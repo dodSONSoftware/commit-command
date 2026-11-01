@@ -1,0 +1,65 @@
+# Rust / Cargo (track Cargo.lock for applications)
+target/
+**/*.rs.bk
+*.pdb
+*.dSYM/
+
+# Rust build artifacts
+target/
+
+# Generated GitFleet lab results
+/app/core/results.json
+
+# GitFleet diagnostic output
+/app/core/results.json
+
+# Tauri-generated artifacts
+**/src-tauri/gen/schemas/
+**/src-tauri/binaries/*.sig
+
+# Node / React / TypeScript
+node_modules/
+dist/
+build/
+coverage/
+.vite/
+.turbo/
+*.tsbuildinfo
+.npm/
+.pnpm-store/
+
+# Python tooling and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local secrets (keep example files)
+.env
+.env.*
+!.env.example
+!.env.sample
+*.pem
+*.p12
+*.pfx
+
+# OS / editor
+.DS_Store
+.AppleDouble
+._*
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
