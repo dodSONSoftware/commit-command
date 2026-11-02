@@ -867,3 +867,103 @@ fn native_window_placement_survives_restart_and_invalid_values_preserve_saved_st
     let mut app = Application::open(&dir, fixture_options(&f)).unwrap();
     assert_eq!(app.window_placement().unwrap(), Some(placement));
 }
+
+#[test]
+fn activity_deduplicates_linked_worktrees_and_audit_filters_real_operation_phases() {
+    let (f, mut app, ws, wt) = setup();
+    f.git(&[
+        "worktree",
+        "add",
+        "-qb",
+        "linked",
+        f.repo.join("linked").to_str().unwrap(),
+    ]);
+    app.request(
+        app.epoch(),
+        Request::Scan {
+            workspace: ws.clone(),
+        },
+    )
+    .unwrap();
+    let now = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_secs();
+    let Data::Activity(activity) = app
+        .request(
+            app.epoch(),
+            Request::Activity {
+                workspace: ws.clone(),
+                worktree: None,
+                since: now - 100,
+                until: now + 100,
+                reference: None,
+                author: None,
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert!(activity.complete);
+    assert_eq!(activity.items.len(), 1);
+    trust(&mut app, &ws, &wt);
+    fs::write(f.repo.join("file.txt"), b"audit selection\n").unwrap();
+    let Data::Review(review) = app
+        .request(
+            app.epoch(),
+            Request::Propose {
+                workspace: ws.clone(),
+                worktree: wt.clone(),
+                request: WriteRequest::Stage {
+                    paths: vec![NativePath::from_path(Path::new("file.txt"))],
+                    hooks: HookPolicy::Execute,
+                },
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    app.cancel_review(&review.id).unwrap();
+    let query = |operation_kind| Request::Audit {
+        workspace: ws.clone(),
+        query: AuditQuery {
+            offset: 0,
+            worktree: Some(wt.clone()),
+            operation_kind: Some(operation_kind),
+            phase: Some(Phase::CancelledBeforePublication),
+            since_ms: None,
+            until_ms: None,
+        },
+    };
+    let Data::Audit(audit) = app
+        .request(app.epoch(), query("stage".into()))
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert_eq!(audit.items.len(), 1);
+    assert!(audit.items[0].events_complete);
+    assert!(audit.items[0].events.len() >= 2);
+    assert_eq!(
+        audit.items[0].events.last().unwrap().phase,
+        Phase::CancelledBeforePublication
+    );
+    assert_eq!(
+        audit.items[0].outcome.phase,
+        Phase::CancelledBeforePublication
+    );
+    let Data::Audit(audit) = app
+        .request(app.epoch(), query("commit".into()))
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert!(audit.items.is_empty());
+    assert!(app.request(app.epoch(), query("shell".into())).is_err());
+}

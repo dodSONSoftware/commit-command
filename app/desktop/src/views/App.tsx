@@ -12,15 +12,15 @@ import type {
   StoredWorktree,
   DesktopState,
   TrustState,
-  HistoryPage,
   Diff,
   Change,
-  OperationPage,
+  AuditPage,
+  Phase,
   NativePath,
   Commit as CommitDetail,
   RecoveryNotice,
 } from "../services/response.generated";
-import type { WriteRequest } from "../services/request.generated";
+import type { WriteRequest, AuditQuery } from "../services/request.generated";
 import {
   initialState,
   bytes,
@@ -35,6 +35,8 @@ import {
   buildTree,
   type TreeNode,
 } from "../stores/model";
+import { WorkspaceActivity } from "./WorkspaceActivity";
+import { HistoryGraph } from "./HistoryGraph";
 type Source = "index" | "working_tree";
 export function App({ bridge }: { bridge: Bridge }) {
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
@@ -46,8 +48,15 @@ export function App({ bridge }: { bridge: Bridge }) {
   const [error, setError] = useState("");
   const [monitor, setMonitor] = useState("Not monitoring");
   const [attention, setAttention] = useState("all");
-  const [operations, setOperations] = useState<OperationPage | null>(null);
+  const [operations, setOperations] = useState<AuditPage | null>(null);
   const [showOperations, setShowOperations] = useState(false);
+  const [showActivity, setShowActivity] = useState(false);
+  const [auditKind, setAuditKind] = useState("");
+  const [auditPhase, setAuditPhase] = useState<Phase | "">("");
+  const [auditWorktree, setAuditWorktree] = useState("");
+  const [auditSince, setAuditSince] = useState("");
+  const [auditUntil, setAuditUntil] = useState("");
+  const [auditApplied, setAuditApplied] = useState<AuditQuery | null>(null);
   const [writeBusy, setWriteBusy] = useState(false);
   const [writesEnabled, setWritesEnabled] = useState(false);
   const [recovery, setRecovery] = useState<RecoveryNotice[]>([]);
@@ -61,7 +70,7 @@ export function App({ bridge }: { bridge: Bridge }) {
   const root = activeWorkspace ? pathText(activeWorkspace.root) : "";
   const entry = entries.find((e) => e.id === nav.active_tab);
   const tab = nav.tabs.find((t) => t.worktree === nav.active_tab);
-  async function act(action: () => Promise<void>) {
+  const act = useCallback(async (action: () => Promise<void>) => {
     setBusy(true);
     setError("");
     try {
@@ -71,7 +80,7 @@ export function App({ bridge }: { bridge: Bridge }) {
     } finally {
       setBusy(false);
     }
-  }
+  }, []);
   const inventory = useCallback(
     async (ws: string) => {
       const data = value(
@@ -104,7 +113,10 @@ export function App({ bridge }: { bridge: Bridge }) {
       setMonitor("Not monitoring");
       setTrust([]);
       setOperations(null);
+      setAuditApplied(null);
       setShowOperations(false);
+      setShowActivity(false);
+      setAuditWorktree("");
       if (ws) {
         const state = value(
           await bridge.request({ kind: "load_state", workspace: ws }),
@@ -184,6 +196,7 @@ export function App({ bridge }: { bridge: Bridge }) {
     context.current = null;
     await load();
     setShowOperations(false);
+    setShowActivity(false);
   }
   async function create() {
     const selection = await bridge.pick();
@@ -213,15 +226,29 @@ export function App({ bridge }: { bridge: Bridge }) {
     if (!workspace) return;
     await bridge.request({ kind: "review_trust", workspace, worktrees: ids });
   }
+  function auditQuery(offset: number) {
+    return {
+      offset,
+      operation_kind: auditKind || null,
+      phase: auditPhase || null,
+      worktree: auditWorktree || null,
+      since_ms: auditSince ? Date.parse(`${auditSince}T00:00:00Z`) : null,
+      until_ms: auditUntil ? Date.parse(`${auditUntil}T23:59:59.999Z`) : null,
+    };
+  }
   async function historyList() {
     if (!workspace) return;
     setShowOperations(true);
-    setOperations(
-      value(
-        await bridge.request({ kind: "operations", workspace, offset: 0 }),
-        "operations",
-      ),
+    setShowActivity(false);
+    const query = auditQuery(0);
+    const data = value(
+      await bridge.request({ kind: "audit", workspace, query }),
+      "audit",
     );
+    if (context.current === workspace) {
+      setOperations(data);
+      setAuditApplied(query);
+    }
   }
   const visible = filtered(entries, nav.filter, attention, nav.sort);
   const counts = entries.reduce(
@@ -283,10 +310,13 @@ export function App({ bridge }: { bridge: Bridge }) {
       </header>
       <nav className="tabs" aria-label="Open tabs">
         <button
-          className={!nav.active_tab && !showOperations ? "active" : ""}
+          className={
+            !nav.active_tab && !showOperations && !showActivity ? "active" : ""
+          }
           onClick={() => {
             setNav({ ...nav, active_tab: null });
             setShowOperations(false);
+            setShowActivity(false);
           }}
         >
           ▦ Overview
@@ -295,13 +325,14 @@ export function App({ bridge }: { bridge: Bridge }) {
           const e = entries.find((e) => e.id === t.worktree);
           return (
             <div
-              className={`tab ${nav.active_tab === t.worktree && !showOperations ? "active" : ""}`}
+              className={`tab ${nav.active_tab === t.worktree && !showOperations && !showActivity ? "active" : ""}`}
               key={t.worktree}
             >
               <button
                 onClick={() => {
                   setNav({ ...nav, active_tab: t.worktree });
                   setShowOperations(false);
+                  setShowActivity(false);
                 }}
               >
                 {e ? repoName(e) : "Unavailable repository"}
@@ -325,13 +356,14 @@ export function App({ bridge }: { bridge: Bridge }) {
           </div>
           <button
             className={
-              !nav.active_tab && !showOperations
+              !nav.active_tab && !showOperations && !showActivity
                 ? "nav-item chosen"
                 : "nav-item"
             }
             onClick={() => {
               setNav({ ...nav, active_tab: null });
               setShowOperations(false);
+              setShowActivity(false);
             }}
           >
             ▦ Workspace Overview
@@ -342,6 +374,16 @@ export function App({ bridge }: { bridge: Bridge }) {
             onClick={() => void act(historyList)}
           >
             ◷ Operation results
+          </button>
+          <button
+            className={`nav-item ${showActivity ? "chosen" : ""}`}
+            disabled={!workspace || busy}
+            onClick={() => {
+              setShowActivity(true);
+              setShowOperations(false);
+            }}
+          >
+            Workspace Activity
           </button>
           <div className="sidebar-label">
             REPOSITORIES <span>{entries.length}</span>
@@ -354,6 +396,7 @@ export function App({ bridge }: { bridge: Bridge }) {
                 onClick={() => {
                   setNav(openTab(nav, e));
                   setShowOperations(false);
+                  setShowActivity(false);
                 }}
               >
                 <span
@@ -527,7 +570,28 @@ export function App({ bridge }: { bridge: Bridge }) {
               </button>
             </div>
           )}
-          {showOperations ? (
+          {showActivity && workspace ? (
+            <WorkspaceActivity
+              key={workspace}
+              bridge={bridge}
+              workspace={workspace}
+              entries={entries}
+              act={act}
+              openCommit={(id, commit) => {
+                const e = entries.find((e) => e.id === id);
+                if (e) {
+                  setNav(
+                    updateTab(openTab(nav, e), id, {
+                      view: "history",
+                      commit,
+                      parent: null,
+                    }),
+                  );
+                  setShowActivity(false);
+                }
+              }}
+            />
+          ) : showOperations ? (
             <section>
               <div className="page-title">
                 <div>
@@ -540,11 +604,103 @@ export function App({ bridge }: { bridge: Bridge }) {
                 </div>
                 <button onClick={() => void act(historyList)}>Refresh</button>
               </div>
+              <form
+                className="activity-filters"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  void act(historyList);
+                }}
+              >
+                <label>
+                  Operation type
+                  <select
+                    aria-label="Audit operation type"
+                    value={auditKind}
+                    onChange={(e) => setAuditKind(e.target.value)}
+                  >
+                    <option value="">All types</option>
+                    {["stage", "unstage", "commit"].map((kind) => (
+                      <option key={kind}>{kind}</option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  Result
+                  <select
+                    aria-label="Audit result"
+                    value={auditPhase}
+                    onChange={(e) =>
+                      setAuditPhase(
+                        (
+                          [
+                            "complete",
+                            "blocked",
+                            "cancelled_before_publication",
+                            "needs_reauthorization",
+                            "published_needs_reconciliation",
+                            "needs_manual_reconciliation",
+                            "published_with_post_processing_failure",
+                            "uncertain_outcome",
+                          ] as const
+                        ).find((p) => p === e.target.value) ?? "",
+                      )
+                    }
+                  >
+                    <option value="">All results</option>
+                    {[
+                      "complete",
+                      "blocked",
+                      "cancelled_before_publication",
+                      "needs_reauthorization",
+                      "published_needs_reconciliation",
+                      "needs_manual_reconciliation",
+                      "published_with_post_processing_failure",
+                      "uncertain_outcome",
+                    ].map((phase) => (
+                      <option key={phase}>{phase}</option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  Repository
+                  <select
+                    aria-label="Audit repository"
+                    value={auditWorktree}
+                    onChange={(e) => setAuditWorktree(e.target.value)}
+                  >
+                    <option value="">Entire workspace</option>
+                    {entries.map((e) => (
+                      <option key={e.id} value={e.id}>
+                        {repoName(e)}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  Since UTC
+                  <input
+                    aria-label="Audit since"
+                    type="date"
+                    value={auditSince}
+                    onChange={(e) => setAuditSince(e.target.value)}
+                  />
+                </label>
+                <label>
+                  Until UTC
+                  <input
+                    aria-label="Audit until"
+                    type="date"
+                    value={auditUntil}
+                    onChange={(e) => setAuditUntil(e.target.value)}
+                  />
+                </label>
+                <button disabled={busy}>Apply audit filters</button>
+              </form>
               <div className="operations">
                 {operations?.items.length === 0 && (
                   <p>No GitFleet operations in this workspace.</p>
                 )}
-                {operations?.items.map((op) => (
+                {operations?.items.map(({ outcome: op, ...record }) => (
                   <article key={op.operation_id}>
                     <span
                       className={`badge ${op.phase === "complete" ? "success" : "warning"}`}
@@ -552,6 +708,22 @@ export function App({ bridge }: { bridge: Bridge }) {
                       {op.phase.replaceAll("_", " ")}
                     </span>
                     <code>{op.operation_id}</code>
+                    <p>
+                      {record.kind} · {record.subject} ·{" "}
+                      {new Date(record.created_at_ms).toLocaleString()}
+                    </p>
+                    <details>
+                      <summary>Recorded phases</summary>
+                      {record.events.map((event, i) => (
+                        <p key={i}>
+                          {new Date(event.at_ms).toLocaleString()} ·{" "}
+                          {event.phase} · Published: {String(event.published)}
+                        </p>
+                      ))}
+                      {!record.events_complete && (
+                        <p>Phase history exceeds the display limit.</p>
+                      )}
+                    </details>
                     <p>
                       {op.reason ??
                         (op.published
@@ -569,6 +741,10 @@ export function App({ bridge }: { bridge: Bridge }) {
                     {![
                       "complete",
                       "published_with_post_processing_failure",
+                      "cancelled_before_publication",
+                      "needs_reauthorization",
+                      "proposed",
+                      "approved",
                     ].includes(op.phase) && (
                       <button
                         onClick={() =>
@@ -587,18 +763,21 @@ export function App({ bridge }: { bridge: Bridge }) {
                     )}
                   </article>
                 ))}
-                {operations?.next != null && (
+                {operations?.next != null && auditApplied && (
                   <button
                     onClick={() =>
                       void act(async () => {
                         if (workspace) {
                           const next = value(
                             await bridge.request({
-                              kind: "operations",
+                              kind: "audit",
                               workspace,
-                              offset: operations.next!,
+                              query: {
+                                ...auditApplied,
+                                offset: operations.next!,
+                              },
                             }),
-                            "operations",
+                            "audit",
                           );
                           setOperations({
                             items: [...operations.items, ...next.items],
@@ -1026,7 +1205,7 @@ function Repository({
   writeEnabled: boolean;
 }) {
   const tab = nav.tabs.find((t) => t.worktree === entry.id)!;
-  const [history, setHistory] = useState<HistoryPage | null>(null);
+  const [historyRefresh, setHistoryRefresh] = useState(0);
   const [patch, setPatch] = useState<Diff | null>(null);
   const [preview, setPreview] = useState("");
   const [selection, setSelection] = useState<
@@ -1041,14 +1220,6 @@ function Repository({
     "configured",
   );
   const area = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (tab.view === "history" && !history) {
-      bridge
-        .request({ kind: "history", workspace, worktree: entry.id })
-        .then((d) => setHistory(value(d, "history")))
-        .catch((e) => setPreview(String(e)));
-    }
-  }, [tab.view, history, bridge, workspace, entry.id]);
   useEffect(() => {
     if (area.current) area.current.scrollTop = tab.scroll;
   }, [entry.id, tab.scroll]);
@@ -1233,7 +1404,7 @@ function Repository({
                 workspace,
                 worktree: entry.id,
               });
-              setHistory(null);
+              setHistoryRefresh(historyRefresh + 1);
             })
           }
         >
@@ -1514,59 +1685,20 @@ function Repository({
         </div>
       ) : (
         <div className="history-grid">
-          <div className="history-list">
-            <div className="section-title">
-              <h2>Local commit history</h2>
-              <span className="muted">Actual parent relationships</span>
-            </div>
-            {history?.commits.map((c) => (
-              <button
-                className={`commit-row ${tab.commit === c.oid.hex ? "selected" : ""}`}
-                key={c.oid.hex}
-                onClick={() =>
-                  void act(async () => {
-                    setNav(
-                      updateTab(nav, entry.id, {
-                        commit: c.oid.hex,
-                        parent: null,
-                      }),
-                    );
-                  })
-                }
-              >
-                <code>{c.oid.hex.slice(0, 8)}</code>
-                <span>{bytes(c.message).split("\n")[0]}</span>
-                <small>
-                  {new Date(c.committer_time * 1000).toLocaleDateString()}
-                </small>
-              </button>
-            ))}
-            {history?.next && (
-              <button
-                disabled={busy}
-                onClick={() =>
-                  void act(async () => {
-                    const next = value(
-                      await bridge.request({
-                        kind: "history",
-                        workspace,
-                        worktree: entry.id,
-                        cursor: history.next,
-                      }),
-                      "history",
-                    );
-                    setHistory({
-                      ...next,
-                      commits: [...history.commits, ...next.commits],
-                    });
-                  })
-                }
-              >
-                Load more
-              </button>
-            )}
-            {history?.commits.length === 0 && <p>No local commits yet.</p>}
-          </div>
+          <HistoryGraph
+            key={`${workspace}/${entry.id}/${tab.filter}/${historyRefresh}`}
+            bridge={bridge}
+            workspace={workspace}
+            worktree={entry.id}
+            selected={tab.commit}
+            reference={tab.filter}
+            onReference={(filter) =>
+              setNav(updateTab(nav, entry.id, { filter }))
+            }
+            onSelect={(commit) =>
+              setNav(updateTab(nav, entry.id, { commit, parent: null }))
+            }
+          />
           <div className="history-inspector">
             <pre>
               {preview ||

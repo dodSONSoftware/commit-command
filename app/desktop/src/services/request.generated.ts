@@ -2,6 +2,27 @@
 
 export type Request =
   | {
+      cursor?: Cursor | null;
+      kind: "graph";
+      scope: HistoryScope;
+      workspace: string;
+      worktree: string;
+    }
+  | {
+      author?: string | null;
+      kind: "activity";
+      reference?: string | null;
+      since: number;
+      until: number;
+      workspace: string;
+      worktree?: string | null;
+    }
+  | {
+      kind: "audit";
+      query: AuditQuery;
+      workspace: string;
+    }
+  | {
       kind: "workspaces";
     }
   | {
@@ -38,7 +59,7 @@ export type Request =
       worktree: string;
     }
   | {
-      cursor?: Cursor | null;
+      cursor?: Cursor2 | null;
       kind: "history";
       workspace: string;
       worktree: string;
@@ -117,6 +138,30 @@ export type HistoryScope =
       reference: string;
       [k: string]: unknown;
     };
+export type ObjectFormat = "sha1" | "sha256";
+export type Phase =
+  | "proposed"
+  | "approved"
+  | "preparing"
+  | "hooks_running"
+  | "revalidated"
+  | "object_ready"
+  | "index_lock_written"
+  | "publication_pending"
+  | "reference_updated"
+  | "index_renamed"
+  | "head_log_written"
+  | "published"
+  | "index_reconciled"
+  | "post_processing"
+  | "complete"
+  | "blocked"
+  | "needs_reauthorization"
+  | "cancelled_before_publication"
+  | "published_needs_reconciliation"
+  | "published_with_post_processing_failure"
+  | "needs_manual_reconciliation"
+  | "uncertain_outcome";
 export type DiffMode =
   | {
       kind: "staged";
@@ -132,7 +177,6 @@ export type DiffMode =
       parent?: ObjectId | null;
       [k: string]: unknown;
     };
-export type ObjectFormat = "sha1" | "sha256";
 /**
  * `display` is never used to reconstruct a path. Byte/wide encodings round-trip.
  */
@@ -177,12 +221,11 @@ export type WriteRequest =
     };
 export type SigningPreference = "configured" | "unsigned";
 
-export interface DiscoveryOptions {
-  excluded_names: string[];
-  excluded_patterns: string[];
-  [k: string]: unknown;
-}
 export interface Cursor {
+  history: Cursor2;
+  lanes: ObjectId[];
+}
+export interface Cursor2 {
   generation: string;
   offset: number;
   scope: HistoryScope;
@@ -191,6 +234,19 @@ export interface Cursor {
 export interface ObjectId {
   format: ObjectFormat;
   hex: string;
+  [k: string]: unknown;
+}
+export interface AuditQuery {
+  offset: number;
+  operation_kind?: string | null;
+  phase?: Phase | null;
+  since_ms?: number | null;
+  until_ms?: number | null;
+  worktree?: string | null;
+}
+export interface DiscoveryOptions {
+  excluded_names: string[];
+  excluded_patterns: string[];
   [k: string]: unknown;
 }
 export interface DesktopState {

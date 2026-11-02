@@ -6,6 +6,21 @@
  */
 export type Data =
   | {
+      kind: "graph";
+      value: Page;
+      [k: string]: unknown;
+    }
+  | {
+      kind: "activity";
+      value: ActivityReport;
+      [k: string]: unknown;
+    }
+  | {
+      kind: "audit";
+      value: AuditPage;
+      [k: string]: unknown;
+    }
+  | {
       kind: "workspaces";
       value: WorkspaceList;
       [k: string]: unknown;
@@ -66,6 +81,55 @@ export type Data =
     };
 /**
  * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "HistoryScope".
+ */
+export type HistoryScope =
+  | {
+      kind: "local_branches";
+      [k: string]: unknown;
+    }
+  | {
+      kind: "reference";
+      reference: string;
+      [k: string]: unknown;
+    };
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ObjectFormat".
+ */
+export type ObjectFormat = "sha1" | "sha256";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ErrorKind".
+ */
+export type ErrorKind =
+  | "invalid_path"
+  | "unsupported_configuration"
+  | "inspection_failed"
+  | "hook_rejected"
+  | "io"
+  | "invalid_data"
+  | "experimental"
+  | "invalid_request"
+  | "unsupported_git_version"
+  | "unavailable"
+  | "concurrent_change"
+  | "stale_cursor"
+  | "missing_object"
+  | "timeout"
+  | "cancelled"
+  | "output_limit"
+  | "busy"
+  | "storage"
+  | "newer_schema"
+  | "untrusted_repository"
+  | "unsupported_repository_state"
+  | "stale_review"
+  | "signing_failed"
+  | "needs_manual_reconciliation"
+  | "uncertain_outcome";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "Phase".
  */
 export type Phase =
@@ -120,55 +184,6 @@ export type NativePath =
 export type Availability = "available" | "missing" | "unavailable";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "ErrorKind".
- */
-export type ErrorKind =
-  | "invalid_path"
-  | "unsupported_configuration"
-  | "inspection_failed"
-  | "hook_rejected"
-  | "io"
-  | "invalid_data"
-  | "experimental"
-  | "invalid_request"
-  | "unsupported_git_version"
-  | "unavailable"
-  | "concurrent_change"
-  | "stale_cursor"
-  | "missing_object"
-  | "timeout"
-  | "cancelled"
-  | "output_limit"
-  | "busy"
-  | "storage"
-  | "newer_schema"
-  | "untrusted_repository"
-  | "unsupported_repository_state"
-  | "stale_review"
-  | "signing_failed"
-  | "needs_manual_reconciliation"
-  | "uncertain_outcome";
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "ObjectFormat".
- */
-export type ObjectFormat = "sha1" | "sha256";
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "HistoryScope".
- */
-export type HistoryScope =
-  | {
-      kind: "local_branches";
-      [k: string]: unknown;
-    }
-  | {
-      kind: "reference";
-      reference: string;
-      [k: string]: unknown;
-    };
-/**
- * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "DiffMode".
  */
 export type DiffMode =
@@ -201,6 +216,174 @@ export interface Response {
   data: Data;
   epoch: number;
   version: number;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "Page".
+ */
+export interface Page {
+  generation: string;
+  next?: Cursor | null;
+  references: Reference[];
+  rows: Row[];
+  shallow_boundaries: ObjectId[];
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "Cursor".
+ */
+export interface Cursor {
+  history: Cursor2;
+  lanes: ObjectId[];
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "Cursor2".
+ */
+export interface Cursor2 {
+  generation: string;
+  offset: number;
+  scope: HistoryScope;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ObjectId".
+ */
+export interface ObjectId {
+  format: ObjectFormat;
+  hex: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "Reference".
+ */
+export interface Reference {
+  name: string;
+  object_type: string;
+  oid: ObjectId;
+  peeled?: ObjectId | null;
+  upstream?: string | null;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "Row".
+ */
+export interface Row {
+  after: ObjectId[];
+  before: ObjectId[];
+  commit: Commit;
+  lane: number;
+  tip: boolean;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "Commit".
+ */
+export interface Commit {
+  author: number[];
+  author_time: number;
+  committer: number[];
+  committer_time: number;
+  encoding?: string | null;
+  message: number[];
+  oid: ObjectId;
+  parents: ObjectId[];
+  tree: ObjectId;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ActivityReport".
+ */
+export interface ActivityReport {
+  complete: boolean;
+  issues: Issue[];
+  items: ActivityEntry[];
+  observed_at_ms: number;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "Issue".
+ */
+export interface Issue {
+  kind: ErrorKind;
+  message: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ActivityEntry".
+ */
+export interface ActivityEntry {
+  commit: Commit2;
+  repository: string;
+  worktree: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "Commit2".
+ */
+export interface Commit2 {
+  author: number[];
+  committer_time: number;
+  oid: ObjectId;
+  subject: number[];
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AuditPage".
+ */
+export interface AuditPage {
+  items: AuditEntry[];
+  next?: number | null;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AuditEntry".
+ */
+export interface AuditEntry {
+  created_at_ms: number;
+  events: AuditPhase[];
+  events_complete: boolean;
+  kind: string;
+  outcome: Outcome;
+  subject: string;
+  worktree: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AuditPhase".
+ */
+export interface AuditPhase {
+  at_ms: number;
+  new_oid?: string | null;
+  phase: Phase;
+  published: boolean;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "Outcome".
+ */
+export interface Outcome {
+  index_reconciled: boolean;
+  new_head?: string | null;
+  operation_id: string;
+  phase: Phase;
+  post_processing: string[];
+  published: boolean;
+  reason?: string | null;
   [k: string]: unknown;
 }
 /**
@@ -272,15 +455,6 @@ export interface StoredWorktree {
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "Issue".
- */
-export interface Issue {
-  kind: ErrorKind;
-  message: string;
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "Metadata".
  */
 export interface Metadata {
@@ -345,31 +519,6 @@ export interface Counts {
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "ObjectId".
- */
-export interface ObjectId {
-  format: ObjectFormat;
-  hex: string;
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "Commit".
- */
-export interface Commit {
-  author: number[];
-  author_time: number;
-  committer: number[];
-  committer_time: number;
-  encoding?: string | null;
-  message: number[];
-  oid: ObjectId;
-  parents: ObjectId[];
-  tree: ObjectId;
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "Tracking".
  */
 export interface Tracking {
@@ -399,33 +548,11 @@ export interface MonitorStatus {
 export interface HistoryPage {
   commits: Commit[];
   generation: string;
-  next?: Cursor | null;
+  next?: Cursor2 | null;
   observed_at_ms: number;
   references: Reference[];
   shallow: boolean;
   shallow_boundaries: ObjectId[];
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "Cursor".
- */
-export interface Cursor {
-  generation: string;
-  offset: number;
-  scope: HistoryScope;
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "Reference".
- */
-export interface Reference {
-  name: string;
-  object_type: string;
-  oid: ObjectId;
-  peeled?: ObjectId | null;
-  upstream?: string | null;
   [k: string]: unknown;
 }
 /**
@@ -534,19 +661,5 @@ export interface ReviewDisplay {
 export interface OperationPage {
   items: Outcome[];
   next?: number | null;
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "Outcome".
- */
-export interface Outcome {
-  index_reconciled: boolean;
-  new_head?: string | null;
-  operation_id: string;
-  phase: Phase;
-  post_processing: string[];
-  published: boolean;
-  reason?: string | null;
   [k: string]: unknown;
 }

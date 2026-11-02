@@ -1,9 +1,13 @@
 //! Presentation-independent application/session boundary. No native UI or transport APIs.
+mod exploration;
 mod monitor;
 mod review;
 mod state;
 use crate::{
     diff, domain::*, history, inspection, workspace::*, writes::*, Error, ErrorKind, Result,
+};
+pub use exploration::{
+    ActivityEntry, ActivityReport, AuditEntry, AuditPage, AuditPhase, AuditQuery,
 };
 pub use monitor::{Monitor, MonitorStatus, MonitoringOptions};
 pub use review::{Confirmation, ReviewDisplay};
@@ -30,6 +34,24 @@ fn stale() -> Error {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Request {
+    Graph {
+        workspace: String,
+        worktree: String,
+        scope: history::HistoryScope,
+        cursor: Option<crate::graph::Cursor>,
+    },
+    Activity {
+        workspace: String,
+        worktree: Option<String>,
+        since: u64,
+        until: u64,
+        reference: Option<String>,
+        author: Option<String>,
+    },
+    Audit {
+        workspace: String,
+        query: AuditQuery,
+    },
     Workspaces {},
     Create {
         name: String,
@@ -143,6 +165,9 @@ pub struct OperationPage {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "kind", content = "value", rename_all = "snake_case")]
 pub enum Data {
+    Graph(crate::graph::Page),
+    Activity(exploration::ActivityReport),
+    Audit(exploration::AuditPage),
     Workspaces(WorkspaceList),
     Inventory(InventoryView),
     Refreshed(Box<StoredWorktree>),
@@ -368,6 +393,42 @@ impl Application {
             _ => {}
         }
         let data = match request {
+            Request::Graph {
+                workspace,
+                worktree,
+                scope,
+                cursor,
+            } => {
+                let e = self.entry(&workspace, &worktree)?;
+                let mut options = self.read_options.clone();
+                options.timeout = Duration::from_secs(30);
+                Data::Graph(crate::graph::page(
+                    &e.metadata.root.to_path()?,
+                    scope,
+                    100,
+                    cursor.as_ref(),
+                    &options,
+                )?)
+            }
+            Request::Activity {
+                workspace,
+                worktree,
+                since,
+                until,
+                reference,
+                author,
+            } => Data::Activity(self.activity(
+                &workspace,
+                worktree.as_deref(),
+                since,
+                until,
+                reference,
+                author,
+            )?),
+            Request::Audit { workspace, query } => {
+                let id = self.active(&workspace)?;
+                Data::Audit(self.writes.application_audit(&id, query)?)
+            }
             Request::Workspaces {} => Data::Workspaces(WorkspaceList {
                 workspaces: self.writes.workspace.list().to_vec(),
                 active: self.writes.workspace.active()?.map(|id| id.0),

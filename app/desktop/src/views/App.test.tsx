@@ -52,6 +52,17 @@ function fake(writes = false) {
         case "save_state":
           saved.push(request.state);
           return { kind: "done" };
+        case "graph":
+          return {
+            kind: "graph",
+            value: {
+              rows: [],
+              references: [],
+              next: null,
+              shallow_boundaries: [],
+              generation: "g",
+            },
+          };
         case "history":
           return {
             kind: "history",
@@ -65,6 +76,8 @@ function fake(writes = false) {
               observed_at_ms: 1,
             },
           };
+        case "audit":
+          return { kind: "audit", value: { items: [], next: null } };
         case "operations":
           return { kind: "operations", value: { items: [], next: null } };
         default:
@@ -269,7 +282,10 @@ it("keeps Changes patches and previews out of History and restores the selected 
   let delayChanges = false;
   bridge.request = async (request) => {
     const data = await original(request);
-    if (data.kind === "history") data.value.commits = [commit];
+    if (data.kind === "graph")
+      data.value.rows = [
+        { commit, lane: 0, tip: true, before: [oid], after: [] },
+      ];
     if (request.kind === "commit") return { kind: "commit", value: commit };
     if (request.kind === "preview")
       return {
@@ -422,3 +438,67 @@ it("refreshes trust automatically and removes selections whose source is no long
     { timeout: 5000 },
   );
 }, 10000);
+
+it("keeps audit pagination bound to applied filters until edited filters are submitted", async () => {
+  const { bridge, requests } = fake();
+  const original = bridge.request;
+  bridge.request = async (request) => {
+    if (request.kind !== "audit") return original(request);
+    requests.push(request);
+    return {
+      kind: "audit",
+      value: {
+        items:
+          request.query.offset === 0 && !request.query.operation_kind
+            ? [
+                {
+                  outcome: {
+                    operation_id: "record",
+                    phase: "complete",
+                    published: false,
+                    index_reconciled: true,
+                    new_head: null,
+                    post_processing: [],
+                    reason: null,
+                  },
+                  worktree: "parent",
+                  kind: "stage",
+                  subject: "",
+                  created_at_ms: 1,
+                  events: [],
+                  events_complete: true,
+                },
+              ]
+            : [],
+        next:
+          request.query.offset === 0 && !request.query.operation_kind
+            ? 50
+            : null,
+      },
+    };
+  };
+  render(<App bridge={bridge} />);
+  await screen.findByRole("checkbox", { name: "Select parent" });
+  await userEvent.click(
+    screen.getByRole("button", { name: "◷ Operation results" }),
+  );
+  await screen.findByRole("button", { name: "Load more results" });
+  fireEvent.change(
+    screen.getByRole("combobox", { name: "Audit operation type" }),
+    { target: { value: "commit" } },
+  );
+  await userEvent.click(
+    screen.getByRole("button", { name: "Load more results" }),
+  );
+  const queries = requests.filter((r) => r.kind === "audit");
+  expect(queries.at(-1)).toMatchObject({
+    query: { offset: 50, operation_kind: null },
+  });
+  await userEvent.click(
+    screen.getByRole("button", { name: "Apply audit filters" }),
+  );
+  expect(requests.filter((r) => r.kind === "audit").at(-1)).toMatchObject({
+    query: { offset: 0, operation_kind: "commit" },
+  });
+  await screen.findByText("No GitFleet operations in this workspace.");
+});

@@ -59,3 +59,41 @@ it("surfaces uncertain backend errors without retrying an operation", async () =
   );
   expect(invoke).toHaveBeenCalledTimes(2);
 });
+
+it("cancels the earliest outstanding Core job instead of a later queued background request", async () => {
+  let count = 0;
+  const pending = new Map<string, (value: unknown) => void>();
+  vi.mocked(invoke).mockImplementation(async (command, args) => {
+    const job =
+      args && typeof args === "object" && "job" in args ? args.job : undefined;
+    if (command === "dispatch") return `job-${++count}`;
+    if (command === "job_status" && job === "native-write")
+      return { state: "idle" };
+    if (command === "job_status")
+      return new Promise((resolve) => {
+        pending.set(String(job), resolve);
+      });
+    return undefined;
+  });
+  const bridge = new NativeBridge();
+  const first = bridge.request({ kind: "workspaces" });
+  const second = bridge.request({ kind: "workspaces" });
+  await Promise.resolve();
+  await Promise.resolve();
+  await bridge.cancel();
+  expect(invoke).toHaveBeenCalledWith("cancel_job", { job: "job-1" });
+  const result = {
+    state: "complete",
+    response: {
+      version: 1,
+      epoch: 1,
+      data: {
+        kind: "workspaces",
+        value: { workspaces: [], active: null, recovery: [] },
+      },
+    },
+  };
+  pending.get("job-1")!(result);
+  pending.get("job-2")!(result);
+  await Promise.all([first, second]);
+});

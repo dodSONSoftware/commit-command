@@ -6,6 +6,8 @@ GitFleet is a desktop multi-repository Git workspace manager with a replaceable 
 
 ## Contents
 
+- [M4 graph activity and audit contracts](architecture/M4_GRAPH_ACTIVITY_AUDIT.md) — Implemented read-only services and remaining native acceptance.
+
 - [Completion execution status](EXECUTION_STATUS.md) — Current accepted work, local commits and deferred checks.
 
 - [Requirement execution crosswalk](REQUIREMENT_EXECUTION_CROSSWALK.md) — Current routing for all 109 original requirements.

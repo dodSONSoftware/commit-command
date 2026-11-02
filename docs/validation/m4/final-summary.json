@@ -1,0 +1,34 @@
+{
+  "default": {
+    "passed": 53,
+    "failed": 0,
+    "ignored": 1
+  },
+  "experimental-writes": {
+    "passed": 88,
+    "failed": 0,
+    "ignored": 2
+  },
+  "controlled-writes": {
+    "passed": 76,
+    "failed": 0,
+    "ignored": 1
+  },
+  "application-services": {
+    "passed": 93,
+    "failed": 0,
+    "ignored": 1
+  },
+  "all-features": {
+    "passed": 133,
+    "failed": 0,
+    "ignored": 3
+  },
+  "desktop": {
+    "renderer_passed": 23,
+    "native_default_passed": 7,
+    "native_all_features_passed": 7,
+    "full_gate_exit": 0,
+    "native_visual": "Deferred: Mac locked"
+  }
+}

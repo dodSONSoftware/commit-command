@@ -1,0 +1,91 @@
+git version 2.56.0
+rustc 1.99.1 (58cf8f9c3 2026-10-13)
+cargo 1.99.1 (5f94df478 2026-08-27)
+v22.22.3
+10.9.8
+
+> gitfleet-desktop@0.1.1 typecheck
+> tsc --noEmit
+
+
+> gitfleet-desktop@0.1.1 lint
+> eslint . --max-warnings 0
+
+
+> gitfleet-desktop@0.1.1 contracts
+> node scripts/contracts.mjs --check
+
+
+> gitfleet-desktop@0.1.1 format:check
+> prettier --check src scripts *.json *.ts *.html
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> gitfleet-desktop@0.1.1 test
+> vitest run
+
+
+ RUN  v4.1.12 /Users/randydodson/Documents/_code/git-fleet/app/desktop
+
+
+ Test Files  6 passed (6)
+      Tests  23 passed (23)
+   Start at  04:02:11
+   Duration  8.26s (transform 379ms, setup 339ms, import 610ms, tests 8.06s, environment 1.93s)
+
+
+> gitfleet-desktop@0.1.1 build
+> tsc --noEmit && vite build
+
+vite v7.3.7 building client environment for production...
+transforming...
+✓ 38 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                    0.46 kB │ gzip:  0.28 kB
+dist/review.html                   0.60 kB │ gzip:  0.36 kB
+dist/assets/review-CbwqxZM9.css    0.85 kB │ gzip:  0.49 kB
+dist/assets/main-B-9JFYlr.css     14.46 kB │ gzip:  3.56 kB
+dist/assets/core-CpHDeAaJ.js       0.80 kB │ gzip:  0.46 kB
+dist/assets/review-A6fOQ0nh.js     1.70 kB │ gzip:  0.91 kB
+dist/assets/main-BoWzjzag.js     262.94 kB │ gzip: 81.18 kB
+✓ built in 371ms
+   Compiling gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.91s
+   Compiling gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.74s
+     Running unittests src/main.rs (src-tauri/target/debug/deps/gitfleet_desktop-9fcd83533de8dc7c)
+
+running 7 tests
+test window_state::tests::saved_geometry_fits_changed_display_and_preserves_valid_position ... ok
+test tests::production_configuration_has_no_remote_plugins_or_broad_permissions ... ok
+test tests::queue_dialog_and_shutdown_boundaries_fail_closed ... ok
+test tests::renderer_reload_revokes_native_context_and_requests_core_reset ... ok
+test security::tests::actual_caller_and_page_are_required ... ok
+test tests::strict_envelope_rejects_oversize_version_unknown_fields_and_approval_json ... ok
+test tests::actual_generated_command_acl_separates_main_review_and_unprivileged_views ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Compiling gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.71s
+     Running unittests src/main.rs (src-tauri/target/debug/deps/gitfleet_desktop-e680b436522ca246)
+
+running 7 tests
+test window_state::tests::saved_geometry_fits_changed_display_and_preserves_valid_position ... ok
+test tests::production_configuration_has_no_remote_plugins_or_broad_permissions ... ok
+test tests::queue_dialog_and_shutdown_boundaries_fail_closed ... ok
+test tests::renderer_reload_revokes_native_context_and_requests_core_reset ... ok
+test security::tests::actual_caller_and_page_are_required ... ok
+test tests::strict_envelope_rejects_oversize_version_unknown_fields_and_approval_json ... ok
+test tests::actual_generated_command_acl_separates_main_review_and_unprivileged_views ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+    Checking gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.48s
+    Checking gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.44s
+   Compiling gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri)
+    Finished `release` profile [optimized] target(s) in 11.30s

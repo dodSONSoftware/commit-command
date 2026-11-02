@@ -8,7 +8,7 @@ Updated November 2, 2026. The user authorized execution of the completion plan, 
 | M3 desktop fixes | Implemented with native retests partial | [Progress report](reports/M3_DESKTOP_PROGRESS_2026-11-02.md); 17 renderer, 87 application-services and 127 all-feature passes; seven native tests per configuration |
 | M3 native acceptance | Partial; remaining interactions deferred | Actual running cancellation, no replay, window restoration, History and workspace-removal retests passed. Mac locked before next session; close/interruption/accessibility and remaining review cases remain open |
 | M3 ordinary writes | Disabled | No change to default features; requires remaining acceptance and explicit default decision |
-| M4 graph/activity/audit | Next independent package | Read-only work may proceed while deferred native M3 checks remain visible |
+| M4 graph/activity/audit | Implemented and automated gates passed; native acceptance deferred | [Report](reports/M4_READ_ONLY_PROGRESS_2026-11-02.md); 53 default, 93 application, 133 all-feature and 23 renderer tests pass; seven native tests per configuration |
 | M5 through M8 | Planned | Follow dependency and acceptance packages in completion plan |
 
 Historical logs remain immutable. Current [requirement crosswalk](REQUIREMENT_EXECUTION_CROSSWALK.md), [completion plan](PROJECT_COMPLETION_PLAN.md), reports and per-run validation directories track progress. Do not infer a full milestone or product completion from an implementation checkpoint.

@@ -26,13 +26,13 @@ export class NativeBridge implements Bridge {
       "running"
     );
   }
-  private current: string | null = null;
+  private pending: string[] = [];
   async request(request: Request): Promise<Payload> {
     const epoch = this.epoch;
     const job = await invoke<string>("dispatch", {
       payload: JSON.stringify({ version: 1, epoch, request }),
     });
-    this.current = job;
+    this.pending.push(job);
     try {
       for (;;) {
         const result = await invoke<Job>("job_status", { job });
@@ -53,7 +53,7 @@ export class NativeBridge implements Bridge {
         await new Promise((resolve) => setTimeout(resolve, 100));
       }
     } finally {
-      if (this.current === job) this.current = null;
+      this.pending = this.pending.filter((id) => id !== job);
     }
   }
   pick() {
@@ -62,7 +62,8 @@ export class NativeBridge implements Bridge {
   async cancel() {
     if (await this.writeStatus())
       await invoke("cancel_job", { job: "native-write" });
-    else if (this.current) await invoke("cancel_job", { job: this.current });
+    else if (this.pending.length)
+      await invoke("cancel_job", { job: this.pending[0] });
   }
 }
 type PayloadValues = {

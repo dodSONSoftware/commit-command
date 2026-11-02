@@ -1,0 +1,34 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.24s
+     Running tests/graph_activity.rs (app/core/target/debug/deps/graph_activity-378bda6f4dcc0351)
+
+running 5 tests
+test activity_does_not_prune_recent_ancestors_behind_older_committer_dates ... ok
+test sha256_graph_retains_full_object_ids ... ok
+test activity_uses_committer_time_and_deduplicates_branches_with_explicit_truncation ... ok
+test unborn_graph_and_activity_are_empty_and_malformed_graph_lanes_are_rejected ... ok
+test graph_uses_actual_merge_parents_and_preserves_lanes_across_pages_without_writes ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.91s
+
+     Running tests/m3_application.rs (app/core/target/debug/deps/m3_application-68afcbee37e2f017)
+
+running 15 tests
+test native_window_placement_survives_restart_and_invalid_values_preserve_saved_state ... ok
+test malformed_state_paths_duplicate_tabs_and_unknown_picker_cannot_modify_storage ... ok
+test navigation_migration_restart_and_newer_data_are_preserved ... ok
+test workspace_switch_invalidates_reviews_and_old_epoch_and_stops_old_watchers ... ok
+test scoped_reads_and_contracts_preserve_every_repository_byte ... ok
+test trust_currentness_is_distinct_from_supported_hook_policy_eligibility ... ok
+test switching_workspace_stops_refreshing_inactive_repository_state ... ok
+test review_text_escapes_bidi_and_reset_invalidates_picker_and_native_capability ... ok
+test operation_reviews_show_exact_content_and_only_applicable_commit_fields ... ok
+test interrupted_records_block_scope_loss_and_are_reported_for_guarded_recovery ... ok
+test activity_deduplicates_linked_worktrees_and_audit_filters_real_operation_phases ... ok
+test native_capability_is_required_decline_replay_and_context_changes_fail_closed ... ok
+test cancelled_and_replaced_reviews_record_nonpublication_and_cancellation_is_per_operation ... ok
+test automatic_discovery_retains_identity_across_rename_and_missing_entries_after_removal ... ok
+test notification_reconciliation_detects_external_edits_without_writes ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 11.29s
+
