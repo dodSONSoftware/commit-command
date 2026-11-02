@@ -51,6 +51,11 @@ export type Data =
       [k: string]: unknown;
     }
   | {
+      kind: "push_preview";
+      value: PushPreview;
+      [k: string]: unknown;
+    }
+  | {
       kind: "fetch_imports";
       value: FetchImportPage;
       [k: string]: unknown;
@@ -334,6 +339,12 @@ export type BatchMode = "review_all" | "index_only";
  * via the `definition` "SigningPreference".
  */
 export type SigningPreference = "configured" | "unsigned";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "PushRelation".
+ */
+export type PushRelation =
+  "up_to_date" | "fast_forward" | "behind" | "diverged";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "Availability".
@@ -836,6 +847,40 @@ export interface ObservationPage {
 export interface FetchCapturePage {
   items: FetchCapture[];
   next?: number | null;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "PushPreview".
+ */
+export interface PushPreview {
+  config_digest: string;
+  destination: string;
+  destination_ref: string;
+  generated_at_ms: number;
+  generation: string;
+  incoming_count: number;
+  observation_id: string;
+  observed_at_ms: number;
+  observed_oid: ObjectId;
+  outgoing: OutgoingCommit[];
+  outgoing_count: number;
+  outgoing_truncated: boolean;
+  relation: PushRelation;
+  remote: string;
+  source_oid: ObjectId;
+  source_ref: string;
+  upstream_matches: boolean;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "OutgoingCommit".
+ */
+export interface OutgoingCommit {
+  oid: ObjectId;
+  subject: number[];
+  subject_truncated: boolean;
   [k: string]: unknown;
 }
 /**

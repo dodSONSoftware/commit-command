@@ -1,0 +1,25 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.57s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-9477e837a431519a)
+
+running 4 tests
+test local_push_preview_refuses_ambiguous_changed_or_unsupported_context_without_effects ... FAILED
+test local_push_preview_reports_up_to_date_and_fast_forward_without_authority_or_mutation ... ok
+test local_push_preview_bounds_outgoing_details_and_loses_no_exact_count ... ok
+test local_push_preview_requires_explicit_objects_then_reports_behind_and_diverged ... ok
+
+failures:
+
+---- local_push_preview_refuses_ambiguous_changed_or_unsupported_context_without_effects stdout ----
+
+thread 'local_push_preview_refuses_ambiguous_changed_or_unsupported_context_without_effects' (13926254) panicked at tests/remote_observation.rs:149:10:
+called `Result::unwrap()` on an `Err` value: Error { kind: UnsupportedConfiguration, message: "Remote destination is ambiguous or has unsupported policy" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    local_push_preview_refuses_ambiguous_changed_or_unsupported_context_without_effects
+
+test result: FAILED. 3 passed; 1 failed; 0 ignored; 0 measured; 23 filtered out; finished in 16.18s
+
+error: test failed, to rerun pass `--test remote_observation`

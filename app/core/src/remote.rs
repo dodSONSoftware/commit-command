@@ -1,6 +1,7 @@
 //! Read-only destination inspection. This module does not contact remote servers.
 pub mod fetch;
 pub mod observation;
+pub mod push;
 use crate::{domain::*, inspection, process, Error, ErrorKind, Result};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};

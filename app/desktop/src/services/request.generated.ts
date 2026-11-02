@@ -65,6 +65,12 @@ export type Request =
       worktree?: string | null;
     }
   | {
+      kind: "push_preview";
+      observation: string;
+      workspace: string;
+      worktree: string;
+    }
+  | {
       kind: "review_fetch_capture";
       observation: string;
       workspace: string;

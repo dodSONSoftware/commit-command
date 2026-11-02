@@ -1,0 +1,38 @@
+//! Local comparisons with past server observations. These DTOs confer no push authority.
+use crate::domain::ObjectId;
+use schemars::JsonSchema;
+use serde::{Deserialize, Serialize};
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum PushRelation {
+    UpToDate,
+    FastForward,
+    Behind,
+    Diverged,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+pub struct OutgoingCommit {
+    pub oid: ObjectId,
+    pub subject: Vec<u8>,
+    pub subject_truncated: bool,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+pub struct PushPreview {
+    pub source_ref: String,
+    pub source_oid: ObjectId,
+    pub remote: String,
+    pub destination: String,
+    pub destination_ref: String,
+    pub observed_oid: ObjectId,
+    pub observation_id: String,
+    pub observed_at_ms: u64,
+    pub generated_at_ms: u64,
+    pub generation: String,
+    pub config_digest: String,
+    pub relation: PushRelation,
+    pub outgoing_count: u32,
+    pub incoming_count: u32,
+    pub outgoing: Vec<OutgoingCommit>,
+    pub outgoing_truncated: bool,
+    pub upstream_matches: bool,
+}

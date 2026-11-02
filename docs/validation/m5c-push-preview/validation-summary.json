@@ -1,0 +1,38 @@
+{
+  "core_matrix": {
+    "default": {
+      "passed": 54,
+      "failed": 0,
+      "ignored": 1
+    },
+    "experimental-writes": {
+      "passed": 89,
+      "failed": 0,
+      "ignored": 2
+    },
+    "controlled-writes": {
+      "passed": 78,
+      "failed": 0,
+      "ignored": 1
+    },
+    "application-services": {
+      "passed": 150,
+      "failed": 0,
+      "ignored": 2
+    },
+    "all-features": {
+      "passed": 192,
+      "failed": 0,
+      "ignored": 5
+    }
+  },
+  "core_validation": "PASSED; full feature matrix, builds, tests, format, strict Clippy and lab",
+  "desktop_validation": "PASSED; contracts/typecheck/lint/format/renderer/native tests/builds/strict Clippy/release",
+  "renderer_tests": 49,
+  "native_host_tests_per_configuration": 11,
+  "native_local_preview": "PASSED ordinary default build; independently verified diverged 1 outgoing / 3 incoming",
+  "effects": "No repository, network-artifact or remote-operation journal changes before/after preview and after native Quit",
+  "network_or_push_execution": "NONE by this checkpoint; preview is local only",
+  "ordinary_writes_enabled": false,
+  "pushed": false
+}

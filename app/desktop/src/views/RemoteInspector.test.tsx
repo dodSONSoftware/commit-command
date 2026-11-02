@@ -211,6 +211,29 @@ it("prepares a branch download only from a completed observation with an OID and
           next: null,
         },
       };
+    if (r.kind === "push_preview")
+      return {
+        kind: "push_preview",
+        value: {
+          source_ref: "refs/heads/main",
+          source_oid: oid,
+          remote: "origin",
+          destination: plan.destination,
+          destination_ref: "refs/heads/main",
+          observed_oid: oid,
+          observation_id: plan.id,
+          observed_at_ms: 0,
+          generated_at_ms: 0,
+          generation: "generation",
+          config_digest: "digest",
+          relation: "up_to_date",
+          outgoing_count: 0,
+          incoming_count: 0,
+          outgoing: [],
+          outgoing_truncated: false,
+          upstream_matches: false,
+        },
+      };
     if (r.kind === "fetch_captures")
       return {
         kind: "fetch_captures",
@@ -290,6 +313,23 @@ it("prepares a branch download only from a completed observation with an OID and
   );
   rerender(<RemoteInspector {...props} enabled={false} />);
   expect(importButton).toBeDisabled();
+  const previewButton = screen.getByRole("button", {
+    name: "Inspect local push preview",
+  });
+  expect(previewButton).toBeEnabled();
+  fireEvent.click(previewButton);
+  await screen.findByRole("region", { name: "Local push comparison" });
+  expect(request).toHaveBeenCalledWith({
+    kind: "push_preview",
+    workspace: "ws",
+    worktree: "repo",
+    observation: "observed",
+  });
+  rerender(<RemoteInspector {...props} worktree="other" enabled={false} />);
+  expect(
+    screen.queryByRole("region", { name: "Local push comparison" }),
+  ).toBeNull();
+
   expect(
     screen.getByRole("button", { name: "Review branch download" }),
   ).toBeDisabled();
@@ -299,6 +339,7 @@ it("prepares a branch download only from a completed observation with an OID and
         "remote_observations",
         "review_fetch_capture",
         "review_fetch_import",
+        "push_preview",
         "fetch_captures",
       ].includes(r.kind),
     ),

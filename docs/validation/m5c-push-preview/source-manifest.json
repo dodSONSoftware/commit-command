@@ -1,0 +1,19 @@
+{
+  "base_commit": "5bd5f85a17c15bbe5801963978787070befff0a0",
+  "files_sha256": {
+    "app/core/src/application/mod.rs": "486dc3240fcde3ee8ccb662459ad126fba878754157aa4be796a0a47eb8d0fdb",
+    "app/core/src/remote.rs": "a9dfcf46671aad2021b0833dcdba68aabc738dc508ab84ba858196f09791bf7a",
+    "app/core/src/writes/mod.rs": "d10b4173db1abd94b891ffcdf795678e3659ef53d6791246199fc20d7f281f0d",
+    "app/core/tests/remote_observation.rs": "e98e259510a2865abf9b5570aac995ce80516f67801bbc242046faf28419b8f7",
+    "app/desktop/src-tauri/src/main.rs": "5e1cdc3bb4dbe0db6b4c92751a38b8d7a4caa320d261dd23fb5813c37d901927",
+    "app/desktop/src/services/request.generated.ts": "525a077d9b05af45710dd7b182f68345303cf6b0476e99bb232ae466f5c2da95",
+    "app/desktop/src/services/response.generated.ts": "2b7e26a316ecc3f0f35eed2bbe23d0138316a8dc4d3c7e85e6612f4a7d3b811f",
+    "app/desktop/src/views/ObservationHistory.tsx": "0dd4a6a484de2f4c1a28f16fc8bbd971566640d0f64bfc3ebe0d1afa066f9be8",
+    "app/desktop/src/views/RemoteInspector.test.tsx": "d219fc488ccc340f36e405d38a854c351b68865f7cee29c7cd082044b01ba53f",
+    "app/desktop/src/views/RemoteInspector.tsx": "a03ef481bddefe411182d049c21f1a4d3f448d2b9159c87c72ec0b6a8a073626",
+    "app/core/src/remote/push.rs": "b7710748b434531686827aec3a2ce6a112a9b5cf18353eed4174c595f7036d89",
+    "app/core/src/writes/push_preview.rs": "6182040f38609a152d736f18085348a9c897ce9fb35681ac3c8c963775874dd0",
+    "app/desktop/src/views/PushPreviewResult.tsx": "ffa035fd2004e01bcd3d7bcada604244122475bd42e66ef025610bb8764246c8",
+    "app/desktop/src/views/PushPreviewResult.test.tsx": "70cba9b58e0307ea4d7a9274874ad943824089d63da88afb24f9bf1226ac8d1e"
+  }
+}

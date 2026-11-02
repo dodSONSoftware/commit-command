@@ -872,6 +872,11 @@ mod tests {
             workspace: "w".into(),
             operation: "i".into()
         }));
+        assert!(!mutating_request(&Request::PushPreview {
+            workspace: "w".into(),
+            worktree: "t".into(),
+            observation: "o".into()
+        }));
         assert!(!mutating_request(&Request::FetchImports {
             workspace: "w".into(),
             offset: 0

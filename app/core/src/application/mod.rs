@@ -97,6 +97,11 @@ pub enum Request {
         worktree: Option<String>,
         offset: usize,
     },
+    PushPreview {
+        workspace: String,
+        worktree: String,
+        observation: String,
+    },
     ReviewFetchCapture {
         workspace: String,
         worktree: String,
@@ -243,6 +248,7 @@ pub enum Data {
     Remotes(crate::remote::Inspection),
     RemoteObservations(crate::remote::observation::ObservationPage),
     FetchCaptures(crate::remote::fetch::FetchCapturePage),
+    PushPreview(crate::remote::push::PushPreview),
     FetchImports(crate::remote::fetch::FetchImportPage),
     Workspaces(WorkspaceList),
     Inventory(InventoryView),
@@ -646,6 +652,20 @@ impl Application {
                         return Err(error);
                     }
                 }
+            }
+            Request::PushPreview {
+                workspace,
+                worktree,
+                observation,
+            } => {
+                let entry = self.entry(&workspace, &worktree)?;
+                let id = self.active(&workspace)?;
+                let mut options = self.read_options.clone();
+                options.timeout = Duration::from_secs(30);
+                Data::PushPreview(
+                    self.writes
+                        .push_preview(&id, &entry, &observation, &options)?,
+                )
             }
             Request::ReviewFetchImport {
                 workspace,

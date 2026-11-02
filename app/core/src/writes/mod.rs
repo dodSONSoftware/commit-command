@@ -13,6 +13,8 @@ mod fetch;
 mod fetch_import;
 mod policy;
 #[cfg(feature = "application-services")]
+mod push_preview;
+#[cfg(feature = "application-services")]
 mod remote;
 mod store;
 mod transaction;

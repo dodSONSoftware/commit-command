@@ -1,0 +1,7 @@
+{
+  "base_commit": "5bd5f85a17c15bbe5801963978787070befff0a0",
+  "features": "ordinary defaults; writes disabled",
+  "bundle": "/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri/target/debug/bundle/macos/GitFleet.app",
+  "binary_sha256": "da637cf303ba77fe90372bdcbe1844967571a4373cc00adffab1c8d173ee5c5f",
+  "fixture": "/private/tmp/gitfleet-public-native-laodapb4"
+}

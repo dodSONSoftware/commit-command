@@ -1,0 +1,23 @@
+{
+  "files_sha256": {
+    "core-clippy.txt": "0fd282782ba84ca1561fd5e298aaab3d1489746fa9883794c60e2b2a9b763679",
+    "core-focused-accepted.txt": "cfafe67d8861133bd97126a4ae0ac7b7f632f3470fbb0cf76ef955fdde97f01c",
+    "core-focused-final.txt": "77aad817a588a887eb424b7614e36fc8a34ba285430a2967d8a8cca6c4aa5cbc",
+    "core-focused-run.txt": "ca54e3bd06493b63d38abd6295d485bda2a7c71f94f6d861933f3cba742a55da",
+    "core-focused.txt": "8e82ce22f2d52439d5d125ef741bf9ec90db647f053496f7773442fb390df1ae",
+    "core-validation.txt": "3ee309426988536f42765e501b5467044e4d08f2a8d2843fe43af66774f33cf8",
+    "desktop-validation.txt": "b51ee7d22ab7d7be27e0c79c186bfecd7201fe66301a0e68d56335c7a55ba053",
+    "native-after-quit-workspaces.json": "3b65c37c8a6c9f12146da234219a31d2d0ccc8434139b1b82e2d83211b5e1f21",
+    "native-after-quit.json": "a2c43c3225a7ff2919be15d9e047ebe8a3ee2034e2ede482be4d8f9e372f15c5",
+    "native-artifact.json": "81ee7348e7f0c92c07c78b55a745f868bb6e680be9e8e23054508d5fb59ed768",
+    "native-before.json": "a2c43c3225a7ff2919be15d9e047ebe8a3ee2034e2ede482be4d8f9e372f15c5",
+    "native-observed.json": "27e4708a6d0594b50f324833376f102a0ddd7aa59c785882266b152bbebea1a8",
+    "native-oracle.py": "28b82e0c209750054b9593516accaa9a2ee82966ba65f892999842f61f790b01",
+    "native-preview.json": "a2c43c3225a7ff2919be15d9e047ebe8a3ee2034e2ede482be4d8f9e372f15c5",
+    "renderer-focused.txt": "7c3a90a43cbbd55a235e004910ebe12e70b0f05f9e74bc4031ced981ebe81b95",
+    "renderer-initial.txt": "5ef2c8798fb38b00ce1540d663a1984a3df59ebf754bcba5f4f48f6bf914f0dc",
+    "source-manifest.json": "f5764f0e3779c724d8915deb8450ce9a10870d628aeb2c760e8dcf6899292bed",
+    "validation-summary.json": "5cb3bdda14c6899bd7b629e8821101e21097c7f41a99268c4bd433a2bced57d6"
+  },
+  "unchanged_after_validation": true
+}

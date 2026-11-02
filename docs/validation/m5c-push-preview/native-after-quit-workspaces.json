@@ -1,0 +1,25 @@
+[
+  {
+    "discovery": {
+      "excluded_names": [
+        "node_modules",
+        ".venv",
+        "target",
+        "dist",
+        "build",
+        ".gitfleet-rust-lab"
+      ],
+      "excluded_patterns": []
+    },
+    "display_root": {
+      "encoding": "utf8",
+      "value": "/private/tmp/gitfleet-public-native-laodapb4/workspace"
+    },
+    "id": "e2fe5636-312d-4650-b8f7-e195c324bf2d",
+    "name": "Public HTTPS native acceptance",
+    "root": {
+      "encoding": "utf8",
+      "value": "/private/tmp/gitfleet-public-native-laodapb4/workspace"
+    }
+  }
+]

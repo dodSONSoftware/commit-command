@@ -1,5 +1,13 @@
 # Fresh conversation handoff — November 2, 2026
 
+## Latest local push preflight checkpoint
+
+The next M5B/C planning checkpoint adds **Inspect local push preview** against one explicitly completed past observation; see `docs/reports/M5C_LOCAL_PUSH_PREVIEW_2026-11-02.md` and the latest local commit. It binds current source/identity/configuration separately, requires identical unambiguous fetch/push destinations, and reports up-to-date/fast-forward/behind/diverged with exact counts and bounded outgoing OID/subject details. Missing objects require explicit fetch. It creates no network read, write journal, confirmation capability, upstream change or push. Ordinary writes remain disabled.
+
+Full Core matrix passed 54/89/78/150/192 with documented ignores 1/2/1/2/5; desktop passed 49 renderer and 11 native host tests per configuration plus the full gate. Focused real-Git and renderer checks, the full gates and actual ordinary native evidence are saved under `docs/validation/m5c-push-preview/`; consult `validation-summary.json` for final counts. Actual native preview on `/private/tmp/gitfleet-public-native-laodapb4` showed **diverged: 1 outgoing / 3 incoming**, matching an independent raw-parent traversal. All managed bytes/modes, network artifacts and existing observation/capture/import journals matched before/after/after native Quit. The fixture app is closed and its state lock reopened. The ordinary dev bundle is refreshed to this source; earlier acceptance artifacts now predate the new preview and must be rebuilt before source acceptance of later changes.
+
+Next continue M5B authentication/helper/SSH/native secure-storage and guarded upstream policy, then M5C fresh destination/dependency proof and separately reviewed push. The preview DTO and historical observation carry no execution authority. Retain remaining M3/M4/native accessibility/topology/scale and M6–M8 work. Preserve unrelated `.gitignore`, `docs/README.md`, `docs/APPLICATION_OVERVIEW.md` and any concurrent user assets. Do not push.
+
 ## Latest actual native fetch acceptance
 
 After the user unlocked the Mac, selected real native gates passed on `ab3fd39`; see `docs/reports/M5B_NATIVE_FETCH_ACCEPTANCE_2026-11-02.md` and the latest local evidence commit. No application source change was needed. Native UI used CUA; independent read-only repository/SQLite oracles are saved under `docs/validation/m5b-fetch-import-native/`.

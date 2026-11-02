@@ -1,12 +1,14 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { value, type Bridge } from "../services/bridge";
 import type {
   Inspection,
   ObservationPage,
   FetchCapturePage,
+  PushPreview,
 } from "../services/response.generated";
 import { bytes, pathText } from "../stores/model";
 import { ObservationRecords } from "./ObservationHistory";
+import { PushPreviewResult } from "./PushPreviewResult";
 import { FetchCaptureRecords } from "./FetchCaptureHistory";
 const text = (value: string) =>
   bytes(Array.from(new TextEncoder().encode(value)));
@@ -27,6 +29,12 @@ export function RemoteInspector({
   act: (action: () => Promise<void>) => Promise<void>;
   enabled?: boolean;
 }) {
+  const [preview, setPreview] = useState<{
+    context: string;
+    value: PushPreview;
+  } | null>(null);
+  const previewSequence = useRef(0);
+  const previewContext = `${workspace}:${worktree}:${revision ?? 0}`;
   const [report, setReport] = useState<Inspection | null>(null);
   const [remote, setRemote] = useState("");
   const [reference, setReference] = useState("");
@@ -279,6 +287,25 @@ export function RemoteInspector({
       </p>
       <ObservationRecords
         items={observations?.items ?? []}
+        previewDisabled={busy}
+        onPreview={(observation) => {
+          if (busy) return;
+          const sequence = ++previewSequence.current;
+          const context = previewContext;
+          void act(async () => {
+            const data = value(
+              await bridge.request({
+                kind: "push_preview",
+                workspace,
+                worktree,
+                observation,
+              }),
+              "push_preview",
+            );
+            if (sequence === previewSequence.current)
+              setPreview({ context, value: data });
+          });
+        }}
         fetchDisabled={!enabled || busy}
         onFetch={(observation) => {
           if (!enabled || busy) return;
@@ -293,6 +320,9 @@ export function RemoteInspector({
           });
         }}
       />
+      {preview?.context === previewContext && (
+        <PushPreviewResult preview={preview.value} />
+      )}
       {observations?.next != null && (
         <button
           disabled={busy}

@@ -172,6 +172,8 @@ Push review binds worktree identity, source ref/OID, effective destination, outg
 
 For selected parent pushes, prove required child commits are available on the intended reachable child remote; use reachability evidence rather than a local tracking ref alone. Push selected dependencies first, never unselected children. Present missing upstream as a separate explicit reviewed config change. Implement and test applicable pre-push hook stdin/arguments and explicit bypass semantics; unsupported managers/configurations remain fail closed.
 
+A preliminary local-only push comparison is implemented; see [report](reports/M5C_LOCAL_PUSH_PREVIEW_2026-11-02.md). It compares current source history with a scoped past observation and displays bounded outgoing details/divergence without network access or push authority. Authentication/upstream policy, fresh destination/dependency proof, native exact approval and actual push execution remain open.
+
 Deliver separate push review/results screens. No commit or AI success path calls push automatically.
 
 Exit for M5: BULK-001 through 007 and PUSH-001 through 006 pass, including server drift, partial publication, safe retry and independent remote-ref verification. Pull and Branch actions are implemented only if their exact non-destructive scope has been resolved separately.

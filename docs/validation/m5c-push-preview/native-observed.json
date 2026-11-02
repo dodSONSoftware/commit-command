@@ -1,0 +1,19 @@
+{
+  "operator": "Codex via CUA",
+  "ordinary_writes_enabled": false,
+  "view": "Local push comparison",
+  "relation": "diverged",
+  "source_ref": "refs/heads/main",
+  "source_oid": "14dda63e7e351f8e6552c17affc372c66a9b303a",
+  "observed_oid": "7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
+  "destination": "https://github.com/octocat/Hello-World.git",
+  "destination_ref": "refs/heads/master",
+  "outgoing_count": 1,
+  "incoming_count": 3,
+  "outgoing_subject": "Native HTTPS baseline",
+  "upstream_matches": false,
+  "approval_dialog_shown": false,
+  "push_or_force_control_present": false,
+  "warning": "This is not push approval; actual push requires fresh server evidence and a separate exact review.",
+  "independent_parent_graph_matches": true
+}

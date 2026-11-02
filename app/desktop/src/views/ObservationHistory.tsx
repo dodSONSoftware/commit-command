@@ -7,10 +7,14 @@ export function ObservationRecords({
   items,
   onFetch,
   fetchDisabled = true,
+  onPreview,
+  previewDisabled = false,
 }: {
   items: ObservationPage["items"];
   onFetch?: (observation: string) => void;
   fetchDisabled?: boolean;
+  onPreview?: (observation: string) => void;
+  previewDisabled?: boolean;
 }) {
   return (
     <>
@@ -45,6 +49,14 @@ export function ObservationRecords({
             <p role="alert">
               {observation.issue.kind}: {text(observation.issue.message)}
             </p>
+          )}
+          {onPreview && observation.phase === "complete" && observation.oid && (
+            <button
+              disabled={previewDisabled}
+              onClick={() => onPreview(observation.plan.id)}
+            >
+              Inspect local push preview
+            </button>
           )}
           {onFetch && observation.phase === "complete" && observation.oid && (
             <button

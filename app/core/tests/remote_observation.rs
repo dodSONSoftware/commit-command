@@ -1469,3 +1469,304 @@ fn fetch_import_updates_packed_expected_old_for_sha1_and_sha256() {
         );
     }
 }
+
+fn push_preview(t: &mut Test, observation: &str) -> gitfleet_core::remote::push::PushPreview {
+    let Data::PushPreview(preview) = t
+        .app
+        .request(
+            t.app.epoch(),
+            Request::PushPreview {
+                workspace: t.workspace.clone(),
+                worktree: t.worktree.clone(),
+                observation: observation.into(),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    preview
+}
+fn advance_local(t: &Test) -> String {
+    fs::write(t.f.repo.join("file.txt"), b"Local outgoing commit\n").unwrap();
+    t.f.git(&["add", "file.txt"]);
+    t.f.git(&["commit", "-qm", "Local outgoing <script> commit"]);
+    String::from_utf8(t.f.git(&["rev-parse", "HEAD"]))
+        .unwrap()
+        .trim()
+        .into()
+}
+#[test]
+fn local_push_preview_reports_up_to_date_and_fast_forward_without_authority_or_mutation() {
+    use gitfleet_core::remote::push::PushRelation;
+    let mut t = setup(true);
+    t.f.git(&["config", "branch.main.remote", "origin"]);
+    t.f.git(&["config", "branch.main.merge", "refs/heads/main"]);
+    trust(&mut t);
+    let observed = observed(&mut t);
+    let before = tree_bytes(&t.f.repo);
+    let remote = tree_bytes(&t.remote);
+    let result = push_preview(&mut t, &observed.plan.id);
+    assert_eq!(result.relation, PushRelation::UpToDate);
+    assert_eq!(result.outgoing_count, 0);
+    assert_eq!(result.incoming_count, 0);
+    assert!(result.upstream_matches);
+    assert!(result.outgoing.is_empty());
+    assert_eq!(before, tree_bytes(&t.f.repo));
+    assert_eq!(remote, tree_bytes(&t.remote));
+    let oid = advance_local(&t);
+    let before = tree_bytes(&t.f.repo);
+    let result = push_preview(&mut t, &observed.plan.id);
+    assert_eq!(result.relation, PushRelation::FastForward);
+    assert_eq!(result.outgoing_count, 1);
+    assert_eq!(result.incoming_count, 0);
+    assert_eq!(result.outgoing[0].oid.hex, oid);
+    assert_eq!(
+        result.outgoing[0].subject,
+        b"Local outgoing <script> commit"
+    );
+    assert!(!result.outgoing_truncated);
+    assert_eq!(result.observed_oid, observed.oid.unwrap());
+    assert_eq!(result.source_ref, "refs/heads/main");
+    assert_eq!(result.destination_ref, "refs/heads/main");
+    assert_eq!(before, tree_bytes(&t.f.repo));
+    assert_eq!(remote, tree_bytes(&t.remote));
+    let db = rusqlite::Connection::open(t.f.root.join("state/state.db")).unwrap();
+    assert_eq!(
+        db.query_row(
+            "select count(*) from state where key like 'remote-observation:%'",
+            [],
+            |r| r.get::<_, i64>(0)
+        )
+        .unwrap(),
+        1
+    );
+    assert_eq!(
+        db.query_row("select count(*) from write_operations", [], |r| r
+            .get::<_, i64>(0))
+            .unwrap(),
+        0
+    );
+    assert!(t.app.begin_confirmation(&result.observation_id).is_err());
+}
+#[test]
+fn local_push_preview_requires_explicit_objects_then_reports_behind_and_diverged() {
+    use gitfleet_core::remote::push::PushRelation;
+    for diverged in [false, true] {
+        let mut t = setup(true);
+        trust(&mut t);
+        let target = advance_server(&t);
+        let observation = observed(&mut t);
+        let before = tree_bytes(&t.f.repo);
+        let remote = tree_bytes(&t.remote);
+        assert_eq!(
+            t.app
+                .request(
+                    t.app.epoch(),
+                    Request::PushPreview {
+                        workspace: t.workspace.clone(),
+                        worktree: t.worktree.clone(),
+                        observation: observation.plan.id.clone()
+                    }
+                )
+                .unwrap_err()
+                .kind,
+            ErrorKind::MissingObject
+        );
+        assert_eq!(before, tree_bytes(&t.f.repo));
+        assert_eq!(remote, tree_bytes(&t.remote));
+        let r = fetch_review(&mut t, &observation.plan.id);
+        let capture = fetch_confirm(&mut t, &r, Cancellation::default());
+        let r = import_review(&mut t, &capture.plan.transport.id);
+        assert_eq!(
+            import_confirm(&mut t, &r).phase,
+            gitfleet_core::remote::fetch::FetchImportPhase::Complete
+        );
+        let local = if diverged {
+            Some(advance_local(&t))
+        } else {
+            None
+        };
+        let before = tree_bytes(&t.f.repo);
+        let result = push_preview(&mut t, &observation.plan.id);
+        assert_eq!(
+            result.relation,
+            if diverged {
+                PushRelation::Diverged
+            } else {
+                PushRelation::Behind
+            }
+        );
+        assert_eq!(result.incoming_count, 1);
+        assert_eq!(result.outgoing_count, u32::from(diverged));
+        assert_eq!(result.observed_oid.hex, target);
+        assert!(!result.upstream_matches);
+        if let Some(oid) = local {
+            assert_eq!(result.outgoing[0].oid.hex, oid);
+        }
+        assert_eq!(before, tree_bytes(&t.f.repo));
+        assert_eq!(remote, tree_bytes(&t.remote));
+    }
+}
+#[test]
+fn local_push_preview_refuses_ambiguous_changed_or_unsupported_context_without_effects() {
+    for mode in [
+        "different_pushurl",
+        "multiple_pushurl",
+        "push_refspec",
+        "config_drift",
+        "revoked",
+        "shallow",
+        "graft",
+        "cancelled_observation",
+        "wrong_scope",
+        "detached",
+        "unborn",
+    ] {
+        let mut t = setup(true);
+        trust(&mut t);
+        if mode == "different_pushurl" {
+            t.f.git(&[
+                "config",
+                "remote.origin.pushurl",
+                "https://example.invalid/different.git",
+            ]);
+            trust(&mut t);
+        }
+        if mode == "push_refspec" {
+            t.f.git(&[
+                "config",
+                "remote.origin.push",
+                "refs/heads/main:refs/heads/other",
+            ]);
+            trust(&mut t);
+        }
+        let observation = if mode == "cancelled_observation" {
+            let r = review(&mut t, "refs/heads/main");
+            let (cap, _) = t.app.begin_confirmation(&r.id).unwrap();
+            assert!(t.app.confirm(cap, false, Cancellation::default()).is_err());
+            observations(&mut t).items[0].clone()
+        } else {
+            observed(&mut t)
+        };
+        if mode == "multiple_pushurl" {
+            t.f.git(&[
+                "config",
+                "--add",
+                "remote.origin.pushurl",
+                t.remote.to_str().unwrap(),
+            ]);
+            t.f.git(&[
+                "config",
+                "--add",
+                "remote.origin.pushurl",
+                "https://example.invalid/other.git",
+            ]);
+            trust(&mut t);
+        }
+        match mode {
+            "detached" => {
+                t.f.git(&["checkout", "--detach", "-q"]);
+            }
+            "unborn" => {
+                t.f.git(&["symbolic-ref", "HEAD", "refs/heads/unborn"]);
+            }
+            "config_drift" => {
+                t.f.git(&[
+                    "config",
+                    "remote.origin.url",
+                    "https://example.invalid/changed.git",
+                ]);
+            }
+            "revoked" => {
+                t.app
+                    .request(
+                        t.app.epoch(),
+                        Request::Revoke {
+                            workspace: t.workspace.clone(),
+                            worktree: t.worktree.clone(),
+                        },
+                    )
+                    .unwrap();
+            }
+            "shallow" => fs::write(
+                t.f.repo.join(".git/shallow"),
+                format!("{}\n", observation.oid.as_ref().unwrap().hex),
+            )
+            .unwrap(),
+            "graft" => {
+                fs::create_dir_all(t.f.repo.join(".git/info")).unwrap();
+                fs::write(t.f.repo.join(".git/info/grafts"), b"").unwrap();
+            }
+            _ => {}
+        }
+        let before = tree_bytes(&t.f.repo);
+        let remote = tree_bytes(&t.remote);
+        let result = t.app.request(
+            t.app.epoch(),
+            Request::PushPreview {
+                workspace: if mode == "wrong_scope" {
+                    "forged".into()
+                } else {
+                    t.workspace.clone()
+                },
+                worktree: t.worktree.clone(),
+                observation: observation.plan.id,
+            },
+        );
+        assert!(result.is_err(), "{mode}");
+        assert_eq!(before, tree_bytes(&t.f.repo), "{mode}");
+        assert_eq!(remote, tree_bytes(&t.remote), "{mode}");
+    }
+}
+#[test]
+fn local_push_preview_bounds_outgoing_details_and_loses_no_exact_count() {
+    let mut t = setup(true);
+    trust(&mut t);
+    let observation = observed(&mut t);
+    let tree = String::from_utf8(t.f.git(&["rev-parse", "HEAD^{tree}"])).unwrap();
+    let mut parent = String::from_utf8(t.f.git(&["rev-parse", "HEAD"]))
+        .unwrap()
+        .trim()
+        .to_string();
+    for i in 0..101 {
+        parent = String::from_utf8(t.f.git(&[
+            "commit-tree",
+            tree.trim(),
+            "-p",
+            &parent,
+            "-m",
+            &format!("Outgoing {i}"),
+        ]))
+        .unwrap()
+        .trim()
+        .into();
+    }
+    t.f.git(&["update-ref", "refs/heads/main", &parent]);
+    let before = tree_bytes(&t.f.repo);
+    let result = push_preview(&mut t, &observation.plan.id);
+    assert_eq!(result.outgoing_count, 101);
+    assert_eq!(result.outgoing.len(), 100);
+    assert!(result.outgoing_truncated);
+    assert_eq!(result.outgoing[0].oid.hex, parent);
+    assert_eq!(before, tree_bytes(&t.f.repo));
+    let token = Cancellation::default();
+    token.cancel();
+    assert_eq!(
+        t.app
+            .request_with_cancellation(
+                t.app.epoch(),
+                Request::PushPreview {
+                    workspace: t.workspace.clone(),
+                    worktree: t.worktree.clone(),
+                    observation: observation.plan.id
+                },
+                token
+            )
+            .unwrap_err()
+            .kind,
+        ErrorKind::Cancelled
+    );
+    assert_eq!(before, tree_bytes(&t.f.repo));
+}
