@@ -1,0 +1,54 @@
+{
+  "core_matrix": {
+    "default": {
+      "passed": 54,
+      "failed": 0,
+      "ignored": 1
+    },
+    "experimental-writes": {
+      "passed": 89,
+      "failed": 0,
+      "ignored": 2
+    },
+    "controlled-writes": {
+      "passed": 78,
+      "failed": 0,
+      "ignored": 1
+    },
+    "application-services": {
+      "passed": 146,
+      "failed": 0,
+      "ignored": 2
+    },
+    "all-features": {
+      "passed": 188,
+      "failed": 0,
+      "ignored": 5
+    }
+  },
+  "core_validation": "PASSED; builds/tests/fmt/strict Clippy and lab",
+  "desktop_validation": "PASSED; contracts/typecheck/lint/fmt/build/strict Clippy/release",
+  "renderer_tests": 47,
+  "native_host_tests": {
+    "default": 11,
+    "all-features": 11
+  },
+  "real_transport_import_cases": {
+    "application-services": 20,
+    "all-features": 22,
+    "subprocess_worker_ignored": 1
+  },
+  "native_acceptance": "BLOCKED: Mac locked; zero UI assertions or import execution",
+  "known_observation": "Earlier unexplained crash-worker exit without SIGKILL remains recorded; diagnostic suite, separate crash repeat and final complete matrix passed. Separate prepared-abort cleanup race reproduced and fixed.",
+  "unrelated_work_preserved": [
+    ".gitignore",
+    "docs/README.md",
+    "docs/APPLICATION_OVERVIEW.md",
+    "docs/graphics/"
+  ],
+  "push": "NOT RUN",
+  "accepted_log_sha256": {
+    "core-validation-accepted.txt": "75ffc1559b57176e715c0230623ef6faed7c55ad4cf7e591f2f56ec0a4b81730",
+    "desktop-validation-accepted.txt": "c7f87ebe8579657769768b358bd996c1361c5a91c3dd375e80aa8c8958d6ac35"
+  }
+}

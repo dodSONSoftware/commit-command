@@ -1,0 +1,6 @@
+{
+  "lossless_archive": "core-validation-final.txt.gz",
+  "original_sha256": "72d449db09fcff39b814213fe0c3a3d7c17de602d2deae9885319c6cb11d1b51",
+  "original_bytes": 56065,
+  "reason": "Retain exact failed log including panic trailing whitespace without source-diff whitespace errors"
+}

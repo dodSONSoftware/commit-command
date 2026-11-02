@@ -1,0 +1,11 @@
+{
+  "artifacts": {
+    "app/desktop/src-tauri/target/debug/gitfleet-desktop": "6cea25c05cada3d48f52b377de9a7ec3764aa835163f99ef31181dbd11e94a02",
+    "app/desktop/src-tauri/target/debug/bundle/macos/GitFleet.app/Contents/MacOS/gitfleet-desktop": "6cea25c05cada3d48f52b377de9a7ec3764aa835163f99ef31181dbd11e94a02",
+    "app/desktop/src-tauri/target/release/gitfleet-desktop": "cb271361657327a93106f6eb331a140f4453b13e6f673f17f4baba3728b8cacd"
+  },
+  "features": "ordinary default; desktop-writes disabled",
+  "native_acceptance": "BLOCKED (locked Mac); no assertions",
+  "build_log": "desktop-validation-accepted.txt",
+  "distribution_status": "local development bundle; not signed/notarized release evidence"
+}

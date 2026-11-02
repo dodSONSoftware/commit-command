@@ -164,7 +164,7 @@ Choose supported transports and credential interaction, host/certificate verific
 
 Use local bare remotes and isolated loopback fixtures by default. Cover missing credentials, auth rejection, cancellation, disconnected transport and bounded process output. Do not require public services for CI.
 
-Current M5B checkpoint: reviewed isolated branch downloads are implemented and validated with real local/loopback transport tests. See [report](reports/M5B_FETCH_CAPTURE_2026-11-02.md). This is the download stage only; the next package must separately review the exact verified bundle, managed object import and guarded tracking-ref publication. Do not classify the full fetch workflow as complete or reuse download authorization for ref mutation.
+Current M5B checkpoint: reviewed branch downloads and separately reviewed offline bundle import/exact tracking-ref publication are implemented. See [download report](reports/M5B_FETCH_CAPTURE_2026-11-02.md) and [import report](reports/M5B_FETCH_IMPORT_2026-11-02.md). The import binds the bundle checksum, repository/trust/configuration and expected old ref, uses a prepared Git transaction with a direct-ref guard, and requires fresh recovery inspection after uncertain publication. Real fixture tests cover SHA-1/SHA-256, packed refs, refusal cases and SIGKILL/no replay. Native import execution and presentation acceptance remain open; the latest attempt was blocked by the locked Mac. Keep ordinary desktop writes disabled. Authentication/SSH, broader branch compatibility, upstream setup and push remain unfinished; do not classify the full fetch workflow or M5B as complete or reuse download authorization for ref mutation.
 
 ### M5C Add separately reviewed individual and bulk push
 

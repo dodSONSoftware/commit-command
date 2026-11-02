@@ -223,8 +223,13 @@ it("prepares a branch download only from a completed observation with an OID and
                 expected_oid: oid,
                 observation_id: "observed",
               },
-              phase: "proposed",
-              artifact: null,
+              phase: "complete",
+              artifact: {
+                bundle_digest: "checksum",
+                bundle_bytes: 100,
+                object_count: 3,
+                object_bytes: 200,
+              },
               captured_at_ms: null,
               issue: null,
             },
@@ -269,9 +274,22 @@ it("prepares a branch download only from a completed observation with an OID and
     observation: "observed",
   });
   expect(
-    screen.getByText(/has not updated the repository/),
+    screen.getByText(/Downloading alone does not update/),
   ).toBeInTheDocument();
+  const importButton = screen.getByRole("button", {
+    name: "Review captured branch import",
+  });
+  fireEvent.click(importButton);
+  await vi.waitFor(() =>
+    expect(request).toHaveBeenCalledWith({
+      kind: "review_fetch_import",
+      workspace: "ws",
+      worktree: "repo",
+      capture: "capture",
+    }),
+  );
   rerender(<RemoteInspector {...props} enabled={false} />);
+  expect(importButton).toBeDisabled();
   expect(
     screen.getByRole("button", { name: "Review branch download" }),
   ).toBeDisabled();
@@ -280,6 +298,7 @@ it("prepares a branch download only from a completed observation with an OID and
       [
         "remote_observations",
         "review_fetch_capture",
+        "review_fetch_import",
         "fetch_captures",
       ].includes(r.kind),
     ),

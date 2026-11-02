@@ -97,6 +97,8 @@ impl ControlledWrites {
             recovery_reviews: BTreeMap::new(),
             #[cfg(feature = "write-test-support")]
             test_fault: None,
+            #[cfg(all(feature = "write-test-support", feature = "application-services"))]
+            import_fault: None,
         })
     }
     pub(super) fn entry(
@@ -402,5 +404,22 @@ impl ControlledWrites {
     #[cfg(feature = "write-test-support")]
     pub fn set_test_fault(&mut self, fault: TestFault) {
         self.test_fault = Some(fault);
+    }
+}
+
+impl ControlledWrites {
+    pub(super) fn ensure_fetch_import_resolved(
+        &mut self,
+        common: &str,
+        except: Option<&str>,
+    ) -> Result<()> {
+        let pending:bool=self.workspace.connection().query_row("SELECT EXISTS(SELECT 1 FROM state WHERE key LIKE 'fetch-import:%' AND json_extract(value,'$.value.plan.metadata.common_binding')=?1 AND (?2 IS NULL OR json_extract(value,'$.value.plan.id')<>?2) AND json_extract(value,'$.value.phase') IN ('importing_objects','publication_pending','reference_prepared','reference_updated','uncertain'))",params![common,except],|r|r.get(0))?;
+        if pending {
+            return Err(fail(
+                ErrorKind::Busy,
+                "Inspect interrupted fetch import before another repository write",
+            ));
+        }
+        Ok(())
     }
 }

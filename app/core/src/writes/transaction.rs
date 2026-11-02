@@ -216,6 +216,7 @@ impl ControlledWrites {
     ) -> Result<Proposal> {
         let entry = self.entry(workspace, worktree)?;
         let meta = entry.metadata;
+        self.ensure_fetch_import_resolved(&meta.common_binding, None)?;
         let (original, entries, branch, head) = policy::preflight(&meta, &self.options)?;
         let preference = match &request {
             WriteRequest::Commit { signing, .. } => *signing,
@@ -668,13 +669,20 @@ fn hook_command(
     }
     process::bounded_input(command, options, None)
 }
-fn promote_objects(dir: &Path, meta: &Metadata) -> Result<()> {
+pub(super) fn promote_loose_objects(
+    source: &Path,
+    meta: &Metadata,
+    options: &ReadOptions,
+    max_object_bytes: usize,
+) -> Result<()> {
+    let started = Instant::now();
     let destination = meta.common_dir.to_path()?.join("objects");
     let root = fs::symlink_metadata(&destination)?;
     if root.is_symlink() || !root.is_dir() {
         return Err(unsupported("Unsafe object storage"));
     }
-    for entry in fs::read_dir(object_dir(dir))? {
+    for entry in fs::read_dir(source)? {
+        options.check(started)?;
         let entry = entry?;
         let name = entry.file_name();
         let name = name
@@ -693,6 +701,7 @@ fn promote_objects(dir: &Path, meta: &Metadata) -> Result<()> {
             return Err(unsupported("Unsafe object fanout"));
         }
         for file in fs::read_dir(entry.path())? {
+            options.check(started)?;
             let file = file?;
             let name = file.file_name();
             let name = name
@@ -717,7 +726,7 @@ fn promote_objects(dir: &Path, meta: &Metadata) -> Result<()> {
             let temporary = target.join(format!(".gitfleet-object-{}", Uuid::new_v4()));
             store::write_new(
                 &temporary,
-                &inspection::file_bytes(&file.path(), 32 * 1024 * 1024)?,
+                &inspection::file_bytes(&file.path(), max_object_bytes)?,
             )?;
             // Publish an immutable object only after its complete bytes are durable.
             match fs::hard_link(&temporary, &path) {
@@ -938,6 +947,7 @@ impl ControlledWrites {
             File::open(op.metadata.common_dir.to_path()?)?,
             "Shared repository is write-locked",
         )?;
+        self.ensure_fetch_import_resolved(&op.metadata.common_binding, None)?;
         let result = self.execute_inner(&mut op);
         match result {
             Ok(()) => Ok(op.outcome()),
@@ -1147,7 +1157,12 @@ impl ControlledWrites {
         }));
         self.checkpoint(op, Phase::IndexLockWritten)?;
         self.revalidate(op, true)?;
-        promote_objects(&dir, &op.metadata)?;
+        promote_loose_objects(
+            &object_dir(&dir),
+            &op.metadata,
+            &self.options.process,
+            32 * 1024 * 1024,
+        )?;
         validate_objects(
             &op.metadata.root.to_path()?,
             &dir.join("reconciled.index"),
@@ -1601,6 +1616,7 @@ impl ControlledWrites {
             File::open(op.metadata.common_dir.to_path()?)?,
             "Shared repository is locked",
         )?;
+        self.ensure_fetch_import_resolved(&op.metadata.common_binding, None)?;
         // Recheck after the cross-process lock, before any managed-repository mutation.
         if self.recovery_view(&review.operation_id)?.fingerprint != review.fingerprint {
             return Err(fail(

@@ -1,0 +1,9 @@
+{
+  "status": "BLOCKED",
+  "reason": "CUA: The Mac is locked and automatic unlock could not unlock it.",
+  "native_assertions": 0,
+  "fixture_pids_sent_SIGTERM": [
+    85922
+  ],
+  "termination_is_not_native_close_acceptance": true
+}

@@ -37,6 +37,7 @@ function fake(writes = false) {
               workspaces: [fixtureWorkspace],
               active: "ws",
               recovery: [],
+              fetch_import_recovery: [],
             },
           };
         case "load_bulk_composer":

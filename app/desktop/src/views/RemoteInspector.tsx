@@ -308,7 +308,25 @@ export function RemoteInspector({
       {captures?.items.length === 0 && (
         <p>No recorded branch downloads for this repository.</p>
       )}
-      <FetchCaptureRecords items={captures?.items ?? []} />
+      <FetchCaptureRecords
+        items={captures?.items ?? []}
+        importDisabled={!enabled || busy}
+        onImport={(capture) => {
+          if (!enabled || busy) return;
+          void act(async () => {
+            await bridge.request({
+              kind: "review_fetch_import",
+              workspace,
+              worktree,
+              capture,
+            });
+          });
+        }}
+      />
+      <p>
+        Captured branch imports and interrupted publication recovery are listed
+        in Operation results.
+      </p>
       {captures?.next != null && (
         <button
           disabled={busy}

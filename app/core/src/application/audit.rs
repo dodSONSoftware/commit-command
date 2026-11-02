@@ -1,6 +1,6 @@
 //! Read-only projections of existing journals; history never restores execution authority.
 use super::*;
-use crate::remote::fetch::{FetchCapture, FetchCapturePhase};
+use crate::remote::fetch::{FetchCapture, FetchCapturePhase, FetchImport, FetchImportPhase};
 use crate::remote::observation::{Observation, ObservationPhase};
 use rusqlite::params;
 
@@ -13,6 +13,7 @@ pub enum OperationAuditKind {
     BatchCommit,
     RemoteObservation,
     FetchCapture,
+    FetchImport,
 }
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "snake_case")]
@@ -41,6 +42,7 @@ pub enum OperationAuditRecord {
     Batch(BatchView),
     RemoteObservation(Box<Observation>),
     FetchCapture(Box<FetchCapture>),
+    FetchImport(Box<FetchImport>),
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct OperationAuditEntry {
@@ -78,15 +80,21 @@ WITH sources AS (
          'fetch_capture', json_extract(value,'$.value.phase'), value,
          json_extract(value,'$.value.plan.worktree')
     FROM state WHERE key LIKE 'fetch-capture:%' AND json_extract(value,'$.value.plan.workspace')=?1
+  UNION ALL
+  SELECT 'import', substr(key,14), json_extract(value,'$.value.plan.created_at_ms'),
+         'fetch_import', json_extract(value,'$.value.phase'), value,
+         json_extract(value,'$.value.plan.worktree')
+    FROM state WHERE key LIKE 'fetch-import:%' AND json_extract(value,'$.value.plan.workspace')=?1
 ), classified AS (
   SELECT *, CASE
     WHEN source='local' AND phase IN ('proposed','approved') AND id IS NOT ?8 THEN 'interrupted'
     WHEN source='batch' AND (phase='executing' OR (phase='proposed' AND id IS NOT ?9)) THEN 'interrupted'
     WHEN source='remote' AND (phase='running' OR (phase='proposed' AND id IS NOT ?10)) THEN 'interrupted'
     WHEN source='fetch' AND (phase='running' OR (phase='proposed' AND id IS NOT ?11)) THEN 'interrupted'
+    WHEN source='import' AND phase='proposed' AND id IS NOT ?12 THEN 'interrupted'
     WHEN phase='complete' THEN 'complete'
     WHEN phase='blocked' THEN 'blocked'
-    WHEN phase IN ('cancelled','cancelled_before_publication') THEN 'cancelled'
+    WHEN phase IN ('cancelled','cancelled_before_publication','aborted') THEN 'cancelled'
     WHEN phase='interrupted' THEN 'interrupted'
     WHEN phase IN ('proposed','approved') THEN 'pending'
     ELSE 'needs_attention' END AS result
@@ -137,13 +145,15 @@ impl Application {
             // Scope by stored IDs so removed/unavailable checkouts remain inspectable.
             Uuid::parse_str(worktree).map_err(|_| invalid("Invalid audit worktree ID"))?;
         }
-        let (mut write, mut batch, mut remote, mut fetch) = (None, None, None, None);
+        let (mut write, mut batch, mut remote, mut fetch, mut import) =
+            (None, None, None, None, None);
         if let Some(pending) = self.pending.as_ref().filter(|p| self.review(&p.id).is_ok()) {
             match &pending.action {
                 review::Action::Write(p) => write = Some(p.operation_id.clone()),
                 review::Action::Batch(p) => batch = Some(p.id.clone()),
                 review::Action::RemoteObservation(p) => remote = Some(p.id.clone()),
                 review::Action::FetchCapture(p) => fetch = Some(p.transport.id.clone()),
+                review::Action::FetchImport(p) => import = Some(p.transport.id.clone()),
                 _ => {}
             }
         }
@@ -165,7 +175,8 @@ impl Application {
                     write,
                     batch,
                     remote,
-                    fetch
+                    fetch,
+                    import
                 ],
                 |r| {
                     Ok((
@@ -264,6 +275,19 @@ impl Application {
                         capture.phase = FetchCapturePhase::Interrupted;
                     }
                     OperationAuditRecord::FetchCapture(Box::new(capture))
+                }
+                "import" => {
+                    let mut item = self.writes.import_audit_detail(&payload)?;
+                    if item.plan.transport.id != id
+                        || item.plan.transport.workspace.0 != workspace
+                        || item.plan.transport.created_at_ms != created
+                    {
+                        return Err(invalid("Inconsistent import audit record"));
+                    }
+                    if result == OperationAuditResult::Interrupted {
+                        item.phase = FetchImportPhase::Interrupted;
+                    }
+                    OperationAuditRecord::FetchImport(Box::new(item))
                 }
                 _ => return Err(invalid("Unknown audit source")),
             };

@@ -41,3 +41,60 @@ pub struct FetchCapturePage {
     pub items: Vec<FetchCapture>,
     pub next: Option<usize>,
 }
+
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+pub struct FetchImportPlan {
+    #[serde(flatten)]
+    pub transport: ObservationPlan,
+    pub capture_id: String,
+    pub expected_oid: ObjectId,
+    pub bundle_digest: String,
+    pub bundle_bytes: u64,
+    pub tracking_ref: String,
+    pub expected_old: Option<ObjectId>,
+}
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum FetchImportPhase {
+    Proposed,
+    ImportingObjects,
+    PublicationPending,
+    ReferencePrepared,
+    ReferenceUpdated,
+    Complete,
+    Blocked,
+    Cancelled,
+    Interrupted,
+    Uncertain,
+    Aborted,
+    ObservedTarget,
+}
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum FetchReferenceStatus {
+    NotAttempted,
+    Updated,
+    MatchesTarget,
+    Unchanged,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+pub struct FetchImport {
+    pub plan: FetchImportPlan,
+    pub phase: FetchImportPhase,
+    pub objects_imported: bool,
+    pub reference_status: FetchReferenceStatus,
+    pub issue: Option<Issue>,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+pub struct FetchImportPage {
+    pub items: Vec<FetchImport>,
+    pub next: Option<usize>,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+pub struct FetchImportRecovery {
+    pub operation: FetchImport,
+    pub action: String,
+    pub actual_oid: Option<ObjectId>,
+    pub fingerprint: String,
+    pub explanation: String,
+}

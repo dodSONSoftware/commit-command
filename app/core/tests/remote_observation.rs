@@ -18,7 +18,25 @@ struct Test {
     options: Options,
 }
 fn setup(local: bool) -> Test {
+    setup_format(local, false)
+}
+fn setup_format(local: bool, sha256: bool) -> Test {
     let f = Fixture::new();
+    if sha256 {
+        fs::remove_dir_all(f.repo.join(".git")).unwrap();
+        f.git(&[
+            "-c",
+            "init.templateDir=",
+            "init",
+            "-q",
+            "-b",
+            "main",
+            "--object-format=sha256",
+        ]);
+        f.git(&["config", "user.name", "SHA256 fixture"]);
+        f.git(&["config", "user.email", "fixture@example.invalid"]);
+        f.git(&["config", "commit.gpgsign", "false"]);
+    }
     f.commit_file();
     let remote = f.root.join("remote.git");
     f.git(&[
@@ -27,6 +45,11 @@ fn setup(local: bool) -> Test {
         "init",
         "--bare",
         "-q",
+        if sha256 {
+            "--object-format=sha256"
+        } else {
+            "--object-format=sha1"
+        },
         remote.to_str().unwrap(),
     ]);
     f.git(&[
@@ -903,5 +926,546 @@ fn fetch_capture_refuses_authentication_redirects_and_cancels_a_proven_running_r
         let requests = fs::read_to_string(&server.marker).unwrap();
         assert!(!requests.contains("/forbidden"));
         assert!(!requests.contains("auth=true"));
+    }
+}
+
+fn downloaded(t: &mut Test) -> gitfleet_core::remote::fetch::FetchCapture {
+    let source = observed(t);
+    let r = fetch_review(t, &source.plan.id);
+    fetch_confirm(t, &r, Cancellation::default())
+}
+fn import_review(t: &mut Test, capture: &str) -> ReviewDisplay {
+    let Data::Review(r) = t
+        .app
+        .request(
+            t.app.epoch(),
+            Request::ReviewFetchImport {
+                workspace: t.workspace.clone(),
+                worktree: t.worktree.clone(),
+                capture: capture.into(),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    r
+}
+fn import_confirm(t: &mut Test, r: &ReviewDisplay) -> gitfleet_core::remote::fetch::FetchImport {
+    let (cap, _) = t.app.begin_confirmation(&r.id).unwrap();
+    serde_json::from_value(t.app.confirm(cap, true, Cancellation::default()).unwrap()).unwrap()
+}
+#[test]
+fn fetch_import_adds_exact_objects_and_one_tracking_ref_with_separate_authority() {
+    use gitfleet_core::remote::fetch::*;
+    let mut t = setup(true);
+    trust(&mut t);
+    let oid = advance_server(&t);
+    let capture = downloaded(&mut t);
+    assert_eq!(capture.phase, FetchCapturePhase::Complete);
+    let before = tree_bytes(&t.f.repo);
+    let remote = tree_bytes(&t.remote);
+    let r = import_review(&mut t, &capture.plan.transport.id);
+    assert!(r.summary.contains(&oid));
+    assert!(r
+        .summary
+        .contains(&capture.artifact.as_ref().unwrap().bundle_digest));
+    assert_eq!(before, tree_bytes(&t.f.repo));
+    let imported = import_confirm(&mut t, &r);
+    assert_eq!(
+        imported.phase,
+        FetchImportPhase::Complete,
+        "{:?}",
+        imported.issue
+    );
+    assert!(imported.objects_imported);
+    assert_eq!(imported.reference_status, FetchReferenceStatus::Updated);
+    assert_eq!(
+        String::from_utf8(t.f.git(&["rev-parse", "refs/remotes/origin/main"]))
+            .unwrap()
+            .trim(),
+        oid
+    );
+    t.f.git(&["cat-file", "-e", &oid]);
+    let mut after = tree_bytes(&t.f.repo);
+    after.retain(|p, _| {
+        !p.starts_with(".git/objects")
+            && !p.starts_with(".git/refs/remotes")
+            && !p.starts_with(".git/logs/refs/remotes")
+    });
+    let mut before = before;
+    before.retain(|p, _| !p.starts_with(".git/objects"));
+    assert_eq!(before, after);
+    assert_eq!(remote, tree_bytes(&t.remote));
+    assert_eq!(
+        fs::read_to_string(t.f.repo.join(".git/logs/refs/remotes/origin/main"))
+            .unwrap()
+            .lines()
+            .count(),
+        1
+    );
+    assert!(t.app.begin_confirmation(&r.id).is_err());
+    assert!(t
+        .app
+        .request(
+            t.app.epoch(),
+            Request::ReviewFetchImport {
+                workspace: t.workspace.clone(),
+                worktree: t.worktree.clone(),
+                capture: capture.plan.transport.id
+            }
+        )
+        .is_err());
+    let Data::OperationAudit(page) = t
+        .app
+        .request(
+            t.app.epoch(),
+            Request::OperationAudit {
+                workspace: t.workspace.clone(),
+                query: OperationAuditQuery {
+                    offset: 0,
+                    worktree: None,
+                    operation_kind: Some(OperationAuditKind::FetchImport),
+                    result: Some(OperationAuditResult::Complete),
+                    since_ms: None,
+                    until_ms: None,
+                },
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert_eq!(page.items.len(), 1);
+    assert_eq!(page.items[0].id, imported.plan.transport.id);
+}
+
+#[test]
+fn fetch_import_decline_cancel_tamper_config_and_ref_drift_fail_closed() {
+    use gitfleet_core::remote::fetch::*;
+    for mode in ["decline", "cancel", "tamper", "config", "ref", "symbolic"] {
+        let mut t = setup(true);
+        trust(&mut t);
+        advance_server(&t);
+        let capture = downloaded(&mut t);
+        let r = import_review(&mut t, &capture.plan.transport.id);
+        match mode {
+            "tamper" => {
+                fs::write(
+                    t.f.root
+                        .join("state/network")
+                        .join(&capture.plan.transport.id)
+                        .join("capture.bundle"),
+                    b"changed",
+                )
+                .unwrap();
+            }
+            "config" => {
+                t.f.git(&["config", "remote.origin.url", "/missing"]);
+            }
+            "ref" => {
+                t.f.git(&["update-ref", "refs/remotes/origin/main", "HEAD"]);
+            }
+            "symbolic" => {
+                t.f.git(&[
+                    "symbolic-ref",
+                    "refs/remotes/origin/main",
+                    "refs/heads/main",
+                ]);
+            }
+            _ => {}
+        }
+        let before = tree_bytes(&t.f.repo);
+        let (cap, _) = t.app.begin_confirmation(&r.id).unwrap();
+        let token = Cancellation::default();
+        if mode == "cancel" {
+            token.cancel();
+        }
+        let result = t.app.confirm(cap, mode != "decline", token);
+        if mode == "decline" {
+            assert_eq!(result.unwrap_err().kind, ErrorKind::Cancelled);
+        } else {
+            let value: FetchImport = serde_json::from_value(result.unwrap()).unwrap();
+            assert!(
+                matches!(
+                    value.phase,
+                    FetchImportPhase::Blocked | FetchImportPhase::Cancelled
+                ),
+                "{mode}: {value:?}"
+            );
+            assert!(!value.objects_imported);
+        }
+        assert_eq!(before, tree_bytes(&t.f.repo), "{mode}");
+        assert!(t.app.begin_confirmation(&r.id).is_err());
+    }
+}
+#[test]
+fn fetch_import_rejects_aliases_and_shared_lock_and_orphaned_authority() {
+    use std::os::unix::fs::symlink;
+    for mode in ["symbolic", "symlink", "case", "shared", "restart"] {
+        let mut t = setup(true);
+        trust(&mut t);
+        advance_server(&t);
+        let capture = downloaded(&mut t);
+        match mode {
+            "symbolic" => {
+                t.f.git(&[
+                    "symbolic-ref",
+                    "refs/remotes/origin/main",
+                    "refs/heads/main",
+                ]);
+            }
+            "symlink" => {
+                symlink(
+                    t.f.repo.join(".git/refs/heads"),
+                    t.f.repo.join(".git/refs/remotes"),
+                )
+                .unwrap();
+            }
+            "case" => {
+                fs::create_dir_all(t.f.repo.join(".git/refs/Remotes")).unwrap();
+            }
+            _ => {}
+        }
+        let before = tree_bytes(&t.f.repo);
+        let result = t.app.request(
+            t.app.epoch(),
+            Request::ReviewFetchImport {
+                workspace: t.workspace.clone(),
+                worktree: t.worktree.clone(),
+                capture: capture.plan.transport.id,
+            },
+        );
+        if ["symbolic", "symlink", "case"].contains(&mode) {
+            assert!(result.is_err(), "{mode}");
+        } else {
+            let Data::Review(r) = result.unwrap().data else {
+                panic!()
+            };
+            let (cap, _) = t.app.begin_confirmation(&r.id).unwrap();
+            if mode == "shared" {
+                let file = fs::File::open(t.f.repo.join(".git")).unwrap();
+                file.try_lock().unwrap();
+                assert_eq!(
+                    t.app
+                        .confirm(cap, true, Cancellation::default())
+                        .unwrap_err()
+                        .kind,
+                    ErrorKind::Busy
+                );
+                file.unlock().unwrap();
+            } else {
+                reopen(&mut t);
+                assert!(t.app.confirm(cap, true, Cancellation::default()).is_err());
+                let Data::FetchImports(page) = t
+                    .app
+                    .request(
+                        t.app.epoch(),
+                        Request::FetchImports {
+                            workspace: t.workspace.clone(),
+                            offset: 0,
+                        },
+                    )
+                    .unwrap()
+                    .data
+                else {
+                    panic!()
+                };
+                assert_eq!(
+                    page.items[0].phase,
+                    gitfleet_core::remote::fetch::FetchImportPhase::Interrupted
+                );
+            }
+        }
+        assert_eq!(before, tree_bytes(&t.f.repo), "{mode}");
+    }
+}
+#[cfg(feature = "write-test-support")]
+#[test]
+fn fetch_import_storage_failure_requires_fresh_observation_and_preserves_foreign_lock() {
+    use gitfleet_core::{remote::fetch::*, writes::TestFaultKind};
+    let mut t = setup(true);
+    fs::write(t.f.repo.join(".gitfleet-m2-fixture"), b"fixture").unwrap();
+    trust(&mut t);
+    advance_server(&t);
+    let capture = downloaded(&mut t);
+    let r = import_review(&mut t, &capture.plan.transport.id);
+    t.app.set_import_test_fault(
+        FetchImportPhase::ReferenceUpdated,
+        TestFaultKind::StorageFailure,
+    );
+    let result = import_confirm(&mut t, &r);
+    assert_eq!(result.phase, FetchImportPhase::Uncertain);
+    let oid = t.f.git(&["rev-parse", "refs/remotes/origin/main"]);
+    let before = tree_bytes(&t.f.repo);
+    let Data::Workspaces(list) = t
+        .app
+        .request(t.app.epoch(), Request::Workspaces {})
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert_eq!(list.fetch_import_recovery.len(), 1);
+    assert_eq!(
+        list.fetch_import_recovery[0].operation_id,
+        result.plan.transport.id
+    );
+    assert_eq!(
+        t.app
+            .request(
+                t.app.epoch(),
+                Request::ReviewFetchImport {
+                    workspace: t.workspace.clone(),
+                    worktree: t.worktree.clone(),
+                    capture: capture.plan.transport.id
+                }
+            )
+            .unwrap_err()
+            .kind,
+        ErrorKind::Busy
+    );
+
+    assert_eq!(
+        t.app
+            .request(
+                t.app.epoch(),
+                Request::Remove {
+                    workspace: t.workspace.clone()
+                }
+            )
+            .unwrap_err()
+            .kind,
+        ErrorKind::Busy
+    );
+    let Data::Review(r) = t
+        .app
+        .request(
+            t.app.epoch(),
+            Request::ReviewFetchImportRecovery {
+                workspace: t.workspace.clone(),
+                operation: result.plan.transport.id.clone(),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert!(r.summary.contains("observe_target"));
+    let lock = t.f.repo.join(".git/refs/remotes/origin/main.lock");
+    fs::write(&lock, b"foreign lock").unwrap();
+    let (cap, _) = t.app.begin_confirmation(&r.id).unwrap();
+    assert!(t.app.confirm(cap, true, Cancellation::default()).is_err());
+    assert_eq!(fs::read(&lock).unwrap(), b"foreign lock");
+    let Data::Review(r) = t
+        .app
+        .request(
+            t.app.epoch(),
+            Request::ReviewFetchImportRecovery {
+                workspace: t.workspace.clone(),
+                operation: result.plan.transport.id.clone(),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert!(r.summary.contains("manual"));
+    let (cap, _) = t.app.begin_confirmation(&r.id).unwrap();
+    assert!(t.app.confirm(cap, true, Cancellation::default()).is_err());
+    fs::remove_file(lock).unwrap();
+    let Data::Review(r) = t
+        .app
+        .request(
+            t.app.epoch(),
+            Request::ReviewFetchImportRecovery {
+                workspace: t.workspace.clone(),
+                operation: result.plan.transport.id,
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    let recovered = import_confirm(&mut t, &r);
+    assert_eq!(recovered.phase, FetchImportPhase::ObservedTarget);
+    assert_eq!(
+        recovered.reference_status,
+        FetchReferenceStatus::MatchesTarget
+    );
+    assert_eq!(before, tree_bytes(&t.f.repo));
+    assert_eq!(oid, t.f.git(&["rev-parse", "refs/remotes/origin/main"]));
+}
+#[cfg(feature = "write-test-support")]
+#[test]
+#[ignore = "subprocess-only disposable SIGKILL worker"]
+fn fetch_import_crash_worker() {
+    use gitfleet_core::{remote::fetch::FetchImportPhase, writes::TestFaultKind};
+    let Ok(marker) = std::env::var("GITFLEET_IMPORT_CRASH_MARKER") else {
+        return;
+    };
+    let phase: FetchImportPhase =
+        serde_json::from_str(&std::env::var("GITFLEET_IMPORT_CRASH_PHASE").unwrap()).unwrap();
+    let mut t = setup(true);
+    fs::write(t.f.repo.join(".gitfleet-m2-fixture"), b"fixture").unwrap();
+    trust(&mut t);
+    advance_server(&t);
+    let capture = downloaded(&mut t);
+    let r = import_review(&mut t, &capture.plan.transport.id);
+    fs::write(
+        marker,
+        serde_json::to_vec(&(t.f.root.clone(), t.workspace.clone(), t.worktree.clone())).unwrap(),
+    )
+    .unwrap();
+    t.app.set_import_test_fault(phase, TestFaultKind::Sigkill);
+    let result = import_confirm(&mut t, &r);
+    panic!("fault at {phase:?} did not kill worker: {result:?}");
+}
+#[cfg(feature = "write-test-support")]
+#[test]
+fn fetch_import_sigkill_before_and_after_publication_never_replays() {
+    use gitfleet_core::remote::fetch::*;
+    use std::os::unix::process::ExitStatusExt;
+    for phase in [
+        FetchImportPhase::ImportingObjects,
+        FetchImportPhase::ReferencePrepared,
+        FetchImportPhase::ReferenceUpdated,
+    ] {
+        let owner = Fixture::new();
+        let marker = owner.root.join("worker.json");
+        let output = std::process::Command::new(std::env::current_exe().unwrap())
+            .args([
+                "--exact",
+                "fetch_import_crash_worker",
+                "--ignored",
+                "--nocapture",
+            ])
+            .env("GITFLEET_IMPORT_CRASH_MARKER", &marker)
+            .env(
+                "GITFLEET_IMPORT_CRASH_PHASE",
+                serde_json::to_string(&phase).unwrap(),
+            )
+            .output()
+            .unwrap();
+        assert_eq!(
+            output.status.signal(),
+            Some(libc::SIGKILL),
+            "phase {phase:?}: stdout={} stderr={}",
+            String::from_utf8_lossy(&output.stdout),
+            String::from_utf8_lossy(&output.stderr)
+        );
+        let (root, workspace, worktree): (PathBuf, String, String) =
+            serde_json::from_slice(&fs::read(marker).unwrap()).unwrap();
+        let f = Fixture {
+            repo: root.join("repo"),
+            root: root.clone(),
+        };
+        let options = Options {
+            global_config: Some(root.join("global.config")),
+            signer_home: Some(root.join("home")),
+            remote: TransportOptions {
+                local_fixture_root: Some(root.clone()),
+                ca_file: None,
+            },
+            ..Options::default()
+        };
+        // EOF aborts a prepared child; wait for Git's owned lock cleanup before inspection.
+        let deadline = std::time::Instant::now() + std::time::Duration::from_secs(5);
+        while f.repo.join(".git/refs/remotes/origin/main.lock").exists() {
+            assert!(std::time::Instant::now() < deadline);
+            std::thread::sleep(std::time::Duration::from_millis(10));
+        }
+        let before = tree_bytes(&f.repo);
+        let app = Application::open(&root.join("state"), options.clone()).unwrap();
+        let mut t = Test {
+            f,
+            app,
+            workspace,
+            worktree,
+            remote: root.join("remote.git"),
+            options,
+        };
+        let Data::FetchImports(page) = t
+            .app
+            .request(
+                t.app.epoch(),
+                Request::FetchImports {
+                    workspace: t.workspace.clone(),
+                    offset: 0,
+                },
+            )
+            .unwrap()
+            .data
+        else {
+            panic!()
+        };
+        assert_eq!(page.items[0].phase, phase);
+        assert_eq!(before, tree_bytes(&t.f.repo));
+        let Data::Review(r) = t
+            .app
+            .request(
+                t.app.epoch(),
+                Request::ReviewFetchImportRecovery {
+                    workspace: t.workspace.clone(),
+                    operation: page.items[0].plan.transport.id.clone(),
+                },
+            )
+            .unwrap()
+            .data
+        else {
+            panic!()
+        };
+        let recovered = import_confirm(&mut t, &r);
+        assert_eq!(
+            recovered.phase,
+            if phase == FetchImportPhase::ReferenceUpdated {
+                FetchImportPhase::ObservedTarget
+            } else {
+                FetchImportPhase::Aborted
+            }
+        );
+        assert_eq!(before, tree_bytes(&t.f.repo));
+        reopen(&mut t);
+        assert_eq!(before, tree_bytes(&t.f.repo));
+    }
+}
+
+#[test]
+fn fetch_import_updates_packed_expected_old_for_sha1_and_sha256() {
+    use gitfleet_core::remote::fetch::*;
+    for sha256 in [false, true] {
+        let mut t = setup_format(true, sha256);
+        trust(&mut t);
+        let old = String::from_utf8(t.f.git(&["rev-parse", "HEAD"])).unwrap();
+        t.f.git(&["update-ref", "refs/remotes/origin/main", old.trim()]);
+        t.f.git(&["pack-refs", "--all"]);
+        assert!(!t.f.repo.join(".git/refs/remotes/origin/main").exists());
+        let next = advance_server(&t);
+        let capture = downloaded(&mut t);
+        let r = import_review(&mut t, &capture.plan.transport.id);
+        let result = import_confirm(&mut t, &r);
+        assert_eq!(
+            result.phase,
+            FetchImportPhase::Complete,
+            "{:?}",
+            result.issue
+        );
+        assert_eq!(result.plan.expected_old.unwrap().hex, old.trim());
+        assert_eq!(next.len(), if sha256 { 64 } else { 40 });
+        assert_eq!(
+            String::from_utf8(t.f.git(&["rev-parse", "refs/remotes/origin/main"]))
+                .unwrap()
+                .trim(),
+            next
+        );
+        assert_eq!(
+            String::from_utf8(t.f.git(&["rev-parse", "HEAD"])).unwrap(),
+            old
+        );
     }
 }

@@ -17,6 +17,8 @@ pub(super) enum Action {
     Batch(BatchRecord),
     RemoteObservation(Box<crate::remote::observation::ObservationPlan>),
     FetchCapture(Box<crate::remote::fetch::FetchCapturePlan>),
+    FetchImport(Box<crate::remote::fetch::FetchImportPlan>),
+    FetchImportRecovery(Box<crate::remote::fetch::FetchImportRecovery>),
     Recovery {
         workspace: WorkspaceId,
         review: RecoveryReview,
@@ -125,6 +127,12 @@ impl Application {
         let (title, summary, content) = match &action {
             Action::Write(p) => self.describe_write(p)?,
             Action::Batch(record) => self.describe_batch(record)?,
+            Action::FetchImport(plan)=>(
+                "Review captured branch import".into(),
+                format!("Import verified captured objects and update {}.\nExpected old value: {}\nNew captured commit: {}\nBundle SHA-256: {} ({} bytes)\nThis offline operation adds objects and writes this exact tracking ref and its reflog. It does not merge, change HEAD, index, working files, tags, upstreams or FETCH_HEAD. Hooks and network are disabled. Interrupted publication requires inspection, never automatic replay.",plan.tracking_ref,plan.expected_old.as_ref().map(|v|v.hex.as_str()).unwrap_or("absent"),plan.expected_oid.hex,plan.bundle_digest,plan.bundle_bytes),
+                serde_json::to_string_pretty(plan)?,
+            ),
+            Action::FetchImportRecovery(review)=>("Review captured branch recovery".into(),format!("Operation: {}\nRef: {}\nAction: {}\n{}",review.operation.plan.transport.id,review.operation.plan.tracking_ref,review.action,review.explanation),serde_json::to_string_pretty(review)?),
             Action::FetchCapture(plan) => (
                 "Review branch download for fetch".into(),
                 format!("Download {} on remote {} from {}.\nExpected observed commit: {}\nThe downloaded branch must still match that exact commit.\nObjects stay in isolated app storage. This does not update this checkout, tracking refs, index, working files, tags or upstreams. Import requires a separate review.\nHTTPS verifies certificates and hostnames and rejects redirects. No credentials/helpers, proxy, SSH commands, hooks or submodule recursion.\nLimits: 10,000 objects, 64 MiB uncompressed/bundle, 128 MiB polled artifact budget and the bounded process deadline.",plan.transport.reference,plan.transport.remote,plan.transport.destination,plan.expected_oid.hex),
@@ -232,6 +240,7 @@ impl Application {
                     .application_cancel_proposal(&proposal.operation_id)?,
                 Action::Batch(record) => self.cancel_batch_record(&mut record.clone())?,
                 Action::RemoteObservation(plan) => self.writes.cancel_observation(&plan.id)?,
+                Action::FetchImport(plan) => self.writes.cancel_import(&plan.transport.id)?,
                 Action::FetchCapture(plan) => self.writes.cancel_capture(&plan.transport.id)?,
                 _ => {}
             }
@@ -242,6 +251,22 @@ impl Application {
             ));
         }
         let result = match p.action {
+            Action::FetchImport(plan) => {
+                self.active(&plan.transport.workspace.0)?;
+                self.entry(&plan.transport.workspace.0, &plan.transport.worktree.0)?;
+                serde_json::to_value(self.writes.execute_import(&plan, cancellation)?)?
+            }
+            Action::FetchImportRecovery(review) => {
+                self.active(&review.operation.plan.transport.workspace.0)?;
+                self.entry(
+                    &review.operation.plan.transport.workspace.0,
+                    &review.operation.plan.transport.worktree.0,
+                )?;
+                if cancellation.is_cancelled() {
+                    return Err(Error::with_kind(ErrorKind::Cancelled, "Recovery cancelled"));
+                }
+                serde_json::to_value(self.writes.recover_import(&review)?)?
+            }
             Action::FetchCapture(plan) => {
                 self.active(&plan.transport.workspace.0)?;
                 self.entry(&plan.transport.workspace.0, &plan.transport.worktree.0)?;

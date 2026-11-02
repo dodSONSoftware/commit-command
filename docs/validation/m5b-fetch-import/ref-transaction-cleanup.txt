@@ -1,0 +1,12 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.77s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-60dcaffda66a7bf5)
+
+running 4 tests
+test process::reference::abort_deadline_test::unresponsive_abort_is_bounded_and_uncertain ... ok
+test process::reference::tests::prepared_cancellation_aborts_and_reaps_without_publication ... ok
+test process::reference::tests::prepared_guard_aborts_symbolic_ref_even_when_resolved_oid_matches ... ok
+test process::reference::tests::foreign_lock_is_never_removed ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 11 filtered out; finished in 0.71s
+

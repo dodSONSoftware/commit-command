@@ -1,0 +1,8 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-9477e837a431519a)
+
+running 1 test
+test fetch_import_sigkill_before_and_after_publication_never_replays ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 22 filtered out; finished in 20.05s
+

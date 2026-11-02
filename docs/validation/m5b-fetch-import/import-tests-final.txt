@@ -1,0 +1,15 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.92s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-9477e837a431519a)
+
+running 7 tests
+test fetch_import_crash_worker ... ignored, subprocess-only disposable SIGKILL worker
+test fetch_import_adds_exact_objects_and_one_tracking_ref_with_separate_authority ... ok
+test fetch_import_storage_failure_requires_fresh_observation_and_preserves_foreign_lock ... ok
+test fetch_import_updates_packed_expected_old_for_sha1_and_sha256 ... ok
+test fetch_import_sigkill_before_and_after_publication_never_replays ... ok
+test fetch_import_rejects_aliases_and_shared_lock_and_orphaned_authority ... ok
+test fetch_import_decline_cancel_tamper_config_and_ref_drift_fail_closed ... ok
+
+test result: ok. 6 passed; 0 failed; 1 ignored; 0 measured; 16 filtered out; finished in 27.71s
+

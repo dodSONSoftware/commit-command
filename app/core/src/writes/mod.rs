@@ -9,6 +9,8 @@ mod adapter;
 mod application;
 #[cfg(feature = "application-services")]
 mod fetch;
+#[cfg(feature = "application-services")]
+mod fetch_import;
 mod policy;
 #[cfg(feature = "application-services")]
 mod remote;
@@ -272,6 +274,8 @@ pub struct ControlledWrites {
     recovery_reviews: BTreeMap<String, RecoveryReview>,
     #[cfg(feature = "write-test-support")]
     test_fault: Option<TestFault>,
+    #[cfg(all(feature = "write-test-support", feature = "application-services"))]
+    import_fault: Option<(crate::remote::fetch::FetchImportPhase, TestFaultKind)>,
 }
 #[cfg(feature = "write-test-support")]
 #[derive(Debug, Clone)]

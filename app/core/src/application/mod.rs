@@ -102,6 +102,19 @@ pub enum Request {
         worktree: String,
         observation: String,
     },
+    ReviewFetchImport {
+        workspace: String,
+        worktree: String,
+        capture: String,
+    },
+    FetchImports {
+        workspace: String,
+        offset: usize,
+    },
+    ReviewFetchImportRecovery {
+        workspace: String,
+        operation: String,
+    },
     FetchCaptures {
         workspace: String,
         worktree: Option<String>,
@@ -197,6 +210,7 @@ pub struct WorkspaceList {
     pub workspaces: Vec<Workspace>,
     pub active: Option<String>,
     pub recovery: Vec<RecoveryNotice>,
+    pub fetch_import_recovery: Vec<FetchImportNotice>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct InventoryView {
@@ -229,6 +243,7 @@ pub enum Data {
     Remotes(crate::remote::Inspection),
     RemoteObservations(crate::remote::observation::ObservationPage),
     FetchCaptures(crate::remote::fetch::FetchCapturePage),
+    FetchImports(crate::remote::fetch::FetchImportPage),
     Workspaces(WorkspaceList),
     Inventory(InventoryView),
     Refreshed(Box<StoredWorktree>),
@@ -247,6 +262,12 @@ pub struct Response {
     pub version: u32,
     pub epoch: u64,
     pub data: Data,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+pub struct FetchImportNotice {
+    pub operation_id: String,
+    pub workspace_id: String,
+    pub worktree_id: String,
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct RecoveryNotice {
@@ -366,6 +387,9 @@ impl Application {
                     .writes
                     .application_cancel_proposal(&proposal.operation_id)?,
                 review::Action::Batch(mut record) => self.cancel_batch_record(&mut record)?,
+                review::Action::FetchImport(plan) => {
+                    self.writes.cancel_import(&plan.transport.id)?
+                }
                 review::Action::FetchCapture(plan) => {
                     self.writes.cancel_capture(&plan.transport.id)?
                 }
@@ -396,6 +420,14 @@ impl Application {
     pub fn reset_presentation(&mut self) -> Result<()> {
         self.invalidate()?;
         self.restart_monitor()
+    }
+    #[cfg(feature = "write-test-support")]
+    pub fn set_import_test_fault(
+        &mut self,
+        phase: crate::remote::fetch::FetchImportPhase,
+        kind: TestFaultKind,
+    ) {
+        self.writes.set_import_fault(phase, kind);
     }
     pub fn epoch(&self) -> u64 {
         self.epoch
@@ -513,6 +545,7 @@ impl Application {
                 workspaces: self.writes.workspace.list().to_vec(),
                 active: self.writes.workspace.active()?.map(|id| id.0),
                 recovery: self.writes.application_pending()?,
+                fetch_import_recovery: self.writes.import_notices()?,
             }),
             Request::Create { name, picker } => {
                 let path = self.directory(&picker)?;
@@ -613,6 +646,45 @@ impl Application {
                         return Err(error);
                     }
                 }
+            }
+            Request::ReviewFetchImport {
+                workspace,
+                worktree,
+                capture,
+            } => {
+                let entry = self.entry(&workspace, &worktree)?;
+                let id = self.active(&workspace)?;
+                self.abandon_review()?;
+                let plan = self
+                    .writes
+                    .propose_import(&id, &entry, &capture, &self.read_options)?;
+                match self.set_review(review::Action::FetchImport(Box::new(plan.clone()))) {
+                    Ok(display) => Data::Review(display),
+                    Err(error) => {
+                        self.writes.cancel_import(&plan.transport.id)?;
+                        return Err(error);
+                    }
+                }
+            }
+            Request::FetchImports { workspace, offset } => {
+                let id = self.active(&workspace)?;
+                let mut page = self.writes.imports(&id, offset)?;
+                for item in &mut page.items {
+                    if item.phase==crate::remote::fetch::FetchImportPhase::Proposed && !self.pending.as_ref().is_some_and(|p|matches!(&p.action,review::Action::FetchImport(plan) if plan.transport.id==item.plan.transport.id) && self.review(&p.id).is_ok()) {item.phase=crate::remote::fetch::FetchImportPhase::Interrupted;}
+                }
+                Data::FetchImports(page)
+            }
+            Request::ReviewFetchImportRecovery {
+                workspace,
+                operation,
+            } => {
+                let id = self.active(&workspace)?;
+                self.abandon_review()?;
+                let review = self.writes.inspect_import_recovery(&id, &operation)?;
+                self.entry(&workspace, &review.operation.plan.transport.worktree.0)?;
+                Data::Review(
+                    self.set_review(review::Action::FetchImportRecovery(Box::new(review)))?,
+                )
             }
             Request::ReviewFetchCapture {
                 workspace,

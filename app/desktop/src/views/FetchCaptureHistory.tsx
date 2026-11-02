@@ -2,7 +2,15 @@ import type { FetchCapture } from "../services/response.generated";
 import { bytes, pathText } from "../stores/model";
 const text = (value: string) =>
   bytes(Array.from(new TextEncoder().encode(value)));
-export function FetchCaptureRecords({ items }: { items: FetchCapture[] }) {
+export function FetchCaptureRecords({
+  items,
+  onImport,
+  importDisabled = false,
+}: {
+  items: FetchCapture[];
+  onImport?: (capture: string) => void;
+  importDisabled?: boolean;
+}) {
   return (
     <>
       {items.map((capture) => (
@@ -38,9 +46,17 @@ export function FetchCaptureRecords({ items }: { items: FetchCapture[] }) {
             </p>
           )}
           <p>
-            This download has not updated the repository or tracking refs.
-            Import requires a separate review.
+            Downloading alone does not update the repository or tracking refs.
+            Import requires a separate review; see its recorded result.
           </p>
+          {onImport && capture.phase === "complete" && capture.artifact && (
+            <button
+              disabled={importDisabled}
+              onClick={() => onImport(capture.plan.id)}
+            >
+              Review captured branch import
+            </button>
+          )}
           {capture.issue && (
             <p role="alert">
               {capture.issue.kind}: {text(capture.issue.message)}

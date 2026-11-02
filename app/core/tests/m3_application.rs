@@ -1432,7 +1432,7 @@ fn unified_audit_filters_real_local_batch_and_remote_records_without_mutation_or
                 assert_eq!(view.outcomes.len(), 1);
                 assert_eq!(view.record.phase, BatchPhase::Cancelled);
             }
-            OperationAuditRecord::FetchCapture(_) => {
+            OperationAuditRecord::FetchCapture(_) | OperationAuditRecord::FetchImport(_) => {
                 panic!("No fetch was prepared by this fixture")
             }
             OperationAuditRecord::RemoteObservation(record) => assert_eq!(

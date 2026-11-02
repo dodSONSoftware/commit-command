@@ -1,0 +1,19 @@
+    Checking gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+error: unneeded `return` statement
+   --> src/writes/fetch_import.rs:337:18
+    |
+337 |             _ => return Err(fail(ErrorKind::Storage, "Injected import storage failure")),
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#needless_return
+    = note: `-D clippy::needless-return` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::needless_return)]`
+help: remove `return`
+    |
+337 -             _ => return Err(fail(ErrorKind::Storage, "Injected import storage failure")),
+337 +             _ => Err(fail(ErrorKind::Storage, "Injected import storage failure")),
+    |
+
+error: could not compile `gitfleet-core` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `gitfleet-core` (lib test) due to 1 previous error

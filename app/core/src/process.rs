@@ -7,6 +7,10 @@ use std::process::{Command, Output, Stdio};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex, OnceLock};
 use std::time::{Duration, Instant};
+#[cfg(feature = "application-services")]
+mod reference;
+#[cfg(feature = "application-services")]
+pub(crate) use reference::transaction as reference_transaction;
 
 #[derive(Debug, Clone, Default)]
 pub struct Cancellation(Arc<AtomicBool>);

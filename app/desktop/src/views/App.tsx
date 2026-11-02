@@ -18,6 +18,7 @@ import type {
   NativePath,
   Commit as CommitDetail,
   RecoveryNotice,
+  FetchImportNotice,
 } from "../services/response.generated";
 import type { WriteRequest } from "../services/request.generated";
 import {
@@ -62,6 +63,8 @@ export function App({ bridge }: { bridge: Bridge }) {
   const [writeBusy, setWriteBusy] = useState(false);
   const [writesEnabled, setWritesEnabled] = useState(false);
   const [recovery, setRecovery] = useState<RecoveryNotice[]>([]);
+  const [importRecovery, setImportRecovery] = useState<FetchImportNotice[]>([]);
+  const recoveryNotices = [...recovery, ...importRecovery];
   const context = useRef<string | null>(null);
   const loaded = useRef(false);
   const polling = useRef(false);
@@ -152,6 +155,7 @@ export function App({ bridge }: { bridge: Bridge }) {
     );
     setWorkspaces(data.workspaces);
     setRecovery(data.recovery);
+    setImportRecovery(data.fetch_import_recovery);
     const ws = data.active ?? null;
     if (context.current !== ws) {
       loaded.current = false;
@@ -639,10 +643,10 @@ export function App({ bridge }: { bridge: Bridge }) {
           }}
         />
         <main className="content">
-          {recovery.length > 0 && (
+          {recoveryNotices.length > 0 && (
             <div className="recovery-alert" role="status">
               <strong>
-                Showing {recovery.length} recorded operation(s) needing
+                Showing {recoveryNotices.length} recorded operation(s) needing
                 attention
               </strong>
               <span>
@@ -655,7 +659,7 @@ export function App({ bridge }: { bridge: Bridge }) {
               >
                 Inspect operation results
               </button>
-              {recovery
+              {recoveryNotices
                 .filter((n) => n.workspace_id !== workspace)
                 .map((n) => (
                   <button

@@ -71,6 +71,22 @@ export type Request =
       worktree: string;
     }
   | {
+      capture: string;
+      kind: "review_fetch_import";
+      workspace: string;
+      worktree: string;
+    }
+  | {
+      kind: "fetch_imports";
+      offset: number;
+      workspace: string;
+    }
+  | {
+      kind: "review_fetch_import_recovery";
+      operation: string;
+      workspace: string;
+    }
+  | {
       kind: "fetch_captures";
       offset: number;
       workspace: string;
@@ -199,7 +215,8 @@ export type OperationAuditKind =
   | "commit"
   | "batch_commit"
   | "remote_observation"
-  | "fetch_capture";
+  | "fetch_capture"
+  | "fetch_import";
 export type OperationAuditResult =
   | "pending"
   | "complete"

@@ -2,10 +2,10 @@
 use super::*;
 use crate::remote::fetch::*;
 
-const OBJECT_BYTES: u64 = 64 * 1024 * 1024;
+pub(super) const OBJECT_BYTES: u64 = 64 * 1024 * 1024;
 const ARTIFACT_BYTES: u64 = 128 * 1024 * 1024;
 const OBJECT_COUNT: usize = 10_000;
-const CAPTURE_REF: &str = "refs/heads/gitfleet-fetch";
+pub(super) const CAPTURE_REF: &str = "refs/heads/gitfleet-fetch";
 
 #[derive(Serialize, Deserialize)]
 struct StoredCapture {
@@ -17,6 +17,9 @@ fn stale() -> Error {
     fail(ErrorKind::StaleReview, "Fetch download review is stale")
 }
 fn artifact_budget(root: &Path) -> Result<()> {
+    check_artifact_budget(root, ARTIFACT_BYTES, 1024)
+}
+pub(super) fn check_artifact_budget(root: &Path, max_bytes: u64, max_entries: usize) -> Result<()> {
     let mut directories = vec![root.to_path_buf()];
     let mut count = 0;
     let mut size = 0u64;
@@ -39,7 +42,7 @@ fn artifact_budget(root: &Path) -> Result<()> {
             } else {
                 return Err(unsupported("Unsafe fetch artifact type"));
             }
-            if count > 1024 || size > ARTIFACT_BYTES {
+            if count > max_entries || size > max_bytes {
                 return Err(fail(
                     ErrorKind::OutputLimit,
                     "Fetch artifact budget exceeded",
@@ -49,7 +52,7 @@ fn artifact_budget(root: &Path) -> Result<()> {
     }
     Ok(())
 }
-fn object_inventory(list: &[u8], format: &ObjectFormat) -> Result<(u32, u64)> {
+pub(super) fn object_inventory(list: &[u8], format: &ObjectFormat) -> Result<(u32, u64)> {
     let list = std::str::from_utf8(list)
         .map_err(|_| fail(ErrorKind::InvalidData, "Invalid captured object inventory"))?;
     let mut count = 0;
@@ -111,6 +114,22 @@ impl ControlledWrites {
             return Err(stale());
         }
         Ok(stored)
+    }
+    pub(super) fn completed_capture(
+        &mut self,
+        id: &str,
+        workspace: &WorkspaceId,
+        worktree: &WorktreeId,
+    ) -> Result<FetchCapture> {
+        let stored = self.capture(id)?;
+        if stored.value.plan.transport.workspace != *workspace
+            || stored.value.plan.transport.worktree != *worktree
+            || stored.value.phase != FetchCapturePhase::Complete
+            || stored.value.artifact.is_none()
+        {
+            return Err(stale());
+        }
+        Ok(stored.value)
     }
     pub(crate) fn propose_capture(
         &mut self,

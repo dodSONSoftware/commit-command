@@ -1,0 +1,10 @@
+{
+  "root": "/private/tmp/gitfleet-m3-native-5zxerugm",
+  "synthetic_import_ids": [
+    "dcd76ef4-9e46-45b6-b48e-0aaf0a5df9db",
+    "7b7cbf80-e74f-416a-a109-a772eb89f763"
+  ],
+  "real_imports": 0,
+  "real_captures": 0,
+  "purpose": "Native display/startup/default-gate acceptance only"
+}

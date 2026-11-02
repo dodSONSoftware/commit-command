@@ -51,6 +51,11 @@ export type Data =
       [k: string]: unknown;
     }
   | {
+      kind: "fetch_imports";
+      value: FetchImportPage;
+      [k: string]: unknown;
+    }
+  | {
       kind: "workspaces";
       value: WorkspaceList;
       [k: string]: unknown;
@@ -168,7 +173,8 @@ export type OperationAuditKind =
   | "commit"
   | "batch_commit"
   | "remote_observation"
-  | "fetch_capture";
+  | "fetch_capture"
+  | "fetch_import";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "OperationAuditRecord".
@@ -192,6 +198,11 @@ export type OperationAuditRecord =
   | {
       kind: "fetch_capture";
       value: FetchCapture;
+      [k: string]: unknown;
+    }
+  | {
+      kind: "fetch_import";
+      value: FetchImport;
       [k: string]: unknown;
     };
 /**
@@ -274,6 +285,29 @@ export type Transport =
  */
 export type FetchCapturePhase =
   "proposed" | "running" | "complete" | "blocked" | "cancelled" | "interrupted";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "FetchImportPhase".
+ */
+export type FetchImportPhase =
+  | "proposed"
+  | "importing_objects"
+  | "publication_pending"
+  | "reference_prepared"
+  | "reference_updated"
+  | "complete"
+  | "blocked"
+  | "cancelled"
+  | "interrupted"
+  | "uncertain"
+  | "aborted"
+  | "observed_target";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "FetchReferenceStatus".
+ */
+export type FetchReferenceStatus =
+  "not_attempted" | "updated" | "matches_target" | "unchanged";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "OperationAuditResult".
@@ -656,6 +690,45 @@ export interface FetchCapturePlan {
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "FetchImport".
+ */
+export interface FetchImport {
+  issue?: Issue | null;
+  objects_imported: boolean;
+  phase: FetchImportPhase;
+  plan: FetchImportPlan;
+  reference_status: FetchReferenceStatus;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "FetchImportPlan".
+ */
+export interface FetchImportPlan {
+  bundle_bytes: number;
+  bundle_digest: string;
+  capture_id: string;
+  config_digest: string;
+  created_at_ms: number;
+  destination: string;
+  expected_oid: ObjectId;
+  expected_old?: ObjectId | null;
+  generation: string;
+  id: string;
+  local_binding?: string | null;
+  local_target?: NativePath | null;
+  metadata: Metadata;
+  reference: string;
+  remote: string;
+  tools: ToolBinding[];
+  tracking_ref: string;
+  transport: Transport;
+  workspace: string;
+  worktree: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "AuditPage".
  */
 export interface AuditPage {
@@ -767,12 +840,32 @@ export interface FetchCapturePage {
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "FetchImportPage".
+ */
+export interface FetchImportPage {
+  items: FetchImport[];
+  next?: number | null;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "WorkspaceList".
  */
 export interface WorkspaceList {
   active?: string | null;
+  fetch_import_recovery: FetchImportNotice[];
   recovery: RecoveryNotice[];
   workspaces: Workspace[];
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "FetchImportNotice".
+ */
+export interface FetchImportNotice {
+  operation_id: string;
+  workspace_id: string;
+  worktree_id: string;
   [k: string]: unknown;
 }
 /**

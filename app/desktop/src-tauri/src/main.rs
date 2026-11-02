@@ -180,6 +180,8 @@ fn mutating_request(request: &Request) -> bool {
             | Request::ReviewBatch { .. }
             | Request::ReviewRemoteObservation { .. }
             | Request::ReviewFetchCapture { .. }
+            | Request::ReviewFetchImport { .. }
+            | Request::ReviewFetchImportRecovery { .. }
             | Request::Revoke { .. }
             | Request::HookPolicy { .. }
             | Request::Propose { .. }
@@ -860,6 +862,19 @@ mod tests {
             workspace: "w".into(),
             worktree: "t".into(),
             observation: "o".into()
+        }));
+        assert!(mutating_request(&Request::ReviewFetchImport {
+            workspace: "w".into(),
+            worktree: "t".into(),
+            capture: "c".into()
+        }));
+        assert!(mutating_request(&Request::ReviewFetchImportRecovery {
+            workspace: "w".into(),
+            operation: "i".into()
+        }));
+        assert!(!mutating_request(&Request::FetchImports {
+            workspace: "w".into(),
+            offset: 0
         }));
         assert!(!mutating_request(&Request::FetchCaptures {
             workspace: "w".into(),

@@ -1,0 +1,31 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.36s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-9477e837a431519a)
+
+running 23 tests
+test fetch_import_crash_worker ... ignored, subprocess-only disposable SIGKILL worker
+test certificate_source_drift_requires_new_review_before_any_request ... ok
+test authentication_failure_never_uses_a_configured_helper_or_retains_raw_server_text ... ok
+test fetch_capture_rejects_missing_or_absent_sources_and_loses_authority_on_restart ... ok
+test fetch_capture_requires_fresh_native_authority_and_produces_exact_verified_bundle_without_managed_mutation ... ok
+test decline_cancellation_and_configuration_drift_never_contact_a_remote ... ok
+test fetch_capture_decline_precancel_and_configuration_drift_cannot_import_or_contact_a_server ... ok
+test fetch_capture_downloads_real_objects_over_verified_https_with_managed_helpers_isolated ... ok
+test fetch_capture_detects_remote_branch_drift_without_importing_downloaded_objects ... ok
+test missing_remote_branch_is_observed_absent_without_creating_a_destination ... ok
+test restart_exposes_an_orphaned_review_but_never_restores_authority ... ok
+test untrusted_or_ordinary_local_destinations_never_gain_network_authority ... ok
+test observation_needs_independent_native_authority_and_changes_neither_repository ... ok
+test verified_https_observation_ignores_managed_helpers_proxies_and_unsafe_tls_settings ... ok
+test https_requires_a_valid_certificate_hostname_and_refuses_redirects ... ok
+test running_https_observation_is_cancelled_after_the_actual_request_starts ... ok
+test fetch_import_storage_failure_requires_fresh_observation_and_preserves_foreign_lock ... ok
+test fetch_import_adds_exact_objects_and_one_tracking_ref_with_separate_authority ... ok
+test fetch_import_updates_packed_expected_old_for_sha1_and_sha256 ... ok
+test fetch_capture_refuses_authentication_redirects_and_cancels_a_proven_running_request ... ok
+test fetch_import_sigkill_before_and_after_publication_never_replays ... ok
+test fetch_import_rejects_aliases_and_shared_lock_and_orphaned_authority ... ok
+test fetch_import_decline_cancel_tamper_config_and_ref_drift_fail_closed ... ok
+
+test result: ok. 22 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 38.10s
+

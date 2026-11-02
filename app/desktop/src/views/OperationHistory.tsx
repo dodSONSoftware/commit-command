@@ -8,6 +8,7 @@ import type {
 } from "../services/response.generated";
 import { bytes, pathText, repoName } from "../stores/model";
 import { ObservationRecords } from "./ObservationHistory";
+import { FetchImportRecords } from "./FetchImportHistory";
 import { FetchCaptureRecords } from "./FetchCaptureHistory";
 
 const kinds = [
@@ -17,9 +18,14 @@ const kinds = [
   "batch_commit",
   "remote_observation",
   "fetch_capture",
+  "fetch_import",
 ] as const;
 const operationName = (kind: string) =>
-  kind === "fetch_capture" ? "branch download" : kind.replaceAll("_", " ");
+  kind === "fetch_capture"
+    ? "branch download"
+    : kind === "fetch_import"
+      ? "captured branch import"
+      : kind.replaceAll("_", " ");
 const results = [
   "pending",
   "complete",
@@ -97,8 +103,8 @@ export function OperationHistory({
           <h1>Operation results</h1>
           <p>
             Local Git operations, commit batches, remote observations and branch
-            downloads in one recorded chronology. Reading history cannot repeat
-            an operation or contact a server.
+            downloads and imports in one recorded chronology. Reading history
+            cannot repeat an operation or contact a server.
           </p>
         </div>
         <button
@@ -229,6 +235,21 @@ export function OperationHistory({
             )}
             {item.record.kind === "fetch_capture" && (
               <FetchCaptureRecords items={[item.record.value]} />
+            )}
+            {item.record.kind === "fetch_import" && (
+              <FetchImportRecords
+                items={[item.record.value]}
+                busy={busy}
+                onRecover={(operation) =>
+                  void act(async () => {
+                    await bridge.request({
+                      kind: "review_fetch_import_recovery",
+                      workspace,
+                      operation,
+                    });
+                  })
+                }
+              />
             )}
             {item.record.kind === "batch" && (
               <article>

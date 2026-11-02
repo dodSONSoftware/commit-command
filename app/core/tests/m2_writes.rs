@@ -1489,3 +1489,50 @@ fn preparatory_hooks_can_read_selected_private_blobs_and_rejected_adds_stay_priv
     assert!(!out.published);
     assert_eq!(before, tree_bytes(&t.f.repo.join(".git/objects")));
 }
+
+#[test]
+fn unresolved_fetch_import_blocks_new_and_already_approved_local_writes_in_every_feature_build() {
+    let t = M2::new();
+    fs::write(t.f.repo.join("file.txt"), b"approved\n").unwrap();
+    let mut service = t.service();
+    t.trust(&mut service);
+    let request = t.request(
+        &[("file.txt", ContentSource::WorkingTree)],
+        HookPolicy::Execute,
+    );
+    let proposal = service
+        .propose(&t.workspace, &t.worktree, request.clone())
+        .unwrap();
+    let approval = service.approve(&proposal).unwrap();
+    let metadata = service
+        .inspect_trust(&t.workspace, &t.worktree)
+        .unwrap()
+        .metadata;
+    // Synthetic interrupted journal; no import is executed by this fixture.
+    let db = rusqlite::Connection::open(t.state.join("state.db")).unwrap();
+    let record = serde_json::json!({"value":{"plan":{"metadata":{"common_binding":metadata.common_binding}},"phase":"uncertain"}});
+    db.execute(
+        "INSERT INTO state(key,value) VALUES('fetch-import:test-interruption',?1)",
+        [record.to_string()],
+    )
+    .unwrap();
+    let before = tree_bytes(&t.f.repo);
+    assert_eq!(
+        service
+            .propose(&t.workspace, &t.worktree, request)
+            .unwrap_err()
+            .kind,
+        ErrorKind::Busy
+    );
+    assert_eq!(
+        service.execute(&approval).unwrap_err().kind,
+        ErrorKind::Busy
+    );
+    assert_eq!(before, tree_bytes(&t.f.repo));
+    db.execute(
+        "DELETE FROM state WHERE key='fetch-import:test-interruption'",
+        [],
+    )
+    .unwrap();
+    assert_eq!(service.execute(&approval).unwrap().phase, Phase::Complete);
+}
