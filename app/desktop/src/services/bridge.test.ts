@@ -97,3 +97,21 @@ it("cancels the earliest outstanding Core job instead of a later queued backgrou
   pending.get("job-2")!(result);
   await Promise.all([first, second]);
 });
+
+it("observes native completion revisions even when a fast operation is already idle", async () => {
+  vi.mocked(invoke)
+    .mockResolvedValueOnce({ state: "idle", response: { revision: 0 } })
+    .mockResolvedValueOnce({ state: "idle", response: { revision: 2 } })
+    .mockResolvedValueOnce({ state: "running", response: { revision: 2 } })
+    .mockResolvedValueOnce({ state: "idle", response: { revision: -1 } });
+  const bridge = new NativeBridge();
+  expect(await bridge.writeStatus()).toBe(false);
+  expect(bridge.writeRevision).toBe(0);
+  expect(await bridge.writeStatus()).toBe(false);
+  expect(bridge.writeRevision).toBe(2);
+  expect(await bridge.writeStatus()).toBe(true);
+  await expect(bridge.writeStatus()).rejects.toThrow(
+    "Invalid native completion revision",
+  );
+  expect(bridge.writeRevision).toBe(2);
+});

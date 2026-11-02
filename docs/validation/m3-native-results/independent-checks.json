@@ -1,0 +1,12 @@
+{
+  "engine/plugins/audio_unchanged": true,
+  "documentation_unchanged": true,
+  "engine_one_commit": true,
+  "engine_exact_message": true,
+  "engine_working_files_preserved": true,
+  "tooling_one_commit": true,
+  "tooling_exact_message": true,
+  "tooling_working_files_preserved": true,
+  "engine_exact_index_content": true,
+  "engine_index_unchanged": true
+}

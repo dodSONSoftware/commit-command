@@ -1,0 +1,10 @@
+{
+  "base": "46175b8",
+  "changes": "native result refresh",
+  "features": [
+    "custom-protocol"
+  ],
+  "sha256": "cd193a751e64fe8f56e168e4019def8b9307625191c211299a2ebb92a5e2d618",
+  "write_gate_native_retest": "disabled on already trusted fixture",
+  "read_only_repository_preservation": true
+}

@@ -7,7 +7,7 @@ GitFleet should be completed by preserving its existing Rust services, closing M
 Execution checkpoint: **resumed at the user's request**. Foreground Cancel, close
 during a running hook, forced interruption/guarded abort and serialized background
 polling now have current native evidence; see the
-[latest report](reports/M3_POLLING_2026-11-02.md). Continue remaining
+[latest report](reports/M3_NATIVE_RESULTS_2026-11-02.md). Continue remaining
 native acceptance and unfinished packages. No push or ordinary-write default change.
 
 ## Completion scope and governing contracts

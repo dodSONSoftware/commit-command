@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { value, type Bridge } from "../services/bridge";
 import type {
   Inspection,
@@ -14,7 +14,9 @@ export function RemoteInspector({
   busy,
   act,
   enabled = false,
+  revision,
 }: {
+  revision?: number;
   bridge: Bridge;
   workspace: string;
   worktree: string;
@@ -28,16 +30,32 @@ export function RemoteInspector({
   const [observations, setObservations] = useState<ObservationPage | null>(
     null,
   );
+  const readPage = useCallback(
+    async (offset = 0) =>
+      value(
+        await bridge.request({
+          kind: "remote_observations",
+          workspace,
+          worktree,
+          offset,
+        }),
+        "remote_observations",
+      ),
+    [bridge, workspace, worktree],
+  );
+  useEffect(() => {
+    if (revision == null) return;
+    let live = true;
+    void act(async () => {
+      const page = await readPage();
+      if (live) setObservations(page);
+    });
+    return () => {
+      live = false;
+    };
+  }, [revision, readPage, act]);
   async function refresh(offset = 0) {
-    const page = value(
-      await bridge.request({
-        kind: "remote_observations",
-        workspace,
-        worktree,
-        offset,
-      }),
-      "remote_observations",
-    );
+    const page = await readPage(offset);
     setObservations((previous) =>
       offset && previous
         ? { items: [...previous.items, ...page.items], next: page.next }

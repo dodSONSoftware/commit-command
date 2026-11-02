@@ -4,6 +4,7 @@ import type { Response } from "./response.generated";
 export type Payload = Response["data"];
 export interface Bridge {
   epoch: number;
+  writeRevision?: number;
   capabilities(): Promise<{ writes_enabled: boolean }>;
   writeStatus(): Promise<boolean>;
   request(request: Request): Promise<Payload>;
@@ -17,14 +18,22 @@ interface Job {
 }
 export class NativeBridge implements Bridge {
   epoch = 0;
+  writeRevision = 0;
   capabilities() {
     return invoke<{ writes_enabled: boolean }>("desktop_capabilities");
   }
   async writeStatus() {
-    return (
-      (await invoke<Job>("job_status", { job: "native-write" })).state ===
-      "running"
-    );
+    const status = await invoke<{
+      state: string;
+      response?: { revision: number } | null;
+    }>("job_status", { job: "native-write" });
+    if (status.response) {
+      const revision = status.response.revision;
+      if (!Number.isSafeInteger(revision) || revision < 0)
+        throw new Error("Invalid native completion revision");
+      this.writeRevision = revision;
+    }
+    return status.state === "running";
   }
   private pending: string[] = [];
   async request(request: Request): Promise<Payload> {

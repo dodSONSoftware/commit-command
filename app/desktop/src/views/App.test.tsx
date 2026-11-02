@@ -682,3 +682,76 @@ it("polls one refresh at a time and pauses repository reads during native writes
     screen.getByRole("button", { name: "Cancel current operation" }),
   ).toBeDisabled();
 });
+
+it("refreshes durable bulk results after a fast native completion without replaying work", async () => {
+  vi.useFakeTimers({ toFake: ["setInterval", "clearInterval"] });
+  const { bridge, requests } = fake(true);
+  const original = bridge.request;
+  let completed = false;
+  bridge.writeRevision = 0;
+  bridge.writeStatus = async () => {
+    bridge.writeRevision = completed ? 1 : 0;
+    return false;
+  };
+  bridge.request = async (r) => {
+    if (r.kind === "batches") {
+      requests.push(r);
+      return {
+        kind: "batches",
+        value: {
+          items: [
+            {
+              record: {
+                version: 1,
+                id: "fast-native-batch",
+                workspace: "ws",
+                created_at_ms: 0,
+                phase: completed ? "complete" : "proposed",
+                issue: null,
+                items: [
+                  {
+                    worktree: "parent",
+                    path: { encoding: "utf8", value: "/parent" },
+                    dependencies: [],
+                    operation: "op",
+                    issue: null,
+                  },
+                ],
+              },
+              outcomes: [
+                {
+                  operation_id: "op",
+                  phase: completed ? "complete" : "proposed",
+                  published: completed,
+                  index_reconciled: completed,
+                  post_processing: [],
+                },
+              ],
+            },
+          ],
+          next: null,
+        },
+      };
+    }
+    return original(r);
+  };
+  render(<App bridge={bridge} />);
+  await screen.findByRole("checkbox", { name: "Select parent" });
+  await userEvent.click(screen.getByRole("button", { name: "Bulk Commit" }));
+  await screen.findByRole("heading", { name: /^proposed ·/ });
+  completed = true;
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(3000);
+  });
+  await screen.findByRole("heading", { name: /^complete ·/ });
+  expect(
+    screen.getByRole("button", {
+      name: "Select unfinished worktrees for fresh review",
+    }),
+  ).toBeDisabled();
+  expect(
+    requests.some((r) =>
+      ["review_batch", "propose", "review_trust"].includes(r.kind),
+    ),
+  ).toBe(false);
+});

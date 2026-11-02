@@ -48,6 +48,7 @@ struct Host {
     dialog: std::sync::atomic::AtomicBool,
     generation: std::sync::atomic::AtomicU64,
     reset: std::sync::atomic::AtomicBool,
+    completed: std::sync::atomic::AtomicU64,
 }
 enum Task {
     Request {
@@ -273,7 +274,9 @@ fn job_status<R: tauri::Runtime>(
                 "idle"
             }
             .into(),
-            response: None,
+            response: Some(
+                json!({"revision": state.completed.load(std::sync::atomic::Ordering::Acquire)}),
+            ),
             error: None,
         });
     }
@@ -459,6 +462,9 @@ async fn review_confirm<R: tauri::Runtime>(
     .await
     .map_err(|_| "Execution response unavailable".to_owned())?;
     *lock(&state.active)? = None;
+    state
+        .completed
+        .fetch_add(1, std::sync::atomic::Ordering::Release);
     result
 }
 #[tauri::command]
@@ -606,7 +612,10 @@ fn worker(mut core: Application, rx: mpsc::Receiver<Task>, app: tauri::AppHandle
                 let _ = reply.send(result);
             }
             Ok(Task::CancelReview(id)) => {
-                let _ = core.cancel_review(&id);
+                if core.cancel_review(&id).is_ok() {
+                    host.completed
+                        .fetch_add(1, std::sync::atomic::Ordering::Release);
+                }
             }
             Ok(Task::SaveWindowPlacement(placement)) => {
                 if let Err(error) = core.save_window_placement(placement) {
@@ -658,6 +667,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         dialog: std::sync::atomic::AtomicBool::new(false),
         generation: std::sync::atomic::AtomicU64::new(1),
         reset: std::sync::atomic::AtomicBool::new(false),
+        completed: std::sync::atomic::AtomicU64::new(0),
     });
     let setup_host = host.clone();
     tauri::Builder::default()
@@ -774,6 +784,7 @@ mod tests {
                 dialog: std::sync::atomic::AtomicBool::new(false),
                 generation: std::sync::atomic::AtomicU64::new(1),
                 reset: std::sync::atomic::AtomicBool::new(false),
+                completed: std::sync::atomic::AtomicU64::new(0),
             }),
             rx,
         )
@@ -894,7 +905,7 @@ mod tests {
     fn actual_generated_command_acl_separates_main_review_and_unprivileged_views() {
         let (host, rx) = host();
         let app = tauri::test::mock_builder()
-            .manage(host)
+            .manage(host.clone())
             .invoke_handler(tauri::generate_handler![
                 desktop_capabilities,
                 dispatch,
@@ -921,6 +932,15 @@ mod tests {
         )
         .build()
         .unwrap();
+        let idle = invoke(&main, "job_status", json!({"job":"native-write"})).unwrap();
+        assert_eq!(idle["state"], "idle");
+        assert_eq!(idle["response"]["revision"], 0);
+        host.completed
+            .store(2, std::sync::atomic::Ordering::Release);
+        let completed = invoke(&main, "job_status", json!({"job":"native-write"})).unwrap();
+        assert_eq!(completed["state"], "idle");
+        assert_eq!(completed["response"]["revision"], 2);
+        assert!(invoke(&review, "job_status", json!({"job":"native-write"})).is_err());
         let caps = invoke(&main, "desktop_capabilities", json!({})).unwrap();
         assert_eq!(caps["writes_enabled"], cfg!(feature = "desktop-writes"));
         let denied = invoke(

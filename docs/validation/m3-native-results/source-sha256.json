@@ -1,0 +1,9 @@
+{
+  "app/desktop/src-tauri/src/main.rs": "83d311ab6df07222cb90702e25732e08071519fe11f9080eb5634af174ec340b",
+  "app/desktop/src/services/bridge.ts": "04cacd19ea680b150cf4e9bc010c45e01d7bacd803a397f5055a991bd155f72a",
+  "app/desktop/src/services/bridge.test.ts": "352cdd3d013fc37c50937617c423db9aee40ed697e2fe04cb9e8d0dcd71ed021",
+  "app/desktop/src/views/App.tsx": "a24d874b5bc2c4d400a425588294286e4a0ffdd024b2165fae56c0ff4f7bdc5b",
+  "app/desktop/src/views/App.test.tsx": "8f28683c72c0ecfa61a95252c09aa6be11d88e1041261e80fb1bb684b39d4a72",
+  "app/desktop/src/views/BulkCommit.tsx": "78755521138a36bb50f6947b9f4bb2ef74fffeeab8c9e1368b751ffa00b86758",
+  "app/desktop/src/views/RemoteInspector.tsx": "d4bbe5db686edddf0cffd86708aa1992f0265e2557190e8b408e56f78f9bc21d"
+}

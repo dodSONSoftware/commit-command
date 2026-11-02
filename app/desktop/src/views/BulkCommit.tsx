@@ -1,4 +1,10 @@
-import { useState, type Dispatch, type SetStateAction } from "react";
+import {
+  useCallback,
+  useEffect,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { value, type Bridge } from "../services/bridge";
 import type { BatchSelection } from "../services/request.generated";
 import type {
@@ -32,7 +38,9 @@ export function BulkCommit({
   enabled,
   busy,
   act,
+  revision,
 }: {
+  revision?: number;
   bridge: Bridge;
   workspace: string;
   entries: StoredWorktree[];
@@ -63,11 +71,27 @@ export function BulkCommit({
       },
     }));
   }
+  const readPage = useCallback(
+    async (offset = 0) =>
+      value(
+        await bridge.request({ kind: "batches", workspace, offset }),
+        "batches",
+      ),
+    [bridge, workspace],
+  );
+  useEffect(() => {
+    if (revision == null) return;
+    let live = true;
+    void act(async () => {
+      const page = await readPage();
+      if (live) setResults(page);
+    });
+    return () => {
+      live = false;
+    };
+  }, [revision, readPage, act]);
   async function refresh(offset = 0) {
-    const page = value(
-      await bridge.request({ kind: "batches", workspace, offset }),
-      "batches",
-    );
+    const page = await readPage(offset);
     setResults((current) =>
       offset && current
         ? { items: [...current.items, ...page.items], next: page.next }
@@ -274,7 +298,7 @@ export function BulkCommit({
       </form>
       <h2>Durable batch results</h2>
       <p>
-        Refresh after the native operation finishes. Closing a review or
+        Results refresh after native operations finish. Closing a review or
         restarting never resumes a batch automatically.
       </p>
       {results?.items.length === 0 && (
@@ -315,7 +339,12 @@ export function BulkCommit({
             disabled={
               busy ||
               record.phase === "proposed" ||
-              record.phase === "executing"
+              record.phase === "executing" ||
+              record.items.every((item) =>
+                outcomes.some(
+                  (o) => o.operation_id === item.operation && o.published,
+                ),
+              )
             }
             onClick={() => {
               const unfinished = record.items

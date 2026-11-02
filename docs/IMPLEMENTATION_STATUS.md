@@ -4,7 +4,9 @@ Current execution follow-up (November 2, 2026): execution resumed at the user's
 request. [Foreground cancellation](reports/M3_FOREGROUND_CANCEL_2026-11-02.md),
 [native close/interruption/recovery](reports/M3_NATIVE_LIFECYCLE_2026-11-02.md) and
 [serialized polling](reports/M3_POLLING_2026-11-02.md) now have current automated
-and native evidence. Latest desktop gate: 31 renderer tests and eight native host
+and native evidence. [Native durable results](reports/M3_NATIVE_RESULTS_2026-11-02.md) also refresh
+after fast operations; native bulk publication/decline/restart now has independent
+Git evidence. Latest desktop gate: 33 renderer tests and eight native host
 tests per feature configuration, all static/build checks passing. M3 remains
 partial and ordinary desktop writes remain disabled.
 

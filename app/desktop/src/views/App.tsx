@@ -71,6 +71,8 @@ export function App({ bridge }: { bridge: Bridge }) {
   const context = useRef<string | null>(null);
   const loaded = useRef(false);
   const polling = useRef(false);
+  const seenWriteRevision = useRef(0);
+  const [resultsRevision, setResultsRevision] = useState(0);
   const latest = useRef(nav);
   const latestBulk = useRef(bulkComposer);
   useEffect(() => {
@@ -182,7 +184,15 @@ export function App({ bridge }: { bridge: Bridge }) {
           setWriteBusy(running);
           // The Core owner is occupied until the write settles. Do not queue reads.
           if (running) return;
-          await inventory(workspace);
+          const revision = bridge.writeRevision ?? 0;
+          if (revision !== seenWriteRevision.current) {
+            await load();
+            if (!live || context.current !== workspace) return;
+            seenWriteRevision.current = revision;
+            setResultsRevision((current) => current + 1);
+          } else {
+            await inventory(workspace);
+          }
           if (!live || context.current !== workspace) return;
           if (writesEnabled) {
             const data = await bridge.request({
@@ -204,7 +214,7 @@ export function App({ bridge }: { bridge: Bridge }) {
       live = false;
       clearInterval(id);
     };
-  }, [workspace, busy, inventory, bridge, writesEnabled]);
+  }, [workspace, busy, inventory, bridge, writesEnabled, load]);
   useEffect(() => {
     if (!workspace || !loaded.current) return;
     const id = setTimeout(() => {
@@ -306,6 +316,25 @@ export function App({ bridge }: { bridge: Bridge }) {
       setAuditApplied(query);
     }
   }
+  useEffect(() => {
+    if (!resultsRevision || !showOperations || !workspace || !auditApplied)
+      return;
+    let live = true;
+    void act(async () => {
+      const data = value(
+        await bridge.request({
+          kind: "audit",
+          workspace,
+          query: { ...auditApplied, offset: 0 },
+        }),
+        "audit",
+      );
+      if (live && context.current === workspace) setOperations(data);
+    });
+    return () => {
+      live = false;
+    };
+  }, [resultsRevision, showOperations, workspace, auditApplied, bridge, act]);
   const visible = filtered(entries, nav.filter, attention, nav.sort);
   const counts = entries.reduce(
     (s, e) => ({
@@ -646,6 +675,7 @@ export function App({ bridge }: { bridge: Bridge }) {
           )}
           {showBulk && workspace ? (
             <BulkCommit
+              revision={resultsRevision}
               key={workspace}
               bridge={bridge}
               workspace={workspace}
@@ -1153,6 +1183,7 @@ export function App({ bridge }: { bridge: Bridge }) {
               trust={selectedTrust}
               inspectTrust={refreshTrust}
               trustRepo={() => trustSelected([entry.id])}
+              resultsRevision={resultsRevision}
               writeEnabled={writesEnabled}
             />
           ) : (
@@ -1288,6 +1319,7 @@ function Repository({
   inspectTrust,
   trustRepo,
   writeEnabled,
+  resultsRevision,
 }: {
   bridge: Bridge;
   workspace: string;
@@ -1301,6 +1333,7 @@ function Repository({
   inspectTrust: () => Promise<void>;
   trustRepo: () => Promise<void>;
   writeEnabled: boolean;
+  resultsRevision: number;
 }) {
   const tab = nav.tabs.find((t) => t.worktree === entry.id)!;
   const [historyRefresh, setHistoryRefresh] = useState(0);
@@ -1521,6 +1554,7 @@ function Repository({
         </button>
       </div>
       <RemoteInspector
+        revision={resultsRevision}
         bridge={bridge}
         workspace={workspace}
         worktree={entry.id}

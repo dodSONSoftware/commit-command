@@ -1,0 +1,9 @@
+{
+  "base": "46175b8",
+  "changes": "native completion revision and durable result refresh",
+  "features": [
+    "custom-protocol",
+    "desktop-writes"
+  ],
+  "sha256": "47ae2e2e60c91b430e72f8fd0c60b09ab3724d20c6953abca1578915f83adcd6"
+}
