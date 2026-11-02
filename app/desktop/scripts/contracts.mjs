@@ -39,6 +39,7 @@ for (const [name, schema] of Object.entries(schemas)) {
       bannerComment:
         "/* Generated from Rust Core JSON Schema. Run npm run contracts. */",
       unreachableDefinitions: true,
+      style: { printWidth: 80 },
     },
   );
   const path = `src/services/${name}.generated.ts`;

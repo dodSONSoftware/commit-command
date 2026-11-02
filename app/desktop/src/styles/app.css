@@ -1022,3 +1022,11 @@ footer button {
   margin: 12px 0;
   overflow-wrap: anywhere;
 }
+
+.remote-inspector {
+  margin: 12px 0;
+}
+.remote-inspector code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

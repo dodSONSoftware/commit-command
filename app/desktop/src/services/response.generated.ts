@@ -26,6 +26,11 @@ export type Data =
       [k: string]: unknown;
     }
   | {
+      kind: "remotes";
+      value: Inspection;
+      [k: string]: unknown;
+    }
+  | {
       kind: "workspaces";
       value: WorkspaceList;
       [k: string]: unknown;
@@ -195,6 +200,12 @@ export type BatchPhase =
   | "cancelled"
   | "needs_reauthorization"
   | "interrupted";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "Transport".
+ */
+export type Transport =
+  "local" | "https" | "ssh" | "git" | "remote_helper" | "unsupported";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "Availability".
@@ -446,6 +457,60 @@ export interface BatchItem {
   operation?: string | null;
   path: NativePath;
   worktree: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "Inspection".
+ */
+export interface Inspection {
+  branch?: string | null;
+  config_digest: string;
+  credential_helper_configured: boolean;
+  generation: string;
+  issues: string[];
+  observed_at_ms: number;
+  proxy_configured: boolean;
+  remotes: Remote[];
+  ssh_command_configured: boolean;
+  suggested_push_remote?: string | null;
+  tls_verification_disabled: boolean;
+  upstream_ref?: string | null;
+  upstream_remote?: string | null;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "Remote".
+ */
+export interface Remote {
+  fetch: Destination[];
+  fetch_refspec_count: number;
+  issues: string[];
+  name: string;
+  origins: ConfigOrigin[];
+  push: Destination[];
+  push_refspec_count: number;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "Destination".
+ */
+export interface Destination {
+  credentials_hidden: boolean;
+  display: string;
+  restrictions: string[];
+  transport: Transport;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ConfigOrigin".
+ */
+export interface ConfigOrigin {
+  file?: NativePath | null;
+  scope: string;
   [k: string]: unknown;
 }
 /**

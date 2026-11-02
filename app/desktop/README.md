@@ -125,8 +125,12 @@ review gate. Select worktrees in Overview, open Bulk Commit, choose messages/sou
 and exclusions, and prepare the exact native review. Refresh results after native
 execution. Selecting unfinished worktrees always requires a new review; published
 successes are excluded. Ordinary builds keep write preparation disabled.
-See [M5A contracts](../../docs/architecture/M5A_LOCAL_BULK_COMMITS.md). Remote
-operations, AI, Actions, hunk staging, discard/reset/amend, advanced hook support,
+See [M5A contracts](../../docs/architecture/M5A_LOCAL_BULK_COMMITS.md).
+Each repository also exposes on-demand **Remotes and upstream** inspection:
+effective fetch/push destinations, URL rewrites, origins, upstream/push-remote
+suggestions, redacted credential fields and policy warnings. Inspection contacts
+no servers and grants no network authority. See [remote boundary](../../docs/architecture/M5_REMOTE_BOUNDARY.md).
+Network operations, AI, Actions, hunk staging, discard/reset/amend, advanced hook support,
 backup/retention UI and release packaging were not implemented.
 
 See [M3 contracts](../../docs/architecture/M3_DESKTOP_AND_IPC.md),

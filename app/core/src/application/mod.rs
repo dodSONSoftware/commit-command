@@ -64,6 +64,10 @@ pub enum Request {
         workspace: String,
         offset: usize,
     },
+    Remotes {
+        workspace: String,
+        worktree: String,
+    },
     Workspaces {},
     Create {
         name: String,
@@ -181,6 +185,7 @@ pub enum Data {
     Activity(exploration::ActivityReport),
     Audit(exploration::AuditPage),
     Batches(BatchPage),
+    Remotes(crate::remote::Inspection),
     Workspaces(WorkspaceList),
     Inventory(InventoryView),
     Refreshed(Box<StoredWorktree>),
@@ -532,6 +537,16 @@ impl Application {
                     &WorktreeId(worktree),
                     &self.read_options,
                 )?))
+            }
+            Request::Remotes {
+                workspace,
+                worktree,
+            } => {
+                let entry = self.entry(&workspace, &worktree)?;
+                Data::Remotes(
+                    self.writes
+                        .application_remotes(&entry, &self.read_options)?,
+                )
             }
             Request::History {
                 workspace,

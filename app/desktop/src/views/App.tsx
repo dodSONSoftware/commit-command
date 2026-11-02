@@ -38,6 +38,7 @@ import {
 import { WorkspaceActivity } from "./WorkspaceActivity";
 import { HistoryGraph } from "./HistoryGraph";
 import { BulkCommit } from "./BulkCommit";
+import { RemoteInspector } from "./RemoteInspector";
 type Source = "index" | "working_tree";
 export function App({ bridge }: { bridge: Bridge }) {
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
@@ -1456,6 +1457,13 @@ function Repository({
           ↻ Local refresh
         </button>
       </div>
+      <RemoteInspector
+        bridge={bridge}
+        workspace={workspace}
+        worktree={entry.id}
+        busy={busy}
+        act={act}
+      />
       <div className="repository-tabs">
         <button
           className={tab.view === "changes" ? "active" : ""}

@@ -14,7 +14,7 @@ controlled-writes = ["rusqlite/backup", "dep:sha1"]
 # Disposable fault/crash driver, never exposed by the ordinary CLI.
 write-test-support = ["controlled-writes"]
 # Transport-neutral desktop orchestration, monitoring and JSON contracts.
-application-services = ["controlled-writes", "dep:notify", "dep:schemars"]
+application-services = ["controlled-writes", "dep:notify", "dep:schemars", "dep:url"]
 
 [dependencies]
 serde = { version = "1", features = ["derive"] }
@@ -27,6 +27,7 @@ sha2 = "0.10.9"
 sha1 = { version = "0.10.7", optional = true }
 notify = { version = "8.2.1", optional = true }
 schemars = { version = "1.2.3", optional = true }
+url = { version = "2.5.8", optional = true }
 
 [target.'cfg(unix)'.dependencies]
 libc = "0.2.191"
@@ -72,4 +73,8 @@ required-features = ["application-services"]
 
 [[test]]
 name = "bulk_application"
+required-features = ["application-services"]
+
+[[test]]
+name = "remote_inspection"
 required-features = ["application-services"]

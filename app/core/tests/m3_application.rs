@@ -967,3 +967,52 @@ fn activity_deduplicates_linked_worktrees_and_audit_filters_real_operation_phase
     assert!(audit.items.is_empty());
     assert!(app.request(app.epoch(), query("shell".into())).is_err());
 }
+
+#[test]
+fn untrusted_remote_inspection_is_scoped_and_includes_host_configuration_without_helper_execution()
+{
+    let (f, mut app, ws, wt) = setup();
+    f.git(&["config", "remote.origin.url", "alias:repo"]);
+    fs::write(
+        f.root.join("global.config"),
+        b"[url \"https://example.invalid/\"]\n insteadOf = alias:\n",
+    )
+    .unwrap();
+    let before = tree_bytes(&f.repo);
+    let Data::Remotes(result) = app
+        .request(
+            app.epoch(),
+            Request::Remotes {
+                workspace: ws.clone(),
+                worktree: wt.clone(),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert_eq!(
+        result.remotes[0].fetch[0].display,
+        "https://example.invalid/repo"
+    );
+    assert_eq!(tree_bytes(&f.repo), before);
+    assert!(app
+        .request(
+            app.epoch(),
+            Request::Remotes {
+                workspace: "other".into(),
+                worktree: wt
+            }
+        )
+        .is_err());
+    assert!(app
+        .request(
+            app.epoch(),
+            Request::Remotes {
+                workspace: ws,
+                worktree: "other".into()
+            }
+        )
+        .is_err());
+}

@@ -1,6 +1,17 @@
 use super::*;
 use crate::application::{OperationPage, TrustState};
 impl ControlledWrites {
+    pub(crate) fn application_remotes(
+        &self,
+        entry: &crate::workspace::StoredWorktree,
+        options: &ReadOptions,
+    ) -> Result<crate::remote::Inspection> {
+        crate::remote::inspect(
+            &entry.metadata.root.to_path()?,
+            self.options.global_config.as_deref(),
+            options,
+        )
+    }
     pub(crate) fn cancel_application_reviews(&mut self) {
         self.trust_reviews.clear();
         self.recovery_reviews.clear();

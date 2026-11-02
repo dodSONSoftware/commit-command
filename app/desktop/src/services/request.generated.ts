@@ -33,6 +33,11 @@ export type Request =
       workspace: string;
     }
   | {
+      kind: "remotes";
+      workspace: string;
+      worktree: string;
+    }
+  | {
       kind: "workspaces";
     }
   | {

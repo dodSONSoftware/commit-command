@@ -27,3 +27,5 @@ pub use error::{Error, ErrorKind, Result};
 
 #[cfg(feature = "application-services")]
 pub mod application;
+#[cfg(feature = "application-services")]
+pub mod remote;
