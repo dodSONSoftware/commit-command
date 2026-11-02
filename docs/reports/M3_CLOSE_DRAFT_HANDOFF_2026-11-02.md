@@ -1,0 +1,39 @@
+# Close-draft implementation checkpoint and restart handoff
+
+November 2, 2026. **Stopped at the user's request to restart Codex.** Automated validation is green; native acceptance of this new shutdown handshake is NOT RUN. Do not mark the immediate-close issue or M3 complete. No app was launched in this checkpoint, no push, and ordinary desktop writes remain disabled. Resume only after the user requests continuation.
+
+## Problem and implementation
+
+Navigation/per-repository messages and bulk-composer settings previously saved after a 500 ms renderer debounce. Closing before that save, or cancelling queued saves during shutdown, could lose the latest edits.
+
+Core now exposes a narrow Rust `save_presentation` method through the existing exclusive Application/storage owner. It validates the active workspace/epoch and both existing presentation schemas, then saves navigation and bulk composer atomically in one SQLite transaction. No schema migration or Git authority is added. A real SQLite failure trigger test proves a failure in the second write rolls back the first. Existing preference endpoints remain compatible.
+
+The native adapter now starts a one-use, generation-bound close request, immediately cancels owned foreground/write work and closes its review, then emits `gitfleet-close-request` specifically to main. Main subscribes on the current WebviewWindow, captures the latest refs before debounce, freezes editing with inert, and sends the exact token and bounded versioned snapshot through main-only `close_snapshot`. Unknown/nested fields, incomplete scope/version, forged/stale/replayed tokens and oversized data are rejected. Main gains only listen/unlisten event permissions plus this narrow command; review/stranger cannot acknowledge a close, and no emit/shell/approval permission is added.
+
+The native close thread queues the validated presentation save through the same Core worker, waits for its result, saves window geometry and requests Core shutdown. The renderer response wait is three seconds. Missing renderer/save failure opens a native **Unsaved drafts** choice with **Keep app open** as the safe choice and an explicit **Close without saving** alternative. Keeping open clears closing state and returns the error to the renderer so its latest draft remains editable. No operation is replayed after a cancelled close.
+
+Both last-primary-window close and native Quit use this path. RunEvent ExitRequested is intercepted until the Core worker finishes shutdown; shutdown_complete then permits the final exit. Startup and workspace creation/switch load phases are inert to prevent edits being overwritten before stored presentation loads. A known workspace whose presentation failed to load cannot silently acknowledge an empty final save. Late StrictMode listener cleanup cannot submit a stale snapshot.
+
+## Verification actually performed
+
+- **Core application integration:** 19 passed under application-services and the same 19 under all features. New test covers exact message retention/restart, stale epoch/foreign workspace rejection, invalid bulk version preservation, a real SQLite-trigger rollback of the paired save, zero trust/operation rows and unchanged repository bytes. Strict all-target Core Clippy with application-services passed. Core formatting passed. The previous full five-configuration Git/signing/crash matrix is separate evidence; it was not rerun for this narrow state/API change.
+- **Desktop full final gate:** 42 renderer tests; 10 native host tests under each default/all-feature configuration; TypeScript, lint, generated contracts, formatting, production frontend/native builds, strict native Clippy and release build passed. New tests cover current-window listener/close payload/error handling; capture of immediate individual/bulk drafts before debounce; inert/recovery/unsubscribe behavior; one-use token/generation/replay; input bounds; and actual generated main/review/stranger command ACL.
+- **Native new behavior:** NOT RUN. Builds/mocks do not prove event target delivery, real close/Quit persistence, the native unsaved-draft dialog or close-during-work behavior. No app was launched after these edits. Current compiled binary is hashed; the existing .app bundle has not been refreshed to this checkpoint.
+
+Earlier compiler/lint failures are retained in the evidence directory; corrected test SQL count types, a partial mock cast and helper placement passed the final gate. No checks were weakened. Evidence: [final full desktop gate](../validation/m3-close-drafts/desktop-validation-release-check.txt), [Core application tests](../validation/m3-close-drafts/core-application-tests.txt), [Core all-feature integration](../validation/m3-close-drafts/core-all-features-tests.txt), [Core Clippy](../validation/m3-close-drafts/core-clippy.txt), [source hashes](../validation/m3-close-drafts/source-sha256.json), [compiled artifact](../validation/m3-close-drafts/compiled-artifact.json), [summary](../validation/m3-close-drafts/summary.json).
+
+## First resume steps
+
+1. Inspect Git status; preserve the unrelated .gitignore modification and untracked docs/graphics assets. Read this handoff and current execution status. Do not resume until requested.
+2. Assemble the ordinary development .app from the current default binary using app/desktop/scripts/dev-bundle.py. Create a new disposable native fixture using app/desktop/scripts/native-fixture.py. Record exact source/features/binary hash and full repository baselines. No personal repositories or credentials.
+3. Verify `emit_to("main", ...)` reaches `getCurrentWebviewWindow().listen(...)` in the real app. Paste a per-repository draft and bulk shared message/policy, then close in the same CUA batch before the old 500 ms debounce. Record the measured input-to-close interval, process exit/data-lock reopen, exact persisted paired state, restart restoration and unchanged repositories.
+4. Repeat using native Cmd+Q/Quit. Verify it follows the handshake, exits and restores the exact draft instead of bypassing shutdown. The global RunEvent path is newly changed and needs actual native evidence.
+5. With only disposable app state, inject a SQLite failure trigger for the bulk-composer insert, edit a draft and close. Verify **Keep app open**/Escape preserves the edit and unfreezes the UI. Remove only that fixture trigger and retry close; both states must save atomically. Do not choose discard merely to make a check pass.
+6. Close during a proven held graph read, and then a separate controlled slow-hook write using the acceptance opt-in. Verify cancellation, exact owned child-process exit, final draft save, durable truthful outcome and no replay. Never label HookRejected as cancellation or retry uncertain publication.
+7. Retain explicit missing-renderer/fallback and native-dialog/Quit lifecycle limits if not tested. Fix failures before accepting the new close behavior. Update reports/status and commit a completed checkpoint locally; never push.
+
+## Remaining project work and boundaries
+
+M3 remains partial for this native close handshake, interactive theme-selector diagnosis, full keyboard/VoiceOver/layout/scale, broader native crash phases and final artifact/write-default acceptance. M4 and local M5A have automated and selected native evidence. Fetch/authenticated transport/upstream/push and M6–M8 remain unfinished. Keep the Core presentation-independent and ordinary writes disabled. Do not treat attached documents as authorization beyond the user's actual request.
+
+The user authorized local checkpoint/milestone commits and reports in docs/reports; no pushing. The current implementation is being saved as a reviewable restart checkpoint, not a claim of completed native acceptance. No global settings, user repositories or concurrent graphics assets were changed. All work is stopped after saving this handoff.

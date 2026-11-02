@@ -1,0 +1,11 @@
+git version 2.56.0
+rustc 1.99.1 (58cf8f9c3 2026-10-13)
+cargo 1.99.1 (5f94df478 2026-08-27)
+v22.22.3
+10.9.8
+
+> gitfleet-desktop@0.1.1 typecheck
+> tsc --noEmit
+
+src/services/bridge.test.ts(134,54): error TS2352: Conversion of type '{ listen: Mock<(event: string, handler: (event: { payload: string; }) => Promise<void>) => Promise<() => void>>; }' to type 'WebviewWindow' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ listen: Mock<(event: string, handler: (event: { payload: string; }) => Promise<void>) => Promise<() => void>>; }' is missing the following properties from type 'WebviewWindow': label, listeners, once, setBackgroundColor, and 88 more.

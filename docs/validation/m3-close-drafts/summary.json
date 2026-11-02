@@ -1,0 +1,30 @@
+{
+  "status": "automated validation passed; stopped at user request before native acceptance",
+  "core_application_services": {
+    "passed": 19,
+    "failed": 0
+  },
+  "core_all_features_same_integration_suite": {
+    "passed": 19,
+    "failed": 0
+  },
+  "core_application_services_strict_all_target_clippy": "passed",
+  "renderer": {
+    "passed": 42,
+    "failed": 0
+  },
+  "native_host_default": {
+    "passed": 10,
+    "failed": 0
+  },
+  "native_host_all_features": {
+    "passed": 10,
+    "failed": 0
+  },
+  "desktop_static_contract_format_build_clippy_release": "passed",
+  "full_core_signing_crash_matrix": "not rerun for this presentation-storage checkpoint; previous full run separate",
+  "native_close_handshake": "not run",
+  "initial_compile_lint_failures": "retained in earlier validation logs; final successful gate desktop-validation-release-check.txt",
+  "app_launches_this_checkpoint": 0,
+  "pushes": 0
+}

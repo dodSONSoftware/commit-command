@@ -761,3 +761,45 @@ it("refreshes durable bulk results after a fast native completion without replay
     ),
   ).toBe(false);
 });
+
+it("captures the latest navigation and bulk draft on close before debounce and unfreezes after a failed save", async () => {
+  const { bridge, saved } = fake();
+  let snapshot: (() => import("../services/bridge").CloseSnapshot) | undefined;
+  let changed: ((closing: boolean, error?: string) => void) | undefined;
+  const unsubscribe = vi.fn();
+  bridge.onCloseRequested = async (capture, status) => {
+    snapshot = capture;
+    changed = status;
+    return unsubscribe;
+  };
+  const { container, unmount } = render(<App bridge={bridge} />);
+  await screen.findByRole("checkbox", { name: "Select parent" });
+  await userEvent.click(
+    screen.getAllByRole("button", { name: "parent" }).at(-1)!,
+  );
+  fireEvent.change(screen.getByRole("textbox", { name: "Message" }), {
+    target: { value: "Immediate individual draft" },
+  });
+  await userEvent.click(screen.getByRole("button", { name: "Bulk Commit" }));
+  fireEvent.change(
+    screen.getByRole("textbox", { name: "Shared commit message" }),
+    { target: { value: "Immediate bulk draft" } },
+  );
+  expect(
+    saved.some((s) => s.drafts.parent === "Immediate individual draft"),
+  ).toBe(false);
+  const captured = snapshot!();
+  expect(captured.workspace).toBe("ws");
+  expect(captured.navigation!.drafts.parent).toBe("Immediate individual draft");
+  expect(captured.bulk!.message).toBe("Immediate bulk draft");
+  act(() => changed!(true));
+  expect(container.querySelector(".shell")).toHaveAttribute("inert");
+  act(() => changed!(false, "Close cancelled: fixture save failed"));
+  expect(container.querySelector(".shell")).not.toHaveAttribute("inert");
+  expect(screen.getByRole("alert")).toHaveTextContent("fixture save failed");
+  expect(
+    screen.getByRole("textbox", { name: "Shared commit message" }),
+  ).toHaveValue("Immediate bulk draft");
+  unmount();
+  expect(unsubscribe).toHaveBeenCalledOnce();
+});

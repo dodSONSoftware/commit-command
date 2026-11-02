@@ -31,6 +31,21 @@ pub fn authorize(label: &str, url: &Url, required: &str) -> Result<(), String> {
     }
     Ok(())
 }
+pub(super) fn known_fields(actual: &serde_json::Value, canonical: &serde_json::Value) -> bool {
+    match (actual, canonical) {
+        (serde_json::Value::Object(a), serde_json::Value::Object(c)) => {
+            a.iter().all(|(key, value)| {
+                c.get(key)
+                    .is_some_and(|expected| known_fields(value, expected))
+            })
+        }
+        (serde_json::Value::Array(a), serde_json::Value::Array(c)) => {
+            a.len() == c.len() && a.iter().zip(c).all(|(a, c)| known_fields(a, c))
+        }
+        _ => true,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

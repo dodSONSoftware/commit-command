@@ -53,6 +53,8 @@ export function App({ bridge }: { bridge: Bridge }) {
   const [pendingActions, setPendingActions] = useState(0);
   const busy = pendingActions > 0;
   const [error, setError] = useState("");
+  const [closing, setClosing] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [monitor, setMonitor] = useState("Not monitoring");
   const [attention, setAttention] = useState("all");
   const [operations, setOperations] = useState<AuditPage | null>(null);
@@ -81,6 +83,45 @@ export function App({ bridge }: { bridge: Bridge }) {
   useEffect(() => {
     latest.current = nav;
   }, [nav]);
+  useEffect(() => {
+    if (!bridge.onCloseRequested) return;
+    let live = true;
+    let unsubscribe: (() => void) | undefined;
+    bridge
+      .onCloseRequested(
+        () => {
+          if (!live) throw new Error("Close listener is no longer active");
+          if (context.current && !loaded.current)
+            throw new Error(
+              "Workspace presentation state has not loaded; latest drafts cannot be saved",
+            );
+          const workspace = loaded.current ? context.current : null;
+          return {
+            version: 1,
+            epoch: bridge.epoch,
+            workspace,
+            navigation: workspace ? latest.current : null,
+            bulk: workspace ? latestBulk.current : null,
+          };
+        },
+        (pending, message) => {
+          if (!live) return;
+          setClosing(pending);
+          if (message) setError(message);
+        },
+      )
+      .then((dispose) => {
+        if (live) unsubscribe = dispose;
+        else dispose();
+      })
+      .catch((error) => {
+        if (live) setError(`Close draft-saving unavailable: ${String(error)}`);
+      });
+    return () => {
+      live = false;
+      unsubscribe?.();
+    };
+  }, [bridge]);
   const activeWorkspace = workspaces.find((w) => w.id === workspace);
   const root = activeWorkspace ? pathText(activeWorkspace.root) : "";
   const entry = entries.find((e) => e.id === nav.active_tab);
@@ -162,17 +203,23 @@ export function App({ bridge }: { bridge: Bridge }) {
   }, [bridge]);
   useEffect(() => {
     let live = true;
-    Promise.resolve()
-      .then(load)
-      .catch((e) => {
-        if (live) setError(`Desktop connection unavailable: ${String(e)}`);
-      });
+    Promise.resolve().then(async () => {
+      if (!live) return;
+      setLoading(true);
+      try {
+        await load();
+      } catch (error) {
+        if (live) setError(`Desktop connection unavailable: ${String(error)}`);
+      } finally {
+        if (live) setLoading(false);
+      }
+    });
     return () => {
       live = false;
     };
   }, [load]);
   useEffect(() => {
-    if (!workspace) return;
+    if (!workspace || closing) return;
     let live = true;
     const id = setInterval(() => {
       if (busy || polling.current) return;
@@ -214,18 +261,18 @@ export function App({ bridge }: { bridge: Bridge }) {
       live = false;
       clearInterval(id);
     };
-  }, [workspace, busy, inventory, bridge, writesEnabled, load]);
+  }, [workspace, busy, inventory, bridge, writesEnabled, load, closing]);
   useEffect(() => {
-    if (!workspace || !loaded.current) return;
+    if (!workspace || !loaded.current || closing) return;
     const id = setTimeout(() => {
       bridge
         .request({ kind: "save_state", workspace, state: nav })
         .catch((e) => setError(`Navigation was not saved: ${String(e)}`));
     }, 500);
     return () => clearTimeout(id);
-  }, [nav, workspace, bridge]);
+  }, [nav, workspace, bridge, closing]);
   useEffect(() => {
-    if (!workspace || !loaded.current) return;
+    if (!workspace || !loaded.current || closing) return;
     const id = setTimeout(() => {
       bridge
         .request({ kind: "save_bulk_composer", workspace, state: bulkComposer })
@@ -235,7 +282,7 @@ export function App({ bridge }: { bridge: Bridge }) {
         });
     }, 500);
     return () => clearTimeout(id);
-  }, [bulkComposer, workspace, bridge]);
+  }, [bulkComposer, workspace, bridge, closing]);
   useEffect(() => {
     document.documentElement.dataset.theme = nav.theme;
   }, [nav.theme]);
@@ -254,23 +301,33 @@ export function App({ bridge }: { bridge: Bridge }) {
     }
   }
   async function switchWorkspace(id: string) {
-    await savePresentation();
-    await bridge.request({ kind: "activate", workspace: id });
-    context.current = null;
-    await load();
-    setShowOperations(false);
-    setShowActivity(false);
-    setShowBulk(false);
+    setLoading(true);
+    try {
+      await savePresentation();
+      await bridge.request({ kind: "activate", workspace: id });
+      context.current = null;
+      await load();
+      setShowOperations(false);
+      setShowActivity(false);
+      setShowBulk(false);
+    } finally {
+      setLoading(false);
+    }
   }
   async function create() {
-    const selection = await bridge.pick();
-    if (!selection) return;
-    await savePresentation();
-    const name =
-      selection.display.split("/").filter(Boolean).at(-1) ?? "Workspace";
-    await bridge.request({ kind: "create", name, picker: selection.picker });
-    context.current = null;
-    await load();
+    setLoading(true);
+    try {
+      const selection = await bridge.pick();
+      if (!selection) return;
+      await savePresentation();
+      const name =
+        selection.display.split("/").filter(Boolean).at(-1) ?? "Workspace";
+      await bridge.request({ kind: "create", name, picker: selection.picker });
+      context.current = null;
+      await load();
+    } finally {
+      setLoading(false);
+    }
   }
   async function refreshTrust() {
     if (!workspace) return;
@@ -355,7 +412,7 @@ export function App({ bridge }: { bridge: Bridge }) {
   );
   const selectedTrust = trust.find((t) => t.worktree === entry?.id);
   return (
-    <div className="shell">
+    <div className="shell" inert={closing || loading}>
       <header className="topbar">
         <div className="brand">
           <span className="brand-icon">⑂</span>
@@ -1205,13 +1262,15 @@ export function App({ bridge }: { bridge: Bridge }) {
           {monitor}
         </span>
         <span>
-          {busy
-            ? "Core request in progress"
-            : writeBusy
-              ? "Controlled write in progress"
-              : !writesEnabled
-                ? "Read-only desktop · native write acceptance pending"
-                : "Local inspection · no automatic remote operations"}
+          {closing
+            ? "Saving drafts and closing…"
+            : busy
+              ? "Core request in progress"
+              : writeBusy
+                ? "Controlled write in progress"
+                : !writesEnabled
+                  ? "Read-only desktop · native write acceptance pending"
+                  : "Local inspection · no automatic remote operations"}
         </span>
         <button
           onClick={() =>

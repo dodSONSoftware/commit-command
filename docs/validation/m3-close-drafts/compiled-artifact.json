@@ -1,0 +1,11 @@
+{
+  "source_base": "f97e822",
+  "changes": "close snapshot persistence checkpoint; native acceptance pending",
+  "binary": "/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri/target/debug/gitfleet-desktop",
+  "sha256": "b91cc4037732d0b5be12bec167803b574dffe0662c62e3eda63a45965535f2e0",
+  "features": [
+    "custom-protocol"
+  ],
+  "source_hashes": "source-sha256.json",
+  "not_bundled_or_natively_tested_this_checkpoint": true
+}

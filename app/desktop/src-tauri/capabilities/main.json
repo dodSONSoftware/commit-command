@@ -10,6 +10,9 @@
     "allow-pick-directory",
     "allow-job-status",
     "allow-cancel-job",
-    "allow-desktop-capabilities"
+    "allow-desktop-capabilities",
+    "allow-close-snapshot",
+    "core:event:allow-listen",
+    "core:event:allow-unlisten"
   ]
 }

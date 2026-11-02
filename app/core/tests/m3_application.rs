@@ -1196,3 +1196,91 @@ fn invalid_bulk_preferences_do_not_replace_the_last_valid_draft() {
     assert_eq!(loaded.message, valid.message);
     assert_eq!(before, tree_bytes(&f.repo));
 }
+
+#[test]
+fn final_presentation_snapshot_is_atomic_durable_and_never_grants_authority() {
+    let (f, mut app, ws, wt) = setup();
+    let before = tree_bytes(&f.repo);
+    let mut navigation = DesktopState::default();
+    navigation
+        .drafts
+        .insert(wt.clone(), "Latest individual draft\n\nExact body 🛰".into());
+    let bulk = BulkComposerState {
+        message: "Latest bulk draft\n\nExact body".into(),
+        ..BulkComposerState::default()
+    };
+    app.save_presentation(app.epoch(), &ws, &navigation, &bulk)
+        .unwrap();
+    drop(app);
+    let mut app = Application::open(&f.root.join("state"), fixture_options(&f)).unwrap();
+    let state = app
+        .request(
+            app.epoch(),
+            Request::LoadState {
+                workspace: ws.clone(),
+            },
+        )
+        .unwrap()
+        .data;
+    let Data::State(state) = state else { panic!() };
+    assert_eq!(state.drafts, navigation.drafts);
+    let Data::BulkComposer(state) = app
+        .request(
+            app.epoch(),
+            Request::LoadBulkComposer {
+                workspace: ws.clone(),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert_eq!(state.message, bulk.message);
+    assert!(app
+        .save_presentation(app.epoch() + 1, &ws, &navigation, &bulk)
+        .is_err());
+    assert!(app
+        .save_presentation(app.epoch(), "foreign", &navigation, &bulk)
+        .is_err());
+    let mut bad_bulk = bulk.clone();
+    bad_bulk.version = 2;
+    let mut changed = navigation.clone();
+    changed.drafts.insert(wt.clone(), "Must roll back".into());
+    assert!(app
+        .save_presentation(app.epoch(), &ws, &changed, &bad_bulk)
+        .is_err());
+    let db = rusqlite::Connection::open(f.root.join("state/state.db")).unwrap();
+    db.execute_batch("CREATE TRIGGER fail_bulk_snapshot BEFORE INSERT ON state WHEN NEW.key LIKE 'bulk-composer:%' BEGIN SELECT RAISE(ABORT,'fixture write failure'); END;").unwrap();
+    assert!(app
+        .save_presentation(app.epoch(), &ws, &changed, &bulk)
+        .is_err());
+    db.execute_batch("DROP TRIGGER fail_bulk_snapshot;")
+        .unwrap();
+    let Data::State(saved) = app
+        .request(
+            app.epoch(),
+            Request::LoadState {
+                workspace: ws.clone(),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert_eq!(saved.drafts, navigation.drafts);
+    assert_eq!(
+        db.query_row("SELECT count(*) FROM write_trust", [], |r| r
+            .get::<_, i64>(0))
+            .unwrap(),
+        0
+    );
+    assert_eq!(
+        db.query_row("SELECT count(*) FROM write_operations", [], |r| r
+            .get::<_, i64>(0))
+            .unwrap(),
+        0
+    );
+    assert_eq!(tree_bytes(&f.repo), before);
+}

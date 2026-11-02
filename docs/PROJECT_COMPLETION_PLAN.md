@@ -4,11 +4,11 @@ Prepared November 2, 2026. Status: execution authorized by the user in this chat
 
 GitFleet should be completed by preserving its existing Rust services, closing M3 native acceptance, then implementing M4 through M8 in bounded packages. Each package below has a deliverable and an observable exit condition. The first release target is macOS; Linux and Windows acceptance must be resolved explicitly against the release requirements before claiming the entire specification complete.
 
-Execution checkpoint: **resumed at the user's request**. Foreground Cancel, close
-during a running hook, forced interruption/guarded abort and serialized background
-polling now have current native evidence; see the
-[latest report](reports/M3_STALE_REVIEW_WINDOW_2026-11-02.md). Continue remaining
-native acceptance and unfinished packages. No push or ordinary-write default change.
+Execution checkpoint: **stopped at the user's request to restart Codex**.
+The close-draft implementation passed automated gates; its actual native close,
+Quit, save-failure and cancellation checks remain NOT RUN. Resume only when
+requested, starting with the [restart handoff](reports/M3_CLOSE_DRAFT_HANDOFF_2026-11-02.md).
+No push or ordinary-write default change.
 
 ## Completion scope and governing contracts
 

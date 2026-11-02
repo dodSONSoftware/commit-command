@@ -1,18 +1,12 @@
 # GitFleet implementation status
 
-Current execution follow-up (November 2, 2026): execution resumed at the user's
-request. [Foreground cancellation](reports/M3_FOREGROUND_CANCEL_2026-11-02.md),
-[native close/interruption/recovery](reports/M3_NATIVE_LIFECYCLE_2026-11-02.md) and
-[serialized polling](reports/M3_POLLING_2026-11-02.md) now have current automated
-and native evidence. [Native durable results](reports/M3_NATIVE_RESULTS_2026-11-02.md) also refresh
-after fast operations; native bulk publication/decline/restart now has independent
-Git evidence. [Selected contrast/keyboard fixes](reports/M3_ACCESSIBILITY_2026-11-02.md) also
-have automated and native evidence; full accessibility remains open. [Review expiry/context](reports/M3_REVIEW_LIFETIME_2026-11-02.md) now has actual
-native rejection/preservation evidence and the full current Core matrix passed.
-[Obsolete native review dismissal](reports/M3_STALE_REVIEW_WINDOW_2026-11-02.md)
-now also passes the actual workspace-removal regression. Latest desktop gate: 40 renderer tests and eight native host
-tests per feature configuration, all static/build checks passing. M3 remains
-partial and ordinary desktop writes remain disabled.
+Current execution follow-up (November 2, 2026): **stopped at the user's request to
+restart Codex**. The [close-draft checkpoint and resume handoff](reports/M3_CLOSE_DRAFT_HANDOFF_2026-11-02.md)
+records atomic presentation saving and native close/Quit coordination. Automated
+gates passed: 19 Core application integration cases under each relevant feature
+configuration, 42 renderer tests and 10 native host tests per configuration plus
+static/build gates. Actual native acceptance of the new handshake is NOT RUN.
+Resume only when requested; do not mark M3 complete or enable ordinary writes.
 
 Earlier completion execution follow-up (same date): the user authorized the full
 [completion plan](PROJECT_COMPLETION_PLAN.md), local package/milestone commits and

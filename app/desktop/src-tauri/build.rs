@@ -9,6 +9,7 @@ fn main() {
             "review_data",
             "review_confirm",
             "review_cancel",
+            "close_snapshot",
         ]),
     ))
     .expect("Tauri command permission generation failed");

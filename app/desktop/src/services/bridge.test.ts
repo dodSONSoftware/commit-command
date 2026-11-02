@@ -1,6 +1,11 @@
 import { beforeEach, expect, it, vi } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
 import { NativeBridge } from "./bridge";
+import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
+import { initialState, initialBulkComposer } from "../stores/model";
+vi.mock("@tauri-apps/api/webviewWindow", () => ({
+  getCurrentWebviewWindow: vi.fn(),
+}));
 vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
 beforeEach(() => vi.mocked(invoke).mockReset());
 it("sends scoped requests without approval tokens or booleans", async () => {
@@ -114,4 +119,43 @@ it("observes native completion revisions even when a fast operation is already i
     "Invalid native completion revision",
   );
   expect(bridge.writeRevision).toBe(2);
+});
+
+it("listens on the current native window and sends only the exact one-use close snapshot", async () => {
+  const dispose = vi.fn();
+  const listen = vi
+    .fn<
+      (
+        event: string,
+        handler: (event: { payload: string }) => Promise<void>,
+      ) => Promise<() => void>
+    >()
+    .mockResolvedValue(dispose);
+  vi.mocked(getCurrentWebviewWindow).mockReturnValue({
+    listen,
+  } as unknown as ReturnType<typeof getCurrentWebviewWindow>);
+  vi.mocked(invoke)
+    .mockResolvedValueOnce(undefined)
+    .mockRejectedValueOnce(new Error("Close cancelled"));
+  const changed = vi.fn();
+  const snapshot = {
+    version: 1 as const,
+    epoch: 4,
+    workspace: "ws",
+    navigation: initialState,
+    bulk: initialBulkComposer,
+  };
+  const bridge = new NativeBridge();
+  const unlisten = await bridge.onCloseRequested(() => snapshot, changed);
+  expect(listen.mock.calls[0][0]).toBe("gitfleet-close-request");
+  await listen.mock.calls[0][1]({ payload: "native-token" });
+  expect(invoke).toHaveBeenCalledWith("close_snapshot", {
+    token: "native-token",
+    payload: JSON.stringify(snapshot),
+  });
+  expect(changed).toHaveBeenLastCalledWith(true);
+  await listen.mock.calls[0][1]({ payload: "retry-token" });
+  expect(changed).toHaveBeenLastCalledWith(false, "Error: Close cancelled");
+  unlisten();
+  expect(dispose).toHaveBeenCalledOnce();
 });

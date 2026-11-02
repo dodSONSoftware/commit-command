@@ -1,9 +1,22 @@
 import { invoke } from "@tauri-apps/api/core";
+import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
+import type { DesktopState, BulkComposerState } from "./response.generated";
 import type { Request } from "./request.generated";
 import type { Response } from "./response.generated";
 export type Payload = Response["data"];
+export interface CloseSnapshot {
+  version: 1;
+  epoch: number;
+  workspace: string | null;
+  navigation: DesktopState | null;
+  bulk: BulkComposerState | null;
+}
 export interface Bridge {
   epoch: number;
+  onCloseRequested?(
+    snapshot: () => CloseSnapshot,
+    changed: (closing: boolean, error?: string) => void,
+  ): Promise<() => void>;
   writeRevision?: number;
   capabilities(): Promise<{ writes_enabled: boolean }>;
   writeStatus(): Promise<boolean>;
@@ -19,6 +32,25 @@ interface Job {
 export class NativeBridge implements Bridge {
   epoch = 0;
   writeRevision = 0;
+  async onCloseRequested(
+    snapshot: () => CloseSnapshot,
+    changed: (closing: boolean, error?: string) => void,
+  ) {
+    return getCurrentWebviewWindow().listen<string>(
+      "gitfleet-close-request",
+      async ({ payload: token }) => {
+        changed(true);
+        try {
+          await invoke("close_snapshot", {
+            token,
+            payload: JSON.stringify(snapshot()),
+          });
+        } catch (error) {
+          changed(false, String(error));
+        }
+      },
+    );
+  }
   capabilities() {
     return invoke<{ writes_enabled: boolean }>("desktop_capabilities");
   }

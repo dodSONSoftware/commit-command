@@ -1,5 +1,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 mod security;
+mod shutdown;
+use shutdown::close_snapshot;
 mod window_state;
 use gitfleet_core::{
     application::{Application, Confirmation, Data, Request, ReviewDisplay, WindowPlacement},
@@ -49,6 +51,8 @@ struct Host {
     generation: std::sync::atomic::AtomicU64,
     reset: std::sync::atomic::AtomicBool,
     completed: std::sync::atomic::AtomicU64,
+    close_state: shutdown::CloseState,
+    shutdown_complete: std::sync::atomic::AtomicBool,
 }
 enum Task {
     Request {
@@ -75,6 +79,10 @@ enum Task {
     RequestDirectory(NativeDirectory),
     CancelReview(String),
     SaveWindowPlacement(WindowPlacement),
+    SavePresentation {
+        snapshot: shutdown::Snapshot,
+        reply: mpsc::Sender<Result<(), String>>,
+    },
     Shutdown,
 }
 impl Host {
@@ -158,21 +166,9 @@ fn decode(payload: &str) -> Result<Envelope, String> {
         return Err("Unsupported protocol version".into());
     }
     // Core compatibility DTOs may ignore unknown fields; the desktop wire does not.
-    fn known_fields(actual: &Value, canonical: &Value) -> bool {
-        match (actual, canonical) {
-            (Value::Object(a), Value::Object(c)) => a.iter().all(|(key, value)| {
-                c.get(key)
-                    .is_some_and(|expected| known_fields(value, expected))
-            }),
-            (Value::Array(a), Value::Array(c)) => {
-                a.len() == c.len() && a.iter().zip(c).all(|(a, c)| known_fields(a, c))
-            }
-            _ => true,
-        }
-    }
     let actual: Value = serde_json::from_str(payload).map_err(|_| "Malformed request")?;
     let expected = json!({"version":input.version,"epoch":input.epoch,"request":input.request});
-    if !known_fields(&actual, &expected) {
+    if !security::known_fields(&actual, &expected) {
         return Err("Unknown request field".into());
     }
     Ok(input)
@@ -628,6 +624,9 @@ fn worker(mut core: Application, rx: mpsc::Receiver<Task>, app: tauri::AppHandle
                         .fetch_add(1, std::sync::atomic::Ordering::Release);
                 }
             }
+            Ok(Task::SavePresentation { snapshot, reply }) => {
+                let _ = reply.send(snapshot.save(&mut core));
+            }
             Ok(Task::SaveWindowPlacement(placement)) => {
                 if let Err(error) = core.save_window_placement(placement) {
                     eprintln!("Window placement could not be saved: {:?}", error.kind);
@@ -640,6 +639,8 @@ fn worker(mut core: Application, rx: mpsc::Receiver<Task>, app: tauri::AppHandle
                         error.kind
                     );
                 }
+                host.shutdown_complete
+                    .store(true, std::sync::atomic::Ordering::Release);
                 app.exit(0);
                 break;
             }
@@ -679,10 +680,12 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         generation: std::sync::atomic::AtomicU64::new(1),
         reset: std::sync::atomic::AtomicBool::new(false),
         completed: std::sync::atomic::AtomicU64::new(0),
+        close_state: shutdown::CloseState::default(),
+        shutdown_complete: std::sync::atomic::AtomicBool::new(false),
     });
     let setup_host = host.clone();
     tauri::Builder::default()
-        .manage(host)
+        .manage(host.clone())
         .invoke_handler(tauri::generate_handler![
             desktop_capabilities,
             dispatch,
@@ -691,7 +694,8 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             cancel_job,
             review_data,
             review_confirm,
-            review_cancel
+            review_cancel,
+            close_snapshot
         ])
         .setup(move |app| {
             let page_host = setup_host.clone();
@@ -730,47 +734,23 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             window.on_window_event(move |event| {
                 if let tauri::WindowEvent::CloseRequested { api, .. } = event {
                     api.prevent_close();
-                    if host.closing.swap(true, std::sync::atomic::Ordering::AcqRel) {
-                        return;
-                    }
-                    if let Ok(jobs) = host.jobs.lock() {
-                        for j in jobs.values() {
-                            j.cancel.cancel();
-                        }
-                    }
-                    if let Ok(active) = host.active.lock() {
-                        if let Some(cancel) = active.as_ref() {
-                            cancel.cancel();
-                        }
-                    }
-                    if let Some(review) = handle.get_webview_window("review") {
-                        let _ = review.close();
-                    }
-                    if let Some(main) = handle.get_webview_window("main") {
-                        let _ = main.set_title("GitFleet — Closing safely…");
-                    }
-                    let placement =
-                        handle.get_webview_window("main").and_then(
-                            |w| match window_state::capture(&w) {
-                                Ok(p) => p,
-                                Err(error) => {
-                                    eprintln!("Window placement unavailable: {error}");
-                                    None
-                                }
-                            },
-                        );
-                    let sender = host.sender.clone();
-                    std::thread::spawn(move || {
-                        if let Some(p) = placement {
-                            let _ = sender.send(Task::SaveWindowPlacement(p));
-                        }
-                        let _ = sender.send(Task::Shutdown);
-                    });
+                    shutdown::request(handle.clone(), host.clone());
                 }
             });
             Ok(())
         })
-        .run(tauri::generate_context!())?;
+        .build(tauri::generate_context!())?
+        .run(move |app, event| {
+            if let tauri::RunEvent::ExitRequested { api, .. } = event {
+                if !host
+                    .shutdown_complete
+                    .load(std::sync::atomic::Ordering::Acquire)
+                {
+                    api.prevent_exit();
+                    shutdown::request(app.clone(), host.clone());
+                }
+            }
+        });
     Ok(())
 }
 fn main() {
@@ -796,6 +776,8 @@ mod tests {
                 generation: std::sync::atomic::AtomicU64::new(1),
                 reset: std::sync::atomic::AtomicBool::new(false),
                 completed: std::sync::atomic::AtomicU64::new(0),
+                close_state: shutdown::CloseState::default(),
+                shutdown_complete: std::sync::atomic::AtomicBool::new(false),
             }),
             rx,
         )
@@ -924,7 +906,8 @@ mod tests {
                 cancel_job,
                 review_data,
                 review_confirm,
-                review_cancel
+                review_cancel,
+                close_snapshot
             ])
             .build(tauri::generate_context!())
             .unwrap();
@@ -952,6 +935,30 @@ mod tests {
         assert_eq!(completed["state"], "idle");
         assert_eq!(completed["response"]["revision"], 2);
         assert!(invoke(&review, "job_status", json!({"job":"native-write"})).is_err());
+        assert!(invoke(
+            &main,
+            "close_snapshot",
+            json!({"token":"forged","payload":"{}"})
+        )
+        .unwrap_err()
+        .to_string()
+        .contains("No native close"));
+        assert!(invoke(
+            &review,
+            "close_snapshot",
+            json!({"token":"forged","payload":"{}"})
+        )
+        .unwrap_err()
+        .to_string()
+        .contains("not allowed"));
+        assert!(invoke(
+            &stranger,
+            "close_snapshot",
+            json!({"token":"forged","payload":"{}"})
+        )
+        .unwrap_err()
+        .to_string()
+        .contains("not allowed"));
         let caps = invoke(&main, "desktop_capabilities", json!({})).unwrap();
         assert_eq!(caps["writes_enabled"], cfg!(feature = "desktop-writes"));
         let denied = invoke(

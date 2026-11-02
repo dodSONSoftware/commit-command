@@ -56,6 +56,36 @@ impl BulkComposerState {
     }
 }
 impl Application {
+    /// Save the final renderer snapshot through the existing exclusive storage owner.
+    /// This carries presentation preferences only and never grants Git authority.
+    pub fn save_presentation(
+        &mut self,
+        epoch: u64,
+        workspace: &str,
+        navigation: &DesktopState,
+        bulk: &BulkComposerState,
+    ) -> Result<()> {
+        if epoch != self.epoch {
+            return Err(stale());
+        }
+        let id = self.active(workspace)?;
+        state::validate(navigation)?;
+        bulk.validate()?;
+        let navigation = serde_json::to_string(navigation)?;
+        let bulk = serde_json::to_string(bulk)?;
+        let tx = self.writes.workspace.connection().transaction()?;
+        tx.execute(
+            "INSERT INTO desktop_state(workspace_id,payload) VALUES(?1,?2) ON CONFLICT(workspace_id) DO UPDATE SET payload=excluded.payload",
+            rusqlite::params![id.0, navigation],
+        )?;
+        tx.execute(
+            "INSERT OR REPLACE INTO state(key,value) VALUES(?1,?2)",
+            rusqlite::params![format!("bulk-composer:{}", id.0), bulk],
+        )?;
+        tx.commit()?;
+        Ok(())
+    }
+
     pub(super) fn load_bulk_composer(&mut self, workspace: &str) -> Result<BulkComposerState> {
         let id = self.active(workspace)?;
         use rusqlite::OptionalExtension;

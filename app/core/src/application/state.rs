@@ -103,7 +103,7 @@ pub(super) fn load(writes: &mut ControlledWrites, id: &WorkspaceId) -> Result<De
     validate(&state)?;
     Ok(state)
 }
-fn validate(s: &DesktopState) -> Result<()> {
+pub(super) fn validate(s: &DesktopState) -> Result<()> {
     if s.version != 1 {
         return Err(Error::with_kind(
             ErrorKind::NewerSchema,
