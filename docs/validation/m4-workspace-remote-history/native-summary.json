@@ -1,0 +1,15 @@
+{
+  "ordinary_writes_disabled": true,
+  "native_observed": [
+    "workspace history has complete/absent, blocked/error and interrupted projections",
+    "record ID, repository path, preparation and observation times displayed",
+    "refresh and vertical scrolling work",
+    "prior cancelled local write remains distinct"
+  ],
+  "records_are_synthetic": true,
+  "network_execution_acceptance": false,
+  "repository_file_hashes_and_modes_unchanged": true,
+  "write_operation_count": 1,
+  "stored_observation_count": 3,
+  "history_refresh_did_not_execute_or_rewrite_records": true
+}

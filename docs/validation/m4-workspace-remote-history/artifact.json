@@ -1,0 +1,14 @@
+{
+  "base_commit": "13949ba",
+  "features": [
+    "custom-protocol"
+  ],
+  "sha256": {
+    "app/desktop/src/views/ObservationHistory.tsx": "ded85b1c7d37f2a74dc7a69481980d0db511747e42cff64dae71a33a31427dd5",
+    "app/desktop/src/views/ObservationHistory.test.tsx": "da6906c87a5b58b547b9cab74cb9cb4059727d71f1e394d3f22dc855ed94a7f0",
+    "app/desktop/src/views/App.tsx": "f4ebdcf76c1d06c94306b408d45df73748ec1dcd0e3dbc061c4bb4bf835b6833",
+    "app/desktop/src/views/App.test.tsx": "6125c166fe0e5df631f36f61fc41ab6caee096a503386398c03cfb8ef085120c",
+    "app/desktop/src/views/RemoteInspector.tsx": "b7eb1f1ba39ee253cfde217fa2f03d7fc33d0acf1da9207cb4c35dfed3092005",
+    "app/desktop/src-tauri/target/debug/bundle/macos/GitFleet.app/Contents/MacOS/gitfleet-desktop": "1d48662f302225517e7f216b4bbcec61eec0e7c80552ef0ce4d942a66557f1d2"
+  }
+}

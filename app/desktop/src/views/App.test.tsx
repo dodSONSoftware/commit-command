@@ -87,6 +87,11 @@ function fake(writes = false) {
               observed_at_ms: 1,
             },
           };
+        case "remote_observations":
+          return {
+            kind: "remote_observations",
+            value: { items: [], next: null },
+          };
         case "audit":
           return { kind: "audit", value: { items: [], next: null } };
         case "operations":
@@ -497,6 +502,13 @@ it("keeps audit pagination bound to applied filters until edited filters are sub
     screen.getByRole("button", { name: "◷ Operation results" }),
   );
   await screen.findByRole("button", { name: "Load more results" });
+  await screen.findByText("No recorded remote observations in this workspace.");
+  expect(requests).toContainEqual({
+    kind: "remote_observations",
+    workspace: "ws",
+    worktree: null,
+    offset: 0,
+  });
   fireEvent.change(
     screen.getByRole("combobox", { name: "Audit operation type" }),
     { target: { value: "commit" } },

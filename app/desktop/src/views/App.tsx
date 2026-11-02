@@ -41,6 +41,7 @@ import { WorkspaceActivity } from "./WorkspaceActivity";
 import { HistoryGraph } from "./HistoryGraph";
 import { BulkCommit } from "./BulkCommit";
 import { RemoteInspector } from "./RemoteInspector";
+import { WorkspaceObservationHistory } from "./ObservationHistory";
 type Source = "index" | "working_tree";
 export function App({ bridge }: { bridge: Bridge }) {
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
@@ -789,6 +790,7 @@ export function App({ bridge }: { bridge: Bridge }) {
                 </div>
                 <button onClick={() => void act(historyList)}>Refresh</button>
               </div>
+              <h2>Local Git operations</h2>
               <form
                 className="activity-filters"
                 onSubmit={(e) => {
@@ -976,6 +978,16 @@ export function App({ bridge }: { bridge: Bridge }) {
                   </button>
                 )}
               </div>
+              {workspace && (
+                <WorkspaceObservationHistory
+                  key={workspace}
+                  bridge={bridge}
+                  workspace={workspace}
+                  busy={busy}
+                  act={act}
+                  revision={resultsRevision}
+                />
+              )}
             </section>
           ) : !nav.active_tab ? (
             <>

@@ -1,0 +1,21 @@
+{
+  "purpose": "Synthetic historical presentation records only; no network activity or approval authority",
+  "fixture": "/private/tmp/gitfleet-m3-native-1nx521al",
+  "records": [
+    {
+      "id": "2bfca735-6f9a-4957-bda0-3ade3a7aeaa7",
+      "stored_phase": "complete",
+      "expected_display_phase": "complete"
+    },
+    {
+      "id": "35894c2a-5408-4dba-82fd-0a921ab8996b",
+      "stored_phase": "blocked",
+      "expected_display_phase": "blocked"
+    },
+    {
+      "id": "0ec9a671-01bb-4393-a2d0-d9da0acb62eb",
+      "stored_phase": "running",
+      "expected_display_phase": "interrupted"
+    }
+  ]
+}

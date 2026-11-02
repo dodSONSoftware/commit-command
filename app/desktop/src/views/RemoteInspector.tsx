@@ -5,6 +5,7 @@ import type {
   ObservationPage,
 } from "../services/response.generated";
 import { bytes, pathText } from "../stores/model";
+import { ObservationRecords } from "./ObservationHistory";
 const text = (value: string) =>
   bytes(Array.from(new TextEncoder().encode(value)));
 export function RemoteInspector({
@@ -244,30 +245,7 @@ export function RemoteInspector({
       {observations?.items.length === 0 && (
         <p>No recorded observations for this repository.</p>
       )}
-      {observations?.items.map((observation) => (
-        <article className="bulk-result" key={observation.plan.id}>
-          <h3>
-            {observation.phase} · {text(observation.plan.remote)} ·{" "}
-            {text(observation.plan.reference)}
-          </h3>
-          <p>{text(observation.plan.destination)}</p>
-          {observation.phase === "complete" && (
-            <p>
-              Observed{" "}
-              {observation.observed_at_ms
-                ? new Date(observation.observed_at_ms).toISOString()
-                : "unknown time"}{" "}
-              · {observation.oid?.hex ?? "Reference absent"}. This is a past
-              server observation.
-            </p>
-          )}
-          {observation.issue && (
-            <p role="alert">
-              {observation.issue.kind}: {text(observation.issue.message)}
-            </p>
-          )}
-        </article>
-      ))}
+      <ObservationRecords items={observations?.items ?? []} />
       {observations?.next != null && (
         <button
           disabled={busy}
