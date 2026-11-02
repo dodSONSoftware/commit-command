@@ -883,3 +883,20 @@ footer button {
 .recovery-alert span {
   color: var(--muted);
 }
+.trust-inspection {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+}
+@media (max-width: 1200px) {
+  .composer {
+    align-items: start;
+  }
+  .composer button {
+    align-self: start;
+    justify-self: start;
+    max-width: 100%;
+    white-space: normal;
+  }
+}

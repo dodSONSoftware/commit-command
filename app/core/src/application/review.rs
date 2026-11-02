@@ -39,21 +39,57 @@ impl Application {
         let (title, summary, content) = match &action {
             Action::Write(p) => {
                 let entry = self.entry(&p.workspace_id.0, &p.worktree_id.0)?;
-                let mut plan = serde_json::to_value(p)?;
-                if let Some(fields) = plan.as_object_mut() { fields.remove("patch"); }
-                let mut detail = serde_json::to_string_pretty(&plan)?;
-                detail.push_str(&format!("\nCanonical worktree: {:?}\n", entry.metadata.root));
-                detail.push_str("\nExact message (JSON escaped):\n");
-                detail.push_str(&serde_json::to_string(&String::from_utf8_lossy(&p.message))?);
-                detail.push_str("\n\nProposed patch (control characters escaped except line breaks):\n");
-                for c in String::from_utf8_lossy(&p.patch).chars() {
-                    if c == '\n' || c == '\t' || !c.is_control() { detail.push(c); }
-                    else { detail.extend(c.escape_default()); }
+                let (kind, paths) = match &p.request {
+                    WriteRequest::Commit { selected, .. } => (
+                        "COMMIT",
+                        selected.iter().map(|s| format!("{} — {:?}", s.path.display(), s.source)).collect::<Vec<_>>(),
+                    ),
+                    WriteRequest::Stage { paths, .. } => (
+                        "STAGE",
+                        paths.iter().map(|p| format!("{} — working tree → index", p.display())).collect(),
+                    ),
+                    WriteRequest::Unstage { paths, .. } => (
+                        "UNSTAGE",
+                        paths.iter().map(|p| format!("{} — HEAD → index", p.display())).collect(),
+                    ),
+                };
+                let mut summary = format!(
+                    "{kind}\nWorktree: {}\nRepository: {}\nBranch: {}\nSelected paths: {}\nTree: {}\nHooks: {:?}",
+                    entry.metadata.root.display(), p.repository_id.0, p.branch, paths.len(), p.approved_tree, p.hooks
+                );
+                let mut detail = format!(
+                    "{summary}\n\nExpected HEAD: {}\nOperation: {}\nReview digest: {}\n\nSelected content\n{}\n",
+                    p.expected_head.as_deref().unwrap_or("Unborn branch"), p.operation_id, p.review_digest, paths.join("\n")
+                );
+                if let WriteRequest::Commit { .. } = &p.request {
+                    let message = String::from_utf8_lossy(&p.message);
+                    let subject = message.lines().next().unwrap_or("").chars().take(160).collect::<String>();
+                    let signer = p.signing.as_ref().map(|s| s.fingerprint.as_str()).unwrap_or("UNSIGNED");
+                    summary.push_str(&format!("\nMessage subject: {}\nSigner: {}", serde_json::to_string(&subject)?, signer));
+                    detail.push_str(&format!(
+                        "\nCommit identity\nAuthor: {} <{}>\nDate: {}\nSigner: {}\n\nExact message (JSON escaped)\n{}\n",
+                        p.author_name, p.author_email, p.author_date, signer, serde_json::to_string(&message)?
+                    ));
+                    if let Some(signing) = &p.signing {
+                        detail.push_str(&format!("\nSigning configuration\n{}\n", serde_json::to_string_pretty(signing)?));
+                    }
+                } else {
+                    summary.push_str("\nHEAD and working files are preserved.");
                 }
-                let kind = match &p.request { WriteRequest::Commit { .. } => "COMMIT", WriteRequest::Stage { .. } => "STAGE", WriteRequest::Unstage { .. } => "UNSTAGE" };
-                let subject = String::from_utf8_lossy(&p.message).lines().next().unwrap_or("").chars().take(160).collect::<String>();
-                let summary = format!("{kind}\nWorktree: {:?}\nRepository: {}\nBranch: {}\nTree: {}\nMessage subject: {}\nHooks: {:?}\nSigner: {}\nReview digest: {}\nFull content is in the authoritative review window.", entry.metadata.root, p.repository_id.0, p.branch, p.approved_tree, serde_json::to_string(&subject)?, p.hooks, p.signing.as_ref().map(|s| s.fingerprint.as_str()).unwrap_or("UNSIGNED"), p.review_digest);
-                ("Review controlled write".into(), summary, detail)
+                detail.push_str("\nReviewed hook manifest\n");
+                for hook in &p.hook_manifest {
+                    detail.push_str(&format!("{}\n", serde_json::to_string_pretty(hook)?));
+                }
+                detail.push_str("\nProposed patch\n");
+                match std::str::from_utf8(&p.patch) {
+                    Ok(patch) => detail.push_str(patch),
+                    Err(_) => {
+                        detail.push_str("Non-UTF-8 patch; exact bytes (JSON)\n");
+                        detail.push_str(&serde_json::to_string(&p.patch)?);
+                    }
+                }
+                summary.push_str(&format!("\nReview digest: {}\nFull content is in the authoritative review window.", p.review_digest));
+                (format!("Review {}", kind.to_lowercase()), summary, detail)
             }
             Action::Trust { reviews, .. } => (
                 "Review explicit trust grants".into(),

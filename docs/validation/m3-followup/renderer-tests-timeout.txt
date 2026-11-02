@@ -1,0 +1,31 @@
+
+> gitfleet-desktop@0.1.1 test
+> vitest run
+
+
+ RUN  v4.1.12 /Users/randydodson/Documents/_code/git-fleet/app/desktop
+
+ ❯ src/views/App.test.tsx (8 tests | 1 failed) 6488ms
+   × refreshes trust automatically and removes selections whose source is no longer changed 5005ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/views/App.test.tsx > refreshes trust automatically and removes selections whose source is no longer changed
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/views/App.test.tsx:355:1
+    353| });
+    354|
+    355| it("refreshes trust automatically and removes selections whose source …
+       | ^
+    356|   const { bridge } = fake(true);
+    357|   const original = bridge.request;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  1 failed | 16 passed (17)
+   Start at  03:22:16
+   Duration  7.04s (transform 279ms, setup 181ms, import 314ms, tests 6.57s, environment 1.10s)
+

@@ -1,7 +1,8 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 mod security;
+mod window_state;
 use gitfleet_core::{
-    application::{Application, Confirmation, Data, Request, ReviewDisplay},
+    application::{Application, Confirmation, Data, Request, ReviewDisplay, WindowPlacement},
     inspection::Cancellation,
     writes::Options,
 };
@@ -72,6 +73,7 @@ enum Task {
     },
     RequestDirectory(NativeDirectory),
     CancelReview(String),
+    SaveWindowPlacement(WindowPlacement),
     Shutdown,
 }
 impl Host {
@@ -602,6 +604,11 @@ fn worker(mut core: Application, rx: mpsc::Receiver<Task>, app: tauri::AppHandle
             Ok(Task::CancelReview(id)) => {
                 let _ = core.cancel_review(&id);
             }
+            Ok(Task::SaveWindowPlacement(placement)) => {
+                if let Err(error) = core.save_window_placement(placement) {
+                    eprintln!("Window placement could not be saved: {:?}", error.kind);
+                }
+            }
             Ok(Task::Shutdown) | Err(mpsc::RecvTimeoutError::Disconnected) => {
                 if let Err(error) = core.shutdown() {
                     eprintln!(
@@ -635,7 +642,8 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     if args.next().is_some() {
         return Err("Unexpected arguments".into());
     }
-    let core = Application::open(&directory, Options::default())?;
+    let mut core = Application::open(&directory, Options::default())?;
+    let saved_placement = core.window_placement()?;
     let (sender, rx) = mpsc::sync_channel(8);
     let host = Arc::new(Host {
         sender,
@@ -666,6 +674,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             let window =
                 WebviewWindowBuilder::new(app, "main", WebviewUrl::App("index.html".into()))
                     .title("GitFleet")
+                    .visible(false)
                     .inner_size(1440., 940.)
                     .min_inner_size(960., 640.)
                     .devtools(false)
@@ -682,6 +691,10 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                     .on_navigation(|url| security::authorize("main", url, "main").is_ok())
                     .on_new_window(|_, _| tauri::webview::NewWindowResponse::Deny)
                     .build()?;
+            if let Some(placement) = saved_placement {
+                window_state::restore(&window, placement)?;
+            }
+            window.show()?;
             let handle = app.handle().clone();
             let host = setup_host.clone();
             std::thread::Builder::new()
@@ -711,8 +724,21 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                     if let Some(main) = handle.get_webview_window("main") {
                         let _ = main.set_title("GitFleet — Closing safely…");
                     }
+                    let placement =
+                        handle.get_webview_window("main").and_then(
+                            |w| match window_state::capture(&w) {
+                                Ok(p) => p,
+                                Err(error) => {
+                                    eprintln!("Window placement unavailable: {error}");
+                                    None
+                                }
+                            },
+                        );
                     let sender = host.sender.clone();
                     std::thread::spawn(move || {
+                        if let Some(p) = placement {
+                            let _ = sender.send(Task::SaveWindowPlacement(p));
+                        }
                         let _ = sender.send(Task::Shutdown);
                     });
                 }

@@ -1,0 +1,25 @@
+{
+  "operation": "98922127-d098-4884-bb57-4e662044c68a",
+  "phase": "cancelled_before_publication",
+  "published": false,
+  "cancel_clicked_while_hook_running": true,
+  "sentinel_runs": 1,
+  "all_repository_snapshots_unchanged": true,
+  "placement_at_close": {
+    "x": 1200,
+    "y": 309,
+    "width": 1440,
+    "height": 940
+  },
+  "restart_and_removal_snapshots_unchanged": true,
+  "sentinel_runs_after_restart": 1,
+  "native_history_patch_regression_passed": true,
+  "native_workspace_removal_regression_passed": true,
+  "placement_after_restart_close": {
+    "x": 1200,
+    "y": 309,
+    "width": 1440,
+    "height": 940
+  },
+  "placement_restored": true
+}

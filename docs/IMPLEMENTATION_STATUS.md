@@ -1,5 +1,7 @@
 # GitFleet implementation status
 
+Current execution follow-up: see [execution status](EXECUTION_STATUS.md) and the [M3 progress report](reports/M3_DESKTOP_PROGRESS_2026-11-02.md). Actual running cancellation and selected native retests now have agent-observed evidence; remaining native checks are deferred while the Mac is locked. The historical and earlier checkpoint descriptions below retain their original dates.
+
 Updated: 2026-11-02. **M3 implementation delivered; native acceptance is partial,
 so M3 is not complete.** The user authorized M3 and its proposed decisions/gates.
 Earlier organization policy denied Computer Use access to `dev.gitfleet.desktop`; the

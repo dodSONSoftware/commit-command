@@ -780,3 +780,90 @@ fn trust_currentness_is_distinct_from_supported_hook_policy_eligibility() {
     assert!(states[0].eligible);
     assert_eq!(states[0].policy, Some(HookPolicy::BypassAll));
 }
+
+#[test]
+fn operation_reviews_show_exact_content_and_only_applicable_commit_fields() {
+    let (f, mut app, ws, wt) = setup();
+    trust(&mut app, &ws, &wt);
+    fs::write(f.repo.join("file.txt"), b"reviewed content\n").unwrap();
+    let request = |request| Request::Propose {
+        workspace: ws.clone(),
+        worktree: wt.clone(),
+        request,
+    };
+    let paths = vec![NativePath::from_path(Path::new("file.txt"))];
+    let Data::Review(stage) = app
+        .request(
+            app.epoch(),
+            request(WriteRequest::Stage {
+                paths: paths.clone(),
+                hooks: HookPolicy::Execute,
+            }),
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert_eq!(stage.title, "Review stage");
+    assert!(stage.content.contains("file.txt — working tree → index"));
+    assert!(stage.content.contains("+reviewed content"));
+    assert!(!stage.summary.contains("Message subject"));
+    assert!(!stage.summary.contains("Signer:"));
+    assert!(!stage.content.contains("Commit identity"));
+    assert!(stage
+        .summary
+        .contains("HEAD and working files are preserved"));
+    app.cancel_review(&stage.id).unwrap();
+    let Data::Review(commit) = app
+        .request(
+            app.epoch(),
+            request(WriteRequest::Commit {
+                selected: vec![SelectedPath {
+                    path: paths[0].clone(),
+                    source: ContentSource::WorkingTree,
+                }],
+                message: "Exact reviewed message\n\nBody\n".into(),
+                hooks: HookPolicy::Execute,
+                signing: SigningPreference::Unsigned,
+            }),
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert_eq!(commit.title, "Review commit");
+    assert!(commit.summary.contains("Signer: UNSIGNED"));
+    assert!(commit
+        .content
+        .contains("\"Exact reviewed message\\n\\nBody\\n\""));
+    assert!(commit.content.contains("Commit identity"));
+    assert!(commit.content.contains("file.txt — WorkingTree"));
+    assert!(!commit.content.contains("\"patch\": ["));
+}
+
+#[test]
+fn native_window_placement_survives_restart_and_invalid_values_preserve_saved_state() {
+    let f = Fixture::new();
+    let dir = f.root.join("state");
+    let placement = WindowPlacement {
+        x: -1200,
+        y: 60,
+        width: 1200,
+        height: 800,
+    };
+    let mut app = Application::open(&dir, fixture_options(&f)).unwrap();
+    assert_eq!(app.window_placement().unwrap(), None);
+    app.save_window_placement(placement).unwrap();
+    assert!(app
+        .save_window_placement(WindowPlacement {
+            width: 0,
+            ..placement
+        })
+        .is_err());
+    assert_eq!(app.window_placement().unwrap(), Some(placement));
+    drop(app);
+    let mut app = Application::open(&dir, fixture_options(&f)).unwrap();
+    assert_eq!(app.window_placement().unwrap(), Some(placement));
+}

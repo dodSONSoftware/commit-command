@@ -1,0 +1,8 @@
+{
+  "path": "/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri/target/debug/bundle/macos/GitFleet Acceptance.app/Contents/MacOS/gitfleet-desktop",
+  "sha256": "a3f9b3f176cb34318c0d902c2c64e0e0d174bba8e7f4146913a0c82fd7ebce9f",
+  "features": [
+    "custom-protocol",
+    "desktop-writes"
+  ]
+}

@@ -159,3 +159,54 @@ pub(super) fn save(
     writes.workspace.connection().execute("INSERT INTO desktop_state(workspace_id,payload) VALUES(?1,?2) ON CONFLICT(workspace_id) DO UPDATE SET payload=excluded.payload",params![id.0,serde_json::to_string(s)?])?;
     Ok(())
 }
+
+/// Native presentation geometry in physical desktop coordinates. Never an IPC request.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct WindowPlacement {
+    pub x: i32,
+    pub y: i32,
+    pub width: u32,
+    pub height: u32,
+}
+impl WindowPlacement {
+    fn validate(&self) -> Result<()> {
+        if self.x.unsigned_abs() > 100_000
+            || self.y.unsigned_abs() > 100_000
+            || !(200..=32_768).contains(&self.width)
+            || !(200..=32_768).contains(&self.height)
+        {
+            return Err(invalid("Invalid native window placement"));
+        }
+        Ok(())
+    }
+}
+impl Application {
+    pub fn window_placement(&mut self) -> Result<Option<WindowPlacement>> {
+        let raw: Option<String> = self
+            .writes
+            .workspace
+            .connection()
+            .query_row(
+                "SELECT value FROM state WHERE key='native_window_placement'",
+                [],
+                |r| r.get(0),
+            )
+            .optional()?;
+        let placement = raw
+            .map(|s| serde_json::from_str::<WindowPlacement>(&s))
+            .transpose()?;
+        if let Some(p) = &placement {
+            p.validate()?;
+        }
+        Ok(placement)
+    }
+    pub fn save_window_placement(&mut self, placement: WindowPlacement) -> Result<()> {
+        placement.validate()?;
+        self.writes.workspace.connection().execute(
+            "INSERT OR REPLACE INTO state(key,value) VALUES('native_window_placement',?1)",
+            [serde_json::to_string(&placement)?],
+        )?;
+        Ok(())
+    }
+}

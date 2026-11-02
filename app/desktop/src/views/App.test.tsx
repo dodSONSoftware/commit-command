@@ -351,3 +351,74 @@ it("keeps Changes patches and previews out of History and restores the selected 
   );
   expect(screen.queryByText("Late Changes patch")).toBeNull();
 });
+
+it("refreshes trust automatically and removes selections whose source is no longer changed", async () => {
+  const { bridge } = fake(true);
+  const original = bridge.request;
+  let clean = false;
+  bridge.request = async (request) => {
+    if (request.kind === "trust_status")
+      return {
+        kind: "trust",
+        value: [
+          {
+            worktree: "parent",
+            grant: "granted",
+            validity: "current",
+            eligible: true,
+            reason: null,
+            policy: "execute",
+          },
+        ],
+      };
+    const result = await original(request);
+    if (clean && result.kind === "inventory") {
+      const status = result.value.entries[0].status!;
+      status.changes = [];
+      status.counts = { staged: 0, unstaged: 0, untracked: 0, conflicted: 0 };
+    }
+    return result;
+  };
+  render(<App bridge={bridge} />);
+  await screen.findByRole("checkbox", { name: "Select parent" });
+  await userEvent.click(
+    screen.getAllByRole("button", { name: "parent" }).at(-1)!,
+  );
+  expect(
+    screen
+      .getByRole("button", { name: "Inspect trust & eligibility" })
+      .closest(".repository-tabs"),
+  ).toBeNull();
+  await userEvent.click(
+    screen.getByRole("checkbox", { name: "Include file.txt from index" }),
+  );
+  expect(screen.getByRole("button", { name: "Review stage" })).toBeEnabled();
+  expect(
+    screen.getByRole("button", { name: "Review commit · 1 files" }),
+  ).toBeInTheDocument();
+  clean = true;
+  await waitFor(
+    () => {
+      expect(screen.getByText("granted · current")).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: "Review commit · 0 files" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: "Review stage" }),
+      ).toBeDisabled();
+    },
+    { timeout: 5000 },
+  );
+  clean = false;
+  await waitFor(
+    () => {
+      expect(
+        screen.getByRole("checkbox", { name: "Include file.txt from index" }),
+      ).not.toBeChecked();
+      expect(
+        screen.getByRole("button", { name: "Review stage" }),
+      ).toBeDisabled();
+    },
+    { timeout: 5000 },
+  );
+}, 10000);

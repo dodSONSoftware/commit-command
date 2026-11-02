@@ -101,6 +101,7 @@ export function App({ bridge }: { bridge: Bridge }) {
       context.current = ws;
       setWorkspace(ws);
       setEntries([]);
+      setMonitor("Not monitoring");
       setTrust([]);
       setOperations(null);
       setShowOperations(false);
@@ -147,10 +148,19 @@ export function App({ bridge }: { bridge: Bridge }) {
         inventory(workspace).catch((e) =>
           setMonitor(`Refresh unavailable: ${String(e)}`),
         );
+        if (writesEnabled)
+          bridge
+            .request({ kind: "trust_status", workspace })
+            .then((data) => {
+              if (context.current === workspace) setTrust(value(data, "trust"));
+            })
+            .catch((e) =>
+              setMonitor(`Trust refresh unavailable: ${String(e)}`),
+            );
       }
     }, 3000);
     return () => clearInterval(id);
-  }, [workspace, busy, inventory, bridge]);
+  }, [workspace, busy, inventory, bridge, writesEnabled]);
   useEffect(() => {
     if (!workspace || !loaded.current) return;
     const id = setTimeout(() => {
@@ -1165,7 +1175,7 @@ function Repository({
     setSelection(next);
   }
   function request(kind: "stage" | "unstage" | "commit"): WriteRequest {
-    const selected = [...selection.values()];
+    const selected = selectedChanges;
     return kind === "commit"
       ? {
           kind: "commit",
@@ -1178,6 +1188,27 @@ function Repository({
   }
   const writeBlocked = busy || !writeEnabled;
   const changes = entry.status?.changes ?? [];
+  const selectedChanges = [...selection.values()].filter((selected) =>
+    changes.some(
+      (change) =>
+        JSON.stringify(change.path) === JSON.stringify(selected.path) &&
+        (selected.source === "index"
+          ? ![".", "?", "!"].includes(change.index)
+          : change.worktree !== "." || change.index === "?"),
+    ),
+  );
+  const changeContext = JSON.stringify(changes);
+  const [selectedChangeContext, setSelectedChangeContext] =
+    useState(changeContext);
+  if (selectedChangeContext !== changeContext) {
+    setSelectedChangeContext(changeContext);
+    if (selectedChanges.length !== selection.size) {
+      const keys = new Set(
+        selectedChanges.map((s) => `${JSON.stringify(s.path)}:${s.source}`),
+      );
+      setSelection(new Map([...selection].filter(([key]) => keys.has(key))));
+    }
+  }
   const draft = nav.drafts[entry.id] ?? "";
   return (
     <section className="repository">
@@ -1222,6 +1253,8 @@ function Repository({
         >
           History
         </button>
+      </div>
+      <div className="trust-inspection">
         <button onClick={() => void act(inspectTrust)}>
           Inspect trust & eligibility
         </button>
@@ -1244,7 +1277,7 @@ function Repository({
           <div className="files">
             <div className="section-title">
               <h2>Changed files</h2>
-              <span>{selection.size} selected</span>
+              <span>{selectedChanges.length} selected</span>
             </div>
             {(["index", "working_tree"] as const).map((source) => (
               <div className="file-group" key={source}>
@@ -1293,13 +1326,13 @@ function Repository({
             {!changes.length && <p className="muted">No observed changes.</p>}
             <div className="file-actions">
               <button
-                disabled={writeBlocked || !selection.size}
+                disabled={writeBlocked || !selectedChanges.length}
                 onClick={() => void act(() => propose(request("stage")))}
               >
                 Review stage
               </button>
               <button
-                disabled={writeBlocked || !selection.size}
+                disabled={writeBlocked || !selectedChanges.length}
                 onClick={() => void act(() => propose(request("unstage")))}
               >
                 Review unstage
@@ -1438,10 +1471,12 @@ function Repository({
             </p>
             <button
               className="primary"
-              disabled={writeBlocked || !selection.size || !draft.trim()}
+              disabled={
+                writeBlocked || !selectedChanges.length || !draft.trim()
+              }
               onClick={() => void act(() => propose(request("commit")))}
             >
-              Review commit · {selection.size} files
+              Review commit · {selectedChanges.length} files
             </button>
             <div className="trust-card">
               <h3>Trust & execution</h3>

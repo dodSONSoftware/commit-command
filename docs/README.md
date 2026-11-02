@@ -6,6 +6,8 @@ GitFleet is a desktop multi-repository Git workspace manager with a replaceable 
 
 ## Contents
 
+- [Completion execution status](EXECUTION_STATUS.md) — Current accepted work, local commits and deferred checks.
+
 - [Requirement execution crosswalk](REQUIREMENT_EXECUTION_CROSSWALK.md) — Current routing for all 109 original requirements.
 - [P0 baseline report](reports/P0_BASELINE_2026-11-02.md) — Current execution baseline and validation.
 
