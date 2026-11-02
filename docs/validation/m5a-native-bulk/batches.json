@@ -1,0 +1,62 @@
+[
+  {
+    "version": 1,
+    "id": "bf92cd38-ad0d-470e-bca3-8d8d31576120",
+    "workspace": "caddba20-4940-4b75-914b-6a5172e48a4d",
+    "created_at_ms": 1793639812020,
+    "phase": "cancelled",
+    "issue": null,
+    "items": [
+      {
+        "worktree": "bb54b5c6-9d85-4f0e-9fc5-1e473fef2afd",
+        "path": {
+          "encoding": "utf8",
+          "value": "/private/tmp/gitfleet-m3-native-jwifsxgh/workspace/tooling"
+        },
+        "dependencies": [],
+        "operation": "0e46639b-201f-4b6a-a8b4-d3e6c96237c7",
+        "issue": null
+      },
+      {
+        "worktree": "f04492af-fd5b-4570-a63f-64a49b49ce33",
+        "path": {
+          "encoding": "utf8",
+          "value": "/private/tmp/gitfleet-m3-native-jwifsxgh/workspace/engine"
+        },
+        "dependencies": [],
+        "operation": "52e9b261-9593-41cb-9226-3dfe9e7e7985",
+        "issue": null
+      }
+    ]
+  },
+  {
+    "version": 1,
+    "id": "ecaabf1d-af87-4864-b172-bdf33fb138e3",
+    "workspace": "caddba20-4940-4b75-914b-6a5172e48a4d",
+    "created_at_ms": 1793639842632,
+    "phase": "complete",
+    "issue": null,
+    "items": [
+      {
+        "worktree": "bb54b5c6-9d85-4f0e-9fc5-1e473fef2afd",
+        "path": {
+          "encoding": "utf8",
+          "value": "/private/tmp/gitfleet-m3-native-jwifsxgh/workspace/tooling"
+        },
+        "dependencies": [],
+        "operation": "bbf18119-c08e-4fb2-9042-a501ffcab82f",
+        "issue": null
+      },
+      {
+        "worktree": "f04492af-fd5b-4570-a63f-64a49b49ce33",
+        "path": {
+          "encoding": "utf8",
+          "value": "/private/tmp/gitfleet-m3-native-jwifsxgh/workspace/engine"
+        },
+        "dependencies": [],
+        "operation": "e6708224-62f3-431e-a657-15d7fd88842a",
+        "issue": null
+      }
+    ]
+  }
+]

@@ -1,6 +1,6 @@
 # GitFleet completion execution status
 
-Updated November 2, 2026. **Execution resumed at the user's request.** Latest [serialized polling checkpoint](reports/M3_POLLING_2026-11-02.md). The user authorized the completion plan, local milestone commits and reports, with no push. Reasonable permission/facility blocks may be deferred; a deferred test is not a pass.
+Updated November 2, 2026. **Execution resumed at the user's request.** Latest [native bulk checkpoint](reports/M5A_NATIVE_BULK_2026-11-02.md). The user authorized the completion plan, local milestone commits and reports, with no push. Reasonable permission/facility blocks may be deferred; a deferred test is not a pass.
 
 | Package | State | Evidence and next action |
 |---|---|---|
@@ -10,7 +10,8 @@ Updated November 2, 2026. **Execution resumed at the user's request.** Latest [s
 | M3 native lifecycle follow-up | Selected gates passed | [Report](reports/M3_NATIVE_LIFECYCLE_2026-11-02.md); exact PID termination, durable cancellation, native guarded abort, no replay and four-repository preservation; background polling queue finding subsequently fixed and retested |
 | M3 ordinary writes | Disabled | No change to default features; requires remaining acceptance and explicit default decision |
 | M4 graph/activity/audit | Automated gates passed; selected native retests passed | [Original report](reports/M4_READ_ONLY_PROGRESS_2026-11-02.md); timeline/lanes/heatmap and basic graph/parent navigation now observed natively; foreground Cancel retest passed; remaining accessibility/scale gates open |
-| M5A local bulk commit | Implemented; automated coverage and ordinary native form retests | [Original report](reports/M5A_LOCAL_BULK_PROGRESS_2026-11-02.md); new shared-form persistence fix passed automated/native navigation and restart retests; native multi-repository publication remains open |
+| M5A local bulk commit | Implemented; automated coverage and ordinary native form retests | [Original report](reports/M5A_LOCAL_BULK_PROGRESS_2026-11-02.md); new shared-form persistence fix passed automated/native navigation and restart retests; native two-repository publication/decline/restart now passed; broader dependency/failure/accessibility gates remain open |
+| M5A native bulk follow-up | Selected native gates passed | [Report](reports/M5A_NATIVE_BULK_2026-11-02.md); exact staged/working blobs and messages, exclusions, unselected preservation, native Escape decline and restart/no replay; result refresh/empty retry presentation gaps next |
 | M5B local remote inspection | Automated gates and ordinary native redaction/gate retest passed | [Report](reports/M5B_REMOTE_INSPECTION_2026-11-02.md); 113 application, 153 all-feature, 27 renderer and eight native host passes per configuration; no server contact |
 | M5B reviewed branch observation | Implemented and automated gates passed; native acceptance deferred | [Report](reports/M5B_REMOTE_OBSERVATION_2026-11-02.md); exact credential-free network read through separate native review and isolated transport; local/loopback TLS tests pass |
 | M5B/C fetch/push workflows | Next | Explicit fetch, authenticated transport, guarded upstream setup and separately reviewed individual/bulk push remain unfinished; no fetch/push implementation yet |

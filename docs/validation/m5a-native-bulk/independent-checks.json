@@ -1,0 +1,16 @@
+{
+  "engine/plugins/audio_unchanged": true,
+  "documentation_unchanged": true,
+  "engine_one_commit": true,
+  "engine_exact_message": true,
+  "engine_only_readme_changed": true,
+  "engine_worktree_preserved": true,
+  "tooling_one_commit": true,
+  "tooling_exact_message": true,
+  "tooling_only_readme_changed": true,
+  "tooling_worktree_preserved": true,
+  "engine_exact_staged_content": true,
+  "engine_index_unchanged": true,
+  "tooling_exact_working_content": true,
+  "tooling_excluded_notes_untracked": true
+}

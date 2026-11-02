@@ -1,0 +1,8 @@
+{
+  "source": "c2c106b (same code as polling checkpoint)",
+  "features": [
+    "custom-protocol",
+    "desktop-writes"
+  ],
+  "sha256": "3f38cad5bb9ca53966a8db41074856c61d6e0929f5b46a03e4b58e3bf2a64388"
+}
