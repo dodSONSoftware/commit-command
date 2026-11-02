@@ -57,6 +57,7 @@ it("renders real commit selection and keeps large loaded histories virtualized",
   render(
     <HistoryGraph
       bridge={bridge}
+      act={(action) => action()}
       workspace="ws"
       worktree="wt"
       selected={null}

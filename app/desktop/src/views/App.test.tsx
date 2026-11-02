@@ -568,3 +568,65 @@ it("keeps shared bulk messages and content policy across selection navigation an
   expect(screen.getByLabelText("Content · parent")).toHaveValue("index_only");
   expect(screen.getByLabelText("Exclude file.txt")).not.toBeChecked();
 });
+
+it("keeps Cancel enabled across overlapping graph and commit reads until both settle", async () => {
+  const { bridge } = fake();
+  const original = bridge.request;
+  const finish: Record<string, (data: Payload) => void> = {};
+  bridge.cancel = vi.fn(async () => {});
+  bridge.request = async (request) => {
+    if (request.kind === "load_state")
+      return {
+        kind: "state",
+        value: {
+          ...initialState,
+          active_tab: "parent",
+          tabs: [
+            {
+              worktree: "parent",
+              view: "history",
+              path: null,
+              source: "working_tree",
+              commit: "1".repeat(40),
+              parent: null,
+              filter: "",
+              scroll: 0,
+            },
+          ],
+        },
+      };
+    if (request.kind === "graph" || request.kind === "commit")
+      return new Promise<Payload>((resolve) => {
+        finish[request.kind] = resolve;
+      });
+    return original(request);
+  };
+  render(<App bridge={bridge} />);
+  await waitFor(() =>
+    expect(Object.keys(finish).sort()).toEqual(["commit", "graph"]),
+  );
+  const cancel = screen.getByRole("button", {
+    name: "Cancel current operation",
+  });
+  expect(cancel).toBeEnabled();
+  await act(async () => {
+    finish.graph(
+      await original({
+        kind: "graph",
+        workspace: "ws",
+        worktree: "parent",
+        scope: { kind: "local_branches" },
+        cursor: null,
+      }),
+    );
+  });
+  expect(cancel).toBeEnabled();
+  await userEvent.click(cancel);
+  expect(bridge.cancel).toHaveBeenCalledOnce();
+  expect(cancel).toBeEnabled();
+  // Settling the remaining request with an error also releases its pending action.
+  await act(async () => {
+    finish.commit({ kind: "done" });
+  });
+  await waitFor(() => expect(cancel).toBeDisabled());
+});

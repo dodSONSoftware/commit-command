@@ -1,0 +1,6 @@
+{
+  "app/desktop/src/views/App.tsx": "53fb9cd8f381aee2e0ebdbf3bba8e70f86e528ac615581d70b41931ac1b82795",
+  "app/desktop/src/views/App.test.tsx": "2bc7a4bbed040ae92ee426aaa4786ed4f3af2f96831f7415f09fb65c403670da",
+  "app/desktop/src/views/HistoryGraph.tsx": "963d97431489215b51d82214ad9ce88a5ba2be3117cc0d3c9e11b22d59059a5f",
+  "app/desktop/src/views/HistoryGraph.test.tsx": "4f0b2065b83c17d63633e3d3b2dae88a93f80267bda3be75f23c80ff8529a26d"
+}

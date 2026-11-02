@@ -1,8 +1,9 @@
 # GitFleet implementation status
 
-Current execution follow-up (November 2, 2026): execution is stopped at the user
-request after the [native/bulk-state checkpoint](reports/M5_NATIVE_FOLLOWUP_2026-11-02.md). Native control became available again; selected M4/M5 ordinary UI and
-close-during-read retests passed. A graph-read Cancel UI finding remains open.
+Current execution follow-up (November 2, 2026): execution resumed at the user's
+request. The [foreground Cancel fix](reports/M3_FOREGROUND_CANCEL_2026-11-02.md)
+passed the full desktop gate and actual native cancellation/process termination,
+reload and repository-preservation checks. Remaining M3 native gates remain open.
 
 Earlier completion execution follow-up (same date): the user authorized the full
 [completion plan](PROJECT_COMPLETION_PLAN.md), local package/milestone commits and

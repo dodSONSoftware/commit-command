@@ -1,0 +1,7 @@
+{
+  "base": "76da443",
+  "changes": "foreground cancellation tracking",
+  "features": "default custom-protocol; desktop-writes disabled",
+  "sha256": "c02d0e439ac93d3a4e912536877fa9927efd12cfd3984eb9398e2eead13e2c0a",
+  "fixture": "/private/tmp/gitfleet-m3-native-35cm8or4"
+}

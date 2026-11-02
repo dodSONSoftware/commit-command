@@ -56,6 +56,7 @@ export function GraphLines({ row }: { row: GraphRow }) {
 }
 export function HistoryGraph({
   bridge,
+  act,
   workspace,
   worktree,
   selected,
@@ -64,6 +65,7 @@ export function HistoryGraph({
   onSelect,
 }: {
   bridge: Bridge;
+  act: (action: () => Promise<void>) => Promise<void>;
   workspace: string;
   worktree: string;
   selected?: string | null;
@@ -73,7 +75,7 @@ export function HistoryGraph({
 }) {
   const [page, setPage] = useState<GraphPage | null>(null);
   const [error, setError] = useState("");
-  const [busy, setBusy] = useState(false);
+  const [busy, setBusy] = useState(true);
   const [revision, setRevision] = useState(0);
   const [scroll, setScroll] = useState(0);
   const viewport = useRef<HTMLDivElement>(null);
@@ -90,29 +92,34 @@ export function HistoryGraph({
     : { kind: "local_branches" as const };
   useEffect(() => {
     let live = true;
-    bridge
-      .request({
-        kind: "graph",
-        workspace,
-        worktree,
-        scope: reference
-          ? { kind: "reference", reference }
-          : { kind: "local_branches" },
-        cursor: null,
-      })
-      .then((data) => {
-        if (live) {
-          setPage(value(data, "graph"));
-          setError("");
-        }
-      })
-      .catch((e) => {
-        if (live) setError(String(e));
-      });
+    void act(async () => {
+      await bridge
+        .request({
+          kind: "graph",
+          workspace,
+          worktree,
+          scope: reference
+            ? { kind: "reference", reference }
+            : { kind: "local_branches" },
+          cursor: null,
+        })
+        .then((data) => {
+          if (live) {
+            setPage(value(data, "graph"));
+            setError("");
+          }
+        })
+        .catch((e) => {
+          if (live) setError(String(e));
+        })
+        .finally(() => {
+          if (live) setBusy(false);
+        });
+    });
     return () => {
       live = false;
     };
-  }, [bridge, workspace, worktree, reference, revision]);
+  }, [bridge, workspace, worktree, reference, revision, act]);
   async function more() {
     if (!page?.next) return;
     setBusy(true);
@@ -161,6 +168,7 @@ export function HistoryGraph({
       <button
         disabled={busy}
         onClick={() => {
+          setBusy(true);
           setPage(null);
           setRevision(revision + 1);
         }}
@@ -207,7 +215,7 @@ export function HistoryGraph({
         </div>
       </div>
       {page?.next && (
-        <button disabled={busy} onClick={() => void more()}>
+        <button disabled={busy} onClick={() => void act(more)}>
           Load more
         </button>
       )}

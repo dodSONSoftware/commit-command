@@ -50,7 +50,8 @@ export function App({ bridge }: { bridge: Bridge }) {
   const [bulkComposer, setBulkComposer] =
     useState<BulkComposerState>(initialBulkComposer);
   const [trust, setTrust] = useState<TrustState[]>([]);
-  const [busy, setBusy] = useState(false);
+  const [pendingActions, setPendingActions] = useState(0);
+  const busy = pendingActions > 0;
   const [error, setError] = useState("");
   const [monitor, setMonitor] = useState("Not monitoring");
   const [attention, setAttention] = useState("all");
@@ -82,14 +83,14 @@ export function App({ bridge }: { bridge: Bridge }) {
   const entry = entries.find((e) => e.id === nav.active_tab);
   const tab = nav.tabs.find((t) => t.worktree === nav.active_tab);
   const act = useCallback(async (action: () => Promise<void>) => {
-    setBusy(true);
+    setPendingActions((count) => count + 1);
     setError("");
     try {
       await action();
     } catch (e) {
       setError(String(e));
     } finally {
-      setBusy(false);
+      setPendingActions((count) => count - 1);
     }
   }, []);
   const inventory = useCallback(
@@ -1330,33 +1331,40 @@ function Repository({
     if (tab.view !== "changes" || !tab.path) return;
     let live = true;
     const path = JSON.parse(selectedPath) as NativePath;
-    const request = observedUntracked
-      ? bridge.request({ kind: "preview", workspace, worktree: entry.id, path })
-      : bridge.request({
-          kind: "diff",
-          workspace,
-          worktree: entry.id,
-          mode: { kind: tab.source === "index" ? "staged" : "unstaged" },
-          path,
+    void act(async () => {
+      const request = observedUntracked
+        ? bridge.request({
+            kind: "preview",
+            workspace,
+            worktree: entry.id,
+            path,
+          })
+        : bridge.request({
+            kind: "diff",
+            workspace,
+            worktree: entry.id,
+            mode: { kind: tab.source === "index" ? "staged" : "unstaged" },
+            path,
+          });
+      await request
+        .then((data) => {
+          if (!live) return;
+          if (data.kind === "preview") {
+            setPatch(null);
+            setPreview(
+              data.value.binary
+                ? "Binary untracked file"
+                : `Untracked working-file preview\n${bytes(data.value.bytes)}`,
+            );
+          } else {
+            setPatch(value(data, "diff"));
+            setPreview("");
+          }
+        })
+        .catch((e) => {
+          if (live) setPreview(String(e));
         });
-    request
-      .then((data) => {
-        if (!live) return;
-        if (data.kind === "preview") {
-          setPatch(null);
-          setPreview(
-            data.value.binary
-              ? "Binary untracked file"
-              : `Untracked working-file preview\n${bytes(data.value.bytes)}`,
-          );
-        } else {
-          setPatch(value(data, "diff"));
-          setPreview("");
-        }
-      })
-      .catch((e) => {
-        if (live) setPreview(String(e));
-      });
+    });
     return () => {
       live = false;
     };
@@ -1369,51 +1377,55 @@ function Repository({
     selectedPath,
     tab.source,
     observedUntracked,
+    act,
   ]);
   useEffect(() => {
     if (tab.view !== "history" || !tab.commit) return;
+    const oid = tab.commit;
     let live = true;
-    bridge
-      .request({
-        kind: "commit",
-        workspace,
-        worktree: entry.id,
-        oid: tab.commit,
-      })
-      .then(async (data) => {
-        const commit = value(data, "commit");
-        if (!live) return;
-        setCommitDetail(commit);
-        setPreview(
-          `${bytes(commit.message)}\n\nAuthor: ${bytes(commit.author)}\nParents: ${commit.parents.map((p) => p.hex).join(", ") || "Root commit"}`,
-        );
-        const parent = tab.parent
-          ? commit.parents.find((p) => p.hex === tab.parent)
-          : commit.parents[0];
-        if (tab.parent && !parent)
-          throw new Error("Saved comparison parent is no longer valid");
-        const diff = value(
-          await bridge.request({
-            kind: "diff",
-            workspace,
-            worktree: entry.id,
-            mode: {
-              kind: "historical",
-              commit: commit.oid,
-              parent: parent ?? null,
-            },
-          }),
-          "diff",
-        );
-        if (live) setPatch(diff);
-      })
-      .catch((e) => {
-        if (live) setPreview(String(e));
-      });
+    void act(async () => {
+      await bridge
+        .request({
+          kind: "commit",
+          workspace,
+          worktree: entry.id,
+          oid,
+        })
+        .then(async (data) => {
+          const commit = value(data, "commit");
+          if (!live) return;
+          setCommitDetail(commit);
+          setPreview(
+            `${bytes(commit.message)}\n\nAuthor: ${bytes(commit.author)}\nParents: ${commit.parents.map((p) => p.hex).join(", ") || "Root commit"}`,
+          );
+          const parent = tab.parent
+            ? commit.parents.find((p) => p.hex === tab.parent)
+            : commit.parents[0];
+          if (tab.parent && !parent)
+            throw new Error("Saved comparison parent is no longer valid");
+          const diff = value(
+            await bridge.request({
+              kind: "diff",
+              workspace,
+              worktree: entry.id,
+              mode: {
+                kind: "historical",
+                commit: commit.oid,
+                parent: parent ?? null,
+              },
+            }),
+            "diff",
+          );
+          if (live) setPatch(diff);
+        })
+        .catch((e) => {
+          if (live) setPreview(String(e));
+        });
+    });
     return () => {
       live = false;
     };
-  }, [bridge, workspace, entry.id, tab.view, tab.commit, tab.parent]);
+  }, [bridge, workspace, entry.id, tab.view, tab.commit, tab.parent, act]);
   async function diff(path: NativePath, source: Source) {
     setNav(updateTab(nav, entry.id, { path, source, scroll: 0 }));
   }
@@ -1780,6 +1792,7 @@ function Repository({
           <HistoryGraph
             key={`${workspace}/${entry.id}/${tab.filter}/${historyRefresh}`}
             bridge={bridge}
+            act={act}
             workspace={workspace}
             worktree={entry.id}
             selected={tab.commit}
