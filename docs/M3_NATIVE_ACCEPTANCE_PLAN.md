@@ -1,11 +1,15 @@
 # M3 native acceptance plan and results checklist
 
-Prepared: 2026-11-01. **Plan only; no native tests were run when saving it.**
+Prepared: 2026-11-01. **Original procedure and historical checklist.** No native
+tests were run when first saving it. Current execution/results supersede only the
+explicitly retested cases; see [execution status](EXECUTION_STATUS.md) and the
+[current acceptance ledger](ACCEPTANCE_MATRIX.md#12-m3-acceptance-gates--implementation-with-native-gates-open).
 M3 remains incomplete. Organization policy previously blocked Computer Use access
 to `dev.gitfleet.desktop`; this plan does not override that restriction.
 Ordinary desktop writes must remain disabled in Rust and the UI. The native Cargo
 feature default remains `custom-protocol` only; `desktop-writes` is a non-default
-acceptance opt-in. No project commit or push is authorized.
+acceptance opt-in. This document grants no Git authority; the user subsequently
+authorized local milestone commits in chat. Pushing remains prohibited.
 
 Use two separate runs: first the ordinary read-only desktop, then an explicitly
 feature-enabled acceptance build targeting fresh disposable repositories. Keep

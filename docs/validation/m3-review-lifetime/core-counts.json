@@ -1,0 +1,37 @@
+{
+  "configurations": [
+    {
+      "passed": 53,
+      "failed": 0,
+      "ignored": 1,
+      "configuration": "default"
+    },
+    {
+      "passed": 88,
+      "failed": 0,
+      "ignored": 2,
+      "configuration": "experimental-writes"
+    },
+    {
+      "passed": 76,
+      "failed": 0,
+      "ignored": 1,
+      "configuration": "controlled-writes"
+    },
+    {
+      "passed": 125,
+      "failed": 0,
+      "ignored": 2,
+      "configuration": "application-services"
+    },
+    {
+      "passed": 165,
+      "failed": 0,
+      "ignored": 4,
+      "configuration": "all-features"
+    }
+  ],
+  "note": "Each configuration includes one real host non-UTF8 filename-creation limitation. Experimental/all-features additionally ignore the optional historical-lab GPG case; mandatory controlled-write OpenPGP and SSH positives passed separately. Application/all-features additionally include batch subprocess worker ignores; all-features includes the crash-matrix subprocess worker. Workers are invoked/asserted by their parent tests. Historical lab separately passed 23 with one optional GPG skip.",
+  "initial_sandbox_failure": "isolated OpenPGP gpg-agent unavailable; initial log retained",
+  "approved_rerun": "complete exit zero"
+}

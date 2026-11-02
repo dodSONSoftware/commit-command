@@ -1,0 +1,11 @@
+{
+  "expired_review": "bc98d499-7676-44bc-a3b9-672752396e94",
+  "after_expiry_native_approve": "rejected: Application context or review changed",
+  "context_review": "35532003-f8b6-4945-8e41-e7af1d9b2df7",
+  "invalidation": "removed saved active fixture workspace definition",
+  "old_review_continue": "rejected before native dialog: Application context or review changed",
+  "trust_rows": 0,
+  "write_operations": 0,
+  "all_four_repo_snapshots_equal": true,
+  "app_closed": true
+}

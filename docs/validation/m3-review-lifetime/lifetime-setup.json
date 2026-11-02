@@ -1,0 +1,10 @@
+{
+  "source": "fcfec7c",
+  "review": "bc98d499-7676-44bc-a3b9-672752396e94",
+  "worktree": "8a633da4-3083-4b05-bd6a-815ee9fea608",
+  "native_displayed_expiration": "2026-11-02 11:43:56 America/Chicago",
+  "expiration_utc": "2026-11-02T17:43:56Z",
+  "case": "native confirmation opened before expiry; final native acceptance will be attempted after actual deadline",
+  "clock_manipulation": false,
+  "core_timeout_changed": false
+}

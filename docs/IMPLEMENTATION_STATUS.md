@@ -7,7 +7,9 @@ request. [Foreground cancellation](reports/M3_FOREGROUND_CANCEL_2026-11-02.md),
 and native evidence. [Native durable results](reports/M3_NATIVE_RESULTS_2026-11-02.md) also refresh
 after fast operations; native bulk publication/decline/restart now has independent
 Git evidence. [Selected contrast/keyboard fixes](reports/M3_ACCESSIBILITY_2026-11-02.md) also
-have automated and native evidence; full accessibility remains open. Latest desktop gate: 37 renderer tests and eight native host
+have automated and native evidence; full accessibility remains open. [Review expiry/context](reports/M3_REVIEW_LIFETIME_2026-11-02.md) now has actual
+native rejection/preservation evidence and the full current Core matrix passed.
+Latest desktop gate: 40 renderer tests and eight native host
 tests per feature configuration, all static/build checks passing. M3 remains
 partial and ordinary desktop writes remain disabled.
 

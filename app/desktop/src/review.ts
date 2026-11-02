@@ -50,7 +50,24 @@ async function load() {
   if (!review.can_confirm)
     status.textContent =
       "Read-only desktop: execution is disabled pending native acceptance.";
+  const expire = () => {
+    confirm.disabled = true;
+    cancel.textContent = "Close review";
+    status.textContent =
+      "Review expired. Prepare a fresh proposal. No operation is approved.";
+  };
+  const expiry = window.setTimeout(
+    expire,
+    Math.max(0, review.expires_at_ms - Date.now()),
+  );
+  if (Date.now() >= review.expires_at_ms) expire();
   confirm.onclick = async () => {
+    if (Date.now() >= review.expires_at_ms) {
+      expire();
+      return;
+    }
+    // Core still checks expiry after the independent native dialog returns.
+    window.clearTimeout(expiry);
     confirm.disabled = true;
     status.textContent =
       "Awaiting independent native approval. Closing or cancelling does not approve this plan.";

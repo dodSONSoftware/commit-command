@@ -1,0 +1,9 @@
+{
+  "source_base": "fcfec7c",
+  "changes": "presentation-only review expiry timer; source hashes recorded",
+  "features": [
+    "custom-protocol"
+  ],
+  "sha256": "887068e018064cd90f5a44152844b473f6d0d144bd2785fbfd4e6dd834b913fb",
+  "native_timer_ui_acceptance": "automated only; held native-dialog test used earlier artifact.json"
+}

@@ -7,7 +7,7 @@ GitFleet should be completed by preserving its existing Rust services, closing M
 Execution checkpoint: **resumed at the user's request**. Foreground Cancel, close
 during a running hook, forced interruption/guarded abort and serialized background
 polling now have current native evidence; see the
-[latest report](reports/M3_ACCESSIBILITY_2026-11-02.md). Continue remaining
+[latest report](reports/M3_REVIEW_LIFETIME_2026-11-02.md). Continue remaining
 native acceptance and unfinished packages. No push or ordinary-write default change.
 
 ## Completion scope and governing contracts
@@ -27,7 +27,12 @@ The following rules apply throughout:
 - Use disposable repositories, signing keys, remote fixtures and provider mocks for tests. Existing user repositories, personal keys, live remotes and real AI endpoints require their own authorization.
 - Native policy restrictions remain binding. A denied native gate stays blocked until permitted access or a qualified operator supplies the required evidence. Keep independent implementation work moving without pretending the gate passed.
 
-## Current implementation baseline
+## Original planning baseline (historical)
+
+This section records the initial planning assessment before P0 and later
+implementation. Current package states and evidence are in
+[execution status](EXECUTION_STATUS.md); the historical counts/findings below must
+not be read as current capability limits.
 
 The repository scan covers Core modules and binaries, integration suites, desktop/native source, generated contracts, build and validation scripts, manifests and lockfiles, CI, specifications, historical evidence and mockup references. Dependency/build directories and Git internals are not application source. This is a planning assessment, not an exhaustive security audit of every line or dependency.
 
@@ -42,9 +47,9 @@ The repository scan covers Core modules and binaries, integration suites, deskto
 | M6 and M7 | `src/ai/` and `src/actions/` contain placeholders | Provider/configuration/context pipeline, candidates, bounded automatic authority and SemVer execution |
 | M8 | Atomic config writes, migration backups, private state and local dev bundle scripts exist | General backup/import/export/restore, retention, performance/accessibility hardening and distribution |
 
-Latest follow-up validation in [implementation status](IMPLEMENTATION_STATUS.md#follow-up-validation--2026-11-02) records 16 renderer tests, lint, TypeScript/Vite build, formatting and generated-contract checks passing. The five-configuration Core matrix and native mock/build counts are historical November 1 evidence. Later native outcomes are user-observed and lack exact test-time binary attestation. They must not be erased or promoted into an attested run for current sources.
+The initial follow-up validation in [implementation status](IMPLEMENTATION_STATUS.md#follow-up-validation--2026-11-02) records 16 renderer tests, lint, TypeScript/Vite build, formatting and generated-contract checks passing. The five-configuration Core matrix and native mock/build counts are historical November 1 evidence. Later native outcomes are user-observed and lack exact test-time binary attestation. They must not be erased or promoted into an attested run for current sources.
 
-Important implementation constraints found in the source:
+Initial code findings (historical; subsequent work is tracked in execution status):
 
 - `history.rs` supplies actual parents and bounded paging, but the desktop facade currently requests local-branch history with a fixed page size. Graph browsing needs typed scope/ref requests and stable pagination.
 - `application/review.rs` produces long textual reviews from serialized proposals. Readability should improve through Core-produced operation-specific content while authority remains in Rust.
@@ -63,7 +68,7 @@ Follow this primary sequence:
 
 Backup primitives should be strengthened before later schema migrations; accessibility and performance checks accompany each UI package. Do not postpone foundational data safety until the end. Independent read-only UI work can proceed during a native access blocker when that work is authorized, while M3 remains open.
 
-Start each package by recording its requirement IDs, precise inputs, affected modules, risks and current authorization. Finish with the changed behavior, actual tests/evidence, unresolved issues and next package. Maintain a small execution record alongside this plan rather than repeatedly rewriting historical handoffs. Use states Planned, In progress, Blocked, Awaiting native acceptance and Accepted. P0 is accepted; M3 fixes and partial native retests are recorded in [execution status](EXECUTION_STATUS.md). Remaining native checks are deferred while the Mac is locked, under the user’s instruction to skip reasonable permission/facility blocks and revisit them. Independent read-only M4 work is next; later packages remain Planned. Existing capabilities in the baseline table are not new work.
+Start each package by recording its requirement IDs, precise inputs, affected modules, risks and current authorization. Finish with the changed behavior, actual tests/evidence, unresolved issues and next package. Maintain a small execution record alongside this plan rather than repeatedly rewriting historical handoffs. Use states Planned, In progress, Blocked, Awaiting native acceptance and Accepted. P0 is accepted. M3 has current fixes and selected native passes but remains partial. M4 and M5A have automated and selected native evidence; local remote inspection and separately reviewed branch observation are implemented. Native control is available again; no current Mac-lock blocker is assumed. Fetch, authenticated transport/upstream/push and M6–M8 remain unfinished. See [execution status](EXECUTION_STATUS.md) for the current next work. Existing capabilities in the historical baseline table are not new work.
 
 ## P0 Establish the current execution baseline
 

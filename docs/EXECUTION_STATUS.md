@@ -1,6 +1,6 @@
 # GitFleet completion execution status
 
-Updated November 2, 2026. **Execution resumed at the user's request.** Latest [selected accessibility checkpoint](reports/M3_ACCESSIBILITY_2026-11-02.md). The user authorized the completion plan, local milestone commits and reports, with no push. Reasonable permission/facility blocks may be deferred; a deferred test is not a pass.
+Updated November 2, 2026. **Execution resumed at the user's request.** Latest [review lifetime/current matrix checkpoint](reports/M3_REVIEW_LIFETIME_2026-11-02.md). The user authorized the completion plan, local milestone commits and reports, with no push. Reasonable permission/facility blocks may be deferred; a deferred test is not a pass.
 
 | Package | State | Evidence and next action |
 |---|---|---|
@@ -20,6 +20,7 @@ Updated November 2, 2026. **Execution resumed at the user's request.** Latest [s
 | Background polling | Validated, automated and native | [Report](reports/M3_POLLING_2026-11-02.md); 31 renderer/eight native host tests per configuration; serial refresh/no queueing during native write, native Cancel and preservation passed |
 | Native completion/results | Validated, automated and native | [Report](reports/M3_NATIVE_RESULTS_2026-11-02.md); 33 renderer/eight native host tests per configuration; fast native batch automatically refreshes to Published, empty retry disabled; ordinary read-only restart preserved |
 | Selected accessibility | Fixes validated; full acceptance open | [Report](reports/M3_ACCESSIBILITY_2026-11-02.md); 37 renderer/eight native host tests per configuration, measured CSS contrast, keyboard/AX and Light rendering; interactive theme menu not accepted, VoiceOver/broader cases open |
+| Review lifetime/context | Selected native gates passed; presentation timer validated | [Report](reports/M3_REVIEW_LIFETIME_2026-11-02.md); actual late native approval and removed-workspace review rejected; zero trust/write records and preserved repositories; full current Core matrix plus 40 renderer/eight native host tests per configuration |
 | M6 through M8 | Planned | Follow dependency and acceptance packages in completion plan |
 
 Historical logs remain immutable. Current [requirement crosswalk](REQUIREMENT_EXECUTION_CROSSWALK.md), [completion plan](PROJECT_COMPLETION_PLAN.md), reports and per-run validation directories track progress. Do not infer a full milestone or product completion from an implementation checkpoint.

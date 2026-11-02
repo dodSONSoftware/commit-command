@@ -1,0 +1,15 @@
+{
+  "source_base": "fcfec7c",
+  "code_changes": "review expiration presentation only; Core unchanged",
+  "core_matrix_exit": 0,
+  "core_matrix_counts": "core-counts.json",
+  "initial_core_sandbox_exit": "failed isolated OpenPGP agent connection; retained",
+  "desktop_final_exit": 0,
+  "renderer_passed": 40,
+  "native_host_passed_default": 8,
+  "native_host_passed_all_features": 8,
+  "core_full_run_concurrent_with_renderer_only_edits": true,
+  "native_held_dialog_artifact": "artifact.json (fcfec7c, before presentation-only timer change)",
+  "native_expiration_case": "passed actual deadline, native late acceptance rejected",
+  "native_context_case": "passed removal invalidation; old review rejected before native dialog"
+}
