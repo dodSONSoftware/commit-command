@@ -1,0 +1,8 @@
+{
+  "hook": 55267,
+  "sentinel_age_seconds": 16.01103186607361,
+  "processes": [
+    "55267 55267 /bin/sh /private/tmp/gitfleet-m3-native-21cg777_/workspace/engine/.git/hooks/pre-commit",
+    "55268 55267 /bin/sleep 120"
+  ]
+}

@@ -1,9 +1,12 @@
 # GitFleet implementation status
 
 Current execution follow-up (November 2, 2026): execution resumed at the user's
-request. The [foreground Cancel fix](reports/M3_FOREGROUND_CANCEL_2026-11-02.md)
-passed the full desktop gate and actual native cancellation/process termination,
-reload and repository-preservation checks. Remaining M3 native gates remain open.
+request. [Foreground cancellation](reports/M3_FOREGROUND_CANCEL_2026-11-02.md),
+[native close/interruption/recovery](reports/M3_NATIVE_LIFECYCLE_2026-11-02.md) and
+[serialized polling](reports/M3_POLLING_2026-11-02.md) now have current automated
+and native evidence. Latest desktop gate: 31 renderer tests and eight native host
+tests per feature configuration, all static/build checks passing. M3 remains
+partial and ordinary desktop writes remain disabled.
 
 Earlier completion execution follow-up (same date): the user authorized the full
 [completion plan](PROJECT_COMPLETION_PLAN.md), local package/milestone commits and

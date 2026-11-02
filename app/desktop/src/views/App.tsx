@@ -70,6 +70,7 @@ export function App({ bridge }: { bridge: Bridge }) {
   const [recovery, setRecovery] = useState<RecoveryNotice[]>([]);
   const context = useRef<string | null>(null);
   const loaded = useRef(false);
+  const polling = useRef(false);
   const latest = useRef(nav);
   const latestBulk = useRef(bulkComposer);
   useEffect(() => {
@@ -170,27 +171,39 @@ export function App({ bridge }: { bridge: Bridge }) {
   }, [load]);
   useEffect(() => {
     if (!workspace) return;
+    let live = true;
     const id = setInterval(() => {
-      if (!busy) {
-        bridge
-          .writeStatus()
-          .then(setWriteBusy)
-          .catch((e) => setMonitor(String(e)));
-        inventory(workspace).catch((e) =>
-          setMonitor(`Refresh unavailable: ${String(e)}`),
-        );
-        if (writesEnabled)
-          bridge
-            .request({ kind: "trust_status", workspace })
-            .then((data) => {
-              if (context.current === workspace) setTrust(value(data, "trust"));
-            })
-            .catch((e) =>
-              setMonitor(`Trust refresh unavailable: ${String(e)}`),
-            );
-      }
+      if (busy || polling.current) return;
+      polling.current = true;
+      void (async () => {
+        try {
+          const running = await bridge.writeStatus();
+          if (!live || context.current !== workspace) return;
+          setWriteBusy(running);
+          // The Core owner is occupied until the write settles. Do not queue reads.
+          if (running) return;
+          await inventory(workspace);
+          if (!live || context.current !== workspace) return;
+          if (writesEnabled) {
+            const data = await bridge.request({
+              kind: "trust_status",
+              workspace,
+            });
+            if (live && context.current === workspace)
+              setTrust(value(data, "trust"));
+          }
+        } catch (e) {
+          if (live && context.current === workspace)
+            setMonitor(`Refresh unavailable: ${String(e)}`);
+        } finally {
+          polling.current = false;
+        }
+      })();
     }, 3000);
-    return () => clearInterval(id);
+    return () => {
+      live = false;
+      clearInterval(id);
+    };
   }, [workspace, busy, inventory, bridge, writesEnabled]);
   useEffect(() => {
     if (!workspace || !loaded.current) return;

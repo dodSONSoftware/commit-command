@@ -317,7 +317,12 @@ screen. No future bulk, remote, UI, AI or Actions acceptance is implied.
 [The November 2 checkpoint](M3_NATIVE_ACCEPTANCE_HANDOFF_2026-11-02.md) records later
 user-observed native results supported by terminal output/screenshots, without
 independent reproduction by the documenting agent or exact test-time binary attestation.
-The table combines those observations with the historical
+Current November 2 agent-operated follow-ups additionally establish actual Cancel,
+close during read/write, guarded abort/no replay and repository preservation against
+hashed development artifacts: [foreground reads](reports/M3_FOREGROUND_CANCEL_2026-11-02.md),
+[native lifecycle](reports/M3_NATIVE_LIFECYCLE_2026-11-02.md),
+[polling and inert review text](reports/M3_POLLING_2026-11-02.md).
+The table combines these bounded results with the historical
 [M3 automated evidence](validation/m3/README.md) and [IPC contracts](architecture/M3_DESKTOP_AND_IPC.md).
 “Pass” remains bounded to the identified evidence; partial gates are not closed.
 
@@ -326,27 +331,29 @@ The table combines those observations with the historical
 | M3-A01 | Independent Core and thin desktop adapter | Pass: Core feature builds without Tauri/React; separate native adapter path dependency, no Core split/layout reorganization. |
 | M3-A02 | Safe ordinary feature graph | Pass: normal graph excludes POC/crash features; default native write handlers disabled; no automation server or backend-evaluation endpoint. |
 | M3-A03 | Single service/storage/approval owner | Pass at Core/adapter level: one `Application`/`ControlledWrites` owner, app-data lock contention/reopen tests, stable session and per-operation cancellation. Native lifecycle remains A17. |
-| M3-A04 | Workspace/picker lifecycle | Partial: user exercised picker cancellation, naming, exclusions and definition removal with unchanged repository snapshots. Removal exposed stale UI; renderer fix/regression now passes, native retest pending. Full scope/picker criteria remain subject to the checklist. |
+| M3-A04 | Workspace/picker lifecycle | Partial: picker/scope criteria remain open. Active definition removal defect fixed and natively retested with repository preservation; see the M3 desktop progress report. |
 | M3-A05 | Shared Overview selection | Pass in renderer: Table/Tree continuity, no descendant selection, tab close preservation and 100-entry filtering tests. Native visual acceptance remains A19. |
-| M3-A06 | Tabs, drafts and restoration | Partial: user demonstrated separate drafts, tab close/reopen and application restart restoration. Window geometry did not restore; remaining focus/lifecycle criteria are open. |
-| M3-A07 | Changes/History fidelity | Partial: user matched staged/working previews and History/root patches to independent Git output. Retained Changes patch on entering History is now patched with view-switch/late-response renderer coverage; native retest pending. Full graph remains M4. |
+| M3-A06 | Tabs, drafts and restoration | Partial: tabs/drafts and geometry survived native restart. Shared bulk form state also survives view/restart. Full focus/immediate-close durability criteria remain open. |
+| M3-A07 | Changes/History fidelity | Selected native retests passed: Changes/History isolation and exact parent comparison. Stale-response regressions and actual foreground graph Cancel/reload pass. Full scale/accessibility acceptance remains open. |
 | M3-A08 | Automatic monitoring and reconciliation | Pass at Core level with existing monitoring tests. Later user observations exercised edits, rename/move/missing restoration and inactive-workspace isolation, generally within about four seconds; no formal performance acceptance follows. |
 | M3-A09 | Read-only Git boundary | Pass: M0 helper sentinels/state snapshots retained; scoped M3 reads, proposals, declined/replaced reviews preserve repository bytes. |
 | M3-A10 | Actual command ACL separation | Pass under Tauri mock runtime with actual generated context: allowed main calls, denied main→review, review→dispatch and unprivileged calls; platform-specific origin checks. Not a live-OS approval test. |
 | M3-A11 | Strict bounded input/scope | Pass: unknown/nested approval fields, oversize/version inputs, foreign IDs, invalid paths/picker/state, queues and dialog concurrency rejected. |
 | M3-A12 | Independent human authorization | Partial: Core capability/decline/replay/session tests and later user-observed native trust/write confirmations exist. Remaining context-switch, expiration and lifecycle cases are untested; no ordinary write exposure. |
-| M3-A13 | Exact trusted review | Partial: user independently checked exact published tree/message/index/worktree preservation and stale content/same-OID branch rejection. Remaining hostile-content and complete native review criteria remain open; raw review readability is unresolved. |
-| M3-A14 | Trust, hooks and signing-policy presentation | Partial: user exercised trust/no inheritance/revocation, hook rejection, explicit bypass, post-hook failure and changed-hook rejection. Reference-transaction Execute rejection passed; execution remains unsupported. Trust UI refresh remains defective. |
+| M3-A13 | Exact trusted review | Partial: operation-specific review displays exact index source/patch and JSON message. Native HTML-like text was inert and bidi controls escaped. Exact hostile-byte publication and remaining context/review criteria remain open. |
+| M3-A14 | Trust, hooks and signing-policy presentation | Partial: trust/no inheritance/revocation, hooks and signing have prior evidence; trust auto-refresh fix natively retested. General hook managers remain unsupported; remaining native policy cases open. |
 | M3-A15 | Desktop-controlled stage/unstage/commit/signing | Partial: user-observed index-only publication, stage/unstage and independently verified isolated SSH/OpenPGP signatures and missing-key failures. Remaining native criteria/evidence reconciliation are open; full details in the checkpoint. |
-| M3-A16 | Results and guarded recovery UI | Partial: user observed durable results and ordinary restart preservation after publication. Guarded recovery/no replay for the blocked operation and forced-interruption lifecycle are still untested natively. |
-| M3-A17 | Last-window shutdown and cancellation | Partial: Core stop/reset/cancel and host logic exist. Actual running-operation Cancel was not clicked: the slow hook ended blocked HookRejected, proving neither cancellation nor timeout. Review/main-window close, forced interruption and lock-release gates remain open. |
+| M3-A16 | Results and guarded recovery UI | Partial: durable cancellation and native interrupted hooks_running inspection/explicit guarded abort passed without replay or repository mutation. Other native recovery phases remain open. |
+| M3-A17 | Last-window shutdown and cancellation | Partial: actual Cancel during hook/read, ordinary last-window close, held-read close, close during running write, lock reopen and exact fixture process termination passed. Forced interruption/guarded abort at hooks_running passed. Broader native phases and full review/main lifecycle remain open. |
 | M3-A18 | State/migration/locking preservation | Pass at Core level: schema-2 backup/schema-3 migration, restore/newer-invalid state checks, known schema-3 reopen, atomic config bounds and independent duplicated-descriptor lock regression. |
-| M3-A19 | Native accessibility/visual/lifecycle quality | Partial: user accepted themes for now and reported visible keyboard focus/no trap. VoiceOver and contrast measurement were not tested; geometry, narrow layout and other UI issues remain. Earlier agent access denial does not erase later user observations. |
-| M3-A20 | Complete evidence and handoff | Partial: current documents/checklist reconciled to the November 2 checkpoint. Later evidence remains temporary, binary correspondence unestablished and required native gates unfinished; historical evidence is unchanged. |
+| M3-A19 | Native accessibility/visual/lifecycle quality | Partial: selected native geometry/layout/focus observations and keyboard Return on initially focused Cancel review passed. Full keyboard/VoiceOver/measured contrast and remaining layout checks are open. |
+| M3-A20 | Complete evidence and handoff | Partial: new reports contain durable scrubbed evidence, source/feature/binary hashes and fixture identities. Older observations remain historical; final release artifact and unfinished gates are not accepted. |
 
 These gates address WS-002/003/011–015, UI-001–005, GIT-012, SEC-002/010/018/020,
 STATE-001 and RELEASE-001 only at the boundaries stated above. Future bulk Git,
-remote, graph/activity, AI/Actions and release requirements remain unimplemented.
+remote, graph/activity, AI/Actions and release requirements are tracked separately
+in [execution status](EXECUTION_STATUS.md); M4 and selected M5 foundations now have
+implementation evidence, while their remaining gates stay explicit.
 An explicit set of trust grants does not implement M5 bulk Git execution.
 
 M0/M1/M2 historical evidence and completion snapshots remain unchanged. The current

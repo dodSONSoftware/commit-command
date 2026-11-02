@@ -1,0 +1,42 @@
+[
+  {
+    "sequence": 11,
+    "operation_id": "49d29614-fe2d-405d-8c0f-b3ce74000167",
+    "phase": "\"proposed\"",
+    "published": 0,
+    "new_oid": null,
+    "at_ms": 1793639393537
+  },
+  {
+    "sequence": 12,
+    "operation_id": "49d29614-fe2d-405d-8c0f-b3ce74000167",
+    "phase": "\"approved\"",
+    "published": 0,
+    "new_oid": null,
+    "at_ms": 1793639417488
+  },
+  {
+    "sequence": 13,
+    "operation_id": "49d29614-fe2d-405d-8c0f-b3ce74000167",
+    "phase": "\"preparing\"",
+    "published": 0,
+    "new_oid": null,
+    "at_ms": 1793639417663
+  },
+  {
+    "sequence": 14,
+    "operation_id": "49d29614-fe2d-405d-8c0f-b3ce74000167",
+    "phase": "\"hooks_running\"",
+    "published": 0,
+    "new_oid": null,
+    "at_ms": 1793639417689
+  },
+  {
+    "sequence": 15,
+    "operation_id": "49d29614-fe2d-405d-8c0f-b3ce74000167",
+    "phase": "\"cancelled_before_publication\"",
+    "published": 0,
+    "new_oid": null,
+    "at_ms": 1793639436993
+  }
+]

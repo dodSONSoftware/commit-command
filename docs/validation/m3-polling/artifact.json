@@ -1,0 +1,10 @@
+{
+  "base": "3215273",
+  "changes": "serialized polling",
+  "features": [
+    "custom-protocol",
+    "desktop-writes"
+  ],
+  "sha256": "3f38cad5bb9ca53966a8db41074856c61d6e0929f5b46a03e4b58e3bf2a64388",
+  "fixture": "/private/tmp/gitfleet-m3-native-21cg777_"
+}

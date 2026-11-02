@@ -630,3 +630,55 @@ it("keeps Cancel enabled across overlapping graph and commit reads until both se
   });
   await waitFor(() => expect(cancel).toBeDisabled());
 });
+
+it("polls one refresh at a time and pauses repository reads during native writes", async () => {
+  vi.useFakeTimers({ toFake: ["setInterval", "clearInterval"] });
+  const { bridge, requests } = fake(true);
+  const original = bridge.request;
+  let running = true;
+  let finishInventory: ((data: Payload) => void) | undefined;
+  let holdInventory = false;
+  bridge.writeStatus = vi.fn(async () => running);
+  bridge.request = async (request) => {
+    if (request.kind === "inventory" && holdInventory)
+      return new Promise<Payload>((resolve) => {
+        finishInventory = resolve;
+      });
+    return original(request);
+  };
+  render(<App bridge={bridge} />);
+  await screen.findByRole("checkbox", { name: "Select parent" });
+  const baseline = requests.length;
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(12000);
+  });
+  expect(requests.slice(baseline)).toEqual([]);
+  expect(
+    screen.getByRole("button", { name: "Cancel current operation" }),
+  ).toBeEnabled();
+  running = false;
+  holdInventory = true;
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(3000);
+  });
+  expect(finishInventory).toBeDefined();
+  const polls = vi.mocked(bridge.writeStatus).mock.calls.length;
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(12000);
+  });
+  expect(bridge.writeStatus).toHaveBeenCalledTimes(polls);
+  holdInventory = false;
+  await act(async () => {
+    finishInventory!(await original({ kind: "inventory", workspace: "ws" }));
+  });
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(3000);
+  });
+  expect(bridge.writeStatus).toHaveBeenCalledTimes(polls + 1);
+  expect(requests.slice(baseline).some((r) => r.kind === "trust_status")).toBe(
+    true,
+  );
+  expect(
+    screen.getByRole("button", { name: "Cancel current operation" }),
+  ).toBeDisabled();
+});

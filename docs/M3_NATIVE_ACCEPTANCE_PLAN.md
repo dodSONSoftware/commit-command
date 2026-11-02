@@ -406,7 +406,20 @@ M3 can close only when all required native criteria pass or an explicit scope
 decision resolves an exception. A blocked/unsupported/not-run case is not an
 implicit waiver. Passing this plan does not itself authorize changing defaults.
 
-## Results checklist
+## Current execution follow-ups — November 2, 2026
+
+The checklist below preserves the earlier checkpoint reconciliation and its
+user-observed provenance. It is historical; current results supersede its older
+"not run"/"pending" labels only for the exact checks recorded in the
+[acceptance matrix](ACCEPTANCE_MATRIX.md#12-m3-acceptance-gates--implementation-with-native-gates-open)
+and [execution status](EXECUTION_STATUS.md). Current agent-operated evidence includes
+actual foreground Cancel, close during held reads/running writes, native guarded
+abort after forced interruption, no replay, and serialized refresh during writes.
+See [latest report](reports/M3_POLLING_2026-11-02.md). M3 remains incomplete; no
+ordinary-write default change or push is authorized by this acceptance document.
+The user's later chat authorization governs local milestone commits.
+
+## Historical results checklist
 
 Reconciled: 2026-11-02 against the [native checkpoint](M3_NATIVE_ACCEPTANCE_HANDOFF_2026-11-02.md).
 **User-observed** means the checkpoint records terminal output/screenshots; the
