@@ -3,6 +3,12 @@
 **Version:** 1.0 · **Date:** November 1, 2026  
 **Companion:** `GITFLEET_SPECIFICATION.md`
 
+Current execution updates are recorded in [execution status](EXECUTION_STATUS.md),
+[the requirement crosswalk](REQUIREMENT_EXECUTION_CROSSWALK.md) and milestone reports.
+The original rows below retain the baseline assessment; dated follow-up ledgers and
+reports supersede their earlier test status. A later automated pass does not imply
+native or release acceptance.
+
 ## How to read the status
 
 - **POC-tested:** Behavior exercised by the existing Python labs / Rust v0.1.1 *in a constrained experimental subset*. Does not mean production ready.

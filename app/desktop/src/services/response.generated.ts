@@ -21,6 +21,11 @@ export type Data =
       [k: string]: unknown;
     }
   | {
+      kind: "batches";
+      value: BatchPage;
+      [k: string]: unknown;
+    }
+  | {
       kind: "workspaces";
       value: WorkspaceList;
       [k: string]: unknown;
@@ -177,6 +182,19 @@ export type NativePath =
       value: number[];
       [k: string]: unknown;
     };
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "BatchPhase".
+ */
+export type BatchPhase =
+  | "proposed"
+  | "executing"
+  | "complete"
+  | "blocked"
+  | "partial_failure"
+  | "cancelled"
+  | "needs_reauthorization"
+  | "interrupted";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "Availability".
@@ -384,6 +402,50 @@ export interface Outcome {
   post_processing: string[];
   published: boolean;
   reason?: string | null;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "BatchPage".
+ */
+export interface BatchPage {
+  items: BatchView[];
+  next?: number | null;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "BatchView".
+ */
+export interface BatchView {
+  outcomes: Outcome[];
+  record: BatchRecord;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "BatchRecord".
+ */
+export interface BatchRecord {
+  created_at_ms: number;
+  id: string;
+  issue?: Issue | null;
+  items: BatchItem[];
+  phase: BatchPhase;
+  version: number;
+  workspace: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "BatchItem".
+ */
+export interface BatchItem {
+  dependencies: string[];
+  issue?: Issue | null;
+  operation?: string | null;
+  path: NativePath;
+  worktree: string;
   [k: string]: unknown;
 }
 /**

@@ -1,5 +1,9 @@
 //! Presentation-independent application/session boundary. No native UI or transport APIs.
+mod bulk;
 mod exploration;
+pub use bulk::{
+    BatchItem, BatchMode, BatchPage, BatchPhase, BatchRecord, BatchSelection, BatchView,
+};
 mod monitor;
 mod review;
 mod state;
@@ -51,6 +55,14 @@ pub enum Request {
     Audit {
         workspace: String,
         query: AuditQuery,
+    },
+    ReviewBatch {
+        workspace: String,
+        selections: Vec<BatchSelection>,
+    },
+    Batches {
+        workspace: String,
+        offset: usize,
     },
     Workspaces {},
     Create {
@@ -168,6 +180,7 @@ pub enum Data {
     Graph(crate::graph::Page),
     Activity(exploration::ActivityReport),
     Audit(exploration::AuditPage),
+    Batches(BatchPage),
     Workspaces(WorkspaceList),
     Inventory(InventoryView),
     Refreshed(Box<StoredWorktree>),
@@ -300,9 +313,12 @@ impl Application {
     }
     fn abandon_review(&mut self) -> Result<()> {
         if let Some(pending) = self.pending.take() {
-            if let review::Action::Write(proposal) = pending.action {
-                self.writes
-                    .application_cancel_proposal(&proposal.operation_id)?;
+            match pending.action {
+                review::Action::Write(proposal) => self
+                    .writes
+                    .application_cancel_proposal(&proposal.operation_id)?,
+                review::Action::Batch(mut record) => self.cancel_batch_record(&mut record)?,
+                _ => {}
             }
         }
         self.writes.cancel_application_reviews();
@@ -428,6 +444,13 @@ impl Application {
             Request::Audit { workspace, query } => {
                 let id = self.active(&workspace)?;
                 Data::Audit(self.writes.application_audit(&id, query)?)
+            }
+            Request::ReviewBatch {
+                workspace,
+                selections,
+            } => Data::Review(self.review_batch(&workspace, selections)?),
+            Request::Batches { workspace, offset } => {
+                Data::Batches(self.batches(&workspace, offset)?)
             }
             Request::Workspaces {} => Data::Workspaces(WorkspaceList {
                 workspaces: self.writes.workspace.list().to_vec(),
@@ -619,7 +642,7 @@ impl Application {
                     .find(|e| e.id.0 == worktree)
                     .ok_or_else(stale)?;
                 self.writes.revoke_trust(&WorktreeId(worktree))?;
-                self.pending = None;
+                self.abandon_review()?;
                 Data::Done
             }
             Request::HookPolicy {
@@ -630,7 +653,7 @@ impl Application {
                 self.entry(&workspace, &worktree)?;
                 self.writes
                     .remember_hook_policy(&WorktreeId(worktree), policy)?;
-                self.pending = None;
+                self.abandon_review()?;
                 Data::Done
             }
             Request::Propose {

@@ -14,6 +14,7 @@ pub(super) enum Action {
         reviews: Vec<TrustReview>,
     },
     Write(Box<Proposal>),
+    Batch(BatchRecord),
     Recovery {
         workspace: WorkspaceId,
         review: RecoveryReview,
@@ -34,63 +35,94 @@ pub struct Confirmation {
     nonce: String,
 }
 impl Application {
-    pub(super) fn set_review(&mut self, action: Action) -> Result<ReviewDisplay> {
-        let id = Uuid::new_v4().to_string();
-        let (title, summary, content) = match &action {
-            Action::Write(p) => {
-                let entry = self.entry(&p.workspace_id.0, &p.worktree_id.0)?;
-                let (kind, paths) = match &p.request {
-                    WriteRequest::Commit { selected, .. } => (
-                        "COMMIT",
-                        selected.iter().map(|s| format!("{} — {:?}", s.path.display(), s.source)).collect::<Vec<_>>(),
-                    ),
-                    WriteRequest::Stage { paths, .. } => (
-                        "STAGE",
-                        paths.iter().map(|p| format!("{} — working tree → index", p.display())).collect(),
-                    ),
-                    WriteRequest::Unstage { paths, .. } => (
-                        "UNSTAGE",
-                        paths.iter().map(|p| format!("{} — HEAD → index", p.display())).collect(),
-                    ),
-                };
-                let mut summary = format!(
+    pub(super) fn describe_write(&self, p: &Proposal) -> Result<(String, String, String)> {
+        let entry = self.entry(&p.workspace_id.0, &p.worktree_id.0)?;
+        let (kind, paths) = match &p.request {
+            WriteRequest::Commit { selected, .. } => (
+                "COMMIT",
+                selected
+                    .iter()
+                    .map(|s| format!("{} — {:?}", s.path.display(), s.source))
+                    .collect::<Vec<_>>(),
+            ),
+            WriteRequest::Stage { paths, .. } => (
+                "STAGE",
+                paths
+                    .iter()
+                    .map(|p| format!("{} — working tree → index", p.display()))
+                    .collect(),
+            ),
+            WriteRequest::Unstage { paths, .. } => (
+                "UNSTAGE",
+                paths
+                    .iter()
+                    .map(|p| format!("{} — HEAD → index", p.display()))
+                    .collect(),
+            ),
+        };
+        let mut summary = format!(
                     "{kind}\nWorktree: {}\nRepository: {}\nBranch: {}\nSelected paths: {}\nTree: {}\nHooks: {:?}",
                     entry.metadata.root.display(), p.repository_id.0, p.branch, paths.len(), p.approved_tree, p.hooks
                 );
-                let mut detail = format!(
+        let mut detail = format!(
                     "{summary}\n\nExpected HEAD: {}\nOperation: {}\nReview digest: {}\n\nSelected content\n{}\n",
                     p.expected_head.as_deref().unwrap_or("Unborn branch"), p.operation_id, p.review_digest, paths.join("\n")
                 );
-                if let WriteRequest::Commit { .. } = &p.request {
-                    let message = String::from_utf8_lossy(&p.message);
-                    let subject = message.lines().next().unwrap_or("").chars().take(160).collect::<String>();
-                    let signer = p.signing.as_ref().map(|s| s.fingerprint.as_str()).unwrap_or("UNSIGNED");
-                    summary.push_str(&format!("\nMessage subject: {}\nSigner: {}", serde_json::to_string(&subject)?, signer));
-                    detail.push_str(&format!(
+        if let WriteRequest::Commit { .. } = &p.request {
+            let message = String::from_utf8_lossy(&p.message);
+            let subject = message
+                .lines()
+                .next()
+                .unwrap_or("")
+                .chars()
+                .take(160)
+                .collect::<String>();
+            let signer = p
+                .signing
+                .as_ref()
+                .map(|s| s.fingerprint.as_str())
+                .unwrap_or("UNSIGNED");
+            summary.push_str(&format!(
+                "\nMessage subject: {}\nSigner: {}",
+                serde_json::to_string(&subject)?,
+                signer
+            ));
+            detail.push_str(&format!(
                         "\nCommit identity\nAuthor: {} <{}>\nDate: {}\nSigner: {}\n\nExact message (JSON escaped)\n{}\n",
                         p.author_name, p.author_email, p.author_date, signer, serde_json::to_string(&message)?
                     ));
-                    if let Some(signing) = &p.signing {
-                        detail.push_str(&format!("\nSigning configuration\n{}\n", serde_json::to_string_pretty(signing)?));
-                    }
-                } else {
-                    summary.push_str("\nHEAD and working files are preserved.");
-                }
-                detail.push_str("\nReviewed hook manifest\n");
-                for hook in &p.hook_manifest {
-                    detail.push_str(&format!("{}\n", serde_json::to_string_pretty(hook)?));
-                }
-                detail.push_str("\nProposed patch\n");
-                match std::str::from_utf8(&p.patch) {
-                    Ok(patch) => detail.push_str(patch),
-                    Err(_) => {
-                        detail.push_str("Non-UTF-8 patch; exact bytes (JSON)\n");
-                        detail.push_str(&serde_json::to_string(&p.patch)?);
-                    }
-                }
-                summary.push_str(&format!("\nReview digest: {}\nFull content is in the authoritative review window.", p.review_digest));
-                (format!("Review {}", kind.to_lowercase()), summary, detail)
+            if let Some(signing) = &p.signing {
+                detail.push_str(&format!(
+                    "\nSigning configuration\n{}\n",
+                    serde_json::to_string_pretty(signing)?
+                ));
             }
+        } else {
+            summary.push_str("\nHEAD and working files are preserved.");
+        }
+        detail.push_str("\nReviewed hook manifest\n");
+        for hook in &p.hook_manifest {
+            detail.push_str(&format!("{}\n", serde_json::to_string_pretty(hook)?));
+        }
+        detail.push_str("\nProposed patch\n");
+        match std::str::from_utf8(&p.patch) {
+            Ok(patch) => detail.push_str(patch),
+            Err(_) => {
+                detail.push_str("Non-UTF-8 patch; exact bytes (JSON)\n");
+                detail.push_str(&serde_json::to_string(&p.patch)?);
+            }
+        }
+        summary.push_str(&format!(
+            "\nReview digest: {}\nFull content is in the authoritative review window.",
+            p.review_digest
+        ));
+        Ok((format!("Review {}", kind.to_lowercase()), summary, detail))
+    }
+    pub(super) fn set_review(&mut self, action: Action) -> Result<ReviewDisplay> {
+        let id = Uuid::new_v4().to_string();
+        let (title, summary, content) = match &action {
+            Action::Write(p) => self.describe_write(p)?,
+            Action::Batch(record) => self.describe_batch(record)?,
             Action::Trust { reviews, .. } => (
                 "Review explicit trust grants".into(),
                 format!("Trust {} explicit worktree(s). Reviewed hooks/signers run unsandboxed as your user.\n{}", reviews.len(), reviews.iter().map(|r| format!("{}: {:?}", r.worktree_id.0, r.metadata.root)).collect::<Vec<_>>().join("\n")),
@@ -182,9 +214,12 @@ impl Application {
             return Err(stale());
         }
         if !accepted {
-            if let Action::Write(proposal) = &p.action {
-                self.writes
-                    .application_cancel_proposal(&proposal.operation_id)?;
+            match &p.action {
+                Action::Write(proposal) => self
+                    .writes
+                    .application_cancel_proposal(&proposal.operation_id)?,
+                Action::Batch(record) => self.cancel_batch_record(&mut record.clone())?,
+                _ => {}
             }
             self.writes.cancel_application_reviews();
             return Err(Error::with_kind(
@@ -193,6 +228,7 @@ impl Application {
             ));
         }
         let result = match p.action {
+            Action::Batch(record) => self.execute_batch(record, cancellation)?,
             Action::Write(proposal) => {
                 self.active(&proposal.workspace_id.0)?;
                 self.entry(&proposal.workspace_id.0, &proposal.worktree_id.0)?;

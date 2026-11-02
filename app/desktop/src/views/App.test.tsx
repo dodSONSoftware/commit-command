@@ -4,16 +4,20 @@ import {
   screen,
   waitFor,
   fireEvent,
+  act,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { afterEach, expect, it } from "vitest";
+import { afterEach, expect, it, vi } from "vitest";
 import { App } from "./App";
 import type { Bridge, Payload } from "../services/bridge";
 import type { Request } from "../services/request.generated";
 import type { DesktopState } from "../services/response.generated";
 import { initialState } from "../stores/model";
 import { fixtureEntry, fixtureWorkspace } from "../testdata";
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  vi.useRealTimers();
+});
 function fake(writes = false) {
   const requests: Request[] = [];
   const saved: DesktopState[] = [];
@@ -369,6 +373,7 @@ it("keeps Changes patches and previews out of History and restores the selected 
 });
 
 it("refreshes trust automatically and removes selections whose source is no longer changed", async () => {
+  vi.useFakeTimers({ toFake: ["setInterval", "clearInterval"] });
   const { bridge } = fake(true);
   const original = bridge.request;
   let clean = false;
@@ -413,31 +418,27 @@ it("refreshes trust automatically and removes selections whose source is no long
     screen.getByRole("button", { name: "Review commit · 1 files" }),
   ).toBeInTheDocument();
   clean = true;
-  await waitFor(
-    () => {
-      expect(screen.getByText("granted · current")).toBeInTheDocument();
-      expect(
-        screen.getByRole("button", { name: "Review commit · 0 files" }),
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole("button", { name: "Review stage" }),
-      ).toBeDisabled();
-    },
-    { timeout: 5000 },
-  );
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(3000);
+  });
+  {
+    expect(screen.getByText("granted · current")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Review commit · 0 files" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Review stage" })).toBeDisabled();
+  }
   clean = false;
-  await waitFor(
-    () => {
-      expect(
-        screen.getByRole("checkbox", { name: "Include file.txt from index" }),
-      ).not.toBeChecked();
-      expect(
-        screen.getByRole("button", { name: "Review stage" }),
-      ).toBeDisabled();
-    },
-    { timeout: 5000 },
-  );
-}, 10000);
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(3000);
+  });
+  {
+    expect(
+      screen.getByRole("checkbox", { name: "Include file.txt from index" }),
+    ).not.toBeChecked();
+    expect(screen.getByRole("button", { name: "Review stage" })).toBeDisabled();
+  }
+});
 
 it("keeps audit pagination bound to applied filters until edited filters are submitted", async () => {
   const { bridge, requests } = fake();

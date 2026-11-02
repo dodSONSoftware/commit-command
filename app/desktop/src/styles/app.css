@@ -993,3 +993,32 @@ footer button {
 .history-list {
   min-width: 0;
 }
+
+.bulk-commit fieldset,
+.bulk-result {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+  min-width: 0;
+}
+.bulk-commit label {
+  display: block;
+}
+.bulk-commit textarea {
+  width: 100%;
+  min-width: 0;
+}
+.bulk-commit .bulk-path {
+  display: flex;
+  gap: 8px;
+  overflow-wrap: anywhere;
+  margin: 8px 0;
+}
+.bulk-commit .bulk-path input {
+  width: auto;
+}
+.bulk-result li {
+  margin: 12px 0;
+  overflow-wrap: anywhere;
+}

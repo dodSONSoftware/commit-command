@@ -23,6 +23,16 @@ export type Request =
       workspace: string;
     }
   | {
+      kind: "review_batch";
+      selections: BatchSelection[];
+      workspace: string;
+    }
+  | {
+      kind: "batches";
+      offset: number;
+      workspace: string;
+    }
+  | {
       kind: "workspaces";
     }
   | {
@@ -162,21 +172,6 @@ export type Phase =
   | "published_with_post_processing_failure"
   | "needs_manual_reconciliation"
   | "uncertain_outcome";
-export type DiffMode =
-  | {
-      kind: "staged";
-      [k: string]: unknown;
-    }
-  | {
-      kind: "unstaged";
-      [k: string]: unknown;
-    }
-  | {
-      commit: ObjectId;
-      kind: "historical";
-      parent?: ObjectId | null;
-      [k: string]: unknown;
-    };
 /**
  * `display` is never used to reconstruct a path. Byte/wide encodings round-trip.
  */
@@ -196,8 +191,25 @@ export type NativePath =
       value: number[];
       [k: string]: unknown;
     };
-export type ContentSource = "index" | "working_tree";
 export type HookPolicy = "execute" | "bypass_all";
+export type BatchMode = "review_all" | "index_only";
+export type SigningPreference = "configured" | "unsigned";
+export type DiffMode =
+  | {
+      kind: "staged";
+      [k: string]: unknown;
+    }
+  | {
+      kind: "unstaged";
+      [k: string]: unknown;
+    }
+  | {
+      commit: ObjectId;
+      kind: "historical";
+      parent?: ObjectId | null;
+      [k: string]: unknown;
+    };
+export type ContentSource = "index" | "working_tree";
 export type WriteRequest =
   | {
       hooks: HookPolicy;
@@ -219,7 +231,6 @@ export type WriteRequest =
       paths: NativePath[];
       [k: string]: unknown;
     };
-export type SigningPreference = "configured" | "unsigned";
 
 export interface Cursor {
   history: Cursor2;
@@ -243,6 +254,14 @@ export interface AuditQuery {
   since_ms?: number | null;
   until_ms?: number | null;
   worktree?: string | null;
+}
+export interface BatchSelection {
+  excluded: NativePath[];
+  hooks: HookPolicy;
+  message: string;
+  mode: BatchMode;
+  signing: SigningPreference;
+  worktree: string;
 }
 export interface DiscoveryOptions {
   excluded_names: string[];

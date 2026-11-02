@@ -263,3 +263,21 @@ impl ControlledWrites {
         Ok(AuditPage { items, next })
     }
 }
+
+impl ControlledWrites {
+    pub(crate) fn application_proposal(&mut self, id: &str) -> Result<Proposal> {
+        Ok(self.load(id)?.proposal)
+    }
+    pub(crate) fn application_propose(
+        &mut self,
+        workspace: &WorkspaceId,
+        worktree: &WorktreeId,
+        request: WriteRequest,
+        cancellation: inspection::Cancellation,
+    ) -> Result<Proposal> {
+        let previous = std::mem::replace(&mut self.options.process.cancellation, cancellation);
+        let result = self.propose(workspace, worktree, request);
+        self.options.process.cancellation = previous;
+        result
+    }
+}

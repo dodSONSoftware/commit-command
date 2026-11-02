@@ -37,6 +37,7 @@ import {
 } from "../stores/model";
 import { WorkspaceActivity } from "./WorkspaceActivity";
 import { HistoryGraph } from "./HistoryGraph";
+import { BulkCommit } from "./BulkCommit";
 type Source = "index" | "working_tree";
 export function App({ bridge }: { bridge: Bridge }) {
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
@@ -51,6 +52,7 @@ export function App({ bridge }: { bridge: Bridge }) {
   const [operations, setOperations] = useState<AuditPage | null>(null);
   const [showOperations, setShowOperations] = useState(false);
   const [showActivity, setShowActivity] = useState(false);
+  const [showBulk, setShowBulk] = useState(false);
   const [auditKind, setAuditKind] = useState("");
   const [auditPhase, setAuditPhase] = useState<Phase | "">("");
   const [auditWorktree, setAuditWorktree] = useState("");
@@ -116,6 +118,7 @@ export function App({ bridge }: { bridge: Bridge }) {
       setAuditApplied(null);
       setShowOperations(false);
       setShowActivity(false);
+      setShowBulk(false);
       setAuditWorktree("");
       if (ws) {
         const state = value(
@@ -197,6 +200,7 @@ export function App({ bridge }: { bridge: Bridge }) {
     await load();
     setShowOperations(false);
     setShowActivity(false);
+    setShowBulk(false);
   }
   async function create() {
     const selection = await bridge.pick();
@@ -240,6 +244,7 @@ export function App({ bridge }: { bridge: Bridge }) {
     if (!workspace) return;
     setShowOperations(true);
     setShowActivity(false);
+    setShowBulk(false);
     const query = auditQuery(0);
     const data = value(
       await bridge.request({ kind: "audit", workspace, query }),
@@ -311,12 +316,15 @@ export function App({ bridge }: { bridge: Bridge }) {
       <nav className="tabs" aria-label="Open tabs">
         <button
           className={
-            !nav.active_tab && !showOperations && !showActivity ? "active" : ""
+            !nav.active_tab && !showOperations && !showActivity && !showBulk
+              ? "active"
+              : ""
           }
           onClick={() => {
             setNav({ ...nav, active_tab: null });
             setShowOperations(false);
             setShowActivity(false);
+            setShowBulk(false);
           }}
         >
           ▦ Overview
@@ -325,7 +333,7 @@ export function App({ bridge }: { bridge: Bridge }) {
           const e = entries.find((e) => e.id === t.worktree);
           return (
             <div
-              className={`tab ${nav.active_tab === t.worktree && !showOperations && !showActivity ? "active" : ""}`}
+              className={`tab ${nav.active_tab === t.worktree && !showOperations && !showActivity && !showBulk ? "active" : ""}`}
               key={t.worktree}
             >
               <button
@@ -333,6 +341,7 @@ export function App({ bridge }: { bridge: Bridge }) {
                   setNav({ ...nav, active_tab: t.worktree });
                   setShowOperations(false);
                   setShowActivity(false);
+                  setShowBulk(false);
                 }}
               >
                 {e ? repoName(e) : "Unavailable repository"}
@@ -356,7 +365,7 @@ export function App({ bridge }: { bridge: Bridge }) {
           </div>
           <button
             className={
-              !nav.active_tab && !showOperations && !showActivity
+              !nav.active_tab && !showOperations && !showActivity && !showBulk
                 ? "nav-item chosen"
                 : "nav-item"
             }
@@ -364,6 +373,7 @@ export function App({ bridge }: { bridge: Bridge }) {
               setNav({ ...nav, active_tab: null });
               setShowOperations(false);
               setShowActivity(false);
+              setShowBulk(false);
             }}
           >
             ▦ Workspace Overview
@@ -380,10 +390,22 @@ export function App({ bridge }: { bridge: Bridge }) {
             disabled={!workspace || busy}
             onClick={() => {
               setShowActivity(true);
+              setShowBulk(false);
               setShowOperations(false);
             }}
           >
             Workspace Activity
+          </button>
+          <button
+            className={`nav-item ${showBulk ? "chosen" : ""}`}
+            disabled={!workspace || busy}
+            onClick={() => {
+              setShowOperations(false);
+              setShowActivity(false);
+              setShowBulk(true);
+            }}
+          >
+            Bulk Commit
           </button>
           <div className="sidebar-label">
             REPOSITORIES <span>{entries.length}</span>
@@ -397,6 +419,7 @@ export function App({ bridge }: { bridge: Bridge }) {
                   setNav(openTab(nav, e));
                   setShowOperations(false);
                   setShowActivity(false);
+                  setShowBulk(false);
                 }}
               >
                 <span
@@ -570,7 +593,28 @@ export function App({ bridge }: { bridge: Bridge }) {
               </button>
             </div>
           )}
-          {showActivity && workspace ? (
+          {showBulk && workspace ? (
+            <BulkCommit
+              key={workspace}
+              bridge={bridge}
+              workspace={workspace}
+              entries={entries}
+              selected={nav.selected}
+              drafts={nav.drafts}
+              setDraft={(id, text) =>
+                setNav((current) => ({
+                  ...current,
+                  drafts: { ...current.drafts, [id]: text },
+                }))
+              }
+              setSelected={(ids) =>
+                setNav((current) => ({ ...current, selected: ids }))
+              }
+              enabled={writesEnabled}
+              busy={busy || writeBusy}
+              act={act}
+            />
+          ) : showActivity && workspace ? (
             <WorkspaceActivity
               key={workspace}
               bridge={bridge}
@@ -588,6 +632,7 @@ export function App({ bridge }: { bridge: Bridge }) {
                     }),
                   );
                   setShowActivity(false);
+                  setShowBulk(false);
                 }
               }}
             />

@@ -1,6 +1,20 @@
 # GitFleet implementation status
 
-Current execution follow-up: see [execution status](EXECUTION_STATUS.md) and the [M3 progress report](reports/M3_DESKTOP_PROGRESS_2026-11-02.md). Actual running cancellation and selected native retests now have agent-observed evidence; remaining native checks are deferred while the Mac is locked. The historical and earlier checkpoint descriptions below retain their original dates.
+Current execution follow-up (November 2, 2026): the user authorized the full
+[completion plan](PROJECT_COMPLETION_PLAN.md), local package/milestone commits and
+reports, with no push. See [execution status](EXECUTION_STATUS.md) for current gates.
+P0 is committed; M3 fixes and M4 graph/activity/audit have automated evidence and
+partial native evidence. M5A local commit batches have passed automated gates; see the
+[M5A report](reports/M5A_LOCAL_BULK_PROGRESS_2026-11-02.md). Remaining
+native checks are deferred while the Mac is locked; ordinary desktop writes remain
+disabled. M5 remote work and M6–M8 remain unfinished.
+
+## Historical M3 checkpoint
+
+The remainder is the earlier dated checkpoint, retained for evidence provenance.
+Its authorization limits, test counts and then-open observations describe that
+checkpoint; current authorization and subsequent results are above and in the
+linked execution tracker/reports.
 
 Updated: 2026-11-02. **M3 implementation delivered; native acceptance is partial,
 so M3 is not complete.** The user authorized M3 and its proposed decisions/gates.

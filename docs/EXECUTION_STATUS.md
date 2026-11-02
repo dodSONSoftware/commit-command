@@ -9,6 +9,8 @@ Updated November 2, 2026. The user authorized execution of the completion plan, 
 | M3 native acceptance | Partial; remaining interactions deferred | Actual running cancellation, no replay, window restoration, History and workspace-removal retests passed. Mac locked before next session; close/interruption/accessibility and remaining review cases remain open |
 | M3 ordinary writes | Disabled | No change to default features; requires remaining acceptance and explicit default decision |
 | M4 graph/activity/audit | Implemented and automated gates passed; native acceptance deferred | [Report](reports/M4_READ_ONLY_PROGRESS_2026-11-02.md); 53 default, 93 application, 133 all-feature and 23 renderer tests pass; seven native tests per configuration |
-| M5 through M8 | Planned | Follow dependency and acceptance packages in completion plan |
+| M5A local bulk commit | Implemented and automated gates passed; native acceptance deferred | [Report](reports/M5A_LOCAL_BULK_PROGRESS_2026-11-02.md); 11 new Core integration cases, 104 application, 144 all-feature and 26 renderer passes; eight native tests per configuration |
+| M5B/C remote workflows | Next | Explicit remote policy, fetch and separately reviewed push; no push capability or implicit remote activity implemented yet |
+| M6 through M8 | Planned | Follow dependency and acceptance packages in completion plan |
 
 Historical logs remain immutable. Current [requirement crosswalk](REQUIREMENT_EXECUTION_CROSSWALK.md), [completion plan](PROJECT_COMPLETION_PLAN.md), reports and per-run validation directories track progress. Do not infer a full milestone or product completion from an implementation checkpoint.

@@ -69,3 +69,7 @@ required-features = ["application-services"]
 [[test]]
 name = "m3_application"
 required-features = ["application-services"]
+
+[[test]]
+name = "bulk_application"
+required-features = ["application-services"]

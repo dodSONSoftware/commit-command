@@ -119,7 +119,13 @@ from agent verification. Renderer mocks cannot close the remaining native gates.
 9. Record native evidence and all unresolved failures before considering the
    M3 gates complete or changing ordinary desktop write exposure.
 
-Full graph/activity/audit exploration is M4; bulk Git operations are M5. Remote
+Graph/activity/audit exploration is implemented with automated M4 coverage. M5A
+adds an explicit Bulk Commit form and durable batch results through the same native
+review gate. Select worktrees in Overview, open Bulk Commit, choose messages/sources
+and exclusions, and prepare the exact native review. Refresh results after native
+execution. Selecting unfinished worktrees always requires a new review; published
+successes are excluded. Ordinary builds keep write preparation disabled.
+See [M5A contracts](../../docs/architecture/M5A_LOCAL_BULK_COMMITS.md). Remote
 operations, AI, Actions, hunk staging, discard/reset/amend, advanced hook support,
 backup/retention UI and release packaging were not implemented.
 

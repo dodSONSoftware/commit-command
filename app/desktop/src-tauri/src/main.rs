@@ -180,6 +180,7 @@ fn mutating_request(request: &Request) -> bool {
     matches!(
         request,
         Request::ReviewTrust { .. }
+            | Request::ReviewBatch { .. }
             | Request::Revoke { .. }
             | Request::HookPolicy { .. }
             | Request::Propose { .. }
@@ -205,6 +206,7 @@ fn dispatch<R: tauri::Runtime>(
                 | Request::Remove { .. }
                 | Request::Propose { .. }
                 | Request::ReviewTrust { .. }
+                | Request::ReviewBatch { .. }
                 | Request::ReviewRecovery { .. }
         )
     {
@@ -786,11 +788,24 @@ mod tests {
         }
         let nested = json!({"version":1,"epoch":1,"request":{"kind":"propose","workspace":"w","worktree":"t","request":{"kind":"stage","paths":[{"encoding":"utf8","value":"file.txt"}],"hooks":"execute","approved":true}}});
         assert!(decode(&nested.to_string()).is_err());
+        let batch = json!({"version":1,"epoch":1,"request":{"kind":"review_batch","workspace":"w","selections":[{"worktree":"t","message":"message","mode":"review_all","excluded":[],"hooks":"execute","signing":"configured","approved":true}]}});
+        assert!(decode(&batch.to_string()).is_err());
         assert!(decode(&"x".repeat(security::MAX_REQUEST + 1)).is_err());
         assert!(decode(
             &json!({"version":1,"epoch":1,"request":{"kind":"workspaces"}}).to_string()
         )
         .is_ok());
+    }
+    #[test]
+    fn bulk_review_uses_the_same_write_gate_as_individual_proposals() {
+        assert!(mutating_request(&Request::ReviewBatch {
+            workspace: "w".into(),
+            selections: Vec::new(),
+        }));
+        assert!(!mutating_request(&Request::Batches {
+            workspace: "w".into(),
+            offset: 0,
+        }));
     }
     #[test]
     fn renderer_reload_revokes_native_context_and_requests_core_reset() {

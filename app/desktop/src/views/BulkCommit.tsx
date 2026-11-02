@@ -1,0 +1,322 @@
+import { useState } from "react";
+import { value, type Bridge } from "../services/bridge";
+import type { BatchSelection } from "../services/request.generated";
+import type { BatchPage, StoredWorktree } from "../services/response.generated";
+import { pathText, repoName } from "../stores/model";
+
+type Configuration = Pick<
+  BatchSelection,
+  "mode" | "excluded" | "hooks" | "signing"
+>;
+const defaults: Configuration = {
+  mode: "review_all",
+  excluded: [],
+  hooks: "execute",
+  signing: "configured",
+};
+
+export function BulkCommit({
+  bridge,
+  workspace,
+  entries,
+  selected,
+  drafts,
+  setDraft,
+  setSelected,
+  enabled,
+  busy,
+  act,
+}: {
+  bridge: Bridge;
+  workspace: string;
+  entries: StoredWorktree[];
+  selected: string[];
+  drafts: Record<string, string>;
+  setDraft: (id: string, text: string) => void;
+  setSelected: (ids: string[]) => void;
+  enabled: boolean;
+  busy: boolean;
+  act: (action: () => Promise<void>) => Promise<void>;
+}) {
+  const [shared, setShared] = useState("");
+  const [configuration, setConfiguration] = useState<
+    Record<string, Configuration>
+  >({});
+  const [results, setResults] = useState<BatchPage | null>(null);
+  const chosen = selected.map((id) => entries.find((e) => e.id === id));
+  const valid =
+    chosen.length > 0 &&
+    chosen.length <= 20 &&
+    chosen.every((entry) => entry && (drafts[entry.id] || shared).trim());
+  function change(id: string, update: Partial<Configuration>) {
+    setConfiguration((current) => ({
+      ...current,
+      [id]: { ...(current[id] ?? defaults), ...update },
+    }));
+  }
+  async function refresh(offset = 0) {
+    const page = value(
+      await bridge.request({ kind: "batches", workspace, offset }),
+      "batches",
+    );
+    setResults((current) =>
+      offset && current
+        ? { items: [...current.items, ...page.items], next: page.next }
+        : page,
+    );
+  }
+  return (
+    <section className="bulk-commit">
+      <div className="page-title">
+        <div>
+          <h1>Bulk Commit</h1>
+          <p>
+            Only explicitly selected worktrees participate. Commits run
+            sequentially and stop on first failure; completed commits are
+            preserved.
+          </p>
+        </div>
+        <button disabled={busy} onClick={() => void act(() => refresh())}>
+          Refresh batch results
+        </button>
+      </div>
+      {!enabled && (
+        <p role="status">
+          Writes require the acceptance build and native authorization.
+        </p>
+      )}
+      <p>
+        Selected submodules run before their selected parents. After a child
+        commit, prepare a fresh review for the parent's changed gitlink. Nested
+        independent repositories are never selected implicitly.
+      </p>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (!valid || busy || !enabled) return;
+          void act(async () => {
+            await bridge.request({
+              kind: "review_batch",
+              workspace,
+              selections: chosen.flatMap((entry) =>
+                entry
+                  ? [
+                      {
+                        worktree: entry.id,
+                        message: drafts[entry.id] || shared,
+                        ...(configuration[entry.id] ?? defaults),
+                      },
+                    ]
+                  : [],
+              ),
+            });
+            await refresh();
+          });
+        }}
+      >
+        <label>
+          Shared commit message
+          <textarea
+            rows={4}
+            maxLength={512 * 1024}
+            value={shared}
+            onChange={(e) => setShared(e.target.value)}
+          />
+        </label>
+        <p>
+          {selected.length} explicitly selected · maximum 20 per review. A
+          nonempty repository draft overrides the shared message.
+        </p>
+        {chosen.map((entry, index) => {
+          if (!entry)
+            return (
+              <p role="alert" key={selected[index]}>
+                Selected worktree unavailable: {selected[index]}. Return to
+                Overview to update selection.
+              </p>
+            );
+          const config = configuration[entry.id] ?? defaults;
+          const paths = new Map(
+            (entry.status?.changes ?? [])
+              .flatMap((c) => [
+                c.path,
+                ...(c.original_path ? [c.original_path] : []),
+              ])
+              .map((p) => [JSON.stringify(p), p]),
+          );
+          return (
+            <fieldset key={entry.id} disabled={busy}>
+              <legend>{repoName(entry)}</legend>
+              <p className="path">{pathText(entry.display_path)}</p>
+              <label>
+                Message override · {repoName(entry)}
+                <textarea
+                  rows={3}
+                  maxLength={512 * 1024}
+                  value={drafts[entry.id] ?? ""}
+                  placeholder="Use shared message"
+                  onChange={(e) => setDraft(entry.id, e.target.value)}
+                />
+              </label>
+              <div className="activity-filters">
+                <label>
+                  Content · {repoName(entry)}
+                  <select
+                    value={config.mode}
+                    onChange={(e) =>
+                      change(entry.id, {
+                        mode: e.target.value as Configuration["mode"],
+                      })
+                    }
+                  >
+                    <option value="review_all">
+                      Review all eligible changes
+                    </option>
+                    <option value="index_only">
+                      Index only · preserve partial staging
+                    </option>
+                  </select>
+                </label>
+                <label>
+                  Hooks · {repoName(entry)}
+                  <select
+                    value={config.hooks}
+                    onChange={(e) =>
+                      change(entry.id, {
+                        hooks: e.target.value as Configuration["hooks"],
+                      })
+                    }
+                  >
+                    <option value="execute">Execute supported hooks</option>
+                    <option value="bypass_all">
+                      Bypass all · explicit review
+                    </option>
+                  </select>
+                </label>
+                <label>
+                  Signing · {repoName(entry)}
+                  <select
+                    value={config.signing}
+                    onChange={(e) =>
+                      change(entry.id, {
+                        signing: e.target.value as Configuration["signing"],
+                      })
+                    }
+                  >
+                    <option value="configured">
+                      Configured signing policy
+                    </option>
+                    <option value="unsigned">Explicitly unsigned</option>
+                  </select>
+                </label>
+              </div>
+              <details>
+                <summary>
+                  Exclude specific changed paths · {repoName(entry)}
+                </summary>
+                <p>
+                  Core determines eligibility from fresh status. An exclusion
+                  that no longer applies blocks this worktree until reviewed
+                  again.
+                </p>
+                {[...paths].map(([key, path]) => (
+                  <label className="bulk-path" key={key}>
+                    <input
+                      type="checkbox"
+                      checked={config.excluded.some(
+                        (p) => JSON.stringify(p) === key,
+                      )}
+                      onChange={(event) =>
+                        change(entry.id, {
+                          excluded: event.target.checked
+                            ? [...config.excluded, path]
+                            : config.excluded.filter(
+                                (p) => JSON.stringify(p) !== key,
+                              ),
+                        })
+                      }
+                    />
+                    Exclude {pathText(path)}
+                  </label>
+                ))}
+              </details>
+            </fieldset>
+          );
+        })}
+        <button className="primary" disabled={!enabled || busy || !valid}>
+          Prepare native bulk review
+        </button>
+      </form>
+      <h2>Durable batch results</h2>
+      <p>
+        Refresh after the native operation finishes. Closing a review or
+        restarting never resumes a batch automatically.
+      </p>
+      {results?.items.length === 0 && (
+        <p>No recorded batches in this workspace.</p>
+      )}
+      {results?.items.map(({ record, outcomes }) => (
+        <article className="bulk-result" key={record.id}>
+          <h3>
+            {record.phase} · {new Date(record.created_at_ms).toISOString()}
+          </h3>
+          <p className="path">{record.id}</p>
+          {record.issue && (
+            <p role="alert">
+              {record.issue.kind}: {record.issue.message}
+            </p>
+          )}
+          <ol>
+            {record.items.map((item) => {
+              const outcome = outcomes.find(
+                (o) => o.operation_id === item.operation,
+              );
+              return (
+                <li key={item.worktree}>
+                  <span className="path">{pathText(item.path)}</span> ·{" "}
+                  {outcome?.phase ?? "blocked"} ·{" "}
+                  {outcome?.published ? "Published" : "Not published"}
+                  {item.issue && (
+                    <p>
+                      {item.issue.kind}: {item.issue.message}
+                    </p>
+                  )}
+                  {outcome?.reason && <p>{outcome.reason}</p>}
+                </li>
+              );
+            })}
+          </ol>
+          <button
+            disabled={
+              busy ||
+              record.phase === "proposed" ||
+              record.phase === "executing"
+            }
+            onClick={() => {
+              const unfinished = record.items
+                .filter(
+                  (item) =>
+                    !outcomes.some(
+                      (o) => o.operation_id === item.operation && o.published,
+                    ),
+                )
+                .map((item) => item.worktree);
+              setSelected(unfinished);
+              setConfiguration({});
+            }}
+          >
+            Select unfinished worktrees for fresh review
+          </button>
+        </article>
+      ))}
+      {results?.next != null && (
+        <button
+          disabled={busy}
+          onClick={() => void act(() => refresh(results.next!))}
+        >
+          Load older batches
+        </button>
+      )}
+    </section>
+  );
+}
