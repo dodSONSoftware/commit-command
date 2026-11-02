@@ -11,6 +11,7 @@ import type {
   Workspace,
   StoredWorktree,
   DesktopState,
+  BulkComposerState,
   TrustState,
   Diff,
   Change,
@@ -23,6 +24,7 @@ import type {
 import type { WriteRequest, AuditQuery } from "../services/request.generated";
 import {
   initialState,
+  initialBulkComposer,
   bytes,
   pathText,
   relative,
@@ -45,6 +47,8 @@ export function App({ bridge }: { bridge: Bridge }) {
   const [workspace, setWorkspace] = useState<string | null>(null);
   const [entries, setEntries] = useState<StoredWorktree[]>([]);
   const [nav, setNav] = useState<DesktopState>(initialState);
+  const [bulkComposer, setBulkComposer] =
+    useState<BulkComposerState>(initialBulkComposer);
   const [trust, setTrust] = useState<TrustState[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -66,6 +70,10 @@ export function App({ bridge }: { bridge: Bridge }) {
   const context = useRef<string | null>(null);
   const loaded = useRef(false);
   const latest = useRef(nav);
+  const latestBulk = useRef(bulkComposer);
+  useEffect(() => {
+    latestBulk.current = bulkComposer;
+  }, [bulkComposer]);
   useEffect(() => {
     latest.current = nav;
   }, [nav]);
@@ -112,6 +120,7 @@ export function App({ bridge }: { bridge: Bridge }) {
       loaded.current = false;
       context.current = ws;
       setWorkspace(ws);
+      setBulkComposer(initialBulkComposer);
       setEntries([]);
       setMonitor("Not monitoring");
       setTrust([]);
@@ -126,8 +135,13 @@ export function App({ bridge }: { bridge: Bridge }) {
           await bridge.request({ kind: "load_state", workspace: ws }),
           "state",
         );
+        const composer = value(
+          await bridge.request({ kind: "load_bulk_composer", workspace: ws }),
+          "bulk_composer",
+        );
         if (context.current === ws) {
           setNav(state);
+          setBulkComposer(composer);
           loaded.current = true;
         }
       } else {
@@ -187,15 +201,36 @@ export function App({ bridge }: { bridge: Bridge }) {
     return () => clearTimeout(id);
   }, [nav, workspace, bridge]);
   useEffect(() => {
+    if (!workspace || !loaded.current) return;
+    const id = setTimeout(() => {
+      bridge
+        .request({ kind: "save_bulk_composer", workspace, state: bulkComposer })
+        .catch((e) => {
+          if (context.current === workspace)
+            setError(`Bulk composer was not saved: ${String(e)}`);
+        });
+    }, 500);
+    return () => clearTimeout(id);
+  }, [bulkComposer, workspace, bridge]);
+  useEffect(() => {
     document.documentElement.dataset.theme = nav.theme;
   }, [nav.theme]);
-  async function switchWorkspace(id: string) {
-    if (workspace && loaded.current)
+  async function savePresentation() {
+    if (workspace && loaded.current) {
       await bridge.request({
         kind: "save_state",
         workspace,
         state: latest.current,
       });
+      await bridge.request({
+        kind: "save_bulk_composer",
+        workspace,
+        state: latestBulk.current,
+      });
+    }
+  }
+  async function switchWorkspace(id: string) {
+    await savePresentation();
     await bridge.request({ kind: "activate", workspace: id });
     context.current = null;
     await load();
@@ -206,6 +241,7 @@ export function App({ bridge }: { bridge: Bridge }) {
   async function create() {
     const selection = await bridge.pick();
     if (!selection) return;
+    await savePresentation();
     const name =
       selection.display.split("/").filter(Boolean).at(-1) ?? "Workspace";
     await bridge.request({ kind: "create", name, picker: selection.picker });
@@ -602,6 +638,8 @@ export function App({ bridge }: { bridge: Bridge }) {
               entries={entries}
               selected={nav.selected}
               drafts={nav.drafts}
+              composer={bulkComposer}
+              setComposer={setBulkComposer}
               setDraft={(id, text) =>
                 setNav((current) => ({
                   ...current,

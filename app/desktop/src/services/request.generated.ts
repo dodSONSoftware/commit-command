@@ -33,6 +33,15 @@ export type Request =
       workspace: string;
     }
   | {
+      kind: "load_bulk_composer";
+      workspace: string;
+    }
+  | {
+      kind: "save_bulk_composer";
+      state: BulkComposerState;
+      workspace: string;
+    }
+  | {
       kind: "remotes";
       workspace: string;
       worktree: string;
@@ -280,6 +289,19 @@ export interface BatchSelection {
   mode: BatchMode;
   signing: SigningPreference;
   worktree: string;
+}
+export interface BulkComposerState {
+  configurations: {
+    [k: string]: BatchConfiguration;
+  };
+  message: string;
+  version: number;
+}
+export interface BatchConfiguration {
+  excluded: NativePath[];
+  hooks: HookPolicy;
+  mode: BatchMode;
+  signing: SigningPreference;
 }
 export interface DiscoveryOptions {
   excluded_names: string[];

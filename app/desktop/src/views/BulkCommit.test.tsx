@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { initialBulkComposer } from "../stores/model";
 import {
   cleanup,
   fireEvent,
@@ -38,24 +40,30 @@ function setup(enabled = true) {
   const setSelected = vi.fn();
   const setDraft = vi.fn();
   const act = async (action: () => Promise<void>) => action();
-  render(
-    <BulkCommit
-      bridge={bridge}
-      workspace="ws"
-      entries={[
-        fixtureEntry("a", "alpha"),
-        fixtureEntry("b", "beta"),
-        fixtureEntry("c", "unselected"),
-      ]}
-      selected={["a", "b"]}
-      drafts={{ b: "Repository override" }}
-      setDraft={setDraft}
-      setSelected={setSelected}
-      enabled={enabled}
-      busy={false}
-      act={act}
-    />,
-  );
+  function Controlled() {
+    const [composer, setComposer] = useState(initialBulkComposer);
+    return (
+      <BulkCommit
+        bridge={bridge}
+        workspace="ws"
+        entries={[
+          fixtureEntry("a", "alpha"),
+          fixtureEntry("b", "beta"),
+          fixtureEntry("c", "unselected"),
+        ]}
+        selected={["a", "b"]}
+        composer={composer}
+        setComposer={setComposer}
+        drafts={{ b: "Repository override" }}
+        setDraft={setDraft}
+        setSelected={setSelected}
+        enabled={enabled}
+        busy={false}
+        act={act}
+      />
+    );
+  }
+  render(<Controlled />);
   return { request, setSelected, setDraft };
 }
 it("prepares only explicit selections with exact overrides, sources and exclusions through review", async () => {

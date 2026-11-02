@@ -1,0 +1,8 @@
+{
+  "source_commit": "c06296b",
+  "features": "ordinary default custom-protocol; desktop-writes disabled",
+  "binary": "/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri/target/debug/bundle/macos/GitFleet.app/Contents/MacOS/gitfleet-desktop",
+  "sha256": "a0b8f4a7c5170ab2f4fc123a950cdff6bd0743ea02ac1c5130223c127cb9cf0f",
+  "fixture": "/private/tmp/gitfleet-m3-native-35cm8or4",
+  "native_control_available": true
+}

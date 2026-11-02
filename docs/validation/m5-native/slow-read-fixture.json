@@ -1,0 +1,8 @@
+{
+  "wrapper": "/private/tmp/gitfleet-m3-native-35cm8or4/tools/git",
+  "sha256": "b3c61154705fb624e3b2bc2da173bfe4ea9e8e0572f97c4e2747a6163f9b765e",
+  "sentinel": "/private/tmp/gitfleet-m3-native-35cm8or4/read-started.pid",
+  "holds": "rev-list only while explicit fixture flag exists",
+  "sleep_seconds": 60,
+  "durable_script": "held-read-git-wrapper.sh"
+}

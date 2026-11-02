@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "message": "Persisted native bulk draft\n\nRetain the explicit index-only policy.",
+  "configurations": {
+    "7769afae-f417-45eb-976d-19d8f0fe9d9a": {
+      "mode": "index_only",
+      "excluded": [],
+      "hooks": "execute",
+      "signing": "configured"
+    }
+  }
+}

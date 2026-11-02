@@ -1,0 +1,7 @@
+{
+  "source_base": "c06296b",
+  "source_changes": "bulk state/native follow-up; final source hashes recorded separately",
+  "features": "ordinary default custom-protocol; desktop-writes disabled",
+  "binary": "/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri/target/debug/bundle/macos/GitFleet.app/Contents/MacOS/gitfleet-desktop",
+  "sha256": "0aa9e1ee2cf761f6e8c1bc68a4e4946b91f8a2170bd54d8e7b0a529636ddabe5"
+}

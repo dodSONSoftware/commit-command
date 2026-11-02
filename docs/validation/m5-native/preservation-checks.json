@@ -1,0 +1,6 @@
+{
+  "initial_read_views": true,
+  "remote_inspection": true,
+  "close_during_running_read": true,
+  "draft_fix_and_restart": true
+}

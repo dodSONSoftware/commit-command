@@ -10,6 +10,25 @@ The desktop supplies a shared message with optional existing per-worktree draft 
 
 Dependency edges come only from discovery's actual submodule relationships. Independent nested repositories have no dependency edge. A deterministic topological order places selected children before selected parents. Dependencies are persisted with the batch. If a selected child publishes, the parent's old proposal cannot authorize a future changed gitlink; execution stops for fresh parent review. Omitting a child never enrolls it. Sequential M2 execution retains existing common-directory and native Git locks, including for linked worktrees.
 
+## Workspace composer persistence
+
+Shared messages and per-worktree content/exclusion/hook/signing choices survive
+view navigation and restart. A separate versioned `bulk-composer:<workspace-id>`
+record uses the existing state table and single owner; the existing desktop-state
+schema and per-repository message drafts remain unchanged. Typed load/save requests
+require the active workspace, cap the message at 512 KiB, configurations at 100,
+exclusions at 10,000 per configuration and the record at 2 MiB. Invalid versions,
+relative paths, duplicate native path aliases and oversized values fail without
+replacing the last valid draft. Preferences confer no operation authority.
+
+The app retains the composer across view changes, saves with the existing
+navigation debounce and flushes before switching/creating workspaces. Selecting
+unfinished worktrees retains explicit content policy. A clear-exclusions control
+lets users remove obsolete exclusions without resetting index-only mode. Saving a
+draft does not stage or write Git content. An immediate close before the existing
+debounce is not newly guaranteed by this patch; close/save lifecycle acceptance
+remains open.
+
 ## Execution and durable results
 
 A versioned `batch:<uuid>` record uses the existing single-owner SQLite state table. It links exact M2 operation IDs, paths, worktree IDs, dependencies and preparation issues. Outcomes are read from M2's journal rather than duplicated. Record size is capped at 4 MiB. Results paginate at up to 50 records and bound raw records to 4 MiB and projected results to 8 MiB per page.

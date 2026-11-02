@@ -1016,3 +1016,183 @@ fn untrusted_remote_inspection_is_scoped_and_includes_host_configuration_without
         )
         .is_err());
 }
+
+#[test]
+fn bulk_composer_state_is_durable_workspace_scoped_and_does_not_change_git() {
+    use std::collections::BTreeMap;
+    let (f, mut app, ws, wt) = setup();
+    let before = tree_bytes(&f.repo);
+    let state = BulkComposerState {
+        version: 1,
+        message: "Shared subject\n\nExact body 🛰\n".into(),
+        configurations: BTreeMap::from([(
+            wt.clone(),
+            BatchConfiguration {
+                mode: BatchMode::IndexOnly,
+                excluded: vec![NativePath::from_path(Path::new("file.txt"))],
+                hooks: HookPolicy::BypassAll,
+                signing: SigningPreference::Unsigned,
+            },
+        )]),
+    };
+    app.request(
+        app.epoch(),
+        Request::SaveBulkComposer {
+            workspace: ws.clone(),
+            state: state.clone(),
+        },
+    )
+    .unwrap();
+    let Data::BulkComposer(loaded) = app
+        .request(
+            app.epoch(),
+            Request::LoadBulkComposer {
+                workspace: ws.clone(),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert_eq!(
+        serde_json::to_value(&loaded).unwrap(),
+        serde_json::to_value(&state).unwrap()
+    );
+    let other = Fixture::new();
+    other.commit_file();
+    let picker = app.register_directory(&other.repo).unwrap();
+    app.request(
+        app.epoch(),
+        Request::Create {
+            name: "Other workspace".into(),
+            picker,
+        },
+    )
+    .unwrap();
+    let Data::Workspaces(workspaces) = app
+        .request(app.epoch(), Request::Workspaces {})
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    let active = workspaces.active.unwrap();
+    assert_ne!(active, ws);
+    let Data::BulkComposer(empty) = app
+        .request(app.epoch(), Request::LoadBulkComposer { workspace: active })
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert!(empty.message.is_empty() && empty.configurations.is_empty());
+    assert!(app
+        .request(
+            app.epoch(),
+            Request::SaveBulkComposer {
+                workspace: ws.clone(),
+                state: BulkComposerState::default()
+            }
+        )
+        .is_err());
+    app.request(
+        app.epoch(),
+        Request::Activate {
+            workspace: ws.clone(),
+        },
+    )
+    .unwrap();
+    drop(app);
+    let mut app = Application::open(&f.root.join("state"), fixture_options(&f)).unwrap();
+    let Data::BulkComposer(restored) = app
+        .request(app.epoch(), Request::LoadBulkComposer { workspace: ws })
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert_eq!(
+        serde_json::to_value(restored).unwrap(),
+        serde_json::to_value(state).unwrap()
+    );
+    assert_eq!(before, tree_bytes(&f.repo));
+}
+
+#[test]
+fn invalid_bulk_preferences_do_not_replace_the_last_valid_draft() {
+    use std::collections::BTreeMap;
+    let (f, mut app, ws, wt) = setup();
+    let before = tree_bytes(&f.repo);
+    let valid = BulkComposerState {
+        message: "Keep this draft".into(),
+        ..BulkComposerState::default()
+    };
+    app.request(
+        app.epoch(),
+        Request::SaveBulkComposer {
+            workspace: ws.clone(),
+            state: valid.clone(),
+        },
+    )
+    .unwrap();
+    let config = |excluded| BatchConfiguration {
+        mode: BatchMode::ReviewAll,
+        excluded,
+        hooks: HookPolicy::Execute,
+        signing: SigningPreference::Configured,
+    };
+    for state in [
+        BulkComposerState {
+            version: 2,
+            ..valid.clone()
+        },
+        BulkComposerState {
+            message: "x".repeat(512 * 1024 + 1),
+            ..valid.clone()
+        },
+        BulkComposerState {
+            configurations: BTreeMap::from([(
+                wt.clone(),
+                config(vec![NativePath::Utf8("../escape".into())]),
+            )]),
+            ..valid.clone()
+        },
+        BulkComposerState {
+            configurations: BTreeMap::from([(
+                wt,
+                config(vec![
+                    NativePath::Utf8("file.txt".into()),
+                    NativePath::UnixBytes(b"file.txt".to_vec()),
+                ]),
+            )]),
+            ..valid.clone()
+        },
+    ] {
+        assert!(app
+            .request(
+                app.epoch(),
+                Request::SaveBulkComposer {
+                    workspace: ws.clone(),
+                    state
+                }
+            )
+            .is_err());
+    }
+    let mut forged = serde_json::to_value(Request::SaveBulkComposer {
+        workspace: ws.clone(),
+        state: valid.clone(),
+    })
+    .unwrap();
+    forged["state"]["approved"] = serde_json::json!(true);
+    assert!(serde_json::from_value::<Request>(forged).is_err());
+    let Data::BulkComposer(loaded) = app
+        .request(app.epoch(), Request::LoadBulkComposer { workspace: ws })
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert_eq!(loaded.message, valid.message);
+    assert_eq!(before, tree_bytes(&f.repo));
+}

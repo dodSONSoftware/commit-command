@@ -1,0 +1,37 @@
+{
+  "source_base": "c06296bb3f56649b9ada2aeda17f66409ce43846",
+  "dirty": true,
+  "application_services_integration": {
+    "passed": 18,
+    "failed": 0
+  },
+  "all_features_application_integration": {
+    "passed": 18,
+    "failed": 0
+  },
+  "default_core_all_targets_check": "passed",
+  "core_format_and_application_all_feature_strict_clippy": "passed",
+  "renderer": {
+    "passed": 29,
+    "failed": 0
+  },
+  "native_host_default": {
+    "passed": 8,
+    "failed": 0
+  },
+  "native_host_all_features": {
+    "passed": 8,
+    "failed": 0
+  },
+  "desktop_full_gate": "passed",
+  "full_core_signing_crash_matrix_rerun_for_this_state_only_patch": false,
+  "native_evidence": "../m5-native",
+  "native_draft_navigation_restart": "passed",
+  "native_close_during_held_read": "passed",
+  "app_closed_at_stop": true,
+  "user_requested_stop": true,
+  "unrelated_unstaged": [
+    ".gitignore"
+  ],
+  "known_open_finding": "Cancel current operation disabled during an automatic graph read; native close still cancels it correctly"
+}

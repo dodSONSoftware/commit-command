@@ -1,12 +1,16 @@
 # GitFleet implementation status
 
-Current execution follow-up (November 2, 2026): the user authorized the full
+Current execution follow-up (November 2, 2026): execution is stopped at the user
+request after the [native/bulk-state checkpoint](reports/M5_NATIVE_FOLLOWUP_2026-11-02.md). Native control became available again; selected M4/M5 ordinary UI and
+close-during-read retests passed. A graph-read Cancel UI finding remains open.
+
+Earlier completion execution follow-up (same date): the user authorized the full
 [completion plan](PROJECT_COMPLETION_PLAN.md), local package/milestone commits and
 reports, with no push. See [execution status](EXECUTION_STATUS.md) for current gates.
 P0 is committed; M3 fixes and M4 graph/activity/audit have automated evidence and
 partial native evidence. M5A local commit batches have passed automated gates; see the
 [M5A report](reports/M5A_LOCAL_BULK_PROGRESS_2026-11-02.md). Remaining
-native checks are deferred while the Mac is locked; ordinary desktop writes remain
+native checks are incomplete; ordinary desktop writes remain
 disabled. M5B remote inspection and separately reviewed credential-free branch observation
 are implemented with automated evidence. Fetch, authenticated transport, push and
 M6–M8 remain unfinished.

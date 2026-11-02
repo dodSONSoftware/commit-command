@@ -12,7 +12,7 @@ import { App } from "./App";
 import type { Bridge, Payload } from "../services/bridge";
 import type { Request } from "../services/request.generated";
 import type { DesktopState } from "../services/response.generated";
-import { initialState } from "../stores/model";
+import { initialState, initialBulkComposer } from "../stores/model";
 import { fixtureEntry, fixtureWorkspace } from "../testdata";
 afterEach(() => {
   cleanup();
@@ -39,6 +39,13 @@ function fake(writes = false) {
               recovery: [],
             },
           };
+        case "load_bulk_composer":
+          return {
+            kind: "bulk_composer",
+            value: { ...initialBulkComposer, configurations: {} },
+          };
+        case "save_bulk_composer":
+          return { kind: "done" };
         case "load_state":
           return { kind: "state", value: { ...initialState, drafts: {} } };
         case "inventory":
@@ -502,4 +509,62 @@ it("keeps audit pagination bound to applied filters until edited filters are sub
     query: { offset: 0, operation_kind: "commit" },
   });
   await screen.findByText("No GitFleet operations in this workspace.");
+});
+
+it("keeps shared bulk messages and content policy across selection navigation and restart", async () => {
+  const { bridge } = fake();
+  const original = bridge.request;
+  let composer = structuredClone(initialBulkComposer);
+  let navigation = structuredClone(initialState);
+  bridge.request = async (request) => {
+    const result = await original(request);
+    if (request.kind === "save_bulk_composer")
+      composer = structuredClone(request.state);
+    if (request.kind === "load_bulk_composer")
+      return { kind: "bulk_composer", value: structuredClone(composer) };
+    if (request.kind === "save_state")
+      navigation = structuredClone(request.state);
+    if (request.kind === "load_state")
+      return { kind: "state", value: structuredClone(navigation) };
+    return result;
+  };
+  const first = render(<App bridge={bridge} />);
+  await userEvent.click(
+    await screen.findByRole("checkbox", { name: "Select parent" }),
+  );
+  await userEvent.click(screen.getByRole("button", { name: "Bulk Commit" }));
+  fireEvent.change(screen.getByLabelText("Shared commit message"), {
+    target: { value: "Keep shared subject\n\nKeep body" },
+  });
+  fireEvent.change(screen.getByLabelText("Content · parent"), {
+    target: { value: "index_only" },
+  });
+  fireEvent.click(screen.getByLabelText("Exclude file.txt"));
+  await userEvent.click(screen.getByRole("button", { name: "▦ Overview" }));
+  await userEvent.click(screen.getByRole("button", { name: "Bulk Commit" }));
+  expect(screen.getByLabelText("Shared commit message")).toHaveValue(
+    "Keep shared subject\n\nKeep body",
+  );
+  expect(screen.getByLabelText("Content · parent")).toHaveValue("index_only");
+  expect(screen.getByLabelText("Exclude file.txt")).toBeChecked();
+  fireEvent.click(
+    screen.getByRole("button", { name: "Clear path exclusions · parent" }),
+  );
+  await waitFor(
+    () => {
+      expect(composer.message).toBe("Keep shared subject\n\nKeep body");
+      expect(composer.configurations.parent.mode).toBe("index_only");
+      expect(composer.configurations.parent.excluded).toEqual([]);
+    },
+    { timeout: 2000 },
+  );
+  first.unmount();
+  render(<App bridge={bridge} />);
+  await screen.findByRole("checkbox", { name: "Select parent" });
+  await userEvent.click(screen.getByRole("button", { name: "Bulk Commit" }));
+  expect(screen.getByLabelText("Shared commit message")).toHaveValue(
+    "Keep shared subject\n\nKeep body",
+  );
+  expect(screen.getByLabelText("Content · parent")).toHaveValue("index_only");
+  expect(screen.getByLabelText("Exclude file.txt")).not.toBeChecked();
 });

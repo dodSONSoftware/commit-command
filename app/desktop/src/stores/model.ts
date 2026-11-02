@@ -3,7 +3,13 @@ import type {
   StoredWorktree,
   NativePath,
   RepositoryTab,
+  BulkComposerState,
 } from "../services/response.generated";
+export const initialBulkComposer: BulkComposerState = {
+  version: 1,
+  message: "",
+  configurations: {},
+};
 export const initialState: DesktopState = {
   version: 1,
   tabs: [],

@@ -26,6 +26,11 @@ export type Data =
       [k: string]: unknown;
     }
   | {
+      kind: "bulk_composer";
+      value: BulkComposerState;
+      [k: string]: unknown;
+    }
+  | {
       kind: "remotes";
       value: Inspection;
       [k: string]: unknown;
@@ -207,6 +212,21 @@ export type BatchPhase =
   | "interrupted";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "HookPolicy".
+ */
+export type HookPolicy = "execute" | "bypass_all";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "BatchMode".
+ */
+export type BatchMode = "review_all" | "index_only";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "SigningPreference".
+ */
+export type SigningPreference = "configured" | "unsigned";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "Transport".
  */
 export type Transport =
@@ -246,11 +266,6 @@ export type DiffMode =
  * via the `definition` "ContentSource".
  */
 export type ContentSource = "index" | "working_tree";
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "HookPolicy".
- */
-export type HookPolicy = "execute" | "bypass_all";
 
 export interface Response {
   data: Data;
@@ -469,6 +484,27 @@ export interface BatchItem {
   path: NativePath;
   worktree: string;
   [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "BulkComposerState".
+ */
+export interface BulkComposerState {
+  configurations: {
+    [k: string]: BatchConfiguration;
+  };
+  message: string;
+  version: number;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "BatchConfiguration".
+ */
+export interface BatchConfiguration {
+  excluded: NativePath[];
+  hooks: HookPolicy;
+  mode: BatchMode;
+  signing: SigningPreference;
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema

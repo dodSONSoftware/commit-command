@@ -1,7 +1,11 @@
-import { useState } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import { value, type Bridge } from "../services/bridge";
 import type { BatchSelection } from "../services/request.generated";
-import type { BatchPage, StoredWorktree } from "../services/response.generated";
+import type {
+  BatchPage,
+  StoredWorktree,
+  BulkComposerState,
+} from "../services/response.generated";
 import { pathText, repoName } from "../stores/model";
 
 type Configuration = Pick<
@@ -21,6 +25,8 @@ export function BulkCommit({
   entries,
   selected,
   drafts,
+  composer,
+  setComposer,
   setDraft,
   setSelected,
   enabled,
@@ -32,16 +38,16 @@ export function BulkCommit({
   entries: StoredWorktree[];
   selected: string[];
   drafts: Record<string, string>;
+  composer: BulkComposerState;
+  setComposer: Dispatch<SetStateAction<BulkComposerState>>;
   setDraft: (id: string, text: string) => void;
   setSelected: (ids: string[]) => void;
   enabled: boolean;
   busy: boolean;
   act: (action: () => Promise<void>) => Promise<void>;
 }) {
-  const [shared, setShared] = useState("");
-  const [configuration, setConfiguration] = useState<
-    Record<string, Configuration>
-  >({});
+  const shared = composer.message;
+  const configuration = composer.configurations;
   const [results, setResults] = useState<BatchPage | null>(null);
   const chosen = selected.map((id) => entries.find((e) => e.id === id));
   const valid =
@@ -49,9 +55,12 @@ export function BulkCommit({
     chosen.length <= 20 &&
     chosen.every((entry) => entry && (drafts[entry.id] || shared).trim());
   function change(id: string, update: Partial<Configuration>) {
-    setConfiguration((current) => ({
+    setComposer((current) => ({
       ...current,
-      [id]: { ...(current[id] ?? defaults), ...update },
+      configurations: {
+        ...current.configurations,
+        [id]: { ...(current.configurations[id] ?? defaults), ...update },
+      },
     }));
   }
   async function refresh(offset = 0) {
@@ -120,7 +129,13 @@ export function BulkCommit({
             rows={4}
             maxLength={512 * 1024}
             value={shared}
-            onChange={(e) => setShared(e.target.value)}
+            disabled={busy}
+            onChange={(e) =>
+              setComposer((current) => ({
+                ...current,
+                message: e.target.value,
+              }))
+            }
           />
         </label>
         <p>
@@ -210,6 +225,16 @@ export function BulkCommit({
                   </select>
                 </label>
               </div>
+              <button
+                type="button"
+                onClick={() => change(entry.id, { excluded: [] })}
+              >
+                Clear path exclusions · {repoName(entry)}
+              </button>
+              <p>
+                {config.excluded.length} stored exclusions. Clear exclusions if
+                a path is no longer eligible.
+              </p>
               <details>
                 <summary>
                   Exclude specific changed paths · {repoName(entry)}
@@ -302,7 +327,6 @@ export function BulkCommit({
                 )
                 .map((item) => item.worktree);
               setSelected(unfinished);
-              setConfiguration({});
             }}
           >
             Select unfinished worktrees for fresh review

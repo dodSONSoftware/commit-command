@@ -1,5 +1,7 @@
 //! Presentation-independent application/session boundary. No native UI or transport APIs.
 mod bulk;
+mod bulk_state;
+pub use bulk_state::{BatchConfiguration, BulkComposerState};
 mod exploration;
 pub use bulk::{
     BatchItem, BatchMode, BatchPage, BatchPhase, BatchRecord, BatchSelection, BatchView,
@@ -63,6 +65,13 @@ pub enum Request {
     Batches {
         workspace: String,
         offset: usize,
+    },
+    LoadBulkComposer {
+        workspace: String,
+    },
+    SaveBulkComposer {
+        workspace: String,
+        state: BulkComposerState,
     },
     Remotes {
         workspace: String,
@@ -196,6 +205,7 @@ pub enum Data {
     Activity(exploration::ActivityReport),
     Audit(exploration::AuditPage),
     Batches(BatchPage),
+    BulkComposer(BulkComposerState),
     Remotes(crate::remote::Inspection),
     RemoteObservations(crate::remote::observation::ObservationPage),
     Workspaces(WorkspaceList),
@@ -600,6 +610,13 @@ impl Application {
                     }
                 }
                 Data::RemoteObservations(page)
+            }
+            Request::LoadBulkComposer { workspace } => {
+                Data::BulkComposer(self.load_bulk_composer(&workspace)?)
+            }
+            Request::SaveBulkComposer { workspace, state } => {
+                self.save_bulk_composer(&workspace, &state)?;
+                Data::Done
             }
             Request::Remotes {
                 workspace,
