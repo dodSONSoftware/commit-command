@@ -6,10 +6,24 @@ use std::fs::{self, File, OpenOptions};
 use std::io::Write;
 use std::path::{Path, PathBuf};
 
+/// Persisted POC phases; JSON spellings remain compatible with v0.1.1 journals.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum JournalState {
+    Prepared,
+    CommitObjectCreated,
+    RefUpdatePending,
+    RefUpdatedPendingIndex,
+    IndexPromoted,
+    RefRejected,
+    AbortedBeforeRef,
+    Complete,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Journal {
     pub format_version: u32,
-    pub state: String,
+    pub state: JournalState,
     pub repo: PathBuf,
     pub git_dir: PathBuf,
     pub git_ref: String,
@@ -30,11 +44,18 @@ pub struct Journal {
 }
 
 pub fn save(path: &Path, value: &Journal) -> Result<()> {
-    fs::create_dir_all(path.parent().ok_or_else(|| Error::new("journal has no parent"))?)?;
+    fs::create_dir_all(
+        path.parent()
+            .ok_or_else(|| Error::new("journal has no parent"))?,
+    )?;
     let tmp = path.with_extension("tmp");
     let bytes = serde_json::to_vec_pretty(value)?;
     let mut file = OpenOptions::new().create_new(true).write(true).open(&tmp)?;
-    if let Err(e) = (|| -> std::io::Result<()> { file.write_all(&bytes)?; file.write_all(b"\n")?; file.sync_all() })() {
+    if let Err(e) = (|| -> std::io::Result<()> {
+        file.write_all(&bytes)?;
+        file.write_all(b"\n")?;
+        file.sync_all()
+    })() {
         let _ = fs::remove_file(&tmp);
         return Err(e.into());
     }
@@ -46,10 +67,14 @@ pub fn save(path: &Path, value: &Journal) -> Result<()> {
 
 pub fn load(path: &Path) -> Result<Journal> {
     let value: Journal = serde_json::from_slice(&fs::read(path)?)?;
-    if value.format_version != 1 { return Err(Error::new("Unsupported journal version")); }
+    if value.format_version != 1 {
+        return Err(Error::new("Unsupported journal version"));
+    }
     Ok(value)
 }
 
 pub fn sync_directory(path: &Path) {
-    if let Ok(f) = File::open(path) { let _ = f.sync_all(); }
+    if let Ok(f) = File::open(path) {
+        let _ = f.sync_all();
+    }
 }

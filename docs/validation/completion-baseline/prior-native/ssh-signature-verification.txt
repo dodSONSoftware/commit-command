@@ -1,0 +1,1 @@
+Good "git" signature for fixture@example.invalid with ED25519 key SHA256:nz0tI1UNHADN/+ZjygZ2EwwIFQGJ7xmjsXkL8m0gZ6k

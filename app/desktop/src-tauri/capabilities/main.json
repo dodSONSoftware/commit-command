@@ -1,0 +1,15 @@
+{
+  "identifier": "main",
+  "description": "Bundled workspace renderer: scoped requests and jobs only. No approval or OS plugins.",
+  "webviews": [
+    "main"
+  ],
+  "local": true,
+  "permissions": [
+    "allow-dispatch",
+    "allow-pick-directory",
+    "allow-job-status",
+    "allow-cancel-job",
+    "allow-desktop-capabilities"
+  ]
+}

@@ -18,6 +18,10 @@ cargo test --workspace --all-targets
 cargo run --bin gitfleet-lab -- --output results.json
 ```
 
-**Expected:** all acceptance tests and all six core behavior tests pass; the GPG-positive case may skip if `gpg` is unavailable. This expected result has **not** yet been verified by compiling v0.1.1 in this environment.
+**Historical authoring note:** the artifact author could not compile v0.1.1.
+Subsequent user-supplied macOS/Git 2.56.0 evidence verified the build and 30 Rust
+test results, with the positive GPG diagnostic skipped. These commands describe
+that historical artifact, before M0's opt-in feature boundary. Current validation
+and explicit skip accounting are in [implementation status](../../IMPLEMENTATION_STATUS.md).
 
 No production files or repository content are modified by the test suite; Git fixtures are disposable.

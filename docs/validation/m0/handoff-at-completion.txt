@@ -1,0 +1,83 @@
+Historical M0 completion snapshot, preserved before the authorized M1 implementation.
+
+# GitFleet implementation handoff
+
+Updated: 2026-11-01. **M0 completed and stopped for user review.** Do not begin M1
+or later without explicit authorization. No commit or push is authorized.
+
+## Read next
+
+1. [Implementation status](IMPLEMENTATION_STATUS.md): exact results, file inventory,
+   skips, supported envelope and open gates.
+2. [M0 safety contracts](architecture/M0_SAFETY_BOUNDARIES.md): implemented process
+   policy and proposed trust/approval/execution/recovery boundaries.
+3. [Specification](GITFLEET_SPECIFICATION.md), [acceptance matrix](ACCEPTANCE_MATRIX.md)
+   and [decision register](DECISIONS_AND_OPEN_ITEMS.md): product baseline and M0 changes.
+4. `app/core/src/inspection.rs`, `lib.rs`, `Cargo.toml`, inspection/write tests and
+   the experimental engine before changing behavior.
+
+## Authorization and architecture
+
+Preserve `docs/` and `app/`; keep Core independent of Tauri/React. Core remains one
+crate. Desktop directories are placeholders. No M1 persistence, repository identity
+system, history/diff service, UI, monitoring, remotes, AI, Actions or production writes
+were implemented. Preserve the user's pre-existing `.gitignore` change. Cargo.lock,
+license, mockups and historical `app/core/results.json` were not changed.
+
+The default library/CLI provide fixed read-only inspection and discovery. Experimental
+write modules, lab binary and legacy fixture tests require `experimental-writes`.
+Feature opt-in is not trust, approval or permission to target a real repository.
+All Git writes during M0 validation were confined to new temporary fixture repos.
+
+## Important behavior
+
+- CLI `status` uses `inspection::snapshot`; its JSON contains `head`, `branch`,
+  and Git-quoted `status`. Removed diagnostic tree/index-entry fields remain lab-only.
+- Process policy disables executable fsmonitor/hooks, optional locks, lazy fetch,
+  transports, pager and auto maintenance; removes inherited Git overrides; suppresses
+  global/system config. Content filter definitions in local/included/worktree config
+  are rejected before status. Submodule detail is ignored.
+- Inspection handles unborn/detached HEAD and conflicts. Discovery errors propagate
+  instead of silently implying complete inventory. Persisted unavailable repo IDs and
+  per-repository error records remain M1 work.
+- Same-OID branch changes invalidate experimental plans. Worktree selections use
+  literal Git pathspecs. Nonzero hook rejection has `ErrorKind::HookRejected`.
+- `JournalState` is typed and preserves v0.1.1 JSON phase names. Journal authority,
+  durability and recovery safety are not production-grade.
+- Successful original lab commits have an independent full tree/blob oracle.
+  New fixtures verify partial staging, excluded index/worktree bytes, binary bytes,
+  literal changed-path sets, and raw commit message bytes.
+- Release invariants are now `INV-*`; acceptance scenarios retain `SEC-*`. Crosswalk
+  is in the acceptance matrix. Minimal effective-hook inspection and persistent
+  operation results are prerequisites for M2 writes.
+
+## Reproduce validation
+
+From project root:
+
+```sh
+CARGO_NET_OFFLINE=true sh app/core/scripts/validate.sh
+```
+
+Offline mode requires cached locked dependencies. Omit the environment assignment
+to populate dependencies on a new machine. Default evidence goes to ignored
+`app/core/target/m0-evidence/`; reviewed evidence is preserved under `docs/validation/m0/`.
+The macOS/Linux GitHub workflow exists locally but has not been pushed or executed.
+
+Final local results: default 11 passed/1 ignored; all features 46 passed/2 ignored;
+original lab 23 passed/1 skipped; default/all-features builds and Clippy passed;
+format/static checks passed. macOS arm64, Git 2.56.0, Rust/Cargo 1.99.1.
+GPG-positive remains unverified (not installed); non-UTF-8 filename fixture is ignored
+on macOS after EPERM. The original 30 tests remain, with the optional GPG Cargo test
+explicitly ignored rather than silently reported as passed. Do not sum repeated runs
+as additional unique tests.
+
+## Next authorization boundary
+
+Recommend M1 only after agreeing repository/common-directory/worktree identities,
+move/replacement semantics, typed status/path representation, persisted workspace
+schema, expanded read-only process policy and supported Git versions. M0 assumes
+stable config/metadata and trusted host Git/PATH; hostile concurrent replacement,
+config-include confidentiality, advanced indexes, SHA-256 and process limits remain
+open. M2's production-write blockers are detailed in implementation status and the
+POC limitations. Never reuse mutable lab journals as frontend approval records.

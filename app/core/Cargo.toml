@@ -2,12 +2,34 @@
 name = "gitfleet-core"
 version = "0.1.1"
 edition = "2021"
+rust-version = "1.99"
 license = "MIT"
-description = "Headless, experimental GitFleet controlled commit engine and disposable Git lab"
+description = "Headless GitFleet inspection, controlled-write services and disposable Git lab"
+
+[features]
+default = []
+# Disposable fixtures only. This does not enable production-authorized writes.
+experimental-writes = []
+controlled-writes = ["rusqlite/backup", "dep:sha1"]
+# Disposable fault/crash driver, never exposed by the ordinary CLI.
+write-test-support = ["controlled-writes"]
+# Transport-neutral desktop orchestration, monitoring and JSON contracts.
+application-services = ["controlled-writes", "dep:notify", "dep:schemars"]
 
 [dependencies]
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+toml = "0.8.23"
+rusqlite = { version = "=0.41.0", default-features = false, features = ["bundled"] }
+uuid = { version = "1.29.0", features = ["v4"] }
+glob = "0.3.4"
+sha2 = "0.10.9"
+sha1 = { version = "0.10.7", optional = true }
+notify = { version = "8.2.1", optional = true }
+schemars = { version = "1.2.3", optional = true }
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2.191"
 
 [[bin]]
 name = "gitfleet-cli"
@@ -16,3 +38,34 @@ path = "src/bin/gitfleet_cli.rs"
 [[bin]]
 name = "gitfleet-lab"
 path = "src/bin/gitfleet_lab.rs"
+required-features = ["experimental-writes"]
+
+[[test]]
+name = "acceptance"
+required-features = ["experimental-writes"]
+
+[[test]]
+name = "core_behaviour"
+required-features = ["experimental-writes"]
+
+[[test]]
+name = "write_regressions"
+required-features = ["experimental-writes"]
+
+[[bin]]
+name = "gitfleet-write"
+path = "src/bin/gitfleet_write.rs"
+required-features = ["controlled-writes"]
+
+[[test]]
+name = "m2_writes"
+required-features = ["controlled-writes"]
+
+[[bin]]
+name = "gitfleet-contracts"
+path = "src/bin/gitfleet_contracts.rs"
+required-features = ["application-services"]
+
+[[test]]
+name = "m3_application"
+required-features = ["application-services"]

@@ -3,10 +3,22 @@ use std::process::Command;
 
 fn scenario(name: &str) {
     let result = Command::new(env!("CARGO_BIN_EXE_gitfleet-lab"))
-        .arg("--case").arg(name).output().expect("run disposable lab");
-    assert!(result.status.success(), "{name}: {}", String::from_utf8_lossy(&result.stderr));
-    let response: serde_json::Value = serde_json::from_slice(&result.stdout).expect("valid JSON results");
+        .arg("--case")
+        .arg(name)
+        .output()
+        .expect("run disposable lab");
+    assert!(
+        result.status.success(),
+        "{name}: {}",
+        String::from_utf8_lossy(&result.stderr)
+    );
+    let response: serde_json::Value =
+        serde_json::from_slice(&result.stdout).expect("valid JSON results");
     assert!(response["status"].is_string(), "{name}: missing status");
+    assert_ne!(
+        response["status"], "skipped",
+        "{name}: explicit test requires execution: {response}"
+    );
 }
 
 macro_rules! test_case {
@@ -37,5 +49,11 @@ test_case!(
     real_sigkill_after_reconcile,
     crash_then_external_index_edit,
     signing_missing_key,
-    successful_gpg_signing,
 );
+
+// Cargo must not report an unavailable signing scenario as a passing test.
+#[test]
+#[ignore = "optional positive GPG signing; run explicitly with a working GPG installation"]
+fn successful_gpg_signing() {
+    scenario("successful_gpg_signing");
+}

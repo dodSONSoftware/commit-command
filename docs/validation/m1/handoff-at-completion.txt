@@ -1,0 +1,101 @@
+# GitFleet implementation handoff
+
+Updated: 2026-11-01. **M1 complete and stopped for review.** Do not begin M2 or later
+without explicit authorization. Do not commit or push. The user approved M1 scope,
+its recommended decisions and acceptance gates; this does not authorize production
+Git writes or publishing.
+
+## Read first
+
+1. [Current implementation status](IMPLEMENTATION_STATUS.md): delivered scope,
+   exact results, file inventory, exclusions and next boundary.
+2. [M1 architecture/contracts](architecture/M1_READ_ONLY_WORKSPACES.md): identities,
+   storage ownership, process policy, limits and unsupported cases.
+3. [Specification](GITFLEET_SPECIFICATION.md), [acceptance matrix](ACCEPTANCE_MATRIX.md),
+   [decision register](DECISIONS_AND_OPEN_ITEMS.md).
+4. [Core CLI examples](../app/core/README.md), then actual domain/process/inspection/
+   discovery/workspace/history/diff source and tests.
+
+## Preserve these boundaries
+
+- Existing docs/app layout; one Rust Core crate; no Tauri/React dependencies.
+- Desktop directories remain placeholders. No watchers, graph rendering, AI, Actions,
+  remote operations or production write services were implemented.
+- Default builds provide workspace persistence and restricted read-only Git services.
+  Commit/journal/low-level Git/lab modules still require `experimental-writes`; opt-in
+  is not authorization to target a real repository.
+- All Git writes in validation were confined to new disposable fixtures. No Git
+  staging/commit/push was performed on this project or other existing user repos.
+- Preserve the user's pre-existing `.gitignore` edit and uncommitted M0/M1 changes.
+  Historical lab results and mockups/license/desktop placeholders remain intact.
+
+## Important implementation details
+
+TOML version 1 owns definitions; SQLite schema 1 owns observed identities/memberships/
+availability, active workspace and derived caches. CLI persistence requires explicit
+`--data-dir` outside managed checkouts. One OS lock owns that directory. Atomic
+TOML saves and revision-based startup reconciliation handle the cross-store gap.
+Invalid/newer state is rejected, never silently replaced. The initial v0→v1 schema
+is transactional and known-empty existing v0 databases are backed up; future schema
+upgrades require new safety tests.
+
+Repository IDs represent shared common metadata; worktree IDs represent checkouts.
+Canonical identity and native friendly paths are separate. Moves keep IDs only when
+observed bindings match; clones/replacements get new identities. Every entry remains
+untrusted. These IDs do not authenticate repository trust or future write authority.
+
+`scan` returns partial inventories and errors; the old `discover` wrapper retains
+all-or-error compatibility. Missing/excluded/unavailable entries persist. Root or
+exclusion changes invalidate observations. Targeted refresh revalidates identity and
+scope without scanning unrelated directories, and marks failures unavailable.
+
+Status uses NUL porcelain v2, including staged gitlinks from an isolated tree/index
+read. Submodule dirt/HEAD comes from independently inspected child entries. Parent
+counts exclude recursive child changes. Legacy v1 status text remains diagnostic.
+Upstream comparisons are local-only with unknown fetch freshness. Commits retain
+raw bytes, timestamp fields, exact parent OIDs and encoding metadata. History cursors
+reject changed generations. Root/merge diffs enforce explicit parent semantics.
+
+NativePath transports byte/wide paths losslessly; display strings never become
+execution paths. Literal names, symlink escapes, FIFOs, binary/mode and SHA-256 are
+covered. The macOS non-UTF-8 filename fixture remains explicitly ignored; synthetic
+byte parser/serialization coverage passes. Sparse-index settings/content filters
+are rejected. Split/unmerged/ordinary read-only fixtures pass.
+
+The private Git transport suppresses helpers/hooks/maintenance/network/lazy fetch,
+system/global config and inherited Git overrides. Diff explicitly disables external
+helpers/textconv. Four subprocesses and one multi-command read per worktree are
+allowed; time/output limits and cancellation kill/reap owned Unix groups. Generation
+checks detect ordinary ref/config/index drift and working-file diff changes. Hostile
+concurrent replacement, includes/alternate confidentiality and blocked kernel I/O
+remain outside the supported stable/local envelope.
+
+## Reproduce
+
+From project root:
+
+```sh
+CARGO_NET_OFFLINE=true sh app/core/scripts/validate.sh
+```
+
+Offline mode requires cached locked dependencies. Omit the environment assignment
+on a machine that needs dependency downloads. Requires Rust 1.99+, Git 2.56.0+,
+Python 3 and a C toolchain for bundled SQLite. Default output is ignored
+`app/core/target/m1-evidence/`; reviewed evidence is under `docs/validation/m1/`.
+
+Final local results: default 46 passed/1 ignored; all features 81 passed/2 ignored;
+original lab 23 passed/1 skipped. Both builds, format, both Clippy configurations
+with warnings denied, layout/link/diff checks passed. Test totals overlap between
+runs; there are 83 unique tests, 81 executed. GPG positive is unavailable; non-UTF-8
+filesystem creation is unsupported on this host. macOS arm64/Git 2.56.0/Rust 1.99.1
+is the executed baseline. The workflow exists locally but has not run; no Linux/
+Windows claim is supported. CI runner provisioning must meet the version floors.
+
+## Next authorization boundary
+
+Stop here unless the user authorizes further work. Recommend an M2 proposal before
+implementation: trust/opaque approvals, explicit supported-state preflight, hook
+compatibility and complete bypass, configured signing, journal/scratch integrity,
+durability/recovery, exact message checks, worktree concurrency and index preservation.
+Never accept mutable lab journals or frontend JSON as approval. No M1 identity,
+cache or passing read-only test closes those production-write gates.

@@ -1,11 +1,27 @@
-//! GitFleet Core proof of concept. All write tests use disposable Git repositories.
-//! Not a production-safe Git commit engine; see docs/LIMITATIONS.md.
+//! Headless inspection, separately gated controlled writes and a disposable commit experiment.
+//! See `docs/architecture/core-poc/LIMITATIONS.md` at the project root.
 
+#[cfg(feature = "experimental-writes")]
 pub mod commit;
+pub mod diff;
 pub mod discovery;
+pub mod domain;
 pub mod error;
+#[cfg(feature = "experimental-writes")]
 pub mod git;
+pub mod history;
+pub mod inspection;
+#[cfg(feature = "experimental-writes")]
 pub mod journal;
+#[cfg(feature = "experimental-writes")]
 pub mod lab;
+mod locking;
+mod process;
+pub mod workspace;
+#[cfg(feature = "controlled-writes")]
+pub mod writes;
 
-pub use error::{Error, Result};
+pub use error::{Error, ErrorKind, Result};
+
+#[cfg(feature = "application-services")]
+pub mod application;

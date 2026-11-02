@@ -1,0 +1,910 @@
+{
+  "documentation": {
+    "entries": {
+      ".git": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/COMMIT_EDITMSG": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "53e3deb2ec67f1d2fd93e2496adba8c5a841c289721c1aaa42a19ba44a2e2226",
+        "size": 29
+      },
+      ".git/HEAD": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+        "size": 21
+      },
+      ".git/config": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "78404ea12a0436a2288c31079eaa1fc35a4a9211d489eb110c32ae7b3037cbdf",
+        "size": 233
+      },
+      ".git/index": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "29e00802a695fe0547871cc63158658c7d7ac378745d3c7e934b2950288abcbe",
+        "size": 217
+      },
+      ".git/logs": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/logs/HEAD": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "cbb5201cdcb4357ca927cf1ab49948f1cece38f102f4721a8e35ecb12349526e",
+        "size": 376
+      },
+      ".git/logs/refs": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/logs/refs/heads": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/logs/refs/heads/main": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "cbb5201cdcb4357ca927cf1ab49948f1cece38f102f4721a8e35ecb12349526e",
+        "size": 376
+      },
+      ".git/objects": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/13": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/13/26b36529d32d181b7d2d7c245e9c8535a0f49f": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "dddc57d2b8faf076b00f01c4ee6280ea13ae8f8fe9396226000af3aad49a8572",
+        "size": 180
+      },
+      ".git/objects/18": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/18/686d36545db4cd01ca738b1533e56a1df77470": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "9a27934ba1283eeb840859065626708e7f9581e7516d1cae20d2b94130ea18f6",
+        "size": 48
+      },
+      ".git/objects/54": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/54/a533b6e0810d2814b212185a632e2340493c5b": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "32f7a4710e45013899df70c947a3b12c93025bda8dacc5874c9d8aa9fc67f14f",
+        "size": 148
+      },
+      ".git/objects/68": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/68/fab1ba3b666cb439dba450c095ecbce907f443": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "f73f3ff84964a5683fe4ac97a9acdee2c5dd5e487c904dbbeefd331f1577f037",
+        "size": 48
+      },
+      ".git/objects/6a": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/6a/ea1ab6d12c1b3efbd3c667a3ab667f0b786e2c": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "12931159ca4090913c0700d6fbd938bd6b8ea18ca3814489ee918fdfa6936631",
+        "size": 91
+      },
+      ".git/objects/83": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/83/4a093f0f45969797536fd1b3c67839782fb01d": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "24c00e9a21d12a65d43447e3c6c48864564965dc2ace84f3a66e625613ec15b3",
+        "size": 92
+      },
+      ".git/objects/b6": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/b6/c26c969f6adacfbf3af3554b758461d70fdef9": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "00200abc2a8af1f9305e9d9d98439bb07424409b7a7fe79bf83fc13b9b0a3e2f",
+        "size": 75
+      },
+      ".git/objects/info": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/pack": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/refs": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/refs/heads": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/refs/heads/main": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "5e898b1bb52951d548df4c2baf0ad09c8e77b0bef56981c3031fd3ec75fd2a70",
+        "size": 41
+      },
+      ".git/refs/tags": {
+        "kind": "directory",
+        "mode": 493
+      },
+      "README.md": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "b1b3432d4702fedb6110881c8be98c0bdbd7d04e890a3d1fcdc4a2ac6734512b",
+        "size": 60
+      },
+      "settings.toml": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "8ce93e29019c1214f8730b3a4f7a33c7c2fb004ab0b65cd3eed2b4abc1660a92",
+        "size": 33
+      }
+    },
+    "head_oid": "1326b36529d32d181b7d2d7c245e9c8535a0f49f\n",
+    "head_ref": "refs/heads/main\n",
+    "head_tree": "834a093f0f45969797536fd1b3c67839782fb01d\n",
+    "index_entries": "100644 b6c26c969f6adacfbf3af3554b758461d70fdef9 0\tREADME.md\n100644 68fab1ba3b666cb439dba450c095ecbce907f443 0\tsettings.toml\n",
+    "status": ""
+  },
+  "engine": {
+    "entries": {
+      ".git": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/COMMIT_EDITMSG": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "53e3deb2ec67f1d2fd93e2496adba8c5a841c289721c1aaa42a19ba44a2e2226",
+        "size": 29
+      },
+      ".git/HEAD": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+        "size": 21
+      },
+      ".git/config": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "78404ea12a0436a2288c31079eaa1fc35a4a9211d489eb110c32ae7b3037cbdf",
+        "size": 233
+      },
+      ".git/hooks": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/hooks/reference-transaction": {
+        "kind": "file",
+        "mode": 493,
+        "sha256": "5266e014a19e834a80d7791a146814d7c021456b0e8200de553e4fb11ea419d3",
+        "size": 146
+      },
+      ".git/index": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "28629620cacd579b449264b32f913b4380e01ec49550b45cc9bfb83f80f741c5",
+        "size": 198
+      },
+      ".git/logs": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/logs/HEAD": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "d39266725123e9c69b4a8bc120feeece32f83ab74470bba738413072f5c60543",
+        "size": 376
+      },
+      ".git/logs/refs": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/logs/refs/heads": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/logs/refs/heads/main": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "d39266725123e9c69b4a8bc120feeece32f83ab74470bba738413072f5c60543",
+        "size": 376
+      },
+      ".git/objects": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/18": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/18/686d36545db4cd01ca738b1533e56a1df77470": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "9a27934ba1283eeb840859065626708e7f9581e7516d1cae20d2b94130ea18f6",
+        "size": 48
+      },
+      ".git/objects/37": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/37/6a11be72c8f396f826a9ef869eebb048dcb309": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "ea2bbb1abe836a79b5270349bec42ac030635d83313fd791a2473797c0614154",
+        "size": 91
+      },
+      ".git/objects/5f": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/5f/fbe7a4446aa7314e62742ba88e942476f7b1c3": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "4a2ae2c5f00976f95c9bd0a3d0962ee38290d4af4aace6abff056c2bf05e9013",
+        "size": 92
+      },
+      ".git/objects/68": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/68/fab1ba3b666cb439dba450c095ecbce907f443": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "f73f3ff84964a5683fe4ac97a9acdee2c5dd5e487c904dbbeefd331f1577f037",
+        "size": 48
+      },
+      ".git/objects/a8": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/a8/8c209759f7a9f81125e137177ad387e51e35a2": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "17f5d4b266d1eb2ee5c9e10f632758a9de586dcab62fab33c0c3c93207213333",
+        "size": 181
+      },
+      ".git/objects/b6": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/b6/f26276eb5c3b39f662d574f5b791f893c3f2dc": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "08a5aba712cccf00d25bb16f12a4a0e5b4cb8f8c4138d5c7a9c604c9f7ad7f1d",
+        "size": 59
+      },
+      ".git/objects/da": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/da/be40efbce8b0ad3a486a80d222c0e78d6d16d2": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "5319de2ab9f5f8e11f8da652bc03d371247bb44bb30d6376d798a2d566d84f6b",
+        "size": 68
+      },
+      ".git/objects/e9": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/e9/efa9d4801a4d063d206973e8f55a3529488878": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "25d8330e6459a35d2681b0568d84637a563392e5900a3929d4f52d41164ec70b",
+        "size": 147
+      },
+      ".git/objects/info": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/pack": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/refs": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/refs/heads": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/refs/heads/main": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "5c7ada0bb48225c969b1e03184aea7ef003ad2cb660a1cdf1b72b1defad68e5b",
+        "size": 41
+      },
+      ".git/refs/tags": {
+        "kind": "directory",
+        "mode": 493
+      },
+      "README.md": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "f3064467b25c1d40c697e181658f493cc3d8b164aba0941ca7f91ca33dc1ee90",
+        "size": 64
+      },
+      "notes.txt": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "41b6f6859192ad488adc35f72587a1f578e27d78b1da6f240fe3bbfec004a826",
+        "size": 35
+      },
+      "plugins": {
+        "kind": "directory",
+        "mode": 493
+      },
+      "plugins/audio": {
+        "kind": "directory",
+        "mode": 493
+      },
+      "plugins/audio/.git": {
+        "kind": "directory",
+        "mode": 493
+      },
+      "plugins/audio/.git/COMMIT_EDITMSG": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "53e3deb2ec67f1d2fd93e2496adba8c5a841c289721c1aaa42a19ba44a2e2226",
+        "size": 29
+      },
+      "plugins/audio/.git/HEAD": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+        "size": 21
+      },
+      "plugins/audio/.git/config": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "78404ea12a0436a2288c31079eaa1fc35a4a9211d489eb110c32ae7b3037cbdf",
+        "size": 233
+      },
+      "plugins/audio/.git/index": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "9f481990e3b3609c260e8d849fb1045326d5bcf6e17f16a35ffad1271c737dff",
+        "size": 217
+      },
+      "plugins/audio/.git/logs": {
+        "kind": "directory",
+        "mode": 493
+      },
+      "plugins/audio/.git/logs/HEAD": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "31ba5387c35317574e4e6a5ab092e69619c1804179168a515fbb8d7cd16a3c4c",
+        "size": 376
+      },
+      "plugins/audio/.git/logs/refs": {
+        "kind": "directory",
+        "mode": 493
+      },
+      "plugins/audio/.git/logs/refs/heads": {
+        "kind": "directory",
+        "mode": 493
+      },
+      "plugins/audio/.git/logs/refs/heads/main": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "31ba5387c35317574e4e6a5ab092e69619c1804179168a515fbb8d7cd16a3c4c",
+        "size": 376
+      },
+      "plugins/audio/.git/objects": {
+        "kind": "directory",
+        "mode": 493
+      },
+      "plugins/audio/.git/objects/11": {
+        "kind": "directory",
+        "mode": 493
+      },
+      "plugins/audio/.git/objects/11/d8df833d5d479bbd2a14cd3a3f0677b2b8b929": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "754a28038004f2ab5212c9ccee79dc4ab05b18967e91187108222481438821d2",
+        "size": 92
+      },
+      "plugins/audio/.git/objects/18": {
+        "kind": "directory",
+        "mode": 493
+      },
+      "plugins/audio/.git/objects/18/686d36545db4cd01ca738b1533e56a1df77470": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "9a27934ba1283eeb840859065626708e7f9581e7516d1cae20d2b94130ea18f6",
+        "size": 48
+      },
+      "plugins/audio/.git/objects/46": {
+        "kind": "directory",
+        "mode": 493
+      },
+      "plugins/audio/.git/objects/46/9b13e112b51e116ea40c20c81986cf4efb3a54": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "18e75f091d5fc8237fc7bb3ff979d56ba5fd57e6ba368c146a5ac69678cfbfa5",
+        "size": 147
+      },
+      "plugins/audio/.git/objects/63": {
+        "kind": "directory",
+        "mode": 493
+      },
+      "plugins/audio/.git/objects/63/7f268afe16413dbebdad1a9bb4e069eb358704": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "b3bcc07ab5b73a34430f757458d36d1d23a23042630e2a2cdb23ef2a08cfcf34",
+        "size": 182
+      },
+      "plugins/audio/.git/objects/68": {
+        "kind": "directory",
+        "mode": 493
+      },
+      "plugins/audio/.git/objects/68/fab1ba3b666cb439dba450c095ecbce907f443": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "f73f3ff84964a5683fe4ac97a9acdee2c5dd5e487c904dbbeefd331f1577f037",
+        "size": 48
+      },
+      "plugins/audio/.git/objects/96": {
+        "kind": "directory",
+        "mode": 493
+      },
+      "plugins/audio/.git/objects/96/9cc63f5e60e0ed5a61d9881892085432c12660": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "2551662cbc560ec950c2b45d6e6f883c3ca1f43260615564c9498d7f0ce9a173",
+        "size": 91
+      },
+      "plugins/audio/.git/objects/e6": {
+        "kind": "directory",
+        "mode": 493
+      },
+      "plugins/audio/.git/objects/e6/e79fb0aeddab92c066937417b59c0086e3716c": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "7e777af2d996e7208d0005e7c88a33d73ad63b8062fd14f01abfb85dd2d7be68",
+        "size": 80
+      },
+      "plugins/audio/.git/objects/info": {
+        "kind": "directory",
+        "mode": 493
+      },
+      "plugins/audio/.git/objects/pack": {
+        "kind": "directory",
+        "mode": 493
+      },
+      "plugins/audio/.git/refs": {
+        "kind": "directory",
+        "mode": 493
+      },
+      "plugins/audio/.git/refs/heads": {
+        "kind": "directory",
+        "mode": 493
+      },
+      "plugins/audio/.git/refs/heads/main": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "a1d531faa5988cfb54502f0842095bc8a55e76203f026f026bdde722990d69b4",
+        "size": 41
+      },
+      "plugins/audio/.git/refs/tags": {
+        "kind": "directory",
+        "mode": 493
+      },
+      "plugins/audio/README.md": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "fc7e658f2934cf18ec67c6a4a1b600e8df023dd3ae4cdcc09283d52e549f07b6",
+        "size": 57
+      },
+      "plugins/audio/notes.txt": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "41b6f6859192ad488adc35f72587a1f578e27d78b1da6f240fe3bbfec004a826",
+        "size": 35
+      },
+      "plugins/audio/settings.toml": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "8ce93e29019c1214f8730b3a4f7a33c7c2fb004ab0b65cd3eed2b4abc1660a92",
+        "size": 33
+      },
+      "settings.toml": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "8ce93e29019c1214f8730b3a4f7a33c7c2fb004ab0b65cd3eed2b4abc1660a92",
+        "size": 33
+      }
+    },
+    "head_oid": "a88c209759f7a9f81125e137177ad387e51e35a2\n",
+    "head_ref": "refs/heads/main\n",
+    "head_tree": "5ffbe7a4446aa7314e62742ba88e942476f7b1c3\n",
+    "index_entries": "100644 b6f26276eb5c3b39f662d574f5b791f893c3f2dc 0\tREADME.md\n100644 68fab1ba3b666cb439dba450c095ecbce907f443 0\tsettings.toml\n",
+    "status": "1 MM N... 100644 100644 100644 dabe40efbce8b0ad3a486a80d222c0e78d6d16d2 b6f26276eb5c3b39f662d574f5b791f893c3f2dc README.md\n? notes.txt\n? plugins/audio/\n"
+  },
+  "engine/plugins/audio": {
+    "entries": {
+      ".git": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/COMMIT_EDITMSG": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "53e3deb2ec67f1d2fd93e2496adba8c5a841c289721c1aaa42a19ba44a2e2226",
+        "size": 29
+      },
+      ".git/HEAD": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+        "size": 21
+      },
+      ".git/config": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "78404ea12a0436a2288c31079eaa1fc35a4a9211d489eb110c32ae7b3037cbdf",
+        "size": 233
+      },
+      ".git/index": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "9f481990e3b3609c260e8d849fb1045326d5bcf6e17f16a35ffad1271c737dff",
+        "size": 217
+      },
+      ".git/logs": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/logs/HEAD": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "31ba5387c35317574e4e6a5ab092e69619c1804179168a515fbb8d7cd16a3c4c",
+        "size": 376
+      },
+      ".git/logs/refs": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/logs/refs/heads": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/logs/refs/heads/main": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "31ba5387c35317574e4e6a5ab092e69619c1804179168a515fbb8d7cd16a3c4c",
+        "size": 376
+      },
+      ".git/objects": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/11": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/11/d8df833d5d479bbd2a14cd3a3f0677b2b8b929": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "754a28038004f2ab5212c9ccee79dc4ab05b18967e91187108222481438821d2",
+        "size": 92
+      },
+      ".git/objects/18": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/18/686d36545db4cd01ca738b1533e56a1df77470": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "9a27934ba1283eeb840859065626708e7f9581e7516d1cae20d2b94130ea18f6",
+        "size": 48
+      },
+      ".git/objects/46": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/46/9b13e112b51e116ea40c20c81986cf4efb3a54": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "18e75f091d5fc8237fc7bb3ff979d56ba5fd57e6ba368c146a5ac69678cfbfa5",
+        "size": 147
+      },
+      ".git/objects/63": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/63/7f268afe16413dbebdad1a9bb4e069eb358704": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "b3bcc07ab5b73a34430f757458d36d1d23a23042630e2a2cdb23ef2a08cfcf34",
+        "size": 182
+      },
+      ".git/objects/68": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/68/fab1ba3b666cb439dba450c095ecbce907f443": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "f73f3ff84964a5683fe4ac97a9acdee2c5dd5e487c904dbbeefd331f1577f037",
+        "size": 48
+      },
+      ".git/objects/96": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/96/9cc63f5e60e0ed5a61d9881892085432c12660": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "2551662cbc560ec950c2b45d6e6f883c3ca1f43260615564c9498d7f0ce9a173",
+        "size": 91
+      },
+      ".git/objects/e6": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/e6/e79fb0aeddab92c066937417b59c0086e3716c": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "7e777af2d996e7208d0005e7c88a33d73ad63b8062fd14f01abfb85dd2d7be68",
+        "size": 80
+      },
+      ".git/objects/info": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/pack": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/refs": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/refs/heads": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/refs/heads/main": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "a1d531faa5988cfb54502f0842095bc8a55e76203f026f026bdde722990d69b4",
+        "size": 41
+      },
+      ".git/refs/tags": {
+        "kind": "directory",
+        "mode": 493
+      },
+      "README.md": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "fc7e658f2934cf18ec67c6a4a1b600e8df023dd3ae4cdcc09283d52e549f07b6",
+        "size": 57
+      },
+      "notes.txt": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "41b6f6859192ad488adc35f72587a1f578e27d78b1da6f240fe3bbfec004a826",
+        "size": 35
+      },
+      "settings.toml": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "8ce93e29019c1214f8730b3a4f7a33c7c2fb004ab0b65cd3eed2b4abc1660a92",
+        "size": 33
+      }
+    },
+    "head_oid": "637f268afe16413dbebdad1a9bb4e069eb358704\n",
+    "head_ref": "refs/heads/main\n",
+    "head_tree": "11d8df833d5d479bbd2a14cd3a3f0677b2b8b929\n",
+    "index_entries": "100644 e6e79fb0aeddab92c066937417b59c0086e3716c 0\tREADME.md\n100644 68fab1ba3b666cb439dba450c095ecbce907f443 0\tsettings.toml\n",
+    "status": "1 .M N... 100644 100644 100644 e6e79fb0aeddab92c066937417b59c0086e3716c e6e79fb0aeddab92c066937417b59c0086e3716c README.md\n? notes.txt\n"
+  },
+  "tooling": {
+    "entries": {
+      ".git": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/COMMIT_EDITMSG": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "53e3deb2ec67f1d2fd93e2496adba8c5a841c289721c1aaa42a19ba44a2e2226",
+        "size": 29
+      },
+      ".git/HEAD": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+        "size": 21
+      },
+      ".git/config": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "78404ea12a0436a2288c31079eaa1fc35a4a9211d489eb110c32ae7b3037cbdf",
+        "size": 233
+      },
+      ".git/index": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "986d1b0bd0fe1be817be77b5b5f781a3ce3f5a78c6a3e874826553aa3bb61b3f",
+        "size": 217
+      },
+      ".git/logs": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/logs/HEAD": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "9a9671c519307f7955bac338079d154d7f23c8522c34ccbb27da65e729d0e5d7",
+        "size": 376
+      },
+      ".git/logs/refs": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/logs/refs/heads": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/logs/refs/heads/main": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "9a9671c519307f7955bac338079d154d7f23c8522c34ccbb27da65e729d0e5d7",
+        "size": 376
+      },
+      ".git/objects": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/18": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/18/686d36545db4cd01ca738b1533e56a1df77470": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "9a27934ba1283eeb840859065626708e7f9581e7516d1cae20d2b94130ea18f6",
+        "size": 48
+      },
+      ".git/objects/5e": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/5e/af226868f0a6bd524d101d594456847bd34851": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "100b87aa1d65be62415f5f1a06cb6637318b5635ae6a34e068a082f18738eb5f",
+        "size": 91
+      },
+      ".git/objects/61": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/61/03f84d46596bb7075250f47819f6b7ccde6438": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "fb3abf9736d1b45c2a846b7f81ef8c9204756d3ae74b59a8a4cbef621e988c9f",
+        "size": 181
+      },
+      ".git/objects/68": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/68/fab1ba3b666cb439dba450c095ecbce907f443": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "f73f3ff84964a5683fe4ac97a9acdee2c5dd5e487c904dbbeefd331f1577f037",
+        "size": 48
+      },
+      ".git/objects/80": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/80/a996a1e11d9525c2ea0db3e33d8e5936c5b973": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "b2b9b99743be0353f15bcd01d912532ba8c2ef280ea2144ac7ea5b062d3624d3",
+        "size": 148
+      },
+      ".git/objects/c7": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/c7/7b45cf015484ae16d81e0491d67b4c686104fa": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "d5a29065bb51e2ae18f6edd85f42ef4a2bab5b4a17d464a808b4f50b79d75a74",
+        "size": 92
+      },
+      ".git/objects/d5": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/d5/c43d9de7c8db08b6d957df8c87377dc9336db7": {
+        "kind": "file",
+        "mode": 292,
+        "sha256": "076d1c63ca45d4876ffbc65d29acd7de2c44c928bc55b1c3ed5b6f9328f23d59",
+        "size": 69
+      },
+      ".git/objects/info": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/objects/pack": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/refs": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/refs/heads": {
+        "kind": "directory",
+        "mode": 493
+      },
+      ".git/refs/heads/main": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "7956a38be525e23c6328670cf892806a4b0d742ebb2a52aea1374eea28a0f57b",
+        "size": 41
+      },
+      ".git/refs/tags": {
+        "kind": "directory",
+        "mode": 493
+      },
+      "README.md": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "1376564339c46b5f88ab8ebb097e21f9a3d17dc495d4ef875e8572ba8fac2427",
+        "size": 44
+      },
+      "notes.txt": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "41b6f6859192ad488adc35f72587a1f578e27d78b1da6f240fe3bbfec004a826",
+        "size": 35
+      },
+      "settings.toml": {
+        "kind": "file",
+        "mode": 420,
+        "sha256": "8ce93e29019c1214f8730b3a4f7a33c7c2fb004ab0b65cd3eed2b4abc1660a92",
+        "size": 33
+      }
+    },
+    "head_oid": "6103f84d46596bb7075250f47819f6b7ccde6438\n",
+    "head_ref": "refs/heads/main\n",
+    "head_tree": "c77b45cf015484ae16d81e0491d67b4c686104fa\n",
+    "index_entries": "100644 d5c43d9de7c8db08b6d957df8c87377dc9336db7 0\tREADME.md\n100644 68fab1ba3b666cb439dba450c095ecbce907f443 0\tsettings.toml\n",
+    "status": "1 .M N... 100644 100644 100644 d5c43d9de7c8db08b6d957df8c87377dc9336db7 d5c43d9de7c8db08b6d957df8c87377dc9336db7 README.md\n? notes.txt\n"
+  }
+}

@@ -1,0 +1,112 @@
+Historical M0 completion snapshot, preserved before the authorized M1 implementation.
+
+# GitFleet implementation status
+
+Updated: 2026-11-01. **M0 implementation complete within the documented supported
+envelope; ready for user review.** M1 and later are not authorized or implemented.
+No production write capability, desktop scaffolding, additional crate, commit,
+push, publication or deployment was introduced. The existing docs/app structure
+and Core's presentation independence are preserved.
+
+## Validation evidence
+
+Executed locally, offline, on macOS 27.2 arm64 with Git 2.56.0, rustc 1.99.1 and
+Cargo 1.99.1. Versions: [environment.json](validation/m0/environment.json).
+Command: `CARGO_NET_OFFLINE=true sh app/core/scripts/validate.sh ../../docs/validation/m0`.
+The script runs from `app/core/`; the command above is launched from the project root.
+
+| Check | Exact final result |
+|---|---|
+| Assembled layout/manifest check | Passed |
+| `cargo fmt --all -- --check` | Passed |
+| `cargo build --workspace --all-targets --locked` | Passed |
+| Same build with `--all-features` | Passed |
+| `cargo test --workspace --all-targets --locked` | 11 passed, 0 failed, 1 ignored |
+| Same tests with `--all-features` | 46 passed, 0 failed, 2 ignored |
+| Default Clippy, all targets, `-- -D warnings` | Passed |
+| All-features Clippy, all targets, `-- -D warnings` | Passed |
+| Original 24-case diagnostic suite | 23 passed, 1 skipped |
+| `git diff --check` | Passed |
+
+All-features test breakdown: original acceptance 23 passed/1 ignored; original
+core behavior 6 passed; new inspection 11 passed/1 ignored; new write regressions
+6 passed. Zero-test library/binary harnesses are excluded from totals. The default
+inspection tests repeat in the all-features run and are not additional unique tests.
+There are 48 unique integration tests, of which 46 executed successfully here.
+
+Explicit exclusions:
+
+1. `successful_gpg_signing`: Cargo ignored by default as an optional positive
+   signing test; lab independently skipped it because GPG is not installed. An
+   explicitly requested GPG Cargo test fails if the lab cannot execute it. Key
+   generation failure is no longer a skip. Positive GPG remains unverified here.
+2. `non_utf8_filename_remains_git_quoted_without_mutation`: explicitly ignored on
+   macOS after fixture creation returned EPERM. Newline filenames pass separately.
+   Requires explicit execution on a supporting filesystem; no non-UTF-8 support
+   claim is made from this host.
+
+Raw Cargo output and diagnostic summary: [validation.txt](validation/m0/validation.txt).
+Full diagnostic results: [lab-results.json](validation/m0/lab-results.json).
+The old ignored `app/core/results.json` and imported README source listings were
+preserved as historical v0.1.1 evidence and were not overwritten.
+
+During implementation, the first unusual-filename fixture failed on host EPERM;
+it was separated into explicit ignored coverage. Initial Clippy findings were
+corrected. The static checker initially required unavailable Python `tomllib`;
+it now reads Cargo metadata with Python's standard JSON library. The final complete
+validation command exited 0. No ignored case is counted as a passing test.
+
+## Acceptance status
+
+| M0 deliverable | Status and boundary |
+|---|---|
+| Reproducible baseline and preserved original suite | Complete; explicit GPG exclusion replaces historical hidden skip |
+| Disposable test isolation | Complete for executed checks; all Git writes in newly created fixture repos |
+| Honest evidence ledger | Complete; M0 IDs, INV/SEC crosswalk, current/historical results and coverage limits recorded |
+| Focused regressions and independent oracles | Complete; same-OID branch switch, literal paths, hook rejection, actual complete tree blobs, index preservation, worktree/binary/message bytes |
+| Read-only inspection boundary | Complete for supported stable configurations; no write-tree; helper and transport protections; filter rejection; exact fixture state tests |
+| Experimental-write build boundary | Complete; non-default feature required; does not authorize real-project writes |
+| Support/risk matrix and proposed service contracts | Complete in M0 safety contracts; production contracts remain proposals |
+| Documentation/tooling reconciliation | Complete; paths, verification history, script layout, identifier conflict corrected |
+| Local build/test/format/Clippy | Complete with the explicit exclusions above |
+| CI definition | Complete locally for macOS/Linux; not pushed or executed; platform validation pending |
+
+The acceptance IDs and test mapping are in [the matrix](ACCEPTANCE_MATRIX.md#9-m0-evidence-and-identifier-reconciliation).
+
+## Files changed
+
+- Root `README.md`; `.github/workflows/core.yml` (local definition only).
+- `app/core/Cargo.toml`, `README.md`, `scripts/verify-scaffold.py`, new `scripts/validate.sh`.
+- Core `src/lib.rs`, `error.rs`, `discovery.rs`, new `inspection.rs`; experimental
+  `commit.rs`, `git.rs`, `journal.rs`, `lab.rs`; both `src/bin/` adapters. Existing
+  Rust formatting was normalized to pass `cargo fmt`; the lab binary change is
+  formatting only.
+- Existing `tests/acceptance.rs`, `tests/core_behaviour.rs`; new `tests/inspection.rs`,
+  `tests/write_regressions.rs`, `tests/support/mod.rs`.
+- `docs/README.md`, specification, acceptance matrix, decision register, four
+  `docs/architecture/core-poc/` documents; new `architecture/M0_SAFETY_BOUNDARIES.md`,
+  implementation status/handoff, and the three validation evidence files above.
+
+The pre-existing user edit to `.gitignore` remains unchanged. Cargo.lock,
+mockup images, license and desktop placeholder files were not changed.
+
+## Remaining risks and M1 readiness
+
+M0 is ready for review; M1 can be scoped after authorization. M1 must establish
+stable repository/common-directory/worktree identities and relationship/move rules,
+structured status/path/error models, saved-workspace storage, read-only history/diff
+policies, and supported Git versions. Config/metadata TOCTOU, process time/output
+limits and inaccessible inventory behavior need explicit decisions before expanding
+inspection beyond the documented envelope.
+
+Configured content filters are unsupported for untrusted inspection. Hostile
+concurrent metadata/config replacement is unsupported; includes/alternates can read
+outside the chosen directory. Bare repositories, submodule detail, advanced index
+formats, SHA-256, non-UTF-8 metadata/root paths, Linux/Windows and additional Git
+versions have no support claim. Missing promisor objects fail without fetching.
+
+Production writes remain blocked on trust/opaque approvals, full unsupported-state
+preflight, hook lifecycle and comprehensive bypass, normal signing configuration,
+journal/scratch integrity and durability/cleanup, index flags/extensions, worktree
+concurrency, exact message enforcement and post-hook state revalidation. Existing
+crash tests do not cover every transaction boundary or power loss.

@@ -1,0 +1,162 @@
+use super::*;
+use crate::application::{OperationPage, TrustState};
+impl ControlledWrites {
+    pub(crate) fn cancel_application_reviews(&mut self) {
+        self.trust_reviews.clear();
+        self.recovery_reviews.clear();
+    }
+
+    pub(crate) fn application_trust_state(
+        &mut self,
+        workspace: &WorkspaceId,
+        entry: &crate::workspace::StoredWorktree,
+    ) -> Result<TrustState> {
+        let row: Option<(String, bool)> = self
+            .workspace
+            .connection()
+            .query_row(
+                "SELECT review,revoked FROM write_trust WHERE worktree_id=?1",
+                [&entry.id.0],
+                |r| Ok((r.get(0)?, r.get(1)?)),
+            )
+            .optional()?;
+        let Some((raw, revoked)) = row else {
+            return Ok(TrustState {
+                worktree: entry.id.0.clone(),
+                grant: "untrusted".into(),
+                validity: "none".into(),
+                eligible: false,
+                reason: Some("Explicit worktree trust required".into()),
+                policy: None,
+            });
+        };
+        let previous: TrustReview = serde_json::from_str(&raw)?;
+        let mut result = TrustState {
+            worktree: entry.id.0.clone(),
+            grant: if revoked { "revoked" } else { "granted" }.into(),
+            validity: "unverifiable".into(),
+            eligible: false,
+            reason: None,
+            policy: self.hook_policy(&entry.id).ok(),
+        };
+        if revoked {
+            result.validity = "revoked".into();
+            return Ok(result);
+        }
+        match self.inspect_trust(workspace, &entry.id) {
+            Ok(current) => {
+                self.trust_reviews.remove(&current.review_id);
+                let same = previous.binding == current.binding
+                    && previous.config_hash == current.config_hash
+                    && previous.hooks == current.hooks
+                    && previous.signing == current.signing
+                    && previous.signer_home == current.signer_home;
+                result.validity = if same { "current" } else { "stale" }.into();
+                result.eligible = same;
+                if same {
+                    if let Err(error) = policy::validate_hook_manifest(
+                        &current.hooks,
+                        result.policy.unwrap_or(HookPolicy::Execute),
+                    ) {
+                        result.eligible = false;
+                        result.reason = Some(error.to_string());
+                    }
+                }
+                if !same {
+                    self.revoke_trust(&entry.id)?;
+                    result.grant = "revoked".into();
+                    result.reason = Some("Trust binding changed; review again".into());
+                }
+            }
+            Err(e) => result.reason = Some(format!("{:?}: {}", e.kind, e)),
+        };
+        Ok(result)
+    }
+    pub(crate) fn application_operation_scope(
+        &mut self,
+        workspace: &WorkspaceId,
+        id: &str,
+    ) -> Result<()> {
+        if self.load(id)?.proposal.workspace_id != *workspace {
+            return Err(fail(
+                ErrorKind::InvalidRequest,
+                "Operation belongs to another workspace",
+            ));
+        }
+        Ok(())
+    }
+    pub(crate) fn application_operations(
+        &mut self,
+        workspace: &WorkspaceId,
+        offset: usize,
+    ) -> Result<OperationPage> {
+        if offset > 1_000_000 {
+            return Err(fail(
+                ErrorKind::InvalidRequest,
+                "Operation offset limit exceeded",
+            ));
+        }
+        // Bound records read from SQLite rather than loading the entire history.
+        let mut statement=self.workspace.connection().prepare("SELECT payload FROM write_operations WHERE json_extract(payload,'$.proposal.workspace_id')=?1 ORDER BY rowid DESC LIMIT 51 OFFSET ?2")?;
+        let rows = statement.query_map(params![workspace.0, offset as i64], |r| {
+            r.get::<_, String>(0)
+        })?;
+        let mut items = rows
+            .map(|r| Ok(serde_json::from_str::<Operation>(&r?)?.outcome()))
+            .collect::<Result<Vec<_>>>()?;
+        let next = if items.len() > 50 {
+            items.truncate(50);
+            Some(offset + 50)
+        } else {
+            None
+        };
+        Ok(OperationPage { items, next })
+    }
+    pub fn execute_with_cancellation(
+        &mut self,
+        approval: &Approval,
+        cancellation: inspection::Cancellation,
+    ) -> Result<Outcome> {
+        let previous = std::mem::replace(&mut self.options.process.cancellation, cancellation);
+        let result = self.execute(approval);
+        self.options.process.cancellation = previous;
+        result
+    }
+}
+
+impl ControlledWrites {
+    pub(crate) fn application_cancel_proposal(&mut self, id: &str) -> Result<()> {
+        let mut op = self.load(id)?;
+        if matches!(op.phase, Phase::Proposed | Phase::Approved) {
+            op.phase = Phase::CancelledBeforePublication;
+            op.reason = Some(
+                "Application review was cancelled or replaced; no execution was started".into(),
+            );
+            self.persist(&op)?;
+        }
+        Ok(())
+    }
+    pub(crate) fn application_pending(
+        &mut self,
+    ) -> Result<Vec<crate::application::RecoveryNotice>> {
+        let mut statement=self.workspace.connection().prepare("SELECT payload FROM write_operations WHERE json_extract(payload,'$.phase') NOT IN ('complete','published_with_post_processing_failure','cancelled_before_publication','proposed','approved','needs_reauthorization') ORDER BY rowid DESC LIMIT 100")?;
+        let rows = statement.query_map([], |r| r.get::<_, String>(0))?;
+        rows.map(|r| {
+            let op: Operation = serde_json::from_str(&r?)?;
+            Ok(crate::application::RecoveryNotice {
+                operation_id: op.proposal.operation_id,
+                workspace_id: op.proposal.workspace_id.0,
+                worktree_id: op.proposal.worktree_id.0,
+                phase: op.phase,
+                published: op.published,
+                reason: op.reason,
+            })
+        })
+        .collect()
+    }
+}
+impl ControlledWrites {
+    pub(crate) fn application_has_pending(&mut self, workspace: &str) -> Result<bool> {
+        self.workspace.connection().query_row("SELECT EXISTS(SELECT 1 FROM write_operations WHERE json_extract(payload,'$.proposal.workspace_id')=?1 AND json_extract(payload,'$.phase') NOT IN ('complete','published_with_post_processing_failure','cancelled_before_publication','proposed','approved','needs_reauthorization'))",[workspace],|r|r.get(0)).map_err(Error::from)
+    }
+}

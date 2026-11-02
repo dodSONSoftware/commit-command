@@ -1,0 +1,118 @@
+# GitFleet implementation handoff
+
+Updated: 2026-11-01. **M2 complete for the documented local macOS/APFS envelope; stop
+and await instructions.** The user explicitly authorized M2 including its proposed
+decisions/gates. M3 and later, commits, pushes, publication and deployment are not
+authorized. Do not infer permission to run write CLI examples on existing repos.
+
+## Read first
+
+1. [Current status](IMPLEMENTATION_STATUS.md): inventory, exact results, exclusions.
+2. [M2 contracts](architecture/M2_CONTROLLED_WRITES.md): trust, approval, execution,
+   hooks/signing, native locks, durability and actual-state recovery.
+3. [Acceptance ledger](ACCEPTANCE_MATRIX.md#11-m2-acceptance-gates--controlled-writes),
+   [decisions](DECISIONS_AND_OPEN_ITEMS.md), [specification](GITFLEET_SPECIFICATION.md).
+4. [M2 evidence](validation/m2/README.md), [Core usage](../app/core/README.md), then
+   actual `writes` source, `m2_writes` tests and private process/workspace integration.
+5. [M1 contracts](architecture/M1_READ_ONLY_WORKSPACES.md) and M0 boundaries remain
+   applicable. Their prior completion snapshots/evidence are retained separately.
+
+## Preserve these boundaries
+
+- One UI-independent Rust Core crate under the existing docs/app layout. No Tauri/
+  React dependencies; desktop directories remain placeholders.
+- Default features: restricted read-only managed-Git services plus own app state.
+  `controlled-writes`: separate production service for the bounded M2 envelope.
+  `experimental-writes`: original POC APIs/lab, never promoted to production.
+  `write-test-support`: disposable-marker/temporary-root guarded crash faults;
+  ordinary release adapters must not enable it.
+- No Git write operation was performed against this project or an existing user
+  repository. All integration writes used new disposable fixtures. Preserve the
+  user's `.gitignore` edit and all pre-existing uncommitted M0/M1 work.
+- No M3 scaffolding, watcher, bulk, remote, AI, Actions or packaging implementation.
+  Feature selection and examples never grant repository trust or write approval.
+
+## Implementation details that matter
+
+M1 TOML version 1 remains authoritative for workspace definitions. `ControlledWrites`
+owns the existing app-data writer lock; its first open backs up SQLite schema 1,
+then transactionally adds trust/operations/events and upgrades to schema 2. Default
+M1 services can reopen schema 2. Private operation artifacts are Core-owned UUID
+paths, never caller-selected mutable journals. Records retain messages/patches/
+paths and are sensitive despite raw helper output/credentials/token redaction.
+Automatic retention pruning is deliberately not implemented.
+
+Trust is per worktree and binds canonical identity/ownership/config/hooks/signer/home.
+Linked/nested repositories do not inherit it. Proposals are generated in isolated
+app-owned indexes/object stores; creating/reviewing one does not write managed Git
+objects/index/refs. An exact stored proposal yields a private, non-serializable,
+session-bound one-use approval with a maximum ten-minute lifetime. Restart requires
+a fresh proposal. Replay returns the recorded outcome; it does not rerun execution.
+The write CLI's literal interactive APPROVE is an adapter to those Core contracts.
+
+Only local macOS/APFS, Git 2.56+, files refs and ordinary SHA-1/SHA-256 v2/v3 index
+states are enabled. Unsupported/unknown flags/extensions, split/sparse/unmerged,
+filters/conversions, detached/bare/in-progress states and foreign locks fail closed.
+Do not silently expand this envelope. Read-only M1 remains broader.
+
+Preparatory hooks get both the selected alternate index and private object store
+with the managed objects as a read alternate. They can inspect newly selected blobs
+without writing unapproved objects into the real database. Supported direct hooks
+cannot rewrite approved tree/message or selected content. Post hooks are recorded
+before invocation and never replayed. Bypass-all suppresses native and manually
+invoked hooks. Reference-transaction Execute and identifiable managers are blocked.
+Hooks/signers are trusted unsandboxed user code; arbitrary hostile execution is
+outside the guarantee. Frozen signer/key identity plus real signature verification
+is mandatory before publication; unsigned fallback is forbidden.
+
+Git 2.56 rejects `symref-verify HEAD` plus referent update as duplicate HEAD update.
+The implementation instead holds native HEAD/index locks, verifies HEAD, and runs
+branch old-OID CAS from a detached app-owned Git context with a shared `commondir`.
+Git records a branch reflog UUID receipt. Core maintains the corresponding HEAD
+reflog under an owned lock and before-image hash. Objects are synced before atomic
+visibility; fsck verifies object integrity. Selective index rename needs original
+index bytes and owned lock. Partial/replaced locks or reflogs require manual review.
+
+Recovery reviews bind current refs/index/locks/reflogs and are session-owned.
+Recovery recognizes actual publication even before its journal flag, verifies the
+commit, reconciles only its owned index, or aborts unpublished work by removing
+only proven locks. No commit or hook is replayed; external edits are preserved.
+Revoked trust prevents recovery, but explicit re-trust can inspect proven pending
+locks. An uncertain post-hook attempt stays uncertain across recovery retries.
+Do not implement force cleanup by weakening ownership checks.
+
+## Reproduce and evidence
+
+```sh
+GITFLEET_TEST_GPG=/absolute/path/to/gpg CARGO_NET_OFFLINE=true sh app/core/scripts/validate.sh
+```
+
+Requires Rust 1.99+, Git 2.56+, Python/C toolchain, SSH signing and GPG with local
+agent socket permission. Omit offline mode when the locked cache is unavailable.
+The current host's temporary GPG is `/private/tmp/gitfleet-m2-tools/install/bin/gpg`;
+it is not globally installed or guaranteed to persist. Checksum/tool provenance is
+recorded under M2 evidence. Fixtures create/remove only their own keys/keyrings.
+
+Final results: default **47 pass/1 ignore**; experimental **82 pass/2 ignores**;
+controlled **70 pass/1 ignore**; all features **110 pass/3 ignores**. Four builds,
+four strict Clippy configurations, formatting, layout, links and diff whitespace
+pass. Historical lab: **23 pass/1 skip**. Configurations overlap. The all-feature
+M2 tests include five crash/fault cases and a harness-ignored driver explicitly
+invoked by them at 13 SIGKILL phases and recovery scenarios. Mandatory M2 GPG and
+SSH positives pass. Original optional POC GPG and the macOS non-UTF-8 filesystem
+fixture remain excluded; no skip is counted as a pass.
+
+SIGKILL/durable-phase faults are process-crash evidence, not power-loss/OS-crash
+proof or exhaustive failed-syscall simulation. No native Linux/Windows write,
+non-APFS/network filesystem, hardware-token or generic hook-manager claim exists.
+The updated CI workflow is local and has never run remotely.
+
+## Next work requires authorization
+
+Prepare an M3 proposal if asked. Its adapter must display Core-owned exact reviews,
+keep explicit user gestures and opaque capability boundaries, and expose distinct
+blocked/published/reconciliation/post-hook/uncertain outcomes. Test IPC/UI privilege
+boundaries independently; do not route it through the POC. Broader platform/hook/
+signing support, retention UX and release/distribution decisions remain separate
+questions. No further implementation or Git write operation on user repos is
+implied. Do not commit or push unless explicitly authorized.

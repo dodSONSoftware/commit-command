@@ -1,0 +1,44 @@
+name: Rust core safety and controlled-write gates
+on:
+  push:
+    paths: ['app/core/**', 'app/desktop/**', 'docs/**', '.github/workflows/core.yml']
+  pull_request:
+    paths: ['app/core/**', 'app/desktop/**', 'docs/**', '.github/workflows/core.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  core:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.99.1
+        with:
+          components: rustfmt, clippy
+      - name: Validate default inspection, experimental lab and supported M2/M3 Core gates
+        run: sh app/core/scripts/validate.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: core-evidence-${{ matrix.os }}
+          path: app/core/target/m3-evidence/
+
+  desktop:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.99.1
+        with:
+          components: rustfmt, clippy
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: app/desktop/package-lock.json
+      - run: npm --prefix app/desktop ci
+      - name: Automated desktop gates; native human acceptance remains separate
+        run: sh app/desktop/scripts/validate.sh

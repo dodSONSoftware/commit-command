@@ -1,0 +1,10 @@
+{
+  "HEAD unchanged": true,
+  "Branch unchanged": true,
+  "Only README index entry changed": true,
+  "Staged README matches approved working bytes": true,
+  "All engine working contents unchanged": true,
+  "Entire repository unchanged: engine/plugins/audio": true,
+  "Entire repository unchanged: tooling": true,
+  "Entire repository unchanged: documentation": true
+}

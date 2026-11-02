@@ -1,0 +1,5 @@
+Local Markdown file targets checked: 82
+Missing file targets: 0
+Historical embedded Core README source listings excluded; fragments not independently validated.
+
+Tracked diff whitespace check exit: 0

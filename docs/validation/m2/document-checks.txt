@@ -1,0 +1,3 @@
+PASS: Local Markdown file targets in root/core READMEs and docs (historical imported source listings excluded).
+Archived pre-M2 status/handoff are verbatim .txt evidence, retaining their original relative link text.
+PASS: git --no-optional-locks diff --no-ext-diff --check.

@@ -1,0 +1,15 @@
+{
+  "head": "e81bd36e5981331bfd640cf3414ae000635af4cb",
+  "checks": {
+    "One commit directly above baseline": true,
+    "Exact message": true,
+    "HEAD tree matches preserved index": true,
+    "Index entries preserved": true,
+    "Post-commit hook executed exactly once": true,
+    "Installed hook unchanged": true,
+    "All engine working contents unchanged": true,
+    "Entire repository unchanged: engine/plugins/audio": true,
+    "Entire repository unchanged: tooling": true,
+    "Entire repository unchanged: documentation": true
+  }
+}

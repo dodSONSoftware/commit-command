@@ -14,7 +14,16 @@ This lab translates 24 cases from GitFleet Hook Lab v4 into a Rust diagnostic ha
 
 Each scenario runs in a fresh OS temporary directory, initializes a Git repo, executes the controlled pipeline, checks expected outcome and core invariants, then deletes the fixture.
 
-`cargo test --workspace` runs one subprocess per case. `gitfleet-lab --output results.json` runs the same suite and emits a structured JSON report suitable for comparing to v4.
+Current command: `cargo test --workspace --all-targets --features experimental-writes`.
+Each executed acceptance case uses a subprocess. Positive GPG is explicitly ignored
+by default; run it with `--ignored --exact successful_gpg_signing` only with working
+GPG. A requested test may not silently skip. `cargo run --features experimental-writes
+--bin gitfleet-lab -- --output target/lab-results.json` retains all 24 scenarios and
+reports missing-GPG skips. Key generation failure now fails.
+
+Default `cargo test --workspace --all-targets` exercises only the inspection boundary.
+See [M0 evidence ledger](../../ACCEPTANCE_MATRIX.md#9-m0-evidence-and-identifier-reconciliation)
+and [current exact results](../../IMPLEMENTATION_STATUS.md).
 
 ## Intended invariants
 
@@ -32,3 +41,20 @@ Each scenario runs in a fresh OS temporary directory, initializes a Git repo, ex
 - A linked worktree with a `.git` **file** is discovered alongside the parent repository.
 
 These tests are read-only except for creating disposable local Git fixtures.
+
+## M0 additions and evidence limits
+
+- All successful original scenarios compare full actual tree/blob contents against
+  independently captured baseline plus selected index/worktree bytes; excluded
+  logical index entries are checked independently of the journal.
+- `tests/write_regressions.rs` adds six tests: same-OID branch switch, literal
+  filenames, nonzero hook rejection, independent partial/binary/raw-message checks,
+  unknown journal phase rejection, and legacy phase spelling preservation.
+- `tests/inspection.rs` adds twelve tests for no repository mutation, configured
+  helper sentinels, filters (local/include/worktree), inherited overrides, missing
+  promisor objects, unborn/detached/unmerged status, root validation and unusual
+  filenames. Non-UTF-8 filename creation is explicitly ignored on macOS after EPERM.
+- The three original crash locations are retained. The “after reconciliation”
+  location is after finalization; intermediate durability boundaries remain untested.
+- Cargo ignored tests, diagnostic skipped scenarios, unsupported configurations
+  and untested production requirements are separate categories, never extra passes.

@@ -137,7 +137,7 @@ State is multidimensional, not a single enum. Include repository ID/path, curren
 
 ## 5. User interface specification
 
-The approved visual references are in `assets/`. They establish the **direction**: GitKraken-inspired dark graphite UI, crisp blue accent, readable dense tables, colored ancestry lanes, restrained badges, and polished macOS chrome. The behavioral requirements in this document take precedence over errors or speculative features depicted in generated mockups.
+The approved visual references are in `mockups/`. They establish the **direction**: GitKraken-inspired dark graphite UI, crisp blue accent, readable dense tables, colored ancestry lanes, restrained badges, and polished macOS chrome. The behavioral requirements in this document take precedence over errors or speculative features depicted in generated mockups.
 
 ### 5.1 Application shell
 
@@ -561,23 +561,25 @@ Every failure must have a stable machine-readable code, user-appropriate message
 
 | ID | Requirement / testable assertion |
 |---|---|
-| SEC-001 | Untrusted repository cannot perform GitFleet writes or execute hooks |
-| SEC-002 | Approved committed tree equals actual published commit tree |
-| SEC-003 | Approved message equals actual published commit message |
-| SEC-004 | Any changed selected content/index/HEAD invalidates stale authorization |
-| SEC-005 | Partial staging, excluded staged entries and untracked files survive correctly |
-| SEC-006 | Unsupported hooks/configurations fail closed before unsafe publication |
-| SEC-007 | Crash recovery never silently replays an uncertain operation |
-| SEC-008 | Hook bypass requires explicit reviewed policy and audit |
-| SEC-009 | Push is never implicitly triggered by commit or AI auto commit |
-| SEC-010 | AI text has no direct filesystem/shell/Git execution rights |
-| SEC-011 | Pre-commit Action input/output modifications are previewed and bounded |
-| SEC-012 | Imported Actions are disabled until reauthorized |
-| SEC-013 | Outbound code transfer occurs only to approved AI destination |
-| SEC-014 | No unsafe cross-repository dependency violation in bulk commit/push |
-| SEC-015 | Tauri presentation adapter can be replaced without changing core domain logic |
+| INV-001 | Untrusted repository cannot perform GitFleet writes or execute hooks |
+| INV-002 | Approved committed tree equals actual published commit tree |
+| INV-003 | Approved message equals actual published commit message |
+| INV-004 | Any changed selected content/index/HEAD invalidates stale authorization |
+| INV-005 | Partial staging, excluded staged entries and untracked files survive correctly |
+| INV-006 | Unsupported hooks/configurations fail closed before unsafe publication |
+| INV-007 | Crash recovery never silently replays an uncertain operation |
+| INV-008 | Hook bypass requires explicit reviewed policy and audit |
+| INV-009 | Push is never implicitly triggered by commit or AI auto commit |
+| INV-010 | AI text has no direct filesystem/shell/Git execution rights |
+| INV-011 | Pre-commit Action input/output modifications are previewed and bounded |
+| INV-012 | Imported Actions are disabled until reauthorized |
+| INV-013 | Outbound code transfer occurs only to approved AI destination |
+| INV-014 | No unsafe cross-repository dependency violation in bulk commit/push |
+| INV-015 | Tauri presentation adapter can be replaced without changing core domain logic |
 
-Detailed scenario coverage is in `ACCEPTANCE_MATRIX.md`.
+Detailed scenario coverage is in `ACCEPTANCE_MATRIX.md`. M0 renamed this section's
+former `SEC-001`–`SEC-015` to `INV-001`–`INV-015` without changing their meaning;
+`SEC-*` exclusively identifies acceptance-matrix scenarios. See the crosswalk there.
 
 ## 17. Implementation roadmap
 
@@ -587,13 +589,13 @@ Milestones are ordered by prerequisite and must have explicit acceptance tests; 
 |---|---|---|
 | **M0 — Baseline & hardening plan** | Bring POC v0.1.1 under main repo, audit experimental limitations, establish CI/test fixtures and Rust API boundaries | Reproduce current 30 Rust tests; documented unsupported Git states |
 | **M1 — Core read-only workspace** | Real discovery/status/history/diff, nested relationships, trust identities, persistent workspaces; CLI-backed service | Disposable integration fixtures, path security, stable IDs |
-| **M2 — Production controlled writes** | Authorization plans, full-file stage/unstage, safe selective commit, hook policy, signing, durable journal, crash recovery | SEC-001–SEC-008 production matrix passes in supported environments |
+| **M2 — Production controlled writes** | Authorization plans, full-file stage/unstage, safe selective commit, hook policy and minimum effective-hook inspection, signing, durable journal, crash recovery and persistent per-operation results | INV-001–INV-008 production matrix passes in supported environments |
 | **M3 — Desktop foundation** | Tauri thin adapter, React shell, workspace Overview Table/Tree, tabs, monitoring, Changes/History base | UI state continuity, no business rules in frontend |
 | **M4 — Graph & activity** | Commit DAG, inspector/diffs, timeline, lanes, contribution heatmap, operation audit | Graph correctness and dedup/activity tests |
 | **M5 — Bulk operations** | Reviewed bulk commit/push, submodule order, missing upstream, partial results/retry | Dependency and partial-failure tests, no auto push |
 | **M6 — AI foundation** | Connections/model discovery, profiles/system messages, parameters/concurrency, templates/instructions, context inspection/test | Provider mock tests, no data leakage, explicit approval |
-| **M7 — AI commit + Actions** | Hierarchical analysis, 3 candidates, assisted/explicit automatic commits, deterministic SemVer action | SEC-009–SEC-013 and idempotence tests |
-| **M8 — Polish and release readiness** | Hook inspection, backup/import/export, accessibility, performance, packaging, hardening | All release gates and platform tests |
+| **M7 — AI commit + Actions** | Hierarchical analysis, 3 candidates, assisted/explicit automatic commits, deterministic SemVer action | INV-009–INV-013 and idempotence tests |
+| **M8 — Polish and release readiness** | Expanded hook inspection, backup/import/export, accessibility, performance, packaging, hardening | All release gates and platform tests |
 | **Post-v1** | Hunk-level staging; selective individual hook management; additional GitFleet Actions; multiple windows/other adapters | Separate scoped designs and tests |
 
 **Pragmatic sequencing:** UI may be scaffolded in parallel once M1 contracts are stable; do not enable any real write path until M2 security gates pass. M4/M6 can proceed with mock data while relevant core APIs mature, without promoting mock outputs to production.
@@ -643,8 +645,64 @@ Milestones are ordered by prerequisite and must have explicit acceptance tests; 
 
 - Python GitFleet Hook Labs v1, v2, v3, v4.
 - `gitfleet-rust-core-poc-v0.1.1.zip` and submitted macOS `cargo build` / `cargo test` / diagnostic results (24 acceptance + 6 core tests passed; GPG-positive diagnostic skipped).
-- Approved UI concept boards: `assets/01-core-workflows.png`, `assets/02-ai-and-settings.png`, `assets/03-operations-and-reliability.png`.
+- Approved UI concept boards: `mockups/01-core-workflows.png`, `mockups/02-ai-and-settings.png`, `mockups/03-operations-and-reliability.png`.
 
 ### 20.3 Implementation instruction
 
 This document is the **requirements baseline**, not permission to operate on a real repository, run bulk Git writes, or connect to a production AI server. Codex should begin by reviewing this specification, auditing the existing Rust POC against it, and producing a bounded implementation plan. All tests default to disposable repositories and mock AI providers. Any live Git write/network access requires explicit user authorization.
+
+
+## 21. M1 implementation reconciliation — 2026-11-01
+
+M1 was authorized after M0 and implemented as a headless read-only workspace
+milestone. [M1 contracts](architecture/M1_READ_ONLY_WORKSPACES.md) document concrete
+identity/path/persistence/process decisions. [Implementation status](IMPLEMENTATION_STATUS.md)
+records local validation, exclusions and next authorization boundary. M1-A01–A15
+in the acceptance matrix map the approved milestone gates to runnable evidence.
+
+Core remains a single crate; the conceptual multi-crate suggestion in section 6.1
+is not a requirement to split it. Experimental writes remain opt-in and unsafe for
+real projects. Desktop scaffolding, watchers, graph rendering, production trust/
+approval/writes, remote operations, AI, Actions and backup UI remain later work.
+Only the core portion of shared M1/M3/M4 requirements is fulfilled.
+
+The initial validated baseline is macOS arm64 with Git 2.56.0 and Rust/Cargo 1.99.1.
+The implementation declares Git >=2.56.0 and Rust >=1.99; versions beyond the tested
+pair and Linux/Windows are not implicitly validated. Safe inspection suppresses
+system/global executable configuration and rejects content filters/sparse-index
+configuration. Native byte paths and SHA-256 inspection are modeled/tested within
+the documented envelope. The original pre-production write risks remain open.
+
+
+### M2 implementation reconciliation — 2026-11-01
+
+The user authorized M2 implementation, including the proposed bounded support
+policy. [M2 contracts](architecture/M2_CONTROLLED_WRITES.md) and the
+[M2 acceptance ledger](ACCEPTANCE_MATRIX.md#11-m2-acceptance-gates--controlled-writes)
+now describe the production service's implemented scope. M0/M1 default inspection
+and the historical POC remain separate. Core still has one crate and no presentation
+dependency. The M2 gate closes only for local macOS/APFS, supported files refs and
+ordinary index states; advanced indexes, hook managers/reference-transaction Execute,
+non-UTF-8 filesystem creation, other platforms and OS/power-loss validation remain
+explicit exclusions. Positive GPG/SSH acceptance is no longer a pending Mac gate.
+Thirteen SIGKILL boundaries establish process-crash evidence, not universal storage
+durability. Operation records are retained without automatic pruning; configurable
+90-day retention remains a proposed default, not an implemented M2 deletion policy.
+M3 and later require separate authorization. No desktop, bulk, remote or AI write
+capability is implied by M2 service completion.
+
+
+### M3 implementation reconciliation — updated 2026-11-02
+
+M3 was subsequently authorized. A Tauri/React adapter, transport-neutral Core
+application services, scoped IPC, navigation persistence and monitoring are now
+implemented. Core remains one crate independent of presentation dependencies.
+[The M3 contracts](architecture/M3_DESKTOP_AND_IPC.md) and
+[M3 acceptance ledger](ACCEPTANCE_MATRIX.md#12-m3-acceptance-gates--implementation-with-native-gates-open)
+identify automated evidence and open native gates. The earlier agent access denial
+remains historical; the [November 2 checkpoint](M3_NATIVE_ACCEPTANCE_HANDOFF_2026-11-02.md)
+records later user-observed native approval, read/write, signing and restart evidence.
+M3 is not complete, and ordinary desktop writes remain disabled in Rust and UI.
+Actual cancellation, guarded recovery, close/forced-interruption, remaining security
+cases and accessibility acceptance still require permitted testing.
+M0–M2 safety boundaries and exclusions remain; M4 and later are not authorized.

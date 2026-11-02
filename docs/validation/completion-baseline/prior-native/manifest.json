@@ -1,0 +1,275 @@
+{
+  "provenance": "User-observed November 1\u20132 native session; preservation does not independently reproduce or attest those runs.",
+  "files": [
+    {
+      "file": "after-cancellation-attempt.json",
+      "sha256": "ac2fb70e13d3b6cca4139767053261f8e7dc8040cc3d43434be373bd61270a68",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/after-cancellation-attempt.json"
+    },
+    {
+      "file": "after-cancelled-commit-review.json",
+      "sha256": "dbaac72f6f9c247398a1936dab04c63470ff40506470c9d7889fdf40d83083bd",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/after-cancelled-commit-review.json"
+    },
+    {
+      "file": "after-hook-bypass.json",
+      "sha256": "d1bd3b3fabbecefe471c288c3e469891c844314c466bbdc8b4a39a813110e6fd",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/after-hook-bypass.json"
+    },
+    {
+      "file": "after-hook-rejection.json",
+      "sha256": "bb244663dc6dbba4f07600d6d02e9cca70a7e19346ec054187fc99bbbcfaf1a9",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/after-hook-rejection.json"
+    },
+    {
+      "file": "after-index-only-publication.json",
+      "sha256": "ac06cf9e5018516ff136812f0826919a468c48f85d0f4ab9a721a88a1a267905",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/after-index-only-publication.json"
+    },
+    {
+      "file": "after-openpgp-key-rejection.json",
+      "sha256": "aeef0e338c6f28de505cba931f41cf29d2359d62841b44116679db0a0dda1f84",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/after-openpgp-key-rejection.json"
+    },
+    {
+      "file": "after-openpgp-signing.json",
+      "sha256": "aeef0e338c6f28de505cba931f41cf29d2359d62841b44116679db0a0dda1f84",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/after-openpgp-signing.json"
+    },
+    {
+      "file": "after-ordinary-restart.json",
+      "sha256": "ac06cf9e5018516ff136812f0826919a468c48f85d0f4ab9a721a88a1a267905",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/after-ordinary-restart.json"
+    },
+    {
+      "file": "after-post-hook-failure.json",
+      "sha256": "f404bf96795d17ec011a5b92d761a5bfd924c48f5d4958a0563119b31c52005f",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/after-post-hook-failure.json"
+    },
+    {
+      "file": "after-read-only-session.json",
+      "sha256": "4ba9031f62dbd095e44a3b5292005ee5b43d7ec52d4b373e4c202ad6f3ce7809",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/after-read-only-session.json"
+    },
+    {
+      "file": "after-read-only.json",
+      "sha256": "4ba9031f62dbd095e44a3b5292005ee5b43d7ec52d4b373e4c202ad6f3ce7809",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/after-read-only.json"
+    },
+    {
+      "file": "after-reference-hook-rejection.json",
+      "sha256": "d76e7c48395b050a14bb4e1450bcd843f959df8e5de10a5883517e38b57afdb6",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/after-reference-hook-rejection.json"
+    },
+    {
+      "file": "after-ssh-key-rejection.json",
+      "sha256": "91825dfa90f9331959a68864457b9bec7b9d885160adcf6dfe18df8e3f9eb230",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/after-ssh-key-rejection.json"
+    },
+    {
+      "file": "after-ssh-signing.json",
+      "sha256": "91825dfa90f9331959a68864457b9bec7b9d885160adcf6dfe18df8e3f9eb230",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/after-ssh-signing.json"
+    },
+    {
+      "file": "after-stage.json",
+      "sha256": "3ff2ed3750788a346d141b8def05f4fe0cd452873f88961476bfcb355d452fd1",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/after-stage.json"
+    },
+    {
+      "file": "after-unstage.json",
+      "sha256": "2f0e548857a5c26f2b55b3146d10fb8c6d21486983b67666c2389bf903a4cbe9",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/after-unstage.json"
+    },
+    {
+      "file": "baseline.json",
+      "sha256": "4ba9031f62dbd095e44a3b5292005ee5b43d7ec52d4b373e4c202ad6f3ce7809",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/baseline.json"
+    },
+    {
+      "file": "cancellation-attempt-preservation.json",
+      "sha256": "72625c156ef7c7d7d18377b1161217bff9fd08b5a4829c20ce52cb7cf95d26ce",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/cancellation-attempt-preservation.json"
+    },
+    {
+      "file": "cancellation-baseline.json",
+      "sha256": "ac2fb70e13d3b6cca4139767053261f8e7dc8040cc3d43434be373bd61270a68",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/cancellation-baseline.json"
+    },
+    {
+      "file": "changed-hook-verification.json",
+      "sha256": "deb10581c6ec50ad926979bc9f8f14c07dfba8cc921d25b59f2e48256d2438a3",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/changed-hook-verification.json"
+    },
+    {
+      "file": "engine-exclusion-checks.json",
+      "sha256": "ab6d34fa620fd6c406851f284211b051db323200f214da3ac114a8572ff8f949",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/engine-exclusion-checks.json"
+    },
+    {
+      "file": "engine-publication-checks.json",
+      "sha256": "8dcbeb055121b2b94eb6cf467cd8dd9d4639cc93a0ce25c392de6d50d5ac3171",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/engine-publication-checks.json"
+    },
+    {
+      "file": "fixture-cancellation.json",
+      "sha256": "103383bb19992d6af36c0fed120103cfe8d699726901de8ef5f00eabe3abb108",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/fixture-cancellation.json"
+    },
+    {
+      "file": "fixture-hooks.json",
+      "sha256": "b68e449151145c63ac2c0e74834d4d62f57ae3f4fd2b2605cb0ec5f17db4fa4b",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/fixture-hooks.json"
+    },
+    {
+      "file": "fixture-openpgp-signing.json",
+      "sha256": "b21b7594a4b24de135ee3a358bb7eed4f56f9d2d9bdeb0d27ae23c61f94796c7",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/fixture-openpgp-signing.json"
+    },
+    {
+      "file": "fixture-post-hook.json",
+      "sha256": "2cb01d85b52f8ba115eee10f5644922c4c9c22ce46f9c1d9b93aafa236171809",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/fixture-post-hook.json"
+    },
+    {
+      "file": "fixture-reference-hook.json",
+      "sha256": "076640a91fdfb832063e2a720ce0c1ea15b7cd719e045061860d8e415ea20303",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/fixture-reference-hook.json"
+    },
+    {
+      "file": "fixture-secondary.json",
+      "sha256": "f1e34f70a3487805384c6e5e9e257ecf5ca8e9738c842bb1111e9df2b9728d2f",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/fixture-secondary.json"
+    },
+    {
+      "file": "fixture-ssh-signing.json",
+      "sha256": "48e4b694c4ac5e241c212323f97cd7b048af91f3ae0c8dc6166abcb554ed4148",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/fixture-ssh-signing.json"
+    },
+    {
+      "file": "fixture-writes.json",
+      "sha256": "a7c706eebffed3cc34f45f7de7baeafea9d79f5280be9280b01abff731847e22",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/fixture-writes.json"
+    },
+    {
+      "file": "fixture.json",
+      "sha256": "0f1aa9301039ba1eb5c8bbeabe066e58def1b6a002c0b769845d0091215e35e4",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/fixture.json"
+    },
+    {
+      "file": "hook-bypass-verification.json",
+      "sha256": "b5956fe4a8269b5ca663f62996c557fa5e8dfdba8983a4a0b5b460d6ba350f18",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/hook-bypass-verification.json"
+    },
+    {
+      "file": "hook-fixture-baseline.json",
+      "sha256": "bb244663dc6dbba4f07600d6d02e9cca70a7e19346ec054187fc99bbbcfaf1a9",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/hook-fixture-baseline.json"
+    },
+    {
+      "file": "hook-rejection-verification.json",
+      "sha256": "ede506a08b04a271d8a0fe31b18a9d072cf9ef4620dd898598fb20e20117c171",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/hook-rejection-verification.json"
+    },
+    {
+      "file": "openpgp-key-rejection-verification.json",
+      "sha256": "97851aa2affb448074e3d8450ffdafcdba2fc3b8c5b88e4c49d23d73a23ea767",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/openpgp-key-rejection-verification.json"
+    },
+    {
+      "file": "openpgp-publication-verification.json",
+      "sha256": "9c2a91c130f67157f5b56a036c60fb43c84ee5ed0af39aec56f0e7a0b832dac9",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/openpgp-publication-verification.json"
+    },
+    {
+      "file": "openpgp-signature-verification.txt",
+      "sha256": "4b2cdfaee105645fd126ae1ea9345fc79119834795221f27fe91f4cf68b19e8e",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/openpgp-signature-verification.txt"
+    },
+    {
+      "file": "openpgp-signing-baseline.json",
+      "sha256": "c78f931c0546f2f4b8a0b1a3f97d6ce8b7a2b069c15197248b6110f0158492cb",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/openpgp-signing-baseline.json"
+    },
+    {
+      "file": "post-hook-fixture-baseline.json",
+      "sha256": "cebcdc6c68d3a04d77aea40249f13bcf4b02e22cb45be9e333c71591c5f6c8b5",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/post-hook-fixture-baseline.json"
+    },
+    {
+      "file": "post-hook-verification.json",
+      "sha256": "81b69fb36961ff9c27384b89f407952527c5db9d66c555fc39baef4e2e8ce339",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/post-hook-verification.json"
+    },
+    {
+      "file": "reference-hook-baseline.json",
+      "sha256": "d76e7c48395b050a14bb4e1450bcd843f959df8e5de10a5883517e38b57afdb6",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/reference-hook-baseline.json"
+    },
+    {
+      "file": "reference-hook-verification.json",
+      "sha256": "de7f1a9a96c8bd7cf3df2e102d4da912e4ac3a02fd77206c50451ffce1b3a700",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/reference-hook-verification.json"
+    },
+    {
+      "file": "same-oid-verification.json",
+      "sha256": "90f8b599eb2ea91db9a55a1f0c8dca8285085b38fd34237df8d73c4a06873bd9",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/same-oid-verification.json"
+    },
+    {
+      "file": "secondary-after-definition-removal.json",
+      "sha256": "0fd5b158837113023ebd3a80504112bfe797cd51bfd54ffd5184e11553adfd7b",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/secondary-after-definition-removal.json"
+    },
+    {
+      "file": "secondary-before-definition-removal.json",
+      "sha256": "0fd5b158837113023ebd3a80504112bfe797cd51bfd54ffd5184e11553adfd7b",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/secondary-before-definition-removal.json"
+    },
+    {
+      "file": "snapshot.py",
+      "sha256": "beb56864980b441a76c1a3501e5bc3a01adb1b7c7ce1333c074317054584058d",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/snapshot.py"
+    },
+    {
+      "file": "ssh-key-rejection-verification.json",
+      "sha256": "97851aa2affb448074e3d8450ffdafcdba2fc3b8c5b88e4c49d23d73a23ea767",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/ssh-key-rejection-verification.json"
+    },
+    {
+      "file": "ssh-publication-verification.json",
+      "sha256": "80f212f411210e8a6153f50c8a9896e1042928412a8fc20dff73afaeaae0ec4b",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/ssh-publication-verification.json"
+    },
+    {
+      "file": "ssh-signature-verification.txt",
+      "sha256": "395522bfb8a8760b8021e5c65a5ee9f39919591208633a2d4c858712c09d3ec7",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/ssh-signature-verification.txt"
+    },
+    {
+      "file": "ssh-signing-baseline.json",
+      "sha256": "3386da748ab4cfd8950d4b6f2c6ded59da579d011bd669bc8ee87be08de9c7cb",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/ssh-signing-baseline.json"
+    },
+    {
+      "file": "stage-verification.json",
+      "sha256": "43f16b8100e976379d51708186be1c6b3f61a8212d7e08c7b00503215287083a",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/stage-verification.json"
+    },
+    {
+      "file": "stale-content-verification.json",
+      "sha256": "0964c7eb1d5896f47385a643d88898a9da121a5bfdfeee1e5a63fcde8cd7a0c2",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/stale-content-verification.json"
+    },
+    {
+      "file": "unstage-verification.json",
+      "sha256": "9a8a22a880b7ff9a70b3cba06b4bc8be08a82e80f9112cd33299f3a9d01b3f52",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/unstage-verification.json"
+    },
+    {
+      "file": "write-fixture-baseline.json",
+      "sha256": "dbaac72f6f9c247398a1936dab04c63470ff40506470c9d7889fdf40d83083bd",
+      "source": "/private/tmp/gitfleet-m3-evidence-niCdnj/write-fixture-baseline.json"
+    }
+  ]
+}

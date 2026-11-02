@@ -1,0 +1,90 @@
+ M .gitignore
+ M README.md
+ M app/core/Cargo.lock
+ M app/core/Cargo.toml
+ M app/core/README.md
+ M app/core/scripts/verify-scaffold.py
+ M app/core/src/bin/gitfleet_cli.rs
+ M app/core/src/bin/gitfleet_lab.rs
+ M app/core/src/commit.rs
+ M app/core/src/discovery.rs
+ M app/core/src/error.rs
+ M app/core/src/git.rs
+ M app/core/src/journal.rs
+ M app/core/src/lab.rs
+ M app/core/src/lib.rs
+ M app/core/tests/acceptance.rs
+ M app/core/tests/core_behaviour.rs
+ M docs/ACCEPTANCE_MATRIX.md
+ M docs/DECISIONS_AND_OPEN_ITEMS.md
+ M docs/GITFLEET_SPECIFICATION.md
+ M docs/README.md
+ M docs/architecture/core-poc/ARCHITECTURE.md
+ M docs/architecture/core-poc/LIMITATIONS.md
+ M docs/architecture/core-poc/PATCH_NOTES.md
+ M docs/architecture/core-poc/TEST_MATRIX.md
+?? .github/
+?? app/core/scripts/validate.sh
+?? app/core/src/application/
+?? app/core/src/bin/gitfleet_contracts.rs
+?? app/core/src/bin/gitfleet_write.rs
+?? app/core/src/diff.rs
+?? app/core/src/domain.rs
+?? app/core/src/history.rs
+?? app/core/src/inspection.rs
+?? app/core/src/locking.rs
+?? app/core/src/process.rs
+?? app/core/src/workspace.rs
+?? app/core/src/writes/
+?? app/core/tests/inspection.rs
+?? app/core/tests/m1_read.rs
+?? app/core/tests/m1_workspace.rs
+?? app/core/tests/m2_writes.rs
+?? app/core/tests/m3_application.rs
+?? app/core/tests/support/
+?? app/core/tests/write_regressions.rs
+?? app/desktop/.gitignore
+?? app/desktop/.npmrc
+?? app/desktop/README.md
+?? app/desktop/eslint.config.js
+?? app/desktop/index.html
+?? app/desktop/package-lock.json
+?? app/desktop/package.json
+?? app/desktop/review.html
+?? app/desktop/scripts/
+?? app/desktop/src-tauri/Cargo.lock
+?? app/desktop/src-tauri/Cargo.toml
+?? app/desktop/src-tauri/build.rs
+?? app/desktop/src-tauri/capabilities/
+?? app/desktop/src-tauri/icons/
+?? app/desktop/src-tauri/permissions/
+?? app/desktop/src-tauri/src/main.rs
+?? app/desktop/src-tauri/src/security.rs
+?? app/desktop/src-tauri/tauri.conf.json
+?? app/desktop/src/main.tsx
+?? app/desktop/src/review.test.ts
+?? app/desktop/src/review.ts
+?? app/desktop/src/services/bridge.test.ts
+?? app/desktop/src/services/bridge.ts
+?? app/desktop/src/services/request.generated.ts
+?? app/desktop/src/services/response.generated.ts
+?? app/desktop/src/stores/model.test.ts
+?? app/desktop/src/stores/model.ts
+?? app/desktop/src/styles/app.css
+?? app/desktop/src/styles/review.css
+?? app/desktop/src/test-setup.ts
+?? app/desktop/src/testdata.ts
+?? app/desktop/src/views/App.test.tsx
+?? app/desktop/src/views/App.tsx
+?? app/desktop/tsconfig.json
+?? app/desktop/vite.config.ts
+?? docs/IMPLEMENTATION_HANDOFF.md
+?? docs/IMPLEMENTATION_STATUS.md
+?? docs/M3_NATIVE_ACCEPTANCE_HANDOFF_2026-11-02.md
+?? docs/M3_NATIVE_ACCEPTANCE_PLAN.md
+?? docs/PROJECT_COMPLETION_PLAN.md
+?? docs/architecture/M0_SAFETY_BOUNDARIES.md
+?? docs/architecture/M1_READ_ONLY_WORKSPACES.md
+?? docs/architecture/M2_CONTROLLED_WRITES.md
+?? docs/architecture/M3_DESKTOP_AND_IPC.md
+?? docs/validation/

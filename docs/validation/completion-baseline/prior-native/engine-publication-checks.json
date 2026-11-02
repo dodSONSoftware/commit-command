@@ -1,0 +1,12 @@
+{
+  "head": "e09e95cc2fd91b3fdaf7c388eb2a94c4b65d33a0",
+  "checks": {
+    "One new commit directly above baseline": true,
+    "Still on main": true,
+    "Exact commit message": true,
+    "HEAD README matches previously staged bytes": true,
+    "Complete HEAD tree matches baseline index": true,
+    "Index entries preserved": true,
+    "Working README unchanged": true
+  }
+}

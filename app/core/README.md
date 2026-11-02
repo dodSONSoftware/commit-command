@@ -1,3 +1,122 @@
+# GitFleet Core — read-only workspaces, controlled writes and application services
+
+Core remains one presentation-independent Rust crate. Default features expose
+workspace persistence and read-only Git services. `experimental-writes` still
+only enables the disposable commit lab; it is not production approval.
+
+M3 adds optional `application-services`: presentation-independent orchestration,
+monitoring, persisted navigation and schema generation over the existing services.
+Core remains one crate with no Tauri/React dependency. The separate desktop adapter
+is implemented but native acceptance remains incomplete; ordinary desktop writes
+remain disabled. Later user-observed native results are in the
+[November 2 checkpoint](../../docs/M3_NATIVE_ACCEPTANCE_HANDOFF_2026-11-02.md). See [M3 contracts](../../docs/architecture/M3_DESKTOP_AND_IPC.md) and
+[current evidence](../../docs/validation/m3/README.md).
+
+Requires Rust 1.99+, Git 2.56.0+, Python 3, and a C toolchain for bundled SQLite.
+Dependencies are locked; tests create their own temporary Git repositories and
+application data directories. No live remotes, credentials, AI or desktop are needed.
+
+From this directory:
+
+```sh
+GITFLEET_TEST_GPG=/absolute/path/to/gpg sh scripts/validate.sh
+cargo run --bin gitfleet-cli -- status /path/to/worktree
+cargo run --bin gitfleet-cli -- scan /path/to/workspace
+cargo run --bin gitfleet-cli -- history /path/to/worktree 100
+cargo run --bin gitfleet-cli -- history /path/to/worktree 100 refs/heads/main
+cargo run --bin gitfleet-cli -- commit /path/to/worktree FULL_COMMIT_OID
+cargo run --bin gitfleet-cli -- diff /path/to/worktree staged
+cargo run --bin gitfleet-cli -- diff /path/to/worktree unstaged 'literal/path.txt'
+cargo run --bin gitfleet-cli -- diff /path/to/worktree commit FULL_COMMIT_OID FULL_PARENT_OID
+cargo run --bin gitfleet-cli -- preview /path/to/worktree 'literal/path.txt'
+```
+
+Root-commit diffs omit the parent argument. Non-root diffs require a true parent.
+History accepts an optional serialized `next` cursor as its final argument, after
+page size and full ref. Use the library DTOs for lossless non-UTF-8 paths; CLI paths
+are native OS arguments. JSON byte fields are arrays, never lossy execution paths.
+
+Workspace configuration requires an explicit data directory outside managed repos:
+
+```sh
+cargo run --bin gitfleet-cli -- --data-dir /outside/projects/gitfleet-state workspace create Project /path/to/workspace
+cargo run --bin gitfleet-cli -- --data-dir /outside/projects/gitfleet-state workspace list
+cargo run --bin gitfleet-cli -- --data-dir /outside/projects/gitfleet-state workspace activate WORKSPACE_ID
+cargo run --bin gitfleet-cli -- --data-dir /outside/projects/gitfleet-state workspace scan WORKSPACE_ID
+cargo run --bin gitfleet-cli -- --data-dir /outside/projects/gitfleet-state workspace inventory WORKSPACE_ID
+cargo run --bin gitfleet-cli -- --data-dir /outside/projects/gitfleet-state workspace last-scan WORKSPACE_ID
+cargo run --bin gitfleet-cli -- --data-dir /outside/projects/gitfleet-state workspace refresh WORKSPACE_ID WORKTREE_ID
+```
+
+Additional verbs: `active`, `rename ID NAME`, `root ID ROOT`, `remove ID`, and
+`exclusions ID JSON`. Exclusions JSON contains `excluded_names` and
+`excluded_patterns`. Pattern matching is case-sensitive, workspace-relative, with
+literal separators; `.git` traversal is always forbidden. `discover` retains the
+M0 compatibility result/error behavior; `scan` exposes partial inventories.
+
+Status includes structured changes/counts, HEAD/branch, local-only upstream
+comparison, operation markers, last commit, generation and observation time.
+The old `status` text remains a compatibility diagnostic; structured fields are
+authoritative, including staged gitlinks recovered without scanning children.
+
+[The M1 contracts](../../docs/architecture/M1_READ_ONLY_WORKSPACES.md) define limits,
+identity/persistence behavior, unsafe configurations and platform restrictions.
+[Status](../../docs/IMPLEMENTATION_STATUS.md) records exact validation and skips;
+[handoff](../../docs/IMPLEMENTATION_HANDOFF.md) records the next authorization boundary.
+
+The original suite is preserved:
+
+```sh
+cargo test --workspace --all-targets --features experimental-writes
+cargo run --features experimental-writes --bin gitfleet-lab -- --output target/lab-results.json
+# Explicit positive GPG test requires successful creation and verification.
+cargo test --features experimental-writes --test acceptance successful_gpg_signing -- --ignored --exact
+```
+
+## Explicit M2 controlled writes
+
+`controlled-writes` enables a separate service and interactive CLI for the
+[documented macOS/APFS support envelope](../../docs/architecture/M2_CONTROLLED_WRITES.md).
+It does not enable the experimental APIs. Existing workspace/worktree IDs must be
+obtained with the read-only workspace CLI above; data must remain outside checkouts.
+These commands are examples, not authorization to target a repository:
+
+```sh
+cargo run --features controlled-writes --bin gitfleet-write -- /outside/projects/gitfleet-state trust WORKSPACE_ID WORKTREE_ID
+cargo run --features controlled-writes --bin gitfleet-write -- /outside/projects/gitfleet-state propose WORKSPACE_ID WORKTREE_ID '{"kind":"commit","selected":[{"path":{"encoding":"utf8","value":"file.txt"},"source":"working_tree"}],"message":"Reviewed message","hooks":"execute","signing":"configured"}'
+cargo run --features controlled-writes --bin gitfleet-write -- /outside/projects/gitfleet-state history
+cargo run --features controlled-writes --bin gitfleet-write -- /outside/projects/gitfleet-state recover OPERATION_UUID
+cargo run --features controlled-writes --bin gitfleet-write -- /outside/projects/gitfleet-state revoke WORKTREE_ID
+```
+
+Trust, proposal execution and recovery each require an interactive literal
+`APPROVE`. A proposal never writes managed Git objects/index/refs. The approved
+execution does; trust in hooks/signers permits unsandboxed user-code execution.
+There is no generic Git command, unattended approval or force-lock cleanup endpoint.
+Use library NativePath DTOs for native byte paths; this small write CLI accepts
+UTF-8 arguments. It is not a desktop UX or bulk executor.
+
+Full-file stage/unstage request JSON uses `kind: "stage"`/`"unstage"`, `paths` with
+NativePath values and the explicit `hooks` policy. `bypass_all` is complete and
+visible; `unsigned` is an explicitly reviewed signing preference. The Rust API
+also provides saved hook policy and separate read-only recovery inspection.
+
+M2 validation requires actual positive OpenPGP and SSH results. Set
+`GITFLEET_TEST_GPG` to an absolute installed GPG executable; keyrings/keys are created
+only in disposable temporary locations and agents are cleaned up. Missing GPG
+fails the gate, rather than silently skipping. The all-feature matrix includes a
+fixture-only SIGKILL driver (`write-test-support`); production adapters should use
+only `controlled-writes`. Non-macOS validation runs default and experimental checks
+and explicitly labels M2 unsupported. No release/platform support follows from
+unexecuted CI. See [M2 evidence](../../docs/validation/m2/README.md) for exact results.
+
+## Historical v0.1.1 package README and source listings
+
+Everything below is preserved historical material. Paths, commands, source
+listings and authoring-time verification statements describe the imported package,
+not the assembled M0 tree. The actual source files and current documentation above
+are authoritative. The old listings are intentionally not synchronized.
+
 # GitFleet — Rust Core Proof of Concept
 
 A **headless Rust POC** for GitFleet's controlled selective-commit engine, based on the established GitFleet Hook Lab v1–v4 experiments. Its core has **no Tauri, React, browser or AI dependencies**. `gitfleet-cli` provides read-only repository inspection, and `gitfleet-lab` performs write tests **only against disposable repositories created under the OS temporary directory**.
@@ -1409,7 +1528,7 @@ import sys
 try:
     import tomllib
 except ImportError:
-    print('Python 3.11+ is required for static verification')
+    print('Python 3 is required for static verification')
     sys.exit(2)
 
 root = Path(__file__).resolve().parents[1]

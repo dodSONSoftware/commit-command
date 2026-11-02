@@ -2,13 +2,19 @@
 
 ## Layer boundaries
 
-- `gitfleet_core::git`: narrow Git CLI adapter (`Command`, argv only, no shell), index inspection, path validation, read-only repository state.
+- `gitfleet_core::inspection`: fixed read-only queries and conservative untrusted configuration policy.
+- `gitfleet_core::git` (opt-in experimental): narrow Git CLI adapter (`Command`, argv only, no shell), index inspection, path validation, read-only repository state.
 - `gitfleet_core::commit`: controlled selective commit planning, isolated indexes, hook invocation, signing via Git, compare-and-swap ref updates, guarded index reconciliation.
 - `gitfleet_core::journal`: versioned, fsync-backed journal writes and restart reconciliation.
 - `gitfleet_core::discovery`: read-only nested repository discovery, skipping symlinks and common high-volume directories.
 - `gitfleet_core::lab`: disposable test fixtures and v4-compatible behavioral scenarios.
 - `gitfleet-cli`: read-only adapter (`discover`, `status`).
 - `gitfleet-lab`: test-only write adapter, restricted to disposable fixture repositories.
+
+M0 gates `git`, `commit`, `journal`, `lab` and the lab binary behind the non-default
+`experimental-writes` feature. The CLI depends only on inspection/discovery.
+Typed journal phases preserve the original JSON spellings; typed error categories
+cover inspection and hook rejection. Outcome strings remain the legacy lab protocol.
 
 The core contains no Tauri, React, browser, or HTTP server dependencies. A future `gitfleet-tauri` adapter can call service interfaces over typed requests. A web API would be a separate trusted boundary.
 
@@ -36,3 +42,10 @@ Normal Git commit hooks may mutate the index or message *after* user review. Git
 ## Rust production evolution
 
 Before exposing write actions to Tauri, implement a typed request/authorization protocol, privileged service checks, durable operation IDs in SQLite, hook compatibility policy, index-format validation, portable path bytes, locking and race stress tests, plus explicit repository trust.
+
+## M0 contracts
+
+See [service and safety contracts](../M0_SAFETY_BOUNDARIES.md). The typed error
+categories and journal enum are implemented; production trust/approval/execution/
+recovery service contracts in that document are proposals for M1/M2, not shipped
+services. There are no new crates or presentation dependencies.

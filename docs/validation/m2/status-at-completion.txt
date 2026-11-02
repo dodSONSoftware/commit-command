@@ -1,0 +1,141 @@
+# GitFleet implementation status
+
+Updated: 2026-11-01. **M2 complete within the documented local macOS/APFS envelope.**
+The user authorized M2 with its proposed decisions and acceptance gates. Work stops
+after M2; M3 and later require separate authorization. No commit, push, publication,
+deployment, remote workflow or real-repository Git write was performed.
+
+The existing `docs/` and `app/` layout, one Rust Core crate and presentation
+independence remain intact. Desktop directories are placeholders. The user's
+pre-existing `.gitignore` and M0/M1 changes were preserved. All integration Git
+writes targeted new disposable fixtures. Historical POC results remain unchanged.
+
+## Delivered M2
+
+- A separate non-default `controlled-writes` service and interactive write CLI;
+  default managed-repository inspection remains read-only, and experimental POC
+  writes retain their own `experimental-writes` feature.
+- Worktree-scoped trust, visible effective hooks/configuration/signing policy,
+  canonical identity/ownership binding, revocation/invalidation and no inheritance.
+- Core-owned immutable proposals and opaque in-memory one-use approval capabilities,
+  maximum ten-minute lifetime and restart invalidation; exact request/tree/message/
+  parents/author/date/hook/signing review with stale-state rejection.
+- Full-file stage/unstage and selected index/worktree/mixed commits; initial commits,
+  literal/newline paths, binary/modes/symlinks/deletions/renames/gitlinks and SHA-256;
+  preservation of excluded staging and worktree content.
+- Preparatory hooks with isolated index **and object database**, direct supported
+  hook lifecycle, explicit complete bypass, saved policy, tampering/nonzero/timeout
+  rejection and distinct post-publication side effects/failures/uncertainty.
+- Configured OpenPGP/SSH signing with actual signature verification against the
+  approved key, exact raw commit verification and no unsigned fallback.
+- Common-directory writer lock, native HEAD/index lock ownership receipts,
+  old-OID branch CAS, branch/HEAD reflog receipts, atomically durable loose-object
+  promotion, object integrity checks and selective index reconciliation.
+- SQLite schema-1 backup/transactional schema-2 migration, durable private artifacts,
+  persistent operation records/phase events and guarded actual-state recovery.
+- Thirteen real SIGKILL phase boundaries, storage/candidate corruption injections,
+  foreign-state recovery refusal and explicit re-trust of proven crashed locks.
+
+The [M2 architecture contract](architecture/M2_CONTROLLED_WRITES.md) is authoritative
+for API semantics, trust assumptions, limits and unsupported cases. The
+[acceptance ledger](ACCEPTANCE_MATRIX.md#11-m2-acceptance-gates--controlled-writes)
+maps M2-A01–M2-A18 to executed evidence. All 18 gates are satisfied for that bounded
+scope; exclusions below are not counted as passing implementations.
+
+## Exact validation
+
+Executed on macOS 27.2 arm64 / local APFS, Git 2.56.0, rustc 1.99.1, Cargo 1.99.1.
+GnuPG 2.5.24/libgcrypt 1.12.4 were built in an isolated temporary prefix; SSH uses
+system ssh-keygen. No global installation or personal signing keyring was changed.
+
+```sh
+GITFLEET_TEST_GPG=/private/tmp/gitfleet-m2-tools/install/bin/gpg CARGO_NET_OFFLINE=true sh app/core/scripts/validate.sh ../../docs/validation/m2
+```
+
+The script changes into `app/core`; its evidence argument is relative to there.
+An environment allowing local gpg-agent Unix sockets is required. The final run
+used approved sandbox escalation solely for disposable fixtures/keyrings.
+
+| Check | Result |
+|---|---|
+| Layout/manifest and `cargo fmt --all -- --check` | Passed |
+| All-target Cargo build, default / experimental / controlled / all features | All four passed |
+| Default all-target tests | **47 passed, 0 failed, 1 ignored** |
+| Experimental-only all-target tests | **82 passed, 0 failed, 2 ignored** |
+| Controlled-only all-target tests | **70 passed, 0 failed, 1 ignored** |
+| All-feature all-target tests | **110 passed, 0 failed, 3 ignored** |
+| All-target Clippy `-- -D warnings`, all four configurations | Passed |
+| Historical disposable POC lab | **23 passed, 1 skipped** |
+| Markdown links and `git diff --check` | Passed |
+
+Counts overlap across configurations. There are 113 all-feature harness entries:
+110 passing entries and three explicit ignores. M2 has 23 ordinary tests and five
+crash/fault tests, plus one ignored child driver invoked by passing crash tests.
+Default coverage gains one bounded-stdin/process timeout regression. The original
+controlled-commit suite and M0/M1 regressions remain intact.
+
+Explicit excludes: original optional POC `successful_gpg_signing` remains ignored;
+its lab equivalent skips because GPG is absent from default PATH. **M2 positive
+OpenPGP and SSH both execute and pass**, using the explicit GPG path and disposable
+keys. The historical non-UTF-8 filesystem test remains ignored due to the known
+macOS EPERM fixture limitation. The ignored crash worker is explicitly invoked
+and asserted by passing SIGKILL tests, rather than counted as a missing scenario.
+
+Raw output, tools/environment and the full POC lab result are in
+[the M2 evidence index](validation/m2/README.md). M0 and M1 evidence remain under
+`validation/m0/` and `validation/m1/`, including their completion snapshots.
+The workflow was updated locally; no CI job was pushed or remotely executed.
+
+## M2 file inventory
+
+Added:
+
+- `app/core/src/writes/{mod,adapter,policy,store,transaction}.rs`.
+- `app/core/src/bin/gitfleet_write.rs`, `app/core/tests/m2_writes.rs`.
+- `docs/architecture/M2_CONTROLLED_WRITES.md`, `docs/validation/m2/` evidence.
+
+Updated for M2:
+
+- Core Cargo manifest/lock: separate controlled/fault features and targets, optional
+  SHA-1 index checksums, SQLite backup support; no crate split or UI dependency.
+- `src/lib.rs`, `src/error.rs`, `src/workspace.rs` (schema-2 compatibility/private
+  service access), `src/process.rs` (bounded stdin and timeout precedence/test).
+- Validation/layout scripts and local `.github/workflows/core.yml` feature matrix.
+- Root/core/docs READMEs, specification reconciliation, acceptance/decision registers,
+  current status/handoff; preserved pre-M2 status/handoff under M1 evidence.
+
+Older uncommitted M0/M1 files in Git status are not all M2 changes. No unrelated
+cleanup or modification of the user's pre-existing `.gitignore` was performed.
+
+## Remaining risks and unsupported cases
+
+- Writes support local macOS/APFS and files refs with ordinary checksum-valid v2/v3
+  indexes only. Split/sparse/unmerged/extended-flag/v4 indexes, conflicting same-branch linked checkouts, detached/bare or
+  in-progress states, content filters/conversions/custom attributesFile settings, symlinked writable metadata and
+  foreign locks are rejected. M1 read support remains broader.
+- Executable hooks/signers are trusted user code, not sandboxed. Unknown frameworks,
+  reference-transaction Execute, transitive script/interpreter/agent dependencies,
+  deliberate same-user replacement/hard-link attacks and confidentiality through
+  includes/alternates are outside the guarantee. Explicit bypass is available.
+- SIGKILL and injected durable-phase failures do not prove power-loss/OS-crash or
+  every individual failed-syscall behavior. Partial locks/reflogs and external edits
+  can require manual reconciliation. Recovery never overwrites foreign state.
+- Post-hook attempt uncertainty persists; recovery never replays hooks or commits.
+  Unreferenced objects/temporary artifacts may remain after interruption.
+- Non-UTF-8 filesystem writes, Linux/Windows writes, network/non-APFS filesystems,
+  reftable, X.509/dynamic SSH/interactive/hardware-token signing remain unsupported
+  or untested. No platform release or packaging acceptance is implied.
+- Private operation records/artifacts/backups retain sensitive messages/patches/
+  paths and public signer information. Raw helper output, credentials and plaintext
+  approval tokens are not persisted. Automatic pruning/encryption is not implemented;
+  configurable 90-day retention remains proposed, with unresolved evidence protected.
+
+## Next authorization boundary
+
+M2 provides stable Core contracts for an M3 proposal. No M3 adapter, desktop
+scaffolding, watcher, bulk executor, remote operation, AI or Action has been added.
+Before enabling writes through a desktop adapter, it must render exact Core reviews,
+require user gestures, preserve capability/session boundaries, surface uncertain/
+published/post-hook states, and pass its own acceptance/security tests. Distribution,
+UI accessibility/OS minimums and broader hook/signing/platform coverage remain open
+product/release questions. Stop here and await user instructions; do not commit/push.

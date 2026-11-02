@@ -1,0 +1,676 @@
+gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri) [custom-protocol,default]
+├── gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core) [application-services,controlled-writes,default]
+│   ├── glob v0.3.4 []
+│   ├── libc v0.2.191 [default,std]
+│   ├── notify v8.2.1 [default,fsevent-sys,macos_fsevent,objc2-core-foundation,objc2-core-services]
+│   │   ├── bitflags v2.13.2 [serde,serde_core,std]
+│   │   │   └── serde_core v1.0.229 [alloc,rc,result,std]
+│   │   ├── libc v0.2.191 [default,std]
+│   │   ├── log v0.4.35 []
+│   │   ├── notify-types v2.2.0 []
+│   │   │   └── bitflags v2.13.2 [serde,serde_core,std] (*)
+│   │   ├── objc2-core-foundation v0.3.2 [CFArray,CFAttributedString,CFBase,CFCGTypes,CFCalendar,CFCharacterSet,CFData,CFDate,CFDictionary,CFError,CFFileSecurity,CFLocale,CFMachPort,CFMessagePort,CFRunLoop,CFSet,CFStream,CFString,CFURL,CFUUID,CFUserNotification,alloc,bitflags,objc2,std]
+│   │   │   ├── bitflags v2.13.2 [serde,serde_core,std] (*)
+│   │   │   └── objc2 v0.6.5 [alloc,default,disable-encoding-assertions,exception,std]
+│   │   │       ├── objc2-encode v4.1.0 [alloc,std]
+│   │   │       └── objc2-exception-helper v0.1.1 []
+│   │   │           [build-dependencies]
+│   │   │           └── cc v1.10.0 []
+│   │   │               ├── find-msvc-tools v0.1.15 []
+│   │   │               └── shlex v2.0.1 [default,std]
+│   │   ├── objc2-core-services v0.3.2 [FSEvents,alloc,libc,std]
+│   │   │   ├── libc v0.2.191 [default,std]
+│   │   │   └── objc2-core-foundation v0.3.2 [CFArray,CFAttributedString,CFBase,CFCGTypes,CFCalendar,CFCharacterSet,CFData,CFDate,CFDictionary,CFError,CFFileSecurity,CFLocale,CFMachPort,CFMessagePort,CFRunLoop,CFSet,CFStream,CFString,CFURL,CFUUID,CFUserNotification,alloc,bitflags,objc2,std] (*)
+│   │   └── walkdir v2.5.0 []
+│   │       └── same-file v1.0.6 []
+│   ├── rusqlite v0.41.0 [backup,bundled,modern_sqlite]
+│   │   ├── bitflags v2.13.2 [serde,serde_core,std] (*)
+│   │   ├── fallible-iterator v0.3.0 [alloc,default]
+│   │   ├── fallible-streaming-iterator v0.1.9 []
+│   │   ├── libsqlite3-sys v0.39.1 [bundled,bundled_bindings,cc,default,min_sqlite_version_3_45_3,pkg-config,vcpkg]
+│   │   │   [build-dependencies]
+│   │   │   ├── cc v1.10.0 [] (*)
+│   │   │   ├── pkg-config v0.3.34 []
+│   │   │   └── vcpkg v0.2.15 []
+│   │   └── smallvec v1.16.4 [const_generics]
+│   ├── schemars v1.2.3 [default,derive,schemars_derive,std]
+│   │   ├── dyn-clone v1.0.20 []
+│   │   ├── ref-cast v1.0.27 []
+│   │   │   └── ref-cast-impl v1.0.27 (proc-macro) []
+│   │   │       ├── proc-macro2 v1.0.107 [default,proc-macro,span-locations]
+│   │   │       │   └── unicode-ident v1.0.27 []
+│   │   │       ├── quote v1.0.47 [default,proc-macro]
+│   │   │       │   └── proc-macro2 v1.0.107 [default,proc-macro,span-locations] (*)
+│   │   │       └── syn v3.0.9 [clone-impls,default,derive,extra-traits,fold,full,parsing,printing,proc-macro,visit]
+│   │   │           ├── proc-macro2 v1.0.107 [default,proc-macro,span-locations] (*)
+│   │   │           ├── quote v1.0.47 [default,proc-macro] (*)
+│   │   │           └── unicode-ident v1.0.27 []
+│   │   ├── schemars_derive v1.2.3 (proc-macro) []
+│   │   │   ├── proc-macro2 v1.0.107 [default,proc-macro,span-locations] (*)
+│   │   │   ├── quote v1.0.47 [default,proc-macro] (*)
+│   │   │   ├── serde_derive_internals v0.30.0 []
+│   │   │   │   ├── proc-macro2 v1.0.107 [default,proc-macro,span-locations] (*)
+│   │   │   │   ├── quote v1.0.47 [default,proc-macro] (*)
+│   │   │   │   └── syn v3.0.9 [clone-impls,default,derive,extra-traits,fold,full,parsing,printing,proc-macro,visit] (*)
+│   │   │   └── syn v3.0.9 [clone-impls,default,derive,extra-traits,fold,full,parsing,printing,proc-macro,visit] (*)
+│   │   ├── serde v1.0.229 [alloc,default,derive,rc,serde_derive,std]
+│   │   │   ├── serde_core v1.0.229 [alloc,rc,result,std]
+│   │   │   └── serde_derive v1.0.229 (proc-macro) [default]
+│   │   │       ├── proc-macro2 v1.0.107 [default,proc-macro,span-locations] (*)
+│   │   │       ├── quote v1.0.47 [default,proc-macro] (*)
+│   │   │       └── syn v3.0.9 [clone-impls,default,derive,extra-traits,fold,full,parsing,printing,proc-macro,visit] (*)
+│   │   └── serde_json v1.0.154 [alloc,default,raw_value,std]
+│   │       ├── itoa v1.0.18 []
+│   │       ├── memchr v2.8.3 [alloc,default,std]
+│   │       ├── serde_core v1.0.229 [alloc,rc,result,std]
+│   │       └── zmij v1.0.23 []
+│   ├── serde v1.0.229 [alloc,default,derive,rc,serde_derive,std] (*)
+│   ├── serde_json v1.0.154 [alloc,default,raw_value,std] (*)
+│   ├── sha1 v0.10.7 [default,std]
+│   │   ├── cfg-if v1.0.5 []
+│   │   ├── cpufeatures v0.2.17 []
+│   │   │   └── libc v0.2.191 [default,std]
+│   │   └── digest v0.10.7 [alloc,block-buffer,core-api,default,std]
+│   │       ├── block-buffer v0.10.4 []
+│   │       │   └── generic-array v0.14.7 [more_lengths]
+│   │       │       └── typenum v1.20.1 []
+│   │       │       [build-dependencies]
+│   │       │       └── version_check v0.9.5 []
+│   │       └── crypto-common v0.1.7 [std]
+│   │           ├── generic-array v0.14.7 [more_lengths] (*)
+│   │           └── typenum v1.20.1 []
+│   ├── sha2 v0.10.9 [default,std]
+│   │   ├── cfg-if v1.0.5 []
+│   │   ├── cpufeatures v0.2.17 [] (*)
+│   │   └── digest v0.10.7 [alloc,block-buffer,core-api,default,std] (*)
+│   ├── toml v0.8.23 [default,display,parse]
+│   │   ├── serde v1.0.229 [alloc,default,derive,rc,serde_derive,std] (*)
+│   │   ├── serde_spanned v0.6.9 [serde]
+│   │   │   └── serde v1.0.229 [alloc,default,derive,rc,serde_derive,std] (*)
+│   │   ├── toml_datetime v0.6.11 [serde]
+│   │   │   └── serde v1.0.229 [alloc,default,derive,rc,serde_derive,std] (*)
+│   │   └── toml_edit v0.22.27 [display,parse,serde]
+│   │       ├── indexmap v2.14.2 [default,std]
+│   │       │   ├── equivalent v1.0.3 []
+│   │       │   └── hashbrown v0.17.1 []
+│   │       ├── serde v1.0.229 [alloc,default,derive,rc,serde_derive,std] (*)
+│   │       ├── serde_spanned v0.6.9 [serde] (*)
+│   │       ├── toml_datetime v0.6.11 [serde] (*)
+│   │       ├── toml_write v0.1.2 [alloc,default,std]
+│   │       └── winnow v0.7.15 [alloc,default,std]
+│   └── uuid v1.29.0 [default,rng,serde,std,v4]
+│       ├── getrandom v0.4.3 []
+│       │   ├── cfg-if v1.0.5 []
+│       │   └── libc v0.2.191 [default,std]
+│       └── serde_core v1.0.229 [alloc,rc,result,std]
+├── rfd v0.15.4 [ashpd,async-std,default,pollster,urlencoding,xdg-portal]
+│   ├── block2 v0.6.2 [alloc,default,std]
+│   │   └── objc2 v0.6.5 [alloc,default,disable-encoding-assertions,exception,std] (*)
+│   ├── dispatch2 v0.3.1 [alloc,block2,default,libc,objc2,std]
+│   │   ├── bitflags v2.13.2 [serde,serde_core,std] (*)
+│   │   ├── block2 v0.6.2 [alloc,default,std] (*)
+│   │   ├── libc v0.2.191 [default,std]
+│   │   └── objc2 v0.6.5 [alloc,default,disable-encoding-assertions,exception,std] (*)
+│   ├── log v0.4.35 []
+│   ├── objc2 v0.6.5 [alloc,default,disable-encoding-assertions,exception,std] (*)
+│   ├── objc2-app-kit v0.3.2 [NSAccessibilityProtocols,NSAlert,NSAnimation,NSAppearance,NSApplication,NSAttributedString,NSBezierPath,NSBox,NSButton,NSCell,NSColor,NSControl,NSCursor,NSDockTile,NSDragging,NSEvent,NSFont,NSGlassEffectView,NSGraphics,NSGraphicsContext,NSImage,NSMenu,NSMenuItem,NSOpenGLView,NSOpenPanel,NSPanel,NSPasteboard,NSPopover,NSPrintInfo,NSPrintOperation,NSResponder,NSRunningApplication,NSSavePanel,NSScreen,NSTextFinder,NSTextInputClient,NSTextInputContext,NSTextView,NSUserActivity,NSUserInterfaceItemIdentification,NSUserInterfaceValidation,NSView,NSVisualEffectView,NSWindow,NSWindowScripting,alloc,bitflags,block2,objc2-core-foundation,objc2-quartz-core,std]
+│   │   ├── bitflags v2.13.2 [serde,serde_core,std] (*)
+│   │   ├── block2 v0.6.2 [alloc,default,std] (*)
+│   │   ├── objc2 v0.6.5 [alloc,default,disable-encoding-assertions,exception,std] (*)
+│   │   ├── objc2-core-foundation v0.3.2 [CFArray,CFAttributedString,CFBase,CFCGTypes,CFCalendar,CFCharacterSet,CFData,CFDate,CFDictionary,CFError,CFFileSecurity,CFLocale,CFMachPort,CFMessagePort,CFRunLoop,CFSet,CFStream,CFString,CFURL,CFUUID,CFUserNotification,alloc,bitflags,objc2,std] (*)
+│   │   ├── objc2-foundation v0.3.2 [NSAffineTransform,NSArray,NSAttributedString,NSAutoreleasePool,NSBundle,NSCharacterSet,NSCoder,NSData,NSDate,NSDictionary,NSDistributedNotificationCenter,NSEnumerator,NSError,NSException,NSFileWrapper,NSFormatter,NSGeometry,NSHTTPCookie,NSItemProvider,NSJSONSerialization,NSKeyValueCoding,NSKeyValueObserving,NSLocale,NSNotification,NSNull,NSObjCRuntime,NSObject,NSOrthography,NSPathUtilities,NSProcessInfo,NSProgress,NSRange,NSRunLoop,NSScriptCommand,NSScriptStandardSuiteCommands,NSSet,NSStream,NSString,NSTextCheckingResult,NSThread,NSURL,NSURLAuthenticationChallenge,NSURLCredential,NSURLRequest,NSURLResponse,NSURLSession,NSUUID,NSUndoManager,NSUserActivity,NSValue,NSZone,alloc,bitflags,block2,objc2-core-foundation,std]
+│   │   │   ├── bitflags v2.13.2 [serde,serde_core,std] (*)
+│   │   │   ├── block2 v0.6.2 [alloc,default,std] (*)
+│   │   │   ├── objc2 v0.6.5 [alloc,default,disable-encoding-assertions,exception,std] (*)
+│   │   │   └── objc2-core-foundation v0.3.2 [CFArray,CFAttributedString,CFBase,CFCGTypes,CFCalendar,CFCharacterSet,CFData,CFDate,CFDictionary,CFError,CFFileSecurity,CFLocale,CFMachPort,CFMessagePort,CFRunLoop,CFSet,CFStream,CFString,CFURL,CFUUID,CFUserNotification,alloc,bitflags,objc2,std] (*)
+│   │   └── objc2-quartz-core v0.3.2 [CADisplayLink,CALayer,CAMediaTiming,CAMediaTimingFunction,CAOpenGLLayer,alloc,bitflags,objc2-core-foundation,std]
+│   │       ├── bitflags v2.13.2 [serde,serde_core,std] (*)
+│   │       ├── objc2 v0.6.5 [alloc,default,disable-encoding-assertions,exception,std] (*)
+│   │       ├── objc2-core-foundation v0.3.2 [CFArray,CFAttributedString,CFBase,CFCGTypes,CFCalendar,CFCharacterSet,CFData,CFDate,CFDictionary,CFError,CFFileSecurity,CFLocale,CFMachPort,CFMessagePort,CFRunLoop,CFSet,CFStream,CFString,CFURL,CFUUID,CFUserNotification,alloc,bitflags,objc2,std] (*)
+│   │       └── objc2-foundation v0.3.2 [NSAffineTransform,NSArray,NSAttributedString,NSAutoreleasePool,NSBundle,NSCharacterSet,NSCoder,NSData,NSDate,NSDictionary,NSDistributedNotificationCenter,NSEnumerator,NSError,NSException,NSFileWrapper,NSFormatter,NSGeometry,NSHTTPCookie,NSItemProvider,NSJSONSerialization,NSKeyValueCoding,NSKeyValueObserving,NSLocale,NSNotification,NSNull,NSObjCRuntime,NSObject,NSOrthography,NSPathUtilities,NSProcessInfo,NSProgress,NSRange,NSRunLoop,NSScriptCommand,NSScriptStandardSuiteCommands,NSSet,NSStream,NSString,NSTextCheckingResult,NSThread,NSURL,NSURLAuthenticationChallenge,NSURLCredential,NSURLRequest,NSURLResponse,NSURLSession,NSUUID,NSUndoManager,NSUserActivity,NSValue,NSZone,alloc,bitflags,block2,objc2-core-foundation,std] (*)
+│   ├── objc2-core-foundation v0.3.2 [CFArray,CFAttributedString,CFBase,CFCGTypes,CFCalendar,CFCharacterSet,CFData,CFDate,CFDictionary,CFError,CFFileSecurity,CFLocale,CFMachPort,CFMessagePort,CFRunLoop,CFSet,CFStream,CFString,CFURL,CFUUID,CFUserNotification,alloc,bitflags,objc2,std] (*)
+│   ├── objc2-foundation v0.3.2 [NSAffineTransform,NSArray,NSAttributedString,NSAutoreleasePool,NSBundle,NSCharacterSet,NSCoder,NSData,NSDate,NSDictionary,NSDistributedNotificationCenter,NSEnumerator,NSError,NSException,NSFileWrapper,NSFormatter,NSGeometry,NSHTTPCookie,NSItemProvider,NSJSONSerialization,NSKeyValueCoding,NSKeyValueObserving,NSLocale,NSNotification,NSNull,NSObjCRuntime,NSObject,NSOrthography,NSPathUtilities,NSProcessInfo,NSProgress,NSRange,NSRunLoop,NSScriptCommand,NSScriptStandardSuiteCommands,NSSet,NSStream,NSString,NSTextCheckingResult,NSThread,NSURL,NSURLAuthenticationChallenge,NSURLCredential,NSURLRequest,NSURLResponse,NSURLSession,NSUUID,NSUndoManager,NSUserActivity,NSValue,NSZone,alloc,bitflags,block2,objc2-core-foundation,std] (*)
+│   └── raw-window-handle v0.6.2 [alloc,std]
+├── serde v1.0.229 [alloc,default,derive,rc,serde_derive,std] (*)
+├── serde_json v1.0.154 [alloc,default,raw_value,std] (*)
+├── tauri v2.12.5 [common-controls-v6,compression,custom-protocol,dbus,default,dynamic-acl,tauri-runtime-wry,webkit2gtk,webview2-com,wry,x11]
+│   ├── anyhow v1.0.104 [default,std]
+│   ├── cookie v0.18.2 []
+│   │   └── time v0.3.55 [alloc,default,formatting,macros,parsing,std]
+│   │       ├── deranged v0.5.9 [default]
+│   │       ├── num-conv v0.2.2 []
+│   │       ├── powerfmt v0.2.1 []
+│   │       ├── time-core v0.1.9 []
+│   │       └── time-macros v0.2.32 (proc-macro) [formatting,parsing]
+│   │           ├── num-conv v0.2.2 []
+│   │           └── time-core v0.1.9 []
+│   │   [build-dependencies]
+│   │   └── version_check v0.9.5 []
+│   ├── dirs v7.0.0 []
+│   │   └── dirs-sys v0.5.0 []
+│   │       ├── libc v0.2.191 [default,std]
+│   │       └── option-ext v0.2.0 []
+│   ├── dunce v1.0.5 []
+│   ├── embed_plist v1.2.2 []
+│   ├── getrandom v0.3.4 []
+│   │   ├── cfg-if v1.0.5 []
+│   │   └── libc v0.2.191 [default,std]
+│   ├── glob v0.3.4 []
+│   ├── heck v0.5.0 []
+│   ├── http v1.5.0 [default,std]
+│   │   ├── bytes v1.12.1 [default,std]
+│   │   └── itoa v1.0.18 []
+│   ├── log v0.4.35 []
+│   ├── mime v0.3.17 []
+│   ├── muda v0.20.0 [common-controls-v6,gtk3,serde]
+│   │   ├── crossbeam-channel v0.5.17 [default,std]
+│   │   │   └── crossbeam-utils v0.8.23 [std]
+│   │   ├── dpi v0.1.2 [default,serde,std]
+│   │   │   └── serde v1.0.229 [alloc,default,derive,rc,serde_derive,std] (*)
+│   │   ├── keyboard-types v0.8.3 [default,serde,std]
+│   │   │   ├── bitflags v2.13.2 [serde,serde_core,std] (*)
+│   │   │   └── serde v1.0.229 [alloc,default,derive,rc,serde_derive,std] (*)
+│   │   ├── objc2 v0.6.5 [alloc,default,disable-encoding-assertions,exception,std] (*)
+│   │   ├── objc2-app-kit v0.3.2 [NSAccessibilityProtocols,NSAlert,NSAnimation,NSAppearance,NSApplication,NSAttributedString,NSBezierPath,NSBox,NSButton,NSCell,NSColor,NSControl,NSCursor,NSDockTile,NSDragging,NSEvent,NSFont,NSGlassEffectView,NSGraphics,NSGraphicsContext,NSImage,NSMenu,NSMenuItem,NSOpenGLView,NSOpenPanel,NSPanel,NSPasteboard,NSPopover,NSPrintInfo,NSPrintOperation,NSResponder,NSRunningApplication,NSSavePanel,NSScreen,NSTextFinder,NSTextInputClient,NSTextInputContext,NSTextView,NSUserActivity,NSUserInterfaceItemIdentification,NSUserInterfaceValidation,NSView,NSVisualEffectView,NSWindow,NSWindowScripting,alloc,bitflags,block2,objc2-core-foundation,objc2-quartz-core,std] (*)
+│   │   ├── objc2-core-foundation v0.3.2 [CFArray,CFAttributedString,CFBase,CFCGTypes,CFCalendar,CFCharacterSet,CFData,CFDate,CFDictionary,CFError,CFFileSecurity,CFLocale,CFMachPort,CFMessagePort,CFRunLoop,CFSet,CFStream,CFString,CFURL,CFUUID,CFUserNotification,alloc,bitflags,objc2,std] (*)
+│   │   ├── objc2-foundation v0.3.2 [NSAffineTransform,NSArray,NSAttributedString,NSAutoreleasePool,NSBundle,NSCharacterSet,NSCoder,NSData,NSDate,NSDictionary,NSDistributedNotificationCenter,NSEnumerator,NSError,NSException,NSFileWrapper,NSFormatter,NSGeometry,NSHTTPCookie,NSItemProvider,NSJSONSerialization,NSKeyValueCoding,NSKeyValueObserving,NSLocale,NSNotification,NSNull,NSObjCRuntime,NSObject,NSOrthography,NSPathUtilities,NSProcessInfo,NSProgress,NSRange,NSRunLoop,NSScriptCommand,NSScriptStandardSuiteCommands,NSSet,NSStream,NSString,NSTextCheckingResult,NSThread,NSURL,NSURLAuthenticationChallenge,NSURLCredential,NSURLRequest,NSURLResponse,NSURLSession,NSUUID,NSUndoManager,NSUserActivity,NSValue,NSZone,alloc,bitflags,block2,objc2-core-foundation,std] (*)
+│   │   ├── once_cell v1.21.4 [alloc,default,race,std]
+│   │   ├── png v0.18.1 []
+│   │   │   ├── bitflags v2.13.2 [serde,serde_core,std] (*)
+│   │   │   ├── crc32fast v1.5.4 [default,std]
+│   │   │   │   └── cfg-if v1.0.5 []
+│   │   │   ├── fdeflate v0.3.7 []
+│   │   │   │   └── simd-adler32 v0.3.10 [const-generics,default,std]
+│   │   │   ├── flate2 v1.1.10 [any_impl,default,miniz_oxide,runtime_detection,rust_backend]
+│   │   │   │   ├── crc32fast v1.5.4 [default,std] (*)
+│   │   │   │   └── miniz_oxide v0.9.1 [default,simd,simd-adler32,with-alloc]
+│   │   │   │       ├── adler2 v2.0.1 []
+│   │   │   │       └── simd-adler32 v0.3.10 [const-generics,default,std]
+│   │   │   └── miniz_oxide v0.8.9 [default,simd,simd-adler32,with-alloc]
+│   │   │       ├── adler2 v2.0.1 []
+│   │   │       └── simd-adler32 v0.3.10 [const-generics,default,std]
+│   │   ├── serde v1.0.229 [alloc,default,derive,rc,serde_derive,std] (*)
+│   │   └── thiserror v2.0.21 [default,std]
+│   │       └── thiserror-impl v2.0.21 (proc-macro) []
+│   │           ├── proc-macro2 v1.0.107 [default,proc-macro,span-locations] (*)
+│   │           ├── quote v1.0.47 [default,proc-macro] (*)
+│   │           └── syn v3.0.9 [clone-impls,default,derive,extra-traits,fold,full,parsing,printing,proc-macro,visit] (*)
+│   ├── objc2 v0.6.5 [alloc,default,disable-encoding-assertions,exception,std] (*)
+│   ├── objc2-app-kit v0.3.2 [NSAccessibilityProtocols,NSAlert,NSAnimation,NSAppearance,NSApplication,NSAttributedString,NSBezierPath,NSBox,NSButton,NSCell,NSColor,NSControl,NSCursor,NSDockTile,NSDragging,NSEvent,NSFont,NSGlassEffectView,NSGraphics,NSGraphicsContext,NSImage,NSMenu,NSMenuItem,NSOpenGLView,NSOpenPanel,NSPanel,NSPasteboard,NSPopover,NSPrintInfo,NSPrintOperation,NSResponder,NSRunningApplication,NSSavePanel,NSScreen,NSTextFinder,NSTextInputClient,NSTextInputContext,NSTextView,NSUserActivity,NSUserInterfaceItemIdentification,NSUserInterfaceValidation,NSView,NSVisualEffectView,NSWindow,NSWindowScripting,alloc,bitflags,block2,objc2-core-foundation,objc2-quartz-core,std] (*)
+│   ├── objc2-foundation v0.3.2 [NSAffineTransform,NSArray,NSAttributedString,NSAutoreleasePool,NSBundle,NSCharacterSet,NSCoder,NSData,NSDate,NSDictionary,NSDistributedNotificationCenter,NSEnumerator,NSError,NSException,NSFileWrapper,NSFormatter,NSGeometry,NSHTTPCookie,NSItemProvider,NSJSONSerialization,NSKeyValueCoding,NSKeyValueObserving,NSLocale,NSNotification,NSNull,NSObjCRuntime,NSObject,NSOrthography,NSPathUtilities,NSProcessInfo,NSProgress,NSRange,NSRunLoop,NSScriptCommand,NSScriptStandardSuiteCommands,NSSet,NSStream,NSString,NSTextCheckingResult,NSThread,NSURL,NSURLAuthenticationChallenge,NSURLCredential,NSURLRequest,NSURLResponse,NSURLSession,NSUUID,NSUndoManager,NSUserActivity,NSValue,NSZone,alloc,bitflags,block2,objc2-core-foundation,std] (*)
+│   ├── objc2-web-kit v0.3.2 [WKDownload,WKDownloadDelegate,WKFrameInfo,WKHTTPCookieStore,WKNavigation,WKNavigationAction,WKNavigationDelegate,WKNavigationResponse,WKOpenPanelParameters,WKPreferences,WKScriptMessage,WKScriptMessageHandler,WKSecurityOrigin,WKUIDelegate,WKURLSchemeHandler,WKURLSchemeTask,WKUserContentController,WKUserScript,WKWebView,WKWebViewConfiguration,WKWebpagePreferences,WKWebsiteDataStore,WKWindowFeatures,alloc,bitflags,block2,objc2-app-kit,objc2-core-foundation,std]
+│   │   ├── bitflags v2.13.2 [serde,serde_core,std] (*)
+│   │   ├── block2 v0.6.2 [alloc,default,std] (*)
+│   │   ├── objc2 v0.6.5 [alloc,default,disable-encoding-assertions,exception,std] (*)
+│   │   ├── objc2-app-kit v0.3.2 [NSAccessibilityProtocols,NSAlert,NSAnimation,NSAppearance,NSApplication,NSAttributedString,NSBezierPath,NSBox,NSButton,NSCell,NSColor,NSControl,NSCursor,NSDockTile,NSDragging,NSEvent,NSFont,NSGlassEffectView,NSGraphics,NSGraphicsContext,NSImage,NSMenu,NSMenuItem,NSOpenGLView,NSOpenPanel,NSPanel,NSPasteboard,NSPopover,NSPrintInfo,NSPrintOperation,NSResponder,NSRunningApplication,NSSavePanel,NSScreen,NSTextFinder,NSTextInputClient,NSTextInputContext,NSTextView,NSUserActivity,NSUserInterfaceItemIdentification,NSUserInterfaceValidation,NSView,NSVisualEffectView,NSWindow,NSWindowScripting,alloc,bitflags,block2,objc2-core-foundation,objc2-quartz-core,std] (*)
+│   │   ├── objc2-core-foundation v0.3.2 [CFArray,CFAttributedString,CFBase,CFCGTypes,CFCalendar,CFCharacterSet,CFData,CFDate,CFDictionary,CFError,CFFileSecurity,CFLocale,CFMachPort,CFMessagePort,CFRunLoop,CFSet,CFStream,CFString,CFURL,CFUUID,CFUserNotification,alloc,bitflags,objc2,std] (*)
+│   │   └── objc2-foundation v0.3.2 [NSAffineTransform,NSArray,NSAttributedString,NSAutoreleasePool,NSBundle,NSCharacterSet,NSCoder,NSData,NSDate,NSDictionary,NSDistributedNotificationCenter,NSEnumerator,NSError,NSException,NSFileWrapper,NSFormatter,NSGeometry,NSHTTPCookie,NSItemProvider,NSJSONSerialization,NSKeyValueCoding,NSKeyValueObserving,NSLocale,NSNotification,NSNull,NSObjCRuntime,NSObject,NSOrthography,NSPathUtilities,NSProcessInfo,NSProgress,NSRange,NSRunLoop,NSScriptCommand,NSScriptStandardSuiteCommands,NSSet,NSStream,NSString,NSTextCheckingResult,NSThread,NSURL,NSURLAuthenticationChallenge,NSURLCredential,NSURLRequest,NSURLResponse,NSURLSession,NSUUID,NSUndoManager,NSUserActivity,NSValue,NSZone,alloc,bitflags,block2,objc2-core-foundation,std] (*)
+│   ├── percent-encoding v2.3.2 [alloc,default,std]
+│   ├── plist v1.10.3 [default,serde]
+│   │   ├── base64 v0.23.1 [alloc,default,simd-unsafe,std]
+│   │   ├── indexmap v2.14.2 [default,std] (*)
+│   │   ├── quick-xml v0.42.0 [default]
+│   │   │   └── memchr v2.8.3 [alloc,default,std]
+│   │   ├── serde v1.0.229 [alloc,default,derive,rc,serde_derive,std] (*)
+│   │   └── time v0.3.55 [alloc,default,formatting,macros,parsing,std] (*)
+│   ├── raw-window-handle v0.6.2 [alloc,std]
+│   ├── serde v1.0.229 [alloc,default,derive,rc,serde_derive,std] (*)
+│   ├── serde_json v1.0.154 [alloc,default,raw_value,std] (*)
+│   ├── serde_repr v0.1.21 (proc-macro) []
+│   │   ├── proc-macro2 v1.0.107 [default,proc-macro,span-locations] (*)
+│   │   ├── quote v1.0.47 [default,proc-macro] (*)
+│   │   └── syn v3.0.9 [clone-impls,default,derive,extra-traits,fold,full,parsing,printing,proc-macro,visit] (*)
+│   ├── serialize-to-javascript v0.1.2 []
+│   │   ├── serde v1.0.229 [alloc,default,derive,rc,serde_derive,std] (*)
+│   │   ├── serde_json v1.0.154 [alloc,default,raw_value,std] (*)
+│   │   └── serialize-to-javascript-impl v0.1.2 (proc-macro) []
+│   │       ├── proc-macro2 v1.0.107 [default,proc-macro,span-locations] (*)
+│   │       ├── quote v1.0.47 [default,proc-macro] (*)
+│   │       └── syn v2.0.119 [clone-impls,default,derive,extra-traits,full,parsing,printing,proc-macro,visit]
+│   │           ├── proc-macro2 v1.0.107 [default,proc-macro,span-locations] (*)
+│   │           ├── quote v1.0.47 [default,proc-macro] (*)
+│   │           └── unicode-ident v1.0.27 []
+│   ├── tauri-macros v2.7.4 (proc-macro) [compression,custom-protocol]
+│   │   ├── heck v0.5.0 []
+│   │   ├── proc-macro2 v1.0.107 [default,proc-macro,span-locations] (*)
+│   │   ├── quote v1.0.47 [default,proc-macro] (*)
+│   │   ├── syn v2.0.119 [clone-impls,default,derive,extra-traits,full,parsing,printing,proc-macro,visit] (*)
+│   │   ├── tauri-codegen v2.7.4 [brotli,compression]
+│   │   │   ├── base64 v0.23.1 [alloc,default,simd-unsafe,std]
+│   │   │   ├── brotli v9.1.1 [alloc-stdlib,std]
+│   │   │   │   ├── alloc-no-stdlib v3.0.0 []
+│   │   │   │   ├── alloc-stdlib v0.3.0 []
+│   │   │   │   │   └── alloc-no-stdlib v3.0.0 []
+│   │   │   │   └── brotli-decompressor v6.2.0 [alloc-stdlib,std]
+│   │   │   │       ├── alloc-no-stdlib v3.0.0 []
+│   │   │   │       └── alloc-stdlib v0.3.0 [] (*)
+│   │   │   ├── ico v0.6.0 []
+│   │   │   │   ├── byteorder v1.5.0 [default,std]
+│   │   │   │   └── png v0.18.1 [] (*)
+│   │   │   ├── json-patch v4.2.0 [default,diff]
+│   │   │   │   ├── jsonptr v0.7.1 [assign,default,delete,json,resolve,serde,std]
+│   │   │   │   │   ├── serde v1.0.229 [alloc,default,derive,serde_derive,std]
+│   │   │   │   │   │   ├── serde_core v1.0.229 [alloc,default,result,std]
+│   │   │   │   │   │   └── serde_derive v1.0.229 (proc-macro) [default] (*)
+│   │   │   │   │   └── serde_json v1.0.154 [alloc,default,std,unbounded_depth]
+│   │   │   │   │       ├── itoa v1.0.18 []
+│   │   │   │   │       ├── memchr v2.8.3 [alloc,default,std]
+│   │   │   │   │       ├── serde_core v1.0.229 [alloc,default,result,std]
+│   │   │   │   │       └── zmij v1.0.23 []
+│   │   │   │   ├── serde v1.0.229 [alloc,default,derive,serde_derive,std] (*)
+│   │   │   │   ├── serde_json v1.0.154 [alloc,default,std,unbounded_depth] (*)
+│   │   │   │   └── thiserror v2.0.21 [default,std] (*)
+│   │   │   ├── plist v1.10.3 [default,serde] (*)
+│   │   │   ├── png v0.18.1 [] (*)
+│   │   │   ├── proc-macro2 v1.0.107 [default,proc-macro,span-locations] (*)
+│   │   │   ├── quote v1.0.47 [default,proc-macro] (*)
+│   │   │   ├── semver v1.0.28 [default,serde,std]
+│   │   │   │   └── serde_core v1.0.229 [alloc,default,result,std]
+│   │   │   ├── serde v1.0.229 [alloc,default,derive,serde_derive,std] (*)
+│   │   │   ├── serde_json v1.0.154 [alloc,default,std,unbounded_depth] (*)
+│   │   │   ├── sha2 v0.10.9 [default,std] (*)
+│   │   │   ├── syn v2.0.119 [clone-impls,default,derive,extra-traits,full,parsing,printing,proc-macro,visit] (*)
+│   │   │   ├── tauri-utils v2.10.2 [brotli,build-2,cargo_metadata,compression,html-manipulation-2,proc-macro2,quote,resources,schema,schemars,swift-rs,walkdir]
+│   │   │   │   ├── anyhow v1.0.104 [default,std]
+│   │   │   │   ├── brotli v9.1.1 [alloc-stdlib,std] (*)
+│   │   │   │   ├── cargo_metadata v0.19.2 [default]
+│   │   │   │   │   ├── camino v1.2.6 [serde1]
+│   │   │   │   │   │   └── serde_core v1.0.229 [alloc,default,result,std]
+│   │   │   │   │   ├── cargo-platform v0.1.9 []
+│   │   │   │   │   │   └── serde v1.0.229 [alloc,default,derive,serde_derive,std] (*)
+│   │   │   │   │   ├── semver v1.0.28 [default,serde,std] (*)
+│   │   │   │   │   ├── serde v1.0.229 [alloc,default,derive,serde_derive,std] (*)
+│   │   │   │   │   ├── serde_json v1.0.154 [alloc,default,std,unbounded_depth] (*)
+│   │   │   │   │   └── thiserror v2.0.21 [default,std] (*)
+│   │   │   │   ├── ctor v1.0.13 []
+│   │   │   │   ├── dom_query v0.28.0 []
+│   │   │   │   │   ├── bit-set v0.8.0 [default,std]
+│   │   │   │   │   │   └── bit-vec v0.8.0 [std]
+│   │   │   │   │   ├── cssparser v0.37.0 [default,fast_match_byte,fast_match_color]
+│   │   │   │   │   │   ├── cssparser-macros v0.7.1 (proc-macro) []
+│   │   │   │   │   │   │   ├── quote v1.0.47 [default,proc-macro] (*)
+│   │   │   │   │   │   │   └── syn v3.0.9 [clone-impls,default,derive,extra-traits,fold,full,parsing,printing,proc-macro,visit] (*)
+│   │   │   │   │   │   ├── dtoa-short v0.3.5 []
+│   │   │   │   │   │   │   └── dtoa v1.0.11 []
+│   │   │   │   │   │   ├── itoa v1.0.18 []
+│   │   │   │   │   │   ├── phf v0.13.1 [default,macros,phf_macros,std]
+│   │   │   │   │   │   │   ├── phf_macros v0.13.1 (proc-macro) []
+│   │   │   │   │   │   │   │   ├── phf_generator v0.13.1 []
+│   │   │   │   │   │   │   │   │   ├── fastrand v2.5.0 []
+│   │   │   │   │   │   │   │   │   └── phf_shared v0.13.1 [default,std]
+│   │   │   │   │   │   │   │   │       └── siphasher v1.0.4 [default,std]
+│   │   │   │   │   │   │   │   ├── phf_shared v0.13.1 [default,std] (*)
+│   │   │   │   │   │   │   │   ├── proc-macro2 v1.0.107 [default,proc-macro,span-locations] (*)
+│   │   │   │   │   │   │   │   ├── quote v1.0.47 [default,proc-macro] (*)
+│   │   │   │   │   │   │   │   └── syn v2.0.119 [clone-impls,default,derive,extra-traits,full,parsing,printing,proc-macro,visit] (*)
+│   │   │   │   │   │   │   └── phf_shared v0.13.1 [default,std] (*)
+│   │   │   │   │   │   └── smallvec v1.16.4 [const_generics]
+│   │   │   │   │   ├── foldhash v0.2.0 [default,std]
+│   │   │   │   │   ├── html5ever v0.39.0 []
+│   │   │   │   │   │   ├── log v0.4.35 []
+│   │   │   │   │   │   └── markup5ever v0.39.0 []
+│   │   │   │   │   │       ├── log v0.4.35 []
+│   │   │   │   │   │       ├── tendril v0.5.1 []
+│   │   │   │   │   │       │   └── new_debug_unreachable v1.0.6 []
+│   │   │   │   │   │       └── web_atoms v0.2.6 []
+│   │   │   │   │   │           ├── phf v0.13.1 [default,macros,phf_macros,std] (*)
+│   │   │   │   │   │           └── string_cache v0.9.0 []
+│   │   │   │   │   │               ├── new_debug_unreachable v1.0.6 []
+│   │   │   │   │   │               ├── parking_lot v0.12.5 [default]
+│   │   │   │   │   │               │   ├── lock_api v0.4.14 [atomic_usize,default]
+│   │   │   │   │   │               │   │   └── scopeguard v1.2.0 []
+│   │   │   │   │   │               │   └── parking_lot_core v0.9.12 []
+│   │   │   │   │   │               │       ├── cfg-if v1.0.5 []
+│   │   │   │   │   │               │       ├── libc v0.2.191 [default,std]
+│   │   │   │   │   │               │       └── smallvec v1.16.4 [const_generics]
+│   │   │   │   │   │               ├── phf_shared v0.13.1 [default,std] (*)
+│   │   │   │   │   │               └── precomputed-hash v0.1.1 []
+│   │   │   │   │   │           [build-dependencies]
+│   │   │   │   │   │           ├── phf_codegen v0.13.1 []
+│   │   │   │   │   │           │   ├── phf_generator v0.13.1 [] (*)
+│   │   │   │   │   │           │   └── phf_shared v0.13.1 [default,std] (*)
+│   │   │   │   │   │           └── string_cache_codegen v0.6.1 []
+│   │   │   │   │   │               ├── phf_generator v0.13.1 [] (*)
+│   │   │   │   │   │               ├── phf_shared v0.13.1 [default,std] (*)
+│   │   │   │   │   │               ├── proc-macro2 v1.0.107 [default,proc-macro,span-locations] (*)
+│   │   │   │   │   │               └── quote v1.0.47 [default,proc-macro] (*)
+│   │   │   │   │   ├── precomputed-hash v0.1.1 []
+│   │   │   │   │   ├── selectors v0.38.0 []
+│   │   │   │   │   │   ├── bitflags v2.13.2 [std]
+│   │   │   │   │   │   ├── cssparser v0.37.0 [default,fast_match_byte,fast_match_color] (*)
+│   │   │   │   │   │   ├── derive_more v2.1.1 [add,add_assign,default,std]
+│   │   │   │   │   │   │   └── derive_more-impl v2.1.1 (proc-macro) [add,add_assign,default]
+│   │   │   │   │   │   │       ├── proc-macro2 v1.0.107 [default,proc-macro,span-locations] (*)
+│   │   │   │   │   │   │       ├── quote v1.0.47 [default,proc-macro] (*)
+│   │   │   │   │   │   │       └── syn v2.0.119 [clone-impls,default,derive,extra-traits,full,parsing,printing,proc-macro,visit] (*)
+│   │   │   │   │   │   │       [build-dependencies]
+│   │   │   │   │   │   │       └── rustc_version v0.4.1 []
+│   │   │   │   │   │   │           └── semver v1.0.28 [default,serde,std] (*)
+│   │   │   │   │   │   ├── log v0.4.35 []
+│   │   │   │   │   │   ├── new_debug_unreachable v1.0.6 []
+│   │   │   │   │   │   ├── phf v0.13.1 [default,macros,phf_macros,std] (*)
+│   │   │   │   │   │   ├── precomputed-hash v0.1.1 []
+│   │   │   │   │   │   ├── rustc-hash v2.1.3 [default,std]
+│   │   │   │   │   │   ├── servo_arc v0.4.3 [default,track_alloc_size]
+│   │   │   │   │   │   │   └── stable_deref_trait v1.2.1 [alloc,default,std]
+│   │   │   │   │   │   └── smallvec v1.16.4 [const_generics]
+│   │   │   │   │   │   [build-dependencies]
+│   │   │   │   │   │   └── phf_codegen v0.13.1 [] (*)
+│   │   │   │   │   └── tendril v0.5.1 [] (*)
+│   │   │   │   ├── dunce v1.0.5 []
+│   │   │   │   ├── glob v0.3.4 []
+│   │   │   │   ├── http v1.5.0 [default,std] (*)
+│   │   │   │   ├── infer v0.22.0 [alloc,cfb,default,std]
+│   │   │   │   │   └── cfb v0.14.0 []
+│   │   │   │   │       ├── fnv v1.0.7 [default,std]
+│   │   │   │   │       ├── uuid v1.29.0 [default,rng,serde,std,v4] (*)
+│   │   │   │   │       └── web-time v1.1.0 []
+│   │   │   │   ├── json-patch v4.2.0 [default,diff] (*)
+│   │   │   │   ├── log v0.4.35 []
+│   │   │   │   ├── memchr v2.8.3 [alloc,default,std]
+│   │   │   │   ├── phf v0.13.1 [default,macros,phf_macros,std] (*)
+│   │   │   │   ├── plist v1.10.3 [default,serde] (*)
+│   │   │   │   ├── proc-macro2 v1.0.107 [default,proc-macro,span-locations] (*)
+│   │   │   │   ├── quote v1.0.47 [default,proc-macro] (*)
+│   │   │   │   ├── regex v1.13.1 [default,perf,perf-backtrack,perf-cache,perf-dfa,perf-inline,perf-literal,perf-onepass,std,unicode,unicode-age,unicode-bool,unicode-case,unicode-gencat,unicode-perl,unicode-script,unicode-segment]
+│   │   │   │   │   ├── aho-corasick v1.1.5 [perf-literal,std]
+│   │   │   │   │   │   └── memchr v2.8.3 [alloc,default,std]
+│   │   │   │   │   ├── memchr v2.8.3 [alloc,default,std]
+│   │   │   │   │   ├── regex-automata v0.4.18 [alloc,dfa-onepass,hybrid,meta,nfa-backtrack,nfa-pikevm,nfa-thompson,perf-inline,perf-literal,perf-literal-multisubstring,perf-literal-substring,std,syntax,unicode,unicode-age,unicode-bool,unicode-case,unicode-gencat,unicode-perl,unicode-script,unicode-segment,unicode-word-boundary]
+│   │   │   │   │   │   ├── aho-corasick v1.1.5 [perf-literal,std] (*)
+│   │   │   │   │   │   ├── memchr v2.8.3 [alloc,default,std]
+│   │   │   │   │   │   └── regex-syntax v0.8.11 [default,std,unicode,unicode-age,unicode-bool,unicode-case,unicode-gencat,unicode-perl,unicode-script,unicode-segment]
+│   │   │   │   │   └── regex-syntax v0.8.11 [default,std,unicode,unicode-age,unicode-bool,unicode-case,unicode-gencat,unicode-perl,unicode-script,unicode-segment]
+│   │   │   │   ├── schemars v0.8.22 [default,derive,indexmap,preserve_order,schemars_derive,url,uuid1]
+│   │   │   │   │   ├── dyn-clone v1.0.20 []
+│   │   │   │   │   ├── indexmap v1.9.3 [serde,serde-1]
+│   │   │   │   │   │   ├── hashbrown v0.12.3 [raw]
+│   │   │   │   │   │   └── serde v1.0.229 [alloc,default,derive,serde_derive,std] (*)
+│   │   │   │   │   │   [build-dependencies]
+│   │   │   │   │   │   └── autocfg v1.5.1 []
+│   │   │   │   │   ├── schemars_derive v0.8.22 (proc-macro) []
+│   │   │   │   │   │   ├── proc-macro2 v1.0.107 [default,proc-macro,span-locations] (*)
+│   │   │   │   │   │   ├── quote v1.0.47 [default,proc-macro] (*)
+│   │   │   │   │   │   ├── serde_derive_internals v0.29.1 []
+│   │   │   │   │   │   │   ├── proc-macro2 v1.0.107 [default,proc-macro,span-locations] (*)
+│   │   │   │   │   │   │   ├── quote v1.0.47 [default,proc-macro] (*)
+│   │   │   │   │   │   │   └── syn v2.0.119 [clone-impls,default,derive,extra-traits,full,parsing,printing,proc-macro,visit] (*)
+│   │   │   │   │   │   └── syn v2.0.119 [clone-impls,default,derive,extra-traits,full,parsing,printing,proc-macro,visit] (*)
+│   │   │   │   │   ├── serde v1.0.229 [alloc,default,derive,serde_derive,std] (*)
+│   │   │   │   │   ├── serde_json v1.0.154 [alloc,default,std,unbounded_depth] (*)
+│   │   │   │   │   ├── url v2.5.8 [default,serde,std]
+│   │   │   │   │   │   ├── form_urlencoded v1.2.2 [alloc,std]
+│   │   │   │   │   │   │   └── percent-encoding v2.3.2 [alloc,std]
+│   │   │   │   │   │   ├── idna v1.1.0 [alloc,compiled_data,std]
+│   │   │   │   │   │   │   ├── idna_adapter v1.2.2 [compiled_data]
+│   │   │   │   │   │   │   │   ├── icu_normalizer v2.4.0 [compiled_data]
+│   │   │   │   │   │   │   │   │   ├── icu_collections v2.4.0 []
+│   │   │   │   │   │   │   │   │   │   ├── displaydoc v0.2.7 (proc-macro) []
+│   │   │   │   │   │   │   │   │   │   │   ├── proc-macro2 v1.0.107 [default,proc-macro,span-locations] (*)
+│   │   │   │   │   │   │   │   │   │   │   ├── quote v1.0.47 [default,proc-macro] (*)
+│   │   │   │   │   │   │   │   │   │   │   └── syn v3.0.9 [clone-impls,default,derive,extra-traits,fold,full,parsing,printing,proc-macro,visit] (*)
+│   │   │   │   │   │   │   │   │   │   ├── potential_utf v0.1.6 [zerovec]
+│   │   │   │   │   │   │   │   │   │   │   └── zerovec v0.11.9 [derive,yoke]
+│   │   │   │   │   │   │   │   │   │   │       ├── yoke v0.8.4 [derive,zerofrom]
+│   │   │   │   │   │   │   │   │   │   │       │   ├── stable_deref_trait v1.2.1 [alloc,default,std]
+│   │   │   │   │   │   │   │   │   │   │       │   ├── yoke-derive v0.8.4 (proc-macro) []
+│   │   │   │   │   │   │   │   │   │   │       │   │   ├── proc-macro2 v1.0.107 [default,proc-macro,span-locations] (*)
+│   │   │   │   │   │   │   │   │   │   │       │   │   ├── quote v1.0.47 [default,proc-macro] (*)
+│   │   │   │   │   │   │   │   │   │   │       │   │   ├── syn v3.0.9 [clone-impls,default,derive,extra-traits,fold,full,parsing,printing,proc-macro,visit] (*)
+│   │   │   │   │   │   │   │   │   │   │       │   │   └── synstructure v0.14.0 [default,proc-macro]
+│   │   │   │   │   │   │   │   │   │   │       │   │       ├── proc-macro2 v1.0.107 [default,proc-macro,span-locations] (*)
+│   │   │   │   │   │   │   │   │   │   │       │   │       ├── quote v1.0.47 [default,proc-macro] (*)
+│   │   │   │   │   │   │   │   │   │   │       │   │       └── syn v3.0.9 [clone-impls,default,derive,extra-traits,fold,full,parsing,printing,proc-macro,visit] (*)
+│   │   │   │   │   │   │   │   │   │   │       │   └── zerofrom v0.1.8 [derive]
+│   │   │   │   │   │   │   │   │   │   │       │       └── zerofrom-derive v0.1.8 (proc-macro) []
+│   │   │   │   │   │   │   │   │   │   │       │           ├── proc-macro2 v1.0.107 [default,proc-macro,span-locations] (*)
+│   │   │   │   │   │   │   │   │   │   │       │           ├── quote v1.0.47 [default,proc-macro] (*)
+│   │   │   │   │   │   │   │   │   │   │       │           ├── syn v3.0.9 [clone-impls,default,derive,extra-traits,fold,full,parsing,printing,proc-macro,visit] (*)
+│   │   │   │   │   │   │   │   │   │   │       │           └── synstructure v0.14.0 [default,proc-macro] (*)
+│   │   │   │   │   │   │   │   │   │   │       ├── zerofrom v0.1.8 [derive] (*)
+│   │   │   │   │   │   │   │   │   │   │       └── zerovec-derive v0.11.7 (proc-macro) []
+│   │   │   │   │   │   │   │   │   │   │           ├── proc-macro2 v1.0.107 [default,proc-macro,span-locations] (*)
+│   │   │   │   │   │   │   │   │   │   │           ├── quote v1.0.47 [default,proc-macro] (*)
+│   │   │   │   │   │   │   │   │   │   │           └── syn v3.0.9 [clone-impls,default,derive,extra-traits,fold,full,parsing,printing,proc-macro,visit] (*)
+│   │   │   │   │   │   │   │   │   │   ├── utf8_iter v1.1.0 []
+│   │   │   │   │   │   │   │   │   │   │   └── utf_types v1.0.0 []
+│   │   │   │   │   │   │   │   │   │   ├── yoke v0.8.4 [derive,zerofrom] (*)
+│   │   │   │   │   │   │   │   │   │   ├── zerofrom v0.1.8 [derive] (*)
+│   │   │   │   │   │   │   │   │   │   └── zerovec v0.11.9 [derive,yoke] (*)
+│   │   │   │   │   │   │   │   │   ├── icu_normalizer_data v2.4.0 []
+│   │   │   │   │   │   │   │   │   ├── icu_provider v2.4.0 [baked]
+│   │   │   │   │   │   │   │   │   │   ├── displaydoc v0.2.7 (proc-macro) [] (*)
+│   │   │   │   │   │   │   │   │   │   ├── icu_locale_core v2.4.0 [zerovec]
+│   │   │   │   │   │   │   │   │   │   │   ├── displaydoc v0.2.7 (proc-macro) [] (*)
+│   │   │   │   │   │   │   │   │   │   │   ├── litemap v0.8.3 []
+│   │   │   │   │   │   │   │   │   │   │   ├── tinystr v0.8.5 [zerovec]
+│   │   │   │   │   │   │   │   │   │   │   │   ├── displaydoc v0.2.7 (proc-macro) [] (*)
+│   │   │   │   │   │   │   │   │   │   │   │   └── zerovec v0.11.9 [derive,yoke] (*)
+│   │   │   │   │   │   │   │   │   │   │   ├── writeable v0.6.4 []
+│   │   │   │   │   │   │   │   │   │   │   └── zerovec v0.11.9 [derive,yoke] (*)
+│   │   │   │   │   │   │   │   │   │   ├── writeable v0.6.4 []
+│   │   │   │   │   │   │   │   │   │   ├── yoke v0.8.4 [derive,zerofrom] (*)
+│   │   │   │   │   │   │   │   │   │   ├── zerofrom v0.1.8 [derive] (*)
+│   │   │   │   │   │   │   │   │   │   ├── zerotrie v0.2.5 [yoke,zerofrom]
+│   │   │   │   │   │   │   │   │   │   │   ├── displaydoc v0.2.7 (proc-macro) [] (*)
+│   │   │   │   │   │   │   │   │   │   │   ├── yoke v0.8.4 [derive,zerofrom] (*)
+│   │   │   │   │   │   │   │   │   │   │   └── zerofrom v0.1.8 [derive] (*)
+│   │   │   │   │   │   │   │   │   │   └── zerovec v0.11.9 [derive,yoke] (*)
+│   │   │   │   │   │   │   │   │   ├── smallvec v1.16.4 [const_generics]
+│   │   │   │   │   │   │   │   │   └── zerovec v0.11.9 [derive,yoke] (*)
+│   │   │   │   │   │   │   │   └── icu_properties v2.4.0 [compiled_data,default]
+│   │   │   │   │   │   │   │       ├── displaydoc v0.2.7 (proc-macro) [] (*)
+│   │   │   │   │   │   │   │       ├── icu_collections v2.4.0 [] (*)
+│   │   │   │   │   │   │   │       ├── icu_locale_core v2.4.0 [zerovec] (*)
+│   │   │   │   │   │   │   │       ├── icu_properties_data v2.4.0 []
+│   │   │   │   │   │   │   │       ├── icu_provider v2.4.0 [baked] (*)
+│   │   │   │   │   │   │   │       ├── zerotrie v0.2.5 [yoke,zerofrom] (*)
+│   │   │   │   │   │   │   │       └── zerovec v0.11.9 [derive,yoke] (*)
+│   │   │   │   │   │   │   ├── smallvec v1.16.4 [const_generics]
+│   │   │   │   │   │   │   └── utf8_iter v1.1.0 [] (*)
+│   │   │   │   │   │   ├── percent-encoding v2.3.2 [alloc,std]
+│   │   │   │   │   │   ├── serde v1.0.229 [alloc,default,derive,serde_derive,std] (*)
+│   │   │   │   │   │   └── serde_derive v1.0.229 (proc-macro) [default] (*)
+│   │   │   │   │   └── uuid v1.29.0 [default,rng,serde,std,v4] (*)
+│   │   │   │   ├── semver v1.0.28 [default,serde,std] (*)
+│   │   │   │   ├── serde v1.0.229 [alloc,default,derive,serde_derive,std] (*)
+│   │   │   │   ├── serde-untagged v0.1.9 []
+│   │   │   │   │   ├── erased-serde v0.4.11 [alloc]
+│   │   │   │   │   │   ├── serde_core v1.0.229 [alloc,default,result,std]
+│   │   │   │   │   │   └── typeid v1.0.3 []
+│   │   │   │   │   ├── serde_core v1.0.229 [alloc,default,result,std]
+│   │   │   │   │   └── typeid v1.0.3 []
+│   │   │   │   ├── serde_json v1.0.154 [alloc,default,std,unbounded_depth] (*)
+│   │   │   │   ├── serde_with v3.24.0 [alloc,default,macros,std]
+│   │   │   │   │   ├── serde_core v1.0.229 [alloc,default,result,std]
+│   │   │   │   │   └── serde_with_macros v3.24.0 (proc-macro) []
+│   │   │   │   │       ├── darling v0.24.1 [default,suggestions]
+│   │   │   │   │       │   ├── darling_core v0.24.1 [strsim,suggestions]
+│   │   │   │   │       │   │   ├── ident_case v1.0.1 []
+│   │   │   │   │       │   │   ├── proc-macro2 v1.0.107 [default,proc-macro,span-locations] (*)
+│   │   │   │   │       │   │   ├── quote v1.0.47 [default,proc-macro] (*)
+│   │   │   │   │       │   │   ├── strsim v0.11.1 []
+│   │   │   │   │       │   │   └── syn v3.0.9 [clone-impls,default,derive,extra-traits,fold,full,parsing,printing,proc-macro,visit] (*)
+│   │   │   │   │       │   └── darling_macro v0.24.1 (proc-macro) []
+│   │   │   │   │       │       ├── darling_core v0.24.1 [strsim,suggestions] (*)
+│   │   │   │   │       │       ├── quote v1.0.47 [default,proc-macro] (*)
+│   │   │   │   │       │       └── syn v3.0.9 [clone-impls,default,derive,extra-traits,fold,full,parsing,printing,proc-macro,visit] (*)
+│   │   │   │   │       ├── proc-macro2 v1.0.107 [default,proc-macro,span-locations] (*)
+│   │   │   │   │       ├── quote v1.0.47 [default,proc-macro] (*)
+│   │   │   │   │       └── syn v3.0.9 [clone-impls,default,derive,extra-traits,fold,full,parsing,printing,proc-macro,visit] (*)
+│   │   │   │   ├── swift-rs v1.0.9 [build,default,serde,serde_json]
+│   │   │   │   │   ├── base64 v0.21.7 [alloc,default,std]
+│   │   │   │   │   ├── serde v1.0.229 [alloc,default,derive,serde_derive,std] (*)
+│   │   │   │   │   └── serde_json v1.0.154 [alloc,default,std,unbounded_depth] (*)
+│   │   │   │   │   [build-dependencies]
+│   │   │   │   │   ├── serde v1.0.229 [alloc,default,derive,serde_derive,std] (*)
+│   │   │   │   │   └── serde_json v1.0.154 [alloc,default,std,unbounded_depth] (*)
+│   │   │   │   ├── thiserror v2.0.21 [default,std] (*)
+│   │   │   │   ├── toml v1.1.8+spec-1.1.0 [default,display,parse,serde,std]
+│   │   │   │   │   ├── serde_core v1.0.229 [alloc,default,result,std]
+│   │   │   │   │   ├── serde_spanned v1.1.2 [alloc,serde,std]
+│   │   │   │   │   │   └── serde_core v1.0.229 [alloc,default,result,std]
+│   │   │   │   │   ├── toml_datetime v1.1.2+spec-1.1.0 [alloc,serde,std]
+│   │   │   │   │   │   └── serde_core v1.0.229 [alloc,default,result,std]
+│   │   │   │   │   ├── toml_parser v1.1.5+spec-1.1.0 [alloc,std]
+│   │   │   │   │   │   └── winnow v1.0.4 []
+│   │   │   │   │   ├── toml_writer v1.1.3+spec-1.1.0 [alloc,std]
+│   │   │   │   │   └── winnow v1.0.4 []
+│   │   │   │   ├── url v2.5.8 [default,serde,std] (*)
+│   │   │   │   ├── urlpattern v0.6.0 []
+│   │   │   │   │   ├── icu_properties v2.4.0 [compiled_data,default] (*)
+│   │   │   │   │   ├── regex v1.13.1 [default,perf,perf-backtrack,perf-cache,perf-dfa,perf-inline,perf-literal,perf-onepass,std,unicode,unicode-age,unicode-bool,unicode-case,unicode-gencat,unicode-perl,unicode-script,unicode-segment] (*)
+│   │   │   │   │   ├── serde v1.0.229 [alloc,default,derive,serde_derive,std] (*)
+│   │   │   │   │   └── url v2.5.8 [default,serde,std] (*)
+│   │   │   │   ├── uuid v1.29.0 [default,rng,serde,std,v4] (*)
+│   │   │   │   └── walkdir v2.5.0 [] (*)
+│   │   │   ├── thiserror v2.0.21 [default,std] (*)
+│   │   │   ├── time v0.3.55 [alloc,default,formatting,parsing,std]
+│   │   │   │   ├── deranged v0.5.9 [default]
+│   │   │   │   ├── num-conv v0.2.2 []
+│   │   │   │   ├── powerfmt v0.2.1 []
+│   │   │   │   └── time-core v0.1.9 []
+│   │   │   ├── url v2.5.8 [default,serde,std] (*)
+│   │   │   ├── uuid v1.29.0 [default,rng,serde,std,v4] (*)
+│   │   │   └── walkdir v2.5.0 [] (*)
+│   │   └── tauri-utils v2.10.2 [brotli,build-2,cargo_metadata,compression,html-manipulation-2,proc-macro2,quote,resources,schema,schemars,swift-rs,walkdir] (*)
+│   ├── tauri-runtime v2.12.2 []
+│   │   ├── cookie v0.18.2 [] (*)
+│   │   ├── dpi v0.1.2 [default,serde,std] (*)
+│   │   ├── http v1.5.0 [default,std] (*)
+│   │   ├── objc2 v0.6.5 [alloc,default,disable-encoding-assertions,exception,std] (*)
+│   │   ├── objc2-web-kit v0.3.2 [WKDownload,WKDownloadDelegate,WKFrameInfo,WKHTTPCookieStore,WKNavigation,WKNavigationAction,WKNavigationDelegate,WKNavigationResponse,WKOpenPanelParameters,WKPreferences,WKScriptMessage,WKScriptMessageHandler,WKSecurityOrigin,WKUIDelegate,WKURLSchemeHandler,WKURLSchemeTask,WKUserContentController,WKUserScript,WKWebView,WKWebViewConfiguration,WKWebpagePreferences,WKWebsiteDataStore,WKWindowFeatures,alloc,bitflags,block2,objc2-app-kit,objc2-core-foundation,std] (*)
+│   │   ├── raw-window-handle v0.6.2 [alloc,std]
+│   │   ├── serde v1.0.229 [alloc,default,derive,rc,serde_derive,std] (*)
+│   │   ├── serde_json v1.0.154 [alloc,default,raw_value,std] (*)
+│   │   ├── tauri-utils v2.10.2 [brotli,compression,resources,walkdir]
+│   │   │   ├── anyhow v1.0.104 [default,std]
+│   │   │   ├── brotli v9.1.1 [alloc-stdlib,std] (*)
+│   │   │   ├── ctor v1.0.13 []
+│   │   │   ├── dunce v1.0.5 []
+│   │   │   ├── glob v0.3.4 []
+│   │   │   ├── http v1.5.0 [default,std] (*)
+│   │   │   ├── infer v0.22.0 [alloc,cfb,default,std] (*)
+│   │   │   ├── json-patch v4.2.0 [default,diff] (*)
+│   │   │   ├── log v0.4.35 []
+│   │   │   ├── memchr v2.8.3 [alloc,default,std]
+│   │   │   ├── phf v0.13.1 [default,macros,phf_macros,std] (*)
+│   │   │   ├── plist v1.10.3 [default,serde] (*)
+│   │   │   ├── regex v1.13.1 [default,perf,perf-backtrack,perf-cache,perf-dfa,perf-inline,perf-literal,perf-onepass,std,unicode,unicode-age,unicode-bool,unicode-case,unicode-gencat,unicode-perl,unicode-script,unicode-segment] (*)
+│   │   │   ├── semver v1.0.28 [default,std]
+│   │   │   ├── serde v1.0.229 [alloc,default,derive,rc,serde_derive,std] (*)
+│   │   │   ├── serde-untagged v0.1.9 [] (*)
+│   │   │   ├── serde_json v1.0.154 [alloc,default,raw_value,std] (*)
+│   │   │   ├── serde_with v3.24.0 [alloc,default,macros,std] (*)
+│   │   │   ├── thiserror v2.0.21 [default,std] (*)
+│   │   │   ├── toml v1.1.8+spec-1.1.0 [default,display,parse,serde,std] (*)
+│   │   │   ├── url v2.5.8 [default,serde,std] (*)
+│   │   │   ├── urlpattern v0.6.0 [] (*)
+│   │   │   ├── uuid v1.29.0 [default,rng,serde,std,v4] (*)
+│   │   │   └── walkdir v2.5.0 [] (*)
+│   │   ├── thiserror v2.0.21 [default,std] (*)
+│   │   └── url v2.5.8 [default,serde,std] (*)
+│   ├── tauri-runtime-wry v2.12.3 [common-controls-v6,dbus,x11]
+│   │   ├── http v1.5.0 [default,std] (*)
+│   │   ├── log v0.4.35 []
+│   │   ├── objc2 v0.6.5 [alloc,default,disable-encoding-assertions,exception,std] (*)
+│   │   ├── objc2-app-kit v0.3.2 [NSAccessibilityProtocols,NSAlert,NSAnimation,NSAppearance,NSApplication,NSAttributedString,NSBezierPath,NSBox,NSButton,NSCell,NSColor,NSControl,NSCursor,NSDockTile,NSDragging,NSEvent,NSFont,NSGlassEffectView,NSGraphics,NSGraphicsContext,NSImage,NSMenu,NSMenuItem,NSOpenGLView,NSOpenPanel,NSPanel,NSPasteboard,NSPopover,NSPrintInfo,NSPrintOperation,NSResponder,NSRunningApplication,NSSavePanel,NSScreen,NSTextFinder,NSTextInputClient,NSTextInputContext,NSTextView,NSUserActivity,NSUserInterfaceItemIdentification,NSUserInterfaceValidation,NSView,NSVisualEffectView,NSWindow,NSWindowScripting,alloc,bitflags,block2,objc2-core-foundation,objc2-quartz-core,std] (*)
+│   │   ├── raw-window-handle v0.6.2 [alloc,std]
+│   │   ├── tao v0.37.2 [dbus,rwh_06,x11]
+│   │   │   ├── bitflags v2.13.2 [serde,serde_core,std] (*)
+│   │   │   ├── block2 v0.6.2 [alloc,default,std] (*)
+│   │   │   ├── core-foundation v0.10.1 [default,link]
+│   │   │   │   ├── core-foundation-sys v0.8.7 [link]
+│   │   │   │   └── libc v0.2.191 [default,std]
+│   │   │   ├── core-graphics v0.25.0 [default,link]
+│   │   │   │   ├── bitflags v2.13.2 [serde,serde_core,std] (*)
+│   │   │   │   ├── core-foundation v0.10.1 [default,link] (*)
+│   │   │   │   ├── core-graphics-types v0.2.0 [link]
+│   │   │   │   │   ├── bitflags v2.13.2 [serde,serde_core,std] (*)
+│   │   │   │   │   ├── core-foundation v0.10.1 [default,link] (*)
+│   │   │   │   │   └── libc v0.2.191 [default,std]
+│   │   │   │   ├── foreign-types v0.5.0 [default,std]
+│   │   │   │   │   ├── foreign-types-macros v0.2.4 (proc-macro) [std]
+│   │   │   │   │   │   ├── proc-macro2 v1.0.107 [default,proc-macro,span-locations] (*)
+│   │   │   │   │   │   ├── quote v1.0.47 [default,proc-macro] (*)
+│   │   │   │   │   │   └── syn v3.0.9 [clone-impls,default,derive,extra-traits,fold,full,parsing,printing,proc-macro,visit] (*)
+│   │   │   │   │   └── foreign-types-shared v0.3.1 []
+│   │   │   │   └── libc v0.2.191 [default,std]
+│   │   │   ├── crossbeam-channel v0.5.17 [default,std] (*)
+│   │   │   ├── dispatch2 v0.3.1 [alloc,block2,default,libc,objc2,std] (*)
+│   │   │   ├── dpi v0.1.2 [default,serde,std] (*)
+│   │   │   ├── libc v0.2.191 [default,std]
+│   │   │   ├── log v0.4.35 []
+│   │   │   ├── objc2 v0.6.5 [alloc,default,disable-encoding-assertions,exception,std] (*)
+│   │   │   ├── objc2-app-kit v0.3.2 [NSAccessibilityProtocols,NSAlert,NSAnimation,NSAppearance,NSApplication,NSAttributedString,NSBezierPath,NSBox,NSButton,NSCell,NSColor,NSControl,NSCursor,NSDockTile,NSDragging,NSEvent,NSFont,NSGlassEffectView,NSGraphics,NSGraphicsContext,NSImage,NSMenu,NSMenuItem,NSOpenGLView,NSOpenPanel,NSPanel,NSPasteboard,NSPopover,NSPrintInfo,NSPrintOperation,NSResponder,NSRunningApplication,NSSavePanel,NSScreen,NSTextFinder,NSTextInputClient,NSTextInputContext,NSTextView,NSUserActivity,NSUserInterfaceItemIdentification,NSUserInterfaceValidation,NSView,NSVisualEffectView,NSWindow,NSWindowScripting,alloc,bitflags,block2,objc2-core-foundation,objc2-quartz-core,std] (*)
+│   │   │   ├── objc2-foundation v0.3.2 [NSAffineTransform,NSArray,NSAttributedString,NSAutoreleasePool,NSBundle,NSCharacterSet,NSCoder,NSData,NSDate,NSDictionary,NSDistributedNotificationCenter,NSEnumerator,NSError,NSException,NSFileWrapper,NSFormatter,NSGeometry,NSHTTPCookie,NSItemProvider,NSJSONSerialization,NSKeyValueCoding,NSKeyValueObserving,NSLocale,NSNotification,NSNull,NSObjCRuntime,NSObject,NSOrthography,NSPathUtilities,NSProcessInfo,NSProgress,NSRange,NSRunLoop,NSScriptCommand,NSScriptStandardSuiteCommands,NSSet,NSStream,NSString,NSTextCheckingResult,NSThread,NSURL,NSURLAuthenticationChallenge,NSURLCredential,NSURLRequest,NSURLResponse,NSURLSession,NSUUID,NSUndoManager,NSUserActivity,NSValue,NSZone,alloc,bitflags,block2,objc2-core-foundation,std] (*)
+│   │   │   ├── raw-window-handle v0.6.2 [alloc,std]
+│   │   │   └── url v2.5.8 [default,serde,std] (*)
+│   │   ├── tauri-runtime v2.12.2 [] (*)
+│   │   ├── tauri-utils v2.10.2 [brotli,compression,resources,walkdir] (*)
+│   │   ├── url v2.5.8 [default,serde,std] (*)
+│   │   └── wry v0.57.1 [gdkx11,javascriptcore-rs,linux-body,os-webview,soup3,webkit2gtk,webkit2gtk-sys,x11,x11-dl]
+│   │       ├── block2 v0.6.2 [alloc,default,std] (*)
+│   │       ├── cookie v0.18.2 [] (*)
+│   │       ├── dirs v7.0.0 [] (*)
+│   │       ├── dpi v0.1.2 [default,serde,std] (*)
+│   │       ├── http v1.5.0 [default,std] (*)
+│   │       ├── objc2 v0.6.5 [alloc,default,disable-encoding-assertions,exception,std] (*)
+│   │       ├── objc2-app-kit v0.3.2 [NSAccessibilityProtocols,NSAlert,NSAnimation,NSAppearance,NSApplication,NSAttributedString,NSBezierPath,NSBox,NSButton,NSCell,NSColor,NSControl,NSCursor,NSDockTile,NSDragging,NSEvent,NSFont,NSGlassEffectView,NSGraphics,NSGraphicsContext,NSImage,NSMenu,NSMenuItem,NSOpenGLView,NSOpenPanel,NSPanel,NSPasteboard,NSPopover,NSPrintInfo,NSPrintOperation,NSResponder,NSRunningApplication,NSSavePanel,NSScreen,NSTextFinder,NSTextInputClient,NSTextInputContext,NSTextView,NSUserActivity,NSUserInterfaceItemIdentification,NSUserInterfaceValidation,NSView,NSVisualEffectView,NSWindow,NSWindowScripting,alloc,bitflags,block2,objc2-core-foundation,objc2-quartz-core,std] (*)
+│   │       ├── objc2-core-foundation v0.3.2 [CFArray,CFAttributedString,CFBase,CFCGTypes,CFCalendar,CFCharacterSet,CFData,CFDate,CFDictionary,CFError,CFFileSecurity,CFLocale,CFMachPort,CFMessagePort,CFRunLoop,CFSet,CFStream,CFString,CFURL,CFUUID,CFUserNotification,alloc,bitflags,objc2,std] (*)
+│   │       ├── objc2-foundation v0.3.2 [NSAffineTransform,NSArray,NSAttributedString,NSAutoreleasePool,NSBundle,NSCharacterSet,NSCoder,NSData,NSDate,NSDictionary,NSDistributedNotificationCenter,NSEnumerator,NSError,NSException,NSFileWrapper,NSFormatter,NSGeometry,NSHTTPCookie,NSItemProvider,NSJSONSerialization,NSKeyValueCoding,NSKeyValueObserving,NSLocale,NSNotification,NSNull,NSObjCRuntime,NSObject,NSOrthography,NSPathUtilities,NSProcessInfo,NSProgress,NSRange,NSRunLoop,NSScriptCommand,NSScriptStandardSuiteCommands,NSSet,NSStream,NSString,NSTextCheckingResult,NSThread,NSURL,NSURLAuthenticationChallenge,NSURLCredential,NSURLRequest,NSURLResponse,NSURLSession,NSUUID,NSUndoManager,NSUserActivity,NSValue,NSZone,alloc,bitflags,block2,objc2-core-foundation,std] (*)
+│   │       ├── objc2-web-kit v0.3.2 [WKDownload,WKDownloadDelegate,WKFrameInfo,WKHTTPCookieStore,WKNavigation,WKNavigationAction,WKNavigationDelegate,WKNavigationResponse,WKOpenPanelParameters,WKPreferences,WKScriptMessage,WKScriptMessageHandler,WKSecurityOrigin,WKUIDelegate,WKURLSchemeHandler,WKURLSchemeTask,WKUserContentController,WKUserScript,WKWebView,WKWebViewConfiguration,WKWebpagePreferences,WKWebsiteDataStore,WKWindowFeatures,alloc,bitflags,block2,objc2-app-kit,objc2-core-foundation,std] (*)
+│   │       ├── raw-window-handle v0.6.2 [alloc,std]
+│   │       ├── thiserror v2.0.21 [default,std] (*)
+│   │       └── url v2.5.8 [default,serde,std] (*)
+│   │       [build-dependencies]
+│   │       └── objc2-foundation v0.3.2 [NSProcessInfo,alloc,bitflags,std]
+│   │           ├── bitflags v2.13.2 [std]
+│   │           └── objc2 v0.6.5 [alloc,std]
+│   │               └── objc2-encode v4.1.0 [alloc,std]
+│   ├── tauri-utils v2.10.2 [brotli,compression,resources,walkdir] (*)
+│   ├── thiserror v2.0.21 [default,std] (*)
+│   ├── tokio v1.54.1 [bytes,default,fs,io-util,rt,rt-multi-thread,sync]
+│   │   ├── bytes v1.12.1 [default,std]
+│   │   └── pin-project-lite v0.2.17 []
+│   ├── url v2.5.8 [default,serde,std] (*)
+│   └── window-vibrancy v0.8.1 []
+│       ├── objc2 v0.6.5 [alloc,default,disable-encoding-assertions,exception,std] (*)
+│       ├── objc2-app-kit v0.3.2 [NSAccessibilityProtocols,NSAlert,NSAnimation,NSAppearance,NSApplication,NSAttributedString,NSBezierPath,NSBox,NSButton,NSCell,NSColor,NSControl,NSCursor,NSDockTile,NSDragging,NSEvent,NSFont,NSGlassEffectView,NSGraphics,NSGraphicsContext,NSImage,NSMenu,NSMenuItem,NSOpenGLView,NSOpenPanel,NSPanel,NSPasteboard,NSPopover,NSPrintInfo,NSPrintOperation,NSResponder,NSRunningApplication,NSSavePanel,NSScreen,NSTextFinder,NSTextInputClient,NSTextInputContext,NSTextView,NSUserActivity,NSUserInterfaceItemIdentification,NSUserInterfaceValidation,NSView,NSVisualEffectView,NSWindow,NSWindowScripting,alloc,bitflags,block2,objc2-core-foundation,objc2-quartz-core,std] (*)
+│       ├── objc2-core-foundation v0.3.2 [CFArray,CFAttributedString,CFBase,CFCGTypes,CFCalendar,CFCharacterSet,CFData,CFDate,CFDictionary,CFError,CFFileSecurity,CFLocale,CFMachPort,CFMessagePort,CFRunLoop,CFSet,CFStream,CFString,CFURL,CFUUID,CFUserNotification,alloc,bitflags,objc2,std] (*)
+│       ├── objc2-foundation v0.3.2 [NSAffineTransform,NSArray,NSAttributedString,NSAutoreleasePool,NSBundle,NSCharacterSet,NSCoder,NSData,NSDate,NSDictionary,NSDistributedNotificationCenter,NSEnumerator,NSError,NSException,NSFileWrapper,NSFormatter,NSGeometry,NSHTTPCookie,NSItemProvider,NSJSONSerialization,NSKeyValueCoding,NSKeyValueObserving,NSLocale,NSNotification,NSNull,NSObjCRuntime,NSObject,NSOrthography,NSPathUtilities,NSProcessInfo,NSProgress,NSRange,NSRunLoop,NSScriptCommand,NSScriptStandardSuiteCommands,NSSet,NSStream,NSString,NSTextCheckingResult,NSThread,NSURL,NSURLAuthenticationChallenge,NSURLCredential,NSURLRequest,NSURLResponse,NSURLSession,NSUUID,NSUndoManager,NSUserActivity,NSValue,NSZone,alloc,bitflags,block2,objc2-core-foundation,std] (*)
+│       ├── objc2-quartz-core v0.3.2 [CADisplayLink,CALayer,CAMediaTiming,CAMediaTimingFunction,CAOpenGLLayer,alloc,bitflags,objc2-core-foundation,std] (*)
+│       └── raw-window-handle v0.6.2 [alloc,std]
+│   [build-dependencies]
+│   ├── glob v0.3.4 []
+│   ├── heck v0.5.0 []
+│   ├── tauri-build v2.7.4 [config-json,default]
+│   │   ├── anyhow v1.0.104 [default,std]
+│   │   ├── cargo_toml v1.0.1 []
+│   │   │   ├── semver v1.0.28 [default,serde,std] (*)
+│   │   │   ├── serde v1.0.229 [alloc,default,derive,serde_derive,std] (*)
+│   │   │   └── toml v1.1.8+spec-1.1.0 [default,display,parse,serde,std] (*)
+│   │   ├── dirs v7.0.0 [] (*)
+│   │   ├── glob v0.3.4 []
+│   │   ├── heck v0.5.0 []
+│   │   ├── json-patch v4.2.0 [default,diff] (*)
+│   │   ├── schemars v0.8.22 [default,derive,indexmap,preserve_order,schemars_derive,url,uuid1] (*)
+│   │   ├── semver v1.0.28 [default,serde,std] (*)
+│   │   ├── serde v1.0.229 [alloc,default,derive,serde_derive,std] (*)
+│   │   ├── serde_json v1.0.154 [alloc,default,std,unbounded_depth] (*)
+│   │   ├── static_vcruntime v3.0.0 []
+│   │   ├── strsim v0.11.1 []
+│   │   ├── tauri-utils v2.10.2 [brotli,build-2,cargo_metadata,compression,html-manipulation-2,proc-macro2,quote,resources,schema,schemars,swift-rs,walkdir] (*)
+│   │   ├── tauri-winres v0.3.7 []
+│   │   │   ├── dunce v1.0.5 []
+│   │   │   ├── embed-resource v3.0.12 []
+│   │   │   │   ├── cc v1.10.0 [] (*)
+│   │   │   │   ├── memchr v2.8.3 [alloc,default,std]
+│   │   │   │   ├── rustc_version v0.4.1 [] (*)
+│   │   │   │   └── toml v1.1.8+spec-1.1.0 [default,display,parse,serde,std] (*)
+│   │   │   └── toml v1.1.8+spec-1.1.0 [default,display,parse,serde,std] (*)
+│   │   └── walkdir v2.5.0 [] (*)
+│   └── tauri-utils v2.10.2 [brotli,build-2,cargo_metadata,compression,html-manipulation-2,proc-macro2,quote,resources,schema,schemars,swift-rs,walkdir] (*)
+└── uuid v1.29.0 [default,rng,serde,std,v4] (*)
+[build-dependencies]
+└── tauri-build v2.7.4 [config-json,default] (*)

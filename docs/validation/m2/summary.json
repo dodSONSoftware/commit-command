@@ -1,0 +1,35 @@
+{
+  "default": {
+    "passed": 47,
+    "failed": 0,
+    "ignored": 1
+  },
+  "experimental-writes": {
+    "passed": 82,
+    "failed": 0,
+    "ignored": 2
+  },
+  "controlled-writes": {
+    "passed": 70,
+    "failed": 0,
+    "ignored": 1
+  },
+  "all-features": {
+    "passed": 110,
+    "failed": 0,
+    "ignored": 3
+  },
+  "historical-lab": {
+    "passed": 23,
+    "skipped": 1
+  },
+  "commands": {
+    "validation_script_exit_code": 0,
+    "format": "passed",
+    "build_configurations": 4,
+    "strict_clippy_configurations": 4,
+    "layout_manifest": "passed",
+    "local_links": "passed",
+    "diff_whitespace": "passed"
+  }
+}

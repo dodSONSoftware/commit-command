@@ -1,0 +1,11 @@
+{
+  "operation": "ac99b8ec-85e0-4310-8a4b-b2a87b127e46",
+  "native_ui_observed": true,
+  "action": "abort_unpublished",
+  "confirm_disabled": true,
+  "review_cancelled_without_execution": true,
+  "before_after_repository_snapshots_equal": true,
+  "app_data_reopened_after_primary_close": true,
+  "binary_sha256": "18f5eaf93193e744c759834d9360176b82884dbd9b5c7eb43afc7f4b670d9286",
+  "features": "ordinary default (custom-protocol; desktop-writes disabled)"
+}

@@ -1,0 +1,6 @@
+{
+  "documentation": true,
+  "engine": true,
+  "engine/plugins/audio": true,
+  "tooling": true
+}

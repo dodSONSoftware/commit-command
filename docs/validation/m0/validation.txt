@@ -1,0 +1,144 @@
+Command: CARGO_NET_OFFLINE=true sh app/core/scripts/validate.sh ../../docs/validation/m0
+Exit status: 0
+
+M0 layout/manifest checks passed. Runtime safety is verified separately by Cargo tests.
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.01s
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.49s
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.01s
+     Running unittests src/lib.rs (target/debug/deps/gitfleet_core-9f573dcb9395e2e6)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/gitfleet_cli.rs (target/debug/deps/gitfleet_cli-12c5a2a485e52044)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/inspection.rs (target/debug/deps/inspection-3a940c0884b5592f)
+
+running 12 tests
+test non_utf8_filename_remains_git_quoted_without_mutation ... ignored, M0 host filesystem rejects non-UTF-8 filename creation (EPERM); requires a supporting filesystem
+test nested_directory_is_not_accepted_as_worktree_root ... ok
+test included_filter_configuration_is_rejected ... ok
+test worktree_filter_configuration_is_rejected ... ok
+test missing_promisor_object_cannot_launch_a_remote_helper ... ok
+test cli_does_not_inherit_git_repository_or_config_overrides ... ok
+test newline_filename_remains_git_quoted_without_mutation ... ok
+test inspection_and_cli_preserve_dirty_repository_bytes ... ok
+test configured_helper_sentinels_are_not_executed ... ok
+test unmerged_index_can_be_inspected_without_write_tree ... ok
+test content_filters_are_rejected_without_mutation ... ok
+test unborn_and_detached_head_can_be_inspected ... ok
+
+test result: ok. 11 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.36s
+
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.01s
+     Running unittests src/lib.rs (target/debug/deps/gitfleet_core-b382ce1504e9ea98)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/gitfleet_cli.rs (target/debug/deps/gitfleet_cli-9f9ba517c371f49b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/gitfleet_lab.rs (target/debug/deps/gitfleet_lab-34d3470556a12064)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/acceptance.rs (target/debug/deps/acceptance-d8c990719b6e8e4a)
+
+running 24 tests
+test hook_changes_selected_worktree ... ok
+test prepare_hook_rewrites_message ... ok
+test hook_rewrites_message ... ok
+test external_index_changed ... ok
+test hook_stages_unapproved ... ok
+test real_sigkill_before_ref ... ok
+test crash_then_external_index_edit ... ok
+test successful_gpg_signing ... ignored, optional positive GPG signing; run explicitly with a working GPG installation
+test real_sigkill_after_ref ... ok
+test real_sigkill_after_reconcile ... ok
+test partial_staging_commits_worktree ... ok
+test partial_staging_commits_index_only ... ok
+test selected_staged_preserves_other_staging ... ok
+test mixed_selected_sources ... ok
+test selected_rename_pair ... ok
+test post_commit_hook ... ok
+test hook_modifies_only_worktree ... ok
+test selected_worktree_changed_after_review ... ok
+test stale_head_before_cas ... ok
+test signing_missing_key ... ok
+test selected_unstaged_deletion ... ok
+test untracked_selected ... ok
+test space_in_path ... ok
+test selected_worktree_preserves_other_staging ... ok
+
+test result: ok. 23 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 1.53s
+
+     Running tests/core_behaviour.rs (target/debug/deps/core_behaviour-357e8c8422ffaec3)
+
+running 6 tests
+test prevent_parent_path_escape ... ok
+test read_only_status_is_available ... ok
+test discovery_does_not_follow_symlinked_directories ... ok
+test discovery_canonicalizes_symlinked_root ... ok
+test discover_nested_repositories_and_gitfile_marker ... ok
+test discover_linked_worktree_with_git_file ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+
+     Running tests/inspection.rs (target/debug/deps/inspection-640eb0e7a09aec5a)
+
+running 12 tests
+test non_utf8_filename_remains_git_quoted_without_mutation ... ignored, M0 host filesystem rejects non-UTF-8 filename creation (EPERM); requires a supporting filesystem
+test nested_directory_is_not_accepted_as_worktree_root ... ok
+test included_filter_configuration_is_rejected ... ok
+test worktree_filter_configuration_is_rejected ... ok
+test missing_promisor_object_cannot_launch_a_remote_helper ... ok
+test cli_does_not_inherit_git_repository_or_config_overrides ... ok
+test inspection_and_cli_preserve_dirty_repository_bytes ... ok
+test newline_filename_remains_git_quoted_without_mutation ... ok
+test configured_helper_sentinels_are_not_executed ... ok
+test unmerged_index_can_be_inspected_without_write_tree ... ok
+test content_filters_are_rejected_without_mutation ... ok
+test unborn_and_detached_head_can_be_inspected ... ok
+
+test result: ok. 11 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.36s
+
+     Running tests/write_regressions.rs (target/debug/deps/write_regressions-e4528e93f515fd15)
+
+running 6 tests
+test journal_phase_serialization_preserves_legacy_spelling ... ok
+test unknown_journal_phase_is_rejected ... ok
+test nonzero_hook_preserves_refs_index_and_worktree ... ok
+test same_oid_branch_switch_invalidates_prepared_plan ... ok
+test partial_staging_and_binary_content_have_independent_oracles ... ok
+test selected_pathspec_magic_is_a_literal_filename ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.87s
+
+    Checking gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.17s
+    Checking gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.05s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.06s
+     Running `target/debug/gitfleet-lab --output ../../docs/validation/m0/lab-results.json`
+
+Diagnostic JSON is preserved separately in lab-results.json. Summary:
+{
+  "passed": 23,
+  "skipped": 1,
+  "skips": {
+    "successful_gpg_signing": "gpg not installed"
+  }
+}

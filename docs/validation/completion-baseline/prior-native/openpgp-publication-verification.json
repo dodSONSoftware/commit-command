@@ -1,0 +1,15 @@
+{
+  "head": "5e66ec2233096d0680331a854f0929854d31aec0",
+  "checks": {
+    "One commit directly above baseline": true,
+    "Still on main": true,
+    "Exact commit message": true,
+    "OpenPGP signature present in commit": true,
+    "Complete HEAD tree matches baseline index": true,
+    "Index entries preserved": true,
+    "All engine working contents unchanged": true,
+    "Entire repository unchanged: engine/plugins/audio": true,
+    "Entire repository unchanged: tooling": true,
+    "Entire repository unchanged: documentation": true
+  }
+}

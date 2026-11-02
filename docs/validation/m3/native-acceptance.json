@@ -1,0 +1,11 @@
+{
+  "status": "blocked",
+  "tool": "mcp__cua_repl.js",
+  "app": "dev.gitfleet.desktop",
+  "exact_response": "Computer Use is blocked from using the app 'dev.gitfleet.desktop' by your organization's policy.",
+  "native_ui_interactions_completed": false,
+  "native_screenshots_captured": false,
+  "workaround_attempted": false,
+  "fixture_process_cleanup": "Stopped only the scoped disposable-fixture app process; no test GUI left running.",
+  "required_next_step": "Permitted native testing or a human operator must complete the documented native gates; do not enable ordinary desktop writes."
+}

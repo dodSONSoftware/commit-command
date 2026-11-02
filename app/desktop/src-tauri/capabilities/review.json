@@ -1,0 +1,1 @@
+{"identifier":"review","description":"Dedicated immutable review; confirmation stays in Rust/native UI.","webviews":["review"],"local":true,"permissions":["allow-review-data","allow-review-confirm","allow-review-cancel"]}

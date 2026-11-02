@@ -1,0 +1,9 @@
+{
+  "node": "v22.22.3",
+  "npm": "10.9.8",
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)",
+  "git": "git version 2.56.0",
+  "platform": "macOS-27.2-arm64-arm-64bit",
+  "architecture": "arm64"
+}

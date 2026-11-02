@@ -37,8 +37,12 @@ fn discover_linked_worktree_with_git_file() {
     assert!(linked.join(".git").is_file());
     let found = discovery::discover(&f.repo).unwrap();
     assert_eq!(found.len(), 2);
-    assert!(found.iter().any(|r| r.path == fs::canonicalize(&f.repo).unwrap()));
-    assert!(found.iter().any(|r| r.path == fs::canonicalize(&linked).unwrap()));
+    assert!(found
+        .iter()
+        .any(|r| r.path == fs::canonicalize(&f.repo).unwrap()));
+    assert!(found
+        .iter()
+        .any(|r| r.path == fs::canonicalize(&linked).unwrap()));
 }
 
 #[test]
@@ -65,6 +69,7 @@ fn discovery_does_not_follow_symlinked_directories() {
 fn read_only_status_is_available() {
     let f = Fixture::new().unwrap();
     f.stage("full.txt", "staged\n").unwrap();
-    let state = git::log_state(&f.repo).unwrap();
+    let state =
+        serde_json::to_value(gitfleet_core::inspection::snapshot(&f.repo).unwrap()).unwrap();
     assert!(state["status"].as_str().unwrap().contains("M  full.txt"));
 }

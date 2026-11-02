@@ -1,0 +1,142 @@
+# GitFleet implementation status
+
+Updated: 2026-11-01. **M1 complete for the documented local macOS envelope; stopped
+for user review.** The user authorized M1 including the proposed decisions and
+acceptance gates. M2 and later were not implemented. No commit, push, remote
+workflow execution, publication or deployment was performed.
+
+Core remains one Rust crate, independent of presentation technology. Existing
+`docs/` and `app/` structure and desktop placeholders remain intact. The user's
+pre-existing `.gitignore` modification was preserved. All Git writes during
+validation used new temporary fixtures; no existing user repository was written.
+
+## Delivered
+
+- Named single-root saved workspaces with list/create/update/remove, one persisted
+  active ID, explicit data directory, atomic TOML and transactional SQLite state.
+- Stable repository/worktree UUIDs bound to observed common/per-worktree filesystem
+  metadata; separate native identity/display paths; verified moves, distinct copies/
+  replacements, no inherited or automatically granted trust.
+- Explicit recursive scans with configurable exclusions, partial/error inventories,
+  retained missing/unavailable entries, submodule and linked-worktree relationships,
+  external references without expansion, and targeted status refresh without rescan.
+- Structured porcelain-v2 status, partial staging/renames/conflicts/modes/gitlinks,
+  unborn/detached HEAD, operation markers, last commit and local-only upstream data.
+- Bounded history pages, actual parent OIDs, refs/tags, commit bytes/timestamps,
+  shallow boundaries, and stale-cursor detection.
+- Staged/unstaged/parent/root diffs, literal paths, immutable blobs, binary/mode/
+  symlink/gitlink summaries and bounded previews.
+- Bounded/cancellable read transport, four subprocesses, one multi-command read per
+  worktree, consistency checks, private clean Git environment, helper restrictions.
+- Native-argument JSON CLI, typed failures, acceptance evidence and updated handoff.
+
+Architecture, API details, limits and explicit unsupported configurations are in
+[M1 contracts](architecture/M1_READ_ONLY_WORKSPACES.md). Core command examples are
+in [the core README](../app/core/README.md).
+
+## Exact final validation
+
+Executed offline on macOS 27.2 arm64, Git 2.56.0, rustc 1.99.1 and Cargo 1.99.1.
+Command from the project root:
+
+```sh
+CARGO_NET_OFFLINE=true sh app/core/scripts/validate.sh ../../docs/validation/m1
+```
+
+The script changes into `app/core/`; the evidence argument is relative to there.
+Declared minimums are Git 2.56.0 and Rust 1.99; no older compatibility is claimed.
+
+| Check | Final result |
+|---|---|
+| Core layout/manifest check | Passed |
+| `cargo fmt --all -- --check` | Passed |
+| Default `cargo build --workspace --all-targets --locked` | Passed |
+| Same build with `--all-features` | Passed |
+| Default `cargo test --workspace --all-targets --locked` | **46 passed, 0 failed, 1 ignored** |
+| Same tests with `--all-features` | **81 passed, 0 failed, 2 ignored** |
+| Default all-target Clippy, `-- -D warnings` | Passed |
+| All-features all-target Clippy, `-- -D warnings` | Passed |
+| Original 24-case disposable lab diagnostics | **23 passed, 1 skipped** |
+| Local Markdown link validation | Passed |
+| `git diff --check` | Passed |
+
+All-features breakdown: four service/process unit tests, 23 original acceptance
+passes/one ignored, six original core tests, 11 M0 inspection passes/one ignored,
+16 M1 read tests, 15 M1 workspace tests, six M0 write regressions. There are 83 unique
+unit/integration tests: 81 executed passes and two explicit exclusions. The default
+and all-features runs overlap and are not additional unique coverage.
+
+Explicit exclusions retained from M0:
+
+1. `successful_gpg_signing`: optional positive GPG Cargo test ignored by default;
+   lab skipped because GPG is not installed. Explicit invocation requires real
+   successful execution and verification. Positive GPG/SSH remain unverified.
+2. `non_utf8_filename_remains_git_quoted_without_mutation`: ignored on macOS after
+   fixture creation returned EPERM. Native-byte parser/serialization tests pass;
+   newline/literal filename filesystem tests pass. No skipped case counts as passed.
+
+[Raw validation output](validation/m1/validation.txt), [full lab JSON](validation/m1/lab-results.json),
+and [environment versions](validation/m1/environment.json) preserve evidence.
+M0 output and completion snapshots remain separately under `validation/m0/`.
+Historical `app/core/results.json` and imported README source listings were not overwritten.
+
+Initial implementation checks caught a rejected diff option, background maintenance
+from fixture setup, suppressed staged gitlinks, and stale refresh scope after root
+changes. These were corrected and covered before the final complete run. Fixture
+Git commands now disable maintenance; snapshot tests do not ignore lock/object changes.
+
+## M1 acceptance status
+
+M1-A01–M1-A15 are satisfied within the supported local envelope, with explicit
+GPG/non-UTF-8/platform exclusions. [The acceptance ledger](ACCEPTANCE_MATRIX.md#10-m1-acceptance-gates--completed-local-implementation)
+maps each gate to executed tests. Shared M1/M3/M4 requirements are fulfilled only
+for their core portion; no desktop, watcher or graph-rendering claim follows.
+
+Storage failures cover denied atomic saves, invalid/newer files, startup
+reconciliation after the TOML/DB gap, unrecognized v0 refusal, and transactional
+initial schema/backup. No destructive schema upgrade exists yet; future upgrades
+require their own migration/crash tests. Identity continuity is observed matching,
+not authentication against a malicious local actor.
+
+The macOS/Linux CI definition was updated locally and has not been pushed or run.
+Its runners must provide Git/Rust satisfying the declared floors. Linux and Windows
+support remain unclaimed. No cross-platform acceptance was inferred from compilation
+or a local workflow YAML file.
+
+## M1 file inventory
+
+- New Core modules: `src/domain.rs`, private `src/process.rs`, `src/history.rs`,
+  `src/diff.rs`, `src/workspace.rs`.
+- Expanded `src/inspection.rs`, `src/discovery.rs`, `src/error.rs`, `src/lib.rs`,
+  `src/bin/gitfleet_cli.rs`; fixture-only maintenance suppression in `src/git.rs`.
+- New `tests/m1_read.rs`, `tests/m1_workspace.rs`; four unit tests within inspection/
+  process modules; fixture maintenance suppression in `tests/support/mod.rs`.
+- Updated `Cargo.toml` and `Cargo.lock` for justified storage/path/identity/fingerprint/
+  process dependencies; no new project crate, package release bump or UI dependency.
+- Updated validation/layout scripts and local `.github/workflows/core.yml`.
+- Updated root/core/docs READMEs, specification reconciliation, acceptance matrix,
+  decision register, M0 historical-boundary note, POC limitations; new M1 architecture,
+  separate M1 validation artifacts, and current implementation status/handoff.
+
+The original commit pipeline, journal and lab acceptance behavior remain experimental
+and retain M0 regression coverage. No M2 write-security gate was promoted to passed.
+
+## Remaining risks and next boundary
+
+Configured content filters and sparse-index configuration fail closed. Read-only
+ordinary/unmerged/split-index and SHA-256 fixtures passed. Non-UTF-8 ref names,
+Windows execution/process trees, Linux runtime behavior, network filesystems,
+malicious concurrent metadata/config replacement and filesystem confidentiality
+through config includes/alternates remain outside validated support. Native kernel
+filesystem I/O is not asynchronously cancellable. Safe-policy status can differ
+from unrestricted shell Git because system/global config is suppressed.
+
+M1 snapshots detect ordinary changes; they are not an atomic filesystem view or an
+OS sandbox. Cached unavailable entries retain last observations with availability/
+time labels. Child dirt is reported independently and is not recursively added to
+parent counts. No remote freshness or connectivity is implied by ahead/behind.
+
+M2 requires explicit authorization and a bounded plan before work: production trust,
+opaque review approvals, full state preflight, hook lifecycle/complete bypass, user
+signing configuration, durable journal/scratch integrity and recovery, exact message
+verification, shared-worktree concurrency and safe index reconciliation remain open.
