@@ -1,0 +1,82 @@
+[
+  {
+    "sequence": 1,
+    "operation_id": "4833408b-5666-465a-9591-cfd76c99d165",
+    "phase": "\"proposed\"",
+    "published": 0,
+    "new_oid": null,
+    "at_ms": 1793639121506
+  },
+  {
+    "sequence": 2,
+    "operation_id": "4833408b-5666-465a-9591-cfd76c99d165",
+    "phase": "\"approved\"",
+    "published": 0,
+    "new_oid": null,
+    "at_ms": 1793639134672
+  },
+  {
+    "sequence": 3,
+    "operation_id": "4833408b-5666-465a-9591-cfd76c99d165",
+    "phase": "\"preparing\"",
+    "published": 0,
+    "new_oid": null,
+    "at_ms": 1793639134849
+  },
+  {
+    "sequence": 4,
+    "operation_id": "4833408b-5666-465a-9591-cfd76c99d165",
+    "phase": "\"hooks_running\"",
+    "published": 0,
+    "new_oid": null,
+    "at_ms": 1793639134871
+  },
+  {
+    "sequence": 5,
+    "operation_id": "4833408b-5666-465a-9591-cfd76c99d165",
+    "phase": "\"cancelled_before_publication\"",
+    "published": 0,
+    "new_oid": null,
+    "at_ms": 1793639156762
+  },
+  {
+    "sequence": 6,
+    "operation_id": "2a5fbbd6-0375-4f3d-8461-56e9718e36fd",
+    "phase": "\"proposed\"",
+    "published": 0,
+    "new_oid": null,
+    "at_ms": 1793639205135
+  },
+  {
+    "sequence": 7,
+    "operation_id": "2a5fbbd6-0375-4f3d-8461-56e9718e36fd",
+    "phase": "\"approved\"",
+    "published": 0,
+    "new_oid": null,
+    "at_ms": 1793639220265
+  },
+  {
+    "sequence": 8,
+    "operation_id": "2a5fbbd6-0375-4f3d-8461-56e9718e36fd",
+    "phase": "\"preparing\"",
+    "published": 0,
+    "new_oid": null,
+    "at_ms": 1793639220442
+  },
+  {
+    "sequence": 9,
+    "operation_id": "2a5fbbd6-0375-4f3d-8461-56e9718e36fd",
+    "phase": "\"hooks_running\"",
+    "published": 0,
+    "new_oid": null,
+    "at_ms": 1793639220461
+  },
+  {
+    "sequence": 10,
+    "operation_id": "2a5fbbd6-0375-4f3d-8461-56e9718e36fd",
+    "phase": "\"cancelled_before_publication\"",
+    "published": 0,
+    "new_oid": null,
+    "at_ms": 1793639262355
+  }
+]

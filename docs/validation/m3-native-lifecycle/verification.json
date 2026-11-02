@@ -1,0 +1,8 @@
+{
+  "snapshots_all_four_repositories_equal": true,
+  "hook_executions": 2,
+  "close_operation": "4833408b-5666-465a-9591-cfd76c99d165",
+  "interrupted_operation": "2a5fbbd6-0375-4f3d-8461-56e9718e36fd",
+  "final_phase_both": "cancelled_before_publication",
+  "no_replay": true
+}

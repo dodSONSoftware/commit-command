@@ -1,0 +1,9 @@
+{
+  "hook": 50537,
+  "group": 50537,
+  "processes": [
+    "48455 48455 /Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri/target/debug/bundle/macos/GitFleet Acceptance.app/Contents/MacOS/gitfleet-desktop --data-dir /private/tmp/gitfleet-m3-native-21cg777_/state",
+    "50537 50537 /bin/sh /private/tmp/gitfleet-m3-native-21cg777_/workspace/engine/.git/hooks/pre-commit",
+    "50538 50537 /bin/sleep 120"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "hook": 52321,
+  "app": 50601,
+  "processes": [
+    "52321 52321 /bin/sh /private/tmp/gitfleet-m3-native-21cg777_/workspace/engine/.git/hooks/pre-commit",
+    "52322 52321 /bin/sleep 120",
+    "50601 50601 /Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri/target/debug/bundle/macos/GitFleet Acceptance.app/Contents/MacOS/gitfleet-desktop --data-dir /private/tmp/gitfleet-m3-native-21cg777_/state"
+  ],
+  "action": "SIGKILL exact fixture app, then SIGKILL isolated hook process group before restart"
+}

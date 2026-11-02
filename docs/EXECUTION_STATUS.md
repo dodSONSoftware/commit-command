@@ -1,12 +1,13 @@
 # GitFleet completion execution status
 
-Updated November 2, 2026. **Execution resumed at the user's request.** Latest [foreground cancellation checkpoint](reports/M3_FOREGROUND_CANCEL_2026-11-02.md). The user authorized the completion plan, local milestone commits and reports, with no push. Reasonable permission/facility blocks may be deferred; a deferred test is not a pass.
+Updated November 2, 2026. **Execution resumed at the user's request.** Latest [native lifecycle checkpoint](reports/M3_NATIVE_LIFECYCLE_2026-11-02.md). The user authorized the completion plan, local milestone commits and reports, with no push. Reasonable permission/facility blocks may be deferred; a deferred test is not a pass.
 
 | Package | State | Evidence and next action |
 |---|---|---|
 | P0 baseline | Accepted | Commit `7130ced`; [report](reports/P0_BASELINE_2026-11-02.md); full baseline matrix passed |
 | M3 desktop fixes | Implemented with native retests partial | [Progress report](reports/M3_DESKTOP_PROGRESS_2026-11-02.md); 17 renderer, 87 application-services and 127 all-feature passes; seven native tests per configuration |
-| M3 native acceptance | Partial; execution resumed | Actual running cancellation, no replay, geometry, History/removal retests plus ordinary close and proven held-read close passed. Close-during-write/review/interruption/accessibility gates remain open; graph-read Cancel UI finding is fixed and natively retested |
+| M3 native acceptance | Partial; execution resumed | Actual running cancellation, no replay, geometry, History/removal retests plus ordinary close and proven held-read close passed. Close during a running pre-publication hook and forced interruption/guarded abort now passed; broader review/interruption/accessibility gates remain open; graph-read Cancel fixed |
+| M3 native lifecycle follow-up | Selected gates passed | [Report](reports/M3_NATIVE_LIFECYCLE_2026-11-02.md); exact PID termination, durable cancellation, native guarded abort, no replay and four-repository preservation; background polling queue finding next |
 | M3 ordinary writes | Disabled | No change to default features; requires remaining acceptance and explicit default decision |
 | M4 graph/activity/audit | Automated gates passed; selected native retests passed | [Original report](reports/M4_READ_ONLY_PROGRESS_2026-11-02.md); timeline/lanes/heatmap and basic graph/parent navigation now observed natively; foreground Cancel retest passed; remaining accessibility/scale gates open |
 | M5A local bulk commit | Implemented; automated coverage and ordinary native form retests | [Original report](reports/M5A_LOCAL_BULK_PROGRESS_2026-11-02.md); new shared-form persistence fix passed automated/native navigation and restart retests; native multi-repository publication remains open |

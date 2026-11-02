@@ -1,0 +1,25 @@
+[
+  {
+    "discovery": {
+      "excluded_names": [
+        "node_modules",
+        ".venv",
+        "target",
+        "dist",
+        "build",
+        ".gitfleet-rust-lab"
+      ],
+      "excluded_patterns": []
+    },
+    "display_root": {
+      "encoding": "utf8",
+      "value": "/private/tmp/gitfleet-m3-native-21cg777_/workspace"
+    },
+    "id": "d4be2076-171b-4ab9-a6d3-7e7523634cf7",
+    "name": "GitFleet M3 Acceptance",
+    "root": {
+      "encoding": "utf8",
+      "value": "/private/tmp/gitfleet-m3-native-21cg777_/workspace"
+    }
+  }
+]
