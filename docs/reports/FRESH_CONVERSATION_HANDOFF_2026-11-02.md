@@ -1,5 +1,21 @@
 # Fresh conversation handoff — November 2, 2026
 
+## Continuation completed in the fresh chat
+
+The user resumed execution. The preparation and pending-test instructions below are historical; consult current `docs/EXECUTION_STATUS.md` before repeating work.
+
+- `21c46f8`: completed selected native close/Quit acceptance and fixed the macOS predefined Quit bypass. Report: `docs/reports/M3_NATIVE_CLOSE_QUIT_2026-11-02.md`. Immediate window close (183 ms), fixed Cmd+Q (199 ms), native save failure/Keep app open/retry, held graph read and pre-publication hook cancellation passed. Exact owned process termination, durable cancelled-before-publication outcome, repository preservation and restart/no replay verified. Missing-renderer, Dock/system terminate and broader crash/accessibility gates remain open.
+- `13949ba`: interactive native System → Light → Dark selection and ordinary Dark restart restoration accepted, with no source patch. Report: `docs/reports/M3_NATIVE_THEME_2026-11-02.md`.
+- `a5a4a27`: added workspace-wide remote observation history to Operation results, shared record rendering, pagination/refresh and superseded-response guards. Report: `docs/reports/M4_WORKSPACE_REMOTE_HISTORY_2026-11-02.md`. Latest full desktop gate: 44 renderer tests, 10 native host tests in each feature configuration and all build/type/lint/format/contracts/Clippy/release checks passed. Native history checks used explicitly synthetic records; they do not prove native network execution.
+
+Ordinary and acceptance fixture apps were closed safely. Ordinary bundle reflects `a5a4a27` source, remains default-feature/read-only and has saved artifact hashes in the history evidence directory. The separate write acceptance bundle reflects the prior native-menu fix; rebuild before using it for later source changes.
+
+Disposable fixture `/private/tmp/gitfleet-m3-native-1nx521al` remains available: one real cancelled local operation and three explicitly synthetic historical observation records (complete, blocked, orphaned-running). No active injected SQLite trigger remains. Fixture `/private/tmp/gitfleet-m3-native-m_k9vu86` has a Git wrapper/slow-read marker used for shutdown cancellation; use a fresh fixture or remove only that fixture marker before unrelated graph checks.
+
+No push or ordinary-write default change. User `.gitignore` edit and untracked `docs/graphics/` assets remain untouched and unstaged. Continue remaining M3 accessibility/recovery/default decision gates and M5 fetch/auth/upstream/push packages, then M6–M8. The full project remains incomplete. Preserve separate decisions and actual evidence boundaries; no actual user credentials or external repositories were used.
+
+## Historical preparation handoff
+
 Stopped at the user's request after context compaction. Resume development in a fresh conversation. No source changes or native tests occurred during this brief resumption.
 
 ## Authorizations and boundaries
