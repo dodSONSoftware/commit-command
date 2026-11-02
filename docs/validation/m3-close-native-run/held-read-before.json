@@ -1,0 +1,7 @@
+{
+  "read_pid": 13930,
+  "owned_processes": [
+    "13930 13930 /bin/sh /private/tmp/gitfleet-m3-native-m_k9vu86/tools/git --no-pager --no-optional-locks --literal-pathspecs -c core.fsmonitor=false -c core.untrackedCache=false -c core.hooksPath= -c submodule.recurse=false -c gc.auto=0 -c maintenance.auto=false -c core.quotePath=true -c diff.external= -c log.showSignature=false rev-list --topo-order --max-count=101 --skip=0 1c344b7119dbd93e5b3cc2ab143b18eae27d9dd6",
+    "13931 13930 /bin/sleep 120"
+  ]
+}

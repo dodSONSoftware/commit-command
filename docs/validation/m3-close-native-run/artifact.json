@@ -1,0 +1,9 @@
+{
+  "base_commit": "18928e62cbd032832ffe3d07e019faa905d44c86",
+  "modified_source": "app/desktop/src-tauri/src/main.rs",
+  "source_sha256": "91bda78dabff80173934e91dbf00ae7e9bb9ad145e7b0fda6c44d82efa2f0c2a",
+  "binary_sha256": "aeb308fa254869a7944573e28ab38dda786f6b36047b1952e658a27b5132ba14",
+  "features": [
+    "custom-protocol"
+  ]
+}

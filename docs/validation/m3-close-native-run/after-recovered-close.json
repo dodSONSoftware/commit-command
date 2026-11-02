@@ -1,0 +1,14 @@
+{
+  "navigation": [
+    [
+      "af79a027-dfff-4f40-a0e6-c31c688ea2ba",
+      "{\"version\":1,\"tabs\":[{\"worktree\":\"f6539852-b837-44d0-8eb3-f15a573a0035\",\"view\":\"changes\",\"path\":null,\"commit\":null,\"parent\":null,\"source\":\"working_tree\",\"scroll\":0.0,\"filter\":\"\"}],\"active_tab\":\"f6539852-b837-44d0-8eb3-f15a573a0035\",\"selected\":[],\"drafts\":{\"f6539852-b837-44d0-8eb3-f15a573a0035\":\"Fixed native Quit individual \u03b7\"},\"filter\":\"\",\"layout\":\"table\",\"sort\":\"path\",\"theme\":\"system\",\"sidebar_width\":240,\"inspector_width\":400}"
+    ]
+  ],
+  "bulk": [
+    [
+      "bulk-composer:af79a027-dfff-4f40-a0e6-c31c688ea2ba",
+      "{\"version\":1,\"message\":\"Recovered paired bulk \u03b9\",\"configurations\":{}}"
+    ]
+  ]
+}

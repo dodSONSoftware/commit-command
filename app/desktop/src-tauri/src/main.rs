@@ -698,6 +698,43 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             close_snapshot
         ])
         .setup(move |app| {
+            #[cfg(target_os = "macos")]
+            {
+                use tauri::menu::{Menu, MenuItem, PredefinedMenuItem, Submenu};
+                // AppKit's predefined Quit calls terminate: directly, bypassing
+                // ExitRequested and the final draft snapshot handshake.
+                let menu = Menu::default(app.handle())?;
+                menu.remove_at(0)?;
+                let application = Submenu::with_items(
+                    app,
+                    "GitFleet",
+                    true,
+                    &[
+                        &PredefinedMenuItem::about(app, Some("About GitFleet"), None)?,
+                        &PredefinedMenuItem::separator(app)?,
+                        &PredefinedMenuItem::services(app, None)?,
+                        &PredefinedMenuItem::separator(app)?,
+                        &PredefinedMenuItem::hide(app, None)?,
+                        &PredefinedMenuItem::hide_others(app, None)?,
+                        &PredefinedMenuItem::separator(app)?,
+                        &MenuItem::with_id(
+                            app,
+                            "gitfleet-quit",
+                            "Quit GitFleet",
+                            true,
+                            Some("Cmd+Q"),
+                        )?,
+                    ],
+                )?;
+                menu.prepend(&application)?;
+                app.set_menu(menu)?;
+                let quit_host = setup_host.clone();
+                app.on_menu_event(move |app, event| {
+                    if event.id().as_ref() == "gitfleet-quit" {
+                        shutdown::request(app.clone(), quit_host.clone());
+                    }
+                });
+            }
             let page_host = setup_host.clone();
             let page_loaded = std::sync::atomic::AtomicBool::new(false);
             let window =

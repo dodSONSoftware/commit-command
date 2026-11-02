@@ -1,0 +1,8 @@
+{
+  "features": [
+    "custom-protocol",
+    "desktop-writes"
+  ],
+  "binary_sha256": "1c3003739d07085ba0043981855f41402bc7fcdeceafb5ebe01416b1291f1508",
+  "source_sha256": "91bda78dabff80173934e91dbf00ae7e9bb9ad145e7b0fda6c44d82efa2f0c2a"
+}

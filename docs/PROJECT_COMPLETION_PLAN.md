@@ -4,11 +4,11 @@ Prepared November 2, 2026. Status: execution authorized by the user in this chat
 
 GitFleet should be completed by preserving its existing Rust services, closing M3 native acceptance, then implementing M4 through M8 in bounded packages. Each package below has a deliverable and an observable exit condition. The first release target is macOS; Linux and Windows acceptance must be resolved explicitly against the release requirements before claiming the entire specification complete.
 
-Execution checkpoint: **stopped at the user's request to restart Codex**.
-The close-draft implementation passed automated gates; its actual native close,
-Quit, save-failure and cancellation checks remain NOT RUN. Resume only when
-requested, starting with the [restart handoff](reports/M3_CLOSE_DRAFT_HANDOFF_2026-11-02.md).
-No push or ordinary-write default change.
+Execution resumed November 2 under the user's fresh-chat authorization. The
+pending close-draft native cases passed after fixing the predefined macOS Quit
+bypass; see the [native close/Quit report](reports/M3_NATIVE_CLOSE_QUIT_2026-11-02.md).
+Continue remaining M3 theme/accessibility/recovery and completion packages.
+Local milestone/checkpoint commits are authorized; no push or ordinary-write default change.
 
 ## Completion scope and governing contracts
 
@@ -20,7 +20,7 @@ Hunk staging, individual hook toggles, arbitrary Actions, destructive reset/disc
 
 The following rules apply throughout:
 
-- Preserve existing tracked and untracked work. The working tree is the implementation baseline; HEAD alone omits much of the product. Do not commit, push or release without a later explicit instruction.
+- Preserve existing tracked and untracked work. The working tree is the implementation baseline; HEAD alone omits much of the product. Local completed milestone/checkpoint commits are authorized by the user; do not push or release.
 - Keep Core in one crate, independent of Tauri/React. Add cohesive modules when needed; split crates only for a demonstrated dependency or ownership benefit.
 - Keep Git execution, authorization, trust, workflow state and recovery in Rust. Extend typed application requests and generated contracts; do not expose shell, arbitrary Git argv, SQL or raw storage endpoints.
 - Preserve exact approved trees/messages, unrelated staging and working bytes, independent worktree trust, literal native paths, shared-repository locking and no replay of uncertain operations.

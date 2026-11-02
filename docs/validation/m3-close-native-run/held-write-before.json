@@ -1,0 +1,8 @@
+{
+  "hook_pid": 16086,
+  "pgid": "16086",
+  "processes": [
+    "16086 16086 /bin/sh /private/tmp/gitfleet-m3-native-1nx521al/workspace/engine/.git/hooks/pre-commit",
+    "16087 16086 /bin/sleep 120"
+  ]
+}

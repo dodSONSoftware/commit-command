@@ -1,0 +1,28 @@
+{
+  "immediate_window_close_ms": 183,
+  "pre_fix_immediate_quit_ms": 198,
+  "pre_fix_quit": "FAILED: draft lost; predefined native Quit bypassed shutdown",
+  "fixed_immediate_quit_ms": 199,
+  "fixed_quit": "PASSED: exact draft saved and restored",
+  "save_failure": "PASSED: native Keep app open retained edit; editor recovered; trigger removed and close retried successfully",
+  "held_read": {
+    "pid": 13930,
+    "child": 13931,
+    "result": "PASSED: exact process group gone; repository bytes/modes preserved"
+  },
+  "held_write": {
+    "hook": 16086,
+    "child": 16087,
+    "operation": "ec676ecc-2705-4a33-a3ad-6ff7f395adea",
+    "phase": "cancelled_before_publication",
+    "published": false,
+    "result": "PASSED: exact process group gone; all repository bytes/modes preserved; restart restored draft/result; no additional operation"
+  },
+  "not_run": [
+    "missing renderer fallback",
+    "Dock/system terminate lifecycle",
+    "all publication crash phases",
+    "full VoiceOver/scale",
+    "release artifact acceptance"
+  ]
+}
