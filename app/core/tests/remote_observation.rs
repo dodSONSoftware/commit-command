@@ -73,6 +73,7 @@ fn setup_format(local: bool, sha256: bool) -> Test {
         remote: TransportOptions {
             local_fixture_root: local.then(|| f.root.clone()),
             ca_file: None,
+            ssh: None,
         },
         ..Options::default()
     };
@@ -1371,6 +1372,7 @@ fn fetch_import_sigkill_before_and_after_publication_never_replays() {
             remote: TransportOptions {
                 local_fixture_root: Some(root.clone()),
                 ca_file: None,
+                ssh: None,
             },
             ..Options::default()
         };
@@ -2158,6 +2160,7 @@ fn upstream_sigkill_recovery_never_replays_and_removes_only_owned_config_lock() 
             remote: TransportOptions {
                 local_fixture_root: Some(root.clone()),
                 ca_file: None,
+                ssh: None,
             },
             ..Options::default()
         };
@@ -2385,3 +2388,6 @@ fn upstream_restart_revokes_setup_capability_without_creating_a_config_lock() {
     assert_eq!(page.items[0].result, OperationAuditResult::Interrupted);
     assert!(!t.f.repo.join(".git/config.lock").exists());
 }
+
+#[path = "support/ssh_transport.rs"]
+mod ssh_transport_tests;

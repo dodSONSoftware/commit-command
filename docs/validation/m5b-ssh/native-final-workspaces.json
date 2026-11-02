@@ -1,0 +1,25 @@
+[
+  {
+    "discovery": {
+      "excluded_names": [
+        "node_modules",
+        ".venv",
+        "target",
+        "dist",
+        "build",
+        ".gitfleet-rust-lab"
+      ],
+      "excluded_patterns": []
+    },
+    "display_root": {
+      "encoding": "utf8",
+      "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/workspace"
+    },
+    "id": "32c50db1-5cf1-4cc4-8c2e-44143c6ba585",
+    "name": "Native agent SSH acceptance",
+    "root": {
+      "encoding": "utf8",
+      "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/workspace"
+    }
+  }
+]

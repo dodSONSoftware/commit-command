@@ -18,6 +18,15 @@ use std::{
 pub struct TransportOptions {
     pub local_fixture_root: Option<PathBuf>,
     pub ca_file: Option<PathBuf>,
+    pub ssh: Option<SshPolicy>,
+}
+
+/// Explicit host policy; no private key or credential is accepted from IPC.
+#[derive(Debug, Clone)]
+pub struct SshPolicy {
+    pub known_hosts: PathBuf,
+    pub public_identity: PathBuf,
+    pub agent_socket: PathBuf,
 }
 
 pub(crate) struct ResolvedDestination {
@@ -185,7 +194,13 @@ fn destination(raw: &str) -> Destination {
                     "file" => Transport::Local,
                     _ => Transport::Unsupported,
                 };
-                result.credentials_hidden = !url.username().is_empty()
+                let public_ssh_login = result.transport == Transport::Ssh
+                    && !url.username().starts_with('-')
+                    && url
+                        .username()
+                        .bytes()
+                        .all(|b| b.is_ascii_alphanumeric() || b"._-".contains(&b));
+                result.credentials_hidden = (!url.username().is_empty() && !public_ssh_login)
                     || url.password().is_some()
                     || url.query().is_some()
                     || url.fragment().is_some();
@@ -531,10 +546,10 @@ pub(crate) fn resolve_for_observation(
         || !selected_destination.restrictions.is_empty()
         || !matches!(
             selected_destination.transport,
-            Transport::Https | Transport::Local
+            Transport::Https | Transport::Local | Transport::Ssh
         )
     {
-        return Err(invalid("Observation requires one HTTPS destination without embedded credentials, or an explicit local fixture transport"));
+        return Err(invalid("Observation requires one supported destination without embedded secrets and explicit host transport policy"));
     }
     let mut command = clean(repo, global);
     command.args(["remote", "get-url", "--all", "--", name]);

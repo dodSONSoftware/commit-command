@@ -1,0 +1,23 @@
+diff --git a/app/core/src/writes/fetch.rs b/app/core/src/writes/fetch.rs
+index 6f02266..ec3e39f 100644
+--- a/app/core/src/writes/fetch.rs
++++ b/app/core/src/writes/fetch.rs
+@@ -40,6 +40,18 @@ pub(super) fn check_artifact_budget(root: &Path, max_bytes: u64, max_entries: us
+             } else if metadata.is_file() {
+                 size = size.saturating_add(metadata.len());
+             } else {
++                #[cfg(feature = "write-test-support")]
++                if std::env::var_os("GITFLEET_SSH_ARTIFACT_DIAGNOSTIC").is_some()
++                    && root
++                        .ancestors()
++                        .any(|p| p.join(".gitfleet-ssh-fixture").is_file())
++                {
++                    eprintln!(
++                        "Disposable artifact diagnostic: {:?} at {:?}",
++                        metadata.file_type(),
++                        entry.path().strip_prefix(root)
++                    );
++                }
+                 return Err(unsupported("Unsafe fetch artifact type"));
+             }
+             if count > max_entries || size > max_bytes {

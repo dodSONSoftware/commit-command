@@ -1,4 +1,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+mod host_options;
 mod security;
 mod shutdown;
 use shutdown::close_snapshot;
@@ -6,7 +7,6 @@ mod window_state;
 use gitfleet_core::{
     application::{Application, Confirmation, Data, Request, ReviewDisplay, WindowPlacement},
     inspection::Cancellation,
-    writes::Options,
 };
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
@@ -665,19 +665,9 @@ fn worker(mut core: Application, rx: mpsc::Receiver<Task>, app: tauri::AppHandle
     }
 }
 fn run() -> Result<(), Box<dyn std::error::Error>> {
-    let mut args = std::env::args_os().skip(1);
-    let directory = match args.next() {
-        Some(flag) if flag == "--data-dir" => {
-            PathBuf::from(args.next().ok_or("--data-dir needs a path")?)
-        }
-        Some(_) => return Err("Only --data-dir is supported".into()),
-        None => PathBuf::from(std::env::var_os("HOME").ok_or("HOME unavailable")?)
-            .join("Library/Application Support/dev.gitfleet.desktop"),
-    };
-    if args.next().is_some() {
-        return Err("Unexpected arguments".into());
-    }
-    let mut core = Application::open(&directory, Options::default())?;
+    let (directory, options) =
+        host_options::parse(std::env::args_os().skip(1), std::env::var_os("HOME"))?;
+    let mut core = Application::open(&directory, options)?;
     let saved_placement = core.window_placement()?;
     let (sender, rx) = mpsc::sync_channel(8);
     let host = Arc::new(Host {

@@ -1,0 +1,8 @@
+    Checking gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+error: argument never used
+   --> src/application/review.rs:146:671
+    |
+146 | ...t!("Download {} on remote {} from {}.\nExpected...ct budget and the bounded process deadline.",plan.transport.reference,plan.transport.remote,plan.transport.destination,plan.expected_oid.hex,transport_summary(&plan.transport)),
+    |       --------------------------------------------...-------------------------------------------- formatting specifier missing                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ argument never used
+
+error: could not compile `gitfleet-core` (lib) due to 1 previous error

@@ -143,12 +143,12 @@ impl Application {
             Action::FetchImportRecovery(review)=>("Review captured branch recovery".into(),format!("Operation: {}\nRef: {}\nAction: {}\n{}",review.operation.plan.transport.id,review.operation.plan.tracking_ref,review.action,review.explanation),serde_json::to_string_pretty(review)?),
             Action::FetchCapture(plan) => (
                 "Review branch download for fetch".into(),
-                format!("Download {} on remote {} from {}.\nExpected observed commit: {}\nThe downloaded branch must still match that exact commit.\nObjects stay in isolated app storage. This does not update this checkout, tracking refs, index, working files, tags or upstreams. Import requires a separate review.\nHTTPS verifies certificates and hostnames and rejects redirects. No credentials/helpers, proxy, SSH commands, hooks or submodule recursion.\nLimits: 10,000 objects, 64 MiB uncompressed/bundle, 128 MiB polled artifact budget and the bounded process deadline.",plan.transport.reference,plan.transport.remote,plan.transport.destination,plan.expected_oid.hex),
+                format!("Download {} on remote {} from {}.\nExpected observed commit: {}\nThe downloaded branch must still match that exact commit.\nObjects stay in isolated app storage. This does not update this checkout, tracking refs, index, working files, tags or upstreams. Import requires a separate review.\n{}\nManaged credential helpers, proxy, SSH commands, hooks and submodule recursion are disabled.\nLimits: 10,000 objects, 64 MiB uncompressed/bundle, 128 MiB polled artifact budget and the bounded process deadline.",plan.transport.reference,plan.transport.remote,plan.transport.destination,plan.expected_oid.hex,transport_summary(&plan.transport)),
                 serde_json::to_string_pretty(plan)?,
             ),
             Action::RemoteObservation(plan) => (
                 "Review remote branch observation".into(),
-                format!("Contact {} to observe {} on remote {}.\nNo commits, working files, index, refs or upstreams will be changed.\nHTTPS verifies certificates and hostnames against the reviewed trust source and rejects redirects. No credentials or credential helpers are used.\nManaged transport configuration, proxy and SSH commands are not executed.\nLocal transport is restricted to host-configured disposable fixtures.", plan.destination, plan.reference, plan.remote),
+                format!("Contact {} to observe {} on remote {}.\nNo commits, working files, index, refs or upstreams will be changed.\n{}\nManaged transport configuration, proxy and SSH commands are not executed.\nLocal transport is restricted to host-configured disposable fixtures.", plan.destination, plan.reference, plan.remote,transport_summary(plan)),
                 serde_json::to_string_pretty(plan)?,
             ),
             Action::Trust { reviews, .. } => (
@@ -331,5 +331,20 @@ impl Application {
             }
         };
         Ok(result)
+    }
+}
+
+fn transport_summary(plan: &crate::remote::observation::ObservationPlan) -> String {
+    if plan.transport == crate::remote::Transport::Ssh {
+        let bindings = plan
+            .tools
+            .iter()
+            .filter(|b| b.role.starts_with("ssh_"))
+            .map(|b| format!("{}: {:?} · {}", b.role, b.path, b.fingerprint))
+            .collect::<Vec<_>>()
+            .join("\n");
+        format!("SSH authenticates only the reviewed public identity through the selected agent. Strict known-hosts verification is required; no password/keychain fallback, private-key loading, forwarding or host-key writes.\n{bindings}")
+    } else {
+        "HTTPS verifies certificates and hostnames against the reviewed trust source and rejects redirects. No credentials or credential helpers are used.".into()
     }
 }

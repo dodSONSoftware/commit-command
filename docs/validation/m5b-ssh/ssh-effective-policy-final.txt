@@ -1,0 +1,9 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.85s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-9096797290332d67)
+
+running 1 test
+test writes::ssh_transport::tests::actual_ssh_configuration_disables_fallback_and_preserves_shell_quoted_paths ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 15 filtered out; finished in 0.03s
+

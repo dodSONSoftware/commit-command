@@ -1,0 +1,36 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.61s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-878959a9ad654234)
+
+running 3 tests
+test ssh_transport_tests::ssh_agent_authenticates_only_selected_identity_then_downloads_and_imports_offline ... FAILED
+test ssh_transport_tests::ssh_policy_drift_decline_and_precancel_never_authenticate ... ok
+test ssh_transport_tests::ssh_unknown_or_changed_host_and_wrong_selected_identity_fail_without_fallback ... ok
+
+failures:
+
+---- ssh_transport_tests::ssh_agent_authenticates_only_selected_identity_then_downloads_and_imports_offline stdout ----
+
+thread 'ssh_transport_tests::ssh_agent_authenticates_only_selected_identity_then_downloads_and_imports_offline' (15498770) panicked at tests/support/ssh_transport.rs:157:5:
+assertion `left == right` failed: Some(Issue { kind: InspectionFailed, message: "Remote observation failed (transport, authentication, certificate, redirect or server rejection); no raw server diagnostics are retained" }); Server listening on 127.0.0.1 port 60456.
+Connection from 127.0.0.1 port 60458 on 127.0.0.1 port 60456
+kex_exchange_identification: Connection closed by remote host [preauth]
+Connection closed by 127.0.0.1 port 60458 [preauth]
+srclimit_penalise: ipv4: new 127.0.0.1/32 deferred penalty of 1.000 seconds for penalty: connections without attempting authentication
+Connection from 127.0.0.1 port 60459 on 127.0.0.1 port 60456
+Accepted key ED25519 SHA256:1ccfqrUMgyr15boXcgaNnbkwgFupiBUZC9Bm/rBJdTU found at /var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-m0-14373-1793659483597014000-0/SSH policy's files/client.pub:1
+Postponed publickey for randydodson from 127.0.0.1 port 60459 ssh2 [preauth]
+Connection closed by authenticating user randydodson 127.0.0.1 port 60459 [preauth]
+srclimit_penalise: ipv4: new 127.0.0.1/32 deferred penalty of 5.000 seconds for penalty: failed authentication
+
+  left: Blocked
+ right: Complete
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    ssh_transport_tests::ssh_agent_authenticates_only_selected_identity_then_downloads_and_imports_offline
+
+test result: FAILED. 2 passed; 1 failed; 0 ignored; 0 measured; 29 filtered out; finished in 23.64s
+
+error: test failed, to rerun pass `--test remote_observation`

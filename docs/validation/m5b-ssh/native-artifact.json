@@ -1,0 +1,17 @@
+{
+  "bundle": "/private/tmp/gitfleet-ssh-native-dufk8c3i/GitFleet SSH Acceptance.app",
+  "features": [
+    "custom-protocol",
+    "desktop-writes"
+  ],
+  "binary_sha256": "8058e63e4cc79892535b2644d5404a56917da11e210acd1ba69a683beda47165",
+  "source_base": "6f2f9c6",
+  "source": "SSH checkpoint uncommitted; source-manifest.json tracks exact files",
+  "final_hardening": "Same descriptor bytes validated/fingerprinted/snapshotted; explicit plain Ed25519; final focused and complete affected matrix",
+  "ordinary_features": [
+    "custom-protocol"
+  ],
+  "ordinary_binary_sha256": "e6ac0b5b7f6e3447c517c99001821421e045f61403022ff7cdb311c0a34d0457",
+  "release_installer": false,
+  "native_scope": "Final hardened fresh observation/no replay; initial full native chain and held-read Quit in separately hashed earlier artifact."
+}

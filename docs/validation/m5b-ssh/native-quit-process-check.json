@@ -1,0 +1,25 @@
+{
+  "owned_read_processes_exited": [
+    {
+      "pid": 19906,
+      "pgid": 19906,
+      "command": "/opt/homebrew/Cellar/git/2.56.0_1/bin/git --no-pager --literal-pathspecs -c core.hooksPath= -c core.fsmonitor=false -c core.untrackedCache=false -c init.templateDir= -c maintenance.auto=false -c gc.auto=0 -c http.sslVerify=true -c http.followRedirects=false -c http.proxy= -c credential.helper= -c core.askPass= -c http.extraHeader= -c http.cookieFile= -c http.saveCookies=false -c submodule.recurse=false ls-remote --refs --exit-code -- ssh://randydodson@127.0.0.1:60655/private/tmp/gitfleet-ssh-native-dufk8c3i/server.git refs/heads/main"
+    },
+    {
+      "pid": 19907,
+      "pgid": 19906,
+      "command": "/usr/bin/ssh -F /dev/null -i /private/tmp/gitfleet-ssh-native-dufk8c3i/state/network/49ee0a9c-5cce-42a4-9cc8-be7005156a09/home/ssh-identity.pub -o BatchMode=yes -o StrictHostKeyChecking=yes -o GlobalKnownHostsFile=/dev/null -o KnownHostsCommand=none -o UpdateHostKeys=no -o VerifyHostKeyDNS=no -o CheckHostIP=no -o IdentitiesOnly=yes -o IdentityFile=none -o CertificateFile=none -o PreferredAuthentications=publickey -o PubkeyAuthentication=yes -o PasswordAuthentication=no -o KbdInteractiveAuthentication=no -o HostbasedAuthentication=no -o GSSAPIAuthentication=no -o NumberOfPasswordPrompts=0 -o AddKeysToAgent=no -o UseKeychain=no -o PKCS11Provider=none -o SecurityKeyProvider=none -o ProxyCommand=none -o ProxyJump=none -o PermitLocalCommand=no -o LocalCommand=none -o ForwardAgent=no -o ClearAllForwardings=yes -o ControlMaster=no -o ControlPath=none -o RequestTTY=no -o ConnectTimeout=5 -o ServerAliveInterval=5 -o ServerAliveCountMax=1 -o UserKnownHostsFile=\"/private/tmp/gitfleet-ssh-native-dufk8c3i/state/network/49ee0a9c-5cce-42a4-9cc8-be7005156a09/home/ssh-known-hosts\" -o IdentityAgent=\"/private/tmp/gitfleet-ssh-native-dufk8c3i/agent.sock\" -o SendEnv=GIT_PROTOCOL -p 60655 randydodson@127.0.0.1 git-upload-pack '/private/tmp/gitfleet-ssh-native-dufk8c3i/server.git'"
+    },
+    {
+      "pid": 19911,
+      "pgid": 19911,
+      "command": "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python /private/tmp/gitfleet-ssh-native-dufk8c3i/serve.py"
+    },
+    {
+      "pid": 32693,
+      "pgid": 32693,
+      "command": "/private/tmp/gitfleet-ssh-native-dufk8c3i/GitFleet SSH Acceptance.app/Contents/MacOS/gitfleet-desktop --data-dir /private/tmp/gitfleet-ssh-native-dufk8c3i/state --ssh-known-hosts /private/tmp/gitfleet-ssh-native-dufk8c3i/SSH policy's files/known_hosts --ssh-public-identity /private/tmp/gitfleet-ssh-native-dufk8c3i/SSH policy's files/selected.pub --ssh-agent-socket /private/tmp/gitfleet-ssh-native-dufk8c3i/agent.sock"
+    }
+  ],
+  "fixture_agent_and_listener_preserved_for_now": true
+}

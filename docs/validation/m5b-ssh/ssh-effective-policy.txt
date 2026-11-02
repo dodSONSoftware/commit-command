@@ -1,0 +1,110 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.21s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-9096797290332d67)
+
+running 1 test
+test writes::ssh_transport::tests::actual_ssh_configuration_disables_fallback_and_preserves_shell_quoted_paths ... FAILED
+
+failures:
+
+---- writes::ssh_transport::tests::actual_ssh_configuration_disables_fallback_and_preserves_shell_quoted_paths stdout ----
+
+thread 'writes::ssh_transport::tests::actual_ssh_configuration_disables_fallback_and_preserves_shell_quoted_paths' (15545922) panicked at src/writes/ssh_transport.rs:317:13:
+Missing identityfile /tmp/SSH policy's files/ssh-identity.pub: host fixture.invalid
+user randydodson
+hostname fixture.invalid
+port 22
+addressfamily any
+batchmode yes
+canonicalizefallbacklocal yes
+canonicalizehostname false
+checkhostip no
+compression no
+controlmaster false
+enablesshkeysign no
+clearallforwardings yes
+exitonforwardfailure no
+fingerprinthash SHA256
+forwardx11 no
+forwardx11trusted no
+gatewayports no
+gssapiauthentication no
+gssapidelegatecredentials no
+hashknownhosts no
+hostbasedauthentication no
+identitiesonly yes
+kbdinteractiveauthentication no
+nohostauthenticationforlocalhost no
+nohostauthenticationforproxycommand no
+passwordauthentication no
+permitlocalcommand no
+proxyusefdpass no
+pubkeyauthentication true
+requesttty false
+sessiontype default
+stdinnull no
+forkafterauthentication no
+streamlocalbindunlink no
+stricthostkeychecking true
+tcpkeepalive yes
+tunnel false
+verifyhostkeydns false
+visualhostkey no
+updatehostkeys false
+enableescapecommandline no
+warnweakcrypto yes
+applemultipath no
+canonicalizemaxdots 1
+connectionattempts 1
+forwardx11timeout 1200
+numberofpasswordprompts 0
+serveralivecountmax 1
+serveraliveinterval 5
+requiredrsasize 1024
+obscurekeystroketiming yes
+ciphers chacha20-poly1305@openssh.com,aes128-gcm@openssh.com,aes256-gcm@openssh.com,aes128-ctr,aes192-ctr,aes256-ctr
+hostkeyalgorithms ssh-ed25519-cert-v01@openssh.com,ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384-cert-v01@openssh.com,ecdsa-sha2-nistp521-cert-v01@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,webauthn-sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,ssh-ed25519,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ssh-ed25519@openssh.com,sk-ecdsa-sha2-nistp256@openssh.com,webauthn-sk-ecdsa-sha2-nistp256@openssh.com,rsa-sha2-512,rsa-sha2-256
+hostbasedacceptedalgorithms ssh-ed25519-cert-v01@openssh.com,ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384-cert-v01@openssh.com,ecdsa-sha2-nistp521-cert-v01@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,webauthn-sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,ssh-ed25519,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ssh-ed25519@openssh.com,sk-ecdsa-sha2-nistp256@openssh.com,webauthn-sk-ecdsa-sha2-nistp256@openssh.com,rsa-sha2-512,rsa-sha2-256
+identityagent /tmp/agent's socket
+kexalgorithms mlkem768x25519-sha256,sntrup761x25519-sha512,sntrup761x25519-sha512@openssh.com,curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group14-sha256
+casignaturealgorithms ssh-ed25519,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ssh-ed25519@openssh.com,sk-ecdsa-sha2-nistp256@openssh.com,webauthn-sk-ecdsa-sha2-nistp256@openssh.com,rsa-sha2-512,rsa-sha2-256
+loglevel INFO
+macs umac-64-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-64@openssh.com,umac-128@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha1
+preferredauthentications publickey
+pubkeyacceptedalgorithms ssh-ed25519-cert-v01@openssh.com,ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384-cert-v01@openssh.com,ecdsa-sha2-nistp521-cert-v01@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,webauthn-sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,ssh-ed25519,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ssh-ed25519@openssh.com,sk-ecdsa-sha2-nistp256@openssh.com,webauthn-sk-ecdsa-sha2-nistp256@openssh.com,rsa-sha2-512,rsa-sha2-256
+xauthlocation /usr/X11R6/bin/xauth
+identityfile ~/.ssh/id_rsa
+identityfile ~/.ssh/id_ecdsa
+identityfile ~/.ssh/id_ecdsa_sk
+identityfile ~/.ssh/id_ed25519
+identityfile ~/.ssh/id_ed25519_sk
+identityfile ~/.ssh/id_mldsa44_ed25519
+canonicaldomains none
+certificatefile none
+globalknownhostsfile /dev/null
+userknownhostsfile /tmp/SSH policy's files/ssh-known-hosts
+revokedhostkeys none
+logverbose none
+channeltimeout none
+permitremoteopen any
+addkeystoagent false
+forwardagent no
+connecttimeout 5
+tunneldevice any:any
+canonicalizePermittedcnames none
+controlpersist no
+escapechar ~
+ipqos ef cs0
+rekeylimit 0 0
+streamlocalbindmask 0177
+syslogfacility USER
+
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    writes::ssh_transport::tests::actual_ssh_configuration_disables_fallback_and_preserves_shell_quoted_paths
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 15 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `--lib`

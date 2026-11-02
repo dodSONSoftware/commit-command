@@ -1,0 +1,44 @@
+Server listening on 127.0.0.1 port 60655.
+Connection from 127.0.0.1 port 60657 on 127.0.0.1 port 60655
+kex_exchange_identification: Connection closed by remote host [preauth]
+Connection closed by 127.0.0.1 port 60657 [preauth]
+srclimit_penalise: ipv4: new 127.0.0.1/32 deferred penalty of 1.000 seconds for penalty: connections without attempting authentication
+Connection from 127.0.0.1 port 61120 on 127.0.0.1 port 60655
+Authentication refused: bad ownership or modes for directory /private/tmp
+Failed publickey for randydodson from 127.0.0.1 port 61120 ssh2: ED25519 SHA256:WjF7QaV3+nml5E7BXqSMq4in9MXpVWvQUsVhzHnXdZs
+Connection closed by authenticating user randydodson 127.0.0.1 port 61120 [preauth]
+srclimit_penalise: ipv4: new 127.0.0.1/32 deferred penalty of 5.000 seconds for penalty: failed authentication
+Received SIGHUP; restarting.
+Server listening on 127.0.0.1 port 60655.
+Connection from 127.0.0.1 port 61164 on 127.0.0.1 port 60655
+Accepted key ED25519 SHA256:WjF7QaV3+nml5E7BXqSMq4in9MXpVWvQUsVhzHnXdZs found at /var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-ssh-native-authorized-1kwtqlrk/authorized_keys:1
+Postponed publickey for randydodson from 127.0.0.1 port 61164 ssh2 [preauth]
+Accepted key ED25519 SHA256:WjF7QaV3+nml5E7BXqSMq4in9MXpVWvQUsVhzHnXdZs found at /var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-ssh-native-authorized-1kwtqlrk/authorized_keys:1
+Accepted publickey for randydodson from 127.0.0.1 port 61164 ssh2: ED25519 SHA256:WjF7QaV3+nml5E7BXqSMq4in9MXpVWvQUsVhzHnXdZs
+BSM audit: bsm_audit_session_setup: setaudit_addr failed: Operation not permitted
+User child is on pid 17227
+Starting session: forced-command (config) '/usr/bin/python3 /private/tmp/gitfleet-ssh-native-dufk8c3i/serve.py' for randydodson from 127.0.0.1 port 61164 id 0
+Received disconnect from 127.0.0.1 port 61164:11: disconnected by user
+Disconnected from user randydodson 127.0.0.1 port 61164
+Connection from 127.0.0.1 port 61199 on 127.0.0.1 port 60655
+Accepted key ED25519 SHA256:WjF7QaV3+nml5E7BXqSMq4in9MXpVWvQUsVhzHnXdZs found at /var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-ssh-native-authorized-1kwtqlrk/authorized_keys:1
+Postponed publickey for randydodson from 127.0.0.1 port 61199 ssh2 [preauth]
+Accepted key ED25519 SHA256:WjF7QaV3+nml5E7BXqSMq4in9MXpVWvQUsVhzHnXdZs found at /var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-ssh-native-authorized-1kwtqlrk/authorized_keys:1
+Accepted publickey for randydodson from 127.0.0.1 port 61199 ssh2: ED25519 SHA256:WjF7QaV3+nml5E7BXqSMq4in9MXpVWvQUsVhzHnXdZs
+BSM audit: bsm_audit_session_setup: setaudit_addr failed: Operation not permitted
+User child is on pid 17984
+Starting session: forced-command (config) '/usr/bin/python3 /private/tmp/gitfleet-ssh-native-dufk8c3i/serve.py' for randydodson from 127.0.0.1 port 61199 id 0
+Received disconnect from 127.0.0.1 port 61199:11: disconnected by user
+Disconnected from user randydodson 127.0.0.1 port 61199
+Connection from 127.0.0.1 port 61270 on 127.0.0.1 port 60655
+Accepted key ED25519 SHA256:WjF7QaV3+nml5E7BXqSMq4in9MXpVWvQUsVhzHnXdZs found at /var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-ssh-native-authorized-1kwtqlrk/authorized_keys:1
+Postponed publickey for randydodson from 127.0.0.1 port 61270 ssh2 [preauth]
+Accepted key ED25519 SHA256:WjF7QaV3+nml5E7BXqSMq4in9MXpVWvQUsVhzHnXdZs found at /var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-ssh-native-authorized-1kwtqlrk/authorized_keys:1
+Accepted publickey for randydodson from 127.0.0.1 port 61270 ssh2: ED25519 SHA256:WjF7QaV3+nml5E7BXqSMq4in9MXpVWvQUsVhzHnXdZs
+BSM audit: bsm_audit_session_setup: setaudit_addr failed: Operation not permitted
+User child is on pid 19910
+Starting session: forced-command (config) '/usr/bin/python3 /private/tmp/gitfleet-ssh-native-dufk8c3i/serve.py' for randydodson from 127.0.0.1 port 61270 id 0
+Connection closed by 127.0.0.1 port 61270
+Close session: user randydodson from 127.0.0.1 port 61270 id 0
+Transferred: sent 3664, received 3932 bytes
+Closing connection to 127.0.0.1 port 61270

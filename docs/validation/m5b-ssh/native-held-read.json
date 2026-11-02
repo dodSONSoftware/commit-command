@@ -1,0 +1,123 @@
+{
+  "operation": {
+    "plan": {
+      "id": "49ee0a9c-5cce-42a4-9cc8-be7005156a09",
+      "workspace": "32c50db1-5cf1-4cc4-8c2e-44143c6ba585",
+      "worktree": "705feb4c-f28e-4354-a2cb-c27766151a89",
+      "metadata": {
+        "root": {
+          "encoding": "utf8",
+          "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/workspace/repository"
+        },
+        "git_dir": {
+          "encoding": "utf8",
+          "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/workspace/repository/.git"
+        },
+        "common_dir": {
+          "encoding": "utf8",
+          "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/workspace/repository/.git"
+        },
+        "root_binding": "16777229:49437687:Some(SystemTime { tv_sec: 1793659964, tv_nsec: 44310618 })",
+        "git_binding": "16777229:49437688:Some(SystemTime { tv_sec: 1793659964, tv_nsec: 51088121 })",
+        "common_binding": "16777229:49437688:Some(SystemTime { tv_sec: 1793659964, tv_nsec: 51088121 })",
+        "object_format": "sha1"
+      },
+      "remote": "origin",
+      "reference": "refs/heads/main",
+      "destination": "ssh://randydodson@127.0.0.1:60655/private/tmp/gitfleet-ssh-native-dufk8c3i/server.git",
+      "transport": "ssh",
+      "config_digest": "ab93795c33a27f9162e893e8b24a389fd4ce36d5480ec426bfded40bd5ed5b2e",
+      "generation": "e65ada7d6d5a3577d39c5eed342b2e0944e1ce6f1db68b5d79285a52617ca87b",
+      "created_at_ms": 1793660546202,
+      "tools": [
+        {
+          "role": "git",
+          "path": {
+            "encoding": "utf8",
+            "value": "/opt/homebrew/Cellar/git/2.56.0_1/bin/git"
+          },
+          "fingerprint": "70feb0465f5896154abd7405231483f4b0cd99e3855fcc4d86e08b66869d1007"
+        },
+        {
+          "role": "exec_directory",
+          "path": {
+            "encoding": "utf8",
+            "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+          },
+          "fingerprint": "16777229:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })"
+        },
+        {
+          "role": "ssh_client",
+          "path": {
+            "encoding": "utf8",
+            "value": "/usr/bin/ssh"
+          },
+          "fingerprint": "931cbe212fa4ef3f4d47c4d164816cf99b4dba411fc0cdf9ffc18a5c8f64c65c"
+        },
+        {
+          "role": "ssh_known_hosts",
+          "path": {
+            "encoding": "utf8",
+            "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/SSH policy's files/known_hosts"
+          },
+          "fingerprint": "84549e87149cb4e2e5206a9b6d4b97b50c21678fd4183dfefca3954ad76fe64a"
+        },
+        {
+          "role": "ssh_public_identity",
+          "path": {
+            "encoding": "utf8",
+            "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/SSH policy's files/selected.pub"
+          },
+          "fingerprint": "5a8408114d61019786f6d41f0db9febfa7135829608945beccfe8af8ce845205"
+        },
+        {
+          "role": "ssh_agent_socket",
+          "path": {
+            "encoding": "utf8",
+            "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/agent.sock"
+          },
+          "fingerprint": "16777229:49436918:Some(SystemTime { tv_sec: 1793659960, tv_nsec: 365601772 })"
+        }
+      ],
+      "local_target": null,
+      "local_binding": null
+    },
+    "phase": "running",
+    "oid": null,
+    "observed_at_ms": null,
+    "issue": null
+  },
+  "authenticated_requests": 3,
+  "processes": [
+    {
+      "pid": 19906,
+      "pgid": 19906,
+      "command": "/opt/homebrew/Cellar/git/2.56.0_1/bin/git --no-pager --literal-pathspecs -c core.hooksPath= -c core.fsmonitor=false -c core.untrackedCache=false -c init.templateDir= -c maintenance.auto=false -c gc.auto=0 -c http.sslVerify=true -c http.followRedirects=false -c http.proxy= -c credential.helper= -c core.askPass= -c http.extraHeader= -c http.cookieFile= -c http.saveCookies=false -c submodule.recurse=false ls-remote --refs --exit-code -- ssh://randydodson@127.0.0.1:60655/private/tmp/gitfleet-ssh-native-dufk8c3i/server.git refs/heads/main"
+    },
+    {
+      "pid": 19907,
+      "pgid": 19906,
+      "command": "/usr/bin/ssh -F /dev/null -i /private/tmp/gitfleet-ssh-native-dufk8c3i/state/network/49ee0a9c-5cce-42a4-9cc8-be7005156a09/home/ssh-identity.pub -o BatchMode=yes -o StrictHostKeyChecking=yes -o GlobalKnownHostsFile=/dev/null -o KnownHostsCommand=none -o UpdateHostKeys=no -o VerifyHostKeyDNS=no -o CheckHostIP=no -o IdentitiesOnly=yes -o IdentityFile=none -o CertificateFile=none -o PreferredAuthentications=publickey -o PubkeyAuthentication=yes -o PasswordAuthentication=no -o KbdInteractiveAuthentication=no -o HostbasedAuthentication=no -o GSSAPIAuthentication=no -o NumberOfPasswordPrompts=0 -o AddKeysToAgent=no -o UseKeychain=no -o PKCS11Provider=none -o SecurityKeyProvider=none -o ProxyCommand=none -o ProxyJump=none -o PermitLocalCommand=no -o LocalCommand=none -o ForwardAgent=no -o ClearAllForwardings=yes -o ControlMaster=no -o ControlPath=none -o RequestTTY=no -o ConnectTimeout=5 -o ServerAliveInterval=5 -o ServerAliveCountMax=1 -o UserKnownHostsFile=\"/private/tmp/gitfleet-ssh-native-dufk8c3i/state/network/49ee0a9c-5cce-42a4-9cc8-be7005156a09/home/ssh-known-hosts\" -o IdentityAgent=\"/private/tmp/gitfleet-ssh-native-dufk8c3i/agent.sock\" -o SendEnv=GIT_PROTOCOL -p 60655 randydodson@127.0.0.1 git-upload-pack '/private/tmp/gitfleet-ssh-native-dufk8c3i/server.git'"
+    },
+    {
+      "pid": 19911,
+      "pgid": 19911,
+      "command": "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python /private/tmp/gitfleet-ssh-native-dufk8c3i/serve.py"
+    },
+    {
+      "pid": 28137,
+      "pgid": 28137,
+      "command": "/usr/bin/ssh-agent -D -a /private/tmp/gitfleet-ssh-native-dufk8c3i/agent.sock"
+    },
+    {
+      "pid": 28141,
+      "pgid": 28141,
+      "command": "sshd: /usr/sbin/sshd -D -e -f /private/tmp/gitfleet-ssh-native-dufk8c3i/sshd.conf [listener] 0 of 10-100 startups"
+    },
+    {
+      "pid": 32693,
+      "pgid": 32693,
+      "command": "/private/tmp/gitfleet-ssh-native-dufk8c3i/GitFleet SSH Acceptance.app/Contents/MacOS/gitfleet-desktop --data-dir /private/tmp/gitfleet-ssh-native-dufk8c3i/state --ssh-known-hosts /private/tmp/gitfleet-ssh-native-dufk8c3i/SSH policy's files/known_hosts --ssh-public-identity /private/tmp/gitfleet-ssh-native-dufk8c3i/SSH policy's files/selected.pub --ssh-agent-socket /private/tmp/gitfleet-ssh-native-dufk8c3i/agent.sock"
+    }
+  ]
+}

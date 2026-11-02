@@ -1,0 +1,52 @@
+[
+  {
+    "run": 1,
+    "exit_code": 0,
+    "log": "artifact-diagnostic-01.txt"
+  },
+  {
+    "run": 2,
+    "exit_code": 0,
+    "log": "artifact-diagnostic-02.txt"
+  },
+  {
+    "run": 3,
+    "exit_code": 0,
+    "log": "artifact-diagnostic-03.txt"
+  },
+  {
+    "run": 4,
+    "exit_code": 0,
+    "log": "artifact-diagnostic-04.txt"
+  },
+  {
+    "run": 5,
+    "exit_code": 0,
+    "log": "artifact-diagnostic-05.txt"
+  },
+  {
+    "run": 6,
+    "exit_code": 0,
+    "log": "artifact-diagnostic-06.txt"
+  },
+  {
+    "run": 7,
+    "exit_code": 0,
+    "log": "artifact-diagnostic-07.txt"
+  },
+  {
+    "run": 8,
+    "exit_code": 0,
+    "log": "artifact-diagnostic-08.txt"
+  },
+  {
+    "run": 9,
+    "exit_code": 0,
+    "log": "artifact-diagnostic-09.txt"
+  },
+  {
+    "run": 10,
+    "exit_code": 0,
+    "log": "artifact-diagnostic-10.txt"
+  }
+]

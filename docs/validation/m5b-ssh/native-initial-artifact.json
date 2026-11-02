@@ -1,0 +1,10 @@
+{
+  "bundle": "/private/tmp/gitfleet-ssh-native-dufk8c3i/GitFleet SSH Acceptance.app",
+  "features": [
+    "custom-protocol",
+    "desktop-writes"
+  ],
+  "binary_sha256": "99be994b256d1164a2801bf66be6d56b128c0d7ce93d27c7e9d0e6f9fa3b49e9",
+  "source_base": "6f2f9c6",
+  "source": "Earlier SSH checkpoint before same-descriptor snapshot validation and explicit plain Ed25519 hardening; not the final source-manifest."
+}

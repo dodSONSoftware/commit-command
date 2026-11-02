@@ -32,7 +32,10 @@ fn effective_fetch_push_rewrites_case_sensitive_names_origins_and_upstream_are_r
     let r = &result.remotes[0];
     assert_eq!(r.name, "Origin");
     assert_eq!(r.fetch[0].display, "https://read.example.invalid/team/repo");
-    assert_eq!(r.push[0].display, "ssh://write.example.invalid/team/repo");
+    assert_eq!(
+        r.push[0].display,
+        "ssh://git@write.example.invalid/team/repo"
+    );
     assert_eq!(r.fetch[0].transport, Transport::Https);
     assert_eq!(r.push[0].transport, Transport::Ssh);
     assert!(r.origins.iter().any(|o| o.scope == "global"));
@@ -269,4 +272,36 @@ fn malformed_scp_style_userinfo_cannot_leak_a_password_in_inspection() {
         .contains("SECRET-PASSWORD"));
     assert!(result.remotes[0].fetch[0].credentials_hidden);
     assert!(!result.remotes[0].fetch[0].restrictions.is_empty());
+}
+
+#[test]
+fn explicit_ssh_login_is_visible_but_password_query_fragment_and_encoded_login_stay_withheld() {
+    let f = Fixture::new();
+    f.commit_file();
+    for (url, public) in [
+        ("ssh://git@example.invalid/team/repo", true),
+        ("ssh://git:SSH_SECRET@example.invalid/team/repo", false),
+        (
+            "ssh://git@example.invalid/team/repo?token=SSH_SECRET",
+            false,
+        ),
+        ("ssh://git@example.invalid/team/repo#SSH_SECRET", false),
+        ("ssh://bad%40SSH_SECRET@example.invalid/team/repo", false),
+    ] {
+        f.git(&["config", "remote.origin.url", url]);
+        let before = tree_bytes(&f.repo);
+        let value = inspect(&f);
+        let selected = &value.remotes[0].fetch[0];
+        assert_eq!(!selected.credentials_hidden, public);
+        if public {
+            assert_eq!(selected.display, url);
+            assert!(selected.restrictions.is_empty());
+        } else {
+            assert!(!serde_json::to_string(&value)
+                .unwrap()
+                .contains("SSH_SECRET"));
+            assert!(!selected.restrictions.is_empty());
+        }
+        assert_eq!(before, tree_bytes(&f.repo));
+    }
 }

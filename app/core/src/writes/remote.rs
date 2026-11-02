@@ -67,7 +67,9 @@ fn toolchain(
 fn validate_tools(plan: &ObservationPlan) -> Result<()> {
     for binding in &plan.tools {
         let path = binding.path.to_path()?;
-        let actual = if binding.role == "exec_directory" {
+        let actual = if binding.role == "ssh_agent_socket" {
+            super::ssh_transport::socket_binding(&path)?.fingerprint
+        } else if binding.role == "exec_directory" {
             inspection::fs_identity(&path)?
         } else {
             adapter::program_fingerprint(&path)?
@@ -103,10 +105,10 @@ pub(super) fn command(plan: &ObservationPlan, cwd: &Path, home: &Path) -> Result
         .env("GIT_ASKPASS", "")
         .env(
             "GIT_ALLOW_PROTOCOL",
-            if plan.transport == Transport::Https {
-                "https"
-            } else {
-                "file"
+            match plan.transport {
+                Transport::Https => "https",
+                Transport::Ssh => "ssh",
+                _ => "file",
             },
         )
         .args([
@@ -143,6 +145,14 @@ pub(super) fn command(plan: &ObservationPlan, cwd: &Path, home: &Path) -> Result
             "-c",
             "submodule.recurse=false",
         ]);
+    if plan.transport == Transport::Ssh {
+        command
+            .env(
+                "GIT_SSH_COMMAND",
+                super::ssh_transport::command(&plan.tools, home)?,
+            )
+            .env("GIT_SSH_VARIANT", "ssh");
+    }
     if let Some(ca) = plan
         .tools
         .iter()
@@ -288,6 +298,19 @@ impl ControlledWrites {
             None
         };
         let local_binding = local.as_deref().map(inspection::fs_identity).transpose()?;
+        if resolved.transport == Transport::Ssh {
+            super::ssh_transport::validate_destination(&resolved.url)?;
+        }
+        let mut tools = toolchain(
+            options,
+            self.options.remote.ca_file.as_deref(),
+            &resolved.transport,
+        )?;
+        if resolved.transport == Transport::Ssh {
+            tools.extend(super::ssh_transport::bindings(
+                self.options.remote.ssh.as_ref(),
+            )?);
+        }
         let plan = ObservationPlan {
             id: Uuid::new_v4().to_string(),
             workspace: workspace.clone(),
@@ -308,11 +331,7 @@ impl ControlledWrites {
             config_digest: resolved.inspection.config_digest,
             generation: resolved.inspection.generation,
             created_at_ms: now_ms(),
-            tools: toolchain(
-                options,
-                self.options.remote.ca_file.as_deref(),
-                &resolved.transport,
-            )?,
+            tools,
             local_target: local.as_deref().map(NativePath::from_path),
             local_binding,
         };
@@ -427,6 +446,19 @@ impl ControlledWrites {
         {
             return Err(stale());
         }
+        if plan.transport == Transport::Ssh {
+            super::ssh_transport::validate_destination(&resolved.url)?;
+            let current = super::ssh_transport::bindings(self.options.remote.ssh.as_ref())?;
+            let expected = plan
+                .tools
+                .iter()
+                .filter(|b| b.role.starts_with("ssh_"))
+                .cloned()
+                .collect::<Vec<_>>();
+            if current != expected {
+                return Err(stale());
+            }
+        }
         validate_tools(plan)?;
         let url = if let Some(expected) = &plan.local_target {
             let target = local_target(
@@ -466,6 +498,9 @@ impl ControlledWrites {
         store::private_dir(&directory)?;
         let home = directory.join("home");
         store::private_dir(&home)?;
+        if plan.transport == Transport::Ssh {
+            super::ssh_transport::snapshot(&plan.tools, &home)?;
+        }
         let repository = directory.join("transport.git");
         let mut init = command(plan, &directory, &home)?;
         init.args([

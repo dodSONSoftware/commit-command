@@ -1,0 +1,55 @@
+{
+  "core_matrix": {
+    "default": {
+      "passed": 54,
+      "failed": 0,
+      "ignored": 1
+    },
+    "experimental-writes": {
+      "passed": 89,
+      "failed": 0,
+      "ignored": 2
+    },
+    "controlled-writes": {
+      "passed": 79,
+      "failed": 0,
+      "ignored": 1
+    },
+    "application-services": {
+      "passed": 163,
+      "failed": 0,
+      "ignored": 2
+    },
+    "all-features": {
+      "passed": 207,
+      "failed": 0,
+      "ignored": 6
+    }
+  },
+  "matrix_provenance": "Full initial five-configuration gate; final complete application/all-feature reruns after same-descriptor/public-key hardening. Original default/experimental/controlled code paths unaffected by that hardening. Final clean strict Clippy and clean SSH roundtrip/preview passed.",
+  "desktop": "Full final gate passed: contracts/type/lint/format/build/50 renderer tests/12 native host tests per configuration/strict Clippy/default release build",
+  "ssh_cases": 5,
+  "final_all_feature_remote_suite": {
+    "passed": 38,
+    "ignored_workers": 2
+  },
+  "native_initial": [
+    "decline with zero authenticated requests",
+    "blocked server strict-mode fixture permission failure retained",
+    "actual SSH observation/download/offline import; exact tracking publication; source/remote/policy preservation",
+    "proven authenticated running read cancelled by Cmd+Q; exact owned processes exited; durable cancelled journal; state reopened",
+    "ordinary native history/default write gate and no replay"
+  ],
+  "native_hardened": [
+    "rebuilt opt-in artifact authenticated a fresh observation with new socket binding",
+    "all previous repositories/journals/artifacts preserved",
+    "final ordinary restart without SSH policy made no request and preserved exact final snapshot"
+  ],
+  "unresolved": [
+    "One focused roundtrip safely blocked with Unsafe fetch artifact type. No exact entry captured; 18 instrumented repeats did not reproduce it. Guard unchanged; no diagnosis or fix claimed.",
+    "Native popup pointer interaction stalled once while unlocked; native restart/keyboard selection worked; cause not diagnosed."
+  ],
+  "no_push": true,
+  "ordinary_writes_enabled": false,
+  "user_credentials_or_global_configuration_changed": false
+}

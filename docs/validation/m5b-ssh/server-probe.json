@@ -1,0 +1,6 @@
+{
+  "root": "/private/tmp/gitfleet-ssh-probe-gzd26sh8",
+  "exit_before_termination": null,
+  "diagnostics": "Server listening on 127.0.0.1 port 60419.\nReceived signal 15; terminating.\n",
+  "fixture_process_stopped": true
+}

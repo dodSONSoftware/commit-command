@@ -1,0 +1,5 @@
+   Compiling libsqlite3-sys v0.39.1
+   Compiling rusqlite v0.41.0
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.32s
+     Running `app/core/target/debug/examples/native_ssh_fixture /Users/randydodson/Documents/_code/git-fleet/docs/validation/m5b-ssh/native-fixture.json`

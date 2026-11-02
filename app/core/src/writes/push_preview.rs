@@ -92,7 +92,7 @@ impl ControlledWrites {
             || !remote.push[0].restrictions.is_empty()
             || !matches!(
                 remote.push[0].transport,
-                Transport::Https | Transport::Local
+                Transport::Https | Transport::Local | Transport::Ssh
             )
         {
             return Err(unsupported("Local push preview requires one identical fetch/push destination and no configured push refspecs"));

@@ -1,0 +1,555 @@
+{
+  "repository": {
+    ".git/COMMIT_EDITMSG": {
+      "sha256": "500013ddf19caa49673af634f2c8e058a230879363ce82fa064bf435176e687e",
+      "mode": 33188
+    },
+    ".git/HEAD": {
+      "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+      "mode": 33188
+    },
+    ".git/config": {
+      "sha256": "d2ebd5ed707a01fe6f30e8d1b9811029d36d351211df826bcf6ca62be9bfd7b8",
+      "mode": 33188
+    },
+    ".git/index": {
+      "sha256": "0c6f93d280dbb5a635fbe4f8a67106a067e8bc5aa9dfa6d83ba9273c8f4a1fd5",
+      "mode": 33188
+    },
+    ".git/logs/HEAD": {
+      "sha256": "2462b5bfcfeea8961547c8ad4cbac5b243682f5a00ed1ccfc505e01ce15ae22b",
+      "mode": 33188
+    },
+    ".git/logs/refs/heads/main": {
+      "sha256": "2462b5bfcfeea8961547c8ad4cbac5b243682f5a00ed1ccfc505e01ce15ae22b",
+      "mode": 33188
+    },
+    ".git/objects/3f/9c3f593c7db05cc4140af49322081983715fcb": {
+      "sha256": "d8f3a262019cc74a6a37a830bb29c073adc8cd4ebefffad41a6749439a8cb58d",
+      "mode": 33060
+    },
+    ".git/objects/55/347d8137aff848716a5388dfefdaef81b2cae8": {
+      "sha256": "a4202899a551b9648c8ff2f1d349f075f416aa03ea1342ce0b00d034c19dfb29",
+      "mode": 33060
+    },
+    ".git/objects/68/bba7d660962af059bea7105a8838175928f050": {
+      "sha256": "e3dc2afeadf1b73fe7b05959ee60d91154192af5f53198cd077481bddb656abd",
+      "mode": 33060
+    },
+    ".git/objects/d9/b014fe22974bd5e26a78b2a2b5f9d5eec6b25e": {
+      "sha256": "c6d3388f0fe05e80a41ef7b947b69621cf66a33406b6c959f75be2de0a8622c4",
+      "mode": 33060
+    },
+    ".git/refs/heads/main": {
+      "sha256": "7256e5d9d20307d7a4d153390b1d9399e2dad57ae839f1ddbcd1471ee6b11a16",
+      "mode": 33188
+    },
+    "fixture.txt": {
+      "sha256": "fe0ed168888c5fa3ca9802c3a8e68f60e73188c95888da96b67b5e1531c8bcd3",
+      "mode": 33188
+    },
+    "untracked.txt": {
+      "sha256": "9a0ebd742be9d3f2951cde77cecb0da521c7c1a00fd988c3c3336270c5e7619a",
+      "mode": 33188
+    }
+  },
+  "remote_repository": {
+    "HEAD": {
+      "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+      "mode": 33188
+    },
+    "config": {
+      "sha256": "74bedce8466ca2916c3057ca5a49c7aeb32a5e7a8a05847c0ad0e431644d189c",
+      "mode": 33188
+    },
+    "objects/3f/9c3f593c7db05cc4140af49322081983715fcb": {
+      "sha256": "d8f3a262019cc74a6a37a830bb29c073adc8cd4ebefffad41a6749439a8cb58d",
+      "mode": 33060
+    },
+    "objects/55/347d8137aff848716a5388dfefdaef81b2cae8": {
+      "sha256": "a4202899a551b9648c8ff2f1d349f075f416aa03ea1342ce0b00d034c19dfb29",
+      "mode": 33060
+    },
+    "objects/94/06de64dd52f46ec03b721d3eb82e3131f5d522": {
+      "sha256": "1d36c7441e6ba58285d127335496923d7b38aa87e09c1b28f72246524775b9e9",
+      "mode": 33060
+    },
+    "objects/d9/b014fe22974bd5e26a78b2a2b5f9d5eec6b25e": {
+      "sha256": "c6d3388f0fe05e80a41ef7b947b69621cf66a33406b6c959f75be2de0a8622c4",
+      "mode": 33060
+    },
+    "packed-refs": {
+      "sha256": "4165d0447043bf9663c41e0c960d9133d5402c8e2110da2922e302fef332f0a7",
+      "mode": 33188
+    },
+    "refs/heads/main": {
+      "sha256": "785db7984894641082a70444d36eb92344e77894952c74f1b20060ce870fb16b",
+      "mode": 33188
+    }
+  },
+  "selected_policy": {
+    "known_hosts": "0ebfaaf2631a96150bb22c0ff04965bc086007d6d69b6ac9a5c9f9a429fd9d9d",
+    "public_identity": "72778fc490998e2109b0879ff7486ba142e340fdd67570a755a93f56d436001d"
+  },
+  "records": {
+    "remote-observation:ef019ce6-4f33-4f44-ba45-ddc945eaae44": {
+      "version": 1,
+      "session": "17b8c60a-b058-412e-a0ef-dbf84cea8785",
+      "value": {
+        "plan": {
+          "id": "ef019ce6-4f33-4f44-ba45-ddc945eaae44",
+          "workspace": "32c50db1-5cf1-4cc4-8c2e-44143c6ba585",
+          "worktree": "705feb4c-f28e-4354-a2cb-c27766151a89",
+          "metadata": {
+            "root": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/workspace/repository"
+            },
+            "git_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/workspace/repository/.git"
+            },
+            "common_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/workspace/repository/.git"
+            },
+            "root_binding": "16777229:49437687:Some(SystemTime { tv_sec: 1793659964, tv_nsec: 44310618 })",
+            "git_binding": "16777229:49437688:Some(SystemTime { tv_sec: 1793659964, tv_nsec: 51088121 })",
+            "common_binding": "16777229:49437688:Some(SystemTime { tv_sec: 1793659964, tv_nsec: 51088121 })",
+            "object_format": "sha1"
+          },
+          "remote": "origin",
+          "reference": "refs/heads/main",
+          "destination": "ssh://randydodson@127.0.0.1:60655/private/tmp/gitfleet-ssh-native-dufk8c3i/server.git",
+          "transport": "ssh",
+          "config_digest": "ab93795c33a27f9162e893e8b24a389fd4ce36d5480ec426bfded40bd5ed5b2e",
+          "generation": "2fd9f551ccdb7ef5af041f5796e9c562da0dcc6d1a89a435b3a9426d60b97999",
+          "created_at_ms": 1793660296233,
+          "tools": [
+            {
+              "role": "git",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/bin/git"
+              },
+              "fingerprint": "70feb0465f5896154abd7405231483f4b0cd99e3855fcc4d86e08b66869d1007"
+            },
+            {
+              "role": "exec_directory",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+              },
+              "fingerprint": "16777229:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })"
+            },
+            {
+              "role": "ssh_client",
+              "path": {
+                "encoding": "utf8",
+                "value": "/usr/bin/ssh"
+              },
+              "fingerprint": "931cbe212fa4ef3f4d47c4d164816cf99b4dba411fc0cdf9ffc18a5c8f64c65c"
+            },
+            {
+              "role": "ssh_known_hosts",
+              "path": {
+                "encoding": "utf8",
+                "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/SSH policy's files/known_hosts"
+              },
+              "fingerprint": "84549e87149cb4e2e5206a9b6d4b97b50c21678fd4183dfefca3954ad76fe64a"
+            },
+            {
+              "role": "ssh_public_identity",
+              "path": {
+                "encoding": "utf8",
+                "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/SSH policy's files/selected.pub"
+              },
+              "fingerprint": "5a8408114d61019786f6d41f0db9febfa7135829608945beccfe8af8ce845205"
+            },
+            {
+              "role": "ssh_agent_socket",
+              "path": {
+                "encoding": "utf8",
+                "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/agent.sock"
+              },
+              "fingerprint": "16777229:49436918:Some(SystemTime { tv_sec: 1793659960, tv_nsec: 365601772 })"
+            }
+          ],
+          "local_target": null,
+          "local_binding": null
+        },
+        "phase": "cancelled",
+        "oid": null,
+        "observed_at_ms": null,
+        "issue": null
+      }
+    },
+    "remote-observation:6880e9f1-429d-41e3-8705-0bd4b531c522": {
+      "version": 1,
+      "session": "17b8c60a-b058-412e-a0ef-dbf84cea8785",
+      "value": {
+        "plan": {
+          "id": "6880e9f1-429d-41e3-8705-0bd4b531c522",
+          "workspace": "32c50db1-5cf1-4cc4-8c2e-44143c6ba585",
+          "worktree": "705feb4c-f28e-4354-a2cb-c27766151a89",
+          "metadata": {
+            "root": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/workspace/repository"
+            },
+            "git_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/workspace/repository/.git"
+            },
+            "common_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/workspace/repository/.git"
+            },
+            "root_binding": "16777229:49437687:Some(SystemTime { tv_sec: 1793659964, tv_nsec: 44310618 })",
+            "git_binding": "16777229:49437688:Some(SystemTime { tv_sec: 1793659964, tv_nsec: 51088121 })",
+            "common_binding": "16777229:49437688:Some(SystemTime { tv_sec: 1793659964, tv_nsec: 51088121 })",
+            "object_format": "sha1"
+          },
+          "remote": "origin",
+          "reference": "refs/heads/main",
+          "destination": "ssh://randydodson@127.0.0.1:60655/private/tmp/gitfleet-ssh-native-dufk8c3i/server.git",
+          "transport": "ssh",
+          "config_digest": "ab93795c33a27f9162e893e8b24a389fd4ce36d5480ec426bfded40bd5ed5b2e",
+          "generation": "2fd9f551ccdb7ef5af041f5796e9c562da0dcc6d1a89a435b3a9426d60b97999",
+          "created_at_ms": 1793660371382,
+          "tools": [
+            {
+              "role": "git",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/bin/git"
+              },
+              "fingerprint": "70feb0465f5896154abd7405231483f4b0cd99e3855fcc4d86e08b66869d1007"
+            },
+            {
+              "role": "exec_directory",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+              },
+              "fingerprint": "16777229:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })"
+            },
+            {
+              "role": "ssh_client",
+              "path": {
+                "encoding": "utf8",
+                "value": "/usr/bin/ssh"
+              },
+              "fingerprint": "931cbe212fa4ef3f4d47c4d164816cf99b4dba411fc0cdf9ffc18a5c8f64c65c"
+            },
+            {
+              "role": "ssh_known_hosts",
+              "path": {
+                "encoding": "utf8",
+                "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/SSH policy's files/known_hosts"
+              },
+              "fingerprint": "84549e87149cb4e2e5206a9b6d4b97b50c21678fd4183dfefca3954ad76fe64a"
+            },
+            {
+              "role": "ssh_public_identity",
+              "path": {
+                "encoding": "utf8",
+                "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/SSH policy's files/selected.pub"
+              },
+              "fingerprint": "5a8408114d61019786f6d41f0db9febfa7135829608945beccfe8af8ce845205"
+            },
+            {
+              "role": "ssh_agent_socket",
+              "path": {
+                "encoding": "utf8",
+                "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/agent.sock"
+              },
+              "fingerprint": "16777229:49436918:Some(SystemTime { tv_sec: 1793659960, tv_nsec: 365601772 })"
+            }
+          ],
+          "local_target": null,
+          "local_binding": null
+        },
+        "phase": "blocked",
+        "oid": null,
+        "observed_at_ms": null,
+        "issue": {
+          "kind": "inspection_failed",
+          "message": "Remote observation failed (transport, authentication, certificate, redirect or server rejection); no raw server diagnostics are retained"
+        }
+      }
+    },
+    "remote-observation:8df2e92f-7fd8-4ec3-b404-7b3b99ea30f2": {
+      "version": 1,
+      "session": "17b8c60a-b058-412e-a0ef-dbf84cea8785",
+      "value": {
+        "plan": {
+          "id": "8df2e92f-7fd8-4ec3-b404-7b3b99ea30f2",
+          "workspace": "32c50db1-5cf1-4cc4-8c2e-44143c6ba585",
+          "worktree": "705feb4c-f28e-4354-a2cb-c27766151a89",
+          "metadata": {
+            "root": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/workspace/repository"
+            },
+            "git_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/workspace/repository/.git"
+            },
+            "common_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/workspace/repository/.git"
+            },
+            "root_binding": "16777229:49437687:Some(SystemTime { tv_sec: 1793659964, tv_nsec: 44310618 })",
+            "git_binding": "16777229:49437688:Some(SystemTime { tv_sec: 1793659964, tv_nsec: 51088121 })",
+            "common_binding": "16777229:49437688:Some(SystemTime { tv_sec: 1793659964, tv_nsec: 51088121 })",
+            "object_format": "sha1"
+          },
+          "remote": "origin",
+          "reference": "refs/heads/main",
+          "destination": "ssh://randydodson@127.0.0.1:60655/private/tmp/gitfleet-ssh-native-dufk8c3i/server.git",
+          "transport": "ssh",
+          "config_digest": "ab93795c33a27f9162e893e8b24a389fd4ce36d5480ec426bfded40bd5ed5b2e",
+          "generation": "2fd9f551ccdb7ef5af041f5796e9c562da0dcc6d1a89a435b3a9426d60b97999",
+          "created_at_ms": 1793660462393,
+          "tools": [
+            {
+              "role": "git",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/bin/git"
+              },
+              "fingerprint": "70feb0465f5896154abd7405231483f4b0cd99e3855fcc4d86e08b66869d1007"
+            },
+            {
+              "role": "exec_directory",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+              },
+              "fingerprint": "16777229:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })"
+            },
+            {
+              "role": "ssh_client",
+              "path": {
+                "encoding": "utf8",
+                "value": "/usr/bin/ssh"
+              },
+              "fingerprint": "931cbe212fa4ef3f4d47c4d164816cf99b4dba411fc0cdf9ffc18a5c8f64c65c"
+            },
+            {
+              "role": "ssh_known_hosts",
+              "path": {
+                "encoding": "utf8",
+                "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/SSH policy's files/known_hosts"
+              },
+              "fingerprint": "84549e87149cb4e2e5206a9b6d4b97b50c21678fd4183dfefca3954ad76fe64a"
+            },
+            {
+              "role": "ssh_public_identity",
+              "path": {
+                "encoding": "utf8",
+                "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/SSH policy's files/selected.pub"
+              },
+              "fingerprint": "5a8408114d61019786f6d41f0db9febfa7135829608945beccfe8af8ce845205"
+            },
+            {
+              "role": "ssh_agent_socket",
+              "path": {
+                "encoding": "utf8",
+                "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/agent.sock"
+              },
+              "fingerprint": "16777229:49436918:Some(SystemTime { tv_sec: 1793659960, tv_nsec: 365601772 })"
+            }
+          ],
+          "local_target": null,
+          "local_binding": null
+        },
+        "phase": "complete",
+        "oid": {
+          "format": "sha1",
+          "hex": "9406de64dd52f46ec03b721d3eb82e3131f5d522"
+        },
+        "observed_at_ms": 1793660473382,
+        "issue": null
+      }
+    },
+    "fetch-capture:7e4fc29d-dc6e-4222-aff3-ee4475d1d102": {
+      "version": 1,
+      "session": "17b8c60a-b058-412e-a0ef-dbf84cea8785",
+      "value": {
+        "plan": {
+          "id": "7e4fc29d-dc6e-4222-aff3-ee4475d1d102",
+          "workspace": "32c50db1-5cf1-4cc4-8c2e-44143c6ba585",
+          "worktree": "705feb4c-f28e-4354-a2cb-c27766151a89",
+          "metadata": {
+            "root": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/workspace/repository"
+            },
+            "git_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/workspace/repository/.git"
+            },
+            "common_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/workspace/repository/.git"
+            },
+            "root_binding": "16777229:49437687:Some(SystemTime { tv_sec: 1793659964, tv_nsec: 44310618 })",
+            "git_binding": "16777229:49437688:Some(SystemTime { tv_sec: 1793659964, tv_nsec: 51088121 })",
+            "common_binding": "16777229:49437688:Some(SystemTime { tv_sec: 1793659964, tv_nsec: 51088121 })",
+            "object_format": "sha1"
+          },
+          "remote": "origin",
+          "reference": "refs/heads/main",
+          "destination": "ssh://randydodson@127.0.0.1:60655/private/tmp/gitfleet-ssh-native-dufk8c3i/server.git",
+          "transport": "ssh",
+          "config_digest": "ab93795c33a27f9162e893e8b24a389fd4ce36d5480ec426bfded40bd5ed5b2e",
+          "generation": "2fd9f551ccdb7ef5af041f5796e9c562da0dcc6d1a89a435b3a9426d60b97999",
+          "created_at_ms": 1793660491414,
+          "tools": [
+            {
+              "role": "git",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/bin/git"
+              },
+              "fingerprint": "70feb0465f5896154abd7405231483f4b0cd99e3855fcc4d86e08b66869d1007"
+            },
+            {
+              "role": "exec_directory",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+              },
+              "fingerprint": "16777229:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })"
+            },
+            {
+              "role": "ssh_client",
+              "path": {
+                "encoding": "utf8",
+                "value": "/usr/bin/ssh"
+              },
+              "fingerprint": "931cbe212fa4ef3f4d47c4d164816cf99b4dba411fc0cdf9ffc18a5c8f64c65c"
+            },
+            {
+              "role": "ssh_known_hosts",
+              "path": {
+                "encoding": "utf8",
+                "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/SSH policy's files/known_hosts"
+              },
+              "fingerprint": "84549e87149cb4e2e5206a9b6d4b97b50c21678fd4183dfefca3954ad76fe64a"
+            },
+            {
+              "role": "ssh_public_identity",
+              "path": {
+                "encoding": "utf8",
+                "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/SSH policy's files/selected.pub"
+              },
+              "fingerprint": "5a8408114d61019786f6d41f0db9febfa7135829608945beccfe8af8ce845205"
+            },
+            {
+              "role": "ssh_agent_socket",
+              "path": {
+                "encoding": "utf8",
+                "value": "/private/tmp/gitfleet-ssh-native-dufk8c3i/agent.sock"
+              },
+              "fingerprint": "16777229:49436918:Some(SystemTime { tv_sec: 1793659960, tv_nsec: 365601772 })"
+            }
+          ],
+          "local_target": null,
+          "local_binding": null,
+          "observation_id": "8df2e92f-7fd8-4ec3-b404-7b3b99ea30f2",
+          "expected_oid": {
+            "format": "sha1",
+            "hex": "9406de64dd52f46ec03b721d3eb82e3131f5d522"
+          }
+        },
+        "phase": "complete",
+        "artifact": {
+          "bundle_digest": "4a731408863d24ce239a826dc1d5fca2d72d9f8b7ec05472410762030e03a1ea",
+          "bundle_bytes": 396,
+          "object_count": 4,
+          "object_bytes": 533
+        },
+        "captured_at_ms": 1793660503260,
+        "issue": null
+      }
+    }
+  },
+  "requests": [
+    "git-upload-pack '/private/tmp/gitfleet-ssh-native-dufk8c3i/server.git'",
+    "git-upload-pack '/private/tmp/gitfleet-ssh-native-dufk8c3i/server.git'"
+  ],
+  "network_artifacts": {
+    "6880e9f1-429d-41e3-8705-0bd4b531c522/home/ssh-identity.pub": {
+      "sha256": "72778fc490998e2109b0879ff7486ba142e340fdd67570a755a93f56d436001d",
+      "mode": 33152
+    },
+    "6880e9f1-429d-41e3-8705-0bd4b531c522/home/ssh-known-hosts": {
+      "sha256": "0ebfaaf2631a96150bb22c0ff04965bc086007d6d69b6ac9a5c9f9a429fd9d9d",
+      "mode": 33152
+    },
+    "6880e9f1-429d-41e3-8705-0bd4b531c522/transport.git/HEAD": {
+      "sha256": "f6f2b945f6c411b02ba3da9c7ace88dcf71b6af65ba2e0d89aa82900042b5a10",
+      "mode": 33188
+    },
+    "6880e9f1-429d-41e3-8705-0bd4b531c522/transport.git/config": {
+      "sha256": "3c5cc3e72b5473d08433171d50fc687ac3aa2a6a3f4c20b97f5b66f581b0fec9",
+      "mode": 33188
+    },
+    "7e4fc29d-dc6e-4222-aff3-ee4475d1d102/capture.bundle": {
+      "sha256": "4a731408863d24ce239a826dc1d5fca2d72d9f8b7ec05472410762030e03a1ea",
+      "mode": 33188
+    },
+    "7e4fc29d-dc6e-4222-aff3-ee4475d1d102/home/ssh-identity.pub": {
+      "sha256": "72778fc490998e2109b0879ff7486ba142e340fdd67570a755a93f56d436001d",
+      "mode": 33152
+    },
+    "7e4fc29d-dc6e-4222-aff3-ee4475d1d102/home/ssh-known-hosts": {
+      "sha256": "0ebfaaf2631a96150bb22c0ff04965bc086007d6d69b6ac9a5c9f9a429fd9d9d",
+      "mode": 33152
+    },
+    "7e4fc29d-dc6e-4222-aff3-ee4475d1d102/transport.git/HEAD": {
+      "sha256": "f6f2b945f6c411b02ba3da9c7ace88dcf71b6af65ba2e0d89aa82900042b5a10",
+      "mode": 33188
+    },
+    "7e4fc29d-dc6e-4222-aff3-ee4475d1d102/transport.git/config": {
+      "sha256": "3c5cc3e72b5473d08433171d50fc687ac3aa2a6a3f4c20b97f5b66f581b0fec9",
+      "mode": 33188
+    },
+    "7e4fc29d-dc6e-4222-aff3-ee4475d1d102/transport.git/objects/pack/pack-823118cb630c058090a8e1ae69177217e345608d.idx": {
+      "sha256": "c342055d80b11c1a003802b2304f96448ea3fa0f4f224579bdb43b18ce1ae1fe",
+      "mode": 33060
+    },
+    "7e4fc29d-dc6e-4222-aff3-ee4475d1d102/transport.git/objects/pack/pack-823118cb630c058090a8e1ae69177217e345608d.pack": {
+      "sha256": "fea080f17df921c54e77911628a3ead3a5bd1f93ffeb56c53563a9e0fb40eb9d",
+      "mode": 33060
+    },
+    "7e4fc29d-dc6e-4222-aff3-ee4475d1d102/transport.git/objects/pack/pack-823118cb630c058090a8e1ae69177217e345608d.rev": {
+      "sha256": "bbf003c95ebb49274cb1a43e104428f6f952fdf06b45b83e2027541b4ba2b60b",
+      "mode": 33060
+    },
+    "7e4fc29d-dc6e-4222-aff3-ee4475d1d102/transport.git/refs/heads/gitfleet-fetch": {
+      "sha256": "785db7984894641082a70444d36eb92344e77894952c74f1b20060ce870fb16b",
+      "mode": 33188
+    },
+    "8df2e92f-7fd8-4ec3-b404-7b3b99ea30f2/home/ssh-identity.pub": {
+      "sha256": "72778fc490998e2109b0879ff7486ba142e340fdd67570a755a93f56d436001d",
+      "mode": 33152
+    },
+    "8df2e92f-7fd8-4ec3-b404-7b3b99ea30f2/home/ssh-known-hosts": {
+      "sha256": "0ebfaaf2631a96150bb22c0ff04965bc086007d6d69b6ac9a5c9f9a429fd9d9d",
+      "mode": 33152
+    },
+    "8df2e92f-7fd8-4ec3-b404-7b3b99ea30f2/transport.git/HEAD": {
+      "sha256": "f6f2b945f6c411b02ba3da9c7ace88dcf71b6af65ba2e0d89aa82900042b5a10",
+      "mode": 33188
+    },
+    "8df2e92f-7fd8-4ec3-b404-7b3b99ea30f2/transport.git/config": {
+      "sha256": "3c5cc3e72b5473d08433171d50fc687ac3aa2a6a3f4c20b97f5b66f581b0fec9",
+      "mode": 33188
+    }
+  },
+  "oracle": "PASSED"
+}

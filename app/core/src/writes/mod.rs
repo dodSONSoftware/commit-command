@@ -306,3 +306,6 @@ pub struct RecoveryReview {
     pub explanation: String,
     pub fingerprint: String,
 }
+
+#[cfg(feature = "application-services")]
+mod ssh_transport;

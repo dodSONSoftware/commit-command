@@ -1,0 +1,42 @@
+[
+  {
+    "run": 1,
+    "exit_code": 0,
+    "log": "artifact-parallel-01.txt"
+  },
+  {
+    "run": 2,
+    "exit_code": 0,
+    "log": "artifact-parallel-02.txt"
+  },
+  {
+    "run": 3,
+    "exit_code": 0,
+    "log": "artifact-parallel-03.txt"
+  },
+  {
+    "run": 4,
+    "exit_code": 0,
+    "log": "artifact-parallel-04.txt"
+  },
+  {
+    "run": 5,
+    "exit_code": 0,
+    "log": "artifact-parallel-05.txt"
+  },
+  {
+    "run": 6,
+    "exit_code": 0,
+    "log": "artifact-parallel-06.txt"
+  },
+  {
+    "run": 7,
+    "exit_code": 0,
+    "log": "artifact-parallel-07.txt"
+  },
+  {
+    "run": 8,
+    "exit_code": 0,
+    "log": "artifact-parallel-08.txt"
+  }
+]

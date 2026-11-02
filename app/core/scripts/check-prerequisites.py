@@ -35,6 +35,10 @@ def main():
         require("npm", (10, 0, 0))
     elif platform.system() == "Darwin":
         require("openssl", (1, 1, 0), "version")
+        require("/usr/bin/ssh", (9, 0, 0), "-V")
+        for tool in ["/usr/sbin/sshd", "/usr/bin/ssh-agent", "/usr/bin/ssh-add", "/usr/bin/ssh-keygen"]:
+            if not os.access(tool, os.X_OK):
+                raise RuntimeError("Disposable SSH transport tests require " + tool)
         signer = os.environ.get("GITFLEET_TEST_GPG") or shutil.which("gpg") or shutil.which("gpg2")
         if not signer:
             raise RuntimeError("Set GITFLEET_TEST_GPG to an installed GPG executable for isolated signing tests")

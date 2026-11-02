@@ -1,0 +1,18 @@
+{
+  "native_app_closed": true,
+  "state_reopened": true,
+  "fixture_hold_removed": true,
+  "stopped_fixture_processes": [
+    {
+      "role": "agent_pid",
+      "pid": 28137,
+      "command": "/usr/bin/ssh-agent -D -a /private/tmp/gitfleet-ssh-native-dufk8c3i/agent.sock"
+    },
+    {
+      "role": "server_pid",
+      "pid": 28141,
+      "command": "sshd: /usr/sbin/sshd -D -e -f /private/tmp/gitfleet-ssh-native-dufk8c3i/sshd.conf [listener] 0 of 10-100 startups"
+    }
+  ],
+  "user_keys_agents_and_global_configuration_changed": false
+}

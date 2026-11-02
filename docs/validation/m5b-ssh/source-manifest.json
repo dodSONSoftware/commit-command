@@ -1,0 +1,18 @@
+{
+  "base_commit": "6f2f9c655aca052350c77b81a2fa3ff5b0ae8c6b",
+  "files": {
+    "app/core/scripts/check-prerequisites.py": "a2b6ec7772ae287724cf52561a601eec02e88db96cba133e584d44f69d1c36e8",
+    "app/core/src/application/review.rs": "8c0844ae71c3d25c600e80bea544abb57b4dd474ed7b3f308bfa29debd03a5c3",
+    "app/core/src/remote.rs": "abef7672ad56329e261f37a86c8ed60589d2559f5a44dc995583f46cce324288",
+    "app/core/src/writes/mod.rs": "e596d31b9cf36318470892d73fb56682c8de2435aea028e444f2bda76c89c63b",
+    "app/core/src/writes/push_preview.rs": "663cfe8db94ed78a384a6df9f79b293293fb4a35f6237ff87b4aaacca772a24d",
+    "app/core/src/writes/remote.rs": "782e6d0afbc8c0e5e8f3773afed99d8f7c5b110f11e5ffb928a5f649d6e19fb3",
+    "app/core/src/writes/ssh_transport.rs": "2ce0c54c2112fa74637b228a0a90b35b260942292cab57a874f499a3452e61f1",
+    "app/core/tests/remote_inspection.rs": "ba32cf4852f47183967246706b0a1aa3aebb21090a7754c477b845f1a86205fe",
+    "app/core/tests/remote_observation.rs": "b574f886be4af1c609072c932d05bb8568599bc78c2a1362554dfb51845e30f7",
+    "app/core/tests/support/ssh_transport.rs": "ba5895da90d3c362836d227008ea920a0d7b2b5de44a1905adbc0d7223912d0b",
+    "app/desktop/src-tauri/src/host_options.rs": "0cc7404c55f6c0d4591a2f904bfc8e3584ec873d0528cd494b948756eaee4b5d",
+    "app/desktop/src-tauri/src/main.rs": "6b4a2ba3cfb9b8b28fdb31a9207af25f9a9a3206bc017e272c98c2eb064d7cca",
+    "app/desktop/src/views/RemoteInspector.tsx": "0c04a5c61edc16dd1b48ccb1c14cf1c43f99125d3095e2d1a1a8c19680de11c0"
+  }
+}
