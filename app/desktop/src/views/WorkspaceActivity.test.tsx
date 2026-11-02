@@ -82,4 +82,10 @@ it("shows partial coverage, inert commit text, filters and navigation to a real 
   expect(
     screen.getByLabelText("Contribution heatmap").children.length,
   ).toBeGreaterThanOrEqual(365);
+  expect(screen.getAllByRole("img").length).toBeGreaterThanOrEqual(365);
+  fireEvent.click(screen.getByText("Daily activity counts"));
+  expect(
+    screen.getByRole("table", { name: "Daily observed commits · UTC" }),
+  ).toBeInTheDocument();
+  expect(screen.getAllByRole("row").length).toBeGreaterThanOrEqual(366);
 });

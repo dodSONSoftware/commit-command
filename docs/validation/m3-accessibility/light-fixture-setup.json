@@ -1,0 +1,8 @@
+{
+  "fixture_state_directory": "/private/tmp/gitfleet-m3-native-_4f0iu0_/state",
+  "workspace": "87a9fb86-4d89-44e7-b686-7395eef4b0dc",
+  "previous_theme": "system",
+  "seeded_theme": "light",
+  "method": "presentation-only SQLite fixture setup while app closed; no trust or operation fields changed",
+  "interactive_theme_selection": "attempted through native menu; value stayed System; not accepted"
+}

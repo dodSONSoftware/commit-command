@@ -968,12 +968,14 @@ export function App({ bridge }: { bridge: Bridge }) {
               <div className="toolbar">
                 <div className="segmented" aria-label="Overview layout">
                   <button
+                    aria-pressed={nav.layout === "table"}
                     className={nav.layout === "table" ? "active" : ""}
                     onClick={() => setNav({ ...nav, layout: "table" })}
                   >
                     Table
                   </button>
                   <button
+                    aria-pressed={nav.layout === "tree"}
                     className={nav.layout === "tree" ? "active" : ""}
                     onClick={() => setNav({ ...nav, layout: "tree" })}
                   >
@@ -1564,12 +1566,14 @@ function Repository({
       />
       <div className="repository-tabs">
         <button
+          aria-pressed={tab.view === "changes"}
           className={tab.view === "changes" ? "active" : ""}
           onClick={() => setNav(updateTab(nav, entry.id, { view: "changes" }))}
         >
           Changes <span>{changes.length}</span>
         </button>
         <button
+          aria-pressed={tab.view === "history"}
           className={tab.view === "history" ? "active" : ""}
           onClick={() => setNav(updateTab(nav, entry.id, { view: "history" }))}
         >

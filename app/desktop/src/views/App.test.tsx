@@ -107,6 +107,12 @@ it("shares Table/Tree selection without implicit descendants", async () => {
     screen.getByRole("checkbox", { name: "Select parent/child" }),
   ).not.toBeChecked();
   await userEvent.click(screen.getByRole("button", { name: "Tree" }));
+  expect(
+    screen.getByRole("button", { name: "Tree", pressed: true }),
+  ).toBeInTheDocument();
+  expect(
+    screen.getByRole("button", { name: "Table", pressed: false }),
+  ).toBeInTheDocument();
   expect(screen.getByRole("checkbox", { name: "Select parent" })).toBeChecked();
   expect(
     screen.getByRole("checkbox", { name: "Select child" }),

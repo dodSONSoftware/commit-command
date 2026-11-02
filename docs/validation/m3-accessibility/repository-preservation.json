@@ -1,0 +1,6 @@
+{
+  "baseline": "../m3-native-results/after-ordinary.json",
+  "comparison": "repositories-after.json",
+  "all_four_repositories_equal": true,
+  "fixture": "/private/tmp/gitfleet-m3-native-_4f0iu0_"
+}

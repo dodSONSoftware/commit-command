@@ -1,0 +1,534 @@
+{
+  "method": "WCAG sRGB relative luminance; actual declared CSS palette, no ratio rounding before threshold",
+  "scope": "selected declared theme text/control/graph pairs; not full rendered UI or WCAG certification",
+  "pairs": [
+    {
+      "theme": ":root",
+      "foreground": "--text",
+      "background": "--bg",
+      "ratio": 14.380549832664588,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": ":root",
+      "foreground": "--text",
+      "background": "--panel",
+      "ratio": 13.282186849712692,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": ":root",
+      "foreground": "--text",
+      "background": "--panel2",
+      "ratio": 12.223508797760674,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": ":root",
+      "foreground": "--muted",
+      "background": "--bg",
+      "ratio": 6.913345634806894,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": ":root",
+      "foreground": "--muted",
+      "background": "--panel",
+      "ratio": 6.385315550979634,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": ":root",
+      "foreground": "--muted",
+      "background": "--panel2",
+      "ratio": 5.8763637115650065,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": ":root",
+      "foreground": "--control-line",
+      "background": "--bg",
+      "ratio": 4.256391066306328,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root",
+      "foreground": "--control-line",
+      "background": "--panel",
+      "ratio": 3.9312948465791178,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root",
+      "foreground": "--control-line",
+      "background": "--panel2",
+      "ratio": 3.6179446718738575,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root",
+      "foreground": "--blue",
+      "background": "--bg",
+      "ratio": 6.624801837907901,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root",
+      "foreground": "--blue",
+      "background": "--panel",
+      "ratio": 6.118810259503734,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root",
+      "foreground": "--blue",
+      "background": "--panel2",
+      "ratio": 5.6311006527129255,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root",
+      "foreground": "--green",
+      "background": "--bg",
+      "ratio": 10.050678480403125,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root",
+      "foreground": "--green",
+      "background": "--panel",
+      "ratio": 9.283024021784936,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root",
+      "foreground": "--green",
+      "background": "--panel2",
+      "ratio": 8.543105671079033,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root",
+      "foreground": "--yellow",
+      "background": "--bg",
+      "ratio": 9.986309792668466,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root",
+      "foreground": "--yellow",
+      "background": "--panel",
+      "ratio": 9.223571709619474,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root",
+      "foreground": "--yellow",
+      "background": "--panel2",
+      "ratio": 8.48839210101527,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root",
+      "foreground": "--purple",
+      "background": "--bg",
+      "ratio": 8.298959213460712,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root",
+      "foreground": "--purple",
+      "background": "--panel",
+      "ratio": 7.665098220441654,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root",
+      "foreground": "--purple",
+      "background": "--panel2",
+      "ratio": 7.05413924630152,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"light\"]",
+      "foreground": "--text",
+      "background": "--bg",
+      "ratio": 14.388495312039938,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"light\"]",
+      "foreground": "--text",
+      "background": "--panel",
+      "ratio": 15.586221385506754,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"light\"]",
+      "foreground": "--text",
+      "background": "--panel2",
+      "ratio": 13.595625260266216,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"light\"]",
+      "foreground": "--muted",
+      "background": "--bg",
+      "ratio": 5.73690980093979,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"light\"]",
+      "foreground": "--muted",
+      "background": "--panel",
+      "ratio": 6.214461226623837,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"light\"]",
+      "foreground": "--muted",
+      "background": "--panel2",
+      "ratio": 5.420780569060614,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"light\"]",
+      "foreground": "--control-line",
+      "background": "--bg",
+      "ratio": 3.4713117944412892,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"light\"]",
+      "foreground": "--control-line",
+      "background": "--panel",
+      "ratio": 3.760270476719635,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"light\"]",
+      "foreground": "--control-line",
+      "background": "--panel2",
+      "ratio": 3.2800270838101273,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"light\"]",
+      "foreground": "--blue",
+      "background": "--bg",
+      "ratio": 5.27762252766785,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"light\"]",
+      "foreground": "--blue",
+      "background": "--panel",
+      "ratio": 5.716941995771943,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"light\"]",
+      "foreground": "--blue",
+      "background": "--panel2",
+      "ratio": 4.98680206618063,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"light\"]",
+      "foreground": "--green",
+      "background": "--bg",
+      "ratio": 5.009622645977099,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"light\"]",
+      "foreground": "--green",
+      "background": "--panel",
+      "ratio": 5.426633287548203,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"light\"]",
+      "foreground": "--green",
+      "background": "--panel2",
+      "ratio": 4.733570169290464,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"light\"]",
+      "foreground": "--yellow",
+      "background": "--bg",
+      "ratio": 5.496924687582136,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"light\"]",
+      "foreground": "--yellow",
+      "background": "--panel",
+      "ratio": 5.95449929002798,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"light\"]",
+      "foreground": "--yellow",
+      "background": "--panel2",
+      "ratio": 5.1940197022364805,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"light\"]",
+      "foreground": "--purple",
+      "background": "--bg",
+      "ratio": 6.107615904882332,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"light\"]",
+      "foreground": "--purple",
+      "background": "--panel",
+      "ratio": 6.616025620933527,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"light\"]",
+      "foreground": "--purple",
+      "background": "--panel2",
+      "ratio": 5.771059118804365,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"system\"]",
+      "foreground": "--text",
+      "background": "--bg",
+      "ratio": 14.388495312039938,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"system\"]",
+      "foreground": "--text",
+      "background": "--panel",
+      "ratio": 15.586221385506754,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"system\"]",
+      "foreground": "--text",
+      "background": "--panel2",
+      "ratio": 13.595625260266216,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"system\"]",
+      "foreground": "--muted",
+      "background": "--bg",
+      "ratio": 5.73690980093979,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"system\"]",
+      "foreground": "--muted",
+      "background": "--panel",
+      "ratio": 6.214461226623837,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"system\"]",
+      "foreground": "--muted",
+      "background": "--panel2",
+      "ratio": 5.420780569060614,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"system\"]",
+      "foreground": "--control-line",
+      "background": "--bg",
+      "ratio": 3.4713117944412892,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"system\"]",
+      "foreground": "--control-line",
+      "background": "--panel",
+      "ratio": 3.760270476719635,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"system\"]",
+      "foreground": "--control-line",
+      "background": "--panel2",
+      "ratio": 3.2800270838101273,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"system\"]",
+      "foreground": "--blue",
+      "background": "--bg",
+      "ratio": 5.27762252766785,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"system\"]",
+      "foreground": "--blue",
+      "background": "--panel",
+      "ratio": 5.716941995771943,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"system\"]",
+      "foreground": "--blue",
+      "background": "--panel2",
+      "ratio": 4.98680206618063,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"system\"]",
+      "foreground": "--green",
+      "background": "--bg",
+      "ratio": 5.009622645977099,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"system\"]",
+      "foreground": "--green",
+      "background": "--panel",
+      "ratio": 5.426633287548203,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"system\"]",
+      "foreground": "--green",
+      "background": "--panel2",
+      "ratio": 4.733570169290464,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"system\"]",
+      "foreground": "--yellow",
+      "background": "--bg",
+      "ratio": 5.496924687582136,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"system\"]",
+      "foreground": "--yellow",
+      "background": "--panel",
+      "ratio": 5.95449929002798,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"system\"]",
+      "foreground": "--yellow",
+      "background": "--panel2",
+      "ratio": 5.1940197022364805,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"system\"]",
+      "foreground": "--purple",
+      "background": "--bg",
+      "ratio": 6.107615904882332,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"system\"]",
+      "foreground": "--purple",
+      "background": "--panel",
+      "ratio": 6.616025620933527,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": ":root[data-theme=\"system\"]",
+      "foreground": "--purple",
+      "background": "--panel2",
+      "ratio": 5.771059118804365,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "name": "old review primary",
+      "ratio": 3.8643725614607582,
+      "minimum": 4.5,
+      "passed": false
+    },
+    {
+      "name": "new review primary",
+      "ratio": 4.803236197700647,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "name": "main primary",
+      "ratio": 5.716941995771943,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "name": "main primary hover",
+      "ratio": 6.6686319504211875,
+      "minimum": 4.5,
+      "passed": true
+    }
+  ]
+}

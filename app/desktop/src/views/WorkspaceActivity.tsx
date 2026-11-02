@@ -236,12 +236,37 @@ export function WorkspaceActivity({
             {days.map((day) => (
               <div
                 key={day}
+                role="img"
                 className={`heatmap-day intensity-${Math.min(count.get(day) ?? 0, 4)}`}
                 title={`${day}: ${count.get(day) ?? 0} commits`}
                 aria-label={`${day}: ${count.get(day) ?? 0} commits`}
               />
             ))}
           </div>
+          <details>
+            <summary>Daily activity counts</summary>
+            <p>
+              Counts reflect the current bounded activity result. Dates without
+              observed commits have a count of zero.
+            </p>
+            <table>
+              <caption>Daily observed commits · UTC</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Date</th>
+                  <th scope="col">Commits</th>
+                </tr>
+              </thead>
+              <tbody>
+                {days.map((day) => (
+                  <tr key={day}>
+                    <th scope="row">{day}</th>
+                    <td>{count.get(day) ?? 0}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </details>
         </>
       )}
     </section>

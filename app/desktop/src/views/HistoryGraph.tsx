@@ -7,7 +7,7 @@ type GraphRow = GraphPage["rows"][number];
 export function GraphLines({ row }: { row: GraphRow }) {
   const x = (lane: number) => 12 + lane * 18;
   const color = (lane: number) =>
-    ["#4f9fff", "#61d7a0", "#e9ba61", "#ce9aff"][lane % 4];
+    ["var(--blue)", "var(--green)", "var(--yellow)", "var(--purple)"][lane % 4];
   return (
     <svg
       className="commit-graph"
@@ -198,6 +198,7 @@ export function HistoryGraph({
             {page?.rows.slice(first, first + 40).map((row) => (
               <button
                 className={`commit-row ${selected === row.commit.oid.hex ? "selected" : ""}`}
+                aria-pressed={selected === row.commit.oid.hex}
                 key={row.commit.oid.hex}
                 onClick={() => onSelect(row.commit.oid.hex)}
               >

@@ -1,0 +1,10 @@
+{
+  "app/desktop/src/styles/app.css": "e0a5b18d5e4ccf089f7bccf8fdd910135e051c6dc0eaf6eb89824366fb684397",
+  "app/desktop/src/styles/review.css": "582e56c17dd69bd7898cb6f21d3271e18deece1ae45373b50772db9b85a9ecdd",
+  "app/desktop/src/styles/contrast.test.ts": "7dd65f20f306a7388edd2c0a8a25afcdf910321ec28c3540d3a9fe32e7062d46",
+  "app/desktop/src/views/App.tsx": "c9adad1e1ab403e6a9bb0752e4d2113278254a842a21ac6fe17c260d7975608f",
+  "app/desktop/src/views/App.test.tsx": "dcda910b16c74f72e155a482b7788e25071c6b19af974698707a1d3bf0f8cdd0",
+  "app/desktop/src/views/HistoryGraph.tsx": "396fd8d554a3a090f81fded689b646ea53ad6de3394d6806e6fbb4e7e81a5db7",
+  "app/desktop/src/views/WorkspaceActivity.tsx": "7c4991f7a626e3d1c171b967f4fdcdd6b06ad6a766528c9d1c91e6705bd3c153",
+  "app/desktop/src/views/WorkspaceActivity.test.tsx": "b7fa250a81ac074df84f3abd30c09ae26d09c31ecf00b9c0812a60349c829e2d"
+}

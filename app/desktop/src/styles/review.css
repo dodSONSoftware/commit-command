@@ -57,7 +57,7 @@ button {
   cursor: pointer;
 }
 .primary {
-  background: #1674dc;
+  background: #1264c7;
 }
 button:disabled {
   opacity: 0.5;

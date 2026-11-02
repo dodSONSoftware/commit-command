@@ -14,6 +14,8 @@
   --panel: #151f2c;
   --panel2: #192637;
   --line: #29384c;
+  --control-line: #677d99;
+  --purple: #ce9aff;
   --muted: #91a2b9;
   --text: #dce7f5;
   --blue: #4f9fff;
@@ -27,6 +29,8 @@
   --panel: #fff;
   --panel2: #eaf0f8;
   --line: #cbd6e6;
+  --control-line: #75859b;
+  --purple: #7b3eb2;
   --muted: #50627c;
   --text: #14243c;
   --blue: #1264c7;
@@ -41,6 +45,8 @@
     --panel: #fff;
     --panel2: #eaf0f8;
     --line: #cbd6e6;
+    --control-line: #75859b;
+    --purple: #7b3eb2;
     --muted: #50627c;
     --text: #14243c;
     --blue: #1264c7;
@@ -94,9 +100,14 @@ select,
 textarea {
   background: var(--bg);
   color: var(--text);
-  border: 1px solid var(--line);
+  border: 1px solid var(--control-line);
   border-radius: 6px;
   padding: 8px;
+}
+input::placeholder,
+textarea::placeholder {
+  color: var(--muted);
+  opacity: 1;
 }
 input[type="checkbox"] {
   accent-color: var(--blue);
@@ -540,11 +551,15 @@ tbody tr:hover {
   margin-top: 22px;
 }
 .primary {
-  background: #1976dc;
+  background: #1264c7;
   border-color: #318fef;
   color: white;
   font-weight: 600;
 }
+.primary:hover:not(:disabled) {
+  background: #125bb0;
+}
+
 .error {
   display: flex;
   justify-content: space-between;

@@ -1,0 +1,9 @@
+{
+  "base": "1476830",
+  "changes": "contrast and selected accessibility controls",
+  "features": [
+    "custom-protocol"
+  ],
+  "sha256": "a888c39198afc7f9bfe92674d4eea7a11e9179c1dee05d3b022efcd8dea04d7a",
+  "fixture": "/private/tmp/gitfleet-m3-native-_4f0iu0_"
+}
