@@ -38,6 +38,7 @@ function fake(writes = false) {
               active: "ws",
               recovery: [],
               fetch_import_recovery: [],
+              upstream_recovery: [],
             },
           };
         case "load_bulk_composer":

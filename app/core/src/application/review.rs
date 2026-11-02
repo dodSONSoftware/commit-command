@@ -19,6 +19,8 @@ pub(super) enum Action {
     FetchCapture(Box<crate::remote::fetch::FetchCapturePlan>),
     FetchImport(Box<crate::remote::fetch::FetchImportPlan>),
     FetchImportRecovery(Box<crate::remote::fetch::FetchImportRecovery>),
+    UpstreamSetup(Box<crate::remote::upstream::UpstreamPlan>),
+    UpstreamRecovery(Box<crate::remote::upstream::UpstreamRecovery>),
     Recovery {
         workspace: WorkspaceId,
         review: RecoveryReview,
@@ -127,6 +129,12 @@ impl Application {
         let (title, summary, content) = match &action {
             Action::Write(p) => self.describe_write(p)?,
             Action::Batch(record) => self.describe_batch(record)?,
+            Action::UpstreamSetup(plan)=>(
+                "Review missing upstream setup".into(),
+                format!("Set upstream for {} at {}.\nRemote: {} · {}\nMerge ref: {}\nAdd missing branch remote/merge settings to shared config. Existing branch settings are refused.\nConfig before SHA-256: {}\nConfig candidate SHA-256: {}\nThis contacts no server and changes no objects, refs, index or working files. All linked worktrees share this config. Existing trust becomes stale and requires fresh review. No push or automatic retry is authorized.",plan.source_ref,plan.source_oid.hex,plan.transport.remote,plan.transport.destination,plan.transport.reference,plan.expected_config.digest,plan.candidate_digest),
+                serde_json::to_string_pretty(plan)?,
+            ),
+            Action::UpstreamRecovery(review)=>("Review upstream configuration recovery".into(),format!("Operation: {}\nAction: {}\n{}",review.operation.plan.transport.id,review.action,review.explanation),serde_json::to_string_pretty(review)?),
             Action::FetchImport(plan)=>(
                 "Review captured branch import".into(),
                 format!("Import verified captured objects and update {}.\nExpected old value: {}\nNew captured commit: {}\nBundle SHA-256: {} ({} bytes)\nThis offline operation adds objects and writes this exact tracking ref and its reflog. It does not merge, change HEAD, index, working files, tags, upstreams or FETCH_HEAD. Hooks and network are disabled. Interrupted publication requires inspection, never automatic replay.",plan.tracking_ref,plan.expected_old.as_ref().map(|v|v.hex.as_str()).unwrap_or("absent"),plan.expected_oid.hex,plan.bundle_digest,plan.bundle_bytes),
@@ -240,6 +248,7 @@ impl Application {
                     .application_cancel_proposal(&proposal.operation_id)?,
                 Action::Batch(record) => self.cancel_batch_record(&mut record.clone())?,
                 Action::RemoteObservation(plan) => self.writes.cancel_observation(&plan.id)?,
+                Action::UpstreamSetup(plan) => self.writes.cancel_upstream(&plan.transport.id)?,
                 Action::FetchImport(plan) => self.writes.cancel_import(&plan.transport.id)?,
                 Action::FetchCapture(plan) => self.writes.cancel_capture(&plan.transport.id)?,
                 _ => {}
@@ -251,6 +260,22 @@ impl Application {
             ));
         }
         let result = match p.action {
+            Action::UpstreamSetup(plan) => {
+                self.active(&plan.transport.workspace.0)?;
+                self.entry(&plan.transport.workspace.0, &plan.transport.worktree.0)?;
+                serde_json::to_value(self.writes.execute_upstream(&plan, cancellation)?)?
+            }
+            Action::UpstreamRecovery(review) => {
+                self.active(&review.operation.plan.transport.workspace.0)?;
+                self.entry(
+                    &review.operation.plan.transport.workspace.0,
+                    &review.operation.plan.transport.worktree.0,
+                )?;
+                if cancellation.is_cancelled() {
+                    return Err(Error::with_kind(ErrorKind::Cancelled, "Recovery cancelled"));
+                }
+                serde_json::to_value(self.writes.recover_upstream(&review)?)?
+            }
             Action::FetchImport(plan) => {
                 self.active(&plan.transport.workspace.0)?;
                 self.entry(&plan.transport.workspace.0, &plan.transport.worktree.0)?;

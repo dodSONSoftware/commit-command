@@ -287,6 +287,18 @@ export function RemoteInspector({
       </p>
       <ObservationRecords
         items={observations?.items ?? []}
+        upstreamDisabled={!enabled || busy}
+        onUpstream={(observation) => {
+          if (!enabled || busy) return;
+          void act(async () => {
+            await bridge.request({
+              kind: "review_upstream_setup",
+              workspace,
+              worktree,
+              observation,
+            });
+          });
+        }}
         previewDisabled={busy}
         onPreview={(observation) => {
           if (busy) return;

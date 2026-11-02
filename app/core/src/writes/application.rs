@@ -168,7 +168,7 @@ impl ControlledWrites {
 }
 impl ControlledWrites {
     pub(crate) fn application_has_pending(&mut self, workspace: &str) -> Result<bool> {
-        self.workspace.connection().query_row("SELECT EXISTS(SELECT 1 FROM write_operations WHERE json_extract(payload,'$.proposal.workspace_id')=?1 AND json_extract(payload,'$.phase') NOT IN ('complete','published_with_post_processing_failure','cancelled_before_publication','proposed','approved','needs_reauthorization')) OR EXISTS(SELECT 1 FROM state WHERE key LIKE 'fetch-import:%' AND json_extract(value,'$.value.plan.workspace')=?1 AND json_extract(value,'$.value.phase') IN ('importing_objects','publication_pending','reference_prepared','reference_updated','uncertain'))",[workspace],|r|r.get(0)).map_err(Error::from)
+        self.workspace.connection().query_row("SELECT EXISTS(SELECT 1 FROM write_operations WHERE json_extract(payload,'$.proposal.workspace_id')=?1 AND json_extract(payload,'$.phase') NOT IN ('complete','published_with_post_processing_failure','cancelled_before_publication','proposed','approved','needs_reauthorization')) OR EXISTS(SELECT 1 FROM state WHERE key LIKE 'fetch-import:%' AND json_extract(value,'$.value.plan.workspace')=?1 AND json_extract(value,'$.value.phase') IN ('importing_objects','publication_pending','reference_prepared','reference_updated','uncertain')) OR EXISTS(SELECT 1 FROM state WHERE key LIKE 'upstream:%' AND json_extract(value,'$.value.plan.workspace')=?1 AND json_extract(value,'$.value.phase') IN ('lock_pending','lock_created','lock_ready','publication_pending','config_published','uncertain'))",[workspace],|r|r.get(0)).map_err(Error::from)
     }
 }
 

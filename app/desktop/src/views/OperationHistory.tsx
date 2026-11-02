@@ -8,6 +8,7 @@ import type {
 } from "../services/response.generated";
 import { bytes, pathText, repoName } from "../stores/model";
 import { ObservationRecords } from "./ObservationHistory";
+import { UpstreamRecord } from "./UpstreamRecord";
 import { FetchImportRecords } from "./FetchImportHistory";
 import { FetchCaptureRecords } from "./FetchCaptureHistory";
 
@@ -19,6 +20,7 @@ const kinds = [
   "remote_observation",
   "fetch_capture",
   "fetch_import",
+  "upstream_setup",
 ] as const;
 const operationName = (kind: string) =>
   kind === "fetch_capture"
@@ -235,6 +237,21 @@ export function OperationHistory({
             )}
             {item.record.kind === "fetch_capture" && (
               <FetchCaptureRecords items={[item.record.value]} />
+            )}
+            {item.record.kind === "upstream_setup" && (
+              <UpstreamRecord
+                item={item.record.value}
+                busy={busy}
+                onRecover={(operation) =>
+                  void act(async () => {
+                    await bridge.request({
+                      kind: "review_upstream_recovery",
+                      workspace,
+                      operation,
+                    });
+                  })
+                }
+              />
             )}
             {item.record.kind === "fetch_import" && (
               <FetchImportRecords

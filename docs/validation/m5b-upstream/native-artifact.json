@@ -1,0 +1,15 @@
+{
+  "bundle": "/private/tmp/gitfleet-public-native-laodapb4/GitFleet Upstream Acceptance.app",
+  "features": [
+    "custom-protocol",
+    "desktop-writes"
+  ],
+  "binary_sha256": "995a15cbe721b75812b4bfe6d90e1d637b9735adb902216708a39165245f116d",
+  "source_base": "0787e87",
+  "source": "uncommitted guarded upstream checkpoint; see source-manifest.json",
+  "ordinary_bundle_sha256": "ef093b408598044ee4afce13b534131f93ed8bd9e4aefa59317909a0d91f6c75",
+  "ordinary_features": [
+    "custom-protocol"
+  ],
+  "release_or_installer": false
+}

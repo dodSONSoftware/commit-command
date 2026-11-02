@@ -1,0 +1,49 @@
+{
+  "core_matrix": {
+    "default": {
+      "passed": 54,
+      "failed": 0,
+      "ignored": 1
+    },
+    "experimental-writes": {
+      "passed": 89,
+      "failed": 0,
+      "ignored": 2
+    },
+    "controlled-writes": {
+      "passed": 79,
+      "failed": 0,
+      "ignored": 1
+    },
+    "application-services": {
+      "passed": 156,
+      "failed": 0,
+      "ignored": 2
+    },
+    "all-features": {
+      "passed": 200,
+      "failed": 0,
+      "ignored": 6
+    }
+  },
+  "core_gate": "PASSED: format/build/tests/strict Clippy all five configurations; disposable lab 23 passed, 1 documented unsupported scenario",
+  "desktop_gate": "PASSED: contracts/typecheck/lint/format/50 renderer tests/build/11 native host tests in each configuration/strict Clippy/default release build",
+  "final_application_upstream_tests": {
+    "passed": 5,
+    "failed": 0,
+    "reason": "Final review added rejection of special config mode bits; targeted application-services suite and final all-feature Clippy passed."
+  },
+  "crash_tests": "All-feature parent exercised SIGKILL at LockPending, LockCreated, LockReady, PublicationPending, ConfigPublished; worker ignored directly only. New parent and post-publication storage-failure tests passed.",
+  "native": [
+    "real past HTTPS observation fixture: native decline, fresh approval, exact config update, unchanged other bytes/metadata/network/journals, stale trust, typed history, ordinary default gate/restart/no replay",
+    "separate explicitly synthetic-observation fixture: actual native config publication, injected SQLite terminal-journal failure, durable uncertain result, startup attention, fresh native observe_configuration recovery, no repository mutation/replay/trust renewal"
+  ],
+  "not_claimed": [
+    "authenticated/SSH transport",
+    "broader upstream compatibility",
+    "native upstream close/Cancel during its short rename boundary",
+    "native upstream receipt-owned leftover lock removal (automated positive tests passed)",
+    "push or full M5B/product completion"
+  ],
+  "no_push": true
+}

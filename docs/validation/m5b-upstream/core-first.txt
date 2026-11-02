@@ -1,0 +1,24 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+error[E0277]: can't compare `[u8]` with `&[u8; 63]`
+    --> tests/remote_observation.rs:1820:5
+     |
+1820 | /     assert_eq!(
+1821 | |         config[old.len()..],
+1822 | |         b"\n[branch \"main\"]\n\tremote = \"origin\"\n\tmerge = \"refs/heads/main\"\n"
+1823 | |     );
+     | |_____^ no implementation for `[u8] == &[u8; 63]`
+     |
+     = help: the trait `PartialEq<&[u8; 63]>` is not implemented for `[u8]`
+     = help: the following other types implement trait `PartialEq<Rhs>`:
+               `&[u8]` implements `PartialEq<ByteStr>`
+               `&[u8]` implements `PartialEq<ByteString>`
+               `&[u8]` implements `PartialEq<winnow::stream::bstr::BStr>`
+               `&[u8]` implements `PartialEq<winnow::stream::bytes::Bytes>`
+               `[u8]` implements `PartialEq<ByteStr>`
+               `[u8]` implements `PartialEq<ByteString>`
+               `[u8]` implements `PartialEq<winnow::stream::bstr::BStr>`
+               `[u8]` implements `PartialEq<winnow::stream::bytes::Bytes>`
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `gitfleet-core` (test "remote_observation") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...

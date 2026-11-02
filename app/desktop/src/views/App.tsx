@@ -18,7 +18,7 @@ import type {
   NativePath,
   Commit as CommitDetail,
   RecoveryNotice,
-  FetchImportNotice,
+  RemoteRecoveryNotice,
 } from "../services/response.generated";
 import type { WriteRequest } from "../services/request.generated";
 import {
@@ -63,8 +63,13 @@ export function App({ bridge }: { bridge: Bridge }) {
   const [writeBusy, setWriteBusy] = useState(false);
   const [writesEnabled, setWritesEnabled] = useState(false);
   const [recovery, setRecovery] = useState<RecoveryNotice[]>([]);
-  const [importRecovery, setImportRecovery] = useState<FetchImportNotice[]>([]);
-  const recoveryNotices = [...recovery, ...importRecovery];
+  const [importRecovery, setImportRecovery] = useState<RemoteRecoveryNotice[]>(
+    [],
+  );
+  const [upstreamRecovery, setUpstreamRecovery] = useState<
+    RemoteRecoveryNotice[]
+  >([]);
+  const recoveryNotices = [...recovery, ...importRecovery, ...upstreamRecovery];
   const context = useRef<string | null>(null);
   const loaded = useRef(false);
   const polling = useRef(false);
@@ -156,6 +161,7 @@ export function App({ bridge }: { bridge: Bridge }) {
     setWorkspaces(data.workspaces);
     setRecovery(data.recovery);
     setImportRecovery(data.fetch_import_recovery);
+    setUpstreamRecovery(data.upstream_recovery ?? []);
     const ws = data.active ?? null;
     if (context.current !== ws) {
       loaded.current = false;

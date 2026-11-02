@@ -1,0 +1,70 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.44s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-9477e837a431519a)
+
+running 6 tests
+test upstream_crash_worker ... ignored, subprocess-only disposable upstream SIGKILL worker
+test upstream_decline_stale_config_head_trust_and_foreign_locks_preserve_repository ... FAILED
+test upstream_storage_failure_after_rename_and_foreign_lock_recovery_stay_truthful ... FAILED
+test upstream_sigkill_recovery_never_replays_and_removes_only_owned_config_lock ... FAILED
+test upstream_setup_adds_only_missing_keys_preserves_bytes_and_requires_new_trust ... FAILED
+chmod: Unable to translate '501' to a UUID
+test upstream_setup_refuses_existing_custom_or_extended_configuration_and_scrubs_other_secrets ... FAILED
+
+failures:
+
+---- upstream_decline_stale_config_head_trust_and_foreign_locks_preserve_repository stdout ----
+
+thread 'upstream_decline_stale_config_head_trust_and_foreign_locks_preserve_repository' (14554923) panicked at tests/remote_observation.rs:1785:10:
+called `Result::unwrap()` on an `Err` value: Error { kind: UnsupportedRepositoryState, message: "Initial upstream setup requires the standard named-remote fetch mapping" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- upstream_storage_failure_after_rename_and_foreign_lock_recovery_stay_truthful stdout ----
+
+thread 'upstream_storage_failure_after_rename_and_foreign_lock_recovery_stay_truthful' (14554927) panicked at tests/remote_observation.rs:1785:10:
+called `Result::unwrap()` on an `Err` value: Error { kind: UnsupportedRepositoryState, message: "Initial upstream setup requires the standard named-remote fetch mapping" }
+
+---- upstream_sigkill_recovery_never_replays_and_removes_only_owned_config_lock stdout ----
+
+thread 'upstream_sigkill_recovery_never_replays_and_removes_only_owned_config_lock' (14554926) panicked at tests/remote_observation.rs:2120:9:
+assertion `left == right` failed: LockPending: 
+running 1 test
+test upstream_crash_worker ... FAILED
+
+failures:
+
+failures:
+    upstream_crash_worker
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 32 filtered out; finished in 2.65s
+
+ 
+thread 'upstream_crash_worker' (14554982) panicked at tests/remote_observation.rs:1785:10:
+called `Result::unwrap()` on an `Err` value: Error { kind: UnsupportedRepositoryState, message: "Initial upstream setup requires the standard named-remote fetch mapping" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+  left: None
+ right: Some(9)
+
+---- upstream_setup_adds_only_missing_keys_preserves_bytes_and_requires_new_trust stdout ----
+
+thread 'upstream_setup_adds_only_missing_keys_preserves_bytes_and_requires_new_trust' (14554924) panicked at tests/remote_observation.rs:1785:10:
+called `Result::unwrap()` on an `Err` value: Error { kind: UnsupportedRepositoryState, message: "Initial upstream setup requires the standard named-remote fetch mapping" }
+
+---- upstream_setup_refuses_existing_custom_or_extended_configuration_and_scrubs_other_secrets stdout ----
+
+thread 'upstream_setup_refuses_existing_custom_or_extended_configuration_and_scrubs_other_secrets' (14554925) panicked at tests/remote_observation.rs:2009:17:
+assertion failed: std::process::Command::new("/bin/chmod").args(["+a",
+                            &rule]).arg(t.f.repo.join(".git/config")).status().unwrap().success()
+
+
+failures:
+    upstream_decline_stale_config_head_trust_and_foreign_locks_preserve_repository
+    upstream_setup_adds_only_missing_keys_preserves_bytes_and_requires_new_trust
+    upstream_setup_refuses_existing_custom_or_extended_configuration_and_scrubs_other_secrets
+    upstream_sigkill_recovery_never_replays_and_removes_only_owned_config_lock
+    upstream_storage_failure_after_rename_and_foreign_lock_recovery_stay_truthful
+
+test result: FAILED. 0 passed; 5 failed; 1 ignored; 0 measured; 27 filtered out; finished in 15.32s
+
+error: test failed, to rerun pass `--test remote_observation`

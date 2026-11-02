@@ -1,0 +1,13 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.79s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-878959a9ad654234)
+
+running 5 tests
+test upstream_decline_stale_config_head_trust_and_foreign_locks_preserve_repository ... ok
+test upstream_restart_revokes_setup_capability_without_creating_a_config_lock ... ok
+test upstream_setup_adds_only_missing_keys_preserves_bytes_and_requires_new_trust ... ok
+test upstream_setup_refuses_unsupported_policy_and_preserves_attributes_without_persisting_secrets ... ok
+test upstream_shared_config_is_visible_to_linked_worktrees_without_touching_either_checkout ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 24 filtered out; finished in 63.90s
+

@@ -1,0 +1,9 @@
+{
+  "root": "/private/tmp/gitfleet-fetch-native-vthb_q8k",
+  "state": "/private/tmp/gitfleet-fetch-native-vthb_q8k/state",
+  "repository": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository",
+  "bundle": "/private/tmp/gitfleet-fetch-native-vthb_q8k/GitFleet Upstream Acceptance.app",
+  "observation": "00556d29-6c00-484a-b6b6-51624314f436",
+  "source_plan": "cancelled fixture-only review; configuration unchanged since preparation",
+  "provenance": "Explicitly synthetic completed observation only; no network evidence. Actual production native upstream publication, fixture-only SQLite terminal-journal failure, then actual fresh reviewed recovery."
+}

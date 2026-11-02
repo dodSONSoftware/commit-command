@@ -1536,3 +1536,49 @@ fn unresolved_fetch_import_blocks_new_and_already_approved_local_writes_in_every
     .unwrap();
     assert_eq!(service.execute(&approval).unwrap().phase, Phase::Complete);
 }
+
+#[test]
+fn upstream_recovery_barrier_blocks_controlled_only_new_and_approved_local_writes() {
+    let t = M2::new();
+    fs::write(t.f.repo.join("file.txt"), b"approved\n").unwrap();
+    let mut service = t.service();
+    t.trust(&mut service);
+    let request = t.request(
+        &[("file.txt", ContentSource::WorkingTree)],
+        HookPolicy::Execute,
+    );
+    let proposal = service
+        .propose(&t.workspace, &t.worktree, request.clone())
+        .unwrap();
+    let approval = service.approve(&proposal).unwrap();
+    let metadata = service
+        .inspect_trust(&t.workspace, &t.worktree)
+        .unwrap()
+        .metadata;
+    let db = rusqlite::Connection::open(t.state.join("state.db")).unwrap();
+    let record = serde_json::json!({"value":{"plan":{"metadata":{"common_binding":metadata.common_binding}},"phase":"lock_pending"}});
+    db.execute(
+        "INSERT INTO state(key,value) VALUES('upstream:test-interruption',?1)",
+        [record.to_string()],
+    )
+    .unwrap();
+    let before = tree_bytes(&t.f.repo);
+    assert_eq!(
+        service
+            .propose(&t.workspace, &t.worktree, request)
+            .unwrap_err()
+            .kind,
+        ErrorKind::Busy
+    );
+    assert_eq!(
+        service.execute(&approval).unwrap_err().kind,
+        ErrorKind::Busy
+    );
+    assert_eq!(before, tree_bytes(&t.f.repo));
+    db.execute(
+        "DELETE FROM state WHERE key='upstream:test-interruption'",
+        [],
+    )
+    .unwrap();
+    assert_eq!(service.execute(&approval).unwrap().phase, Phase::Complete);
+}

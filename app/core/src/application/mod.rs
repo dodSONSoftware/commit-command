@@ -97,6 +97,15 @@ pub enum Request {
         worktree: Option<String>,
         offset: usize,
     },
+    ReviewUpstreamSetup {
+        workspace: String,
+        worktree: String,
+        observation: String,
+    },
+    ReviewUpstreamRecovery {
+        workspace: String,
+        operation: String,
+    },
     PushPreview {
         workspace: String,
         worktree: String,
@@ -216,6 +225,7 @@ pub struct WorkspaceList {
     pub active: Option<String>,
     pub recovery: Vec<RecoveryNotice>,
     pub fetch_import_recovery: Vec<FetchImportNotice>,
+    pub upstream_recovery: Vec<RemoteRecoveryNotice>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct InventoryView {
@@ -270,11 +280,12 @@ pub struct Response {
     pub data: Data,
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
-pub struct FetchImportNotice {
+pub struct RemoteRecoveryNotice {
     pub operation_id: String,
     pub workspace_id: String,
     pub worktree_id: String,
 }
+pub type FetchImportNotice = RemoteRecoveryNotice;
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct RecoveryNotice {
     pub operation_id: String,
@@ -393,6 +404,9 @@ impl Application {
                     .writes
                     .application_cancel_proposal(&proposal.operation_id)?,
                 review::Action::Batch(mut record) => self.cancel_batch_record(&mut record)?,
+                review::Action::UpstreamSetup(plan) => {
+                    self.writes.cancel_upstream(&plan.transport.id)?
+                }
                 review::Action::FetchImport(plan) => {
                     self.writes.cancel_import(&plan.transport.id)?
                 }
@@ -434,6 +448,14 @@ impl Application {
         kind: TestFaultKind,
     ) {
         self.writes.set_import_fault(phase, kind);
+    }
+    #[cfg(feature = "write-test-support")]
+    pub fn set_upstream_test_fault(
+        &mut self,
+        phase: crate::remote::upstream::UpstreamPhase,
+        kind: TestFaultKind,
+    ) {
+        self.writes.set_upstream_fault(phase, kind);
     }
     pub fn epoch(&self) -> u64 {
         self.epoch
@@ -552,6 +574,7 @@ impl Application {
                 active: self.writes.workspace.active()?.map(|id| id.0),
                 recovery: self.writes.application_pending()?,
                 fetch_import_recovery: self.writes.import_notices()?,
+                upstream_recovery: self.writes.upstream_notices()?,
             }),
             Request::Create { name, picker } => {
                 let path = self.directory(&picker)?;
@@ -652,6 +675,35 @@ impl Application {
                         return Err(error);
                     }
                 }
+            }
+            Request::ReviewUpstreamSetup {
+                workspace,
+                worktree,
+                observation,
+            } => {
+                let entry = self.entry(&workspace, &worktree)?;
+                let id = self.active(&workspace)?;
+                self.abandon_review()?;
+                let plan =
+                    self.writes
+                        .propose_upstream(&id, &entry, &observation, &self.read_options)?;
+                match self.set_review(review::Action::UpstreamSetup(Box::new(plan.clone()))) {
+                    Ok(display) => Data::Review(display),
+                    Err(error) => {
+                        self.writes.cancel_upstream(&plan.transport.id)?;
+                        return Err(error);
+                    }
+                }
+            }
+            Request::ReviewUpstreamRecovery {
+                workspace,
+                operation,
+            } => {
+                let id = self.active(&workspace)?;
+                self.abandon_review()?;
+                let review = self.writes.inspect_upstream_recovery(&id, &operation)?;
+                self.entry(&workspace, &review.operation.plan.transport.worktree.0)?;
+                Data::Review(self.set_review(review::Action::UpstreamRecovery(Box::new(review)))?)
             }
             Request::PushPreview {
                 workspace,

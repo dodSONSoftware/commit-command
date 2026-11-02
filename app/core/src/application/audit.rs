@@ -2,6 +2,7 @@
 use super::*;
 use crate::remote::fetch::{FetchCapture, FetchCapturePhase, FetchImport, FetchImportPhase};
 use crate::remote::observation::{Observation, ObservationPhase};
+use crate::remote::upstream::{UpstreamOperation, UpstreamPhase};
 use rusqlite::params;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
@@ -14,6 +15,7 @@ pub enum OperationAuditKind {
     RemoteObservation,
     FetchCapture,
     FetchImport,
+    UpstreamSetup,
 }
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "snake_case")]
@@ -43,6 +45,7 @@ pub enum OperationAuditRecord {
     RemoteObservation(Box<Observation>),
     FetchCapture(Box<FetchCapture>),
     FetchImport(Box<FetchImport>),
+    UpstreamSetup(Box<UpstreamOperation>),
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct OperationAuditEntry {
@@ -85,6 +88,11 @@ WITH sources AS (
          'fetch_import', json_extract(value,'$.value.phase'), value,
          json_extract(value,'$.value.plan.worktree')
     FROM state WHERE key LIKE 'fetch-import:%' AND json_extract(value,'$.value.plan.workspace')=?1
+  UNION ALL
+  SELECT 'upstream', substr(key,10), json_extract(value,'$.value.plan.created_at_ms'),
+         'upstream_setup', json_extract(value,'$.value.phase'), value,
+         json_extract(value,'$.value.plan.worktree')
+    FROM state WHERE key LIKE 'upstream:%' AND json_extract(value,'$.value.plan.workspace')=?1
 ), classified AS (
   SELECT *, CASE
     WHEN source='local' AND phase IN ('proposed','approved') AND id IS NOT ?8 THEN 'interrupted'
@@ -92,6 +100,7 @@ WITH sources AS (
     WHEN source='remote' AND (phase='running' OR (phase='proposed' AND id IS NOT ?10)) THEN 'interrupted'
     WHEN source='fetch' AND (phase='running' OR (phase='proposed' AND id IS NOT ?11)) THEN 'interrupted'
     WHEN source='import' AND phase='proposed' AND id IS NOT ?12 THEN 'interrupted'
+    WHEN source='upstream' AND phase='proposed' AND id IS NOT ?13 THEN 'interrupted'
     WHEN phase='complete' THEN 'complete'
     WHEN phase='blocked' THEN 'blocked'
     WHEN phase IN ('cancelled','cancelled_before_publication','aborted') THEN 'cancelled'
@@ -145,8 +154,8 @@ impl Application {
             // Scope by stored IDs so removed/unavailable checkouts remain inspectable.
             Uuid::parse_str(worktree).map_err(|_| invalid("Invalid audit worktree ID"))?;
         }
-        let (mut write, mut batch, mut remote, mut fetch, mut import) =
-            (None, None, None, None, None);
+        let (mut write, mut batch, mut remote, mut fetch, mut import, mut upstream) =
+            (None, None, None, None, None, None);
         if let Some(pending) = self.pending.as_ref().filter(|p| self.review(&p.id).is_ok()) {
             match &pending.action {
                 review::Action::Write(p) => write = Some(p.operation_id.clone()),
@@ -154,6 +163,7 @@ impl Application {
                 review::Action::RemoteObservation(p) => remote = Some(p.id.clone()),
                 review::Action::FetchCapture(p) => fetch = Some(p.transport.id.clone()),
                 review::Action::FetchImport(p) => import = Some(p.transport.id.clone()),
+                review::Action::UpstreamSetup(p) => upstream = Some(p.transport.id.clone()),
                 _ => {}
             }
         }
@@ -176,7 +186,8 @@ impl Application {
                     batch,
                     remote,
                     fetch,
-                    import
+                    import,
+                    upstream
                 ],
                 |r| {
                     Ok((
@@ -288,6 +299,19 @@ impl Application {
                         item.phase = FetchImportPhase::Interrupted;
                     }
                     OperationAuditRecord::FetchImport(Box::new(item))
+                }
+                "upstream" => {
+                    let mut item = self.writes.upstream_audit_detail(&payload)?;
+                    if item.plan.transport.id != id
+                        || item.plan.transport.workspace.0 != workspace
+                        || item.plan.transport.created_at_ms != created
+                    {
+                        return Err(invalid("Inconsistent upstream audit record"));
+                    }
+                    if result == OperationAuditResult::Interrupted {
+                        item.phase = UpstreamPhase::Interrupted;
+                    }
+                    OperationAuditRecord::UpstreamSetup(Box::new(item))
                 }
                 _ => return Err(invalid("Unknown audit source")),
             };

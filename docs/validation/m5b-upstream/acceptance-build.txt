@@ -1,0 +1,3 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+   Compiling gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.09s

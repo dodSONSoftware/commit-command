@@ -1,0 +1,1390 @@
+{
+  "repository": {
+    ".git/COMMIT_EDITMSG": {
+      "sha256": "b993cd12a9e257dc68a7d33ce4f88447a2f560db66587138cec7d5957b0e3c72",
+      "mode": 33188
+    },
+    ".git/HEAD": {
+      "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+      "mode": 33188
+    },
+    ".git/config": {
+      "sha256": "ae71e111a9c694d2f1087ffd525057cb645383c82309007b85e9fdc38c7cd0e3",
+      "mode": 33188
+    },
+    ".git/index": {
+      "sha256": "bc609d555d8c5fe2aa70a1c41abfd7b785ad88dcc2eea2151d76ef45b93bbc56",
+      "mode": 33188
+    },
+    ".git/logs/HEAD": {
+      "sha256": "7acb4243a528f7ee6e3c99e7105a607aebc69b38e8e15a9abc11ac4f9ddd38d4",
+      "mode": 33188
+    },
+    ".git/logs/refs/heads/main": {
+      "sha256": "7acb4243a528f7ee6e3c99e7105a607aebc69b38e8e15a9abc11ac4f9ddd38d4",
+      "mode": 33188
+    },
+    ".git/logs/refs/remotes/origin/main": {
+      "sha256": "9b62613a6ae8baee6b67c5537fcafb48b424372919c47ceca2c6c23353db7bb1",
+      "mode": 33188
+    },
+    ".git/objects/20/b8d3dc032015f065107d70b0ea1234917b25c7": {
+      "sha256": "2e36171cc8820df0e00c250a8778367a1842b4b12cea9d7f87b7e7acd916d476",
+      "mode": 33152
+    },
+    ".git/objects/3d/27f84b70ecf2b0091b0ec87c76bf5b7614dda8": {
+      "sha256": "7d4871733d0e90e9af5da8d41e1a03c5c95c5c578462c1548f68143ea484a7ff",
+      "mode": 33060
+    },
+    ".git/objects/49/e243681e872caca55b76636b08b312996869a8": {
+      "sha256": "e8b82e06a10cea340658f70b91da2a4b8b291b5b1fe48680c60dd5ce5614a075",
+      "mode": 33152
+    },
+    ".git/objects/e9/35ede54509bb54c06c9fedae0c8f24c694c2c4": {
+      "sha256": "1e2bada4e49d5846f53b8c8440cbb2ec4ff13c2fa4dcf4af8d4a327202a591e6",
+      "mode": 33060
+    },
+    ".git/objects/ea/4bcb789b9b87f090d82aa4f5229d9e333db8e0": {
+      "sha256": "2b7099692a39878e88bda364572833a96279caf5a1e16345eb31dd9835ae1d02",
+      "mode": 33060
+    },
+    ".git/objects/f9/cda8be33e2216e5a599d04179f232312fae93e": {
+      "sha256": "51f7ed0c074a7bc804413e673d33bfe246cf4ee142f52258d14350126882ec73",
+      "mode": 33060
+    },
+    ".git/refs/heads/main": {
+      "sha256": "e51fb0bca00abaf07da05088e7d4b53eb0b0abf7b5b4437addd59635e379bcc3",
+      "mode": 33188
+    },
+    ".git/refs/remotes/origin/main": {
+      "sha256": "0a7c13f5f82d710f1f981b867609c518e429fc2729830e716dc951551f476aa3",
+      "mode": 33188
+    },
+    "README.md": {
+      "sha256": "b1acc903bc9f14b0cba7e135c78395b47267b27375949885d6239664088169de",
+      "mode": 33188
+    },
+    "untracked.txt": {
+      "sha256": "f11da490adf991fdc30d3828fe15a635bac6a13b62160ecca545e5ed1acc3052",
+      "mode": 33188
+    }
+  },
+  "network": {
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/approved.bundle": {
+      "sha256": "bd03cc64d17fa3a38fb41468a29a53f4c4efac3bae77d7583932dd37656123f9",
+      "mode": 33152
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/_bootlocale.cpython-39.pyc": {
+      "sha256": "bf494bedaf73074caa6ca3376535e46dd151a27c38b0b7abd7f2df23cadeda90",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/_collections_abc.cpython-39.pyc": {
+      "sha256": "47bb6c398da9b6d2de6c507f3cba929edbe85dff874fdaf9f6cc8540d59f3061",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/_sitebuiltins.cpython-39.pyc": {
+      "sha256": "4d314d2732cb6fb3c9c51e3926999d03a9040bb1c4a8a56271b107984e532418",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/_weakrefset.cpython-39.pyc": {
+      "sha256": "1ba67382bd71b0aefc6eacc07338ba66b4425fa0576647cb3ce2cd0f6e9f90f9",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/abc.cpython-39.pyc": {
+      "sha256": "0f40fc5daf18096222997a2bedfa7d5a4ab21b1513be1c06631341f96555117d",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/codecs.cpython-39.pyc": {
+      "sha256": "a68d300d5e25b4bc9987d3b5957ea21ea954b50761b241f0f4dbe54afef45ccf",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/collections/__init__.cpython-39.pyc": {
+      "sha256": "ba887069732e1c7c9678946ed4b48bbc5912ed789d700925954f9e4f73641e1f",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/collections/abc.cpython-39.pyc": {
+      "sha256": "9263ab2a4ffaf2b12f93e9b5b1bc9f86c0ec0e2895d9b47c331edd3f9aaad8ba",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/contextlib.cpython-39.pyc": {
+      "sha256": "177c43ab8f94ee6584627b74e47520dba030869febcd04012a9823490615b73b",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/copyreg.cpython-39.pyc": {
+      "sha256": "ed2f50674d7a8d7c77939d257a40a6ec1d7c9d105351d88c6027631d8d99f797",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/encodings/__init__.cpython-39.pyc": {
+      "sha256": "b4be2f2cb5505a9ce18ced386a34edd480777530740ceb74de67e877d7183252",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/encodings/aliases.cpython-39.pyc": {
+      "sha256": "eb22425380c315a64ffc389c0763a7b58340daef2d87080560abccb1ce9ba9dd",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/encodings/cp437.cpython-39.pyc": {
+      "sha256": "e4c8d002ca65748dfe8d97ed5d973bb04c71266ec40c8f7f92ad9bc70f4564e2",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/encodings/latin_1.cpython-39.pyc": {
+      "sha256": "a65e1cc73b2652cc18707b310197832f2584d02b2d0be47644579ba744a4d0c8",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/encodings/utf_8.cpython-39.pyc": {
+      "sha256": "7e7b4f897808b2a3b48a8a833a2a43780c0671a8e8e46363456591952a34797a",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/enum.cpython-39.pyc": {
+      "sha256": "1f034613ba1f71e5a2e6a9ce6230602a9bef2812a6de60bdbd704d24274a8a98",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/fnmatch.cpython-39.pyc": {
+      "sha256": "40bf7f1fc716685c4aec7a3649f8285dca9ca7b4b27ec9437e03e8821ebb3224",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/functools.cpython-39.pyc": {
+      "sha256": "34a416ed66d946b1d7fe5ec1b4bb6e08f798b13e5d60f9c712781d53aed10659",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/genericpath.cpython-39.pyc": {
+      "sha256": "8461c4bd99c4f628284d270627bf01b50dea75dc1ee3525b7e1f82047ef18812",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/heapq.cpython-39.pyc": {
+      "sha256": "20cb9bcb75d38d49ff9dc898260b71d2a2d2ea942481da9d67868445f37e6bf3",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/io.cpython-39.pyc": {
+      "sha256": "4393d17f9a3655060ef14b70c6c62090a48df9a9fd452a7ba27630f1fdaa2027",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/json/__init__.cpython-39.pyc": {
+      "sha256": "3609cfc6b7259eff4e31ead0cfce2d88645efa946393f67d324bc522f9b8eb4c",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/json/decoder.cpython-39.pyc": {
+      "sha256": "41a34594a05ce493a5ff66a2cfdd106516f698f89aaf343dd8f4627ad05269ab",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/json/encoder.cpython-39.pyc": {
+      "sha256": "fda5be686879a592bd4857ac080962b7b8526c5ac96fdeb0e816855f97ff7325",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/json/scanner.cpython-39.pyc": {
+      "sha256": "aa3b39aea3e8e1b5c4c95e6f0d2a43196b88800d0834ccddc237effb0ecfdc21",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/keyword.cpython-39.pyc": {
+      "sha256": "698f08cb3f2d61bc9f95be4eb5a3f2b300e23718aba28687347669852b5267ee",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/ntpath.cpython-39.pyc": {
+      "sha256": "1ecbe2a997ad143257a758ebd6c48d8841bb495db2a6b8a75f70adf10dbc6732",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/operator.cpython-39.pyc": {
+      "sha256": "b8ae9de970418b0f22261fdd1cd1408a66e35524ae5bf8d11078f2776752c3f5",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/os.cpython-39.pyc": {
+      "sha256": "9f2d0e18c65d51eefb67a3d3b7be7beeebf9f28456b6a11335ce428f2e29efe2",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/pathlib.cpython-39.pyc": {
+      "sha256": "634a8e03a9a42b4f29dea7ad987db194660ac3fc98dae849c550bffb965e90a9",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/posixpath.cpython-39.pyc": {
+      "sha256": "0b13453bdb74b33b45bd6e5e301d24d6fe47196857ffe6d9746f70231b3075e9",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/re.cpython-39.pyc": {
+      "sha256": "3b3c29b923577fd0ed6536773178fac1ddcab58ddbfd0ec1e66078a7f30a5ee8",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/reprlib.cpython-39.pyc": {
+      "sha256": "10d888e2ad574d50a4c37915d395a291768806d9fd112bb68083d3a91c46713d",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/selectors.cpython-39.pyc": {
+      "sha256": "89334218b2b7eb5378b8cee0c6302cd707d131592020dcc0b1f76333dc4c6670",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/signal.cpython-39.pyc": {
+      "sha256": "733330882476cecbfe9216ab5859161f4f7fb22e39ecd0d97ce140d3bc4d392c",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/site.cpython-39.pyc": {
+      "sha256": "a090b8fad8a33bfb46ce71c7a646809b99a9a59591f85ffa0cb4519e7a186376",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/sre_compile.cpython-39.pyc": {
+      "sha256": "3ad93474a6dc0154eb3fca109c12f1713188dfeb640fd672e39c9971feaef6f1",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/sre_constants.cpython-39.pyc": {
+      "sha256": "f1ef4ac2f47b4ab45580cb5a61850f04de3935049cd796ca3bd9ea21bde88ae6",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/sre_parse.cpython-39.pyc": {
+      "sha256": "591400b98e855f6091b5f1f5726147a3fa371c75cb431fdc54d90946e2cd4408",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/stat.cpython-39.pyc": {
+      "sha256": "543a668d9d579ca5655c0010fe4bccedf188185b3b696b67d479164bdb67245b",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.cpython-39.pyc": {
+      "sha256": "0b7d2717a614eea7b15bfb8bd60cdcfc65cfced448177e825b77eaa322731bab",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/threading.cpython-39.pyc": {
+      "sha256": "95de65f1a39584df8c7d1ed45eafc40875e7598c07f6bade87e4ba209daea8a2",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/types.cpython-39.pyc": {
+      "sha256": "6f9b25e4542b89856df6600dc682d16dc725a29fb277a5a75f4ccce0e592417d",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/__init__.cpython-39.pyc": {
+      "sha256": "53393d29d082e95ae482e15da8e7b027379f5fc507ad9c812ed813788dec7584",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/parse.cpython-39.pyc": {
+      "sha256": "bb580f741cf9deea2fc27a37d084bd7569fe5a5c28a0ce8d1f85ca41c2c814ff",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/warnings.cpython-39.pyc": {
+      "sha256": "c0f234ff667229e86909b73c20f88f7452480e6ade9684b1390f09946db7abc6",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/loose.git/HEAD": {
+      "sha256": "f6f2b945f6c411b02ba3da9c7ace88dcf71b6af65ba2e0d89aa82900042b5a10",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/loose.git/config": {
+      "sha256": "3c5cc3e72b5473d08433171d50fc687ac3aa2a6a3f4c20b97f5b66f581b0fec9",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/loose.git/objects/20/b8d3dc032015f065107d70b0ea1234917b25c7": {
+      "sha256": "2e36171cc8820df0e00c250a8778367a1842b4b12cea9d7f87b7e7acd916d476",
+      "mode": 33060
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/loose.git/objects/3d/27f84b70ecf2b0091b0ec87c76bf5b7614dda8": {
+      "sha256": "7d4871733d0e90e9af5da8d41e1a03c5c95c5c578462c1548f68143ea484a7ff",
+      "mode": 33060
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/loose.git/objects/49/e243681e872caca55b76636b08b312996869a8": {
+      "sha256": "e8b82e06a10cea340658f70b91da2a4b8b291b5b1fe48680c60dd5ce5614a075",
+      "mode": 33060
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/loose.git/objects/e9/35ede54509bb54c06c9fedae0c8f24c694c2c4": {
+      "sha256": "1e2bada4e49d5846f53b8c8440cbb2ec4ff13c2fa4dcf4af8d4a327202a591e6",
+      "mode": 33060
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/loose.git/objects/f9/cda8be33e2216e5a599d04179f232312fae93e": {
+      "sha256": "51f7ed0c074a7bc804413e673d33bfe246cf4ee142f52258d14350126882ec73",
+      "mode": 33060
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/transport.git/HEAD": {
+      "sha256": "c0a60d1f7eda5ebb6028cd06d89b1e8ba8a64b1eaf1b139504ef6e264e3eb423",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/transport.git/commondir": {
+      "sha256": "6b75e3c317f115d3befd6e0fb1328cc6a30c34bc1d78f20eb113611c846e3ba7",
+      "mode": 33152
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/transport.git/config": {
+      "sha256": "3c5cc3e72b5473d08433171d50fc687ac3aa2a6a3f4c20b97f5b66f581b0fec9",
+      "mode": 33188
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/transport.git/objects/pack/pack-cf33a06d867f0b925ae905bfd01bb0566d7b0d39.idx": {
+      "sha256": "d8da629198f900450f2f201122f738a0377c0900695f8d2252a0b2ea0f99bb5c",
+      "mode": 33060
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/transport.git/objects/pack/pack-cf33a06d867f0b925ae905bfd01bb0566d7b0d39.pack": {
+      "sha256": "c4cb0db91db396c411661a60dd32cd6f39e065a7294f37a72970a002a270ace7",
+      "mode": 33060
+    },
+    "1615af26-86c2-4574-8050-f2b41b4b18dc/transport.git/objects/pack/pack-cf33a06d867f0b925ae905bfd01bb0566d7b0d39.rev": {
+      "sha256": "31eb5e9ea478139372f98141e9dc1b6fcd25210e461c8d6faeda507e94955aac",
+      "mode": 33060
+    },
+    "167a3762-efee-4b4c-aba3-200775b88878/capture.bundle": {
+      "sha256": "bd03cc64d17fa3a38fb41468a29a53f4c4efac3bae77d7583932dd37656123f9",
+      "mode": 33188
+    },
+    "440051e3-2730-4ec7-b919-1b9a4a981f8e/capture.bundle": {
+      "sha256": "db0869fe38300f1761f0fc9c1506712832a029b796726d425388df914c3aa419",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/approved.bundle": {
+      "sha256": "bd03cc64d17fa3a38fb41468a29a53f4c4efac3bae77d7583932dd37656123f9",
+      "mode": 33152
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/_bootlocale.cpython-39.pyc": {
+      "sha256": "bf494bedaf73074caa6ca3376535e46dd151a27c38b0b7abd7f2df23cadeda90",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/_collections_abc.cpython-39.pyc": {
+      "sha256": "47bb6c398da9b6d2de6c507f3cba929edbe85dff874fdaf9f6cc8540d59f3061",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/_sitebuiltins.cpython-39.pyc": {
+      "sha256": "4d314d2732cb6fb3c9c51e3926999d03a9040bb1c4a8a56271b107984e532418",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/_weakrefset.cpython-39.pyc": {
+      "sha256": "1ba67382bd71b0aefc6eacc07338ba66b4425fa0576647cb3ce2cd0f6e9f90f9",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/abc.cpython-39.pyc": {
+      "sha256": "0f40fc5daf18096222997a2bedfa7d5a4ab21b1513be1c06631341f96555117d",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/codecs.cpython-39.pyc": {
+      "sha256": "a68d300d5e25b4bc9987d3b5957ea21ea954b50761b241f0f4dbe54afef45ccf",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/collections/__init__.cpython-39.pyc": {
+      "sha256": "ba887069732e1c7c9678946ed4b48bbc5912ed789d700925954f9e4f73641e1f",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/collections/abc.cpython-39.pyc": {
+      "sha256": "9263ab2a4ffaf2b12f93e9b5b1bc9f86c0ec0e2895d9b47c331edd3f9aaad8ba",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/contextlib.cpython-39.pyc": {
+      "sha256": "177c43ab8f94ee6584627b74e47520dba030869febcd04012a9823490615b73b",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/copyreg.cpython-39.pyc": {
+      "sha256": "ed2f50674d7a8d7c77939d257a40a6ec1d7c9d105351d88c6027631d8d99f797",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/encodings/__init__.cpython-39.pyc": {
+      "sha256": "b4be2f2cb5505a9ce18ced386a34edd480777530740ceb74de67e877d7183252",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/encodings/aliases.cpython-39.pyc": {
+      "sha256": "eb22425380c315a64ffc389c0763a7b58340daef2d87080560abccb1ce9ba9dd",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/encodings/cp437.cpython-39.pyc": {
+      "sha256": "e4c8d002ca65748dfe8d97ed5d973bb04c71266ec40c8f7f92ad9bc70f4564e2",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/encodings/latin_1.cpython-39.pyc": {
+      "sha256": "a65e1cc73b2652cc18707b310197832f2584d02b2d0be47644579ba744a4d0c8",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/encodings/utf_8.cpython-39.pyc": {
+      "sha256": "7e7b4f897808b2a3b48a8a833a2a43780c0671a8e8e46363456591952a34797a",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/enum.cpython-39.pyc": {
+      "sha256": "1f034613ba1f71e5a2e6a9ce6230602a9bef2812a6de60bdbd704d24274a8a98",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/fnmatch.cpython-39.pyc": {
+      "sha256": "40bf7f1fc716685c4aec7a3649f8285dca9ca7b4b27ec9437e03e8821ebb3224",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/functools.cpython-39.pyc": {
+      "sha256": "34a416ed66d946b1d7fe5ec1b4bb6e08f798b13e5d60f9c712781d53aed10659",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/genericpath.cpython-39.pyc": {
+      "sha256": "8461c4bd99c4f628284d270627bf01b50dea75dc1ee3525b7e1f82047ef18812",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/heapq.cpython-39.pyc": {
+      "sha256": "20cb9bcb75d38d49ff9dc898260b71d2a2d2ea942481da9d67868445f37e6bf3",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/io.cpython-39.pyc": {
+      "sha256": "4393d17f9a3655060ef14b70c6c62090a48df9a9fd452a7ba27630f1fdaa2027",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/json/__init__.cpython-39.pyc": {
+      "sha256": "3609cfc6b7259eff4e31ead0cfce2d88645efa946393f67d324bc522f9b8eb4c",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/json/decoder.cpython-39.pyc": {
+      "sha256": "eb997c9dd5422be30a7732f7eba4e868e1df1bdc36732cd2fe385a9f855ee9b5",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/json/encoder.cpython-39.pyc": {
+      "sha256": "fda5be686879a592bd4857ac080962b7b8526c5ac96fdeb0e816855f97ff7325",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/json/scanner.cpython-39.pyc": {
+      "sha256": "aa3b39aea3e8e1b5c4c95e6f0d2a43196b88800d0834ccddc237effb0ecfdc21",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/keyword.cpython-39.pyc": {
+      "sha256": "698f08cb3f2d61bc9f95be4eb5a3f2b300e23718aba28687347669852b5267ee",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/ntpath.cpython-39.pyc": {
+      "sha256": "1ecbe2a997ad143257a758ebd6c48d8841bb495db2a6b8a75f70adf10dbc6732",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/operator.cpython-39.pyc": {
+      "sha256": "b8ae9de970418b0f22261fdd1cd1408a66e35524ae5bf8d11078f2776752c3f5",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/os.cpython-39.pyc": {
+      "sha256": "9f2d0e18c65d51eefb67a3d3b7be7beeebf9f28456b6a11335ce428f2e29efe2",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/pathlib.cpython-39.pyc": {
+      "sha256": "837d629e2b88a3082cd34090164ac5340ea16f91034ac0d91ec1887a2be0bac6",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/posixpath.cpython-39.pyc": {
+      "sha256": "0b13453bdb74b33b45bd6e5e301d24d6fe47196857ffe6d9746f70231b3075e9",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/re.cpython-39.pyc": {
+      "sha256": "3b3c29b923577fd0ed6536773178fac1ddcab58ddbfd0ec1e66078a7f30a5ee8",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/reprlib.cpython-39.pyc": {
+      "sha256": "10d888e2ad574d50a4c37915d395a291768806d9fd112bb68083d3a91c46713d",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/selectors.cpython-39.pyc": {
+      "sha256": "89334218b2b7eb5378b8cee0c6302cd707d131592020dcc0b1f76333dc4c6670",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/signal.cpython-39.pyc": {
+      "sha256": "733330882476cecbfe9216ab5859161f4f7fb22e39ecd0d97ce140d3bc4d392c",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/site.cpython-39.pyc": {
+      "sha256": "a090b8fad8a33bfb46ce71c7a646809b99a9a59591f85ffa0cb4519e7a186376",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/sre_compile.cpython-39.pyc": {
+      "sha256": "3ad93474a6dc0154eb3fca109c12f1713188dfeb640fd672e39c9971feaef6f1",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/sre_constants.cpython-39.pyc": {
+      "sha256": "f1ef4ac2f47b4ab45580cb5a61850f04de3935049cd796ca3bd9ea21bde88ae6",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/sre_parse.cpython-39.pyc": {
+      "sha256": "591400b98e855f6091b5f1f5726147a3fa371c75cb431fdc54d90946e2cd4408",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/stat.cpython-39.pyc": {
+      "sha256": "543a668d9d579ca5655c0010fe4bccedf188185b3b696b67d479164bdb67245b",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.cpython-39.pyc": {
+      "sha256": "0b7d2717a614eea7b15bfb8bd60cdcfc65cfced448177e825b77eaa322731bab",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/threading.cpython-39.pyc": {
+      "sha256": "95de65f1a39584df8c7d1ed45eafc40875e7598c07f6bade87e4ba209daea8a2",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/types.cpython-39.pyc": {
+      "sha256": "6f9b25e4542b89856df6600dc682d16dc725a29fb277a5a75f4ccce0e592417d",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/__init__.cpython-39.pyc": {
+      "sha256": "53393d29d082e95ae482e15da8e7b027379f5fc507ad9c812ed813788dec7584",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/urllib/parse.cpython-39.pyc": {
+      "sha256": "bb580f741cf9deea2fc27a37d084bd7569fe5a5c28a0ce8d1f85ca41c2c814ff",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/home/Library/Caches/com.apple.python/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/warnings.cpython-39.pyc": {
+      "sha256": "c0f234ff667229e86909b73c20f88f7452480e6ade9684b1390f09946db7abc6",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/loose.git/HEAD": {
+      "sha256": "f6f2b945f6c411b02ba3da9c7ace88dcf71b6af65ba2e0d89aa82900042b5a10",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/loose.git/config": {
+      "sha256": "3c5cc3e72b5473d08433171d50fc687ac3aa2a6a3f4c20b97f5b66f581b0fec9",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/loose.git/objects/20/b8d3dc032015f065107d70b0ea1234917b25c7": {
+      "sha256": "2e36171cc8820df0e00c250a8778367a1842b4b12cea9d7f87b7e7acd916d476",
+      "mode": 33060
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/loose.git/objects/3d/27f84b70ecf2b0091b0ec87c76bf5b7614dda8": {
+      "sha256": "7d4871733d0e90e9af5da8d41e1a03c5c95c5c578462c1548f68143ea484a7ff",
+      "mode": 33060
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/loose.git/objects/49/e243681e872caca55b76636b08b312996869a8": {
+      "sha256": "e8b82e06a10cea340658f70b91da2a4b8b291b5b1fe48680c60dd5ce5614a075",
+      "mode": 33060
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/loose.git/objects/e9/35ede54509bb54c06c9fedae0c8f24c694c2c4": {
+      "sha256": "1e2bada4e49d5846f53b8c8440cbb2ec4ff13c2fa4dcf4af8d4a327202a591e6",
+      "mode": 33060
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/loose.git/objects/f9/cda8be33e2216e5a599d04179f232312fae93e": {
+      "sha256": "51f7ed0c074a7bc804413e673d33bfe246cf4ee142f52258d14350126882ec73",
+      "mode": 33060
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/transport.git/HEAD": {
+      "sha256": "c0a60d1f7eda5ebb6028cd06d89b1e8ba8a64b1eaf1b139504ef6e264e3eb423",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/transport.git/commondir": {
+      "sha256": "6b75e3c317f115d3befd6e0fb1328cc6a30c34bc1d78f20eb113611c846e3ba7",
+      "mode": 33152
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/transport.git/config": {
+      "sha256": "3c5cc3e72b5473d08433171d50fc687ac3aa2a6a3f4c20b97f5b66f581b0fec9",
+      "mode": 33188
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/transport.git/objects/pack/pack-cf33a06d867f0b925ae905bfd01bb0566d7b0d39.idx": {
+      "sha256": "d8da629198f900450f2f201122f738a0377c0900695f8d2252a0b2ea0f99bb5c",
+      "mode": 33060
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/transport.git/objects/pack/pack-cf33a06d867f0b925ae905bfd01bb0566d7b0d39.pack": {
+      "sha256": "c4cb0db91db396c411661a60dd32cd6f39e065a7294f37a72970a002a270ace7",
+      "mode": 33060
+    },
+    "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3/transport.git/objects/pack/pack-cf33a06d867f0b925ae905bfd01bb0566d7b0d39.rev": {
+      "sha256": "31eb5e9ea478139372f98141e9dc1b6fcd25210e461c8d6faeda507e94955aac",
+      "mode": 33060
+    },
+    "beb866c4-2d2e-4e44-b04d-c313ddf1a514/approved.bundle": {
+      "sha256": "db0869fe38300f1761f0fc9c1506712832a029b796726d425388df914c3aa419",
+      "mode": 33152
+    },
+    "beb866c4-2d2e-4e44-b04d-c313ddf1a514/loose.git/HEAD": {
+      "sha256": "f6f2b945f6c411b02ba3da9c7ace88dcf71b6af65ba2e0d89aa82900042b5a10",
+      "mode": 33188
+    },
+    "beb866c4-2d2e-4e44-b04d-c313ddf1a514/loose.git/config": {
+      "sha256": "3c5cc3e72b5473d08433171d50fc687ac3aa2a6a3f4c20b97f5b66f581b0fec9",
+      "mode": 33188
+    },
+    "beb866c4-2d2e-4e44-b04d-c313ddf1a514/loose.git/objects/3d/27f84b70ecf2b0091b0ec87c76bf5b7614dda8": {
+      "sha256": "7d4871733d0e90e9af5da8d41e1a03c5c95c5c578462c1548f68143ea484a7ff",
+      "mode": 33060
+    },
+    "beb866c4-2d2e-4e44-b04d-c313ddf1a514/loose.git/objects/49/e243681e872caca55b76636b08b312996869a8": {
+      "sha256": "e8b82e06a10cea340658f70b91da2a4b8b291b5b1fe48680c60dd5ce5614a075",
+      "mode": 33060
+    },
+    "beb866c4-2d2e-4e44-b04d-c313ddf1a514/loose.git/objects/e9/35ede54509bb54c06c9fedae0c8f24c694c2c4": {
+      "sha256": "1e2bada4e49d5846f53b8c8440cbb2ec4ff13c2fa4dcf4af8d4a327202a591e6",
+      "mode": 33060
+    },
+    "beb866c4-2d2e-4e44-b04d-c313ddf1a514/loose.git/objects/f9/cda8be33e2216e5a599d04179f232312fae93e": {
+      "sha256": "51f7ed0c074a7bc804413e673d33bfe246cf4ee142f52258d14350126882ec73",
+      "mode": 33060
+    },
+    "beb866c4-2d2e-4e44-b04d-c313ddf1a514/transport.git/HEAD": {
+      "sha256": "0a7c13f5f82d710f1f981b867609c518e429fc2729830e716dc951551f476aa3",
+      "mode": 33188
+    },
+    "beb866c4-2d2e-4e44-b04d-c313ddf1a514/transport.git/commondir": {
+      "sha256": "6b75e3c317f115d3befd6e0fb1328cc6a30c34bc1d78f20eb113611c846e3ba7",
+      "mode": 33152
+    },
+    "beb866c4-2d2e-4e44-b04d-c313ddf1a514/transport.git/config": {
+      "sha256": "3c5cc3e72b5473d08433171d50fc687ac3aa2a6a3f4c20b97f5b66f581b0fec9",
+      "mode": 33188
+    },
+    "beb866c4-2d2e-4e44-b04d-c313ddf1a514/transport.git/objects/pack/pack-e10b0dd5698d8099d084d14847c5c9e4b88266c7.idx": {
+      "sha256": "173ce76599ad40ef3cf484e8954c410e7c2b7a2105126ef0b5e0f24793430c16",
+      "mode": 33060
+    },
+    "beb866c4-2d2e-4e44-b04d-c313ddf1a514/transport.git/objects/pack/pack-e10b0dd5698d8099d084d14847c5c9e4b88266c7.pack": {
+      "sha256": "bb7e5c7158eb0d1a800420e4536bf2818e85ffc89398ff3e1d00735c7aa4b9d3",
+      "mode": 33060
+    },
+    "beb866c4-2d2e-4e44-b04d-c313ddf1a514/transport.git/objects/pack/pack-e10b0dd5698d8099d084d14847c5c9e4b88266c7.rev": {
+      "sha256": "8148d00a4ddda8809395f134bfcc0aad9d5d96a16faea1ebe57c70322a34824a",
+      "mode": 33060
+    }
+  },
+  "records": {
+    "remote-observation:77800cad-7c6c-45c8-94ed-074cd8fdfebb": {
+      "version": 1,
+      "session": "417dd967-82b7-4088-91bb-87b36d068703",
+      "value": {
+        "plan": {
+          "id": "77800cad-7c6c-45c8-94ed-074cd8fdfebb",
+          "workspace": "f1eb689f-ab1d-4422-8525-8fb64b631fc6",
+          "worktree": "684a5899-4d46-4338-9d8c-fdbe804320a9",
+          "metadata": {
+            "root": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository"
+            },
+            "git_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+            },
+            "common_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+            },
+            "root_binding": "16777229:49139989:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 457840895 })",
+            "git_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+            "common_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+            "object_format": "sha1"
+          },
+          "remote": "origin",
+          "reference": "refs/heads/main",
+          "destination": "https://example.invalid/gitfleet-native-fixture.git",
+          "transport": "https",
+          "config_digest": "0702a72b46e76e95331f2bf727692f0c86d3356b7526b5d4cba0cbf006108783",
+          "generation": "3e26908a9621f15b74c79bc7ddb7993616fe1aa73ad5600c635ceab0cd330181",
+          "created_at_ms": 1793651987679,
+          "tools": [
+            {
+              "role": "git",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/bin/git"
+              },
+              "fingerprint": "70feb0465f5896154abd7405231483f4b0cd99e3855fcc4d86e08b66869d1007"
+            },
+            {
+              "role": "https_helper",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-remote-https"
+              },
+              "fingerprint": "ea516f1cfced38527ec4d627d6843c84f4960252ce78adaa87b35e2bd2bd2ddb"
+            },
+            {
+              "role": "exec_directory",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+              },
+              "fingerprint": "16777229:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })"
+            }
+          ],
+          "local_target": null,
+          "local_binding": null
+        },
+        "phase": "cancelled",
+        "oid": null,
+        "observed_at_ms": null,
+        "issue": null
+      }
+    },
+    "fetch-capture:440051e3-2730-4ec7-b919-1b9a4a981f8e": {
+      "session": "fixture-seeded-not-network-download",
+      "value": {
+        "artifact": {
+          "bundle_bytes": 443,
+          "bundle_digest": "db0869fe38300f1761f0fc9c1506712832a029b796726d425388df914c3aa419",
+          "object_bytes": 556,
+          "object_count": 4
+        },
+        "captured_at_ms": 1793651987679,
+        "issue": null,
+        "phase": "complete",
+        "plan": {
+          "config_digest": "0702a72b46e76e95331f2bf727692f0c86d3356b7526b5d4cba0cbf006108783",
+          "created_at_ms": 1793651987679,
+          "destination": "https://example.invalid/gitfleet-native-fixture.git",
+          "expected_oid": {
+            "format": "sha1",
+            "hex": "49e243681e872caca55b76636b08b312996869a8"
+          },
+          "generation": "3e26908a9621f15b74c79bc7ddb7993616fe1aa73ad5600c635ceab0cd330181",
+          "id": "440051e3-2730-4ec7-b919-1b9a4a981f8e",
+          "local_binding": null,
+          "local_target": null,
+          "metadata": {
+            "common_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+            "common_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+            },
+            "git_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+            "git_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+            },
+            "object_format": "sha1",
+            "root": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository"
+            },
+            "root_binding": "16777229:49139989:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 457840895 })"
+          },
+          "observation_id": "77800cad-7c6c-45c8-94ed-074cd8fdfebb",
+          "reference": "refs/heads/main",
+          "remote": "origin",
+          "tools": [
+            {
+              "fingerprint": "70feb0465f5896154abd7405231483f4b0cd99e3855fcc4d86e08b66869d1007",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/bin/git"
+              },
+              "role": "git"
+            },
+            {
+              "fingerprint": "ea516f1cfced38527ec4d627d6843c84f4960252ce78adaa87b35e2bd2bd2ddb",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-remote-https"
+              },
+              "role": "https_helper"
+            },
+            {
+              "fingerprint": "16777229:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+              },
+              "role": "exec_directory"
+            }
+          ],
+          "transport": "https",
+          "workspace": "f1eb689f-ab1d-4422-8525-8fb64b631fc6",
+          "worktree": "684a5899-4d46-4338-9d8c-fdbe804320a9"
+        }
+      },
+      "version": 1
+    },
+    "fetch-import:3fd12297-78c1-43db-aae2-be2e9d9b990d": {
+      "version": 1,
+      "session": "1a2b8ed9-91f7-4172-8b54-1fa393374b46",
+      "value": {
+        "plan": {
+          "id": "3fd12297-78c1-43db-aae2-be2e9d9b990d",
+          "workspace": "f1eb689f-ab1d-4422-8525-8fb64b631fc6",
+          "worktree": "684a5899-4d46-4338-9d8c-fdbe804320a9",
+          "metadata": {
+            "root": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository"
+            },
+            "git_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+            },
+            "common_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+            },
+            "root_binding": "16777229:49139989:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 457840895 })",
+            "git_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+            "common_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+            "object_format": "sha1"
+          },
+          "remote": "origin",
+          "reference": "refs/heads/main",
+          "destination": "https://example.invalid/gitfleet-native-fixture.git",
+          "transport": "https",
+          "config_digest": "0702a72b46e76e95331f2bf727692f0c86d3356b7526b5d4cba0cbf006108783",
+          "generation": "3e26908a9621f15b74c79bc7ddb7993616fe1aa73ad5600c635ceab0cd330181",
+          "created_at_ms": 1793652026624,
+          "tools": [
+            {
+              "role": "git",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/bin/git"
+              },
+              "fingerprint": "70feb0465f5896154abd7405231483f4b0cd99e3855fcc4d86e08b66869d1007"
+            },
+            {
+              "role": "https_helper",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-remote-https"
+              },
+              "fingerprint": "ea516f1cfced38527ec4d627d6843c84f4960252ce78adaa87b35e2bd2bd2ddb"
+            },
+            {
+              "role": "exec_directory",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+              },
+              "fingerprint": "16777229:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })"
+            }
+          ],
+          "local_target": null,
+          "local_binding": null,
+          "capture_id": "440051e3-2730-4ec7-b919-1b9a4a981f8e",
+          "expected_oid": {
+            "format": "sha1",
+            "hex": "49e243681e872caca55b76636b08b312996869a8"
+          },
+          "bundle_digest": "db0869fe38300f1761f0fc9c1506712832a029b796726d425388df914c3aa419",
+          "bundle_bytes": 443,
+          "tracking_ref": "refs/remotes/origin/main",
+          "expected_old": null
+        },
+        "phase": "cancelled",
+        "objects_imported": false,
+        "reference_status": "not_attempted",
+        "issue": null
+      },
+      "receipt": null
+    },
+    "fetch-import:9af12026-30cd-4ec1-9ff9-1037020df7f2": {
+      "version": 1,
+      "session": "1a2b8ed9-91f7-4172-8b54-1fa393374b46",
+      "value": {
+        "plan": {
+          "id": "9af12026-30cd-4ec1-9ff9-1037020df7f2",
+          "workspace": "f1eb689f-ab1d-4422-8525-8fb64b631fc6",
+          "worktree": "684a5899-4d46-4338-9d8c-fdbe804320a9",
+          "metadata": {
+            "root": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository"
+            },
+            "git_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+            },
+            "common_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+            },
+            "root_binding": "16777229:49139989:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 457840895 })",
+            "git_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+            "common_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+            "object_format": "sha1"
+          },
+          "remote": "origin",
+          "reference": "refs/heads/main",
+          "destination": "https://example.invalid/gitfleet-native-fixture.git",
+          "transport": "https",
+          "config_digest": "0702a72b46e76e95331f2bf727692f0c86d3356b7526b5d4cba0cbf006108783",
+          "generation": "3e26908a9621f15b74c79bc7ddb7993616fe1aa73ad5600c635ceab0cd330181",
+          "created_at_ms": 1793652079513,
+          "tools": [
+            {
+              "role": "git",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/bin/git"
+              },
+              "fingerprint": "70feb0465f5896154abd7405231483f4b0cd99e3855fcc4d86e08b66869d1007"
+            },
+            {
+              "role": "https_helper",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-remote-https"
+              },
+              "fingerprint": "ea516f1cfced38527ec4d627d6843c84f4960252ce78adaa87b35e2bd2bd2ddb"
+            },
+            {
+              "role": "exec_directory",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+              },
+              "fingerprint": "16777229:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })"
+            }
+          ],
+          "local_target": null,
+          "local_binding": null,
+          "capture_id": "440051e3-2730-4ec7-b919-1b9a4a981f8e",
+          "expected_oid": {
+            "format": "sha1",
+            "hex": "49e243681e872caca55b76636b08b312996869a8"
+          },
+          "bundle_digest": "db0869fe38300f1761f0fc9c1506712832a029b796726d425388df914c3aa419",
+          "bundle_bytes": 443,
+          "tracking_ref": "refs/remotes/origin/main",
+          "expected_old": null
+        },
+        "phase": "blocked",
+        "objects_imported": false,
+        "reference_status": "not_attempted",
+        "issue": {
+          "kind": "unsupported_repository_state",
+          "message": "Unsafe network artifact directory"
+        }
+      },
+      "receipt": null
+    },
+    "fetch-import:beb866c4-2d2e-4e44-b04d-c313ddf1a514": {
+      "version": 1,
+      "session": "1a2b8ed9-91f7-4172-8b54-1fa393374b46",
+      "value": {
+        "plan": {
+          "id": "beb866c4-2d2e-4e44-b04d-c313ddf1a514",
+          "workspace": "f1eb689f-ab1d-4422-8525-8fb64b631fc6",
+          "worktree": "684a5899-4d46-4338-9d8c-fdbe804320a9",
+          "metadata": {
+            "root": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository"
+            },
+            "git_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+            },
+            "common_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+            },
+            "root_binding": "16777229:49139989:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 457840895 })",
+            "git_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+            "common_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+            "object_format": "sha1"
+          },
+          "remote": "origin",
+          "reference": "refs/heads/main",
+          "destination": "https://example.invalid/gitfleet-native-fixture.git",
+          "transport": "https",
+          "config_digest": "0702a72b46e76e95331f2bf727692f0c86d3356b7526b5d4cba0cbf006108783",
+          "generation": "3e26908a9621f15b74c79bc7ddb7993616fe1aa73ad5600c635ceab0cd330181",
+          "created_at_ms": 1793652118842,
+          "tools": [
+            {
+              "role": "git",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/bin/git"
+              },
+              "fingerprint": "70feb0465f5896154abd7405231483f4b0cd99e3855fcc4d86e08b66869d1007"
+            },
+            {
+              "role": "https_helper",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-remote-https"
+              },
+              "fingerprint": "ea516f1cfced38527ec4d627d6843c84f4960252ce78adaa87b35e2bd2bd2ddb"
+            },
+            {
+              "role": "exec_directory",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+              },
+              "fingerprint": "16777229:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })"
+            }
+          ],
+          "local_target": null,
+          "local_binding": null,
+          "capture_id": "440051e3-2730-4ec7-b919-1b9a4a981f8e",
+          "expected_oid": {
+            "format": "sha1",
+            "hex": "49e243681e872caca55b76636b08b312996869a8"
+          },
+          "bundle_digest": "db0869fe38300f1761f0fc9c1506712832a029b796726d425388df914c3aa419",
+          "bundle_bytes": 443,
+          "tracking_ref": "refs/remotes/origin/main",
+          "expected_old": null
+        },
+        "phase": "complete",
+        "objects_imported": true,
+        "reference_status": "updated",
+        "issue": null
+      },
+      "receipt": {
+        "identity": "16777229:49141126:Some(SystemTime { tv_sec: 1793652129, tv_nsec: 102838305 })",
+        "hash": "0a7c13f5f82d710f1f981b867609c518e429fc2729830e716dc951551f476aa3"
+      }
+    },
+    "remote-observation:e0637718-8f05-464a-9757-ac7851175811": {
+      "version": 1,
+      "session": "a8a3ade3-0c33-4268-9f96-d7ad9d6bb17c",
+      "value": {
+        "plan": {
+          "id": "e0637718-8f05-464a-9757-ac7851175811",
+          "workspace": "f1eb689f-ab1d-4422-8525-8fb64b631fc6",
+          "worktree": "684a5899-4d46-4338-9d8c-fdbe804320a9",
+          "metadata": {
+            "root": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository"
+            },
+            "git_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+            },
+            "common_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+            },
+            "root_binding": "16777229:49139989:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 457840895 })",
+            "git_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+            "common_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+            "object_format": "sha1"
+          },
+          "remote": "origin",
+          "reference": "refs/heads/cancellation",
+          "destination": "https://example.invalid/gitfleet-native-fixture.git",
+          "transport": "https",
+          "config_digest": "0702a72b46e76e95331f2bf727692f0c86d3356b7526b5d4cba0cbf006108783",
+          "generation": "86765eabc7870aa3fee905e278d7f7fe589e5f5c53929edc1763f8b68cac189b",
+          "created_at_ms": 1793652331152,
+          "tools": [
+            {
+              "role": "git",
+              "path": {
+                "encoding": "utf8",
+                "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/bin/git"
+              },
+              "fingerprint": "0a2dc8021bb0c65ee087403cd58f9e6c538c8c3f5ac3dca11b910a0c809f53da"
+            },
+            {
+              "role": "https_helper",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-remote-https"
+              },
+              "fingerprint": "ea516f1cfced38527ec4d627d6843c84f4960252ce78adaa87b35e2bd2bd2ddb"
+            },
+            {
+              "role": "exec_directory",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+              },
+              "fingerprint": "16777229:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })"
+            }
+          ],
+          "local_target": null,
+          "local_binding": null
+        },
+        "phase": "cancelled",
+        "oid": null,
+        "observed_at_ms": null,
+        "issue": null
+      }
+    },
+    "fetch-capture:167a3762-efee-4b4c-aba3-200775b88878": {
+      "session": "fixture-seeded-no-network",
+      "value": {
+        "artifact": {
+          "bundle_bytes": 623,
+          "bundle_digest": "bd03cc64d17fa3a38fb41468a29a53f4c4efac3bae77d7583932dd37656123f9",
+          "object_bytes": 846,
+          "object_count": 5
+        },
+        "captured_at_ms": 1793652331152,
+        "issue": null,
+        "phase": "complete",
+        "plan": {
+          "config_digest": "0702a72b46e76e95331f2bf727692f0c86d3356b7526b5d4cba0cbf006108783",
+          "created_at_ms": 1793652331152,
+          "destination": "https://example.invalid/gitfleet-native-fixture.git",
+          "expected_oid": {
+            "format": "sha1",
+            "hex": "20b8d3dc032015f065107d70b0ea1234917b25c7"
+          },
+          "generation": "86765eabc7870aa3fee905e278d7f7fe589e5f5c53929edc1763f8b68cac189b",
+          "id": "167a3762-efee-4b4c-aba3-200775b88878",
+          "local_binding": null,
+          "local_target": null,
+          "metadata": {
+            "common_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+            "common_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+            },
+            "git_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+            "git_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+            },
+            "object_format": "sha1",
+            "root": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository"
+            },
+            "root_binding": "16777229:49139989:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 457840895 })"
+          },
+          "observation_id": "e0637718-8f05-464a-9757-ac7851175811",
+          "reference": "refs/heads/cancellation",
+          "remote": "origin",
+          "tools": [
+            {
+              "fingerprint": "0a2dc8021bb0c65ee087403cd58f9e6c538c8c3f5ac3dca11b910a0c809f53da",
+              "path": {
+                "encoding": "utf8",
+                "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/bin/git"
+              },
+              "role": "git"
+            },
+            {
+              "fingerprint": "ea516f1cfced38527ec4d627d6843c84f4960252ce78adaa87b35e2bd2bd2ddb",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-remote-https"
+              },
+              "role": "https_helper"
+            },
+            {
+              "fingerprint": "16777229:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+              },
+              "role": "exec_directory"
+            }
+          ],
+          "transport": "https",
+          "workspace": "f1eb689f-ab1d-4422-8525-8fb64b631fc6",
+          "worktree": "684a5899-4d46-4338-9d8c-fdbe804320a9"
+        }
+      },
+      "version": 1
+    },
+    "fetch-import:1615af26-86c2-4574-8050-f2b41b4b18dc": {
+      "version": 1,
+      "session": "14a07157-b6bb-4eb8-a57e-a5f98d80168c",
+      "value": {
+        "plan": {
+          "id": "1615af26-86c2-4574-8050-f2b41b4b18dc",
+          "workspace": "f1eb689f-ab1d-4422-8525-8fb64b631fc6",
+          "worktree": "684a5899-4d46-4338-9d8c-fdbe804320a9",
+          "metadata": {
+            "root": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository"
+            },
+            "git_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+            },
+            "common_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+            },
+            "root_binding": "16777229:49139989:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 457840895 })",
+            "git_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+            "common_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+            "object_format": "sha1"
+          },
+          "remote": "origin",
+          "reference": "refs/heads/cancellation",
+          "destination": "https://example.invalid/gitfleet-native-fixture.git",
+          "transport": "https",
+          "config_digest": "0702a72b46e76e95331f2bf727692f0c86d3356b7526b5d4cba0cbf006108783",
+          "generation": "86765eabc7870aa3fee905e278d7f7fe589e5f5c53929edc1763f8b68cac189b",
+          "created_at_ms": 1793652356671,
+          "tools": [
+            {
+              "role": "git",
+              "path": {
+                "encoding": "utf8",
+                "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/bin/git"
+              },
+              "fingerprint": "0a2dc8021bb0c65ee087403cd58f9e6c538c8c3f5ac3dca11b910a0c809f53da"
+            },
+            {
+              "role": "https_helper",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-remote-https"
+              },
+              "fingerprint": "ea516f1cfced38527ec4d627d6843c84f4960252ce78adaa87b35e2bd2bd2ddb"
+            },
+            {
+              "role": "exec_directory",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+              },
+              "fingerprint": "16777229:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })"
+            }
+          ],
+          "local_target": null,
+          "local_binding": null,
+          "capture_id": "167a3762-efee-4b4c-aba3-200775b88878",
+          "expected_oid": {
+            "format": "sha1",
+            "hex": "20b8d3dc032015f065107d70b0ea1234917b25c7"
+          },
+          "bundle_digest": "bd03cc64d17fa3a38fb41468a29a53f4c4efac3bae77d7583932dd37656123f9",
+          "bundle_bytes": 623,
+          "tracking_ref": "refs/remotes/origin/cancellation",
+          "expected_old": null
+        },
+        "phase": "aborted",
+        "objects_imported": true,
+        "reference_status": "unchanged",
+        "issue": null
+      },
+      "receipt": {
+        "identity": "16777229:49144544:Some(SystemTime { tv_sec: 1793652371, tv_nsec: 653247692 })",
+        "hash": "c0a60d1f7eda5ebb6028cd06d89b1e8ba8a64b1eaf1b139504ef6e264e3eb423"
+      }
+    },
+    "fetch-import:b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3": {
+      "version": 1,
+      "session": "14a07157-b6bb-4eb8-a57e-a5f98d80168c",
+      "value": {
+        "plan": {
+          "id": "b5b0a683-3a17-4ba9-8bbf-6c05ced15fa3",
+          "workspace": "f1eb689f-ab1d-4422-8525-8fb64b631fc6",
+          "worktree": "684a5899-4d46-4338-9d8c-fdbe804320a9",
+          "metadata": {
+            "root": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository"
+            },
+            "git_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+            },
+            "common_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+            },
+            "root_binding": "16777229:49139989:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 457840895 })",
+            "git_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+            "common_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+            "object_format": "sha1"
+          },
+          "remote": "origin",
+          "reference": "refs/heads/cancellation",
+          "destination": "https://example.invalid/gitfleet-native-fixture.git",
+          "transport": "https",
+          "config_digest": "0702a72b46e76e95331f2bf727692f0c86d3356b7526b5d4cba0cbf006108783",
+          "generation": "86765eabc7870aa3fee905e278d7f7fe589e5f5c53929edc1763f8b68cac189b",
+          "created_at_ms": 1793652494165,
+          "tools": [
+            {
+              "role": "git",
+              "path": {
+                "encoding": "utf8",
+                "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/bin/git"
+              },
+              "fingerprint": "0a2dc8021bb0c65ee087403cd58f9e6c538c8c3f5ac3dca11b910a0c809f53da"
+            },
+            {
+              "role": "https_helper",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-remote-https"
+              },
+              "fingerprint": "ea516f1cfced38527ec4d627d6843c84f4960252ce78adaa87b35e2bd2bd2ddb"
+            },
+            {
+              "role": "exec_directory",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+              },
+              "fingerprint": "16777229:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })"
+            }
+          ],
+          "local_target": null,
+          "local_binding": null,
+          "capture_id": "167a3762-efee-4b4c-aba3-200775b88878",
+          "expected_oid": {
+            "format": "sha1",
+            "hex": "20b8d3dc032015f065107d70b0ea1234917b25c7"
+          },
+          "bundle_digest": "bd03cc64d17fa3a38fb41468a29a53f4c4efac3bae77d7583932dd37656123f9",
+          "bundle_bytes": 623,
+          "tracking_ref": "refs/remotes/origin/cancellation",
+          "expected_old": null
+        },
+        "phase": "aborted",
+        "objects_imported": true,
+        "reference_status": "unchanged",
+        "issue": null
+      },
+      "receipt": {
+        "identity": "16777229:49145347:Some(SystemTime { tv_sec: 1793652506, tv_nsec: 244410485 })",
+        "hash": "c0a60d1f7eda5ebb6028cd06d89b1e8ba8a64b1eaf1b139504ef6e264e3eb423"
+      }
+    },
+    "remote-observation:00556d29-6c00-484a-b6b6-51624314f436": {
+      "version": 1,
+      "session": "explicitly-synthetic-upstream-native-fixture-no-network",
+      "value": {
+        "plan": {
+          "id": "00556d29-6c00-484a-b6b6-51624314f436",
+          "workspace": "f1eb689f-ab1d-4422-8525-8fb64b631fc6",
+          "worktree": "684a5899-4d46-4338-9d8c-fdbe804320a9",
+          "metadata": {
+            "root": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository"
+            },
+            "git_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+            },
+            "common_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+            },
+            "root_binding": "16777229:49139989:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 457840895 })",
+            "git_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+            "common_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+            "object_format": "sha1"
+          },
+          "remote": "origin",
+          "reference": "refs/heads/main",
+          "destination": "https://example.invalid/gitfleet-native-fixture.git",
+          "transport": "https",
+          "config_digest": "0702a72b46e76e95331f2bf727692f0c86d3356b7526b5d4cba0cbf006108783",
+          "generation": "3e26908a9621f15b74c79bc7ddb7993616fe1aa73ad5600c635ceab0cd330181",
+          "created_at_ms": 1793656670768,
+          "tools": [
+            {
+              "role": "git",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/bin/git"
+              },
+              "fingerprint": "70feb0465f5896154abd7405231483f4b0cd99e3855fcc4d86e08b66869d1007"
+            },
+            {
+              "role": "https_helper",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-remote-https"
+              },
+              "fingerprint": "ea516f1cfced38527ec4d627d6843c84f4960252ce78adaa87b35e2bd2bd2ddb"
+            },
+            {
+              "role": "exec_directory",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+              },
+              "fingerprint": "16777229:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })"
+            }
+          ],
+          "local_target": null,
+          "local_binding": null
+        },
+        "phase": "complete",
+        "oid": {
+          "format": "sha1",
+          "hex": "49e243681e872caca55b76636b08b312996869a8"
+        },
+        "observed_at_ms": 1793656670768,
+        "issue": null
+      }
+    }
+  },
+  "config_metadata": {
+    "mode": 33188,
+    "uid": 501,
+    "gid": 0,
+    "attributes": {
+      "com.apple.provenance": "c0a9b37897b91b240742bff1dfa9031d23bef73038e42f7799dd91e6aed7464a"
+    }
+  },
+  "oracle": "PASSED"
+}

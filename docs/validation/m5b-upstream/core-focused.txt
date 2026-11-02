@@ -1,0 +1,29 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.95s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-9477e837a431519a)
+
+running 2 tests
+test upstream_decline_stale_config_head_trust_and_foreign_locks_preserve_repository ... FAILED
+test upstream_setup_adds_only_missing_keys_preserves_bytes_and_requires_new_trust ... FAILED
+
+failures:
+
+---- upstream_decline_stale_config_head_trust_and_foreign_locks_preserve_repository stdout ----
+
+thread 'upstream_decline_stale_config_head_trust_and_foreign_locks_preserve_repository' (14545258) panicked at tests/remote_observation.rs:1785:10:
+called `Result::unwrap()` on an `Err` value: Error { kind: UnsupportedRepositoryState, message: "Initial upstream setup requires the standard named-remote fetch mapping" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- upstream_setup_adds_only_missing_keys_preserves_bytes_and_requires_new_trust stdout ----
+
+thread 'upstream_setup_adds_only_missing_keys_preserves_bytes_and_requires_new_trust' (14545259) panicked at tests/remote_observation.rs:1785:10:
+called `Result::unwrap()` on an `Err` value: Error { kind: UnsupportedRepositoryState, message: "Initial upstream setup requires the standard named-remote fetch mapping" }
+
+
+failures:
+    upstream_decline_stale_config_head_trust_and_foreign_locks_preserve_repository
+    upstream_setup_adds_only_missing_keys_preserves_bytes_and_requires_new_trust
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 27 filtered out; finished in 2.56s
+
+error: test failed, to rerun pass `--test remote_observation`

@@ -65,6 +65,17 @@ export type Request =
       worktree?: string | null;
     }
   | {
+      kind: "review_upstream_setup";
+      observation: string;
+      workspace: string;
+      worktree: string;
+    }
+  | {
+      kind: "review_upstream_recovery";
+      operation: string;
+      workspace: string;
+    }
+  | {
       kind: "push_preview";
       observation: string;
       workspace: string;
@@ -222,7 +233,8 @@ export type OperationAuditKind =
   | "batch_commit"
   | "remote_observation"
   | "fetch_capture"
-  | "fetch_import";
+  | "fetch_import"
+  | "upstream_setup";
 export type OperationAuditResult =
   | "pending"
   | "complete"

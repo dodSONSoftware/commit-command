@@ -1,0 +1,13 @@
+
+> gitfleet-desktop@0.1.1 test
+> vitest run
+
+
+ RUN  v4.1.12 /Users/randydodson/Documents/_code/git-fleet/app/desktop
+
+
+ Test Files  13 passed (13)
+      Tests  50 passed (50)
+   Start at  15:52:29
+   Duration  3.71s (transform 963ms, setup 1.07s, import 2.22s, tests 4.15s, environment 7.79s)
+

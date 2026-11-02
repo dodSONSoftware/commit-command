@@ -1,0 +1,14 @@
+{
+  "public": {
+    "unresolved_upstream": 0,
+    "fixture_trigger_present": false,
+    "config_lock_present": false,
+    "state_reopened": "CLI succeeded after native Quit"
+  },
+  "recovery": {
+    "unresolved_upstream": 0,
+    "fixture_trigger_present": false,
+    "config_lock_present": false,
+    "state_reopened": "CLI succeeded after native Quit"
+  }
+}

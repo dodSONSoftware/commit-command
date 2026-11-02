@@ -179,7 +179,8 @@ export type OperationAuditKind =
   | "batch_commit"
   | "remote_observation"
   | "fetch_capture"
-  | "fetch_import";
+  | "fetch_import"
+  | "upstream_setup";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "OperationAuditRecord".
@@ -208,6 +209,11 @@ export type OperationAuditRecord =
   | {
       kind: "fetch_import";
       value: FetchImport;
+      [k: string]: unknown;
+    }
+  | {
+      kind: "upstream_setup";
+      value: UpstreamOperation;
       [k: string]: unknown;
     };
 /**
@@ -313,6 +319,29 @@ export type FetchImportPhase =
  */
 export type FetchReferenceStatus =
   "not_attempted" | "updated" | "matches_target" | "unchanged";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "UpstreamStatus".
+ */
+export type UpstreamStatus = "unchanged" | "updated" | "matches_target";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "UpstreamPhase".
+ */
+export type UpstreamPhase =
+  | "proposed"
+  | "lock_pending"
+  | "lock_created"
+  | "lock_ready"
+  | "publication_pending"
+  | "config_published"
+  | "complete"
+  | "blocked"
+  | "cancelled"
+  | "interrupted"
+  | "uncertain"
+  | "aborted"
+  | "observed_configuration";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "OperationAuditResult".
@@ -740,6 +769,57 @@ export interface FetchImportPlan {
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "UpstreamOperation".
+ */
+export interface UpstreamOperation {
+  configuration: UpstreamStatus;
+  issue?: Issue | null;
+  phase: UpstreamPhase;
+  plan: UpstreamPlan;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "UpstreamPlan".
+ */
+export interface UpstreamPlan {
+  candidate_digest: string;
+  config_digest: string;
+  created_at_ms: number;
+  destination: string;
+  expected_config: ConfigBinding;
+  generation: string;
+  id: string;
+  local_binding?: string | null;
+  local_target?: NativePath | null;
+  metadata: Metadata;
+  observation_id: string;
+  observed_at_ms: number;
+  observed_oid: ObjectId;
+  reference: string;
+  remote: string;
+  source_oid: ObjectId;
+  source_ref: string;
+  tools: ToolBinding[];
+  transport: Transport;
+  workspace: string;
+  worktree: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ConfigBinding".
+ */
+export interface ConfigBinding {
+  attributes_digest: string;
+  digest: string;
+  group: number;
+  identity: string;
+  mode: number;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "AuditPage".
  */
 export interface AuditPage {
@@ -898,16 +978,17 @@ export interface FetchImportPage {
  */
 export interface WorkspaceList {
   active?: string | null;
-  fetch_import_recovery: FetchImportNotice[];
+  fetch_import_recovery: RemoteRecoveryNotice[];
   recovery: RecoveryNotice[];
+  upstream_recovery: RemoteRecoveryNotice[];
   workspaces: Workspace[];
   [k: string]: unknown;
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "FetchImportNotice".
+ * via the `definition` "RemoteRecoveryNotice".
  */
-export interface FetchImportNotice {
+export interface RemoteRecoveryNotice {
   operation_id: string;
   workspace_id: string;
   worktree_id: string;

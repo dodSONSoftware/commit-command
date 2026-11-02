@@ -299,6 +299,18 @@ it("prepares a branch download only from a completed observation with an OID and
   expect(
     screen.getByText(/Downloading alone does not update/),
   ).toBeInTheDocument();
+  const upstreamButton = screen.getByRole("button", {
+    name: "Review upstream setup",
+  });
+  fireEvent.click(upstreamButton);
+  await vi.waitFor(() =>
+    expect(request).toHaveBeenCalledWith({
+      kind: "review_upstream_setup",
+      workspace: "ws",
+      worktree: "repo",
+      observation: "observed",
+    }),
+  );
   const importButton = screen.getByRole("button", {
     name: "Review captured branch import",
   });
@@ -313,6 +325,7 @@ it("prepares a branch download only from a completed observation with an OID and
   );
   rerender(<RemoteInspector {...props} enabled={false} />);
   expect(importButton).toBeDisabled();
+  expect(upstreamButton).toBeDisabled();
   const previewButton = screen.getByRole("button", {
     name: "Inspect local push preview",
   });
@@ -339,6 +352,7 @@ it("prepares a branch download only from a completed observation with an OID and
         "remote_observations",
         "review_fetch_capture",
         "review_fetch_import",
+        "review_upstream_setup",
         "push_preview",
         "fetch_captures",
       ].includes(r.kind),

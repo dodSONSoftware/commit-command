@@ -217,6 +217,7 @@ impl ControlledWrites {
         let entry = self.entry(workspace, worktree)?;
         let meta = entry.metadata;
         self.ensure_fetch_import_resolved(&meta.common_binding, None)?;
+        self.ensure_upstream_resolved(&meta.common_binding, None)?;
         let (original, entries, branch, head) = policy::preflight(&meta, &self.options)?;
         let preference = match &request {
             WriteRequest::Commit { signing, .. } => *signing,
@@ -948,6 +949,7 @@ impl ControlledWrites {
             "Shared repository is write-locked",
         )?;
         self.ensure_fetch_import_resolved(&op.metadata.common_binding, None)?;
+        self.ensure_upstream_resolved(&op.metadata.common_binding, None)?;
         let result = self.execute_inner(&mut op);
         match result {
             Ok(()) => Ok(op.outcome()),
@@ -1617,6 +1619,7 @@ impl ControlledWrites {
             "Shared repository is locked",
         )?;
         self.ensure_fetch_import_resolved(&op.metadata.common_binding, None)?;
+        self.ensure_upstream_resolved(&op.metadata.common_binding, None)?;
         // Recheck after the cross-process lock, before any managed-repository mutation.
         if self.recovery_view(&review.operation_id)?.fingerprint != review.fingerprint {
             return Err(fail(

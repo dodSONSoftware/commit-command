@@ -18,6 +18,8 @@ mod push_preview;
 mod remote;
 mod store;
 mod transaction;
+#[cfg(feature = "application-services")]
+mod upstream;
 use crate::domain::{
     digest, now_ms, NativePath, ObjectFormat, RepositoryId, WorkspaceId, WorktreeId,
 };
@@ -278,6 +280,8 @@ pub struct ControlledWrites {
     test_fault: Option<TestFault>,
     #[cfg(all(feature = "write-test-support", feature = "application-services"))]
     import_fault: Option<(crate::remote::fetch::FetchImportPhase, TestFaultKind)>,
+    #[cfg(all(feature = "write-test-support", feature = "application-services"))]
+    upstream_fault: Option<(crate::remote::upstream::UpstreamPhase, TestFaultKind)>,
 }
 #[cfg(feature = "write-test-support")]
 #[derive(Debug, Clone)]

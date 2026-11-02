@@ -1,0 +1,30 @@
+{
+  "base_commit": "0787e879f76fd9dfe0a9236d26bb3e159b43f038",
+  "files": {
+    "app/core/src/application/audit.rs": "0f71621564023ac1580a44d26b106ebc960d7b14d5987eefcceee3375bdd4f0c",
+    "app/core/src/application/mod.rs": "8008db29609c53df54891b2eeea57e3059ca8d32dfef69bf9039bb186b53f241",
+    "app/core/src/application/review.rs": "b9f1d95667363ee27a440d1ef3fe9f3e9dc2b7c3155a67d31b3ae6811da3371c",
+    "app/core/src/remote.rs": "8bc0464f889de8efd464df9865e214296ca69fb487a7732e1fb282a6c37774c9",
+    "app/core/src/remote/upstream.rs": "01fd46b16eb0ecb8c4199ed439294801f9c6e483cd7b9f22101ce294741c34df",
+    "app/core/src/writes/application.rs": "c4e0ed8bd8f3f59c4af3264751aa5ec3951dea4ec28fd980af994ebf65a98060",
+    "app/core/src/writes/fetch_import.rs": "f19f49d227ca287d3d7a52f44ba6a11c4b1df97fe7dc3fcd45ca0116bb5652e3",
+    "app/core/src/writes/mod.rs": "bece17b0ae1167c5026727bec50df8af362ebcd16a87665380cc171cf86e874d",
+    "app/core/src/writes/store.rs": "092a6d1bee95b2c10db773591fe7260412903aa05a68080661bbfc164bd3fb1f",
+    "app/core/src/writes/transaction.rs": "4312dd64d88b4c87c96fc407683cd1860d2d216dd0e7f0c268eab9a1dcd79455",
+    "app/core/src/writes/upstream.rs": "ef316c3a16e70876b80c937a3318d2ec09fa319286619b8c3a3d784e643ae08a",
+    "app/core/tests/m2_writes.rs": "cbd8e2e0d3ace97ddcf5c54e2f019c4dcd0405fe9e78e230c1b94262aa512cd0",
+    "app/core/tests/m3_application.rs": "7cafef5dde5a56b42e62e3833812be58fb272098fcd8bc99ba755214d9ec6181",
+    "app/core/tests/remote_observation.rs": "f17ba4e78626f20bd9f048fe87a65cec7702dd69b61bd5b5cc1d971016da484a",
+    "app/desktop/src-tauri/src/main.rs": "8638171cbfaf429df748ee13235cb8575645382da067907ee0269aaecbf6b010",
+    "app/desktop/src/services/request.generated.ts": "736fcd482ff03d1ded7f2a4087801eb39a16937b965277490471bd9b4ad23cec",
+    "app/desktop/src/services/response.generated.ts": "17626b3dc85d3c414d47184ec7ef8e96075aa4aacd3f9a20441a277b71c81338",
+    "app/desktop/src/views/App.test.tsx": "213363e8bafc52c705a474fa772ec26e177574e3504572b71f831e7daf668f83",
+    "app/desktop/src/views/App.tsx": "34d4e483a430efd07025395cc9cf49b314f2aabfbb8b42e40ad829db02c13546",
+    "app/desktop/src/views/ObservationHistory.tsx": "b1472473fb911800cc272aafaa6189e31b4389b1fb8eb77bb15ffb4ed0113601",
+    "app/desktop/src/views/OperationHistory.tsx": "5832d3c2c39f78de9b17db7da45fef33f3acb8dba41f1a32743a649cb8e32a4b",
+    "app/desktop/src/views/RemoteInspector.test.tsx": "527c858d5a674bbba70aa56060a0f2bbeea61ab1c239efcc433b5bf84904065e",
+    "app/desktop/src/views/RemoteInspector.tsx": "7971977c4335d47a877e70edb7ea884b3c0b2a8e87233baafd3aa8218b02963d",
+    "app/desktop/src/views/UpstreamRecord.test.tsx": "57e64da43f468ebc4ce92380e80979b0b0bc1d7e80bc5a3071fda900fd6296d6",
+    "app/desktop/src/views/UpstreamRecord.tsx": "9c5e0e4eb2e02c049bf84d3b8ee6049d00f82a8f2150aa12d578f131293dade9"
+  }
+}

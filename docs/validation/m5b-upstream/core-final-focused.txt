@@ -1,0 +1,16 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.28s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-9477e837a431519a)
+
+running 8 tests
+test upstream_crash_worker ... ignored, subprocess-only disposable upstream SIGKILL worker
+test upstream_storage_failure_after_rename_and_foreign_lock_recovery_stay_truthful ... ok
+test upstream_shared_config_is_visible_to_linked_worktrees_without_touching_either_checkout ... ok
+test upstream_setup_adds_only_missing_keys_preserves_bytes_and_requires_new_trust ... ok
+test upstream_restart_revokes_setup_capability_without_creating_a_config_lock ... ok
+test upstream_sigkill_recovery_never_replays_and_removes_only_owned_config_lock ... ok
+test upstream_decline_stale_config_head_trust_and_foreign_locks_preserve_repository ... ok
+test upstream_setup_refuses_existing_custom_or_extended_configuration_and_scrubs_other_secrets ... ok
+
+test result: ok. 7 passed; 0 failed; 1 ignored; 0 measured; 27 filtered out; finished in 24.49s
+

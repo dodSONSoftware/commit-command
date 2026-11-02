@@ -1770,3 +1770,618 @@ fn local_push_preview_bounds_outgoing_details_and_loses_no_exact_count() {
     );
     assert_eq!(before, tree_bytes(&t.f.repo));
 }
+
+fn upstream_review(t: &mut Test, observation: &str) -> ReviewDisplay {
+    let Data::Review(r) = t
+        .app
+        .request(
+            t.app.epoch(),
+            Request::ReviewUpstreamSetup {
+                workspace: t.workspace.clone(),
+                worktree: t.worktree.clone(),
+                observation: observation.into(),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    r
+}
+fn upstream_confirm(
+    t: &mut Test,
+    r: &ReviewDisplay,
+) -> gitfleet_core::remote::upstream::UpstreamOperation {
+    let (cap, _) = t.app.begin_confirmation(&r.id).unwrap();
+    serde_json::from_value(t.app.confirm(cap, true, Cancellation::default()).unwrap()).unwrap()
+}
+#[test]
+fn upstream_setup_adds_only_missing_keys_preserves_bytes_and_requires_new_trust() {
+    use gitfleet_core::remote::upstream::*;
+    let mut t = setup(true);
+    trust(&mut t);
+    let observation = observed(&mut t);
+    fs::write(t.f.repo.join("file.txt"), b"Staged upstream fixture\n").unwrap();
+    t.f.git(&["add", "file.txt"]);
+    fs::write(t.f.repo.join("file.txt"), b"Working content\n").unwrap();
+    let before = tree_bytes(&t.f.repo);
+    let remote = tree_bytes(&t.remote);
+    let old = fs::read(t.f.repo.join(".git/config")).unwrap();
+    let r = upstream_review(&mut t, &observation.plan.id);
+    assert!(r.summary.contains("refs/heads/main"));
+    assert!(r.summary.contains("Existing trust becomes stale"));
+    assert_eq!(before, tree_bytes(&t.f.repo));
+    let value = upstream_confirm(&mut t, &r);
+    assert_eq!(value.phase, UpstreamPhase::Complete, "{:?}", value.issue);
+    assert_eq!(value.configuration, UpstreamStatus::Updated);
+    let config = fs::read(t.f.repo.join(".git/config")).unwrap();
+    assert!(config.starts_with(&old));
+    assert_eq!(
+        &config[old.len()..],
+        b"\n[branch \"main\"]\n\tremote = \"origin\"\n\tmerge = \"refs/heads/main\"\n"
+    );
+    let mut after = tree_bytes(&t.f.repo);
+    after.insert(
+        std::path::PathBuf::from(".git/config"),
+        before[std::path::Path::new(".git/config")].clone(),
+    );
+    assert_eq!(before, after);
+    assert_eq!(remote, tree_bytes(&t.remote));
+    assert_eq!(
+        t.f.git(&["config", "--get", "branch.main.remote"]),
+        b"origin\n"
+    );
+    assert_eq!(
+        t.f.git(&["config", "--get", "branch.main.merge"]),
+        b"refs/heads/main\n"
+    );
+    assert!(t.app.begin_confirmation(&r.id).is_err());
+    assert!(t
+        .app
+        .request(
+            t.app.epoch(),
+            Request::ReviewFetchCapture {
+                workspace: t.workspace.clone(),
+                worktree: t.worktree.clone(),
+                observation: observation.plan.id
+            }
+        )
+        .is_err());
+    let Data::Trust(status) = t
+        .app
+        .request(
+            t.app.epoch(),
+            Request::TrustStatus {
+                workspace: t.workspace.clone(),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert!(status.iter().any(|v| v.validity != "current"));
+    let Data::OperationAudit(page) = t
+        .app
+        .request(
+            t.app.epoch(),
+            Request::OperationAudit {
+                workspace: t.workspace.clone(),
+                query: OperationAuditQuery {
+                    offset: 0,
+                    worktree: None,
+                    operation_kind: Some(OperationAuditKind::UpstreamSetup),
+                    result: Some(OperationAuditResult::Complete),
+                    since_ms: None,
+                    until_ms: None,
+                },
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert_eq!(page.items.len(), 1);
+    assert_eq!(page.items[0].id, value.plan.transport.id);
+}
+#[test]
+fn upstream_decline_stale_config_head_trust_and_foreign_locks_preserve_repository() {
+    for mode in [
+        "decline",
+        "cancel",
+        "config",
+        "head",
+        "revoke",
+        "foreign_lock",
+        "same_oid_config_replace",
+    ] {
+        let mut t = setup(true);
+        trust(&mut t);
+        let observation = observed(&mut t);
+        let r = upstream_review(&mut t, &observation.plan.id);
+        let (cap, _) = t.app.begin_confirmation(&r.id).unwrap();
+        match mode {
+            "config" => {
+                t.f.git(&["config", "custom.changed", "true"]);
+            }
+            "head" => {
+                advance_local(&t);
+            }
+            "revoke" => {
+                t.app
+                    .request(
+                        t.app.epoch(),
+                        Request::Revoke {
+                            workspace: t.workspace.clone(),
+                            worktree: t.worktree.clone(),
+                        },
+                    )
+                    .unwrap();
+            }
+            "foreign_lock" => fs::write(t.f.repo.join(".git/config.lock"), b"foreign").unwrap(),
+            "same_oid_config_replace" => {
+                let path = t.f.repo.join(".git/config");
+                let bytes = fs::read(&path).unwrap();
+                fs::remove_file(&path).unwrap();
+                fs::write(path, bytes).unwrap();
+            }
+            _ => {}
+        }
+        let before = tree_bytes(&t.f.repo);
+        let token = Cancellation::default();
+        if mode == "cancel" {
+            token.cancel();
+        }
+        let result = t.app.confirm(cap, mode != "decline", token);
+        if mode == "decline" {
+            assert_eq!(result.unwrap_err().kind, ErrorKind::Cancelled);
+        } else if mode == "revoke" {
+            assert!(result.is_err());
+        } else {
+            let value: gitfleet_core::remote::upstream::UpstreamOperation =
+                serde_json::from_value(result.unwrap()).unwrap();
+            assert!(
+                matches!(
+                    value.phase,
+                    gitfleet_core::remote::upstream::UpstreamPhase::Blocked
+                        | gitfleet_core::remote::upstream::UpstreamPhase::Cancelled
+                ),
+                "{mode}: {value:?}"
+            );
+        }
+        assert_eq!(before, tree_bytes(&t.f.repo), "{mode}");
+    }
+}
+
+#[test]
+fn upstream_setup_refuses_unsupported_policy_and_preserves_attributes_without_persisting_secrets() {
+    for mode in [
+        "existing",
+        "mapping",
+        "worktree_config",
+        "include",
+        "hardlink",
+        "special_mode",
+        "xattr",
+        "acl",
+        "quotes_and_secret",
+    ] {
+        let mut t = setup(true);
+        match mode {
+            "existing" => {
+                t.f.git(&[
+                    "config",
+                    "branch.main.description",
+                    "Existing user branch policy",
+                ]);
+            }
+            "mapping" => {
+                t.f.git(&[
+                    "config",
+                    "remote.origin.fetch",
+                    "+refs/heads/*:refs/other/*",
+                ]);
+            }
+            "worktree_config" => {
+                t.f.git(&["config", "extensions.worktreeConfig", "true"]);
+            }
+            "include" => {
+                let p = t.f.root.join("included.config");
+                fs::write(&p, b"[custom]\n value = true\n").unwrap();
+                t.f.git(&["config", "include.path", p.to_str().unwrap()]);
+            }
+            "hardlink" => fs::hard_link(
+                t.f.repo.join(".git/config"),
+                t.f.root.join("config-hardlink"),
+            )
+            .unwrap(),
+            "special_mode" => {
+                use std::os::unix::fs::PermissionsExt;
+                fs::set_permissions(
+                    t.f.repo.join(".git/config"),
+                    fs::Permissions::from_mode(0o1600),
+                )
+                .unwrap();
+            }
+            "xattr" => {
+                assert!(std::process::Command::new("/usr/bin/xattr")
+                    .args(["-w", "com.gitfleet.fixture", "sentinel"])
+                    .arg(t.f.repo.join(".git/config"))
+                    .status()
+                    .unwrap()
+                    .success());
+            }
+            "acl" => {
+                let rule = "everyone allow read";
+                assert!(std::process::Command::new("/bin/chmod")
+                    .args(["+a", rule])
+                    .arg(t.f.repo.join(".git/config"))
+                    .status()
+                    .unwrap()
+                    .success());
+            }
+            "quotes_and_secret" => {
+                t.f.git(&["branch", "-m", "feature/quoted\"branch"]);
+                t.f.git(&[
+                    "remote",
+                    "add",
+                    "other",
+                    "https://fixture:SECRET_SENTINEL@example.invalid/other.git",
+                ]);
+            }
+            _ => {}
+        }
+        trust(&mut t);
+        let observation = observed(&mut t);
+        let before = tree_bytes(&t.f.repo);
+        let result = t.app.request(
+            t.app.epoch(),
+            Request::ReviewUpstreamSetup {
+                workspace: t.workspace.clone(),
+                worktree: t.worktree.clone(),
+                observation: observation.plan.id,
+            },
+        );
+        if mode == "quotes_and_secret" || mode == "xattr" {
+            let Data::Review(r) = result.unwrap().data else {
+                panic!()
+            };
+            assert!(!r.content.contains("SECRET_SENTINEL"));
+            assert!(!r.summary.contains("SECRET_SENTINEL"));
+            let value = upstream_confirm(&mut t, &r);
+            assert_eq!(
+                value.phase,
+                gitfleet_core::remote::upstream::UpstreamPhase::Complete,
+                "{:?}",
+                value.issue
+            );
+            if mode == "quotes_and_secret" {
+                assert_eq!(
+                    t.f.git(&["config", "--get", "branch.feature/quoted\"branch.remote"]),
+                    b"origin\n"
+                );
+            }
+            if mode == "xattr" {
+                assert_eq!(
+                    std::process::Command::new("/usr/bin/xattr")
+                        .args(["-p", "com.gitfleet.fixture"])
+                        .arg(t.f.repo.join(".git/config"))
+                        .output()
+                        .unwrap()
+                        .stdout,
+                    b"sentinel\n"
+                );
+            }
+            let db = rusqlite::Connection::open(t.f.root.join("state/state.db")).unwrap();
+            let mut q = db
+                .prepare("select value from state where key like 'upstream:%'")
+                .unwrap();
+            for raw in q.query_map([], |r| r.get::<_, String>(0)).unwrap() {
+                assert!(!raw.unwrap().contains("SECRET_SENTINEL"));
+            }
+        } else {
+            assert!(result.is_err(), "{mode}");
+            assert_eq!(before, tree_bytes(&t.f.repo), "{mode}");
+        }
+    }
+}
+#[cfg(feature = "write-test-support")]
+#[test]
+#[ignore = "subprocess-only disposable upstream SIGKILL worker"]
+fn upstream_crash_worker() {
+    use gitfleet_core::{remote::upstream::UpstreamPhase, writes::TestFaultKind};
+    let Ok(marker) = std::env::var("GITFLEET_UPSTREAM_CRASH_MARKER") else {
+        return;
+    };
+    let phase: UpstreamPhase =
+        serde_json::from_str(&std::env::var("GITFLEET_UPSTREAM_CRASH_PHASE").unwrap()).unwrap();
+    let mut t = setup(true);
+    fs::write(t.f.repo.join(".gitfleet-m2-fixture"), b"fixture").unwrap();
+    trust(&mut t);
+    let observation = observed(&mut t);
+    let r = upstream_review(&mut t, &observation.plan.id);
+    fs::write(
+        marker,
+        serde_json::to_vec(&(t.f.root.clone(), t.workspace.clone(), t.worktree.clone())).unwrap(),
+    )
+    .unwrap();
+    t.app.set_upstream_test_fault(phase, TestFaultKind::Sigkill);
+    let value = upstream_confirm(&mut t, &r);
+    panic!("Fault {phase:?} not delivered: {value:?}");
+}
+#[cfg(feature = "write-test-support")]
+#[test]
+fn upstream_sigkill_recovery_never_replays_and_removes_only_owned_config_lock() {
+    use gitfleet_core::remote::upstream::*;
+    use std::os::unix::process::ExitStatusExt;
+    for phase in [
+        UpstreamPhase::LockPending,
+        UpstreamPhase::LockCreated,
+        UpstreamPhase::LockReady,
+        UpstreamPhase::PublicationPending,
+        UpstreamPhase::ConfigPublished,
+    ] {
+        let owner = Fixture::new();
+        let marker = owner.root.join("worker.json");
+        let output = std::process::Command::new(std::env::current_exe().unwrap())
+            .args([
+                "--exact",
+                "upstream_crash_worker",
+                "--ignored",
+                "--nocapture",
+            ])
+            .env("GITFLEET_UPSTREAM_CRASH_MARKER", &marker)
+            .env(
+                "GITFLEET_UPSTREAM_CRASH_PHASE",
+                serde_json::to_string(&phase).unwrap(),
+            )
+            .output()
+            .unwrap();
+        assert_eq!(
+            output.status.signal(),
+            Some(libc::SIGKILL),
+            "{phase:?}: {} {}",
+            String::from_utf8_lossy(&output.stdout),
+            String::from_utf8_lossy(&output.stderr)
+        );
+        let (root, workspace, worktree): (PathBuf, String, String) =
+            serde_json::from_slice(&fs::read(marker).unwrap()).unwrap();
+        let f = Fixture {
+            repo: root.join("repo"),
+            root: root.clone(),
+        };
+        let options = Options {
+            global_config: Some(root.join("global.config")),
+            signer_home: Some(root.join("home")),
+            remote: TransportOptions {
+                local_fixture_root: Some(root.clone()),
+                ca_file: None,
+            },
+            ..Options::default()
+        };
+        let before = tree_bytes(&f.repo);
+        let app = Application::open(&root.join("state"), options.clone()).unwrap();
+        let mut t = Test {
+            f,
+            app,
+            workspace,
+            worktree,
+            remote: root.join("remote.git"),
+            options,
+        };
+        let Data::Workspaces(list) = t
+            .app
+            .request(t.app.epoch(), Request::Workspaces {})
+            .unwrap()
+            .data
+        else {
+            panic!()
+        };
+        assert_eq!(list.upstream_recovery.len(), 1);
+        assert_eq!(before, tree_bytes(&t.f.repo));
+        let id = list.upstream_recovery[0].operation_id.clone();
+        assert_eq!(
+            t.app
+                .request(
+                    t.app.epoch(),
+                    Request::Remove {
+                        workspace: t.workspace.clone()
+                    }
+                )
+                .unwrap_err()
+                .kind,
+            ErrorKind::Busy
+        );
+        let Data::Review(r) = t
+            .app
+            .request(
+                t.app.epoch(),
+                Request::ReviewUpstreamRecovery {
+                    workspace: t.workspace.clone(),
+                    operation: id,
+                },
+            )
+            .unwrap()
+            .data
+        else {
+            panic!()
+        };
+        let published = phase == UpstreamPhase::ConfigPublished;
+        assert!(r.summary.contains(if published {
+            "observe_configuration"
+        } else {
+            "abort_unpublished"
+        }));
+        let recovered = upstream_confirm(&mut t, &r);
+        assert_eq!(
+            recovered.phase,
+            if published {
+                UpstreamPhase::ObservedConfiguration
+            } else {
+                UpstreamPhase::Aborted
+            }
+        );
+        let after = tree_bytes(&t.f.repo);
+        let mut expected = before;
+        expected.remove(std::path::Path::new(".git/config.lock"));
+        assert_eq!(expected, after);
+        reopen(&mut t);
+        assert_eq!(after, tree_bytes(&t.f.repo));
+    }
+}
+#[cfg(feature = "write-test-support")]
+#[test]
+fn upstream_storage_failure_after_rename_and_foreign_lock_recovery_stay_truthful() {
+    use gitfleet_core::{remote::upstream::*, writes::TestFaultKind};
+    let mut t = setup(true);
+    fs::write(t.f.repo.join(".gitfleet-m2-fixture"), b"fixture").unwrap();
+    trust(&mut t);
+    let observation = observed(&mut t);
+    let r = upstream_review(&mut t, &observation.plan.id);
+    t.app.set_upstream_test_fault(
+        UpstreamPhase::ConfigPublished,
+        TestFaultKind::StorageFailure,
+    );
+    let value = upstream_confirm(&mut t, &r);
+    assert_eq!(value.phase, UpstreamPhase::Uncertain);
+    assert_eq!(value.configuration, UpstreamStatus::Updated);
+    let before = tree_bytes(&t.f.repo);
+    let Data::Review(r) = t
+        .app
+        .request(
+            t.app.epoch(),
+            Request::ReviewUpstreamRecovery {
+                workspace: t.workspace.clone(),
+                operation: value.plan.transport.id.clone(),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    let lock = t.f.repo.join(".git/config.lock");
+    fs::write(&lock, b"foreign").unwrap();
+    let (cap, _) = t.app.begin_confirmation(&r.id).unwrap();
+    assert!(t.app.confirm(cap, true, Cancellation::default()).is_err());
+    assert_eq!(fs::read(&lock).unwrap(), b"foreign");
+    let Data::Review(r) = t
+        .app
+        .request(
+            t.app.epoch(),
+            Request::ReviewUpstreamRecovery {
+                workspace: t.workspace.clone(),
+                operation: value.plan.transport.id.clone(),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert!(r.summary.contains("manual"));
+    let (cap, _) = t.app.begin_confirmation(&r.id).unwrap();
+    assert!(t.app.confirm(cap, true, Cancellation::default()).is_err());
+    assert_eq!(fs::read(&lock).unwrap(), b"foreign");
+    fs::remove_file(lock).unwrap();
+    let Data::Review(r) = t
+        .app
+        .request(
+            t.app.epoch(),
+            Request::ReviewUpstreamRecovery {
+                workspace: t.workspace.clone(),
+                operation: value.plan.transport.id,
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert_eq!(
+        upstream_confirm(&mut t, &r).phase,
+        UpstreamPhase::ObservedConfiguration
+    );
+    assert_eq!(before, tree_bytes(&t.f.repo));
+}
+
+#[test]
+fn upstream_shared_config_is_visible_to_linked_worktrees_without_touching_either_checkout() {
+    let mut t = setup(true);
+    let linked = t.f.root.join("linked");
+    t.f.git(&[
+        "worktree",
+        "add",
+        "-q",
+        "-b",
+        "other",
+        linked.to_str().unwrap(),
+    ]);
+    trust(&mut t);
+    let observation = observed(&mut t);
+    let before = tree_bytes(&t.f.repo);
+    let other = tree_bytes(&linked);
+    let r = upstream_review(&mut t, &observation.plan.id);
+    let value = upstream_confirm(&mut t, &r);
+    assert_eq!(
+        value.phase,
+        gitfleet_core::remote::upstream::UpstreamPhase::Complete,
+        "{:?}",
+        value.issue
+    );
+    assert_eq!(
+        t.f.git(&[
+            "-C",
+            linked.to_str().unwrap(),
+            "config",
+            "--get",
+            "branch.main.remote"
+        ]),
+        b"origin\n"
+    );
+    let mut after = tree_bytes(&t.f.repo);
+    after.insert(
+        std::path::PathBuf::from(".git/config"),
+        before[std::path::Path::new(".git/config")].clone(),
+    );
+    assert_eq!(before, after);
+    assert_eq!(other, tree_bytes(&linked));
+}
+#[test]
+fn upstream_restart_revokes_setup_capability_without_creating_a_config_lock() {
+    let mut t = setup(true);
+    trust(&mut t);
+    let observation = observed(&mut t);
+    let r = upstream_review(&mut t, &observation.plan.id);
+    let (cap, _) = t.app.begin_confirmation(&r.id).unwrap();
+    let before = tree_bytes(&t.f.repo);
+    reopen(&mut t);
+    assert!(t.app.confirm(cap, true, Cancellation::default()).is_err());
+    assert_eq!(before, tree_bytes(&t.f.repo));
+    let Data::OperationAudit(page) = t
+        .app
+        .request(
+            t.app.epoch(),
+            Request::OperationAudit {
+                workspace: t.workspace.clone(),
+                query: OperationAuditQuery {
+                    offset: 0,
+                    worktree: None,
+                    operation_kind: Some(OperationAuditKind::UpstreamSetup),
+                    result: Some(OperationAuditResult::Interrupted),
+                    since_ms: None,
+                    until_ms: None,
+                },
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert_eq!(page.items.len(), 1);
+    assert_eq!(page.items[0].result, OperationAuditResult::Interrupted);
+    assert!(!t.f.repo.join(".git/config.lock").exists());
+}

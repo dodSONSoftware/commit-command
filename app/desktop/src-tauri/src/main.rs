@@ -182,6 +182,8 @@ fn mutating_request(request: &Request) -> bool {
             | Request::ReviewFetchCapture { .. }
             | Request::ReviewFetchImport { .. }
             | Request::ReviewFetchImportRecovery { .. }
+            | Request::ReviewUpstreamSetup { .. }
+            | Request::ReviewUpstreamRecovery { .. }
             | Request::Revoke { .. }
             | Request::HookPolicy { .. }
             | Request::Propose { .. }
@@ -210,6 +212,11 @@ fn dispatch<R: tauri::Runtime>(
                 | Request::ReviewBatch { .. }
                 | Request::ReviewRemoteObservation { .. }
                 | Request::ReviewRecovery { .. }
+                | Request::ReviewFetchCapture { .. }
+                | Request::ReviewFetchImport { .. }
+                | Request::ReviewFetchImportRecovery { .. }
+                | Request::ReviewUpstreamSetup { .. }
+                | Request::ReviewUpstreamRecovery { .. }
         )
     {
         return Err("Controlled write is active".into());
@@ -871,6 +878,15 @@ mod tests {
         assert!(mutating_request(&Request::ReviewFetchImportRecovery {
             workspace: "w".into(),
             operation: "i".into()
+        }));
+        assert!(mutating_request(&Request::ReviewUpstreamSetup {
+            workspace: "w".into(),
+            worktree: "t".into(),
+            observation: "o".into()
+        }));
+        assert!(mutating_request(&Request::ReviewUpstreamRecovery {
+            workspace: "w".into(),
+            operation: "o".into()
         }));
         assert!(!mutating_request(&Request::PushPreview {
             workspace: "w".into(),

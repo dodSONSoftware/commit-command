@@ -99,6 +99,8 @@ impl ControlledWrites {
             test_fault: None,
             #[cfg(all(feature = "write-test-support", feature = "application-services"))]
             import_fault: None,
+            #[cfg(all(feature = "write-test-support", feature = "application-services"))]
+            upstream_fault: None,
         })
     }
     pub(super) fn entry(
@@ -418,6 +420,23 @@ impl ControlledWrites {
             return Err(fail(
                 ErrorKind::Busy,
                 "Inspect interrupted fetch import before another repository write",
+            ));
+        }
+        Ok(())
+    }
+}
+
+impl ControlledWrites {
+    pub(super) fn ensure_upstream_resolved(
+        &mut self,
+        common: &str,
+        except: Option<&str>,
+    ) -> Result<()> {
+        let pending:bool=self.workspace.connection().query_row("SELECT EXISTS(SELECT 1 FROM state WHERE key LIKE 'upstream:%' AND json_extract(value,'$.value.plan.metadata.common_binding')=?1 AND (?2 IS NULL OR json_extract(value,'$.value.plan.id')<>?2) AND json_extract(value,'$.value.phase') IN ('lock_pending','lock_created','lock_ready','publication_pending','config_published','uncertain'))",params![common,except],|r|r.get(0))?;
+        if pending {
+            return Err(fail(
+                ErrorKind::Busy,
+                "Inspect interrupted upstream setup before another repository write",
             ));
         }
         Ok(())

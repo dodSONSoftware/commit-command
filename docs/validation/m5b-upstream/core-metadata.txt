@@ -1,0 +1,35 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.76s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-9477e837a431519a)
+
+running 6 tests
+test upstream_crash_worker ... ignored, subprocess-only disposable upstream SIGKILL worker
+test upstream_setup_adds_only_missing_keys_preserves_bytes_and_requires_new_trust ... ok
+test upstream_storage_failure_after_rename_and_foreign_lock_recovery_stay_truthful ... ok
+test upstream_decline_stale_config_head_trust_and_foreign_locks_preserve_repository ... FAILED
+test upstream_setup_refuses_existing_custom_or_extended_configuration_and_scrubs_other_secrets ... FAILED
+test upstream_sigkill_recovery_never_replays_and_removes_only_owned_config_lock ... ok
+
+failures:
+
+---- upstream_decline_stale_config_head_trust_and_foreign_locks_preserve_repository stdout ----
+
+thread 'upstream_decline_stale_config_head_trust_and_foreign_locks_preserve_repository' (14601085) panicked at tests/remote_observation.rs:1932:56:
+called `Result::unwrap()` on an `Err` value: Error { kind: StaleReview, message: "Application context or review changed" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- upstream_setup_refuses_existing_custom_or_extended_configuration_and_scrubs_other_secrets stdout ----
+
+thread 'upstream_setup_refuses_existing_custom_or_extended_configuration_and_scrubs_other_secrets' (14601087) panicked at tests/remote_observation.rs:2058:17:
+assertion `left == right` failed
+  left: [115, 101, 110, 116, 105, 110, 101, 108, 10]
+ right: [115, 101, 110, 116, 105, 110, 101, 108]
+
+
+failures:
+    upstream_decline_stale_config_head_trust_and_foreign_locks_preserve_repository
+    upstream_setup_refuses_existing_custom_or_extended_configuration_and_scrubs_other_secrets
+
+test result: FAILED. 3 passed; 2 failed; 1 ignored; 0 measured; 27 filtered out; finished in 20.31s
+
+error: test failed, to rerun pass `--test remote_observation`

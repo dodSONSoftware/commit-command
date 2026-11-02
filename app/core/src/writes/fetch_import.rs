@@ -232,6 +232,7 @@ impl ControlledWrites {
         options: &ReadOptions,
     ) -> Result<FetchImportPlan> {
         self.ensure_fetch_import_resolved(&entry.metadata.common_binding, None)?;
+        self.ensure_upstream_resolved(&entry.metadata.common_binding, None)?;
         self.ensure_local_writes_resolved(&entry.metadata.common_binding)?;
         let capture = self.completed_capture(capture_id, workspace, &entry.id)?;
         self.bundle_snapshot(&capture)?;
@@ -386,6 +387,7 @@ impl ControlledWrites {
             &plan.transport.metadata.common_binding,
             Some(&plan.transport.id),
         )?;
+        self.ensure_upstream_resolved(&plan.transport.metadata.common_binding, None)?;
         self.ensure_local_writes_resolved(&plan.transport.metadata.common_binding)?;
         let options = self.options.process.clone();
         let started = Instant::now();

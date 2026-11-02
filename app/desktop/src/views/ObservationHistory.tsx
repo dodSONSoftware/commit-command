@@ -9,12 +9,16 @@ export function ObservationRecords({
   fetchDisabled = true,
   onPreview,
   previewDisabled = false,
+  onUpstream,
+  upstreamDisabled = true,
 }: {
   items: ObservationPage["items"];
   onFetch?: (observation: string) => void;
   fetchDisabled?: boolean;
   onPreview?: (observation: string) => void;
   previewDisabled?: boolean;
+  onUpstream?: (observation: string) => void;
+  upstreamDisabled?: boolean;
 }) {
   return (
     <>
@@ -58,6 +62,16 @@ export function ObservationRecords({
               Inspect local push preview
             </button>
           )}
+          {onUpstream &&
+            observation.phase === "complete" &&
+            observation.oid && (
+              <button
+                disabled={upstreamDisabled}
+                onClick={() => onUpstream(observation.plan.id)}
+              >
+                Review upstream setup
+              </button>
+            )}
           {onFetch && observation.phase === "complete" && observation.oid && (
             <button
               disabled={fetchDisabled}

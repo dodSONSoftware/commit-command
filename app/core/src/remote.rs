@@ -2,6 +2,7 @@
 pub mod fetch;
 pub mod observation;
 pub mod push;
+pub mod upstream;
 use crate::{domain::*, inspection, process, Error, ErrorKind, Result};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
