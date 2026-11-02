@@ -1,0 +1,10 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.66s
+     Running tests/m3_application.rs (app/core/target/debug/deps/m3_application-a53092fa13b82fcd)
+
+running 2 tests
+test unified_audit_pages_across_tied_sources_and_projects_orphans_without_rewriting_journals ... ok
+test unified_audit_filters_real_local_batch_and_remote_records_without_mutation_or_authority ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 19 filtered out; finished in 2.75s
+

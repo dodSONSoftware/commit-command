@@ -1,5 +1,3 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { value, type Bridge } from "../services/bridge";
 import type { ObservationPage } from "../services/response.generated";
 import { bytes, pathText } from "../stores/model";
 const text = (value: string) =>
@@ -47,76 +45,5 @@ export function ObservationRecords({
         </article>
       ))}
     </>
-  );
-}
-
-export function WorkspaceObservationHistory({
-  bridge,
-  workspace,
-  busy,
-  act,
-  revision,
-}: {
-  bridge: Bridge;
-  workspace: string;
-  busy: boolean;
-  act: (action: () => Promise<void>) => Promise<void>;
-  revision: number;
-}) {
-  const [page, setPage] = useState<ObservationPage | null>(null);
-  const requestSequence = useRef(0);
-  const load = useCallback(
-    async (offset = 0) => {
-      const sequence = ++requestSequence.current;
-      const data = value(
-        await bridge.request({
-          kind: "remote_observations",
-          workspace,
-          worktree: null,
-          offset,
-        }),
-        "remote_observations",
-      );
-      if (sequence === requestSequence.current)
-        setPage((previous) =>
-          offset && previous
-            ? { items: [...previous.items, ...data.items], next: data.next }
-            : data,
-        );
-    },
-    [bridge, workspace],
-  );
-  useEffect(() => {
-    const sequence = requestSequence;
-    void act(() => load());
-    return () => {
-      ++sequence.current;
-    };
-  }, [act, load, revision]);
-  return (
-    <section aria-label="Workspace remote observation history">
-      <h2>Remote observations</h2>
-      <p>
-        Recorded network reads across this workspace. Local operation filters
-        above do not filter these records. Reading history contacts no server
-        and cannot repeat an operation. Observed references describe past server
-        state; they do not establish synchronization.
-      </p>
-      <button disabled={busy} onClick={() => void act(() => load())}>
-        Refresh remote observation history
-      </button>
-      {page?.items.length === 0 && (
-        <p>No recorded remote observations in this workspace.</p>
-      )}
-      <ObservationRecords items={page?.items ?? []} />
-      {page?.next != null && (
-        <button
-          disabled={busy}
-          onClick={() => void act(() => load(page.next!))}
-        >
-          Load older workspace observations
-        </button>
-      )}
-    </section>
   );
 }

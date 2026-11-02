@@ -18,6 +18,11 @@ export type Request =
       worktree?: string | null;
     }
   | {
+      kind: "operation_audit";
+      query: OperationAuditQuery;
+      workspace: string;
+    }
+  | {
       kind: "audit";
       query: AuditQuery;
       workspace: string;
@@ -176,6 +181,15 @@ export type HistoryScope =
       [k: string]: unknown;
     };
 export type ObjectFormat = "sha1" | "sha256";
+export type OperationAuditKind =
+  "stage" | "unstage" | "commit" | "batch_commit" | "remote_observation";
+export type OperationAuditResult =
+  | "pending"
+  | "complete"
+  | "blocked"
+  | "cancelled"
+  | "interrupted"
+  | "needs_attention";
 export type Phase =
   | "proposed"
   | "approved"
@@ -273,6 +287,14 @@ export interface ObjectId {
   format: ObjectFormat;
   hex: string;
   [k: string]: unknown;
+}
+export interface OperationAuditQuery {
+  offset: number;
+  operation_kind?: OperationAuditKind | null;
+  result?: OperationAuditResult | null;
+  since_ms?: number | null;
+  until_ms?: number | null;
+  worktree?: string | null;
 }
 export interface AuditQuery {
   offset: number;

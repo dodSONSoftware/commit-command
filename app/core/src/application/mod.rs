@@ -1,4 +1,9 @@
 //! Presentation-independent application/session boundary. No native UI or transport APIs.
+mod audit;
+pub use audit::{
+    OperationAuditEntry, OperationAuditKind, OperationAuditPage, OperationAuditQuery,
+    OperationAuditRecord, OperationAuditResult,
+};
 mod bulk;
 mod bulk_state;
 pub use bulk_state::{BatchConfiguration, BulkComposerState};
@@ -53,6 +58,10 @@ pub enum Request {
         until: u64,
         reference: Option<String>,
         author: Option<String>,
+    },
+    OperationAudit {
+        workspace: String,
+        query: OperationAuditQuery,
     },
     Audit {
         workspace: String,
@@ -203,6 +212,7 @@ pub struct OperationPage {
 pub enum Data {
     Graph(crate::graph::Page),
     Activity(exploration::ActivityReport),
+    OperationAudit(OperationAuditPage),
     Audit(exploration::AuditPage),
     Batches(BatchPage),
     BulkComposer(BulkComposerState),
@@ -471,6 +481,9 @@ impl Application {
                 reference,
                 author,
             )?),
+            Request::OperationAudit { workspace, query } => {
+                Data::OperationAudit(self.operation_audit(&workspace, query)?)
+            }
             Request::Audit { workspace, query } => {
                 let id = self.active(&workspace)?;
                 Data::Audit(self.writes.application_audit(&id, query)?)

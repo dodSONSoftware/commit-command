@@ -15,13 +15,11 @@ import type {
   TrustState,
   Diff,
   Change,
-  AuditPage,
-  Phase,
   NativePath,
   Commit as CommitDetail,
   RecoveryNotice,
 } from "../services/response.generated";
-import type { WriteRequest, AuditQuery } from "../services/request.generated";
+import type { WriteRequest } from "../services/request.generated";
 import {
   initialState,
   initialBulkComposer,
@@ -41,7 +39,7 @@ import { WorkspaceActivity } from "./WorkspaceActivity";
 import { HistoryGraph } from "./HistoryGraph";
 import { BulkCommit } from "./BulkCommit";
 import { RemoteInspector } from "./RemoteInspector";
-import { WorkspaceObservationHistory } from "./ObservationHistory";
+import { OperationHistory } from "./OperationHistory";
 type Source = "index" | "working_tree";
 export function App({ bridge }: { bridge: Bridge }) {
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
@@ -58,16 +56,9 @@ export function App({ bridge }: { bridge: Bridge }) {
   const [loading, setLoading] = useState(true);
   const [monitor, setMonitor] = useState("Not monitoring");
   const [attention, setAttention] = useState("all");
-  const [operations, setOperations] = useState<AuditPage | null>(null);
   const [showOperations, setShowOperations] = useState(false);
   const [showActivity, setShowActivity] = useState(false);
   const [showBulk, setShowBulk] = useState(false);
-  const [auditKind, setAuditKind] = useState("");
-  const [auditPhase, setAuditPhase] = useState<Phase | "">("");
-  const [auditWorktree, setAuditWorktree] = useState("");
-  const [auditSince, setAuditSince] = useState("");
-  const [auditUntil, setAuditUntil] = useState("");
-  const [auditApplied, setAuditApplied] = useState<AuditQuery | null>(null);
   const [writeBusy, setWriteBusy] = useState(false);
   const [writesEnabled, setWritesEnabled] = useState(false);
   const [recovery, setRecovery] = useState<RecoveryNotice[]>([]);
@@ -170,12 +161,9 @@ export function App({ bridge }: { bridge: Bridge }) {
       setEntries([]);
       setMonitor("Not monitoring");
       setTrust([]);
-      setOperations(null);
-      setAuditApplied(null);
       setShowOperations(false);
       setShowActivity(false);
       setShowBulk(false);
-      setAuditWorktree("");
       if (ws) {
         const state = value(
           await bridge.request({ kind: "load_state", workspace: ws }),
@@ -349,50 +337,11 @@ export function App({ bridge }: { bridge: Bridge }) {
     if (!workspace) return;
     await bridge.request({ kind: "review_trust", workspace, worktrees: ids });
   }
-  function auditQuery(offset: number) {
-    return {
-      offset,
-      operation_kind: auditKind || null,
-      phase: auditPhase || null,
-      worktree: auditWorktree || null,
-      since_ms: auditSince ? Date.parse(`${auditSince}T00:00:00Z`) : null,
-      until_ms: auditUntil ? Date.parse(`${auditUntil}T23:59:59.999Z`) : null,
-    };
-  }
   async function historyList() {
-    if (!workspace) return;
     setShowOperations(true);
     setShowActivity(false);
     setShowBulk(false);
-    const query = auditQuery(0);
-    const data = value(
-      await bridge.request({ kind: "audit", workspace, query }),
-      "audit",
-    );
-    if (context.current === workspace) {
-      setOperations(data);
-      setAuditApplied(query);
-    }
   }
-  useEffect(() => {
-    if (!resultsRevision || !showOperations || !workspace || !auditApplied)
-      return;
-    let live = true;
-    void act(async () => {
-      const data = value(
-        await bridge.request({
-          kind: "audit",
-          workspace,
-          query: { ...auditApplied, offset: 0 },
-        }),
-        "audit",
-      );
-      if (live && context.current === workspace) setOperations(data);
-    });
-    return () => {
-      live = false;
-    };
-  }, [resultsRevision, showOperations, workspace, auditApplied, bridge, act]);
   const visible = filtered(entries, nav.filter, attention, nav.sort);
   const counts = entries.reduce(
     (s, e) => ({
@@ -778,217 +727,17 @@ export function App({ bridge }: { bridge: Bridge }) {
               }}
             />
           ) : showOperations ? (
-            <section>
-              <div className="page-title">
-                <div>
-                  <span className="eyebrow">DURABLE CORE RECORDS</span>
-                  <h1>Operation results</h1>
-                  <p>
-                    Published commits, reconciliation, and post-hook outcomes
-                    remain distinct.
-                  </p>
-                </div>
-                <button onClick={() => void act(historyList)}>Refresh</button>
-              </div>
-              <h2>Local Git operations</h2>
-              <form
-                className="activity-filters"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  void act(historyList);
-                }}
-              >
-                <label>
-                  Operation type
-                  <select
-                    aria-label="Audit operation type"
-                    value={auditKind}
-                    onChange={(e) => setAuditKind(e.target.value)}
-                  >
-                    <option value="">All types</option>
-                    {["stage", "unstage", "commit"].map((kind) => (
-                      <option key={kind}>{kind}</option>
-                    ))}
-                  </select>
-                </label>
-                <label>
-                  Result
-                  <select
-                    aria-label="Audit result"
-                    value={auditPhase}
-                    onChange={(e) =>
-                      setAuditPhase(
-                        (
-                          [
-                            "complete",
-                            "blocked",
-                            "cancelled_before_publication",
-                            "needs_reauthorization",
-                            "published_needs_reconciliation",
-                            "needs_manual_reconciliation",
-                            "published_with_post_processing_failure",
-                            "uncertain_outcome",
-                          ] as const
-                        ).find((p) => p === e.target.value) ?? "",
-                      )
-                    }
-                  >
-                    <option value="">All results</option>
-                    {[
-                      "complete",
-                      "blocked",
-                      "cancelled_before_publication",
-                      "needs_reauthorization",
-                      "published_needs_reconciliation",
-                      "needs_manual_reconciliation",
-                      "published_with_post_processing_failure",
-                      "uncertain_outcome",
-                    ].map((phase) => (
-                      <option key={phase}>{phase}</option>
-                    ))}
-                  </select>
-                </label>
-                <label>
-                  Repository
-                  <select
-                    aria-label="Audit repository"
-                    value={auditWorktree}
-                    onChange={(e) => setAuditWorktree(e.target.value)}
-                  >
-                    <option value="">Entire workspace</option>
-                    {entries.map((e) => (
-                      <option key={e.id} value={e.id}>
-                        {repoName(e)}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label>
-                  Since UTC
-                  <input
-                    aria-label="Audit since"
-                    type="date"
-                    value={auditSince}
-                    onChange={(e) => setAuditSince(e.target.value)}
-                  />
-                </label>
-                <label>
-                  Until UTC
-                  <input
-                    aria-label="Audit until"
-                    type="date"
-                    value={auditUntil}
-                    onChange={(e) => setAuditUntil(e.target.value)}
-                  />
-                </label>
-                <button disabled={busy}>Apply audit filters</button>
-              </form>
-              <div className="operations">
-                {operations?.items.length === 0 && (
-                  <p>No GitFleet operations in this workspace.</p>
-                )}
-                {operations?.items.map(({ outcome: op, ...record }) => (
-                  <article key={op.operation_id}>
-                    <span
-                      className={`badge ${op.phase === "complete" ? "success" : "warning"}`}
-                    >
-                      {op.phase.replaceAll("_", " ")}
-                    </span>
-                    <code>{op.operation_id}</code>
-                    <p>
-                      {record.kind} · {record.subject} ·{" "}
-                      {new Date(record.created_at_ms).toLocaleString()}
-                    </p>
-                    <details>
-                      <summary>Recorded phases</summary>
-                      {record.events.map((event, i) => (
-                        <p key={i}>
-                          {new Date(event.at_ms).toLocaleString()} ·{" "}
-                          {event.phase} · Published: {String(event.published)}
-                        </p>
-                      ))}
-                      {!record.events_complete && (
-                        <p>Phase history exceeds the display limit.</p>
-                      )}
-                    </details>
-                    <p>
-                      {op.reason ??
-                        (op.published
-                          ? "Commit published; inspect reconciliation and post-processing below."
-                          : "No commit publication recorded.")}
-                    </p>
-                    <p>
-                      Published: {String(op.published)} · Index reconciled:{" "}
-                      {String(op.index_reconciled)}
-                    </p>
-                    {op.new_head && <code>{op.new_head}</code>}
-                    {op.post_processing.map((p, i) => (
-                      <p key={i}>{p}</p>
-                    ))}
-                    {![
-                      "complete",
-                      "published_with_post_processing_failure",
-                      "cancelled_before_publication",
-                      "needs_reauthorization",
-                      "proposed",
-                      "approved",
-                    ].includes(op.phase) && (
-                      <button
-                        onClick={() =>
-                          void act(async () => {
-                            if (workspace)
-                              await bridge.request({
-                                kind: "review_recovery",
-                                workspace,
-                                operation: op.operation_id,
-                              });
-                          })
-                        }
-                      >
-                        Inspect guarded recovery
-                      </button>
-                    )}
-                  </article>
-                ))}
-                {operations?.next != null && auditApplied && (
-                  <button
-                    onClick={() =>
-                      void act(async () => {
-                        if (workspace) {
-                          const next = value(
-                            await bridge.request({
-                              kind: "audit",
-                              workspace,
-                              query: {
-                                ...auditApplied,
-                                offset: operations.next!,
-                              },
-                            }),
-                            "audit",
-                          );
-                          setOperations({
-                            items: [...operations.items, ...next.items],
-                            next: next.next,
-                          });
-                        }
-                      })
-                    }
-                  >
-                    Load more results
-                  </button>
-                )}
-              </div>
-              {workspace && (
-                <WorkspaceObservationHistory
-                  key={workspace}
-                  bridge={bridge}
-                  workspace={workspace}
-                  busy={busy}
-                  act={act}
-                  revision={resultsRevision}
-                />
-              )}
-            </section>
+            workspace && (
+              <OperationHistory
+                key={workspace}
+                bridge={bridge}
+                workspace={workspace}
+                entries={entries}
+                busy={busy}
+                act={act}
+                revision={resultsRevision}
+              />
+            )
           ) : !nav.active_tab ? (
             <>
               <div className="page-title">

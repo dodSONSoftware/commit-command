@@ -1,6 +1,6 @@
 # M4 graph activity and operation audit
 
-Implemented November 2, 2026 under the user's completion-plan authorization. These are read-only services and desktop views. Native visual/accessibility acceptance is deferred while the Mac is locked; no M3 write default was enabled.
+Implemented November 2, 2026 under the user's completion-plan authorization. These are read-only services and desktop views. Selected native checks have since passed; full accessibility/scale acceptance remains open. No M3 write default was enabled.
 
 ## Core boundaries
 
@@ -14,7 +14,7 @@ Workspace aggregation deduplicates by logical repository identity before reading
 
 Audit reads actual M2 operations and durable phase events through the existing single storage owner. It exposes type/result/worktree/UTC time filters, 50-entry pages and up to 1,000 phase events per item with an explicit completeness flag. It decodes stored phase JSON into the typed Phase enum and preserves original journal records. UI pagination remains bound to the applied filters while filter inputs are being edited. Terminal cancelled/proposed/reauthorization states do not offer unnecessary recovery execution.
 
-No new schema or retention deletion is required for these read projections. Unresolved recovery artifacts remain protected. Configurable retention, other operation types and cross-feature audit projections will be extended when their owning features are implemented.
+No new schema or retention deletion is required for these read projections. Unresolved recovery artifacts remain protected. Configurable retention/deletion remains undecided. The additive OperationAudit projection now merges existing local, batch and remote observation sources with typed details and shared time/worktree/type/result filters before deterministic pagination. It preserves the legacy Audit API and schema 3. Only live native reviews project pending; orphaned proposals/in-progress records project interrupted without mutating journals or recreating authority. Partial publication/reconciliation/post-processing stays needs_attention. Selected raw records are capped at 4 MiB per record/page and projected details at 8 MiB. Later AI/Action/fetch/push producers require their own implementation; no fabricated events are generated. See [unified audit report](../reports/M4_UNIFIED_OPERATION_AUDIT_2026-11-02.md).
 
 ## Desktop behavior
 

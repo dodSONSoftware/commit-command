@@ -167,7 +167,7 @@ impl Application {
         }
         Ok(record)
     }
-    fn batch_view(&mut self, record: BatchRecord) -> Result<BatchView> {
+    pub(super) fn batch_view(&mut self, record: BatchRecord) -> Result<BatchView> {
         let outcomes = record
             .items
             .iter()

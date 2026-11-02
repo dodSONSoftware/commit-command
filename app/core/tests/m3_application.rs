@@ -1,5 +1,6 @@
 mod support;
 use gitfleet_core::{application::*, domain::*, inspection::Cancellation, writes::*, ErrorKind};
+use serde_json::json;
 use std::{fs, path::Path};
 use support::{tree_bytes, Fixture};
 fn fixture_options(f: &Fixture) -> Options {
@@ -1283,4 +1284,417 @@ fn final_presentation_snapshot_is_atomic_durable_and_never_grants_authority() {
         0
     );
     assert_eq!(tree_bytes(&f.repo), before);
+}
+
+fn unified_audit(
+    app: &mut Application,
+    workspace: &str,
+    query: OperationAuditQuery,
+) -> OperationAuditPage {
+    let Data::OperationAudit(page) = app
+        .request(
+            app.epoch(),
+            Request::OperationAudit {
+                workspace: workspace.into(),
+                query,
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    page
+}
+fn all_audit() -> OperationAuditQuery {
+    OperationAuditQuery {
+        offset: 0,
+        worktree: None,
+        operation_kind: None,
+        result: None,
+        since_ms: None,
+        until_ms: None,
+    }
+}
+#[test]
+fn unified_audit_filters_real_local_batch_and_remote_records_without_mutation_or_authority() {
+    let (f, mut app, ws, wt) = setup();
+    f.git(&[
+        "remote",
+        "add",
+        "origin",
+        "https://example.invalid/repo.git",
+    ]);
+    fs::write(f.repo.join("file.txt"), b"unified audit fixture\n").unwrap();
+    trust(&mut app, &ws, &wt);
+    let before = tree_bytes(&f.repo);
+    let Data::Review(stage) = app
+        .request(
+            app.epoch(),
+            Request::Propose {
+                workspace: ws.clone(),
+                worktree: wt.clone(),
+                request: WriteRequest::Stage {
+                    paths: vec![NativePath::from_path(Path::new("file.txt"))],
+                    hooks: HookPolicy::Execute,
+                },
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    app.cancel_review(&stage.id).unwrap();
+    let Data::Review(batch) = app
+        .request(
+            app.epoch(),
+            Request::ReviewBatch {
+                workspace: ws.clone(),
+                selections: vec![BatchSelection {
+                    worktree: wt.clone(),
+                    message: "audit batch".into(),
+                    mode: BatchMode::ReviewAll,
+                    excluded: vec![],
+                    hooks: HookPolicy::Execute,
+                    signing: SigningPreference::Unsigned,
+                }],
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    app.cancel_review(&batch.id).unwrap();
+    let Data::Review(observation) = app
+        .request(
+            app.epoch(),
+            Request::ReviewRemoteObservation {
+                workspace: ws.clone(),
+                worktree: wt.clone(),
+                remote: "origin".into(),
+                reference: "refs/heads/main".into(),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    let pending = unified_audit(
+        &mut app,
+        &ws,
+        OperationAuditQuery {
+            result: Some(OperationAuditResult::Pending),
+            ..all_audit()
+        },
+    );
+    assert_eq!(pending.items.len(), 1);
+    assert_eq!(
+        pending.items[0].operation_kind,
+        OperationAuditKind::RemoteObservation
+    );
+    app.cancel_review(&observation.id).unwrap();
+    let all = unified_audit(&mut app, &ws, all_audit());
+    assert_eq!(all.items.len(), 4);
+    assert!(all
+        .items
+        .windows(2)
+        .all(|rows| rows[0].created_at_ms >= rows[1].created_at_ms));
+    assert!(all
+        .items
+        .iter()
+        .all(|item| item.result == OperationAuditResult::Cancelled));
+    for kind in [
+        OperationAuditKind::Stage,
+        OperationAuditKind::Commit,
+        OperationAuditKind::BatchCommit,
+        OperationAuditKind::RemoteObservation,
+    ] {
+        let page = unified_audit(
+            &mut app,
+            &ws,
+            OperationAuditQuery {
+                operation_kind: Some(kind),
+                worktree: Some(wt.clone()),
+                ..all_audit()
+            },
+        );
+        assert_eq!(page.items.len(), 1, "{kind:?}");
+        assert_eq!(page.items[0].operation_kind, kind);
+        match &page.items[0].record {
+            OperationAuditRecord::Local(record) => {
+                assert!(!record.events.is_empty());
+                assert!(!record.outcome.published);
+            }
+            OperationAuditRecord::Batch(view) => {
+                assert_eq!(view.outcomes.len(), 1);
+                assert_eq!(view.record.phase, BatchPhase::Cancelled);
+            }
+            OperationAuditRecord::RemoteObservation(record) => assert_eq!(
+                record.phase,
+                gitfleet_core::remote::observation::ObservationPhase::Cancelled
+            ),
+        }
+    }
+    assert!(unified_audit(
+        &mut app,
+        &ws,
+        OperationAuditQuery {
+            since_ms: Some(u64::MAX >> 1),
+            ..all_audit()
+        }
+    )
+    .items
+    .is_empty());
+    assert!(app
+        .request(
+            app.epoch(),
+            Request::OperationAudit {
+                workspace: ws.clone(),
+                query: OperationAuditQuery {
+                    worktree: Some("foreign".into()),
+                    ..all_audit()
+                }
+            }
+        )
+        .is_err());
+    assert!(app
+        .request(
+            app.epoch(),
+            Request::OperationAudit {
+                workspace: "foreign".into(),
+                query: all_audit()
+            }
+        )
+        .is_err());
+    assert!(app.begin_confirmation(&observation.id).is_err());
+    assert!(!f.root.join("state/network").exists());
+    assert_eq!(before, tree_bytes(&f.repo));
+}
+
+#[test]
+fn unified_audit_pages_across_tied_sources_and_projects_orphans_without_rewriting_journals() {
+    let (f, mut app, ws, wt) = setup();
+    f.git(&[
+        "remote",
+        "add",
+        "origin",
+        "https://example.invalid/repo.git",
+    ]);
+    trust(&mut app, &ws, &wt);
+    let Data::Review(review) = app
+        .request(
+            app.epoch(),
+            Request::ReviewRemoteObservation {
+                workspace: ws.clone(),
+                worktree: wt.clone(),
+                remote: "origin".into(),
+                reference: "refs/heads/main".into(),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    app.cancel_review(&review.id).unwrap();
+    let db = rusqlite::Connection::open(f.root.join("state/state.db")).unwrap();
+    let raw: String = db
+        .query_row(
+            "SELECT value FROM state WHERE key LIKE 'remote-observation:%'",
+            [],
+            |r| r.get(0),
+        )
+        .unwrap();
+    let template: serde_json::Value = serde_json::from_str(&raw).unwrap();
+    db.execute(
+        "DELETE FROM state WHERE key LIKE 'remote-observation:%'",
+        [],
+    )
+    .unwrap();
+    // Synthetic historical records exercise pagination and crash projections only.
+    for n in 0..55 {
+        let mut stored = template.clone();
+        let id = format!("00000000-0000-4000-8000-{n:012}");
+        stored["value"]["plan"]["id"] = json!(id);
+        stored["value"]["plan"]["created_at_ms"] = json!(100);
+        stored["value"]["phase"] = json!(if n % 2 == 0 { "running" } else { "proposed" });
+        db.execute(
+            "INSERT INTO state(key,value) VALUES(?1,?2)",
+            rusqlite::params![format!("remote-observation:{id}"), stored.to_string()],
+        )
+        .unwrap();
+    }
+    let batch_id = "10000000-0000-4000-8000-000000000000";
+    let batch = BatchRecord {
+        version: 1,
+        id: batch_id.into(),
+        workspace: WorkspaceId(ws.clone()),
+        created_at_ms: 100,
+        phase: BatchPhase::Executing,
+        issue: None,
+        items: vec![BatchItem {
+            worktree: WorktreeId(wt.clone()),
+            path: NativePath::from_path(&f.repo),
+            dependencies: vec![],
+            operation: None,
+            issue: None,
+        }],
+    };
+    db.execute(
+        "INSERT INTO state(key,value) VALUES(?1,?2)",
+        rusqlite::params![
+            format!("batch:{batch_id}"),
+            serde_json::to_string(&batch).unwrap()
+        ],
+    )
+    .unwrap();
+    let mut foreign = template.clone();
+    foreign["value"]["plan"]["workspace"] = json!("other-workspace");
+    foreign["value"]["phase"] = json!("running");
+    db.execute(
+        "INSERT INTO state(key,value) VALUES('remote-observation:foreign',?1)",
+        [foreign.to_string()],
+    )
+    .unwrap();
+    let stored_before: Vec<String> = {
+        let mut stmt = db
+            .prepare("SELECT value FROM state WHERE key LIKE 'remote-observation:%' ORDER BY key")
+            .unwrap();
+        stmt.query_map([], |r| r.get(0))
+            .unwrap()
+            .collect::<Result<_, _>>()
+            .unwrap()
+    };
+    let first = unified_audit(
+        &mut app,
+        &ws,
+        OperationAuditQuery {
+            result: Some(OperationAuditResult::Interrupted),
+            since_ms: Some(100),
+            until_ms: Some(100),
+            ..all_audit()
+        },
+    );
+    assert_eq!(first.items.len(), 50);
+    assert_eq!(first.next, Some(50));
+    let second = unified_audit(
+        &mut app,
+        &ws,
+        OperationAuditQuery {
+            offset: 50,
+            result: Some(OperationAuditResult::Interrupted),
+            ..all_audit()
+        },
+    );
+    assert_eq!(second.items.len(), 6);
+    assert_eq!(second.next, None);
+    let ids = first
+        .items
+        .iter()
+        .chain(&second.items)
+        .map(|i| i.id.clone())
+        .collect::<std::collections::BTreeSet<_>>();
+    assert_eq!(ids.len(), 56);
+    assert!(first
+        .items
+        .iter()
+        .chain(&second.items)
+        .all(|i| match &i.record {
+            OperationAuditRecord::RemoteObservation(r) =>
+                r.phase == gitfleet_core::remote::observation::ObservationPhase::Interrupted,
+            OperationAuditRecord::Batch(b) => b.record.phase == BatchPhase::Interrupted,
+            _ => false,
+        }));
+    assert_eq!(first.items[0].id, batch_id);
+
+    assert!(unified_audit(
+        &mut app,
+        &ws,
+        OperationAuditQuery {
+            result: Some(OperationAuditResult::Pending),
+            ..all_audit()
+        }
+    )
+    .items
+    .is_empty());
+    let after: Vec<String> = {
+        let mut stmt = db
+            .prepare("SELECT value FROM state WHERE key LIKE 'remote-observation:%' ORDER BY key")
+            .unwrap();
+        stmt.query_map([], |r| r.get(0))
+            .unwrap()
+            .collect::<Result<_, _>>()
+            .unwrap()
+    };
+    assert_eq!(stored_before, after);
+    for query in [
+        OperationAuditQuery {
+            offset: 1_000_001,
+            ..all_audit()
+        },
+        OperationAuditQuery {
+            since_ms: Some(101),
+            until_ms: Some(100),
+            ..all_audit()
+        },
+        OperationAuditQuery {
+            until_ms: Some(u64::MAX),
+            ..all_audit()
+        },
+    ] {
+        assert_eq!(
+            app.request(
+                app.epoch(),
+                Request::OperationAudit {
+                    workspace: ws.clone(),
+                    query
+                }
+            )
+            .unwrap_err()
+            .kind,
+            ErrorKind::InvalidRequest
+        );
+    }
+    let key = "remote-observation:00000000-0000-4000-8000-000000000000";
+    db.execute("UPDATE state SET value=json_set(value,'$.version',2,'$.value.plan.created_at_ms',200) WHERE key=?1",[key]).unwrap();
+    assert_eq!(
+        app.request(
+            app.epoch(),
+            Request::OperationAudit {
+                workspace: ws.clone(),
+                query: all_audit()
+            }
+        )
+        .unwrap_err()
+        .kind,
+        ErrorKind::NewerSchema
+    );
+    db.execute(
+        "UPDATE state SET value=json_set(value,'$.version',1,'$.padding',?2) WHERE key=?1",
+        rusqlite::params![key, "x".repeat(4 * 1024 * 1024)],
+    )
+    .unwrap();
+    assert_eq!(
+        app.request(
+            app.epoch(),
+            Request::OperationAudit {
+                workspace: ws.clone(),
+                query: all_audit()
+            }
+        )
+        .unwrap_err()
+        .kind,
+        ErrorKind::OutputLimit
+    );
+    assert!(serde_json::from_value::<Request>(
+        json!({"kind":"operation_audit","workspace":ws,"query":{"offset":0,"result":"execute"}})
+    )
+    .is_err());
+    assert!(serde_json::from_value::<Request>(
+        json!({"kind":"operation_audit","workspace":ws,"query":{"offset":0,"approved":true}})
+    )
+    .is_err());
 }

@@ -16,6 +16,11 @@ export type Data =
       [k: string]: unknown;
     }
   | {
+      kind: "operation_audit";
+      value: OperationAuditPage;
+      [k: string]: unknown;
+    }
+  | {
       kind: "audit";
       value: AuditPage;
       [k: string]: unknown;
@@ -150,6 +155,32 @@ export type ErrorKind =
   | "uncertain_outcome";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "OperationAuditKind".
+ */
+export type OperationAuditKind =
+  "stage" | "unstage" | "commit" | "batch_commit" | "remote_observation";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "OperationAuditRecord".
+ */
+export type OperationAuditRecord =
+  | {
+      kind: "local";
+      value: AuditEntry;
+      [k: string]: unknown;
+    }
+  | {
+      kind: "batch";
+      value: BatchView;
+      [k: string]: unknown;
+    }
+  | {
+      kind: "remote_observation";
+      value: Observation;
+      [k: string]: unknown;
+    };
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "Phase".
  */
 export type Phase =
@@ -212,6 +243,29 @@ export type BatchPhase =
   | "interrupted";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ObservationPhase".
+ */
+export type ObservationPhase =
+  "proposed" | "running" | "complete" | "blocked" | "cancelled" | "interrupted";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "Transport".
+ */
+export type Transport =
+  "local" | "https" | "ssh" | "git" | "remote_helper" | "unsupported";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "OperationAuditResult".
+ */
+export type OperationAuditResult =
+  | "pending"
+  | "complete"
+  | "blocked"
+  | "cancelled"
+  | "interrupted"
+  | "needs_attention";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "HookPolicy".
  */
 export type HookPolicy = "execute" | "bypass_all";
@@ -225,18 +279,6 @@ export type BatchMode = "review_all" | "index_only";
  * via the `definition` "SigningPreference".
  */
 export type SigningPreference = "configured" | "unsigned";
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "Transport".
- */
-export type Transport =
-  "local" | "https" | "ssh" | "git" | "remote_helper" | "unsupported";
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "ObservationPhase".
- */
-export type ObservationPhase =
-  "proposed" | "running" | "complete" | "blocked" | "cancelled" | "interrupted";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "Availability".
@@ -395,11 +437,23 @@ export interface Commit2 {
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "AuditPage".
+ * via the `definition` "OperationAuditPage".
  */
-export interface AuditPage {
-  items: AuditEntry[];
+export interface OperationAuditPage {
+  items: OperationAuditEntry[];
   next?: number | null;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "OperationAuditEntry".
+ */
+export interface OperationAuditEntry {
+  created_at_ms: number;
+  id: string;
+  operation_kind: OperationAuditKind;
+  record: OperationAuditRecord;
+  result: OperationAuditResult;
   [k: string]: unknown;
 }
 /**
@@ -443,15 +497,6 @@ export interface Outcome {
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "BatchPage".
- */
-export interface BatchPage {
-  items: BatchView[];
-  next?: number | null;
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "BatchView".
  */
 export interface BatchView {
@@ -483,6 +528,81 @@ export interface BatchItem {
   operation?: string | null;
   path: NativePath;
   worktree: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "Observation".
+ */
+export interface Observation {
+  issue?: Issue | null;
+  observed_at_ms?: number | null;
+  oid?: ObjectId | null;
+  phase: ObservationPhase;
+  plan: ObservationPlan;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ObservationPlan".
+ */
+export interface ObservationPlan {
+  config_digest: string;
+  created_at_ms: number;
+  destination: string;
+  generation: string;
+  id: string;
+  local_binding?: string | null;
+  local_target?: NativePath | null;
+  metadata: Metadata;
+  reference: string;
+  remote: string;
+  tools: ToolBinding[];
+  transport: Transport;
+  workspace: string;
+  worktree: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "Metadata".
+ */
+export interface Metadata {
+  common_binding: string;
+  common_dir: NativePath;
+  git_binding: string;
+  git_dir: NativePath;
+  object_format: ObjectFormat;
+  root: NativePath;
+  root_binding: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ToolBinding".
+ */
+export interface ToolBinding {
+  fingerprint: string;
+  path: NativePath;
+  role: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AuditPage".
+ */
+export interface AuditPage {
+  items: AuditEntry[];
+  next?: number | null;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "BatchPage".
+ */
+export interface BatchPage {
+  items: BatchView[];
+  next?: number | null;
   [k: string]: unknown;
 }
 /**
@@ -567,63 +687,6 @@ export interface ConfigOrigin {
 export interface ObservationPage {
   items: Observation[];
   next?: number | null;
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "Observation".
- */
-export interface Observation {
-  issue?: Issue | null;
-  observed_at_ms?: number | null;
-  oid?: ObjectId | null;
-  phase: ObservationPhase;
-  plan: ObservationPlan;
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "ObservationPlan".
- */
-export interface ObservationPlan {
-  config_digest: string;
-  created_at_ms: number;
-  destination: string;
-  generation: string;
-  id: string;
-  local_binding?: string | null;
-  local_target?: NativePath | null;
-  metadata: Metadata;
-  reference: string;
-  remote: string;
-  tools: ToolBinding[];
-  transport: Transport;
-  workspace: string;
-  worktree: string;
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "Metadata".
- */
-export interface Metadata {
-  common_binding: string;
-  common_dir: NativePath;
-  git_binding: string;
-  git_dir: NativePath;
-  object_format: ObjectFormat;
-  root: NativePath;
-  root_binding: string;
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "ToolBinding".
- */
-export interface ToolBinding {
-  fingerprint: string;
-  path: NativePath;
-  role: string;
   [k: string]: unknown;
 }
 /**

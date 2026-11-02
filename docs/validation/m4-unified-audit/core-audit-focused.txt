@@ -1,0 +1,20 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+error: cannot find macro `json` in this scope
+    --> tests/m3_application.rs:1522:36
+     |
+1522 |         stored["value"]["phase"] = json!(if n % 2 == 0 { "running" } else { "proposed" });
+     |                                    ^^^^
+
+error: cannot find macro `json` in this scope
+    --> tests/m3_application.rs:1521:52
+     |
+1521 |         stored["value"]["plan"]["created_at_ms"] = json!(100);
+     |                                                    ^^^^
+
+error: cannot find macro `json` in this scope
+    --> tests/m3_application.rs:1520:41
+     |
+1520 |         stored["value"]["plan"]["id"] = json!(id);
+     |                                         ^^^^
+
+error: could not compile `gitfleet-core` (test "m3_application") due to 3 previous errors

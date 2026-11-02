@@ -474,6 +474,16 @@ impl ControlledWrites {
         self.persist_observation(&stored)?;
         Ok(stored.value)
     }
+    pub(crate) fn observation_audit_detail(&self, payload: &str) -> Result<Observation> {
+        let stored: StoredObservation = serde_json::from_str(payload)?;
+        if stored.version != 1 {
+            return Err(fail(
+                ErrorKind::NewerSchema,
+                "Unsupported observation record",
+            ));
+        }
+        Ok(stored.value)
+    }
     pub(crate) fn observations(
         &mut self,
         workspace: &WorkspaceId,

@@ -92,6 +92,8 @@ function fake(writes = false) {
             kind: "remote_observations",
             value: { items: [], next: null },
           };
+        case "operation_audit":
+          return { kind: "operation_audit", value: { items: [], next: null } };
         case "audit":
           return { kind: "audit", value: { items: [], next: null } };
         case "operations":
@@ -239,7 +241,7 @@ it("clears the removed active workspace and operation view, then loads another w
   await userEvent.click(
     screen.getByRole("button", { name: "◷ Operation results" }),
   );
-  await screen.findByText("No GitFleet operations in this workspace.");
+  await screen.findByText("No recorded operations match these filters.");
   await userEvent.click(screen.getByText("Workspace settings"));
   await userEvent.click(
     screen.getByRole("button", { name: "Remove saved definition" }),
@@ -462,30 +464,39 @@ it("keeps audit pagination bound to applied filters until edited filters are sub
   const { bridge, requests } = fake();
   const original = bridge.request;
   bridge.request = async (request) => {
-    if (request.kind !== "audit") return original(request);
+    if (request.kind !== "operation_audit") return original(request);
     requests.push(request);
     return {
-      kind: "audit",
+      kind: "operation_audit",
       value: {
         items:
           request.query.offset === 0 && !request.query.operation_kind
             ? [
                 {
-                  outcome: {
-                    operation_id: "record",
-                    phase: "complete",
-                    published: false,
-                    index_reconciled: true,
-                    new_head: null,
-                    post_processing: [],
-                    reason: null,
-                  },
-                  worktree: "parent",
-                  kind: "stage",
-                  subject: "",
+                  id: "record",
                   created_at_ms: 1,
-                  events: [],
-                  events_complete: true,
+                  operation_kind: "stage",
+                  result: "complete",
+                  record: {
+                    kind: "local",
+                    value: {
+                      outcome: {
+                        operation_id: "record",
+                        phase: "complete",
+                        published: false,
+                        index_reconciled: true,
+                        new_head: null,
+                        post_processing: [],
+                        reason: null,
+                      },
+                      worktree: "parent",
+                      kind: "stage",
+                      subject: "",
+                      created_at_ms: 1,
+                      events: [],
+                      events_complete: true,
+                    },
+                  },
                 },
               ]
             : [],
@@ -502,13 +513,6 @@ it("keeps audit pagination bound to applied filters until edited filters are sub
     screen.getByRole("button", { name: "◷ Operation results" }),
   );
   await screen.findByRole("button", { name: "Load more results" });
-  await screen.findByText("No recorded remote observations in this workspace.");
-  expect(requests).toContainEqual({
-    kind: "remote_observations",
-    workspace: "ws",
-    worktree: null,
-    offset: 0,
-  });
   fireEvent.change(
     screen.getByRole("combobox", { name: "Audit operation type" }),
     { target: { value: "commit" } },
@@ -516,17 +520,19 @@ it("keeps audit pagination bound to applied filters until edited filters are sub
   await userEvent.click(
     screen.getByRole("button", { name: "Load more results" }),
   );
-  const queries = requests.filter((r) => r.kind === "audit");
+  const queries = requests.filter((r) => r.kind === "operation_audit");
   expect(queries.at(-1)).toMatchObject({
     query: { offset: 50, operation_kind: null },
   });
   await userEvent.click(
     screen.getByRole("button", { name: "Apply audit filters" }),
   );
-  expect(requests.filter((r) => r.kind === "audit").at(-1)).toMatchObject({
+  expect(
+    requests.filter((r) => r.kind === "operation_audit").at(-1),
+  ).toMatchObject({
     query: { offset: 0, operation_kind: "commit" },
   });
-  await screen.findByText("No GitFleet operations in this workspace.");
+  await screen.findByText("No recorded operations match these filters.");
 });
 
 it("keeps shared bulk messages and content policy across selection navigation and restart", async () => {

@@ -1,0 +1,18 @@
+{
+  "journals_unchanged": true,
+  "repository_hashes_modes_unchanged": true,
+  "native_cases_passed": [
+    "mixed chronology displays real cancelled local operation and explicitly synthetic partial batch/remote records",
+    "native type filter remote_observation returns three records",
+    "combined interrupted result filter returns one remote record",
+    "engine repository scope and Refresh retain the applied filters",
+    "scrolling reaches the record in the restored small window",
+    "ordinary writes disabled; native Quit exits"
+  ],
+  "not_claimed": [
+    "actual native remote execution",
+    "full VoiceOver",
+    "large-history performance"
+  ],
+  "new_layout_finding": "Saved physical 1440x940 restored to observed logical 720x470; investigate DPI/minimum-size restoration in a separate checkpoint"
+}

@@ -1,0 +1,68 @@
+{
+  "local": [
+    [
+      "ec676ecc-2705-4a33-a3ad-6ff7f395adea",
+      "{\"proposal\":{\"operation_id\":\"ec676ecc-2705-4a33-a3ad-6ff7f395adea\",\"workspace_id\":\"f5ac56ff-8c2a-4e3b-bc65-b3d5b3ef3d06\",\"repository_id\":\"17dd7418-abfb-4b43-82a4-91adf9e012b6\",\"worktree_id\":\"4d8ea43f-5d58-4c51-98f1-41658d0ff5ac\",\"request\":{\"kind\":\"commit\",\"selected\":[{\"path\":{\"encoding\":\"utf8\",\"value\":\"README.md\"},\"source\":\"index\"}],\"message\":\"Close during owned hook \u03ba\\n\",\"hooks\":\"execute\",\"signing\":\"configured\"},\"branch\":\"refs/heads/main\",\"expected_head\":\"f8a775038c617da6adacffb92eab1b36088f2364\",\"approved_tree\":\"eee536a782dcef09157b2b44c910b213e8001f3e\",\"message\":[67,108,111,115,101,32,100,117,114,105,110,103,32,111,119,110,101,100,32,104,111,111,107,32,206,186,10],\"author_name\":\"M3 Acceptance Fixture\",\"author_email\":\"fixture@example.invalid\",\"author_date\":\"1793644036 +0000\",\"hooks\":\"execute\",\"hook_manifest\":[{\"name\":\"pre-commit\",\"source\":{\"encoding\":\"utf8\",\"value\":\"/private/tmp/gitfleet-m3-native-1nx521al/workspace/engine/.git/hooks/pre-commit\"},\"resolved\":{\"encoding\":\"utf8\",\"value\":\"/private/tmp/gitfleet-m3-native-1nx521al/workspace/engine/.git/hooks/pre-commit\"},\"executable\":true,\"fingerprint\":\"88221e36b467ab969c6a5d9cd0994a4c5b9d31b606d9d8cb54b34b4600561152\",\"framework\":false}],\"signing\":null,\"created_at_ms\":1793644036831,\"review_digest\":\"6735bc811e4793e6061921f3f9da2e655e745a0e0891d9d4a573bf4fb57e1bea\",\"patch\":[100,105,102,102,32,45,45,103,105,116,32,97,47,82,69,65,68,77,69,46,109,100,32,98,47,82,69,65,68,77,69,46,109,100,10,105,110,100,101,120,32,100,97,98,101,52,48,101,46,46,98,54,102,50,54,50,55,32,49,48,48,54,52,52,10,45,45,45,32,97,47,82,69,65,68,77,69,46,109,100,10,43,43,43,32,98,47,82,69,65,68,77,69,46,109,100,10,64,64,32,45,49,44,51,32,43,49,44,51,32,64,64,10,32,35,32,101,110,103,105,110,101,10,32,10,45,68,105,115,112,111,115,97,98,108,101,32,71,105,116,70,108,101,101,116,32,97,99,99,101,112,116,97,110,99,101,32,114,101,112,111,115,105,116,111,114,121,46,10,43,82,101,118,105,101,119,101,100,32,110,97,116,105,118,101,32,102,105,120,116,117,114,101,32,99,111,110,116,101,110,116,46,10]},\"metadata\":{\"root\":{\"encoding\":\"utf8\",\"value\":\"/private/tmp/gitfleet-m3-native-1nx521al/workspace/engine\"},\"git_dir\":{\"encoding\":\"utf8\",\"value\":\"/private/tmp/gitfleet-m3-native-1nx521al/workspace/engine/.git\"},\"common_dir\":{\"encoding\":\"utf8\",\"value\":\"/private/tmp/gitfleet-m3-native-1nx521al/workspace/engine/.git\"},\"root_binding\":\"16777229:48672487:Some(SystemTime { tv_sec: 1793643990, tv_nsec: 855966688 })\",\"git_binding\":\"16777229:48672488:Some(SystemTime { tv_sec: 1793643990, tv_nsec: 860459719 })\",\"common_binding\":\"16777229:48672488:Some(SystemTime { tv_sec: 1793643990, tv_nsec: 860459719 })\",\"object_format\":\"sha1\"},\"binding\":\"bba601c963ac904d20ade24345b0080cff9930be3abc6d53b05cf6432a882f73\",\"config\":{\"config_hash\":\"27653a0d6667782b8d1e477db7cda169c2eeefaab50ae9e821c58e7ac622c245\",\"config_origins\":[[102,105,108,101,58,47,111,112,116,47,104,111,109,101,98,114,101,119,47,101,116,99,47,103,105,116,99,111,110,102,105,103],[102,105,108,101,58,47,85,115,101,114,115,47,114,97,110,100,121,100,111,100,115,111,110,47,46,103,105,116,99,111,110,102,105,103],[102,105,108,101,58,46,103,105,116,47,99,111,110,102,105,103]],\"name\":\"M3 Acceptance Fixture\",\"email\":\"fixture@example.invalid\",\"date\":\"1793644036 +0000\",\"hooks\":[{\"name\":\"pre-commit\",\"source\":{\"encoding\":\"utf8\",\"value\":\"/private/tmp/gitfleet-m3-native-1nx521al/workspace/engine/.git/hooks/pre-commit\"},\"resolved\":{\"encoding\":\"utf8\",\"value\":\"/private/tmp/gitfleet-m3-native-1nx521al/workspace/engine/.git/hooks/pre-commit\"},\"executable\":true,\"fingerprint\":\"88221e36b467ab969c6a5d9cd0994a4c5b9d31b606d9d8cb54b34b4600561152\",\"framework\":false}],\"signing\":null,\"signer_home\":null,\"file_mode\":true},\"original_index_hash\":\"ceee8d95641c86140aefe1eca3f08e3ba01abf112fb195c7c7f06ca61cac6bbb\",\"original_entries\":[{\"path\":{\"encoding\":\"utf8\",\"value\":\"README.md\"},\"mode\":\"100644\",\"oid\":\"b6f26276eb5c3b39f662d574f5b791f893c3f2dc\"},{\"path\":{\"encoding\":\"utf8\",\"value\":\"settings.toml\"},\"mode\":\"100644\",\"oid\":\"68fab1ba3b666cb439dba450c095ecbce907f443\"}],\"selected_fingerprints\":[[{\"encoding\":\"utf8\",\"value\":\"README.md\"},\"c1c6661d687d7f3e07898a25b761d67ccf0ac6b1ea86f6f06f8d09c0ab9923ec\"]],\"candidate_hash\":\"fc6b33480e6a6a678be45d89d4b86c1d5898f00b53be82f54b687d9fad1bee20\",\"selected_index_hash\":\"e42421b3f93018be2f1d4be1b93402a9012588c24b2fddd3cd4feca300b765b1\",\"new_head\":null,\"phase\":\"cancelled_before_publication\",\"published\":false,\"reconciled\":false,\"lock\":null,\"head_lock\":null,\"head_log_before\":null,\"post_attempted\":[],\"post_results\":[],\"reason\":\"Cancelled: Inspection cancelled\"}"
+    ]
+  ],
+  "events": [
+    [
+      1,
+      "ec676ecc-2705-4a33-a3ad-6ff7f395adea",
+      "\"proposed\"",
+      0,
+      null,
+      1793644037000
+    ],
+    [
+      2,
+      "ec676ecc-2705-4a33-a3ad-6ff7f395adea",
+      "\"approved\"",
+      0,
+      null,
+      1793644056289
+    ],
+    [
+      3,
+      "ec676ecc-2705-4a33-a3ad-6ff7f395adea",
+      "\"preparing\"",
+      0,
+      null,
+      1793644056466
+    ],
+    [
+      4,
+      "ec676ecc-2705-4a33-a3ad-6ff7f395adea",
+      "\"hooks_running\"",
+      0,
+      null,
+      1793644056489
+    ],
+    [
+      5,
+      "ec676ecc-2705-4a33-a3ad-6ff7f395adea",
+      "\"cancelled_before_publication\"",
+      0,
+      null,
+      1793644073260
+    ]
+  ],
+  "remote_and_batch": [
+    [
+      "batch:11540874-0d5e-4983-a9ef-5904a5e75374",
+      "{\"version\": 1, \"id\": \"11540874-0d5e-4983-a9ef-5904a5e75374\", \"workspace\": \"f5ac56ff-8c2a-4e3b-bc65-b3d5b3ef3d06\", \"created_at_ms\": 1793645484191, \"phase\": \"partial_failure\", \"issue\": {\"kind\": \"cancelled\", \"message\": \"Synthetic batch history fixture; no batch executed\"}, \"items\": [{\"worktree\": \"4d8ea43f-5d58-4c51-98f1-41658d0ff5ac\", \"path\": {\"encoding\": \"utf8\", \"value\": \"/private/tmp/gitfleet-m3-native-1nx521al/workspace/engine\"}, \"dependencies\": [], \"operation\": \"ec676ecc-2705-4a33-a3ad-6ff7f395adea\", \"issue\": null}]}"
+    ],
+    [
+      "remote-observation:0ec9a671-01bb-4393-a2d0-d9da0acb62eb",
+      "{\"version\": 1, \"session\": \"synthetic-history-no-authority\", \"value\": {\"plan\": {\"id\": \"0ec9a671-01bb-4393-a2d0-d9da0acb62eb\", \"workspace\": \"f5ac56ff-8c2a-4e3b-bc65-b3d5b3ef3d06\", \"worktree\": \"4d8ea43f-5d58-4c51-98f1-41658d0ff5ac\", \"metadata\": {\"root\": {\"encoding\": \"utf8\", \"value\": \"/private/tmp/gitfleet-m3-native-1nx521al/workspace/engine\"}, \"git_dir\": {\"encoding\": \"utf8\", \"value\": \"/private/tmp/gitfleet-m3-native-1nx521al/workspace/engine/.git\"}, \"common_dir\": {\"encoding\": \"utf8\", \"value\": \"/private/tmp/gitfleet-m3-native-1nx521al/workspace/engine/.git\"}, \"root_binding\": \"16777229:48672487:Some(SystemTime { tv_sec: 1793643990, tv_nsec: 855966688 })\", \"git_binding\": \"16777229:48672488:Some(SystemTime { tv_sec: 1793643990, tv_nsec: 860459719 })\", \"common_binding\": \"16777229:48672488:Some(SystemTime { tv_sec: 1793643990, tv_nsec: 860459719 })\", \"object_format\": \"sha1\"}, \"remote\": \"fixture-history-only\", \"reference\": \"refs/heads/presentation-fixture\", \"destination\": \"https://fixture.invalid/no-network\", \"transport\": \"https\", \"config_digest\": \"synthetic-history\", \"generation\": \"synthetic-history\", \"created_at_ms\": 1793644437141, \"tools\": [], \"local_target\": null, \"local_binding\": null}, \"phase\": \"running\", \"oid\": null, \"observed_at_ms\": null, \"issue\": null}}"
+    ],
+    [
+      "remote-observation:2bfca735-6f9a-4957-bda0-3ade3a7aeaa7",
+      "{\"version\": 1, \"session\": \"synthetic-history-no-authority\", \"value\": {\"plan\": {\"id\": \"2bfca735-6f9a-4957-bda0-3ade3a7aeaa7\", \"workspace\": \"f5ac56ff-8c2a-4e3b-bc65-b3d5b3ef3d06\", \"worktree\": \"4d8ea43f-5d58-4c51-98f1-41658d0ff5ac\", \"metadata\": {\"root\": {\"encoding\": \"utf8\", \"value\": \"/private/tmp/gitfleet-m3-native-1nx521al/workspace/engine\"}, \"git_dir\": {\"encoding\": \"utf8\", \"value\": \"/private/tmp/gitfleet-m3-native-1nx521al/workspace/engine/.git\"}, \"common_dir\": {\"encoding\": \"utf8\", \"value\": \"/private/tmp/gitfleet-m3-native-1nx521al/workspace/engine/.git\"}, \"root_binding\": \"16777229:48672487:Some(SystemTime { tv_sec: 1793643990, tv_nsec: 855966688 })\", \"git_binding\": \"16777229:48672488:Some(SystemTime { tv_sec: 1793643990, tv_nsec: 860459719 })\", \"common_binding\": \"16777229:48672488:Some(SystemTime { tv_sec: 1793643990, tv_nsec: 860459719 })\", \"object_format\": \"sha1\"}, \"remote\": \"fixture-history-only\", \"reference\": \"refs/heads/presentation-fixture\", \"destination\": \"https://fixture.invalid/no-network\", \"transport\": \"https\", \"config_digest\": \"synthetic-history\", \"generation\": \"synthetic-history\", \"created_at_ms\": 1793644437141, \"tools\": [], \"local_target\": null, \"local_binding\": null}, \"phase\": \"complete\", \"oid\": null, \"observed_at_ms\": 1793644437141, \"issue\": null}}"
+    ],
+    [
+      "remote-observation:35894c2a-5408-4dba-82fd-0a921ab8996b",
+      "{\"version\": 1, \"session\": \"synthetic-history-no-authority\", \"value\": {\"plan\": {\"id\": \"35894c2a-5408-4dba-82fd-0a921ab8996b\", \"workspace\": \"f5ac56ff-8c2a-4e3b-bc65-b3d5b3ef3d06\", \"worktree\": \"4d8ea43f-5d58-4c51-98f1-41658d0ff5ac\", \"metadata\": {\"root\": {\"encoding\": \"utf8\", \"value\": \"/private/tmp/gitfleet-m3-native-1nx521al/workspace/engine\"}, \"git_dir\": {\"encoding\": \"utf8\", \"value\": \"/private/tmp/gitfleet-m3-native-1nx521al/workspace/engine/.git\"}, \"common_dir\": {\"encoding\": \"utf8\", \"value\": \"/private/tmp/gitfleet-m3-native-1nx521al/workspace/engine/.git\"}, \"root_binding\": \"16777229:48672487:Some(SystemTime { tv_sec: 1793643990, tv_nsec: 855966688 })\", \"git_binding\": \"16777229:48672488:Some(SystemTime { tv_sec: 1793643990, tv_nsec: 860459719 })\", \"common_binding\": \"16777229:48672488:Some(SystemTime { tv_sec: 1793643990, tv_nsec: 860459719 })\", \"object_format\": \"sha1\"}, \"remote\": \"fixture-history-only\", \"reference\": \"refs/heads/presentation-fixture\", \"destination\": \"https://fixture.invalid/no-network\", \"transport\": \"https\", \"config_digest\": \"synthetic-history\", \"generation\": \"synthetic-history\", \"created_at_ms\": 1793644437141, \"tools\": [], \"local_target\": null, \"local_binding\": null}, \"phase\": \"blocked\", \"oid\": null, \"observed_at_ms\": null, \"issue\": {\"kind\": \"inspection_failed\", \"message\": \"Synthetic native layout fixture; no server contacted\"}}}"
+    ]
+  ]
+}

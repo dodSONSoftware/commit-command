@@ -1,0 +1,5 @@
+{
+  "root": "/private/tmp/gitfleet-m3-native-1nx521al",
+  "synthetic_batch_id": "11540874-0d5e-4983-a9ef-5904a5e75374",
+  "purpose": "Read-only presentation and filtering using one real cancelled local operation and explicitly synthetic batch/remote historical records; no network activity"
+}

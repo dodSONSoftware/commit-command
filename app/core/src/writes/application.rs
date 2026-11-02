@@ -192,7 +192,7 @@ impl ControlledWrites {
         {
             return Err(fail(ErrorKind::InvalidRequest, "Invalid audit time range"));
         }
-        use crate::application::{AuditEntry, AuditPage, AuditPhase};
+        use crate::application::AuditPage;
         if offset > 1_000_000
             || kind
                 .as_ref()
@@ -226,52 +226,59 @@ impl ControlledWrites {
         let next = (payloads.len() > 50).then_some(offset + 50);
         let mut items = Vec::new();
         for payload in payloads.into_iter().take(50) {
-            let op: Operation = serde_json::from_str(&payload)?;
-            let mut events = {
-                let mut statement = self.workspace.connection().prepare("SELECT phase,published,new_oid,at_ms FROM write_events WHERE operation_id=?1 ORDER BY sequence LIMIT 1001")?;
-                let rows = statement.query_map([&op.proposal.operation_id], |r| {
-                    Ok(AuditPhase {
-                        phase: {
-                            let text: String = r.get(0)?;
-                            serde_json::from_str(&text).map_err(|e| {
-                                rusqlite::Error::FromSqlConversionFailure(
-                                    0,
-                                    rusqlite::types::Type::Text,
-                                    Box::new(e),
-                                )
-                            })?
-                        },
-                        published: r.get(1)?,
-                        new_oid: r.get(2)?,
-                        at_ms: r.get(3)?,
-                    })
-                })?;
-                rows.collect::<std::result::Result<Vec<_>, _>>()?
-            };
-            let events_complete = events.len() <= 1000;
-            events.truncate(1000);
-            let kind = match op.proposal.request {
-                WriteRequest::Commit { .. } => "commit",
-                WriteRequest::Stage { .. } => "stage",
-                WriteRequest::Unstage { .. } => "unstage",
-            };
-            items.push(AuditEntry {
-                outcome: op.outcome(),
-                worktree: op.proposal.worktree_id,
-                kind: kind.into(),
-                subject: String::from_utf8_lossy(&op.proposal.message)
-                    .lines()
-                    .next()
-                    .unwrap_or("")
-                    .chars()
-                    .take(512)
-                    .collect(),
-                created_at_ms: op.proposal.created_at_ms,
-                events,
-                events_complete,
-            });
+            items.push(self.application_audit_detail(&payload)?);
         }
         Ok(AuditPage { items, next })
+    }
+    pub(crate) fn application_audit_detail(
+        &mut self,
+        payload: &str,
+    ) -> Result<crate::application::AuditEntry> {
+        use crate::application::{AuditEntry, AuditPhase};
+        let op: Operation = serde_json::from_str(payload)?;
+        let mut events = {
+            let mut statement = self.workspace.connection().prepare("SELECT phase,published,new_oid,at_ms FROM write_events WHERE operation_id=?1 ORDER BY sequence LIMIT 1001")?;
+            let rows = statement.query_map([&op.proposal.operation_id], |r| {
+                Ok(AuditPhase {
+                    phase: {
+                        let text: String = r.get(0)?;
+                        serde_json::from_str(&text).map_err(|e| {
+                            rusqlite::Error::FromSqlConversionFailure(
+                                0,
+                                rusqlite::types::Type::Text,
+                                Box::new(e),
+                            )
+                        })?
+                    },
+                    published: r.get(1)?,
+                    new_oid: r.get(2)?,
+                    at_ms: r.get(3)?,
+                })
+            })?;
+            rows.collect::<std::result::Result<Vec<_>, _>>()?
+        };
+        let events_complete = events.len() <= 1000;
+        events.truncate(1000);
+        let kind = match op.proposal.request {
+            WriteRequest::Commit { .. } => "commit",
+            WriteRequest::Stage { .. } => "stage",
+            WriteRequest::Unstage { .. } => "unstage",
+        };
+        Ok(AuditEntry {
+            outcome: op.outcome(),
+            worktree: op.proposal.worktree_id,
+            kind: kind.into(),
+            subject: String::from_utf8_lossy(&op.proposal.message)
+                .lines()
+                .next()
+                .unwrap_or("")
+                .chars()
+                .take(512)
+                .collect(),
+            created_at_ms: op.proposal.created_at_ms,
+            events,
+            events_complete,
+        })
     }
 }
 
