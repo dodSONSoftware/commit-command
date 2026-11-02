@@ -1,0 +1,85 @@
+{
+  "value": {
+    "plan": {
+      "id": "1615af26-86c2-4574-8050-f2b41b4b18dc",
+      "workspace": "f1eb689f-ab1d-4422-8525-8fb64b631fc6",
+      "worktree": "684a5899-4d46-4338-9d8c-fdbe804320a9",
+      "metadata": {
+        "root": {
+          "encoding": "utf8",
+          "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository"
+        },
+        "git_dir": {
+          "encoding": "utf8",
+          "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+        },
+        "common_dir": {
+          "encoding": "utf8",
+          "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+        },
+        "root_binding": "16777229:49139989:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 457840895 })",
+        "git_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+        "common_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+        "object_format": "sha1"
+      },
+      "remote": "origin",
+      "reference": "refs/heads/cancellation",
+      "destination": "https://example.invalid/gitfleet-native-fixture.git",
+      "transport": "https",
+      "config_digest": "0702a72b46e76e95331f2bf727692f0c86d3356b7526b5d4cba0cbf006108783",
+      "generation": "86765eabc7870aa3fee905e278d7f7fe589e5f5c53929edc1763f8b68cac189b",
+      "created_at_ms": 1793652356671,
+      "tools": [
+        {
+          "role": "git",
+          "path": {
+            "encoding": "utf8",
+            "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/bin/git"
+          },
+          "fingerprint": "0a2dc8021bb0c65ee087403cd58f9e6c538c8c3f5ac3dca11b910a0c809f53da"
+        },
+        {
+          "role": "https_helper",
+          "path": {
+            "encoding": "utf8",
+            "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-remote-https"
+          },
+          "fingerprint": "ea516f1cfced38527ec4d627d6843c84f4960252ce78adaa87b35e2bd2bd2ddb"
+        },
+        {
+          "role": "exec_directory",
+          "path": {
+            "encoding": "utf8",
+            "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+          },
+          "fingerprint": "16777229:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })"
+        }
+      ],
+      "local_target": null,
+      "local_binding": null,
+      "capture_id": "167a3762-efee-4b4c-aba3-200775b88878",
+      "expected_oid": {
+        "format": "sha1",
+        "hex": "20b8d3dc032015f065107d70b0ea1234917b25c7"
+      },
+      "bundle_digest": "bd03cc64d17fa3a38fb41468a29a53f4c4efac3bae77d7583932dd37656123f9",
+      "bundle_bytes": 623,
+      "tracking_ref": "refs/remotes/origin/cancellation",
+      "expected_old": null
+    },
+    "phase": "uncertain",
+    "objects_imported": true,
+    "reference_status": "not_attempted",
+    "issue": {
+      "kind": "uncertain_outcome",
+      "message": "Reference transaction interrupted; inspect actual ref and locks"
+    }
+  },
+  "receipt": {
+    "identity": "16777229:49144544:Some(SystemTime { tv_sec: 1793652371, tv_nsec: 653247692 })",
+    "hash": "c0a60d1f7eda5ebb6028cd06d89b1e8ba8a64b1eaf1b139504ef6e264e3eb423"
+  },
+  "exact_owned_proxy_and_git_pids_terminated": true,
+  "owned_lock_remains": true,
+  "destination_ref_absent": true
+}

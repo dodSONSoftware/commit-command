@@ -1,0 +1,25 @@
+[
+  {
+    "discovery": {
+      "excluded_names": [
+        "node_modules",
+        ".venv",
+        "target",
+        "dist",
+        "build",
+        ".gitfleet-rust-lab"
+      ],
+      "excluded_patterns": []
+    },
+    "display_root": {
+      "encoding": "utf8",
+      "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace"
+    },
+    "id": "f1eb689f-ab1d-4422-8525-8fb64b631fc6",
+    "name": "Native captured import acceptance",
+    "root": {
+      "encoding": "utf8",
+      "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace"
+    }
+  }
+]

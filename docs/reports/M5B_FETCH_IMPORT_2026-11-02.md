@@ -2,6 +2,8 @@
 
 This checkpoint implements offline import of one approved captured branch and publication of one exact tracking ref. It does not complete M5B or establish native execution acceptance. Ordinary desktop writes remain disabled. User-authorized local checkpoint commits only; no push.
 
+Native follow-up after the user unlocked the Mac: [selected real native fetch/import and recovery gates passed](M5B_NATIVE_FETCH_ACCEPTANCE_2026-11-02.md), including actual credential-free HTTPS network execution and positive receipt-owned leftover-lock removal. The blocked-attempt section below describes the earlier attempt and is retained as history.
+
 ## Behavior and authority
 
 A completed captured bundle can be proposed for import through a **new** native review. The download confirmation cannot authorize import. The review binds workspace/worktree identity, current trust/configuration/generation/tool bindings, capture ID, bundle SHA-256 and byte count, captured commit, deterministic `refs/remotes/<remote>/<branch>` destination and its exact old OID or absence. Confirmation is single-use/session/epoch-bound. Decline, cancellation, changed configuration/ref, symbolic ref, artifact tampering and lost session authority fail closed.

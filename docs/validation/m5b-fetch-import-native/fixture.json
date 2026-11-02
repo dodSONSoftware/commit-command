@@ -1,0 +1,18 @@
+{
+  "baseline_oid": "f9cda8be33e2216e5a599d04179f232312fae93e",
+  "bundle_bytes": 443,
+  "bundle_sha256": "db0869fe38300f1761f0fc9c1506712832a029b796726d425388df914c3aa419",
+  "capture": "440051e3-2730-4ec7-b919-1b9a4a981f8e",
+  "provenance": "Actual manually prepared standalone bundle; seeded completed capture and test trust; no network observation or download executed",
+  "repository": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository",
+  "root": "/private/tmp/gitfleet-fetch-native-vthb_q8k",
+  "state": "/private/tmp/gitfleet-fetch-native-vthb_q8k/state",
+  "target_oid": "49e243681e872caca55b76636b08b312996869a8",
+  "workspace": "f1eb689f-ab1d-4422-8525-8fb64b631fc6",
+  "worktree": "684a5899-4d46-4338-9d8c-fdbe804320a9",
+  "acceptance_bundle": "/private/tmp/gitfleet-fetch-native-vthb_q8k/GitFleet Import Acceptance.app",
+  "isolated_home": "/private/tmp/gitfleet-fetch-native-vthb_q8k/home",
+  "fixture_path": "/private/tmp/gitfleet-fetch-native-vthb_q8k/bin:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/opt/homebrew/bin:/Users/randydodson/.codex/tmp/arg0-macos/codex-arg0MoksvH:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/randydodson/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/opt/homebrew/sbin:/Users/randydodson/.cargo/bin:/Users/randydodson/.docker/bin:/Users/randydodson/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS:/Users/randydodson/.docker/bin",
+  "git_proxy": "/private/tmp/gitfleet-fetch-native-vthb_q8k/bin/git",
+  "real_git": "/opt/homebrew/bin/git"
+}

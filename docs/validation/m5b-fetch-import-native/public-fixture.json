@@ -1,0 +1,11 @@
+{
+  "baseline_oid": "14dda63e7e351f8e6552c17affc372c66a9b303a",
+  "isolated_home": "/private/tmp/gitfleet-public-native-laodapb4/home",
+  "provenance": "Local disposable checkout with fixture trust only. Zero observation/capture/import records seeded. All network actions require actual native approval.",
+  "remote": "https://github.com/octocat/Hello-World.git",
+  "repository": "/private/tmp/gitfleet-public-native-laodapb4/workspace/repository",
+  "root": "/private/tmp/gitfleet-public-native-laodapb4",
+  "state": "/private/tmp/gitfleet-public-native-laodapb4/state",
+  "workspace": "e2fe5636-312d-4650-b8f7-e195c324bf2d",
+  "worktree": "f71c91ba-c2e8-4fbe-b858-842e54043660"
+}

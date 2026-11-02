@@ -1,0 +1,71 @@
+{
+  "source_commit": "ab3fd39d6a98968bb2eeb701449096288a97cb9b",
+  "product_source_changed": false,
+  "native_operator": "Codex using CUA; assertions backed by read-only file/Git/SQLite oracles",
+  "passed": [
+    "native independent import decline and consumed review",
+    "actual bundle import with exact ref/reflog and repository preservation",
+    "native audit result rendering and import-kind filtering",
+    "ordinary restart/read-only import control gate",
+    "actual prepared transaction Cancel; exact owned proxy/Git termination",
+    "fresh native receipt-owned lock removal with no replay",
+    "Cmd+Q during actual prepared transaction; durable uncertain outcome",
+    "ordinary startup attention notice; default host rejects recovery preparation",
+    "fresh post-restart native recovery; only owned lock removed",
+    "final restart clears notice; exact repository preservation and no replay",
+    "actual HTTPS observation -> separately reviewed download -> separately reviewed import, zero seeded operation records",
+    "actual HTTPS chain durable after ordinary restart; exact repository and journal preservation"
+  ],
+  "fixture_setup_failure": "First manual-bundle import blocked because manually seeded network directory was 0755; corrected fixture only to 0700 and reviewed afresh. Original blocked record retained.",
+  "transport_scope": "Public credential-free HTTPS only. No authentication/SSH/push acceptance claim. Manual cancellation fixture used an isolated transparent Git proxy that held commit after a genuine prepared-ref receipt.",
+  "stats": {
+    "manual_bundle": {
+      "write_trust": 1,
+      "local_write_operations": 0,
+      "imports": [
+        {
+          "phase": "cancelled",
+          "objects_imported": false,
+          "reference_status": "not_attempted"
+        },
+        {
+          "phase": "blocked",
+          "objects_imported": false,
+          "reference_status": "not_attempted"
+        },
+        {
+          "phase": "complete",
+          "objects_imported": true,
+          "reference_status": "updated"
+        },
+        {
+          "phase": "aborted",
+          "objects_imported": true,
+          "reference_status": "unchanged"
+        },
+        {
+          "phase": "aborted",
+          "objects_imported": true,
+          "reference_status": "unchanged"
+        }
+      ],
+      "unresolved_imports": 0
+    },
+    "actual_https": {
+      "write_trust": 1,
+      "local_write_operations": 0,
+      "imports": [
+        {
+          "phase": "complete",
+          "objects_imported": true,
+          "reference_status": "updated"
+        }
+      ],
+      "unresolved_imports": 0
+    }
+  },
+  "all_fixture_apps_closed_and_state_locks_reopened": true,
+  "fixture_proxy_hold_disabled": true,
+  "ordinary_writes_enabled": false,
+  "pushed": false
+}

@@ -1,0 +1,128 @@
+{
+  "oracle": "PASSED",
+  "repository_entries": {
+    ".git/COMMIT_EDITMSG": {
+      "sha256": "031a41fbf9b37a616f0daeb3649ee31f4bc7a2e8ca628089610a87385c933cf0",
+      "mode": 33188
+    },
+    ".git/HEAD": {
+      "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+      "mode": 33188
+    },
+    ".git/config": {
+      "sha256": "3a8426f98010762bb1dcfab387d3176c9a39fff7259dfd912db9d9b79fb65b52",
+      "mode": 33188
+    },
+    ".git/index": {
+      "sha256": "5bf6f95932c8cf3298b1f2aaed5159eee6c3f7fd47875f46bc75d3ba28619f55",
+      "mode": 33188
+    },
+    ".git/logs/HEAD": {
+      "sha256": "11db51c65c11e28e3eb035b1fa22ebb90700bb2db262c192ed715fd0a13f4ca0",
+      "mode": 33188
+    },
+    ".git/logs/refs/heads/main": {
+      "sha256": "11db51c65c11e28e3eb035b1fa22ebb90700bb2db262c192ed715fd0a13f4ca0",
+      "mode": 33188
+    },
+    ".git/objects/14/dda63e7e351f8e6552c17affc372c66a9b303a": {
+      "sha256": "3cc0db31add14e69e0c5d034a5c077beb20f9727e9ff265be3c17a19adfc60d9",
+      "mode": 33060
+    },
+    ".git/objects/3a/05a6eec03e1ea608d9513051545cc0083b1a28": {
+      "sha256": "df0ee6b81f59bde6d4c0068b42226942773ebff15b952844d59f27e82cdb18b4",
+      "mode": 33060
+    },
+    ".git/objects/99/a797ac5f201c5cd2db579b17ca6203c2e899f8": {
+      "sha256": "9bf5a02961fe2ff11c9f97ab95d89f33b2eb08a97787e85829930ec99aa09670",
+      "mode": 33060
+    },
+    ".git/objects/e7/d53e32d457f33b08ece5ed62d8a79d72e66914": {
+      "sha256": "6fcf6da894ca8e0503da936da5c04d9aa1ab2cca64eded8c8ce1bebc13cdf4ed",
+      "mode": 33060
+    },
+    ".git/refs/heads/main": {
+      "sha256": "51eef8f9c73d71e1c00378ddb9852b3abe8a27c85dd04ff011ee2a279190bf6f",
+      "mode": 33188
+    },
+    "fixture.txt": {
+      "sha256": "ef5dfb1ec1fe31ce4a02f61ca3e3efc4ee31785011868a97b1c5afb52f69dcfb",
+      "mode": 33188
+    },
+    "untracked.txt": {
+      "sha256": "433881d887e66748159c5150cae22eb292641a4d18ac570377faab8cf537ccf7",
+      "mode": 33188
+    }
+  },
+  "records": {
+    "remote-observation:dc1b1474-f962-4e3b-8cd1-ab78d854475e": {
+      "plan": {
+        "id": "dc1b1474-f962-4e3b-8cd1-ab78d854475e",
+        "workspace": "e2fe5636-312d-4650-b8f7-e195c324bf2d",
+        "worktree": "f71c91ba-c2e8-4fbe-b858-842e54043660",
+        "metadata": {
+          "root": {
+            "encoding": "utf8",
+            "value": "/private/tmp/gitfleet-public-native-laodapb4/workspace/repository"
+          },
+          "git_dir": {
+            "encoding": "utf8",
+            "value": "/private/tmp/gitfleet-public-native-laodapb4/workspace/repository/.git"
+          },
+          "common_dir": {
+            "encoding": "utf8",
+            "value": "/private/tmp/gitfleet-public-native-laodapb4/workspace/repository/.git"
+          },
+          "root_binding": "16777229:49147904:Some(SystemTime { tv_sec: 1793652741, tv_nsec: 83078995 })",
+          "git_binding": "16777229:49147905:Some(SystemTime { tv_sec: 1793652741, tv_nsec: 88051359 })",
+          "common_binding": "16777229:49147905:Some(SystemTime { tv_sec: 1793652741, tv_nsec: 88051359 })",
+          "object_format": "sha1"
+        },
+        "remote": "origin",
+        "reference": "refs/heads/master",
+        "destination": "https://github.com/octocat/Hello-World.git",
+        "transport": "https",
+        "config_digest": "021fee524e8ee98a951886eea8e0cb5e3a74636b54049826725cca039dff40b3",
+        "generation": "e57b35cc24a4968085b8648f015e2db8480ead456e5d291db353c48b4489aa65",
+        "created_at_ms": 1793652789069,
+        "tools": [
+          {
+            "role": "git",
+            "path": {
+              "encoding": "utf8",
+              "value": "/opt/homebrew/Cellar/git/2.56.0_1/bin/git"
+            },
+            "fingerprint": "70feb0465f5896154abd7405231483f4b0cd99e3855fcc4d86e08b66869d1007"
+          },
+          {
+            "role": "https_helper",
+            "path": {
+              "encoding": "utf8",
+              "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-remote-https"
+            },
+            "fingerprint": "ea516f1cfced38527ec4d627d6843c84f4960252ce78adaa87b35e2bd2bd2ddb"
+          },
+          {
+            "role": "exec_directory",
+            "path": {
+              "encoding": "utf8",
+              "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+            },
+            "fingerprint": "16777229:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })"
+          }
+        ],
+        "local_target": null,
+        "local_binding": null
+      },
+      "phase": "complete",
+      "oid": {
+        "format": "sha1",
+        "hex": "7fd1a60b01f91b314f59955a4e4d4e80d8edf11d"
+      },
+      "observed_at_ms": 1793652798903,
+      "issue": null
+    }
+  },
+  "actual_observed_oid": "7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
+  "seeded_operation_records": 0
+}

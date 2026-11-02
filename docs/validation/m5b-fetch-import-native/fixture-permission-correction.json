@@ -1,0 +1,15 @@
+{
+  "reason": "Manually seeded network directory had 0755 permissions; production correctly blocked it. Correct only disposable fixture storage to the private 0700 mode used by real capture.",
+  "changes": [
+    {
+      "path": "/private/tmp/gitfleet-fetch-native-vthb_q8k/state/network",
+      "before": "0o755",
+      "after": "0o700"
+    },
+    {
+      "path": "/private/tmp/gitfleet-fetch-native-vthb_q8k/state/network/440051e3-2730-4ec7-b919-1b9a4a981f8e",
+      "before": "0o755",
+      "after": "0o700"
+    }
+  ]
+}

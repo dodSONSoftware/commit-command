@@ -1,0 +1,371 @@
+{
+  "repository_entries": {
+    ".git/COMMIT_EDITMSG": {
+      "sha256": "b993cd12a9e257dc68a7d33ce4f88447a2f560db66587138cec7d5957b0e3c72",
+      "mode": 33188
+    },
+    ".git/HEAD": {
+      "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+      "mode": 33188
+    },
+    ".git/config": {
+      "sha256": "ae71e111a9c694d2f1087ffd525057cb645383c82309007b85e9fdc38c7cd0e3",
+      "mode": 33188
+    },
+    ".git/index": {
+      "sha256": "bc609d555d8c5fe2aa70a1c41abfd7b785ad88dcc2eea2151d76ef45b93bbc56",
+      "mode": 33188
+    },
+    ".git/logs/HEAD": {
+      "sha256": "7acb4243a528f7ee6e3c99e7105a607aebc69b38e8e15a9abc11ac4f9ddd38d4",
+      "mode": 33188
+    },
+    ".git/logs/refs/heads/main": {
+      "sha256": "7acb4243a528f7ee6e3c99e7105a607aebc69b38e8e15a9abc11ac4f9ddd38d4",
+      "mode": 33188
+    },
+    ".git/logs/refs/remotes/origin/main": {
+      "sha256": "9b62613a6ae8baee6b67c5537fcafb48b424372919c47ceca2c6c23353db7bb1",
+      "mode": 33188
+    },
+    ".git/objects/20/b8d3dc032015f065107d70b0ea1234917b25c7": {
+      "sha256": "2e36171cc8820df0e00c250a8778367a1842b4b12cea9d7f87b7e7acd916d476",
+      "mode": 33152
+    },
+    ".git/objects/3d/27f84b70ecf2b0091b0ec87c76bf5b7614dda8": {
+      "sha256": "7d4871733d0e90e9af5da8d41e1a03c5c95c5c578462c1548f68143ea484a7ff",
+      "mode": 33060
+    },
+    ".git/objects/49/e243681e872caca55b76636b08b312996869a8": {
+      "sha256": "e8b82e06a10cea340658f70b91da2a4b8b291b5b1fe48680c60dd5ce5614a075",
+      "mode": 33152
+    },
+    ".git/objects/e9/35ede54509bb54c06c9fedae0c8f24c694c2c4": {
+      "sha256": "1e2bada4e49d5846f53b8c8440cbb2ec4ff13c2fa4dcf4af8d4a327202a591e6",
+      "mode": 33060
+    },
+    ".git/objects/ea/4bcb789b9b87f090d82aa4f5229d9e333db8e0": {
+      "sha256": "2b7099692a39878e88bda364572833a96279caf5a1e16345eb31dd9835ae1d02",
+      "mode": 33060
+    },
+    ".git/objects/f9/cda8be33e2216e5a599d04179f232312fae93e": {
+      "sha256": "51f7ed0c074a7bc804413e673d33bfe246cf4ee142f52258d14350126882ec73",
+      "mode": 33060
+    },
+    ".git/refs/heads/main": {
+      "sha256": "e51fb0bca00abaf07da05088e7d4b53eb0b0abf7b5b4437addd59635e379bcc3",
+      "mode": 33188
+    },
+    ".git/refs/remotes/origin/main": {
+      "sha256": "0a7c13f5f82d710f1f981b867609c518e429fc2729830e716dc951551f476aa3",
+      "mode": 33188
+    },
+    "README.md": {
+      "sha256": "b1acc903bc9f14b0cba7e135c78395b47267b27375949885d6239664088169de",
+      "mode": 33188
+    },
+    "untracked.txt": {
+      "sha256": "f11da490adf991fdc30d3828fe15a635bac6a13b62160ecca545e5ed1acc3052",
+      "mode": 33188
+    }
+  },
+  "imports": {
+    "fetch-import:3fd12297-78c1-43db-aae2-be2e9d9b990d": {
+      "plan": {
+        "id": "3fd12297-78c1-43db-aae2-be2e9d9b990d",
+        "workspace": "f1eb689f-ab1d-4422-8525-8fb64b631fc6",
+        "worktree": "684a5899-4d46-4338-9d8c-fdbe804320a9",
+        "metadata": {
+          "root": {
+            "encoding": "utf8",
+            "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository"
+          },
+          "git_dir": {
+            "encoding": "utf8",
+            "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+          },
+          "common_dir": {
+            "encoding": "utf8",
+            "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+          },
+          "root_binding": "16777229:49139989:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 457840895 })",
+          "git_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+          "common_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+          "object_format": "sha1"
+        },
+        "remote": "origin",
+        "reference": "refs/heads/main",
+        "destination": "https://example.invalid/gitfleet-native-fixture.git",
+        "transport": "https",
+        "config_digest": "0702a72b46e76e95331f2bf727692f0c86d3356b7526b5d4cba0cbf006108783",
+        "generation": "3e26908a9621f15b74c79bc7ddb7993616fe1aa73ad5600c635ceab0cd330181",
+        "created_at_ms": 1793652026624,
+        "tools": [
+          {
+            "role": "git",
+            "path": {
+              "encoding": "utf8",
+              "value": "/opt/homebrew/Cellar/git/2.56.0_1/bin/git"
+            },
+            "fingerprint": "70feb0465f5896154abd7405231483f4b0cd99e3855fcc4d86e08b66869d1007"
+          },
+          {
+            "role": "https_helper",
+            "path": {
+              "encoding": "utf8",
+              "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-remote-https"
+            },
+            "fingerprint": "ea516f1cfced38527ec4d627d6843c84f4960252ce78adaa87b35e2bd2bd2ddb"
+          },
+          {
+            "role": "exec_directory",
+            "path": {
+              "encoding": "utf8",
+              "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+            },
+            "fingerprint": "16777229:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })"
+          }
+        ],
+        "local_target": null,
+        "local_binding": null,
+        "capture_id": "440051e3-2730-4ec7-b919-1b9a4a981f8e",
+        "expected_oid": {
+          "format": "sha1",
+          "hex": "49e243681e872caca55b76636b08b312996869a8"
+        },
+        "bundle_digest": "db0869fe38300f1761f0fc9c1506712832a029b796726d425388df914c3aa419",
+        "bundle_bytes": 443,
+        "tracking_ref": "refs/remotes/origin/main",
+        "expected_old": null
+      },
+      "phase": "cancelled",
+      "objects_imported": false,
+      "reference_status": "not_attempted",
+      "issue": null
+    },
+    "fetch-import:9af12026-30cd-4ec1-9ff9-1037020df7f2": {
+      "plan": {
+        "id": "9af12026-30cd-4ec1-9ff9-1037020df7f2",
+        "workspace": "f1eb689f-ab1d-4422-8525-8fb64b631fc6",
+        "worktree": "684a5899-4d46-4338-9d8c-fdbe804320a9",
+        "metadata": {
+          "root": {
+            "encoding": "utf8",
+            "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository"
+          },
+          "git_dir": {
+            "encoding": "utf8",
+            "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+          },
+          "common_dir": {
+            "encoding": "utf8",
+            "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+          },
+          "root_binding": "16777229:49139989:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 457840895 })",
+          "git_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+          "common_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+          "object_format": "sha1"
+        },
+        "remote": "origin",
+        "reference": "refs/heads/main",
+        "destination": "https://example.invalid/gitfleet-native-fixture.git",
+        "transport": "https",
+        "config_digest": "0702a72b46e76e95331f2bf727692f0c86d3356b7526b5d4cba0cbf006108783",
+        "generation": "3e26908a9621f15b74c79bc7ddb7993616fe1aa73ad5600c635ceab0cd330181",
+        "created_at_ms": 1793652079513,
+        "tools": [
+          {
+            "role": "git",
+            "path": {
+              "encoding": "utf8",
+              "value": "/opt/homebrew/Cellar/git/2.56.0_1/bin/git"
+            },
+            "fingerprint": "70feb0465f5896154abd7405231483f4b0cd99e3855fcc4d86e08b66869d1007"
+          },
+          {
+            "role": "https_helper",
+            "path": {
+              "encoding": "utf8",
+              "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-remote-https"
+            },
+            "fingerprint": "ea516f1cfced38527ec4d627d6843c84f4960252ce78adaa87b35e2bd2bd2ddb"
+          },
+          {
+            "role": "exec_directory",
+            "path": {
+              "encoding": "utf8",
+              "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+            },
+            "fingerprint": "16777229:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })"
+          }
+        ],
+        "local_target": null,
+        "local_binding": null,
+        "capture_id": "440051e3-2730-4ec7-b919-1b9a4a981f8e",
+        "expected_oid": {
+          "format": "sha1",
+          "hex": "49e243681e872caca55b76636b08b312996869a8"
+        },
+        "bundle_digest": "db0869fe38300f1761f0fc9c1506712832a029b796726d425388df914c3aa419",
+        "bundle_bytes": 443,
+        "tracking_ref": "refs/remotes/origin/main",
+        "expected_old": null
+      },
+      "phase": "blocked",
+      "objects_imported": false,
+      "reference_status": "not_attempted",
+      "issue": {
+        "kind": "unsupported_repository_state",
+        "message": "Unsafe network artifact directory"
+      }
+    },
+    "fetch-import:beb866c4-2d2e-4e44-b04d-c313ddf1a514": {
+      "plan": {
+        "id": "beb866c4-2d2e-4e44-b04d-c313ddf1a514",
+        "workspace": "f1eb689f-ab1d-4422-8525-8fb64b631fc6",
+        "worktree": "684a5899-4d46-4338-9d8c-fdbe804320a9",
+        "metadata": {
+          "root": {
+            "encoding": "utf8",
+            "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository"
+          },
+          "git_dir": {
+            "encoding": "utf8",
+            "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+          },
+          "common_dir": {
+            "encoding": "utf8",
+            "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+          },
+          "root_binding": "16777229:49139989:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 457840895 })",
+          "git_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+          "common_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+          "object_format": "sha1"
+        },
+        "remote": "origin",
+        "reference": "refs/heads/main",
+        "destination": "https://example.invalid/gitfleet-native-fixture.git",
+        "transport": "https",
+        "config_digest": "0702a72b46e76e95331f2bf727692f0c86d3356b7526b5d4cba0cbf006108783",
+        "generation": "3e26908a9621f15b74c79bc7ddb7993616fe1aa73ad5600c635ceab0cd330181",
+        "created_at_ms": 1793652118842,
+        "tools": [
+          {
+            "role": "git",
+            "path": {
+              "encoding": "utf8",
+              "value": "/opt/homebrew/Cellar/git/2.56.0_1/bin/git"
+            },
+            "fingerprint": "70feb0465f5896154abd7405231483f4b0cd99e3855fcc4d86e08b66869d1007"
+          },
+          {
+            "role": "https_helper",
+            "path": {
+              "encoding": "utf8",
+              "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-remote-https"
+            },
+            "fingerprint": "ea516f1cfced38527ec4d627d6843c84f4960252ce78adaa87b35e2bd2bd2ddb"
+          },
+          {
+            "role": "exec_directory",
+            "path": {
+              "encoding": "utf8",
+              "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+            },
+            "fingerprint": "16777229:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })"
+          }
+        ],
+        "local_target": null,
+        "local_binding": null,
+        "capture_id": "440051e3-2730-4ec7-b919-1b9a4a981f8e",
+        "expected_oid": {
+          "format": "sha1",
+          "hex": "49e243681e872caca55b76636b08b312996869a8"
+        },
+        "bundle_digest": "db0869fe38300f1761f0fc9c1506712832a029b796726d425388df914c3aa419",
+        "bundle_bytes": 443,
+        "tracking_ref": "refs/remotes/origin/main",
+        "expected_old": null
+      },
+      "phase": "complete",
+      "objects_imported": true,
+      "reference_status": "updated",
+      "issue": null
+    },
+    "fetch-import:1615af26-86c2-4574-8050-f2b41b4b18dc": {
+      "plan": {
+        "id": "1615af26-86c2-4574-8050-f2b41b4b18dc",
+        "workspace": "f1eb689f-ab1d-4422-8525-8fb64b631fc6",
+        "worktree": "684a5899-4d46-4338-9d8c-fdbe804320a9",
+        "metadata": {
+          "root": {
+            "encoding": "utf8",
+            "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository"
+          },
+          "git_dir": {
+            "encoding": "utf8",
+            "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+          },
+          "common_dir": {
+            "encoding": "utf8",
+            "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/workspace/repository/.git"
+          },
+          "root_binding": "16777229:49139989:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 457840895 })",
+          "git_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+          "common_binding": "16777229:49139990:Some(SystemTime { tv_sec: 1793651986, tv_nsec: 464896023 })",
+          "object_format": "sha1"
+        },
+        "remote": "origin",
+        "reference": "refs/heads/cancellation",
+        "destination": "https://example.invalid/gitfleet-native-fixture.git",
+        "transport": "https",
+        "config_digest": "0702a72b46e76e95331f2bf727692f0c86d3356b7526b5d4cba0cbf006108783",
+        "generation": "86765eabc7870aa3fee905e278d7f7fe589e5f5c53929edc1763f8b68cac189b",
+        "created_at_ms": 1793652356671,
+        "tools": [
+          {
+            "role": "git",
+            "path": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-fetch-native-vthb_q8k/bin/git"
+            },
+            "fingerprint": "0a2dc8021bb0c65ee087403cd58f9e6c538c8c3f5ac3dca11b910a0c809f53da"
+          },
+          {
+            "role": "https_helper",
+            "path": {
+              "encoding": "utf8",
+              "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-remote-https"
+            },
+            "fingerprint": "ea516f1cfced38527ec4d627d6843c84f4960252ce78adaa87b35e2bd2bd2ddb"
+          },
+          {
+            "role": "exec_directory",
+            "path": {
+              "encoding": "utf8",
+              "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+            },
+            "fingerprint": "16777229:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })"
+          }
+        ],
+        "local_target": null,
+        "local_binding": null,
+        "capture_id": "167a3762-efee-4b4c-aba3-200775b88878",
+        "expected_oid": {
+          "format": "sha1",
+          "hex": "20b8d3dc032015f065107d70b0ea1234917b25c7"
+        },
+        "bundle_digest": "bd03cc64d17fa3a38fb41468a29a53f4c4efac3bae77d7583932dd37656123f9",
+        "bundle_bytes": 623,
+        "tracking_ref": "refs/remotes/origin/cancellation",
+        "expected_old": null
+      },
+      "phase": "aborted",
+      "objects_imported": true,
+      "reference_status": "unchanged",
+      "issue": null
+    }
+  },
+  "oracle": "PASSED",
+  "only_recovery_repository_effect": "removed exact receipt-owned cancellation.lock; no replay/ref/reflog/object mutation"
+}

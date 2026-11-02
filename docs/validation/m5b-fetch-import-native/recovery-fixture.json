@@ -1,0 +1,8 @@
+{
+  "bundle_bytes": 623,
+  "bundle_sha256": "bd03cc64d17fa3a38fb41468a29a53f4c4efac3bae77d7583932dd37656123f9",
+  "capture": "167a3762-efee-4b4c-aba3-200775b88878",
+  "provenance": "Manually prepared real bundle and seeded capture; production import through native review; fixture Git proxy holds commit only after genuine Git preparation and receipt",
+  "target_oid": "20b8d3dc032015f065107d70b0ea1234917b25c7",
+  "tracking_ref": "refs/remotes/origin/cancellation"
+}

@@ -1,0 +1,11 @@
+{
+  "source_commit": "ab3fd39d6a98968bb2eeb701449096288a97cb9b",
+  "acceptance_features": [
+    "custom-protocol",
+    "desktop-writes"
+  ],
+  "acceptance_binary_sha256": "8495fc1f072a5d8480552d6c29b0ebf0e962dec477dc73132240ad1dc71f8d4e",
+  "ordinary_bundle_sha256": "6cea25c05cada3d48f52b377de9a7ec3764aa835163f99ef31181dbd11e94a02",
+  "fixture_driver_sha256": "1e063c9e7964e59c2b3a3ee9a132f2b1a4849db58489c2913df2e1c0f813f320",
+  "ordinary_default_unchanged": true
+}

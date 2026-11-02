@@ -1,5 +1,17 @@
 # Fresh conversation handoff — November 2, 2026
 
+## Latest actual native fetch acceptance
+
+After the user unlocked the Mac, selected real native gates passed on `ab3fd39`; see `docs/reports/M5B_NATIVE_FETCH_ACCEPTANCE_2026-11-02.md` and the latest local evidence commit. No application source change was needed. Native UI used CUA; independent read-only repository/SQLite oracles are saved under `docs/validation/m5b-fetch-import-native/`.
+
+Actual native HTTPS observation → separately reviewed bundle download → separately reviewed import passed against public `octocat/Hello-World` branch `refs/heads/master`, observed OID `7fd1a60b01f91b314f59955a4e4d4e80d8edf11d`. This separate fixture began with zero seeded operation records. It captured seven objects/784 bundle bytes, preserved all managed bytes before import, published exactly `refs/remotes/origin/master` plus one reflog and objects, and survived ordinary restart with exact repository/journal equality and no replay.
+
+The separate real manual-bundle fixture passed native decline, independent import approval, actual history/filtering, ordinary disabled controls, prepared-transaction Cancel, native Cmd+Q during prepared import, startup attention notice, ordinary host refusal of recovery preparation, fresh native recovery after restart, and **positive genuine receipt-owned leftover-lock removal**. A fixture-only transparent Git proxy held commit after real Git preparation and a durable receipt; exact owned process termination and removal of only the owned lock were verified. Imported unreferenced objects stayed intact. Initial 0755 manually seeded fixture storage was correctly blocked, corrected only to 0700, and reviewed afresh; its blocked journal was retained.
+
+Manual-bundle fixture: `/private/tmp/gitfleet-fetch-native-vthb_q8k`; actual HTTPS fixture: `/private/tmp/gitfleet-public-native-laodapb4`. Both apps are closed, both state locks reopened, and both have zero unresolved imports. The Git proxy hold flag is removed. The rebuilt acceptance app is `/private/tmp/gitfleet-fetch-native-vthb_q8k/GitFleet Import Acceptance.app`; its exact features/hash and the refreshed ordinary default hash are in the native evidence `artifact.json`. Older acceptance packages remain separate/stale. Ordinary desktop writes remain disabled.
+
+Next continue M5B authentication/helper/SSH/native secure storage and upstream policy, then M5C separately reviewed push/dependencies and M6–M8, while retaining remaining M3/M4/accessibility/topology/scale gates. Do not repeat these accepted native checks without a new reason. The earlier unexplained automated crash-worker exit remains documented; do not call this native success its diagnosis. Preserve unrelated user work and do not push.
+
 ## Latest captured-import checkpoint
 
 Separately reviewed offline captured-bundle import and exact tracking-ref publication are implemented; see `docs/reports/M5B_FETCH_IMPORT_2026-11-02.md` and the latest local checkpoint commit. The review binds exact bundle checksum/OID/old ref and current identity/trust/configuration. A prepared Git transaction checks direct-ref type while holding Git's lock. Journal phases, actual-ref recovery, no replay, startup notices and cross-feature local-write guards are included. Ordinary desktop writes remain disabled; no push.
