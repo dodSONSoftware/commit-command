@@ -1,0 +1,9 @@
+{
+  "source_base": "1af5efb",
+  "changes": "dismiss obsolete review on Core epoch change",
+  "features": [
+    "custom-protocol"
+  ],
+  "sha256": "6263d061aa4270147b6d5cd0f417157ca1ec4e7c21f0a5ea288f189fca648c20",
+  "native_acceptance": "closure retest used artifact.json acceptance build; ordinary gate covered by unchanged feature policy and full validator"
+}

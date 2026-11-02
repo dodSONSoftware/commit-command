@@ -545,7 +545,18 @@ fn worker(mut core: Application, rx: mpsc::Receiver<Task>, app: tauri::AppHandle
                     }
                 }
                 let generation = host.generation.load(std::sync::atomic::Ordering::Acquire);
+                let previous_epoch = core.epoch();
                 let result = core.request_with_cancellation(epoch, request, cancel);
+                if core.epoch() != previous_epoch {
+                    if let Ok(mut review) = host.review.lock() {
+                        *review = None;
+                    }
+                    if let Some(review) = app.get_webview_window("review") {
+                        if let Err(error) = review.close() {
+                            eprintln!("Obsolete review window could not be closed: {error}");
+                        }
+                    }
+                }
                 if let Ok(response) = &result {
                     if let Data::Review(display) = &response.data {
                         open_review(&app, host.clone(), display, generation);

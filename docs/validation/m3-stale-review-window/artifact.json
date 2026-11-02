@@ -1,0 +1,9 @@
+{
+  "source_base": "1af5efb",
+  "changes": "dismiss obsolete review on Core epoch change",
+  "features": [
+    "custom-protocol",
+    "desktop-writes"
+  ],
+  "sha256": "56b7b084e7d13fbe646787f5f0919daae3eea23510e3fde95f171a05928156b9"
+}

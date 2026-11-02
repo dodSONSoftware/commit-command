@@ -1,0 +1,18 @@
+{
+  "review": "b3fb8145-cf57-4723-92e5-bdc2972bb488",
+  "before_native_window_menu": [
+    "GitFleet",
+    "GitFleet \u2014 Authoritative review"
+  ],
+  "after_native_window_menu": [
+    "GitFleet"
+  ],
+  "action": "Remove saved definition while unapproved review pending",
+  "welcome_zero_repositories": true,
+  "all_four_repository_snapshots_equal": true,
+  "counts": {
+    "write_trust": 0,
+    "write_operations": 0
+  },
+  "app_closed": true
+}
