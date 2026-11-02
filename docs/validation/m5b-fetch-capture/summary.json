@@ -1,0 +1,47 @@
+{
+  "core_matrix": [
+    {
+      "configuration": "default",
+      "passed": 54,
+      "failed": 0,
+      "ignored": 1
+    },
+    {
+      "configuration": "experimental-writes",
+      "passed": 89,
+      "failed": 0,
+      "ignored": 2
+    },
+    {
+      "configuration": "controlled-writes",
+      "passed": 77,
+      "failed": 0,
+      "ignored": 1
+    },
+    {
+      "configuration": "application-services",
+      "passed": 137,
+      "failed": 0,
+      "ignored": 2
+    },
+    {
+      "configuration": "all-features",
+      "passed": 177,
+      "failed": 0,
+      "ignored": 4
+    }
+  ],
+  "transport_suite": {
+    "passed": 16,
+    "failed": 0,
+    "new_capture_cases": 6
+  },
+  "desktop": {
+    "renderer_passed": 46,
+    "native_host_passed_per_configuration": 11,
+    "full_gate": "Passed"
+  },
+  "scope": "Reviewed branch download into isolated durable bundle only; managed import/ref publication not implemented",
+  "ordinary_writes": "disabled",
+  "push": "not performed"
+}

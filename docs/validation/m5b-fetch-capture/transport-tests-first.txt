@@ -1,0 +1,16 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+error[E0603]: function `digest` is private
+   --> tests/remote_observation.rs:604:32
+    |
+604 |         gitfleet_core::domain::digest(&fs::read(&bundle).unwrap()),
+    |                                ^^^^^^ private function
+    |
+note: the function `digest` is defined here
+   --> src/domain.rs:164:1
+    |
+164 | pub(crate) fn digest(bytes: &[u8]) -> String {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+For more information about this error, try `rustc --explain E0603`.
+error: could not compile `gitfleet-core` (test "remote_observation") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...

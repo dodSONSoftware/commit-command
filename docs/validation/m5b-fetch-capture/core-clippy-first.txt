@@ -1,0 +1,22 @@
+    Checking gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+error: this expression creates a reference which is immediately dereferenced by the compiler
+   --> src/writes/remote.rs:423:13
+    |
+423 |             &options,
+    |             ^^^^^^^^ help: change this to: `options`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#needless_borrow
+    = note: `-D clippy::needless-borrow` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::needless_borrow)]`
+
+error: this expression creates a reference which is immediately dereferenced by the compiler
+   --> src/writes/remote.rs:484:42
+    |
+484 |         if !process::bounded_input(init, &options, None)?
+    |                                          ^^^^^^^^ help: change this to: `options`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#needless_borrow
+
+error: could not compile `gitfleet-core` (lib) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `gitfleet-core` (lib test) due to 2 previous errors

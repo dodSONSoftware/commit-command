@@ -164,6 +164,8 @@ Choose supported transports and credential interaction, host/certificate verific
 
 Use local bare remotes and isolated loopback fixtures by default. Cover missing credentials, auth rejection, cancellation, disconnected transport and bounded process output. Do not require public services for CI.
 
+Current M5B checkpoint: reviewed isolated branch downloads are implemented and validated with real local/loopback transport tests. See [report](reports/M5B_FETCH_CAPTURE_2026-11-02.md). This is the download stage only; the next package must separately review the exact verified bundle, managed object import and guarded tracking-ref publication. Do not classify the full fetch workflow as complete or reuse download authorization for ref mutation.
+
 ### M5C Add separately reviewed individual and bulk push
 
 Push review binds worktree identity, source ref/OID, effective destination, outgoing commits, hook policy, upstream changes and dependency evidence. Refresh remote knowledge only through explicit network activity. Reject non-fast-forward/divergent, unsupported detached, ambiguous-destination and force push cases. Recheck source state immediately before execution, handle server rejection, and observe actual remote state after uncertain interruption. Never automatically retry an ambiguous publication.

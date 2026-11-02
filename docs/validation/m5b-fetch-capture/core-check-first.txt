@@ -1,0 +1,85 @@
+    Checking gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+warning: constant `OBJECT_BYTES` is never used
+ --> src/writes/fetch.rs:5:7
+  |
+5 | const OBJECT_BYTES: u64 = 64 * 1024 * 1024;
+  |       ^^^^^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: constant `ARTIFACT_BYTES` is never used
+ --> src/writes/fetch.rs:6:7
+  |
+6 | const ARTIFACT_BYTES: u64 = 128 * 1024 * 1024;
+  |       ^^^^^^^^^^^^^^
+
+warning: constant `OBJECT_COUNT` is never used
+ --> src/writes/fetch.rs:7:7
+  |
+7 | const OBJECT_COUNT: usize = 10_000;
+  |       ^^^^^^^^^^^^
+
+warning: constant `CAPTURE_REF` is never used
+ --> src/writes/fetch.rs:8:7
+  |
+8 | const CAPTURE_REF: &str = "refs/heads/gitfleet-fetch";
+  |       ^^^^^^^^^^^
+
+warning: struct `StoredCapture` is never constructed
+  --> src/writes/fetch.rs:11:8
+   |
+11 | struct StoredCapture {
+   |        ^^^^^^^^^^^^^
+
+warning: function `stale` is never used
+  --> src/writes/fetch.rs:16:4
+   |
+16 | fn stale() -> Error {
+   |    ^^^^^
+
+warning: function `artifact_budget` is never used
+  --> src/writes/fetch.rs:19:4
+   |
+19 | fn artifact_budget(root: &Path) -> Result<()> {
+   |    ^^^^^^^^^^^^^^^
+
+warning: multiple methods are never used
+   --> src/writes/fetch.rs:53:8
+    |
+ 52 | impl ControlledWrites {
+    | --------------------- methods in this implementation
+ 53 |     fn persist_capture(&mut self, stored: &StoredCapture) -> Result<()> {
+    |        ^^^^^^^^^^^^^^^
+...
+ 67 |     fn capture(&mut self, id: &str) -> Result<StoredCapture> {
+    |        ^^^^^^^
+...
+ 91 |     pub(crate) fn propose_capture(
+    |                   ^^^^^^^^^^^^^^^
+...
+132 |     pub(crate) fn cancel_capture(&mut self, id: &str) -> Result<()> {
+    |                   ^^^^^^^^^^^^^^
+...
+140 |     pub(crate) fn execute_capture(
+    |                   ^^^^^^^^^^^^^^^
+...
+150 |     fn execute_capture_inner(&mut self, plan: &FetchCapturePlan) -> Result<FetchCapture> {
+    |        ^^^^^^^^^^^^^^^^^^^^^
+...
+282 |     pub(crate) fn capture_audit_detail(&self, raw: &str) -> Result<FetchCapture> {
+    |                   ^^^^^^^^^^^^^^^^^^^^
+...
+289 |     pub(crate) fn captures(
+    |                   ^^^^^^^^
+
+warning: method `completed_observation` is never used
+   --> src/writes/remote.rs:495:19
+    |
+191 | impl ControlledWrites {
+    | --------------------- method in this implementation
+...
+495 |     pub(super) fn completed_observation(
+    |                   ^^^^^^^^^^^^^^^^^^^^^
+
+warning: `gitfleet-core` (lib) generated 9 warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.68s

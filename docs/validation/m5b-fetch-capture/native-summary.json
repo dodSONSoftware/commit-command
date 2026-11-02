@@ -1,0 +1,22 @@
+{
+  "fixture": {
+    "root": "/private/tmp/gitfleet-m3-native-5zxerugm",
+    "workspace_root": "/private/tmp/gitfleet-m3-native-5zxerugm/workspace",
+    "data_directory": "/private/tmp/gitfleet-m3-native-5zxerugm/state",
+    "workspace_id": "b7a4a0c5-69d1-44f9-86cc-7f1a60e87c13"
+  },
+  "synthetic_history_only": true,
+  "cases_passed": [
+    "ordinary Review branch download disabled for completed observation with OID",
+    "scoped capture history displays complete and blocked outcomes without implying managed import",
+    "refresh and restart preserve history",
+    "final Branch download audit filter returns only capture records",
+    "native Quit exits and writer lock can reopen"
+  ],
+  "repository_hashes_modes_unchanged": true,
+  "history_payloads_unchanged": true,
+  "write_operations": 0,
+  "trust_grants": 0,
+  "network_artifact_directory_exists": false,
+  "native_network_execution": "NOT RUN"
+}

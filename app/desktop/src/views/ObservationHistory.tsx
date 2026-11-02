@@ -5,8 +5,12 @@ const text = (value: string) =>
 
 export function ObservationRecords({
   items,
+  onFetch,
+  fetchDisabled = true,
 }: {
   items: ObservationPage["items"];
+  onFetch?: (observation: string) => void;
+  fetchDisabled?: boolean;
 }) {
   return (
     <>
@@ -41,6 +45,14 @@ export function ObservationRecords({
             <p role="alert">
               {observation.issue.kind}: {text(observation.issue.message)}
             </p>
+          )}
+          {onFetch && observation.phase === "complete" && observation.oid && (
+            <button
+              disabled={fetchDisabled}
+              onClick={() => onFetch(observation.plan.id)}
+            >
+              Review branch download
+            </button>
           )}
         </article>
       ))}

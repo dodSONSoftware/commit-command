@@ -173,3 +173,115 @@ it("requires an explicit remote and full branch before preparing a native networ
     ),
   ).toBe(true);
 });
+
+it("prepares a branch download only from a completed observation with an OID and keeps ordinary builds gated", async () => {
+  const { fixtureEntry } = await import("../testdata");
+  const plan = {
+    id: "observed",
+    workspace: "ws",
+    worktree: "repo",
+    metadata: fixtureEntry("repo", "repo").metadata,
+    remote: "origin",
+    reference: "refs/heads/main",
+    destination: "https://example.invalid/repo.git",
+    transport: "https" as const,
+    config_digest: "digest",
+    generation: "generation",
+    created_at_ms: 0,
+    tools: [],
+    local_target: null,
+    local_binding: null,
+  };
+  const oid = { format: "sha1" as const, hex: "a".repeat(40) };
+  const request = vi.fn<Bridge["request"]>().mockImplementation(async (r) => {
+    if (r.kind === "remote_observations")
+      return {
+        kind: "remote_observations",
+        value: {
+          items: [
+            { plan, phase: "complete", oid, observed_at_ms: 0, issue: null },
+            {
+              plan: { ...plan, id: "absent" },
+              phase: "complete",
+              oid: null,
+              observed_at_ms: 0,
+              issue: null,
+            },
+          ],
+          next: null,
+        },
+      };
+    if (r.kind === "fetch_captures")
+      return {
+        kind: "fetch_captures",
+        value: {
+          items: [
+            {
+              plan: {
+                ...plan,
+                id: "capture",
+                expected_oid: oid,
+                observation_id: "observed",
+              },
+              phase: "proposed",
+              artifact: null,
+              captured_at_ms: null,
+              issue: null,
+            },
+          ],
+          next: null,
+        },
+      };
+    return { kind: "done" };
+  });
+  const bridge: Bridge = {
+    epoch: 1,
+    request,
+    capabilities: async () => ({ writes_enabled: true }),
+    writeStatus: async () => false,
+    pick: async () => null,
+    cancel: async () => {},
+  };
+  const props = {
+    bridge,
+    workspace: "ws",
+    worktree: "repo",
+    busy: false,
+    act: async (action: () => Promise<void>) => action(),
+  };
+  const { rerender } = render(<RemoteInspector {...props} enabled />);
+  fireEvent.click(screen.getByText("Remotes and upstream"));
+  fireEvent.click(
+    screen.getByRole("button", { name: "Refresh observation results" }),
+  );
+  const button = await screen.findByRole("button", {
+    name: "Review branch download",
+  });
+  expect(
+    screen.getAllByRole("button", { name: "Review branch download" }),
+  ).toHaveLength(1);
+  fireEvent.click(button);
+  await screen.findByText("capture");
+  expect(request).toHaveBeenCalledWith({
+    kind: "review_fetch_capture",
+    workspace: "ws",
+    worktree: "repo",
+    observation: "observed",
+  });
+  expect(
+    screen.getByText(/has not updated the repository/),
+  ).toBeInTheDocument();
+  rerender(<RemoteInspector {...props} enabled={false} />);
+  expect(
+    screen.getByRole("button", { name: "Review branch download" }),
+  ).toBeDisabled();
+  expect(
+    request.mock.calls.every(([r]) =>
+      [
+        "remote_observations",
+        "review_fetch_capture",
+        "fetch_captures",
+      ].includes(r.kind),
+    ),
+  ).toBe(true);
+});

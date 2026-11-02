@@ -1,6 +1,6 @@
 # M5 remote inspection and operation boundary
 
-November 2, 2026. This document distinguishes implemented local inspection and reviewed branch observation from remaining fetch/push work. The local development repository must never be pushed by this execution session. Disposable test remotes are the validation boundary for future remote operation code.
+November 2, 2026. This document distinguishes implemented local inspection, reviewed branch observation and isolated fetch downloads from remaining managed import/ref-publication and push work. The local development repository must never be pushed by this execution session. Disposable test remotes are the validation boundary for future remote operation code.
 
 ## Implemented: local inspection
 
@@ -24,6 +24,12 @@ The only network command is an exact `ls-remote --refs --exit-code` for one vali
 
 Tests use actual isolated local remotes and loopback TLS advertisements, including reviewed CA success, certificate and hostname failures, redirects, helper/proxy isolation, missing credentials, CA drift and cancellation after an HTTP request begins. No external service or actual user credentials are used. System credential/SSH support and actual native UI acceptance remain open.
 
+## Implemented: reviewed fetch download stage
+
+ReviewFetchCapture selects a stored completed branch observation with an OID in the active worktree. A fresh native confirmation binds a new transport/configuration/tool/CA snapshot and expected OID; the old observation is data, not authorization. Shared transport helpers retain the observation isolation policy. Download fetches one exact branch into a new private bare repository, rejects tip drift, validates objects and produces a synced verified bundle with digest/size/count metadata. It never imports managed objects or updates managed refs, FETCH_HEAD, tags, branches, upstreams, index or working files.
+
+The download is bounded to 10,000 objects/64 MiB uncompressed and bundle bytes, shared process output/deadlines and a polled 128 MiB/1,024-entry artifact budget. The private process check can stop/reap owned work on artifact-limit failures; polling is not a hard OS quota. Version-1 records use schema-3 state, have scoped paged history/unified audit and never restore native authority after restart. No publication/replay endpoint exists. The ordinary desktop gate remains disabled. Current artifact path invocation requires UTF-8 app-data paths; full interoperability/native execution and retention remain open. See [fetch download report](../reports/M5B_FETCH_CAPTURE_2026-11-02.md).
+
 ## Next: remaining fetch/push service
 
 1. Keep the read-only adapter's protocol ban. Network requests need distinct typed proposals, durable outcomes and independent native authorization. Trust alone never approves a fetch or push.
@@ -35,4 +41,4 @@ Tests use actual isolated local remotes and loopback TLS advertisements, includi
 7. Persist started/completed/failed/uncertain remote phases before side effects. Restart never replays publication. A cancelled/disconnected push with ambiguous publication requires fresh remote observation and review, rather than an automatic retry. Preserve successful prior batch items.
 8. Validate isolated local bare and loopback transport fixtures, origin/ref drift, server rejection, auth/transport failures, hooks, cancellation, uncertain outcomes and no implicit upstream/ref changes. Actual supported Keychain/SSH/native behavior requires separate platform evidence.
 
-Inspection and branch observation do not fulfill fetch/push, credential storage, authenticated transport, bulk dependency reachability or uncertain-publication recovery. Those requirements remain open in the completion tracker.
+Inspection, branch observation and isolated downloads do not fulfill managed fetch import/ref publication or push, credential storage, authenticated transport, bulk dependency reachability or uncertain-publication recovery. Those requirements remain open in the completion tracker.

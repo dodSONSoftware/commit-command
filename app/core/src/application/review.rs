@@ -16,6 +16,7 @@ pub(super) enum Action {
     Write(Box<Proposal>),
     Batch(BatchRecord),
     RemoteObservation(Box<crate::remote::observation::ObservationPlan>),
+    FetchCapture(Box<crate::remote::fetch::FetchCapturePlan>),
     Recovery {
         workspace: WorkspaceId,
         review: RecoveryReview,
@@ -124,6 +125,11 @@ impl Application {
         let (title, summary, content) = match &action {
             Action::Write(p) => self.describe_write(p)?,
             Action::Batch(record) => self.describe_batch(record)?,
+            Action::FetchCapture(plan) => (
+                "Review branch download for fetch".into(),
+                format!("Download {} on remote {} from {}.\nExpected observed commit: {}\nThe downloaded branch must still match that exact commit.\nObjects stay in isolated app storage. This does not update this checkout, tracking refs, index, working files, tags or upstreams. Import requires a separate review.\nHTTPS verifies certificates and hostnames and rejects redirects. No credentials/helpers, proxy, SSH commands, hooks or submodule recursion.\nLimits: 10,000 objects, 64 MiB uncompressed/bundle, 128 MiB polled artifact budget and the bounded process deadline.",plan.transport.reference,plan.transport.remote,plan.transport.destination,plan.expected_oid.hex),
+                serde_json::to_string_pretty(plan)?,
+            ),
             Action::RemoteObservation(plan) => (
                 "Review remote branch observation".into(),
                 format!("Contact {} to observe {} on remote {}.\nNo commits, working files, index, refs or upstreams will be changed.\nHTTPS verifies certificates and hostnames against the reviewed trust source and rejects redirects. No credentials or credential helpers are used.\nManaged transport configuration, proxy and SSH commands are not executed.\nLocal transport is restricted to host-configured disposable fixtures.", plan.destination, plan.reference, plan.remote),
@@ -226,6 +232,7 @@ impl Application {
                     .application_cancel_proposal(&proposal.operation_id)?,
                 Action::Batch(record) => self.cancel_batch_record(&mut record.clone())?,
                 Action::RemoteObservation(plan) => self.writes.cancel_observation(&plan.id)?,
+                Action::FetchCapture(plan) => self.writes.cancel_capture(&plan.transport.id)?,
                 _ => {}
             }
             self.writes.cancel_application_reviews();
@@ -235,6 +242,11 @@ impl Application {
             ));
         }
         let result = match p.action {
+            Action::FetchCapture(plan) => {
+                self.active(&plan.transport.workspace.0)?;
+                self.entry(&plan.transport.workspace.0, &plan.transport.worktree.0)?;
+                serde_json::to_value(self.writes.execute_capture(&plan, cancellation)?)?
+            }
             Action::RemoteObservation(plan) => {
                 self.active(&plan.workspace.0)?;
                 self.entry(&plan.workspace.0, &plan.worktree.0)?;

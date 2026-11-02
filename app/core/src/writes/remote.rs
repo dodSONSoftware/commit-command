@@ -78,7 +78,7 @@ fn validate_tools(plan: &ObservationPlan) -> Result<()> {
     }
     Ok(())
 }
-fn command(plan: &ObservationPlan, cwd: &Path, home: &Path) -> Result<Command> {
+pub(super) fn command(plan: &ObservationPlan, cwd: &Path, home: &Path) -> Result<Command> {
     let mut command = Command::new(tool_path(plan, "git")?.to_path()?);
     let exec = tool_path(plan, "exec_directory")?.to_path()?;
     let path = std::env::join_paths([exec.as_path(), Path::new("/usr/bin"), Path::new("/bin")])
@@ -235,11 +235,26 @@ impl ControlledWrites {
         options: &ReadOptions,
     ) -> Result<ObservationPlan> {
         let previous = std::mem::replace(&mut self.options.process, options.clone());
-        let result = self.propose_observation_inner(workspace, entry, remote, reference, options);
+        let result = self
+            .prepare_transport_plan(workspace, entry, remote, reference, options)
+            .and_then(|plan| {
+                self.persist_observation(&StoredObservation {
+                    version: 1,
+                    session: self.session.clone(),
+                    value: Observation {
+                        plan: plan.clone(),
+                        phase: ObservationPhase::Proposed,
+                        oid: None,
+                        observed_at_ms: None,
+                        issue: None,
+                    },
+                })?;
+                Ok(plan)
+            });
         self.options.process = previous;
         result
     }
-    fn propose_observation_inner(
+    pub(super) fn prepare_transport_plan(
         &mut self,
         workspace: &WorkspaceId,
         entry: &crate::workspace::StoredWorktree,
@@ -301,17 +316,6 @@ impl ControlledWrites {
             local_target: local.as_deref().map(NativePath::from_path),
             local_binding,
         };
-        self.persist_observation(&StoredObservation {
-            version: 1,
-            session: self.session.clone(),
-            value: Observation {
-                plan: plan.clone(),
-                phase: ObservationPhase::Proposed,
-                oid: None,
-                observed_at_ms: None,
-                issue: None,
-            },
-        })?;
         Ok(plan)
     }
     pub(crate) fn cancel_observation(&mut self, id: &str) -> Result<()> {
@@ -355,79 +359,8 @@ impl ControlledWrites {
                 File::open(plan.metadata.common_dir.to_path()?)?,
                 "Shared repository is write-locked",
             )?;
-            policy::preflight(&plan.metadata, &self.options)?;
-            let config =
-                policy::effective(&plan.metadata, SigningPreference::Unsigned, &self.options)?;
-            self.trusted(&plan.worktree, &plan.metadata, &config)?;
-            let resolved = remote::resolve_for_observation(
-                &plan.metadata.root.to_path()?,
-                self.options.global_config.as_deref(),
-                &plan.remote,
-                &options,
-            )?;
-            if resolved.inspection.config_digest != plan.config_digest
-                || resolved.inspection.generation != plan.generation
-                || resolved.transport != plan.transport
-            {
-                return Err(stale());
-            }
-            validate_tools(plan)?;
-            let url = if let Some(expected) = &plan.local_target {
-                let target = local_target(
-                    &plan.metadata.root.to_path()?,
-                    &resolved.url,
-                    &self.options.remote,
-                )?;
-                if NativePath::from_path(&target) != *expected
-                    || Some(inspection::fs_identity(&target)?) != plan.local_binding
-                {
-                    return Err(stale());
-                }
-                url::Url::from_file_path(target)
-                    .map_err(|_| unsupported("Invalid fixture URL"))?
-                    .to_string()
-            } else {
-                resolved.url
-            };
-            let base = self.workspace.data_directory().join("network");
-            if !base.exists() {
-                store::private_dir(&base)?;
-            }
-            use std::os::unix::fs::PermissionsExt;
-            let metadata = fs::symlink_metadata(&base)?;
-            if !metadata.is_dir()
-                || metadata.is_symlink()
-                || metadata.permissions().mode() & 0o077 != 0
-            {
-                return Err(unsupported("Unsafe network artifact directory"));
-            }
-            let directory = base.join(&plan.id);
-            store::private_dir(&directory)?;
-            let home = directory.join("home");
-            store::private_dir(&home)?;
-            let repository = directory.join("transport.git");
-            let mut init = command(plan, &directory, &home)?;
-            init.args([
-                "init",
-                "--bare",
-                "-q",
-                "--object-format",
-                if plan.metadata.object_format == ObjectFormat::Sha1 {
-                    "sha1"
-                } else {
-                    "sha256"
-                },
-            ])
-            .arg(&repository);
-            if !process::bounded_input(init, &options, None)?
-                .status
-                .success()
-            {
-                return Err(fail(
-                    ErrorKind::InspectionFailed,
-                    "Cannot initialize isolated transport repository",
-                ));
-            }
+            let url = self.revalidate_transport(plan, &options)?;
+            let (_, home, repository) = self.initialize_transport(plan, &options)?;
             let mut probe = command(plan, &repository, &home)?;
             probe.args([
                 "ls-remote",
@@ -472,6 +405,110 @@ impl ControlledWrites {
             }
         }
         self.persist_observation(&stored)?;
+        Ok(stored.value)
+    }
+    pub(super) fn revalidate_transport(
+        &mut self,
+        plan: &ObservationPlan,
+        options: &ReadOptions,
+    ) -> Result<String> {
+        policy::preflight(&plan.metadata, &self.options)?;
+        let config = policy::effective(&plan.metadata, SigningPreference::Unsigned, &self.options)?;
+        self.trusted(&plan.worktree, &plan.metadata, &config)?;
+        let resolved = remote::resolve_for_observation(
+            &plan.metadata.root.to_path()?,
+            self.options.global_config.as_deref(),
+            &plan.remote,
+            options,
+        )?;
+        if resolved.inspection.config_digest != plan.config_digest
+            || resolved.inspection.generation != plan.generation
+            || resolved.transport != plan.transport
+        {
+            return Err(stale());
+        }
+        validate_tools(plan)?;
+        let url = if let Some(expected) = &plan.local_target {
+            let target = local_target(
+                &plan.metadata.root.to_path()?,
+                &resolved.url,
+                &self.options.remote,
+            )?;
+            if NativePath::from_path(&target) != *expected
+                || Some(inspection::fs_identity(&target)?) != plan.local_binding
+            {
+                return Err(stale());
+            }
+            url::Url::from_file_path(target)
+                .map_err(|_| unsupported("Invalid fixture URL"))?
+                .to_string()
+        } else {
+            resolved.url
+        };
+        Ok(url)
+    }
+    pub(super) fn initialize_transport(
+        &self,
+        plan: &ObservationPlan,
+        options: &ReadOptions,
+    ) -> Result<(PathBuf, PathBuf, PathBuf)> {
+        let base = self.workspace.data_directory().join("network");
+        if !base.exists() {
+            store::private_dir(&base)?;
+        }
+        use std::os::unix::fs::PermissionsExt;
+        let metadata = fs::symlink_metadata(&base)?;
+        if !metadata.is_dir() || metadata.is_symlink() || metadata.permissions().mode() & 0o077 != 0
+        {
+            return Err(unsupported("Unsafe network artifact directory"));
+        }
+        let directory = base.join(&plan.id);
+        store::private_dir(&directory)?;
+        let home = directory.join("home");
+        store::private_dir(&home)?;
+        let repository = directory.join("transport.git");
+        let mut init = command(plan, &directory, &home)?;
+        init.args([
+            "init",
+            "--bare",
+            "-q",
+            "--object-format",
+            if plan.metadata.object_format == ObjectFormat::Sha1 {
+                "sha1"
+            } else {
+                "sha256"
+            },
+        ])
+        .arg(&repository);
+        if !process::bounded_input(init, options, None)?
+            .status
+            .success()
+        {
+            return Err(fail(
+                ErrorKind::InspectionFailed,
+                "Cannot initialize isolated transport repository",
+            ));
+        }
+        Ok((directory, home, repository))
+    }
+    pub(super) fn completed_observation(
+        &mut self,
+        id: &str,
+        workspace: &WorkspaceId,
+        worktree: &WorktreeId,
+    ) -> Result<Observation> {
+        let stored = self.observation(id)?;
+        if stored.value.plan.workspace != *workspace
+            || stored.value.plan.worktree != *worktree
+            || stored.value.phase != ObservationPhase::Complete
+            || stored.value.oid.is_none()
+            || stored.value.observed_at_ms.is_none()
+        {
+            return Err(fail(
+                ErrorKind::InvalidRequest,
+                "Choose a completed observation of an existing branch in this worktree",
+            ));
+        }
         Ok(stored.value)
     }
     pub(crate) fn observation_audit_detail(&self, payload: &str) -> Result<Observation> {

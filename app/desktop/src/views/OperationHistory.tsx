@@ -8,6 +8,7 @@ import type {
 } from "../services/response.generated";
 import { bytes, pathText, repoName } from "../stores/model";
 import { ObservationRecords } from "./ObservationHistory";
+import { FetchCaptureRecords } from "./FetchCaptureHistory";
 
 const kinds = [
   "stage",
@@ -15,7 +16,10 @@ const kinds = [
   "commit",
   "batch_commit",
   "remote_observation",
+  "fetch_capture",
 ] as const;
+const operationName = (kind: string) =>
+  kind === "fetch_capture" ? "branch download" : kind.replaceAll("_", " ");
 const results = [
   "pending",
   "complete",
@@ -92,9 +96,9 @@ export function OperationHistory({
           <span className="eyebrow">DURABLE CORE RECORDS</span>
           <h1>Operation results</h1>
           <p>
-            Local Git operations, commit batches and remote observations in one
-            recorded chronology. Reading history cannot repeat an operation or
-            contact a server.
+            Local Git operations, commit batches, remote observations and branch
+            downloads in one recorded chronology. Reading history cannot repeat
+            an operation or contact a server.
           </p>
         </div>
         <button
@@ -134,7 +138,7 @@ export function OperationHistory({
             <option value="">All types</option>
             {kinds.map((kind) => (
               <option key={kind} value={kind}>
-                {kind.replaceAll("_", " ")}
+                {operationName(kind)}
               </option>
             ))}
           </select>
@@ -207,10 +211,10 @@ export function OperationHistory({
         {page?.items.map((item) => (
           <section
             key={`${item.operation_kind}:${item.id}`}
-            aria-label={`${item.operation_kind.replaceAll("_", " ")} · ${item.id}`}
+            aria-label={`${operationName(item.operation_kind)} · ${item.id}`}
           >
             <h2>
-              {item.operation_kind.replaceAll("_", " ")} ·{" "}
+              {operationName(item.operation_kind)} ·{" "}
               {item.result.replaceAll("_", " ")}
             </h2>
             <p>
@@ -222,6 +226,9 @@ export function OperationHistory({
             )}
             {item.record.kind === "remote_observation" && (
               <ObservationRecords items={[item.record.value]} />
+            )}
+            {item.record.kind === "fetch_capture" && (
+              <FetchCaptureRecords items={[item.record.value]} />
             )}
             {item.record.kind === "batch" && (
               <article>

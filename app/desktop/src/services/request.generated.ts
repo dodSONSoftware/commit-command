@@ -65,6 +65,18 @@ export type Request =
       worktree?: string | null;
     }
   | {
+      kind: "review_fetch_capture";
+      observation: string;
+      workspace: string;
+      worktree: string;
+    }
+  | {
+      kind: "fetch_captures";
+      offset: number;
+      workspace: string;
+      worktree?: string | null;
+    }
+  | {
       kind: "workspaces";
     }
   | {
@@ -182,7 +194,12 @@ export type HistoryScope =
     };
 export type ObjectFormat = "sha1" | "sha256";
 export type OperationAuditKind =
-  "stage" | "unstage" | "commit" | "batch_commit" | "remote_observation";
+  | "stage"
+  | "unstage"
+  | "commit"
+  | "batch_commit"
+  | "remote_observation"
+  | "fetch_capture";
 export type OperationAuditResult =
   | "pending"
   | "complete"

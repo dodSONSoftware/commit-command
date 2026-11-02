@@ -1,0 +1,109 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.47s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-878959a9ad654234)
+
+running 14 tests
+test authentication_failure_never_uses_a_configured_helper_or_retains_raw_server_text ... FAILED
+test verified_https_observation_ignores_managed_helpers_proxies_and_unsafe_tls_settings ... FAILED
+test running_https_observation_is_cancelled_after_the_actual_request_starts ... FAILED
+test https_requires_a_valid_certificate_hostname_and_refuses_redirects ... FAILED
+test certificate_source_drift_requires_new_review_before_any_request ... FAILED
+test restart_exposes_an_orphaned_review_but_never_restores_authority ... ok
+test missing_remote_branch_is_observed_absent_without_creating_a_destination ... ok
+test untrusted_or_ordinary_local_destinations_never_gain_network_authority ... ok
+test observation_needs_independent_native_authority_and_changes_neither_repository ... ok
+test fetch_capture_detects_remote_branch_drift_without_importing_downloaded_objects ... ok
+test decline_cancellation_and_configuration_drift_never_contact_a_remote ... ok
+test fetch_capture_requires_fresh_native_authority_and_produces_exact_verified_bundle_without_managed_mutation ... ok
+test fetch_capture_rejects_missing_or_absent_sources_and_loses_authority_on_restart ... ok
+test fetch_capture_decline_precancel_and_configuration_drift_cannot_import_or_contact_a_server ... ok
+
+failures:
+
+---- authentication_failure_never_uses_a_configured_helper_or_retains_raw_server_text stdout ----
+
+thread 'authentication_failure_never_uses_a_configured_helper_or_retains_raw_server_text' (11994269) panicked at tests/remote_observation.rs:362:9:
+TLS server did not start: Traceback (most recent call last):
+  File "/Users/randydodson/Documents/_code/git-fleet/app/core/tests/support/https_observation.py", line 46, in <module>
+    server = http.server.HTTPServer(("127.0.0.1", 0), Handler)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py", line 452, in __init__
+    self.server_bind()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/server.py", line 138, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py", line 466, in server_bind
+    self.socket.bind(self.server_address)
+PermissionError: [Errno 1] Operation not permitted
+
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- verified_https_observation_ignores_managed_helpers_proxies_and_unsafe_tls_settings stdout ----
+
+thread 'verified_https_observation_ignores_managed_helpers_proxies_and_unsafe_tls_settings' (11994282) panicked at tests/remote_observation.rs:362:9:
+TLS server did not start: Traceback (most recent call last):
+  File "/Users/randydodson/Documents/_code/git-fleet/app/core/tests/support/https_observation.py", line 46, in <module>
+    server = http.server.HTTPServer(("127.0.0.1", 0), Handler)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py", line 452, in __init__
+    self.server_bind()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/server.py", line 138, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py", line 466, in server_bind
+    self.socket.bind(self.server_address)
+PermissionError: [Errno 1] Operation not permitted
+
+
+---- running_https_observation_is_cancelled_after_the_actual_request_starts stdout ----
+
+thread 'running_https_observation_is_cancelled_after_the_actual_request_starts' (11994280) panicked at tests/remote_observation.rs:362:9:
+TLS server did not start: Traceback (most recent call last):
+  File "/Users/randydodson/Documents/_code/git-fleet/app/core/tests/support/https_observation.py", line 46, in <module>
+    server = http.server.HTTPServer(("127.0.0.1", 0), Handler)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py", line 452, in __init__
+    self.server_bind()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/server.py", line 138, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py", line 466, in server_bind
+    self.socket.bind(self.server_address)
+PermissionError: [Errno 1] Operation not permitted
+
+
+---- https_requires_a_valid_certificate_hostname_and_refuses_redirects stdout ----
+
+thread 'https_requires_a_valid_certificate_hostname_and_refuses_redirects' (11994276) panicked at tests/remote_observation.rs:362:9:
+TLS server did not start: Traceback (most recent call last):
+  File "/Users/randydodson/Documents/_code/git-fleet/app/core/tests/support/https_observation.py", line 46, in <module>
+    server = http.server.HTTPServer(("127.0.0.1", 0), Handler)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py", line 452, in __init__
+    self.server_bind()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/server.py", line 138, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py", line 466, in server_bind
+    self.socket.bind(self.server_address)
+PermissionError: [Errno 1] Operation not permitted
+
+
+---- certificate_source_drift_requires_new_review_before_any_request stdout ----
+
+thread 'certificate_source_drift_requires_new_review_before_any_request' (11994270) panicked at tests/remote_observation.rs:362:9:
+TLS server did not start: Traceback (most recent call last):
+  File "/Users/randydodson/Documents/_code/git-fleet/app/core/tests/support/https_observation.py", line 46, in <module>
+    server = http.server.HTTPServer(("127.0.0.1", 0), Handler)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py", line 452, in __init__
+    self.server_bind()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/http/server.py", line 138, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/socketserver.py", line 466, in server_bind
+    self.socket.bind(self.server_address)
+PermissionError: [Errno 1] Operation not permitted
+
+
+
+failures:
+    authentication_failure_never_uses_a_configured_helper_or_retains_raw_server_text
+    certificate_source_drift_requires_new_review_before_any_request
+    https_requires_a_valid_certificate_hostname_and_refuses_redirects
+    running_https_observation_is_cancelled_after_the_actual_request_starts
+    verified_https_observation_ignores_managed_helpers_proxies_and_unsafe_tls_settings
+
+test result: FAILED. 9 passed; 5 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.93s
+
+error: test failed, to rerun pass `--test remote_observation`

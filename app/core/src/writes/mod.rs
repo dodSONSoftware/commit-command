@@ -7,6 +7,8 @@ compile_error!(
 mod adapter;
 #[cfg(feature = "application-services")]
 mod application;
+#[cfg(feature = "application-services")]
+mod fetch;
 mod policy;
 #[cfg(feature = "application-services")]
 mod remote;

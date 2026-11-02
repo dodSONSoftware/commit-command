@@ -97,6 +97,16 @@ pub enum Request {
         worktree: Option<String>,
         offset: usize,
     },
+    ReviewFetchCapture {
+        workspace: String,
+        worktree: String,
+        observation: String,
+    },
+    FetchCaptures {
+        workspace: String,
+        worktree: Option<String>,
+        offset: usize,
+    },
     Workspaces {},
     Create {
         name: String,
@@ -218,6 +228,7 @@ pub enum Data {
     BulkComposer(BulkComposerState),
     Remotes(crate::remote::Inspection),
     RemoteObservations(crate::remote::observation::ObservationPage),
+    FetchCaptures(crate::remote::fetch::FetchCapturePage),
     Workspaces(WorkspaceList),
     Inventory(InventoryView),
     Refreshed(Box<StoredWorktree>),
@@ -355,6 +366,9 @@ impl Application {
                     .writes
                     .application_cancel_proposal(&proposal.operation_id)?,
                 review::Action::Batch(mut record) => self.cancel_batch_record(&mut record)?,
+                review::Action::FetchCapture(plan) => {
+                    self.writes.cancel_capture(&plan.transport.id)?
+                }
                 review::Action::RemoteObservation(plan) => {
                     self.writes.cancel_observation(&plan.id)?
                 }
@@ -599,6 +613,45 @@ impl Application {
                         return Err(error);
                     }
                 }
+            }
+            Request::ReviewFetchCapture {
+                workspace,
+                worktree,
+                observation,
+            } => {
+                let entry = self.entry(&workspace, &worktree)?;
+                let id = self.active(&workspace)?;
+                self.abandon_review()?;
+                let plan =
+                    self.writes
+                        .propose_capture(&id, &entry, &observation, &self.read_options)?;
+                match self.set_review(review::Action::FetchCapture(Box::new(plan.clone()))) {
+                    Ok(display) => Data::Review(display),
+                    Err(error) => {
+                        self.writes.cancel_capture(&plan.transport.id)?;
+                        return Err(error);
+                    }
+                }
+            }
+            Request::FetchCaptures {
+                workspace,
+                worktree,
+                offset,
+            } => {
+                let id = self.active(&workspace)?;
+                let selected = worktree
+                    .map(|w| self.entry(&workspace, &w).map(|e| e.id))
+                    .transpose()?;
+                let mut page = self.writes.captures(&id, selected.as_ref(), offset)?;
+                for capture in &mut page.items {
+                    if capture.phase == crate::remote::fetch::FetchCapturePhase::Proposed {
+                        let live=self.pending.as_ref().is_some_and(|pending|matches!(&pending.action,review::Action::FetchCapture(plan) if plan.transport.id==capture.plan.transport.id) && self.review(&pending.id).is_ok());
+                        if !live {
+                            capture.phase = crate::remote::fetch::FetchCapturePhase::Interrupted;
+                        }
+                    }
+                }
+                Data::FetchCaptures(page)
             }
             Request::RemoteObservations {
                 workspace,

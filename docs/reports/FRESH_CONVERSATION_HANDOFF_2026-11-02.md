@@ -1,5 +1,15 @@
 # Fresh conversation handoff — November 2, 2026
 
+## Latest M5B continuation
+
+The reviewed fetch-download checkpoint is complete; see `docs/reports/M5B_FETCH_CAPTURE_2026-11-02.md` and the latest local Git log. A fresh native review can capture one completed observed branch into an isolated verified bundle. Managed object import/tracking-ref publication is **not implemented** and must use a separate fresh review; no download authority may be reused for publication. No push or ordinary-write default change.
+
+Full Core matrix passed: 54/89/77/137/177 tests across the five configurations with documented ignores; 16 real local/loopback transport cases passed. Final desktop gate: 46 renderer tests, 11 native host cases per configuration and all format/type/lint/contracts/build/Clippy/release checks passed. Native checks established ordinary default gating and rendering/filtering/restart only, using synthetic history. New operation's actual native network execution remains NOT RUN.
+
+Ordinary dev bundle is refreshed to current checkpoint source; exact hashes are in `docs/validation/m5b-fetch-capture/source-artifact-final.json`. All native fixture windows are closed. New disposable fixture `/private/tmp/gitfleet-m3-native-5zxerugm` contains one synthetic completed observation and two synthetic capture-history records; zero real download artifacts/trust grants/write operations. Do not use its fake capture checksum as import evidence. Prior fixture and old acceptance bundle remain separate; rebuild acceptance artifacts before further native execution.
+
+Next implement reviewed exact bundle import and guarded tracking-ref publication with identity/configuration/trust/hash/OID/expected-old checks, durable effects and interruption/no-replay tests. Auth/SSH, upstreams, push/dependencies and remaining M3/M4/M6–M8 are still open. Preserve the same unrelated .gitignore, docs/README.md, docs/APPLICATION_OVERVIEW.md and docs/graphics work. No credentials/global settings/personal repositories changed.
+
 ## Latest autonomous continuation
 
 - `c0059f6`: unified typed operation audit over local Git, batch and remote observation journals, with workspace/worktree/type/result/date filters before deterministic paging. Existing legacy APIs/journals remain unchanged. Full Core matrix passed: 53/88/76/128/168 tests across default/experimental/controlled/application/all-feature configurations, with documented ignores. Full desktop gate and selected native mixed-history/filter/repository-preservation checks passed. Report: `docs/reports/M4_UNIFIED_OPERATION_AUDIT_2026-11-02.md`.

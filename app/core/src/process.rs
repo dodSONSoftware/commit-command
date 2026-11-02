@@ -99,10 +99,20 @@ fn bounded(command: Command, options: &ReadOptions) -> Result<Output> {
     bounded_input(command, options, None)
 }
 pub(crate) fn bounded_input(
-    mut command: Command,
+    command: Command,
     options: &ReadOptions,
     input: Option<Vec<u8>>,
 ) -> Result<Output> {
+    bounded_input_checked(command, options, input, || Ok(()))
+}
+/// Trusted callers can bound owned artifacts while a child is running.
+pub(crate) fn bounded_input_checked(
+    mut command: Command,
+    options: &ReadOptions,
+    input: Option<Vec<u8>>,
+    check: impl Fn() -> Result<()>,
+) -> Result<Output> {
+    check()?;
     let start = Instant::now();
     let _permit = permit(options, start)?;
     if options.max_output == 0 || options.max_output > 64 * 1024 * 1024 {
@@ -139,7 +149,7 @@ pub(crate) fn bounded_input(
     let err = std::thread::spawn(move || reader(stderr, 64 * 1024, err_exceeded));
     let mut failure = None;
     let status = loop {
-        if let Err(error) = options.check(start) {
+        if let Err(error) = options.check(start).and_then(|()| check()) {
             failure = Some(error);
             terminate(&mut child);
             break child.wait()?;
@@ -170,7 +180,7 @@ pub(crate) fn bounded_input(
             .as_ref()
             .is_some_and(|writer| !writer.is_finished())
     {
-        if let Err(error) = options.check(start) {
+        if let Err(error) = options.check(start).and_then(|()| check()) {
             failure = Some(error);
             terminate(&mut child);
         }
@@ -208,6 +218,7 @@ pub(crate) fn bounded_input(
             "Inspection output limit exceeded",
         ));
     }
+    check()?;
     Ok(Output {
         status,
         stdout,
@@ -378,5 +389,44 @@ mod tests {
             bounded(shell("exit 0"), &options).unwrap_err().kind,
             ErrorKind::Cancelled
         );
+    }
+    #[cfg(unix)]
+    #[test]
+    fn trusted_artifact_check_prevents_spawn_and_reaps_running_process() {
+        let root =
+            std::env::temp_dir().join(format!("gitfleet-process-budget-{}", uuid::Uuid::new_v4()));
+        std::fs::create_dir(&root).unwrap();
+        let marker = root.join("started");
+        let command = || {
+            let mut command = Command::new("/bin/sh");
+            command
+                .args(["-c", "printf started > \"$1\"; exec sleep 30", "fixture"])
+                .arg(&marker);
+            command
+        };
+        let blocked = || {
+            Err(Error::with_kind(
+                ErrorKind::OutputLimit,
+                "Fixture artifact limit",
+            ))
+        };
+        assert_eq!(
+            bounded_input_checked(command(), &ReadOptions::default(), None, blocked)
+                .unwrap_err()
+                .kind,
+            ErrorKind::OutputLimit
+        );
+        assert!(!marker.exists());
+        let began = Instant::now();
+        let guard = || if marker.exists() { blocked() } else { Ok(()) };
+        assert_eq!(
+            bounded_input_checked(command(), &ReadOptions::default(), None, guard)
+                .unwrap_err()
+                .kind,
+            ErrorKind::OutputLimit
+        );
+        assert!(marker.exists());
+        assert!(began.elapsed() < Duration::from_secs(5));
+        std::fs::remove_dir_all(root).unwrap();
     }
 }

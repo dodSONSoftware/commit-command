@@ -87,6 +87,8 @@ function fake(writes = false) {
               observed_at_ms: 1,
             },
           };
+        case "fetch_captures":
+          return { kind: "fetch_captures", value: { items: [], next: null } };
         case "remote_observations":
           return {
             kind: "remote_observations",

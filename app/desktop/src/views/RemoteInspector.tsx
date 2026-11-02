@@ -3,9 +3,11 @@ import { value, type Bridge } from "../services/bridge";
 import type {
   Inspection,
   ObservationPage,
+  FetchCapturePage,
 } from "../services/response.generated";
 import { bytes, pathText } from "../stores/model";
 import { ObservationRecords } from "./ObservationHistory";
+import { FetchCaptureRecords } from "./FetchCaptureHistory";
 const text = (value: string) =>
   bytes(Array.from(new TextEncoder().encode(value)));
 export function RemoteInspector({
@@ -31,6 +33,20 @@ export function RemoteInspector({
   const [observations, setObservations] = useState<ObservationPage | null>(
     null,
   );
+  const [captures, setCaptures] = useState<FetchCapturePage | null>(null);
+  const readCaptures = useCallback(
+    async (offset = 0) =>
+      value(
+        await bridge.request({
+          kind: "fetch_captures",
+          workspace,
+          worktree,
+          offset,
+        }),
+        "fetch_captures",
+      ),
+    [bridge, workspace, worktree],
+  );
   const readPage = useCallback(
     async (offset = 0) =>
       value(
@@ -48,13 +64,24 @@ export function RemoteInspector({
     if (revision == null) return;
     let live = true;
     void act(async () => {
-      const page = await readPage();
-      if (live) setObservations(page);
+      const [page, captures] = await Promise.all([readPage(), readCaptures()]);
+      if (live) {
+        setObservations(page);
+        setCaptures(captures);
+      }
     });
     return () => {
       live = false;
     };
-  }, [revision, readPage, act]);
+  }, [revision, readPage, readCaptures, act]);
+  async function refreshCaptures(offset = 0) {
+    const page = await readCaptures(offset);
+    setCaptures((previous) =>
+      offset && previous
+        ? { items: [...previous.items, ...page.items], next: page.next }
+        : page,
+    );
+  }
   async function refresh(offset = 0) {
     const page = await readPage(offset);
     setObservations((previous) =>
@@ -245,13 +272,49 @@ export function RemoteInspector({
       {observations?.items.length === 0 && (
         <p>No recorded observations for this repository.</p>
       )}
-      <ObservationRecords items={observations?.items ?? []} />
+      <p>
+        A completed observation of an existing branch can be downloaded after a
+        separate native review. The branch must still match its observed commit.
+        Downloading does not update this repository.
+      </p>
+      <ObservationRecords
+        items={observations?.items ?? []}
+        fetchDisabled={!enabled || busy}
+        onFetch={(observation) => {
+          if (!enabled || busy) return;
+          void act(async () => {
+            await bridge.request({
+              kind: "review_fetch_capture",
+              workspace,
+              worktree,
+              observation,
+            });
+            await refreshCaptures();
+          });
+        }}
+      />
       {observations?.next != null && (
         <button
           disabled={busy}
           onClick={() => void act(() => refresh(observations.next!))}
         >
           Load older observations
+        </button>
+      )}
+      <h3>Branch downloads</h3>
+      <button disabled={busy} onClick={() => void act(() => refreshCaptures())}>
+        Refresh branch downloads
+      </button>
+      {captures?.items.length === 0 && (
+        <p>No recorded branch downloads for this repository.</p>
+      )}
+      <FetchCaptureRecords items={captures?.items ?? []} />
+      {captures?.next != null && (
+        <button
+          disabled={busy}
+          onClick={() => void act(() => refreshCaptures(captures.next!))}
+        >
+          Load older branch downloads
         </button>
       )}
     </details>

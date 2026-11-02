@@ -1,5 +1,6 @@
 //! Read-only projections of existing journals; history never restores execution authority.
 use super::*;
+use crate::remote::fetch::{FetchCapture, FetchCapturePhase};
 use crate::remote::observation::{Observation, ObservationPhase};
 use rusqlite::params;
 
@@ -11,6 +12,7 @@ pub enum OperationAuditKind {
     Commit,
     BatchCommit,
     RemoteObservation,
+    FetchCapture,
 }
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "snake_case")]
@@ -38,6 +40,7 @@ pub enum OperationAuditRecord {
     Local(AuditEntry),
     Batch(BatchView),
     RemoteObservation(Box<Observation>),
+    FetchCapture(Box<FetchCapture>),
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct OperationAuditEntry {
@@ -70,11 +73,17 @@ WITH sources AS (
          'remote_observation', json_extract(value,'$.value.phase'), value,
          json_extract(value,'$.value.plan.worktree')
     FROM state WHERE key LIKE 'remote-observation:%' AND json_extract(value,'$.value.plan.workspace')=?1
+  UNION ALL
+  SELECT 'fetch', substr(key,15), json_extract(value,'$.value.plan.created_at_ms'),
+         'fetch_capture', json_extract(value,'$.value.phase'), value,
+         json_extract(value,'$.value.plan.worktree')
+    FROM state WHERE key LIKE 'fetch-capture:%' AND json_extract(value,'$.value.plan.workspace')=?1
 ), classified AS (
   SELECT *, CASE
     WHEN source='local' AND phase IN ('proposed','approved') AND id IS NOT ?8 THEN 'interrupted'
     WHEN source='batch' AND (phase='executing' OR (phase='proposed' AND id IS NOT ?9)) THEN 'interrupted'
     WHEN source='remote' AND (phase='running' OR (phase='proposed' AND id IS NOT ?10)) THEN 'interrupted'
+    WHEN source='fetch' AND (phase='running' OR (phase='proposed' AND id IS NOT ?11)) THEN 'interrupted'
     WHEN phase='complete' THEN 'complete'
     WHEN phase='blocked' THEN 'blocked'
     WHEN phase IN ('cancelled','cancelled_before_publication') THEN 'cancelled'
@@ -128,12 +137,13 @@ impl Application {
             // Scope by stored IDs so removed/unavailable checkouts remain inspectable.
             Uuid::parse_str(worktree).map_err(|_| invalid("Invalid audit worktree ID"))?;
         }
-        let (mut write, mut batch, mut remote) = (None, None, None);
+        let (mut write, mut batch, mut remote, mut fetch) = (None, None, None, None);
         if let Some(pending) = self.pending.as_ref().filter(|p| self.review(&p.id).is_ok()) {
             match &pending.action {
                 review::Action::Write(p) => write = Some(p.operation_id.clone()),
                 review::Action::Batch(p) => batch = Some(p.id.clone()),
                 review::Action::RemoteObservation(p) => remote = Some(p.id.clone()),
+                review::Action::FetchCapture(p) => fetch = Some(p.transport.id.clone()),
                 _ => {}
             }
         }
@@ -154,7 +164,8 @@ impl Application {
                     query.offset as i64,
                     write,
                     batch,
-                    remote
+                    remote,
+                    fetch
                 ],
                 |r| {
                     Ok((
@@ -240,6 +251,19 @@ impl Application {
                         observation.phase = ObservationPhase::Interrupted;
                     }
                     OperationAuditRecord::RemoteObservation(Box::new(observation))
+                }
+                "fetch" => {
+                    let mut capture = self.writes.capture_audit_detail(&payload)?;
+                    if capture.plan.transport.id != id
+                        || capture.plan.transport.workspace.0 != workspace
+                        || capture.plan.transport.created_at_ms != created
+                    {
+                        return Err(invalid("Inconsistent fetch audit record"));
+                    }
+                    if result == OperationAuditResult::Interrupted {
+                        capture.phase = FetchCapturePhase::Interrupted;
+                    }
+                    OperationAuditRecord::FetchCapture(Box::new(capture))
                 }
                 _ => return Err(invalid("Unknown audit source")),
             };

@@ -1,0 +1,24 @@
+{
+  "base_commit": "da23197",
+  "features": [
+    "custom-protocol"
+  ],
+  "sha256": {
+    "app/core/src/remote/fetch.rs": "4176efb9d833ff6e56be7c48d4ff4e6e6d8f7b7b3a2bc3c67f7126d0029be72c",
+    "app/core/src/writes/fetch.rs": "9442aeaefb60627008a600a399e1711f7926ae824c3e421c66d2bfcb10fdae47",
+    "app/core/src/writes/remote.rs": "d38db8f52cdefa1e7ab4ade72ee271e5661cba899e46826bf9c4942d089a4c4e",
+    "app/core/src/process.rs": "ad47b08a92ea9fa6eff32d2fb57531874d58a7da531e7c8707e10c557bf4f338",
+    "app/core/src/application/mod.rs": "1c4a9671db84862d39dd438fe222ab0598d893d99ddf15164d07d2741bd0a3a7",
+    "app/core/src/application/review.rs": "467ffd42658cd48c0c0148fecee408e61825c6fa98c4a49c242a395499abfac0",
+    "app/core/src/application/audit.rs": "931a22a689ca49b5008738727773ae6844b7e6688f9b8c641ee3be8ba0c2dbc2",
+    "app/core/tests/remote_observation.rs": "763858d49c8539c7fa63e221a34c699626ceb085f95d6cf34f6ab172bd399939",
+    "app/core/tests/support/https_observation.py": "80e5359d3212572fa30d7189f2f14862a585e4cdce2ba0edf7b0b650290a223f",
+    "app/desktop/src-tauri/src/main.rs": "5c5c75065bf4dee5d659f2d51178a4d0e45db1545eeb93cff5d07b22d9340bad",
+    "app/desktop/src/views/RemoteInspector.tsx": "863f6eebd994b16143ceefde1ef58431d3e5796f4aab2b737dcd6ea004e7df67",
+    "app/desktop/src/views/FetchCaptureHistory.tsx": "bf1de5ed3dd0c93b5475021460a4a0af65acb3638b1a4862543ddbd314427459",
+    "app/desktop/src/views/OperationHistory.tsx": "a3fc9526fdfae5d5f9c24f7b686b14854598e97219fb11c0fba763d9a9067bd9",
+    "app/desktop/src/services/request.generated.ts": "973e57c689106428a43d7eda918526bf9e75e8293072f98a462315694261df6b",
+    "app/desktop/src/services/response.generated.ts": "8b5483a47a9cee67699374e2342220303d313b62782d823b143d7330af206f9d",
+    "app/desktop/src-tauri/target/debug/bundle/macos/GitFleet.app/Contents/MacOS/gitfleet-desktop": "7ae8e5d7ec765997fda853b67501c521c34dca9f8b229eef7454346d35e4eae5"
+  }
+}

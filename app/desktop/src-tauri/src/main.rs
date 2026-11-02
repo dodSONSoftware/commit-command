@@ -179,6 +179,7 @@ fn mutating_request(request: &Request) -> bool {
         Request::ReviewTrust { .. }
             | Request::ReviewBatch { .. }
             | Request::ReviewRemoteObservation { .. }
+            | Request::ReviewFetchCapture { .. }
             | Request::Revoke { .. }
             | Request::HookPolicy { .. }
             | Request::Propose { .. }
@@ -854,6 +855,16 @@ mod tests {
             worktree: "t".into(),
             remote: "origin".into(),
             reference: "refs/heads/main".into(),
+        }));
+        assert!(mutating_request(&Request::ReviewFetchCapture {
+            workspace: "w".into(),
+            worktree: "t".into(),
+            observation: "o".into()
+        }));
+        assert!(!mutating_request(&Request::FetchCaptures {
+            workspace: "w".into(),
+            worktree: None,
+            offset: 0
         }));
         assert!(!mutating_request(&Request::RemoteObservations {
             workspace: "w".into(),

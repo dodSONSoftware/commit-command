@@ -46,6 +46,11 @@ export type Data =
       [k: string]: unknown;
     }
   | {
+      kind: "fetch_captures";
+      value: FetchCapturePage;
+      [k: string]: unknown;
+    }
+  | {
       kind: "workspaces";
       value: WorkspaceList;
       [k: string]: unknown;
@@ -158,7 +163,12 @@ export type ErrorKind =
  * via the `definition` "OperationAuditKind".
  */
 export type OperationAuditKind =
-  "stage" | "unstage" | "commit" | "batch_commit" | "remote_observation";
+  | "stage"
+  | "unstage"
+  | "commit"
+  | "batch_commit"
+  | "remote_observation"
+  | "fetch_capture";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "OperationAuditRecord".
@@ -177,6 +187,11 @@ export type OperationAuditRecord =
   | {
       kind: "remote_observation";
       value: Observation;
+      [k: string]: unknown;
+    }
+  | {
+      kind: "fetch_capture";
+      value: FetchCapture;
       [k: string]: unknown;
     };
 /**
@@ -253,6 +268,12 @@ export type ObservationPhase =
  */
 export type Transport =
   "local" | "https" | "ssh" | "git" | "remote_helper" | "unsupported";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "FetchCapturePhase".
+ */
+export type FetchCapturePhase =
+  "proposed" | "running" | "complete" | "blocked" | "cancelled" | "interrupted";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "OperationAuditResult".
@@ -589,6 +610,52 @@ export interface ToolBinding {
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "FetchCapture".
+ */
+export interface FetchCapture {
+  artifact?: FetchArtifact | null;
+  captured_at_ms?: number | null;
+  issue?: Issue | null;
+  phase: FetchCapturePhase;
+  plan: FetchCapturePlan;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "FetchArtifact".
+ */
+export interface FetchArtifact {
+  bundle_bytes: number;
+  bundle_digest: string;
+  object_bytes: number;
+  object_count: number;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "FetchCapturePlan".
+ */
+export interface FetchCapturePlan {
+  config_digest: string;
+  created_at_ms: number;
+  destination: string;
+  expected_oid: ObjectId;
+  generation: string;
+  id: string;
+  local_binding?: string | null;
+  local_target?: NativePath | null;
+  metadata: Metadata;
+  observation_id: string;
+  reference: string;
+  remote: string;
+  tools: ToolBinding[];
+  transport: Transport;
+  workspace: string;
+  worktree: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "AuditPage".
  */
 export interface AuditPage {
@@ -686,6 +753,15 @@ export interface ConfigOrigin {
  */
 export interface ObservationPage {
   items: Observation[];
+  next?: number | null;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "FetchCapturePage".
+ */
+export interface FetchCapturePage {
+  items: FetchCapture[];
   next?: number | null;
   [k: string]: unknown;
 }
