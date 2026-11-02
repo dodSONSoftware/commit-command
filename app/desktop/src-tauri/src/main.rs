@@ -181,6 +181,7 @@ fn mutating_request(request: &Request) -> bool {
         request,
         Request::ReviewTrust { .. }
             | Request::ReviewBatch { .. }
+            | Request::ReviewRemoteObservation { .. }
             | Request::Revoke { .. }
             | Request::HookPolicy { .. }
             | Request::Propose { .. }
@@ -207,6 +208,7 @@ fn dispatch<R: tauri::Runtime>(
                 | Request::Propose { .. }
                 | Request::ReviewTrust { .. }
                 | Request::ReviewBatch { .. }
+                | Request::ReviewRemoteObservation { .. }
                 | Request::ReviewRecovery { .. }
         )
     {
@@ -804,6 +806,17 @@ mod tests {
         }));
         assert!(!mutating_request(&Request::Batches {
             workspace: "w".into(),
+            offset: 0,
+        }));
+        assert!(mutating_request(&Request::ReviewRemoteObservation {
+            workspace: "w".into(),
+            worktree: "t".into(),
+            remote: "origin".into(),
+            reference: "refs/heads/main".into(),
+        }));
+        assert!(!mutating_request(&Request::RemoteObservations {
+            workspace: "w".into(),
+            worktree: None,
             offset: 0,
         }));
     }

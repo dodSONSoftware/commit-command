@@ -31,6 +31,11 @@ export type Data =
       [k: string]: unknown;
     }
   | {
+      kind: "remote_observations";
+      value: ObservationPage;
+      [k: string]: unknown;
+    }
+  | {
       kind: "workspaces";
       value: WorkspaceList;
       [k: string]: unknown;
@@ -206,6 +211,12 @@ export type BatchPhase =
  */
 export type Transport =
   "local" | "https" | "ssh" | "git" | "remote_helper" | "unsupported";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ObservationPhase".
+ */
+export type ObservationPhase =
+  "proposed" | "running" | "complete" | "blocked" | "cancelled" | "interrupted";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "Availability".
@@ -515,6 +526,72 @@ export interface ConfigOrigin {
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ObservationPage".
+ */
+export interface ObservationPage {
+  items: Observation[];
+  next?: number | null;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "Observation".
+ */
+export interface Observation {
+  issue?: Issue | null;
+  observed_at_ms?: number | null;
+  oid?: ObjectId | null;
+  phase: ObservationPhase;
+  plan: ObservationPlan;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ObservationPlan".
+ */
+export interface ObservationPlan {
+  config_digest: string;
+  created_at_ms: number;
+  destination: string;
+  generation: string;
+  id: string;
+  local_binding?: string | null;
+  local_target?: NativePath | null;
+  metadata: Metadata;
+  reference: string;
+  remote: string;
+  tools: ToolBinding[];
+  transport: Transport;
+  workspace: string;
+  worktree: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "Metadata".
+ */
+export interface Metadata {
+  common_binding: string;
+  common_dir: NativePath;
+  git_binding: string;
+  git_dir: NativePath;
+  object_format: ObjectFormat;
+  root: NativePath;
+  root_binding: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ToolBinding".
+ */
+export interface ToolBinding {
+  fingerprint: string;
+  path: NativePath;
+  role: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "WorkspaceList".
  */
 export interface WorkspaceList {
@@ -578,20 +655,6 @@ export interface StoredWorktree {
   repository_id: string;
   status?: Snapshot | null;
   untrusted: boolean;
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "Metadata".
- */
-export interface Metadata {
-  common_binding: string;
-  common_dir: NativePath;
-  git_binding: string;
-  git_dir: NativePath;
-  object_format: ObjectFormat;
-  root: NativePath;
-  root_binding: string;
   [k: string]: unknown;
 }
 /**

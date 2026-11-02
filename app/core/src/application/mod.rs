@@ -68,6 +68,17 @@ pub enum Request {
         workspace: String,
         worktree: String,
     },
+    ReviewRemoteObservation {
+        workspace: String,
+        worktree: String,
+        remote: String,
+        reference: String,
+    },
+    RemoteObservations {
+        workspace: String,
+        worktree: Option<String>,
+        offset: usize,
+    },
     Workspaces {},
     Create {
         name: String,
@@ -186,6 +197,7 @@ pub enum Data {
     Audit(exploration::AuditPage),
     Batches(BatchPage),
     Remotes(crate::remote::Inspection),
+    RemoteObservations(crate::remote::observation::ObservationPage),
     Workspaces(WorkspaceList),
     Inventory(InventoryView),
     Refreshed(Box<StoredWorktree>),
@@ -323,6 +335,9 @@ impl Application {
                     .writes
                     .application_cancel_proposal(&proposal.operation_id)?,
                 review::Action::Batch(mut record) => self.cancel_batch_record(&mut record)?,
+                review::Action::RemoteObservation(plan) => {
+                    self.writes.cancel_observation(&plan.id)?
+                }
                 _ => {}
             }
         }
@@ -537,6 +552,54 @@ impl Application {
                     &WorktreeId(worktree),
                     &self.read_options,
                 )?))
+            }
+            Request::ReviewRemoteObservation {
+                workspace,
+                worktree,
+                remote,
+                reference,
+            } => {
+                let entry = self.entry(&workspace, &worktree)?;
+                let id = self.active(&workspace)?;
+                self.abandon_review()?;
+                let plan = self.writes.propose_observation(
+                    &id,
+                    &entry,
+                    &remote,
+                    &reference,
+                    &self.read_options,
+                )?;
+                match self.set_review(review::Action::RemoteObservation(Box::new(plan.clone()))) {
+                    Ok(display) => Data::Review(display),
+                    Err(error) => {
+                        self.writes.cancel_observation(&plan.id)?;
+                        return Err(error);
+                    }
+                }
+            }
+            Request::RemoteObservations {
+                workspace,
+                worktree,
+                offset,
+            } => {
+                let id = self.active(&workspace)?;
+                let selected = worktree
+                    .map(|worktree| self.entry(&workspace, &worktree).map(|entry| entry.id))
+                    .transpose()?;
+                let mut page = self.writes.observations(&id, selected.as_ref(), offset)?;
+                for observation in &mut page.items {
+                    if observation.phase == crate::remote::observation::ObservationPhase::Proposed {
+                        let live = self.pending.as_ref().is_some_and(|pending| {
+                            matches!(&pending.action, review::Action::RemoteObservation(plan) if plan.id == observation.plan.id)
+                                && self.review(&pending.id).is_ok()
+                        });
+                        if !live {
+                            observation.phase =
+                                crate::remote::observation::ObservationPhase::Interrupted;
+                        }
+                    }
+                }
+                Data::RemoteObservations(page)
             }
             Request::Remotes {
                 workspace,

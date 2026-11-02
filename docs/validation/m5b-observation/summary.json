@@ -1,0 +1,50 @@
+{
+  "base_revision": "91242100783b9a3f58743088106e7df2af2333c5",
+  "dirty": true,
+  "unrelated_unstaged": [
+    ".gitignore"
+  ],
+  "core_matrix": {
+    "default": {
+      "passed": 53,
+      "failed": 0,
+      "ignored": 1
+    },
+    "experimental-writes": {
+      "passed": 88,
+      "failed": 0,
+      "ignored": 2
+    },
+    "controlled-writes": {
+      "passed": 76,
+      "failed": 0,
+      "ignored": 1
+    },
+    "application-services": {
+      "passed": 123,
+      "failed": 0,
+      "ignored": 2
+    },
+    "all-features": {
+      "passed": 163,
+      "failed": 0,
+      "ignored": 4
+    }
+  },
+  "renderer": {
+    "passed": 28,
+    "failed": 0
+  },
+  "native_host_default": {
+    "passed": 8,
+    "failed": 0
+  },
+  "native_host_all_features": {
+    "passed": 8,
+    "failed": 0
+  },
+  "native_ui": "Not run for this checkpoint; remaining native acceptance deferred after preceding Mac lock block",
+  "network_operation": "Independently reviewed credential-free exact branch observation only; no fetch/push/upstream mutation",
+  "ordinary_desktop_writes": false,
+  "ignored_note": "One non-UTF-8 host filesystem limitation per configuration is not a pass; remaining ignored subprocess workers are invoked by parent tests"
+}

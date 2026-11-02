@@ -1,6 +1,6 @@
 # M5 remote inspection and operation boundary
 
-November 2, 2026. This document distinguishes implemented local inspection from the remaining network service. The local development repository must never be pushed by this execution session. Disposable test remotes are the validation boundary for future remote operation code.
+November 2, 2026. This document distinguishes implemented local inspection and reviewed branch observation from remaining fetch/push work. The local development repository must never be pushed by this execution session. Disposable test remotes are the validation boundary for future remote operation code.
 
 ## Implemented: local inspection
 
@@ -14,7 +14,17 @@ A configuration digest binds the complete effective snapshot without publishing 
 
 The URL parser is the `url` crate already used by the desktop dependency graph. It is now an optional direct Core dependency under application-services, so untrusted URL parsing does not rely on ad hoc authority/credential parsing. Default Core builds still exclude it and the remote module.
 
-## Next: explicit network service (not implemented by this checkpoint)
+## Implemented: independently reviewed branch observation
+
+`ReviewRemoteObservation` prepares one exact remote/full branch reference through the same native capability boundary, gated by `desktop-writes`. Trust, active workspace/worktree identity, effective configuration/generation and Git/HTTPS-helper/CA tool bindings are revalidated. Preparation performs no network activity. Decline, replacement, revocation and workspace invalidation cancel the pending proposal. Results live in versioned single-owner SQLite state, with per-worktree/workspace bounded pagination. Restart never restores confirmation authority or replays a running observation; orphaned/running records display as interrupted.
+
+Execution creates a private temporary bare transport repository and empty HOME under app-owned state. It clears inherited environment/configuration, disables lazy network activity, hooks, recursion, maintenance, credential helpers, proxies and cookies, verifies TLS certificates/hostnames and refuses redirects. No actual credentials are supplied in this initial policy. A separately configured CA is trusted host configuration, fingerprinted in the review; it cannot be supplied through IPC. Local file transport is restricted to a trusted host-configured disposable fixture root and is disabled in ordinary host configuration. Git and transport tool paths/content are bound to the review.
+
+The only network command is an exact `ls-remote --refs --exit-code` for one validated full branch. Complete results contain an observed OID or explicit absence plus time; raw server diagnostics are discarded. Managed HEAD, objects, index, refs, working files and upstreams are preserved. This is a past server observation and never implies synchronization. Running cancellation terminates the bounded transport process group. The desktop requests review and reads results; it cannot supply approval or replay an observation.
+
+Tests use actual isolated local remotes and loopback TLS advertisements, including reviewed CA success, certificate and hostname failures, redirects, helper/proxy isolation, missing credentials, CA drift and cancellation after an HTTP request begins. No external service or actual user credentials are used. System credential/SSH support and actual native UI acceptance remain open.
+
+## Next: remaining fetch/push service
 
 1. Keep the read-only adapter's protocol ban. Network requests need distinct typed proposals, durable outcomes and independent native authorization. Trust alone never approves a fetch or push.
 2. Resolve exact destination/configuration, source/destination refs, source OID, hook/credential policy and dependency evidence. Bind them to workspace/worktree identities and a short-lived Rust-only review. Raw embedded credentials and ambiguous or unsupported destinations fail closed.
@@ -25,4 +35,4 @@ The URL parser is the `url` crate already used by the desktop dependency graph. 
 7. Persist started/completed/failed/uncertain remote phases before side effects. Restart never replays publication. A cancelled/disconnected push with ambiguous publication requires fresh remote observation and review, rather than an automatic retry. Preserve successful prior batch items.
 8. Validate isolated local bare and loopback transport fixtures, origin/ref drift, server rejection, auth/transport failures, hooks, cancellation, uncertain outcomes and no implicit upstream/ref changes. Actual supported Keychain/SSH/native behavior requires separate platform evidence.
 
-Inspection alone does not fulfill fetch/push, credential storage, transport authentication, bulk dependency reachability or remote crash recovery. Those requirements remain open in the completion tracker.
+Inspection and branch observation do not fulfill fetch/push, credential storage, authenticated transport, bulk dependency reachability or uncertain-publication recovery. Those requirements remain open in the completion tracker.

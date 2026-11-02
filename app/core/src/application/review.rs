@@ -15,6 +15,7 @@ pub(super) enum Action {
     },
     Write(Box<Proposal>),
     Batch(BatchRecord),
+    RemoteObservation(Box<crate::remote::observation::ObservationPlan>),
     Recovery {
         workspace: WorkspaceId,
         review: RecoveryReview,
@@ -123,6 +124,11 @@ impl Application {
         let (title, summary, content) = match &action {
             Action::Write(p) => self.describe_write(p)?,
             Action::Batch(record) => self.describe_batch(record)?,
+            Action::RemoteObservation(plan) => (
+                "Review remote branch observation".into(),
+                format!("Contact {} to observe {} on remote {}.\nNo commits, working files, index, refs or upstreams will be changed.\nHTTPS verifies certificates and hostnames against the reviewed trust source and rejects redirects. No credentials or credential helpers are used.\nManaged transport configuration, proxy and SSH commands are not executed.\nLocal transport is restricted to host-configured disposable fixtures.", plan.destination, plan.reference, plan.remote),
+                serde_json::to_string_pretty(plan)?,
+            ),
             Action::Trust { reviews, .. } => (
                 "Review explicit trust grants".into(),
                 format!("Trust {} explicit worktree(s). Reviewed hooks/signers run unsandboxed as your user.\n{}", reviews.len(), reviews.iter().map(|r| format!("{}: {:?}", r.worktree_id.0, r.metadata.root)).collect::<Vec<_>>().join("\n")),
@@ -219,6 +225,7 @@ impl Application {
                     .writes
                     .application_cancel_proposal(&proposal.operation_id)?,
                 Action::Batch(record) => self.cancel_batch_record(&mut record.clone())?,
+                Action::RemoteObservation(plan) => self.writes.cancel_observation(&plan.id)?,
                 _ => {}
             }
             self.writes.cancel_application_reviews();
@@ -228,6 +235,11 @@ impl Application {
             ));
         }
         let result = match p.action {
+            Action::RemoteObservation(plan) => {
+                self.active(&plan.workspace.0)?;
+                self.entry(&plan.workspace.0, &plan.worktree.0)?;
+                serde_json::to_value(self.writes.execute_observation(&plan, cancellation)?)?
+            }
             Action::Batch(record) => self.execute_batch(record, cancellation)?,
             Action::Write(proposal) => {
                 self.active(&proposal.workspace_id.0)?;

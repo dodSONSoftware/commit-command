@@ -8,6 +8,8 @@ mod adapter;
 #[cfg(feature = "application-services")]
 mod application;
 mod policy;
+#[cfg(feature = "application-services")]
+mod remote;
 mod store;
 mod transaction;
 use crate::domain::{
@@ -95,6 +97,8 @@ pub struct Options {
     pub signer_home: Option<PathBuf>,
     pub global_config: Option<PathBuf>,
     pub approval_lifetime: Duration,
+    #[cfg(feature = "application-services")]
+    pub remote: crate::remote::TransportOptions,
 }
 impl Default for Options {
     fn default() -> Self {
@@ -107,6 +111,8 @@ impl Default for Options {
             signer_home: None,
             global_config: None,
             approval_lifetime: Duration::from_secs(600),
+            #[cfg(feature = "application-services")]
+            remote: crate::remote::TransportOptions::default(),
         }
     }
 }

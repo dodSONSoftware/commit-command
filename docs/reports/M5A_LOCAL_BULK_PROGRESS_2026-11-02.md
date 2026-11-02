@@ -18,7 +18,7 @@ Contract: [M5A local bulk commits](../architecture/M5A_LOCAL_BULK_COMMITS.md).
 
 The complete Core validation script passed using cached dependencies and isolated signing fixtures. Counts overlap across feature configurations and must not be summed as unique tests.
 
-| Feature configuration | Passed | Failed | Ignored subprocess workers |
+| Feature configuration | Passed | Failed | Ignored (workers / host limitation) |
 |---|---:|---:|---:|
 | Default | 53 | 0 | 1 |
 | Experimental writes | 88 | 0 | 2 |
@@ -26,7 +26,7 @@ The complete Core validation script passed using cached dependencies and isolate
 | Application services | 104 | 0 | 2 |
 | All features | 144 | 0 | 4 |
 
-All applicable Core builds, formatting and strict Clippy passed. The experimental lab passed 23 scenarios with one optional GPG diagnostic skip; controlled-write positive signing tests ran in the mandatory matrix. Ignored subprocess workers are invoked by their parent acceptance tests, including the new batch interruption worker.
+All applicable Core builds, formatting and strict Clippy passed. The experimental lab passed 23 scenarios with one optional GPG diagnostic skip; controlled-write positive signing tests ran in the mandatory matrix. Ignored (workers / host limitation) are invoked by their parent acceptance tests, including the new batch interruption worker.
 
 Eleven new bulk integration cases use independent Git HEAD/blob/index/worktree oracles. They cover explicit selection and independent nesting; hook failure and fresh unfinished-only retry; known untrusted worktrees; decline and stale working content; partial staging and stale exclusions; duplicate selection and restart capability revocation; real selected submodule order and fresh parent review; cancellation after a hook actually starts; actual process-group SIGKILL after the first item publishes with restart/no replay; linked-worktree commits to distinct branches; and trust revocation of a pending batch.
 

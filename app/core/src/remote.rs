@@ -1,8 +1,27 @@
 //! Read-only destination inspection. This module does not contact remote servers.
+pub mod observation;
 use crate::{domain::*, inspection, process, Error, ErrorKind, Result};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use std::{collections::BTreeMap, path::Path, process::Command, time::Instant};
+use std::{
+    collections::BTreeMap,
+    path::{Path, PathBuf},
+    process::Command,
+    time::Instant,
+};
+
+/// Trusted host policy. Renderer requests cannot set transport roots or CA files.
+#[derive(Debug, Clone, Default)]
+pub struct TransportOptions {
+    pub local_fixture_root: Option<PathBuf>,
+    pub ca_file: Option<PathBuf>,
+}
+
+pub(crate) struct ResolvedDestination {
+    pub inspection: Inspection,
+    pub url: String,
+    pub transport: Transport,
+}
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "snake_case")]
@@ -482,5 +501,72 @@ pub fn inspect(
         }
         // Never retain raw URL/configuration bytes in the public result or persistence layer.
         Ok(value)
+    })
+}
+
+/// Resolve again at execution; a display projection is never a transport URL.
+pub(crate) fn resolve_for_observation(
+    repo: &Path,
+    global: Option<&Path>,
+    name: &str,
+    options: &inspection::ReadOptions,
+) -> Result<ResolvedDestination> {
+    let started = Instant::now();
+    let before = inspect(repo, global, options)?;
+    let remote = before
+        .remotes
+        .iter()
+        .find(|r| r.name == name)
+        .ok_or_else(|| invalid("Unknown remote"))?;
+    if !remote.issues.is_empty() || remote.fetch.len() != 1 {
+        return Err(invalid(
+            "Remote destination is ambiguous or has unsupported policy",
+        ));
+    }
+    let selected_destination = &remote.fetch[0];
+    if selected_destination.credentials_hidden
+        || !selected_destination.restrictions.is_empty()
+        || !matches!(
+            selected_destination.transport,
+            Transport::Https | Transport::Local
+        )
+    {
+        return Err(invalid("Observation requires one HTTPS destination without embedded credentials, or an explicit local fixture transport"));
+    }
+    let mut command = clean(repo, global);
+    command.args(["remote", "get-url", "--all", "--", name]);
+    let mut remaining = options.clone();
+    remaining.timeout = options.timeout.saturating_sub(started.elapsed());
+    let output = process::bounded_input(command, &remaining, None)?;
+    if !output.status.success() {
+        return Err(invalid("Cannot resolve observation destination"));
+    }
+    let url = inspection::output_text(output.stdout)?;
+    if url.chars().any(char::is_control) || url.is_empty() {
+        return Err(invalid("Invalid observation destination"));
+    }
+    let parsed = destination(&url);
+    if parsed.display != selected_destination.display
+        || parsed.credentials_hidden
+        || !parsed.restrictions.is_empty()
+    {
+        return Err(Error::with_kind(
+            ErrorKind::ConcurrentChange,
+            "Observation destination changed",
+        ));
+    }
+    let transport = selected_destination.transport.clone();
+    remaining.timeout = options.timeout.saturating_sub(started.elapsed());
+    let after = inspect(repo, global, &remaining)?;
+    if before.config_digest != after.config_digest || before.generation != after.generation {
+        return Err(Error::with_kind(
+            ErrorKind::ConcurrentChange,
+            "Remote configuration changed while resolving destination",
+        ));
+    }
+    Ok(ResolvedDestination {
+        inspection: before,
+        url,
+        transport,
     })
 }

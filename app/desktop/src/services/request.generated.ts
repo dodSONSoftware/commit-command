@@ -38,6 +38,19 @@ export type Request =
       worktree: string;
     }
   | {
+      kind: "review_remote_observation";
+      reference: string;
+      remote: string;
+      workspace: string;
+      worktree: string;
+    }
+  | {
+      kind: "remote_observations";
+      offset: number;
+      workspace: string;
+      worktree?: string | null;
+    }
+  | {
       kind: "workspaces";
     }
   | {

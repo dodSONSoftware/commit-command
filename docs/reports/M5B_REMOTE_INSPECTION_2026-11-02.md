@@ -20,7 +20,7 @@ Eight real-Git inspection tests cover distinct fetch/push rewrites, explicit-pus
 
 The complete Core and final desktop validation scripts passed:
 
-| Core feature configuration | Passed | Failed | Ignored subprocess workers |
+| Core feature configuration | Passed | Failed | Ignored (workers / host limitation) |
 |---|---:|---:|---:|
 | Default | 53 | 0 | 1 |
 | Experimental writes | 88 | 0 | 2 |
@@ -28,7 +28,7 @@ The complete Core and final desktop validation scripts passed:
 | Application services | 113 | 0 | 2 |
 | All features | 153 | 0 | 4 |
 
-Counts overlap. All applicable Core builds, formatting and strict Clippy passed, including mandatory isolated positive signing and crash matrices. The experimental lab passed 23 with one optional diagnostic skip. The desktop passed typecheck/lint/contract drift/format, 27 renderer tests, frontend production build, eight default and eight all-feature native host tests, strict native Clippy and release build.
+Counts overlap. Ignored totals include one host filesystem limitation for non-UTF-8 filename creation in each configuration; remaining ignored subprocess workers are invoked by parent acceptance tests. That host limitation is not a pass. All applicable Core builds, formatting and strict Clippy passed, including mandatory isolated positive signing and crash matrices. The experimental lab passed 23 with one optional diagnostic skip. The desktop passed typecheck/lint/contract drift/format, 27 renderer tests, frontend production build, eight default and eight all-feature native host tests, strict native Clippy and release build.
 
 Evidence: [Core matrix](../validation/m5b-inspection/core-validation.txt), [first desktop gate/format failure](../validation/m5b-inspection/desktop-validation.txt), [final desktop gate](../validation/m5b-inspection/desktop-validation-final.txt), [summary](../validation/m5b-inspection/summary.json), [source hashes](../validation/m5b-inspection/source-sha256.json). Base source revision `b924587` plus the recorded changes. No new native visual/accessibility session was run; the preceding native session was blocked by the locked Mac and remaining acceptance is deferred under the user's instruction.
 

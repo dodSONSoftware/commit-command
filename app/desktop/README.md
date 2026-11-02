@@ -130,7 +130,12 @@ Each repository also exposes on-demand **Remotes and upstream** inspection:
 effective fetch/push destinations, URL rewrites, origins, upstream/push-remote
 suggestions, redacted credential fields and policy warnings. Inspection contacts
 no servers and grants no network authority. See [remote boundary](../../docs/architecture/M5_REMOTE_BOUNDARY.md).
-Network operations, AI, Actions, hunk staging, discard/reset/amend, advanced hook support,
+Acceptance builds also offer separately reviewed, credential-free observation of
+one exact remote branch. It uses an isolated transport repository, verifies TLS,
+rejects redirects and preserves managed Git state. Results are timestamped past
+observations. Default builds keep network review disabled. See the
+[observation report](../../docs/reports/M5B_REMOTE_OBSERVATION_2026-11-02.md).
+Fetch/push/authenticated transport, AI, Actions, hunk staging, discard/reset/amend, advanced hook support,
 backup/retention UI and release packaging were not implemented.
 
 See [M3 contracts](../../docs/architecture/M3_DESKTOP_AND_IPC.md),

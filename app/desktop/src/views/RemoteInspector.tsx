@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { value, type Bridge } from "../services/bridge";
-import type { Inspection } from "../services/response.generated";
+import type {
+  Inspection,
+  ObservationPage,
+} from "../services/response.generated";
 import { bytes, pathText } from "../stores/model";
 const text = (value: string) =>
   bytes(Array.from(new TextEncoder().encode(value)));
@@ -10,14 +13,37 @@ export function RemoteInspector({
   worktree,
   busy,
   act,
+  enabled = false,
 }: {
   bridge: Bridge;
   workspace: string;
   worktree: string;
   busy: boolean;
   act: (action: () => Promise<void>) => Promise<void>;
+  enabled?: boolean;
 }) {
   const [report, setReport] = useState<Inspection | null>(null);
+  const [remote, setRemote] = useState("");
+  const [reference, setReference] = useState("");
+  const [observations, setObservations] = useState<ObservationPage | null>(
+    null,
+  );
+  async function refresh(offset = 0) {
+    const page = value(
+      await bridge.request({
+        kind: "remote_observations",
+        workspace,
+        worktree,
+        offset,
+      }),
+      "remote_observations",
+    );
+    setObservations((previous) =>
+      offset && previous
+        ? { items: [...previous.items, ...page.items], next: page.next }
+        : page,
+    );
+  }
   return (
     <details className="remote-inspector">
       <summary>Remotes and upstream</summary>
@@ -130,6 +156,107 @@ export function RemoteInspector({
             </article>
           ))}
         </>
+      )}
+      <h3>Observe one remote branch</h3>
+      <p>
+        A separate native review authorizes a network read. Observation does not
+        fetch objects or update local tracking refs. This initial transport uses
+        no credentials; private-server authentication remains unavailable.
+      </p>
+      <form
+        className="activity-filters"
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (
+            !enabled ||
+            busy ||
+            !remote ||
+            !reference.startsWith("refs/heads/")
+          )
+            return;
+          void act(async () => {
+            await bridge.request({
+              kind: "review_remote_observation",
+              workspace,
+              worktree,
+              remote,
+              reference,
+            });
+            await refresh();
+          });
+        }}
+      >
+        <label>
+          Remote to observe
+          <select
+            value={remote}
+            onChange={(event) => setRemote(event.target.value)}
+          >
+            <option value="">Choose an inspected remote</option>
+            {report?.remotes.map((item) => (
+              <option key={item.name} value={item.name}>
+                {text(item.name)}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Full remote branch reference
+          <input
+            maxLength={1024}
+            value={reference}
+            placeholder={report?.branch ?? "refs/heads/main"}
+            onChange={(event) => setReference(event.target.value)}
+          />
+        </label>
+        <button
+          disabled={
+            !enabled ||
+            busy ||
+            !report?.remotes.some((item) => item.name === remote) ||
+            !reference.startsWith("refs/heads/")
+          }
+        >
+          Review remote observation
+        </button>
+      </form>
+      <button disabled={busy} onClick={() => void act(() => refresh())}>
+        Refresh observation results
+      </button>
+      {observations?.items.length === 0 && (
+        <p>No recorded observations for this repository.</p>
+      )}
+      {observations?.items.map((observation) => (
+        <article className="bulk-result" key={observation.plan.id}>
+          <h3>
+            {observation.phase} · {text(observation.plan.remote)} ·{" "}
+            {text(observation.plan.reference)}
+          </h3>
+          <p>{text(observation.plan.destination)}</p>
+          {observation.phase === "complete" && (
+            <p>
+              Observed{" "}
+              {observation.observed_at_ms
+                ? new Date(observation.observed_at_ms).toISOString()
+                : "unknown time"}{" "}
+              · {observation.oid?.hex ?? "Reference absent"}. This is a past
+              server observation.
+            </p>
+          )}
+          {observation.issue && (
+            <p role="alert">
+              {observation.issue.kind}: {text(observation.issue.message)}
+            </p>
+          )}
+        </article>
+      ))}
+      {observations?.next != null && (
+        <button
+          disabled={busy}
+          onClick={() => void act(() => refresh(observations.next!))}
+        >
+          Load older observations
+        </button>
       )}
     </details>
   );

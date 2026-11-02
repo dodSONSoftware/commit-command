@@ -7,8 +7,9 @@ P0 is committed; M3 fixes and M4 graph/activity/audit have automated evidence an
 partial native evidence. M5A local commit batches have passed automated gates; see the
 [M5A report](reports/M5A_LOCAL_BULK_PROGRESS_2026-11-02.md). Remaining
 native checks are deferred while the Mac is locked; ordinary desktop writes remain
-disabled. M5B local remote inspection is implemented; reviewed network operations
-and M6–M8 remain unfinished.
+disabled. M5B remote inspection and separately reviewed credential-free branch observation
+are implemented with automated evidence. Fetch, authenticated transport, push and
+M6–M8 remain unfinished.
 
 ## Historical M3 checkpoint
 

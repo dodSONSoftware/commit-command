@@ -1463,6 +1463,7 @@ function Repository({
         worktree={entry.id}
         busy={busy}
         act={act}
+        enabled={writeEnabled}
       />
       <div className="repository-tabs">
         <button
