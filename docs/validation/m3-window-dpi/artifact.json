@@ -1,0 +1,18 @@
+{
+  "base_commit": "c0059f6",
+  "features": [
+    "custom-protocol"
+  ],
+  "sha256": {
+    "app/desktop/src-tauri/src/main.rs": "3ec0c4421c3181373de31849a854ec9729f9e6839b8cca3a322779f688ef4ed3",
+    "app/desktop/src-tauri/src/window_state.rs": "514e90b873ab3b9bf2e2045a2c3630286587a8aea3f3e33fc2a4c1451ce4ff6d",
+    "app/desktop/src-tauri/target/debug/bundle/macos/GitFleet.app/Contents/MacOS/gitfleet-desktop": "abcd0da6d376511f67a54c99fb46a3f51d12e9f613fd0f88ab37355076f808ff"
+  },
+  "undersized_saved_before": {
+    "x": 600,
+    "y": 155,
+    "width": 720,
+    "height": 470
+  },
+  "temporary_diagnostic_logging_removed": true
+}

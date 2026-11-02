@@ -742,7 +742,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                     .title("GitFleet")
                     .visible(false)
                     .inner_size(1440., 940.)
-                    .min_inner_size(960., 640.)
+                    .min_inner_size(window_state::MIN_WIDTH, window_state::MIN_HEIGHT)
                     .devtools(false)
                     .on_page_load(move |window, payload| {
                         if payload.event() == tauri::webview::PageLoadEvent::Started

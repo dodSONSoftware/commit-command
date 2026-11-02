@@ -166,8 +166,7 @@ rules remain unchanged.
 The primary window's close handler prevents immediate disappearance, requests
 cancellation, closes auxiliary review UI, drains to a service shutdown boundary,
 stops monitoring and exits. The visible title indicates safe closing. Forced
-termination remains an M2 recovery case. This lifecycle code compiles and its Core
-parts are tested, but **actual native close-during-operation acceptance is pending**.
+termination remains an M2 recovery case. Selected actual native close/Quit, paired draft capture, save failure/retry and close-during-read/pre-publication-hook cases have passed; see [native close/Quit report](../reports/M3_NATIVE_CLOSE_QUIT_2026-11-02.md). Broader native recovery/Dock/system terminate cases remain open.
 Kernel I/O and hostile process detachment retain M0/M1 limitations.
 
 ## Monitoring
@@ -225,3 +224,7 @@ measured contrast remain untested. Workspace-removal and retained History patch
 fixes have component regressions; their native retests remain open. Default desktop
 write exposure stays disabled. No M4 implementation, commit, push, installation or
 release publication occurred in this follow-up.
+
+## Native placement restoration
+
+Placement remains a narrow Core-owned presentation record in physical desktop coordinates. Native restore selects an available monitor/work area, clamps saved dimensions to the physical equivalent of the shared 960×640 logical minimum and available area, and converts using the destination monitor scale before passing logical position/size to native setters. This avoids the hidden startup window's different backing scale. Actual 1×/2× restoration, negative coordinates, minimum repair and repeated restart passed; see [mixed-DPI report](../reports/M3_MIXED_DPI_WINDOW_RESTORE_2026-11-02.md). Physical monitor disconnect/reconfiguration and full accessibility remain open.

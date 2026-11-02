@@ -1,0 +1,37 @@
+{
+  "diagnostic_reproduction": {
+    "hidden_window_scale": 2,
+    "destination_scale": 1,
+    "input": [
+      1200,
+      309,
+      1440,
+      940
+    ],
+    "actual_broken": [
+      600,
+      155,
+      720,
+      470
+    ]
+  },
+  "fixed_native_passes": [
+    "undersized placement repaired to 960x640 at 600,155 on 1x display",
+    "second restart preserves repaired placement exactly",
+    "original 1440x940 at 1200,309 retained exactly",
+    "actual 2x display preserves physical 1920x1280 at -5000,900 (logical 960x640)"
+  ],
+  "source_diagnostic_logging_removed": true,
+  "desktop": {
+    "renderer_passed": 45,
+    "native_host_per_configuration": 11,
+    "full_gate": "Passed"
+  },
+  "repository_file_hashes_modes_unchanged": true,
+  "operation_journal_payloads_events_unchanged": true,
+  "remaining_native": [
+    "physical monitor disconnect/mode change",
+    "all VoiceOver/layout/zoom workflows",
+    "final release artifact"
+  ]
+}

@@ -1,9 +1,13 @@
 use gitfleet_core::application::WindowPlacement;
-use tauri::{PhysicalPosition, PhysicalSize, Runtime, WebviewWindow};
+use tauri::{LogicalSize, PhysicalPosition, PhysicalSize, Runtime, WebviewWindow};
 
-fn fit(saved: WindowPlacement, area: WindowPlacement) -> WindowPlacement {
-    let width = saved.width.min(area.width);
-    let height = saved.height.min(area.height);
+pub const MIN_WIDTH: f64 = 960.;
+pub const MIN_HEIGHT: f64 = 640.;
+
+fn fit(saved: WindowPlacement, area: WindowPlacement, scale: f64) -> WindowPlacement {
+    let minimum: PhysicalSize<u32> = LogicalSize::new(MIN_WIDTH, MIN_HEIGHT).to_physical(scale);
+    let width = saved.width.max(minimum.width).min(area.width);
+    let height = saved.height.max(minimum.height).min(area.height);
     WindowPlacement {
         x: saved.x.clamp(area.x, area.x + (area.width - width) as i32),
         y: saved
@@ -19,27 +23,32 @@ pub fn restore<R: Runtime>(window: &WebviewWindow<R>, saved: WindowPlacement) ->
         .iter()
         .map(|m| {
             let r = m.work_area();
-            WindowPlacement {
-                x: r.position.x,
-                y: r.position.y,
-                width: r.size.width,
-                height: r.size.height,
-            }
+            (
+                WindowPlacement {
+                    x: r.position.x,
+                    y: r.position.y,
+                    width: r.size.width,
+                    height: r.size.height,
+                },
+                m.scale_factor(),
+            )
         })
         .collect();
     let area = areas
         .iter()
-        .find(|a| {
+        .find(|(a, _)| {
             saved.x >= a.x
                 && saved.y >= a.y
                 && i64::from(saved.x) < i64::from(a.x) + i64::from(a.width)
                 && i64::from(saved.y) < i64::from(a.y) + i64::from(a.height)
         })
         .or_else(|| areas.first());
-    if let Some(area) = area {
-        let p = fit(saved, *area);
-        window.set_size(PhysicalSize::new(p.width, p.height))?;
-        window.set_position(PhysicalPosition::new(p.x, p.y))?;
+    if let Some((area, scale)) = area {
+        let p = fit(saved, *area, *scale);
+        // The hidden window can start on a different-DPI display. Physical
+        // setters convert using that window's current scale before it moves.
+        window.set_position(PhysicalPosition::new(p.x, p.y).to_logical::<f64>(*scale))?;
+        window.set_size(PhysicalSize::new(p.width, p.height).to_logical::<f64>(*scale))?;
     }
     Ok(())
 }
@@ -73,13 +82,55 @@ mod tests {
             width: 2000,
             height: 1200,
         };
-        assert_eq!(fit(saved, area), area);
+        assert_eq!(fit(saved, area, 1.), area);
         let saved = WindowPlacement {
             x: -1500,
             y: 100,
             width: 1200,
             height: 700,
         };
-        assert_eq!(fit(saved, area), saved);
+        assert_eq!(fit(saved, area, 1.), saved);
+    }
+
+    #[test]
+    fn minimum_dimensions_follow_destination_scale_and_fit_small_work_areas() {
+        let area = WindowPlacement {
+            x: -5120,
+            y: 794,
+            width: 5120,
+            height: 2818,
+        };
+        let saved = WindowPlacement {
+            x: -5000,
+            y: 900,
+            width: 720,
+            height: 470,
+        };
+        let fitted = fit(saved, area, 2.);
+        assert_eq!((fitted.width, fitted.height), (1920, 1280));
+        assert_eq!((fitted.x, fitted.y), (saved.x, saved.y));
+        let small = WindowPlacement {
+            x: 0,
+            y: 31,
+            width: 800,
+            height: 500,
+        };
+        assert_eq!(fit(saved, small, 1.), small);
+        let standard = WindowPlacement {
+            x: 0,
+            y: 31,
+            width: 3840,
+            height: 2052,
+        };
+        let repaired = fit(
+            WindowPlacement {
+                x: 600,
+                y: 155,
+                ..saved
+            },
+            standard,
+            1.,
+        );
+        assert_eq!((repaired.width, repaired.height), (960, 640));
     }
 }

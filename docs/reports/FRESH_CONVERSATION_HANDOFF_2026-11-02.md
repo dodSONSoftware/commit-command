@@ -1,5 +1,14 @@
 # Fresh conversation handoff — November 2, 2026
 
+## Latest autonomous continuation
+
+- `c0059f6`: unified typed operation audit over local Git, batch and remote observation journals, with workspace/worktree/type/result/date filters before deterministic paging. Existing legacy APIs/journals remain unchanged. Full Core matrix passed: 53/88/76/128/168 tests across default/experimental/controlled/application/all-feature configurations, with documented ignores. Full desktop gate and selected native mixed-history/filter/repository-preservation checks passed. Report: `docs/reports/M4_UNIFIED_OPERATION_AUDIT_2026-11-02.md`.
+- Latest mixed-DPI geometry checkpoint: `docs/reports/M3_MIXED_DPI_WINDOW_RESTORE_2026-11-02.md`. Native diagnostics proved hidden scale 2 versus destination scale 1 caused position/size halving. Destination-scale logical setters and shared minimum repair fixed it. Final artifact passed 45 renderer/11 native host tests per configuration and actual minimum repair/repeat restart/original 1440×940/negative-coordinate Retina restoration. Core source unchanged since the full matrix.
+- Ordinary bundle has been refreshed to the latest geometry source; its exact hash is in `docs/validation/m3-window-dpi/artifact.json`. All fixture apps are closed. The separate old write-acceptance bundle is stale; rebuild before later source acceptance.
+- Fixture `/private/tmp/gitfleet-m3-native-1nx521al` now also has one explicitly synthetic partial batch history. No batch was executed by these history checks. It still has one real cancelled local operation and three synthetic remote history records. Last saved placement is physical -5000,900,1920×1280 on the available 2× display. All repositories and journal rows were preserved by both packages.
+- Preserve additional concurrent user work: modified `docs/README.md`, untracked `docs/APPLICATION_OVERVIEW.md`, plus the original `.gitignore` and `docs/graphics/`. They were not staged or committed.
+- No push or ordinary-write default change. Remaining M3 VoiceOver/focus/display-reconfiguration/recovery/default decision, M4 retention/scale, M5 fetch/auth/upstream/push and M6–M8 remain unfinished. Continue from current execution status; do not repeat accepted close/theme/audit/geometry tests without a new reason.
+
 ## Continuation completed in the fresh chat
 
 The user resumed execution. The preparation and pending-test instructions below are historical; consult current `docs/EXECUTION_STATUS.md` before repeating work.

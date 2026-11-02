@@ -1,0 +1,2 @@
+DIAG restore saved=WindowPlacement { x: 1200, y: 309, width: 1440, height: 940 } initial_scale=Ok(2.0) monitor_scales=[1.0, 2.0] areas=[WindowPlacement { x: 0, y: 31, width: 3840, height: 2052 }, WindowPlacement { x: -5120, y: 794, width: 5120, height: 2818 }]
+DIAG capture scale=Ok(1.0) position=PhysicalPosition { x: 600, y: 155 } size=PhysicalSize { width: 720, height: 470 }
