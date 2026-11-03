@@ -70,10 +70,16 @@ pub fn parse(
         };
     options.remote.credential_bridge =
         Some(std::env::current_exe().map_err(|_| "Credential bridge executable unavailable")?);
+    options.remote.credential_home = std::env::var_os("HOME").map(PathBuf::from);
     options.remote.ca_file = ca;
     options.remote.https_credentials = match (helper, account) {
         (None, None) => None,
         (Some(helper), Some(account)) => Some(HttpsCredentialPolicy {
+            home: options
+                .remote
+                .credential_home
+                .clone()
+                .ok_or("Credential helper HOME unavailable")?,
             helper,
             account,
             bridge: std::env::current_exe()

@@ -1,0 +1,2 @@
+50714 50714 /private/tmp/gitfleet-auth-compat-tools/gitea --config /private/tmp/gitfleet-gitea-compat-ce2prj0d/app.ini web
+52413 52413 /private/tmp/gitfleet-gitea-compat-ce2prj0d/GitFleet Auth Compatibility.app/Contents/MacOS/gitfleet-desktop --data-dir /private/tmp/gitfleet-gitea-compat-ce2prj0d/native-state

@@ -1,0 +1,33 @@
+{
+  "base_commit": "8892dbe",
+  "core_passed": {
+    "default": 54,
+    "experimental": 89,
+    "controlled": 79,
+    "application": 183,
+    "all": 227
+  },
+  "core_direct_ignored": [
+    1,
+    2,
+    1,
+    4,
+    8
+  ],
+  "lab": {
+    "passed": 23,
+    "skipped": 1
+  },
+  "renderer_passed": 56,
+  "host_passed_per_configuration": 13,
+  "full_final_gates_passed": true,
+  "actual_gitea_password_test_passed": true,
+  "actual_gitea_pat_test_passed": true,
+  "native_chain_and_quit_and_ordinary_restart_passed": true,
+  "native_security_agent_deny_allow": "NOT RUN: organizational computer-use policy blocks SecurityAgent",
+  "artifact_initialization_race": "captured and fixed; deterministic transient/persistent regression passes",
+  "ordinary_writes_enabled": false,
+  "pushed": false,
+  "cleanup": "cleanup.json",
+  "report": "docs/reports/M5B_AUTHENTICATION_COMPATIBILITY_2026-11-02.md"
+}

@@ -1,0 +1,13 @@
+
+> gitfleet-desktop@0.1.1 test
+> vitest run --run src/views/AuthenticationSettings.test.tsx
+
+
+ RUN  v4.1.12 /Users/randydodson/Documents/_code/git-fleet/app/desktop
+
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  21:12:46
+   Duration  643ms (transform 44ms, setup 49ms, import 108ms, tests 108ms, environment 292ms)
+

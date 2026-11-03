@@ -1,0 +1,10 @@
+{
+  "stage": "seed",
+  "helper": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-credential-osxkeychain",
+  "host": "127.0.0.1:51329",
+  "account": "gitfleet-fixture-731a0e4cc852",
+  "only_exact_fixture_item_used": true,
+  "password_matches_fixture": true,
+  "item_removed": false,
+  "keychain_settings_changed": false
+}

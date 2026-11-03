@@ -353,6 +353,39 @@ async fn pick_directory<R: tauri::Runtime>(
     .await
     .map_err(|_| "Native picker response failed".to_owned())?
 }
+#[tauri::command]
+async fn pick_authentication_file<R: tauri::Runtime>(
+    window: WebviewWindow<R>,
+    state: tauri::State<'_, Arc<Host>>,
+    kind: String,
+) -> Result<Option<String>, String> {
+    check(&window, "main")?;
+    if lock(&state.active)?.is_some() {
+        return Err("Controlled write is active".into());
+    }
+    let title = match kind.as_str() {
+        "helper" => "Choose credential helper executable",
+        "known_hosts" => "Choose verified known_hosts file",
+        "public_identity" => "Choose Ed25519 public key (.pub)",
+        "ca_file" => "Choose certificate authority file",
+        _ => return Err("Unknown authentication file kind".into()),
+    };
+    let _lease = DialogLease::new(state.inner().clone())?;
+    let path = tauri::async_runtime::spawn_blocking(move || {
+        rfd::FileDialog::new()
+            .set_title(title)
+            .set_parent(&window)
+            .pick_file()
+    })
+    .await
+    .map_err(|_| "Native picker failed")?;
+    path.map(|p| {
+        p.into_os_string()
+            .into_string()
+            .map_err(|_| "Authentication paths require UTF-8".into())
+    })
+    .transpose()
+}
 struct NativeDirectory {
     path: PathBuf,
     reply: mpsc::Sender<Result<Value, String>>,
@@ -692,6 +725,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             desktop_capabilities,
             dispatch,
             pick_directory,
+            pick_authentication_file,
             job_status,
             cancel_job,
             review_data,
@@ -994,7 +1028,8 @@ mod tests {
                 review_data,
                 review_confirm,
                 review_cancel,
-                close_snapshot
+                close_snapshot,
+                pick_authentication_file
             ])
             .build(tauri::generate_context!())
             .unwrap();
@@ -1046,6 +1081,20 @@ mod tests {
         .unwrap_err()
         .to_string()
         .contains("not allowed"));
+        assert!(invoke(
+            &review,
+            "pick_authentication_file",
+            json!({"kind":"invalid"})
+        )
+        .unwrap_err()
+        .to_string()
+        .contains("not allowed"));
+        assert!(
+            invoke(&main, "pick_authentication_file", json!({"kind":"invalid"}))
+                .unwrap_err()
+                .to_string()
+                .contains("Unknown authentication file kind")
+        );
         let caps = invoke(&main, "desktop_capabilities", json!({})).unwrap();
         assert_eq!(caps["writes_enabled"], cfg!(feature = "desktop-writes"));
         let denied = invoke(

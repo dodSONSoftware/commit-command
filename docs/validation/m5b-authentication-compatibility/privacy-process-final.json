@@ -1,0 +1,7 @@
+{
+  "generated_password_and_basic_value_absent_from_evidence": true,
+  "private_keychain_password_absent_from_evidence": true,
+  "fixture_processes_gone": true,
+  "pat_cleanup_verified_separately": "gitea-token-summary.json",
+  "ordinary_restart_no_replay": "native-restart.json"
+}

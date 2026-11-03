@@ -1,0 +1,7 @@
+{
+  "app_exited": true,
+  "owned_git_bridge_helper_exited": true,
+  "only_fixture_gitea_server_remains": true,
+  "security_agent_ui_interaction": "blocked by organizational policy; native Deny/Allow not performed",
+  "security_agent_dialog_dismissal": "User supplied screenshot shows lingering fixture dialog after owned helper exit; user instructed to Deny with password blank. Dialog disappearance is not claimed."
+}

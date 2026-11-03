@@ -1,0 +1,11 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.44s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-883e37a5b39e3193)
+
+running 3 tests
+test artifact_initialization::artifact_init_probe_worker ... ignored, subprocess-only controlled Git initialization probe
+test artifact_initialization::persistent_initialization_symlink_is_still_refused_before_object_import ... ok
+test artifact_initialization::git_initialization_probe_is_transient_and_never_accepted_as_a_completed_artifact ... ok
+
+test result: ok. 2 passed; 0 failed; 1 ignored; 0 measured; 55 filtered out; finished in 18.01s
+

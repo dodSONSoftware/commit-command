@@ -1,0 +1,8 @@
+{
+  "version": "gitea version 1.25.0 built with GNU Make 4.3, go1.25.3 : bindata, sqlite, sqlite_unlock_notify",
+  "binary": "/private/tmp/gitfleet-auth-compat-tools/gitea",
+  "binary_sha256": "1900f99dacb4a9155edd16f183fb94f7abac7d6b4df658d65b39cbac4b63668c",
+  "archive_sha256": "0390d6465d94ffcda25e077b260832be2b67cfbeacdaea2425c7ba6781e4b046",
+  "official_checksum_match": true,
+  "source": "https://dl.gitea.com/gitea/1.25.0/gitea-1.25.0-darwin-10.12-arm64.xz"
+}

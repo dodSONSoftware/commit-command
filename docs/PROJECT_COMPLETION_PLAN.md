@@ -162,6 +162,9 @@ Tests: multiple independent nested repos, selected/unselected submodules, multi-
 
 ### M5B Introduce explicit remote operation policy
 
+Latest checkpoint: [authentication compatibility](reports/M5B_AUTHENTICATION_COMPATIBILITY_2026-11-02.md) adds explicit discovery/native pickers and fixes real osxkeychain response/HOME interoperability. Actual Gitea 1.25.0 HTTPS password and approved repository-read PAT, native observation/download/import/Quit and ordinary read-only restart pass. [Artifact initialization race](reports/M5B_ARTIFACT_INITIALIZATION_FIX_2026-11-02.md) is now captured/fixed with strict persistent-link refusal retained. Native SecurityAgent Deny/Allow/unlock and lingering prompt dismissal need operator-assisted fresh disposable acceptance: organizational UI policy blocked direct interaction. Other helper/OAuth/agent integrations are outside the current narrow supported envelope. Full M5B remains open for remaining acceptance; ordinary writes stay disabled. Historical open-artifact/OS-helper wording in earlier checkpoint descriptions below is superseded by these reports.
+
+
 Add a dedicated Rust remote service and request/review types for remote inspection, explicit fetch, push planning and guarded upstream configuration. Do not relax the read-only adapter's protocol bans. Resolve and display effective fetch/push URLs, destination refs and configuration origins; account for URL rewriting, multiple push URLs and unsupported protocols/remote helpers. Reject ambiguous destinations rather than guessing.
 
 Choose supported transports and credential interaction, host/certificate verification, proxy/SSH configuration and hook behavior explicitly. Keep credentials in native secure storage or approved helper flows; scrub logs and URL userinfo. Fetch is a mutation of local Git metadata and a network operation: require explicit scope/authorization, journal actual effects and revalidate reviews after changed refs/configuration.

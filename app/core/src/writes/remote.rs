@@ -69,7 +69,7 @@ fn validate_tools(plan: &ObservationPlan) -> Result<()> {
         let path = binding.path.to_path()?;
         let actual = if binding.role == "ssh_agent_socket" {
             super::ssh_transport::socket_binding(&path)?.fingerprint
-        } else if binding.role == "exec_directory" {
+        } else if matches!(binding.role.as_str(), "exec_directory" | "credential_home") {
             inspection::fs_identity(&path)?
         } else {
             adapter::program_fingerprint(&path)?
@@ -576,7 +576,21 @@ impl ControlledWrites {
             super::ssh_transport::snapshot(&plan.tools, &home)?;
         }
         let repository = directory.join("transport.git");
-        let mut init = command(plan, &directory, &home)?;
+        self.initialize_bare_repository(plan, &directory, &home, &repository, options)?;
+        Ok((directory, home, repository))
+    }
+    /// Git init briefly creates a symlink to probe filesystem support. It has no
+    /// untrusted input/template and is bounded by time/output; callers inspect
+    /// completed artifacts before processing any downloaded objects.
+    pub(super) fn initialize_bare_repository(
+        &self,
+        plan: &ObservationPlan,
+        directory: &Path,
+        home: &Path,
+        repository: &Path,
+        options: &ReadOptions,
+    ) -> Result<()> {
+        let mut init = command(plan, directory, home)?;
         init.args([
             "init",
             "--bare",
@@ -588,7 +602,7 @@ impl ControlledWrites {
                 "sha256"
             },
         ])
-        .arg(&repository);
+        .arg(repository);
         if !process::bounded_input(init, options, None)?
             .status
             .success()
@@ -598,7 +612,7 @@ impl ControlledWrites {
                 "Cannot initialize isolated transport repository",
             ));
         }
-        Ok((directory, home, repository))
+        Ok(())
     }
     pub(super) fn completed_observation(
         &mut self,

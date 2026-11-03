@@ -479,22 +479,16 @@ impl ControlledWrites {
             }
             let pack = inspection::file_bytes(packs[0], fetch::OBJECT_BYTES as usize)?;
             let loose = directory.join("loose.git");
-            run(
+            fetch::check_artifact_budget(&directory, 256 * 1024 * 1024, 20_000)?;
+            self.initialize_bare_repository(
+                &plan.transport,
                 &directory,
-                &[
-                    "init",
-                    "--bare",
-                    "-q",
-                    "--object-format",
-                    if plan.transport.metadata.object_format == ObjectFormat::Sha1 {
-                        "sha1"
-                    } else {
-                        "sha256"
-                    },
-                    loose.to_str().ok_or_else(stale)?,
-                ],
-                None,
+                &home,
+                &loose,
+                &remaining(&options, started)?,
             )?;
+            // Reject every persistent link/special file before untrusted data processing.
+            fetch::check_artifact_budget(&directory, 256 * 1024 * 1024, 20_000)?;
             run(&loose, &["unpack-objects", "--strict"], Some(pack))?;
             run(
                 &loose,

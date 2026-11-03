@@ -5,6 +5,9 @@ export type Request =
       kind: "authentication_settings";
     }
   | {
+      kind: "authentication_choices";
+    }
+  | {
       change: Change;
       kind: "review_authentication";
     }

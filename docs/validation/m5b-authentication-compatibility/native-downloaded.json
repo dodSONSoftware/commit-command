@@ -1,0 +1,513 @@
+{
+  "settings": {
+    "revision": "de122244-be77-4332-a6f0-a44bbef9d778",
+    "profiles": [
+      {
+        "id": "c8bf4100-ad4c-470d-9150-9babe09620b9",
+        "name": "Gitea Keychain fixture",
+        "policy": {
+          "kind": "https",
+          "helper": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-credential-osxkeychain",
+          "account": "gitfleet-fixture-731a0e4cc852",
+          "ca_file": "/private/tmp/gitfleet-gitea-compat-ce2prj0d/certificate.pem"
+        },
+        "tools": [
+          {
+            "role": "git",
+            "path": {
+              "encoding": "utf8",
+              "value": "/opt/homebrew/Cellar/git/2.56.0_1/bin/git"
+            },
+            "fingerprint": "70feb0465f5896154abd7405231483f4b0cd99e3855fcc4d86e08b66869d1007"
+          },
+          {
+            "role": "https_helper",
+            "path": {
+              "encoding": "utf8",
+              "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-remote-https"
+            },
+            "fingerprint": "ea516f1cfced38527ec4d627d6843c84f4960252ce78adaa87b35e2bd2bd2ddb"
+          },
+          {
+            "role": "exec_directory",
+            "path": {
+              "encoding": "utf8",
+              "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+            },
+            "fingerprint": "16777229:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })"
+          },
+          {
+            "role": "certificate_authority",
+            "path": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-gitea-compat-ce2prj0d/certificate.pem"
+            },
+            "fingerprint": "083334d02baf9dd69ee34187edf3ce60825f21131c5b067d8dfaebd67bd153f5"
+          },
+          {
+            "role": "credential_helper",
+            "path": {
+              "encoding": "utf8",
+              "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-credential-osxkeychain"
+            },
+            "fingerprint": "8f205dc8218d88f16357b7e1fc56813c09659a9e85e937074d94cbee6f80852e"
+          },
+          {
+            "role": "credential_bridge",
+            "path": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-gitea-compat-ce2prj0d/GitFleet Auth Compatibility.app/Contents/MacOS/gitfleet-desktop"
+            },
+            "fingerprint": "5292f8f8942c45345812883558bd2fbd2896a88cd91038e15dbb3f890790198f"
+          },
+          {
+            "role": "credential_home",
+            "path": {
+              "encoding": "utf8",
+              "value": "/Users/randydodson"
+            },
+            "fingerprint": "16777229:327933:Some(SystemTime { tv_sec: 1761253701, tv_nsec: 817001397 })"
+          }
+        ]
+      }
+    ],
+    "assignments": [
+      {
+        "workspace": "c8a40020-61c2-4b3e-a5c2-648179012391",
+        "worktree": "fd15d98a-6519-4131-8a51-a26628b2b1bc",
+        "remote": "origin",
+        "destination": "https://127.0.0.1:51329/gitfleet-fixture-731a0e4cc852/fixture.git",
+        "profile": "c8bf4100-ad4c-470d-9150-9babe09620b9"
+      }
+    ]
+  },
+  "records": {
+    "remote-observation:807962e0-9f82-4ac9-ac59-8800042ac5a3": {
+      "version": 1,
+      "session": "1fe833d5-994f-404c-8221-6c1e575edef9",
+      "value": {
+        "plan": {
+          "id": "807962e0-9f82-4ac9-ac59-8800042ac5a3",
+          "workspace": "c8a40020-61c2-4b3e-a5c2-648179012391",
+          "worktree": "fd15d98a-6519-4131-8a51-a26628b2b1bc",
+          "metadata": {
+            "root": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-gitea-compat-ce2prj0d/native-workspace/repository"
+            },
+            "git_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-gitea-compat-ce2prj0d/native-workspace/repository/.git"
+            },
+            "common_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-gitea-compat-ce2prj0d/native-workspace/repository/.git"
+            },
+            "root_binding": "16777229:50961156:Some(SystemTime { tv_sec: 1793676342, tv_nsec: 469085369 })",
+            "git_binding": "16777229:50961157:Some(SystemTime { tv_sec: 1793676342, tv_nsec: 474165735 })",
+            "common_binding": "16777229:50961157:Some(SystemTime { tv_sec: 1793676342, tv_nsec: 474165735 })",
+            "object_format": "sha1"
+          },
+          "remote": "origin",
+          "reference": "refs/heads/main",
+          "destination": "https://127.0.0.1:51329/gitfleet-fixture-731a0e4cc852/fixture.git",
+          "transport": "https",
+          "config_digest": "a1b0bc1007544d9d8b9123f64508626a71528260984194ccc7e7f5f17d77e67b",
+          "generation": "837e9c18adcb4c298873f8e6740f7ce9d0df281f3a6e263867e85d60c9fcf852",
+          "created_at_ms": 1793677217716,
+          "tools": [
+            {
+              "role": "git",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/bin/git"
+              },
+              "fingerprint": "70feb0465f5896154abd7405231483f4b0cd99e3855fcc4d86e08b66869d1007"
+            },
+            {
+              "role": "https_helper",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-remote-https"
+              },
+              "fingerprint": "ea516f1cfced38527ec4d627d6843c84f4960252ce78adaa87b35e2bd2bd2ddb"
+            },
+            {
+              "role": "exec_directory",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+              },
+              "fingerprint": "16777229:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })"
+            },
+            {
+              "role": "certificate_authority",
+              "path": {
+                "encoding": "utf8",
+                "value": "/private/tmp/gitfleet-gitea-compat-ce2prj0d/certificate.pem"
+              },
+              "fingerprint": "083334d02baf9dd69ee34187edf3ce60825f21131c5b067d8dfaebd67bd153f5"
+            },
+            {
+              "role": "credential_helper",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-credential-osxkeychain"
+              },
+              "fingerprint": "8f205dc8218d88f16357b7e1fc56813c09659a9e85e937074d94cbee6f80852e"
+            },
+            {
+              "role": "credential_bridge",
+              "path": {
+                "encoding": "utf8",
+                "value": "/private/tmp/gitfleet-gitea-compat-ce2prj0d/GitFleet Auth Compatibility.app/Contents/MacOS/gitfleet-desktop"
+              },
+              "fingerprint": "5292f8f8942c45345812883558bd2fbd2896a88cd91038e15dbb3f890790198f"
+            },
+            {
+              "role": "credential_home",
+              "path": {
+                "encoding": "utf8",
+                "value": "/Users/randydodson"
+              },
+              "fingerprint": "16777229:327933:Some(SystemTime { tv_sec: 1761253701, tv_nsec: 817001397 })"
+            }
+          ],
+          "local_target": null,
+          "local_binding": null,
+          "authentication": {
+            "host": "127.0.0.1:51329",
+            "path": "gitfleet-fixture-731a0e4cc852/fixture.git",
+            "account": "gitfleet-fixture-731a0e4cc852"
+          },
+          "authentication_profile": {
+            "revision": "de122244-be77-4332-a6f0-a44bbef9d778",
+            "id": "c8bf4100-ad4c-470d-9150-9babe09620b9",
+            "name": "Gitea Keychain fixture"
+          }
+        },
+        "phase": "complete",
+        "oid": {
+          "format": "sha1",
+          "hex": "16a76c1ac6599b81b51fc667778b14c29cbc2412"
+        },
+        "observed_at_ms": 1793677348288,
+        "issue": null
+      }
+    },
+    "fetch-capture:7aa06df9-a534-4052-86a0-799aaee5f3b8": {
+      "version": 1,
+      "session": "1fe833d5-994f-404c-8221-6c1e575edef9",
+      "value": {
+        "plan": {
+          "id": "7aa06df9-a534-4052-86a0-799aaee5f3b8",
+          "workspace": "c8a40020-61c2-4b3e-a5c2-648179012391",
+          "worktree": "fd15d98a-6519-4131-8a51-a26628b2b1bc",
+          "metadata": {
+            "root": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-gitea-compat-ce2prj0d/native-workspace/repository"
+            },
+            "git_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-gitea-compat-ce2prj0d/native-workspace/repository/.git"
+            },
+            "common_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-gitea-compat-ce2prj0d/native-workspace/repository/.git"
+            },
+            "root_binding": "16777229:50961156:Some(SystemTime { tv_sec: 1793676342, tv_nsec: 469085369 })",
+            "git_binding": "16777229:50961157:Some(SystemTime { tv_sec: 1793676342, tv_nsec: 474165735 })",
+            "common_binding": "16777229:50961157:Some(SystemTime { tv_sec: 1793676342, tv_nsec: 474165735 })",
+            "object_format": "sha1"
+          },
+          "remote": "origin",
+          "reference": "refs/heads/main",
+          "destination": "https://127.0.0.1:51329/gitfleet-fixture-731a0e4cc852/fixture.git",
+          "transport": "https",
+          "config_digest": "a1b0bc1007544d9d8b9123f64508626a71528260984194ccc7e7f5f17d77e67b",
+          "generation": "837e9c18adcb4c298873f8e6740f7ce9d0df281f3a6e263867e85d60c9fcf852",
+          "created_at_ms": 1793677438710,
+          "tools": [
+            {
+              "role": "git",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/bin/git"
+              },
+              "fingerprint": "70feb0465f5896154abd7405231483f4b0cd99e3855fcc4d86e08b66869d1007"
+            },
+            {
+              "role": "https_helper",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-remote-https"
+              },
+              "fingerprint": "ea516f1cfced38527ec4d627d6843c84f4960252ce78adaa87b35e2bd2bd2ddb"
+            },
+            {
+              "role": "exec_directory",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+              },
+              "fingerprint": "16777229:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })"
+            },
+            {
+              "role": "certificate_authority",
+              "path": {
+                "encoding": "utf8",
+                "value": "/private/tmp/gitfleet-gitea-compat-ce2prj0d/certificate.pem"
+              },
+              "fingerprint": "083334d02baf9dd69ee34187edf3ce60825f21131c5b067d8dfaebd67bd153f5"
+            },
+            {
+              "role": "credential_helper",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-credential-osxkeychain"
+              },
+              "fingerprint": "8f205dc8218d88f16357b7e1fc56813c09659a9e85e937074d94cbee6f80852e"
+            },
+            {
+              "role": "credential_bridge",
+              "path": {
+                "encoding": "utf8",
+                "value": "/private/tmp/gitfleet-gitea-compat-ce2prj0d/GitFleet Auth Compatibility.app/Contents/MacOS/gitfleet-desktop"
+              },
+              "fingerprint": "5292f8f8942c45345812883558bd2fbd2896a88cd91038e15dbb3f890790198f"
+            },
+            {
+              "role": "credential_home",
+              "path": {
+                "encoding": "utf8",
+                "value": "/Users/randydodson"
+              },
+              "fingerprint": "16777229:327933:Some(SystemTime { tv_sec: 1761253701, tv_nsec: 817001397 })"
+            }
+          ],
+          "local_target": null,
+          "local_binding": null,
+          "authentication": {
+            "host": "127.0.0.1:51329",
+            "path": "gitfleet-fixture-731a0e4cc852/fixture.git",
+            "account": "gitfleet-fixture-731a0e4cc852"
+          },
+          "authentication_profile": {
+            "revision": "de122244-be77-4332-a6f0-a44bbef9d778",
+            "id": "c8bf4100-ad4c-470d-9150-9babe09620b9",
+            "name": "Gitea Keychain fixture"
+          },
+          "observation_id": "807962e0-9f82-4ac9-ac59-8800042ac5a3",
+          "expected_oid": {
+            "format": "sha1",
+            "hex": "16a76c1ac6599b81b51fc667778b14c29cbc2412"
+          }
+        },
+        "phase": "complete",
+        "artifact": {
+          "bundle_digest": "2672791698e8cda4010e22d1faa1042752223f0683343c6e3a2afece82f92169",
+          "bundle_bytes": 320,
+          "object_count": 3,
+          "object_bytes": 273
+        },
+        "captured_at_ms": 1793677679373,
+        "issue": null
+      }
+    }
+  },
+  "repository": {
+    ".git/COMMIT_EDITMSG": {
+      "sha256": "527b3dea21d6ba38d6d9930103e603f7708490e7268f2365ec425e565a2b33e2",
+      "mode": 33188
+    },
+    ".git/HEAD": {
+      "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+      "mode": 33188
+    },
+    ".git/config": {
+      "sha256": "748c74ea2cc639dd4f4eaec8d9dc0b1ad02f6520f332f2d17641959971e949a3",
+      "mode": 33188
+    },
+    ".git/index": {
+      "sha256": "a142fcdc8a30167a91f3f07c45b93f319b3c57fdb89f83a0543e9c27aa8c7a9f",
+      "mode": 33188
+    },
+    ".git/logs/HEAD": {
+      "sha256": "dfd6de24492b923aca2372dc0a80575181f16675062c473a34bffe2b08da4ff2",
+      "mode": 33188
+    },
+    ".git/logs/refs/heads/main": {
+      "sha256": "dfd6de24492b923aca2372dc0a80575181f16675062c473a34bffe2b08da4ff2",
+      "mode": 33188
+    },
+    ".git/objects/49/c172092d4554f2e9db0918c03c29cd89209584": {
+      "sha256": "ce52f604188d389664bd1c330e600124530ca6876bef1b41bfc1b0d4231e6fff",
+      "mode": 33060
+    },
+    ".git/objects/72/cc6207533170dd67a1d182bd784bc78e84ae26": {
+      "sha256": "253eab5c495318e4fe00d6fef94379ae97a84a4214bf8bf64e798cc14485b215",
+      "mode": 33060
+    },
+    ".git/objects/b0/83f4279e0701e797e0cabb507bcac9398e918b": {
+      "sha256": "5dd81ac895d29f041272a39a8ec8b93668b83b4057cf6b2faba58fbd5bcd91bd",
+      "mode": 33060
+    },
+    ".git/objects/c9/ed03d4ca0884e60e0c9a4226966eefec9a0778": {
+      "sha256": "e8c9c90842efedc452f03477cb8a62a51f1e4d712de5e1020e5412f9ca5705d5",
+      "mode": 33060
+    },
+    ".git/refs/heads/main": {
+      "sha256": "cc94f54d9f8a3c15961766fc8955b32565c78617d5ba216c596db67b9d3bbd55",
+      "mode": 33188
+    },
+    "fixture.txt": {
+      "sha256": "a65ba2f9aeaaadac48cf7043076d681b72f1ecaec6aa43b53a1ae58bedc6867a",
+      "mode": 33188
+    },
+    "untracked.txt": {
+      "sha256": "a52d78d9e128fbb8d54aba631bd91aa6c82f0be768ff00f94470ad08549cae67",
+      "mode": 33188
+    }
+  },
+  "server_repository": {
+    "HEAD": {
+      "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+      "mode": 33188
+    },
+    "config": {
+      "sha256": "3c5cc3e72b5473d08433171d50fc687ac3aa2a6a3f4c20b97f5b66f581b0fec9",
+      "mode": 33188
+    },
+    "description": {
+      "sha256": "85ab6c163d43a17ea9cf7788308bca1466f1b0a8d1cc92e26e9bf63da4062aee",
+      "mode": 33188
+    },
+    "hooks/applypatch-msg.sample": {
+      "sha256": "0223497a0b8b033aa58a3a521b8629869386cf7ab0e2f101963d328aa62193f7",
+      "mode": 33261
+    },
+    "hooks/commit-msg.sample": {
+      "sha256": "efc1401b0e99d1ff51494d154d98b46c1e99059bcd8bf9f73cecde19fd3eb23b",
+      "mode": 33261
+    },
+    "hooks/fsmonitor-watchman.sample": {
+      "sha256": "9159720099ad5595b8e66645cbfd47763c1e920f46e0b50ae75e642bbec57ef0",
+      "mode": 33261
+    },
+    "hooks/post-receive": {
+      "sha256": "38f2197d49b27f315e3487664802e56bc888d4afaec9e30b3bcc6bd461554aef",
+      "mode": 33261
+    },
+    "hooks/post-receive.d/gitea": {
+      "sha256": "e3120cc6a2c425a02b80d858de3a9e88e9e35ee740fa1d46533dbd9ab7d5fe6b",
+      "mode": 33261
+    },
+    "hooks/post-update.sample": {
+      "sha256": "81765af2daef323061dcbc5e61fc16481cb74b3bac9ad8a174b186523586f6c5",
+      "mode": 33261
+    },
+    "hooks/pre-applypatch.sample": {
+      "sha256": "e15c5b469ea3e0a695bea6f2c82bcf8e62821074939ddd85b77e0007ff165475",
+      "mode": 33261
+    },
+    "hooks/pre-commit.sample": {
+      "sha256": "57185b7b9f05239d7ab52db045f5b89eb31348d7b2177eab214f5eb872e1971b",
+      "mode": 33261
+    },
+    "hooks/pre-merge-commit.sample": {
+      "sha256": "d3825a70337940ebbd0a5c072984e13245920cdf8898bd225c8d27a6dfc9cb53",
+      "mode": 33261
+    },
+    "hooks/pre-push.sample": {
+      "sha256": "ecce9c7e04d3f5dd9d8ada81753dd1d549a9634b26770042b58dda00217d086a",
+      "mode": 33261
+    },
+    "hooks/pre-rebase.sample": {
+      "sha256": "4febce867790052338076f4e66cc47efb14879d18097d1d61c8261859eaaa7b3",
+      "mode": 33261
+    },
+    "hooks/pre-receive": {
+      "sha256": "38f2197d49b27f315e3487664802e56bc888d4afaec9e30b3bcc6bd461554aef",
+      "mode": 33261
+    },
+    "hooks/pre-receive.d/gitea": {
+      "sha256": "00f6c6e8ed296c1904619aa5be4a073da7207d9c9b6fe91dcd3504a62ba35ee2",
+      "mode": 33261
+    },
+    "hooks/pre-receive.sample": {
+      "sha256": "a4c3d2b9c7bb3fd8d1441c31bd4ee71a595d66b44fcf49ddb310252320169989",
+      "mode": 33261
+    },
+    "hooks/prepare-commit-msg.sample": {
+      "sha256": "e9ddcaa4189fddd25ed97fc8c789eca7b6ca16390b2392ae3276f0c8e1aa4619",
+      "mode": 33261
+    },
+    "hooks/proc-receive": {
+      "sha256": "14f20cb12e24dc66ecdf64b8f1ee4c895100300025a0cf2351a63ca2808146de",
+      "mode": 33261
+    },
+    "hooks/proc-receive.d/gitea": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": 33261
+    },
+    "hooks/push-to-checkout.sample": {
+      "sha256": "a53d0741798b287c6dd7afa64aee473f305e65d3f49463bb9d7408ec3b12bf5f",
+      "mode": 33261
+    },
+    "hooks/sendemail-validate.sample": {
+      "sha256": "44ebfc923dc5466bc009602f0ecf067b9c65459abfe8868ddc49b78e6ced7a92",
+      "mode": 33261
+    },
+    "hooks/update": {
+      "sha256": "a53caf562b0cdd47b08d20c27c63059ba41cd410c3264a61cda1a531f1810ae6",
+      "mode": 33261
+    },
+    "hooks/update.d/gitea": {
+      "sha256": "b7466f04557220e7a40b2d8a933224376e5d8e357c89339a4f7b1e2d11bc5076",
+      "mode": 33261
+    },
+    "hooks/update.sample": {
+      "sha256": "8d5f2fa83e103cf08b57eaa67521df9194f45cbdbcb37da52ad586097a14d106",
+      "mode": 33261
+    },
+    "info/exclude": {
+      "sha256": "6671fe83b7a07c8932ee89164d1f2793b2318058eb8b98dc5c06ee0a5a3b0ec1",
+      "mode": 33188
+    },
+    "info/refs": {
+      "sha256": "21e987c2760cbf24d497520044652075e9a485444070c6c44bd1d84252b139a4",
+      "mode": 33188
+    },
+    "logs/HEAD": {
+      "sha256": "370b69fca0cd98cf6fa10d383442462164ce667e224dd7aa36b24532962332df",
+      "mode": 33188
+    },
+    "logs/refs/heads/main": {
+      "sha256": "a51b6212247297c504d33d32d79a7389d67bd6e4d442a1bd0c2d51241b2c1cef",
+      "mode": 33188
+    },
+    "objects/16/a76c1ac6599b81b51fc667778b14c29cbc2412": {
+      "sha256": "aed2cf1a4bd0f491ea561a2b4db1c2ae32d27cc5cfd212a447afdf6977c60158",
+      "mode": 33060
+    },
+    "objects/4d/7c24b6a821ff95890e9dc9c9865e41e7e32004": {
+      "sha256": "c13fd38392c913fae9a77e21df7c02ed882c6a087d21f01dfd462c34c15c7823",
+      "mode": 33060
+    },
+    "objects/91/47724c539a7c880cdd0dd2117d938014074c76": {
+      "sha256": "fc7b5eb89910009309552e65219e7fb8d105fa490a1140fb1abd604d3e3fc3cd",
+      "mode": 33060
+    },
+    "objects/info/packs": {
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "mode": 33188
+    },
+    "refs/heads/main": {
+      "sha256": "1a2b0ae9f3369bef0f62377304ec714bdc728e2e0450867b0468ae7c4c2e6695",
+      "mode": 33188
+    }
+  },
+  "credential_material_absent": true,
+  "keychain_search_list_unchanged": true
+}

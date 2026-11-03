@@ -1,0 +1,54 @@
+# M5B authentication usability and compatibility checkpoint
+
+November 2, 2026. Authentication discovery/file selection and actual macOS Keychain/Gitea compatibility are implemented and validated within the explicit supported envelope below. The recurring artifact refusal has a captured cause and fix in [the companion report](M5B_ARTIFACT_INITIALIZATION_FIX_2026-11-02.md). **Native SecurityAgent Deny/Allow interaction remains unverified because organizational computer-use policy blocks that app.** This is a checkpoint, not full M5B/product completion. Ordinary desktop writes remain disabled. No push.
+
+## Changes and actual compatibility defects
+
+The settings UI now offers explicit local authentication discovery, helper/public-identity suggestions and native file pickers for helper, CA, known_hosts and public identity. Discovery examines local paths/public filenames/socket metadata; it never queries credentials or agent identities, chooses an account, assigns a profile or contacts a server. Suggestions/file selection only fill a draft. The existing separate native profile/assignment/network approval boundaries remain. Selecting a remote displays its current saved assignment. Missing credential/agent and strict host-verification guidance is visible. See [the setup guide](../AUTHENTICATION.md).
+
+Real Git `git-credential-osxkeychain` exposed two defects that fixture-only helpers had missed:
+
+1. A helper can return only the password when the requested account is already provided, and Git's helper returns `capability[]=state` / private `state[]` extensions. The bridge formerly rejected these responses. It now accepts an omitted username for the exact requested account, still rejects supplied account/context mismatch, and discards the private extensions rather than returning or persisting them. Unknown response mechanisms and malformed/duplicate fields remain refused. Deterministic failing/passing protocol evidence is retained.
+2. The helper inherited the isolated transport HOME and could not find the native macOS store. The native host now separately supplies a protected current-user credential HOME, bound by canonical directory identity into profile/review/bridge authority and checked again before lookup. Only the approved helper receives it; Git network HOME/configuration stay isolated. Changing/replacing HOME/tool/bridge/settings invalidates authority. Native review explicitly shows helper HOME. No renderer-selected HOME, user Git config inheritance or credential storage UI was added.
+
+Old profiles without the new binding need explicit edit/review/save; application upgrades also require fresh tool/bridge bindings. History stays readable. Dependencies and lockfiles did not change.
+
+## Supported envelope and evidence
+
+| Integration | Actual validation | Limits |
+| --- | --- | --- |
+| Git 2.56.0 macOS `git-credential-osxkeychain` | Real scoped item: Gitea HTTPS observation/download/offline import; missing account blocks; original fixture password preserved | Existing get-only helper, explicit account/destination, verified TLS/Basic, no redirects; Git store/erase discarded |
+| Gitea 1.25.0 HTTPS password | Real official server bound exclusively to localhost, private repository and fixture CA; automated and native chain | User's private server was never contacted; other deployment policies/versions unverified |
+| Gitea repository-read PAT | Same actual helper/server: explicit approved test passed, token revoked, original fixture credential restored, temporary token files removed | `read:repository` only; no persistent token, no push |
+| Real isolated macOS Keychain | Locked store and missing item fail; cancellation after real lookup preserves the item; search-list equality asserted | Dedicated private fixture Keychain only; never locked/changed user's login Keychain |
+| Native access prompt | Private helper reached SecurityAgent; bounded request blocked safely; fresh pending lookup + native Cmd+Q cancelled and reaped owned processes | Direct Deny/Allow clicks are **NOT RUN**, policy blocked; no interactive unlock success claim |
+| SSH | Prior real SSH agent/Ed25519/strict-known-host evidence remains applicable; full current transport matrix passed | Selected public Ed25519 identity only; no private-key loading, fallback, certificates, automatic host-key edits or blanket third-party agent coverage |
+
+Git helper response behavior was verified against [Git's osxkeychain source](https://github.com/git/git/blob/master/contrib/credential/osxkeychain/git-credential-osxkeychain.c) and [Git credential documentation](https://git-scm.com/docs/gitcredentials). Gitea came from its official 1.25.0 archive with checksum verification; binary/source provenance is in `gitea-tool.json`. OAuth/browser/terminal-login, arbitrary credential-helper products and every Gitea configuration are not claimed as validated integrations.
+
+## Native acceptance and independent oracles
+
+Evidence root: `docs/validation/m5b-authentication-compatibility/`. Exact opt-in binary SHA-256 and startup are in `artifact.json`; final build is `native-build-final.txt`. Fixture `/private/tmp/gitfleet-gitea-compat-ce2prj0d` starts with zero profiles/assignments/network records and uses only `--data-dir`, with native helper HOME separately bound. No credentials are typed into GitFleet.
+
+Actual native discovery left account/helper/profile/remote unselected. Explicit helper selection and CA Browse worked. Independent profile save and exact origin assignment preceded separately reviewed observation, download and offline import. Target was `16a76c1ac6599b81b51fc667778b14c29cbc2412`; download contained three objects/273 uncompressed bytes/320 bundle bytes, SHA-256 `2672791698e8cda4010e22d1faa1042752223f0683343c6e3a2afece82f92169`. Import completed and added only objects plus `refs/remotes/origin/main` and its reflog. The main HEAD/index/staged/working/untracked bytes and server repository stayed unchanged. Review UI eventually displayed complete; durable state was independently inspected while waiting, without treating an intermediate UI as completion.
+
+A separately reviewed profile edit selected a helper compiled against the private fixture Keychain. A real SecurityAgent process appeared during lookup. Computer use returned: `Computer Use is blocked from using the app 'com.apple.SecurityAgent' by your organization's policy.` No bypass was attempted. The bounded request became blocked; it is not counted as a clicked Deny. A fresh review then started a proven pending helper/Git/bridge process group. Native Cmd+Q exited the application and all its owned transport/helper processes; durable observation became cancelled. A user screenshot subsequently showed a lingering SecurityAgent fixture dialog; the user was instructed to click Deny with password blank. **Automatic disappearance of the SecurityAgent dialog is not claimed.** The generated private Keychain was later deleted during fixture cleanup.
+
+The ordinary default build was rebuilt separately (`ordinary-artifact.json`), restarted against the same state, and showed saved profile/assignment and complete/blocked/cancelled history. Settings edits/deletes/assignment and network/import/upstream actions remained disabled. It quit normally. `native-restart.json` exactly matches the prior final operation/settings/repository/server state: no replay. Native oracles before/configured/observed/downloaded/imported/blocked/cancelled/restart also scan for fixture secret persistence and compare the unchanged Keychain search list.
+
+## Validation
+
+- Full final Core gate passed: default **54**, experimental **89**, controlled **79**, application **183**, all features **227**. Direct ignored counts **1/2/1/4/8**, including parent-exercised workers and opt-in actual-store test. These feature totals overlap. Lab **23 passed/one skipped**. Formatting, scaffold/builds and strict Clippy passed.
+- Full final desktop gate passed: **56 renderer tests**, **13 native host tests per configuration**, typecheck, lint, generated contracts, formatting, build and strict Clippy; default release build passed.
+- Actual opt-in Gitea/osxkeychain password and PAT tests each passed separately; full matrix does not implicitly run them. Private real-Keychain locked/missing/cancel tests run in the application/all-feature suites.
+- Deterministic artifact transient-probe/persistent-link tests passed; see companion report. Original red runs and initial full-workload refusal remain evidence, alongside the corrected final gates.
+- Initial helper protocol/HOME failures were diagnosed rather than counted as passes. An intermediate full gate failed Clippy `items_after_test_module`; placement was corrected and the complete final Core gate passed. Early fixture-server bootstrap failures were fixture configuration issues, not claimed product failures or successes.
+- Final evidence scan found no generated password, its Basic encoding, or private test-Keychain password in evidence; raw helper/private-state responses are never logged. The PAT test independently checked its temporary secret and cleanup before deletion.
+
+The initial PAT execution attempt was rejected by automatic approval review because token creation/revocation authority was not explicit. No token was created by that attempt. A concrete cleanup-capable script was prepared; the user explicitly approved that disposable test, and it passed with revocation/restoration. `token-authorization.json` and `gitea-token-summary.json` record this resolved approval boundary.
+
+## Cleanup and remaining work
+
+`cleanup.json` verifies exact generated Keychain item erased, private fixture Keychain deleted, search list unchanged, Gitea server PID ownership verified and stopped, token revoked and temporary token files absent. `privacy-process-final.json` verifies owned application/transport/helper/server processes are gone. Fixture state/evidence remain for inspection; protected fixture secrets are outside the repository. No private Gitea, personal repository, user SSH identity/agent or global Git/Keychain configuration was changed.
+
+Remaining manual authentication acceptance: an operator must exercise **fresh** private-Keychain access Deny, one-time Allow/unlock where appropriate, and prompt disappearance after cancellation. A stale dialog dismissal is not acceptance. Run against newly provisioned disposable state with fresh authority; do not reuse erased credential items or stopped server identities. Keep this small explicit gap open. Other helper/OAuth/agent mechanisms are deferred outside the current envelope. Remaining completion plan work includes M5C destination/dependency proof and independently reviewed non-force push, plus existing M3/M4/accessibility/topology/scale/recovery and M6–M8 gates. This checkpoint does not enable ordinary writes or authorize a push.

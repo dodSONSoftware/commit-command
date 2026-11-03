@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { value, type Bridge } from "../services/bridge";
 import type { Change, ProfilePolicy } from "../services/request.generated";
-import type { Profile, Settings } from "../services/response.generated";
+import type {
+  Choices,
+  Profile,
+  Settings,
+} from "../services/response.generated";
 import { bytes } from "../stores/model";
 const text = (s: string) => bytes(Array.from(new TextEncoder().encode(s)));
 export function AuthenticationSettings({
@@ -24,6 +28,7 @@ export function AuthenticationSettings({
   act: (action: () => Promise<void>) => Promise<void>;
 }) {
   const [settings, setSettings] = useState<Settings | null>(null);
+  const [choices, setChoices] = useState<Choices | null>(null);
   const [editing, setEditing] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [kind, setKind] = useState<"https" | "ssh">("https");
@@ -51,6 +56,14 @@ export function AuthenticationSettings({
   const review = (change: Change) =>
     void act(async () => {
       await bridge.request({ kind: "review_authentication", change });
+    });
+  const browse = (
+    kind: "helper" | "known_hosts" | "public_identity" | "ca_file",
+    set: (path: string) => void,
+  ) =>
+    void act(async () => {
+      const path = await bridge.pickAuthenticationFile?.(kind);
+      if (path) set(path);
     });
   function edit(p: Profile) {
     setEditing(p.id);
@@ -93,6 +106,93 @@ export function AuthenticationSettings({
         changed SSH host keys stop execution; verify and update known_hosts
         externally.
       </p>
+      <button
+        disabled={busy}
+        onClick={() =>
+          void act(async () => {
+            setChoices(
+              value(
+                await bridge.request({ kind: "authentication_choices" }),
+                "authentication_choices",
+              ),
+            );
+          })
+        }
+      >
+        Find local authentication tools
+      </button>
+      {choices && (
+        <div aria-label="Local authentication suggestions">
+          {choices.notes.map((note, i) => (
+            <p key={i}>{text(note)}</p>
+          ))}
+          {choices.helpers.length === 0 && (
+            <p>
+              No supported macOS Keychain helper found in the selected Git
+              installation. Browse to an approved get-only helper explicitly.
+            </p>
+          )}
+          {choices.helpers.length > 0 && (
+            <label>
+              Discovered credential helper
+              <select
+                value=""
+                disabled={busy || !enabled}
+                onChange={(e) => {
+                  if (e.target.value) setHelper(e.target.value);
+                }}
+              >
+                <option value="">Choose a helper explicitly</option>
+                {choices.helpers.map((c) => (
+                  <option key={c.path} value={c.path}>
+                    {text(c.label)} · {text(c.path)}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
+          {choices.known_hosts && (
+            <button
+              disabled={busy || !enabled}
+              onClick={() => setKnown(choices.known_hosts ?? "")}
+            >
+              Use detected known-hosts file
+            </button>
+          )}
+          {choices.public_identities.length > 0 && (
+            <label>
+              Discovered public identity
+              <select
+                value=""
+                disabled={busy || !enabled}
+                onChange={(e) => {
+                  if (e.target.value) setIdentity(e.target.value);
+                }}
+              >
+                <option value="">Choose a public identity explicitly</option>
+                {choices.public_identities.map((path) => (
+                  <option key={path} value={path}>
+                    {text(path)}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
+          {choices.agent_socket ? (
+            <button
+              disabled={busy || !enabled}
+              onClick={() => setAgent(choices.agent_socket ?? "")}
+            >
+              Use advertised agent socket
+            </button>
+          ) : (
+            <p>
+              No usable agent socket is advertised to this app. Start/unlock
+              your external agent and enter its socket path explicitly.
+            </p>
+          )}
+        </div>
+      )}
       {!enabled && (
         <p>Settings changes are disabled in this read-only build.</p>
       )}
@@ -162,6 +262,15 @@ export function AuthenticationSettings({
                 onChange={(e) => setHelper(e.target.value)}
               />
             </label>
+            {bridge.pickAuthenticationFile && (
+              <button
+                type="button"
+                disabled={busy || !enabled}
+                onClick={() => browse("helper", setHelper)}
+              >
+                Browse credential helper executable…
+              </button>
+            )}
             <label>
               Nonsecret account
               <input
@@ -178,6 +287,15 @@ export function AuthenticationSettings({
                 onChange={(e) => setCa(e.target.value)}
               />
             </label>
+            {bridge.pickAuthenticationFile && (
+              <button
+                type="button"
+                disabled={busy || !enabled}
+                onClick={() => browse("ca_file", setCa)}
+              >
+                Browse ca file (optional)…
+              </button>
+            )}
           </>
         ) : (
           <>
@@ -185,6 +303,15 @@ export function AuthenticationSettings({
               Known-hosts file
               <input value={known} onChange={(e) => setKnown(e.target.value)} />
             </label>
+            {bridge.pickAuthenticationFile && (
+              <button
+                type="button"
+                disabled={busy || !enabled}
+                onClick={() => browse("known_hosts", setKnown)}
+              >
+                Browse known-hosts file…
+              </button>
+            )}
             <label>
               Ed25519 public identity file
               <input
@@ -192,6 +319,15 @@ export function AuthenticationSettings({
                 onChange={(e) => setIdentity(e.target.value)}
               />
             </label>
+            {bridge.pickAuthenticationFile && (
+              <button
+                type="button"
+                disabled={busy || !enabled}
+                onClick={() => browse("public_identity", setIdentity)}
+              >
+                Browse ed25519 public identity file…
+              </button>
+            )}
             <label>
               SSH agent socket
               <input value={agent} onChange={(e) => setAgent(e.target.value)} />
@@ -226,7 +362,14 @@ export function AuthenticationSettings({
           value={remote}
           onChange={(e) => {
             setRemote(e.target.value);
-            setProfile("");
+            setProfile(
+              settings?.assignments.find(
+                (a) =>
+                  a.workspace === workspace &&
+                  a.worktree === worktree &&
+                  a.remote === e.target.value,
+              )?.profile ?? "",
+            );
           }}
         >
           <option value="">Choose an inspected remote</option>

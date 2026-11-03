@@ -236,10 +236,11 @@ export function RemoteInspector({
       <h3>Observe one remote branch</h3>
       <p>
         A separate native review authorizes a network read. Observation does not
-        fetch objects or update local tracking refs. HTTPS is credential-free
-        unless an explicit helper and account are selected by the host. SSH
-        requires a host-selected agent identity. Authentication and certificate
-        or host-key verification are shown in the independent review.
+        fetch objects or update local tracking refs. HTTPS uses the assigned
+        profile or explicit startup policy; without either it is
+        credential-free. SSH requires a selected public identity and agent. The
+        independent review shows effective authentication and certificate or
+        host-key verification.
       </p>
       <form
         className="activity-filters"

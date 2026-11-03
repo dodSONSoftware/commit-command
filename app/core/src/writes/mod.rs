@@ -343,3 +343,31 @@ impl ControlledWrites {
         self.options.global_config.as_deref()
     }
 }
+#[cfg(feature = "application-services")]
+pub(crate) fn authentication_helper_choices(
+    options: &ReadOptions,
+) -> Result<Vec<crate::authentication::HelperChoice>> {
+    let tools = remote::toolchain(options, None, &crate::remote::Transport::Https)?;
+    let directory = tools
+        .iter()
+        .find(|t| t.role == "exec_directory")
+        .ok_or_else(|| unsupported("Git helper directory unavailable"))?
+        .path
+        .to_path()?;
+    let helper = directory.join("git-credential-osxkeychain");
+    Ok(crate::credentials::helper_binding(&helper)
+        .ok()
+        .and_then(|t| t.path.to_path().ok())
+        .and_then(|p| p.to_str().map(str::to_owned))
+        .map(|path| {
+            vec![crate::authentication::HelperChoice {
+                label: "macOS Keychain (existing Git helper)".into(),
+                path,
+            }]
+        })
+        .unwrap_or_default())
+}
+#[cfg(feature = "application-services")]
+pub(crate) fn authentication_agent_available(socket: &Path) -> bool {
+    ssh_transport::socket_binding(socket).is_ok()
+}

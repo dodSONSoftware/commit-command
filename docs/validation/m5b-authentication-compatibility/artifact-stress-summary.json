@@ -1,0 +1,146 @@
+[
+  {
+    "case": 0,
+    "exit_code": 0,
+    "seconds": 9.89,
+    "diagnostic": false
+  },
+  {
+    "case": 1,
+    "exit_code": 0,
+    "seconds": 10.11,
+    "diagnostic": false
+  },
+  {
+    "case": 2,
+    "exit_code": 0,
+    "seconds": 10.48,
+    "diagnostic": false
+  },
+  {
+    "case": 3,
+    "exit_code": 0,
+    "seconds": 11.07,
+    "diagnostic": false
+  },
+  {
+    "case": 4,
+    "exit_code": 0,
+    "seconds": 11.07,
+    "diagnostic": false
+  },
+  {
+    "case": 5,
+    "exit_code": 0,
+    "seconds": 10.24,
+    "diagnostic": false
+  },
+  {
+    "case": 6,
+    "exit_code": 0,
+    "seconds": 9.45,
+    "diagnostic": false
+  },
+  {
+    "case": 7,
+    "exit_code": 0,
+    "seconds": 10.02,
+    "diagnostic": false
+  },
+  {
+    "case": 8,
+    "exit_code": 0,
+    "seconds": 9.25,
+    "diagnostic": false
+  },
+  {
+    "case": 9,
+    "exit_code": 0,
+    "seconds": 9.85,
+    "diagnostic": false
+  },
+  {
+    "case": 10,
+    "exit_code": 0,
+    "seconds": 9.86,
+    "diagnostic": false
+  },
+  {
+    "case": 11,
+    "exit_code": 0,
+    "seconds": 9.86,
+    "diagnostic": false
+  },
+  {
+    "case": 12,
+    "exit_code": 0,
+    "seconds": 9.0,
+    "diagnostic": false
+  },
+  {
+    "case": 13,
+    "exit_code": 0,
+    "seconds": 9.11,
+    "diagnostic": false
+  },
+  {
+    "case": 14,
+    "exit_code": 0,
+    "seconds": 9.3,
+    "diagnostic": false
+  },
+  {
+    "case": 15,
+    "exit_code": 0,
+    "seconds": 9.09,
+    "diagnostic": false
+  },
+  {
+    "case": 16,
+    "exit_code": 0,
+    "seconds": 9.34,
+    "diagnostic": false
+  },
+  {
+    "case": 17,
+    "exit_code": 0,
+    "seconds": 9.34,
+    "diagnostic": false
+  },
+  {
+    "case": 18,
+    "exit_code": 0,
+    "seconds": 9.04,
+    "diagnostic": false
+  },
+  {
+    "case": 19,
+    "exit_code": 0,
+    "seconds": 9.16,
+    "diagnostic": false
+  },
+  {
+    "case": 20,
+    "exit_code": 0,
+    "seconds": 9.4,
+    "diagnostic": false
+  },
+  {
+    "case": 21,
+    "exit_code": 0,
+    "seconds": 9.08,
+    "diagnostic": false
+  },
+  {
+    "case": 22,
+    "exit_code": 0,
+    "seconds": 9.32,
+    "diagnostic": false
+  },
+  {
+    "case": 23,
+    "exit_code": 0,
+    "seconds": 9.14,
+    "diagnostic": false
+  }
+]

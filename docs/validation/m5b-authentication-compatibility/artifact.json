@@ -1,0 +1,11 @@
+{
+  "bundle": "/private/tmp/gitfleet-gitea-compat-ce2prj0d/GitFleet Auth Compatibility.app",
+  "features": [
+    "custom-protocol",
+    "desktop-writes"
+  ],
+  "binary_sha256": "a800b50e9933cda120025dd6dcc25f1de26bec944807ad9aa5632a77eec057cb",
+  "base": "8892dbe",
+  "startup": "--data-dir only; helper HOME is native current user, all lookups scoped to generated fixture account",
+  "final_build": "native-build-final.txt"
+}

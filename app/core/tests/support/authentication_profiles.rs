@@ -34,6 +34,7 @@ fn configure(t: &mut Test) -> (String, ProfilePolicy) {
     let secret = super::https_credential_tests::policy(t);
     let old = t.options.remote.https_credentials.take().unwrap();
     t.options.remote.credential_bridge = Some(old.bridge);
+    t.options.remote.credential_home = Some(old.home);
     let policy = ProfilePolicy::Https {
         helper: old.helper.to_str().unwrap().into(),
         account: old.account,

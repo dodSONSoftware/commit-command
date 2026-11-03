@@ -22,6 +22,9 @@ export interface Bridge {
   writeStatus(): Promise<boolean>;
   request(request: Request): Promise<Payload>;
   pick(): Promise<{ picker: string; display: string } | null>;
+  pickAuthenticationFile?(
+    kind: "helper" | "known_hosts" | "public_identity" | "ca_file",
+  ): Promise<string | null>;
   cancel(): Promise<void>;
 }
 interface Job {
@@ -99,6 +102,11 @@ export class NativeBridge implements Bridge {
   }
   pick() {
     return invoke<{ picker: string; display: string } | null>("pick_directory");
+  }
+  pickAuthenticationFile(
+    kind: "helper" | "known_hosts" | "public_identity" | "ca_file",
+  ) {
+    return invoke<string | null>("pick_authentication_file", { kind });
   }
   async cancel() {
     if (await this.writeStatus())

@@ -25,6 +25,7 @@ pub(super) fn policy(t: &mut Test) -> String {
     fs::write(&helper, script).unwrap();
     fs::set_permissions(&helper, fs::Permissions::from_mode(0o700)).unwrap();
     t.options.remote.https_credentials = Some(HttpsCredentialPolicy {
+        home: t.f.root.join("home"),
         helper,
         bridge: env!("CARGO_BIN_EXE_gitfleet-credential").into(),
         account: ACCOUNT.into(),
@@ -127,7 +128,13 @@ fn approved_https_helper_authenticates_downloads_and_imports_without_persisting_
 }
 #[test]
 fn declined_stale_or_cancelled_https_reviews_never_read_a_credential() {
-    for mode in ["decline", "cancel", "helper_changed", "revoked"] {
+    for mode in [
+        "decline",
+        "cancel",
+        "helper_changed",
+        "helper_home_changed",
+        "revoked",
+    ] {
         let mut t = setup(false);
         let server = tls_fixture(&mut t, "git");
         configure_https(&mut t, &server, "127.0.0.1");
@@ -144,6 +151,11 @@ fn declined_stale_or_cancelled_https_reviews_never_read_a_credential() {
                     .unwrap()
                     .write_all(b"\n# changed\n")
                     .unwrap();
+            }
+            "helper_home_changed" => {
+                let home = &t.options.remote.https_credentials.as_ref().unwrap().home;
+                fs::rename(home, t.f.root.join("previous-helper-home")).unwrap();
+                fs::create_dir(home).unwrap();
             }
             "revoked" => {
                 t.app
@@ -371,4 +383,248 @@ fn helper_credentials_never_bypass_tls_hostname_validation_or_follow_redirects()
         assert_eq!(before, tree_bytes(&t.f.repo));
         assert_private(&t, &secret);
     }
+}
+#[test]
+fn osxkeychain_password_only_response_and_private_state_extensions_authenticate_without_persistence(
+) {
+    let mut t = setup(false);
+    let server = tls_fixture(&mut t, "git");
+    configure_https(&mut t, &server, "127.0.0.1");
+    let secret = policy(&mut t);
+    let helper = &t.options.remote.https_credentials.as_ref().unwrap().helper;
+    let script=fs::read_to_string(helper).unwrap().replace("print('username='+value['account'])\n","").replace("print()\n","print('capability[]=state')\nprint('state[]=osxkeychain:seen=__password='+value['password'])\n");
+    fs::write(helper, script).unwrap();
+    trust(&mut t);
+    let before = tree_bytes(&t.f.repo);
+    let r = review(&mut t, "refs/heads/main");
+    let result = confirm(&mut t, &r, Cancellation::default());
+    assert_eq!(
+        result.phase,
+        ObservationPhase::Complete,
+        "{:?}",
+        result.issue
+    );
+    assert_eq!(before, tree_bytes(&t.f.repo));
+    assert_private(&t, &secret);
+}
+
+#[test]
+#[ignore = "opt-in loopback Gitea + exact generated macOS Keychain fixture; never uses user credentials"]
+fn actual_gitea_and_osxkeychain_read_download_import_and_missing_account() {
+    let file = PathBuf::from(
+        std::env::var_os("GITFLEET_GITEA_FIXTURE").expect("explicit fixture metadata"),
+    );
+    let meta: serde_json::Value = serde_json::from_slice(&fs::read(file).unwrap()).unwrap();
+    let root = PathBuf::from(meta["root"].as_str().unwrap());
+    assert!(root.join(".gitfleet-gitea-fixture").is_file());
+    assert!(root.join("keychain-owned.json").is_file());
+    let url = meta["url"].as_str().unwrap();
+    assert!(url.starts_with("https://127.0.0.1:"));
+    let account = meta["account"].as_str().unwrap();
+    assert!(account.starts_with("gitfleet-fixture-"));
+    let credential: serde_json::Value =
+        serde_json::from_slice(&fs::read(meta["credential_file"].as_str().unwrap()).unwrap())
+            .unwrap();
+    let secret = credential["password"].as_str().unwrap();
+    let mut t = setup(false);
+    t.f.git(&["remote", "set-url", "origin", url]);
+    t.options.remote.ca_file = Some(meta["ca_file"].as_str().unwrap().into());
+    t.options.remote.https_credentials = Some(HttpsCredentialPolicy {
+        home: std::env::var_os("HOME").unwrap().into(),
+        helper: meta["helper"].as_str().unwrap().into(),
+        bridge: env!("CARGO_BIN_EXE_gitfleet-credential").into(),
+        account: account.into(),
+    });
+    reopen(&mut t);
+    trust(&mut t);
+    let before = tree_bytes(&t.f.repo);
+    let r = review(&mut t, "refs/heads/main");
+    let observed = confirm(&mut t, &r, Cancellation::default());
+    assert_eq!(
+        observed.phase,
+        ObservationPhase::Complete,
+        "{:?}",
+        observed.issue
+    );
+    assert_eq!(
+        observed.oid.as_ref().unwrap().hex,
+        meta["target_oid"].as_str().unwrap()
+    );
+    assert_eq!(before, tree_bytes(&t.f.repo));
+    let r = fetch_review(&mut t, &observed.plan.id);
+    let capture = fetch_confirm(&mut t, &r, Cancellation::default());
+    assert_eq!(
+        capture.phase,
+        gitfleet_core::remote::fetch::FetchCapturePhase::Complete,
+        "{:?}",
+        capture.issue
+    );
+    assert_eq!(before, tree_bytes(&t.f.repo));
+    let r = import_review(&mut t, &capture.plan.transport.id);
+    let imported = import_confirm(&mut t, &r);
+    assert_eq!(
+        imported.phase,
+        gitfleet_core::remote::fetch::FetchImportPhase::Complete,
+        "{:?}",
+        imported.issue
+    );
+    assert_private(&t, secret);
+    t.options.remote.https_credentials.as_mut().unwrap().account =
+        "gitfleet-fixture-no-such-account".into();
+    reopen(&mut t);
+    let before = tree_bytes(&t.f.repo);
+    let r = review(&mut t, "refs/heads/main");
+    let result = confirm(&mut t, &r, Cancellation::default());
+    assert_eq!(result.phase, ObservationPhase::Blocked);
+    assert_eq!(before, tree_bytes(&t.f.repo));
+    assert_private(&t, secret);
+}
+
+#[cfg(target_os = "macos")]
+#[test]
+fn isolated_os_keychain_locked_missing_and_cancelled_reads_preserve_search_list_and_credentials() {
+    use std::io::Write;
+    struct FixtureKeychain {
+        helper: PathBuf,
+        before: Vec<u8>,
+    }
+    impl FixtureKeychain {
+        fn command(&self, op: &str, input: &[u8]) -> std::process::Output {
+            use std::process::Stdio;
+            let mut c = Command::new(&self.helper)
+                .arg(op)
+                .stdin(Stdio::piped())
+                .stdout(Stdio::piped())
+                .stderr(Stdio::null())
+                .spawn()
+                .unwrap();
+            c.stdin.take().unwrap().write_all(input).unwrap();
+            c.wait_with_output().unwrap()
+        }
+    }
+    impl Drop for FixtureKeychain {
+        fn drop(&mut self) {
+            let _ = Command::new(&self.helper)
+                .arg("delete")
+                .stdout(std::process::Stdio::null())
+                .stderr(std::process::Stdio::null())
+                .status();
+        }
+    }
+    let mut t = setup(false);
+    let server = tls_fixture(&mut t, "git");
+    configure_https(&mut t, &server, "127.0.0.1");
+    let password = policy(&mut t);
+    let root = t.f.root.join("private-keychain");
+    fs::create_dir(&root).unwrap();
+    fs::set_permissions(&root, fs::Permissions::from_mode(0o700)).unwrap();
+    for (name, data) in [
+        ("credential-password", password.clone()),
+        ("keychain-password", uuid::Uuid::new_v4().to_string()),
+    ] {
+        let file = root.join(name);
+        fs::write(&file, data).unwrap();
+        fs::set_permissions(file, fs::Permissions::from_mode(0o600)).unwrap();
+    }
+    let source = root.join("helper.c");
+    fs::write(&source, include_str!("keychain_fixture.c")).unwrap();
+    let helper = root.join("keychain-helper");
+    let compiled = Command::new("cc")
+        .args([
+            "-Wno-deprecated-declarations",
+            "-framework",
+            "Security",
+            "-framework",
+            "CoreFoundation",
+        ])
+        .arg(format!("-DFIXTURE_ROOT=\"{}\"", root.display()))
+        .arg(&source)
+        .arg("-o")
+        .arg(&helper)
+        .output()
+        .unwrap();
+    assert!(compiled.status.success(), "Fixture helper compile failed");
+    fs::set_permissions(&helper, fs::Permissions::from_mode(0o700)).unwrap();
+    let before = Command::new(&helper).arg("searchlist").output().unwrap();
+    assert!(before.status.success());
+    let kc = FixtureKeychain {
+        helper: helper.clone(),
+        before: before.stdout,
+    };
+    let frame = format!(
+        "protocol=https\nhost=127.0.0.1:{}\npath=repo.git\nusername={}\n\n",
+        server.port, ACCOUNT
+    );
+    assert!(
+        kc.command("seed", frame.as_bytes()).status.success(),
+        "Private keychain creation failed"
+    );
+    assert!(
+        kc.before == kc.command("searchlist", b"").stdout,
+        "Private keychain changed global search list"
+    );
+    t.options.remote.https_credentials.as_mut().unwrap().helper = helper;
+    reopen(&mut t);
+    trust(&mut t);
+    let baseline = tree_bytes(&t.f.repo);
+    let r = review(&mut t, "refs/heads/main");
+    assert_eq!(
+        confirm(&mut t, &r, Cancellation::default()).phase,
+        ObservationPhase::Complete
+    );
+    assert!(kc.command("lock", b"").status.success());
+    let r = review(&mut t, "refs/heads/main");
+    let result = confirm(&mut t, &r, Cancellation::default());
+    assert_eq!(result.phase, ObservationPhase::Blocked);
+    let status = fs::read_to_string(root.join("last-status")).unwrap();
+    assert!(
+        matches!(status.as_str(), "-25308" | "-25293"),
+        "Unexpected locked keychain result: {status}"
+    );
+    assert!(kc.command("unlock", b"").status.success());
+    t.options.remote.https_credentials.as_mut().unwrap().account =
+        "not-the-selected-account".into();
+    reopen(&mut t);
+    let r = review(&mut t, "refs/heads/main");
+    assert_eq!(
+        confirm(&mut t, &r, Cancellation::default()).phase,
+        ObservationPhase::Blocked
+    );
+    t.options.remote.https_credentials.as_mut().unwrap().account = ACCOUNT.into();
+    reopen(&mut t);
+    fs::write(root.join("hold"), b"hold after actual OS lookup").unwrap();
+    let r = review(&mut t, "refs/heads/main");
+    let token = Cancellation::default();
+    let cancel = token.clone();
+    let marker = root.join("started");
+    let waiter = std::thread::spawn(move || {
+        let until = Instant::now() + Duration::from_secs(10);
+        while !marker.exists() && Instant::now() < until {
+            std::thread::sleep(Duration::from_millis(2));
+        }
+        assert!(marker.exists());
+        cancel.cancel();
+    });
+    assert_eq!(
+        confirm(&mut t, &r, token).phase,
+        ObservationPhase::Cancelled
+    );
+    waiter.join().unwrap();
+    fs::remove_file(root.join("hold")).unwrap();
+    let output = kc.command("get", frame.as_bytes());
+    assert!(output.status.success());
+    assert!(
+        output
+            .stdout
+            .windows(password.len())
+            .any(|s| s == password.as_bytes()),
+        "Fixture credential was changed or erased"
+    );
+    assert_eq!(baseline, tree_bytes(&t.f.repo));
+    assert_private(&t, &password);
+    assert!(kc.command("delete", b"").status.success());
+    assert!(
+        kc.before == kc.command("searchlist", b"").stdout,
+        "Search list changed after private fixture cleanup"
+    );
 }

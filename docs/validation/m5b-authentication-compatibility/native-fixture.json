@@ -1,0 +1,24 @@
+{
+  "root": "/private/tmp/gitfleet-gitea-compat-ce2prj0d",
+  "home": "/private/tmp/gitfleet-gitea-compat-ce2prj0d/home",
+  "server_pid": 50714,
+  "url": "https://127.0.0.1:51329/gitfleet-fixture-731a0e4cc852/fixture.git",
+  "account": "gitfleet-fixture-731a0e4cc852",
+  "ca_file": "/private/tmp/gitfleet-gitea-compat-ce2prj0d/certificate.pem",
+  "credential_file": "/private/tmp/gitfleet-gitea-compat-ce2prj0d/credential.json",
+  "target_oid": "16a76c1ac6599b81b51fc667778b14c29cbc2412",
+  "helper": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-credential-osxkeychain",
+  "version": {
+    "version": "1.25.0",
+    "unauthenticated_version_refused": true
+  },
+  "private_server_contacted": false,
+  "repository": "/private/tmp/gitfleet-gitea-compat-ce2prj0d/native-workspace/repository",
+  "state": "/private/tmp/gitfleet-gitea-compat-ce2prj0d/native-state",
+  "workspace": "c8a40020-61c2-4b3e-a5c2-648179012391",
+  "worktree": "fd15d98a-6519-4131-8a51-a26628b2b1bc",
+  "bundle": "/private/tmp/gitfleet-gitea-compat-ce2prj0d/GitFleet Auth Compatibility.app",
+  "private_keychain": "/private/tmp/gitfleet-gitea-compat-ce2prj0d/native-private-keychain",
+  "prompt_helper": "/private/tmp/gitfleet-gitea-compat-ce2prj0d/native-private-keychain/prompt-helper",
+  "native_home": "/Users/randydodson"
+}

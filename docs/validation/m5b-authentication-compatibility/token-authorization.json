@@ -1,0 +1,6 @@
+{
+  "user_approval": "Approve this disposable test",
+  "approved_scope": "Loopback-only read-repository token; exact generated Keychain item; revoke token, restore original fixture credential, remove temporary secret files",
+  "script_sha256": "5143b7805da04335f592f6d368eb36458bf0485243bf0404e21c7482733d8857",
+  "automatic_review_initial_rejection": "Access change not specifically authorized and missing revocation; no token created in rejected attempt"
+}

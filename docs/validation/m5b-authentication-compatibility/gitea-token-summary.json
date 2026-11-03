@@ -1,0 +1,10 @@
+{
+  "fixture_only": true,
+  "scopes": [
+    "read:repository"
+  ],
+  "token_revoked": true,
+  "original_fixture_credential_restored": true,
+  "integration_exit_code": 0,
+  "cleanup_errors": []
+}

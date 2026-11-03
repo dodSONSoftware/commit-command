@@ -1,0 +1,23 @@
+[
+  {
+    "mode": "current_home",
+    "exit_code": 0,
+    "field_names": [
+      "password",
+      "capability[]",
+      "state[]"
+    ],
+    "password_matches": true
+  },
+  {
+    "mode": "isolated_home",
+    "exit_code": 0,
+    "field_names": [],
+    "password_matches": false
+  },
+  {
+    "direct_git_advertisement_status": 200,
+    "content_type": "application/x-git-upload-pack-advertisement",
+    "bytes": 432
+  }
+]

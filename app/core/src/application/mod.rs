@@ -47,6 +47,7 @@ fn stale() -> Error {
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Request {
     AuthenticationSettings {},
+    AuthenticationChoices {},
     ReviewAuthentication {
         change: crate::authentication::Change,
     },
@@ -255,6 +256,7 @@ pub struct OperationPage {
 #[serde(tag = "kind", content = "value", rename_all = "snake_case")]
 pub enum Data {
     AuthenticationSettings(crate::authentication::Settings),
+    AuthenticationChoices(crate::authentication::Choices),
     Graph(crate::graph::Page),
     Activity(exploration::ActivityReport),
     OperationAudit(OperationAuditPage),
@@ -657,6 +659,9 @@ impl Application {
                     &WorktreeId(worktree),
                     &self.read_options,
                 )?))
+            }
+            Request::AuthenticationChoices {} => {
+                Data::AuthenticationChoices(crate::authentication::choices(&self.read_options)?)
             }
             Request::AuthenticationSettings {} => {
                 Data::AuthenticationSettings(self.authentication_settings()?)

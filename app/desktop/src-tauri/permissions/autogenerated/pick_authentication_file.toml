@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-pick-authentication-file"
+description = "Enables the pick_authentication_file command without any pre-configured scope."
+commands.allow = ["pick_authentication_file"]
+
+[[permission]]
+identifier = "deny-pick-authentication-file"
+description = "Denies the pick_authentication_file command without any pre-configured scope."
+commands.deny = ["pick_authentication_file"]

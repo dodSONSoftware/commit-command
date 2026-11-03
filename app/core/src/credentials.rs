@@ -29,6 +29,7 @@ pub struct HelperScope {
 struct BridgePlan {
     scope: HelperScope,
     helper: ToolBinding,
+    home: ToolBinding,
 }
 fn invalid() -> Error {
     Error::with_kind(
@@ -100,11 +101,24 @@ fn executable(role: &str, path: &Path) -> Result<ToolBinding> {
         fingerprint: fingerprint(&path)?,
     })
 }
+fn helper_home(path: &Path) -> Result<ToolBinding> {
+    let path = std::fs::canonicalize(path)?;
+    let m = std::fs::symlink_metadata(&path)?;
+    if !m.is_dir() || m.mode() & 0o022 != 0 || m.uid() != unsafe { libc::geteuid() } {
+        return Err(invalid());
+    }
+    Ok(ToolBinding {
+        role: "credential_home".into(),
+        path: NativePath::from_path(&path),
+        fingerprint: crate::inspection::fs_identity(&path)?,
+    })
+}
 pub(crate) fn bindings(policy: &HttpsCredentialPolicy) -> Result<Vec<ToolBinding>> {
     valid_account(&policy.account)?;
     Ok(vec![
         executable("credential_helper", &policy.helper)?,
         executable("credential_bridge", &policy.bridge)?,
+        helper_home(&policy.home)?,
     ])
 }
 fn quote(value: &str) -> String {
@@ -115,6 +129,7 @@ pub(crate) fn helper_command(scope: &HelperScope, tools: &[ToolBinding]) -> Resu
     let plan = BridgePlan {
         scope: scope.clone(),
         helper: get("credential_helper")?.clone(),
+        home: get("credential_home")?.clone(),
     };
     let bridge = get("credential_bridge")?.path.to_path()?;
     let bridge = bridge.to_str().ok_or_else(invalid)?;
@@ -137,7 +152,12 @@ fn fields(bytes: &[u8], response: bool) -> Result<BTreeMap<&str, &str>> {
             return Err(invalid());
         }
         let (key, value) = line.split_once('=').ok_or_else(invalid)?;
-        if response && !matches!(key, "protocol" | "host" | "path" | "username" | "password") {
+        if response
+            && !matches!(
+                key,
+                "protocol" | "host" | "path" | "username" | "password" | "capability[]" | "state[]"
+            )
+        {
             return Err(invalid());
         }
         if matches!(key, "protocol" | "host" | "path" | "username" | "password")
@@ -183,6 +203,10 @@ fn handle(plan: BridgePlan, operation: &str, input: &[u8], output: &mut impl Wri
     if executable("credential_helper", &path)? != plan.helper {
         return Err(invalid());
     }
+    let home = plan.home.path.to_path()?;
+    if helper_home(&home)? != plan.home {
+        return Err(invalid());
+    }
     let request = format!(
         "protocol=https\nhost={}\npath={}\nusername={}\n\n",
         plan.scope.host, plan.scope.path, plan.scope.account
@@ -193,7 +217,8 @@ fn handle(plan: BridgePlan, operation: &str, input: &[u8], output: &mut impl Wri
         .arg("get")
         .env_clear()
         .env("PATH", "/usr/bin:/bin")
-        .env("HOME", std::env::var_os("HOME").ok_or_else(invalid)?)
+        .env("HOME", &home)
+        .env("XDG_CONFIG_HOME", home.join(".config"))
         .env("GIT_TERMINAL_PROMPT", "0");
     let options = ReadOptions {
         timeout: Duration::from_secs(30),
@@ -216,7 +241,12 @@ fn handle(plan: BridgePlan, operation: &str, input: &[u8], output: &mut impl Wri
                 return Err(invalid());
             }
         }
-        if values.get("username") != Some(&plan.scope.account.as_str()) {
+        // A helper may return only a password for the account supplied in get.
+        // Private helper state/capability extensions are discarded, never forwarded.
+        if values
+            .get("username")
+            .is_some_and(|v| *v != plan.scope.account)
+        {
             return Err(invalid());
         }
         let password = values.get("password").ok_or_else(invalid)?;
@@ -280,6 +310,10 @@ pub fn bridge_main() -> i32 {
     }
 }
 
+pub(crate) fn helper_binding(path: &Path) -> Result<ToolBinding> {
+    executable("credential_helper", path)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -322,6 +356,11 @@ mod tests {
                 host: "example.invalid".into(),
                 path: "repo.git".into(),
                 account: "account".into(),
+            },
+            home: ToolBinding {
+                role: "credential_home".into(),
+                path: NativePath::from_path(Path::new("/no/such/home")),
+                fingerprint: String::new(),
             },
             helper: ToolBinding {
                 role: "credential_helper".into(),

@@ -4,6 +4,7 @@ fn main() {
             "desktop_capabilities",
             "dispatch",
             "pick_directory",
+            "pick_authentication_file",
             "job_status",
             "cancel_job",
             "review_data",

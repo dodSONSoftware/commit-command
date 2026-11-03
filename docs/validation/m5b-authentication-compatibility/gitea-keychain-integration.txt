@@ -1,0 +1,24 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.27s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-a5b0bae5745a2202)
+
+running 1 test
+test https_credential_tests::actual_gitea_and_osxkeychain_read_download_import_and_missing_account ... FAILED
+
+failures:
+
+---- https_credential_tests::actual_gitea_and_osxkeychain_read_download_import_and_missing_account stdout ----
+
+thread 'https_credential_tests::actual_gitea_and_osxkeychain_read_download_import_and_missing_account' (20164214) panicked at tests/support/https_credentials.rs:430:5:
+assertion `left == right` failed: Some(Issue { kind: InspectionFailed, message: "Remote observation failed (transport, authentication, certificate, redirect or server rejection); no raw server diagnostics are retained" })
+  left: Blocked
+ right: Complete
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    https_credential_tests::actual_gitea_and_osxkeychain_read_download_import_and_missing_account
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 52 filtered out; finished in 3.33s
+
+error: test failed, to rerun pass `--test remote_observation`

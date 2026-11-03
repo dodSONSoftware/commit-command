@@ -1,0 +1,19 @@
+{
+  "exact_fixture_keychain_item_removed": true,
+  "private_fixture_keychain_deleted": true,
+  "keychain_search_list_unchanged": true,
+  "gitea_fixture_stopped": true,
+  "temporary_pat_files_absent": true,
+  "token_revocation": {
+    "fixture_only": true,
+    "scopes": [
+      "read:repository"
+    ],
+    "token_revoked": true,
+    "original_fixture_credential_restored": true,
+    "integration_exit_code": 0,
+    "cleanup_errors": []
+  },
+  "private_server_contacted": false,
+  "native_deny_allow": "not performed: SecurityAgent computer-use policy block; user asked to dismiss lingering fixture dialog with Deny"
+}

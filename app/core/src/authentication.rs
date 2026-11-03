@@ -102,6 +102,10 @@ impl ProfilePolicy {
             } => {
                 crate::credentials::valid_account(account)?;
                 options.https_credentials = Some(remote::HttpsCredentialPolicy {
+                    home: base
+                        .credential_home
+                        .clone()
+                        .ok_or_else(|| invalid("Native credential home is unavailable"))?,
                     helper: path(helper)?,
                     account: account.clone(),
                     bridge: base
@@ -199,4 +203,54 @@ pub(crate) fn effective(
             name: p.name.clone(),
         }),
     ))
+}
+
+/// Explicit local discovery returns suggestions, never selections or authority.
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+pub struct Choices {
+    pub helpers: Vec<HelperChoice>,
+    pub public_identities: Vec<String>,
+    pub known_hosts: Option<String>,
+    pub agent_socket: Option<String>,
+    pub notes: Vec<String>,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+pub struct HelperChoice {
+    pub label: String,
+    pub path: String,
+}
+pub(crate) fn choices(options: &crate::inspection::ReadOptions) -> Result<Choices> {
+    let helpers = crate::writes::authentication_helper_choices(options)?;
+    let mut result=Choices{helpers,public_identities:vec![],known_hosts:None,agent_socket:None,notes:vec!["Discovery reads only local tool paths, public-key filenames and socket metadata. It does not run a credential helper, query an agent, load keys or contact a server.".into()]};
+    if let Some(home) = std::env::var_os("HOME") {
+        let ssh = PathBuf::from(home).join(".ssh");
+        if std::fs::symlink_metadata(&ssh).is_ok_and(|m| m.is_dir() && !m.file_type().is_symlink())
+        {
+            for entry in std::fs::read_dir(&ssh)?.take(128) {
+                let entry = entry?;
+                let p = entry.path();
+                if !std::fs::symlink_metadata(&p)?.is_file() {
+                    continue;
+                }
+                if entry.file_name() == "known_hosts" {
+                    result.known_hosts = p.to_str().map(str::to_owned);
+                } else if p.extension().is_some_and(|e| e == "pub")
+                    && result.public_identities.len() < 32
+                {
+                    if let Some(p) = p.to_str() {
+                        result.public_identities.push(p.into());
+                    }
+                }
+            }
+            result.public_identities.sort();
+        }
+    }
+    if let Some(socket) = std::env::var_os("SSH_AUTH_SOCK").map(PathBuf::from) {
+        if crate::writes::authentication_agent_available(&socket) {
+            result.agent_socket = socket.to_str().map(str::to_owned);
+        }
+    }
+    result.notes.push("Choose a nonsecret Git account explicitly. For HTTPS use an existing matching Keychain credential or create it with your approved external Git client; GitFleet never asks for a password or token.".into());
+    result.notes.push("Only selected public Ed25519 agent identities are supported. Verify unknown or changed host keys externally; no automatic known_hosts edits.".into());
+    Ok(result)
 }

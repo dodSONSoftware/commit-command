@@ -1,0 +1,24 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.79s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-a5b0bae5745a2202)
+
+running 1 test
+test https_credential_tests::osxkeychain_password_only_response_and_private_state_extensions_authenticate_without_persistence ... FAILED
+
+failures:
+
+---- https_credential_tests::osxkeychain_password_only_response_and_private_state_extensions_authenticate_without_persistence stdout ----
+
+thread 'https_credential_tests::osxkeychain_password_only_response_and_private_state_extensions_authenticate_without_persistence' (19909999) panicked at tests/support/https_credentials.rs:389:5:
+assertion `left == right` failed: Some(Issue { kind: InspectionFailed, message: "Remote observation failed (transport, authentication, certificate, redirect or server rejection); no raw server diagnostics are retained" })
+  left: Blocked
+ right: Complete
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    https_credential_tests::osxkeychain_password_only_response_and_private_state_extensions_authenticate_without_persistence
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 48 filtered out; finished in 3.81s
+
+error: test failed, to rerun pass `--test remote_observation`

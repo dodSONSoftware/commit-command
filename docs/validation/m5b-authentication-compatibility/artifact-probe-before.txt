@@ -1,0 +1,37 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.70s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-883e37a5b39e3193)
+
+running 1 test
+
+thread 'artifact_initialization::git_initialization_probe_is_transient_and_never_accepted_as_a_completed_artifact' (20107873) panicked at tests/support/artifact_initialization.rs:40:5:
+worker stdout=
+running 1 test
+test artifact_initialization::artifact_init_probe_worker ... FAILED
+
+failures:
+
+failures:
+    artifact_initialization::artifact_init_probe_worker
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 56 filtered out; finished in 13.26s
+
+ stderr=ARTIFACT_DIAGNOSTIC path="loose.git/tFixtureProbe" type=FileType { is_file: false, is_dir: false, is_symlink: true, .. } mode=120755 inode=50885908 links=1 size=7
+
+thread 'artifact_initialization::artifact_init_probe_worker' (20107878) panicked at tests/support/artifact_initialization.rs:75:5:
+assertion `left == right` failed: Some(Issue { kind: UnsupportedRepositoryState, message: "Unsafe fetch artifact type" })
+  left: Blocked
+ right: Complete
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test artifact_initialization::git_initialization_probe_is_transient_and_never_accepted_as_a_completed_artifact ... FAILED
+
+failures:
+
+failures:
+    artifact_initialization::git_initialization_probe_is_transient_and_never_accepted_as_a_completed_artifact
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 56 filtered out; finished in 13.28s
+
+error: test failed, to rerun pass `--test remote_observation`

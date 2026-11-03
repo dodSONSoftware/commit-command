@@ -17,6 +17,7 @@ use std::{
 #[derive(Debug, Clone, Default)]
 pub struct TransportOptions {
     pub credential_bridge: Option<PathBuf>,
+    pub credential_home: Option<PathBuf>,
     pub local_fixture_root: Option<PathBuf>,
     pub ca_file: Option<PathBuf>,
     pub ssh: Option<SshPolicy>,
@@ -34,6 +35,7 @@ pub struct SshPolicy {
 /// A trusted executable implementing Git's username/password helper protocol.
 #[derive(Debug, Clone)]
 pub struct HttpsCredentialPolicy {
+    pub home: PathBuf,
     pub helper: PathBuf,
     pub bridge: PathBuf,
     pub account: String,

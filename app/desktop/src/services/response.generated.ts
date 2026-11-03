@@ -11,6 +11,11 @@ export type Data =
       [k: string]: unknown;
     }
   | {
+      kind: "authentication_choices";
+      value: Choices;
+      [k: string]: unknown;
+    }
+  | {
       kind: "graph";
       value: Page;
       [k: string]: unknown;
@@ -470,6 +475,29 @@ export interface ToolBinding {
   fingerprint: string;
   path: NativePath;
   role: string;
+  [k: string]: unknown;
+}
+/**
+ * Explicit local discovery returns suggestions, never selections or authority.
+ *
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "Choices".
+ */
+export interface Choices {
+  agent_socket?: string | null;
+  helpers: HelperChoice[];
+  known_hosts?: string | null;
+  notes: string[];
+  public_identities: string[];
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "HelperChoice".
+ */
+export interface HelperChoice {
+  label: string;
+  path: string;
   [k: string]: unknown;
 }
 /**

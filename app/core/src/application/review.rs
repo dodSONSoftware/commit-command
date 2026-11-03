@@ -378,7 +378,14 @@ fn transport_policy_summary(plan: &crate::remote::observation::ObservationPlan) 
                 format!("{path} · SHA-256 {}", binding.fingerprint)
             })
             .unwrap_or_else(|| "Unavailable helper binding".into());
-        format!("HTTPS uses only Basic authentication over verified TLS and rejects redirects. Use account {} only for https://{}/{}.\nApproved helper: {}\nThe trusted helper runs unsandboxed as your user and may access its credential store. Only get is sent; Git store/erase are discarded. No credential is shown or saved in GitFleet journals.",scope.account,scope.host,scope.path,helper)
+        let home = plan
+            .tools
+            .iter()
+            .find(|t| t.role == "credential_home")
+            .and_then(|t| t.path.to_path().ok())
+            .map(|p| p.display().to_string())
+            .unwrap_or_else(|| "Unavailable".into());
+        format!("HTTPS uses only Basic authentication over verified TLS and rejects redirects. Use account {} only for https://{}/{}.\nApproved helper: {}\nHelper HOME: {} (Git transport stays isolated)\nThe trusted helper runs unsandboxed as your user and may access its credential store. Only get is sent; Git store/erase are discarded. No credential is shown or saved in GitFleet journals.",scope.account,scope.host,scope.path,helper,home)
     } else {
         "HTTPS verifies certificates and hostnames against the reviewed trust source and rejects redirects. No credentials or credential helpers are used.".into()
     }
