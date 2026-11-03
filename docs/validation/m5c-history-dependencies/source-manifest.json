@@ -1,0 +1,12 @@
+{
+  "base_commit": "e63d56cf667185188bcfa3ef635000cfc0fc5883",
+  "files_sha256": {
+    "app/core/src/remote/push.rs": "b9ba496892634d49c61e8cdc3c7cac773768921bba94eeb35a7f685976df2cc1",
+    "app/core/src/writes/push_preview.rs": "8a779e566187dc34cb8b452e27a6b2943c0031a9c60d1e55f07dd45feccc98f5",
+    "app/core/tests/remote_observation.rs": "610bb09e33a64740b6e88dc702d4876d3b7a50b3d7860ac117b578368fb9d335",
+    "app/desktop/src/services/response.generated.ts": "ad8bf2d03eef813c1bba7fc5f2499c5f295bfcbdbd41382c9f03f532cd826927",
+    "app/desktop/src/views/PushPreviewResult.test.tsx": "a0f13af1d9f40c4eb783bdaa5a6e0e9df5c0072de8e0dc6ef25db50392de643e",
+    "app/desktop/src/views/PushPreviewResult.tsx": "633bdd7eb0b668f18d4649735c5b3517238dd0575a91155d4fe6ecaca58adf14",
+    "app/desktop/src/views/RemoteInspector.test.tsx": "0555c102d8bbb08829bded54e7d9fe9ce5888b34342fd93d056dff5f255631e7"
+  }
+}

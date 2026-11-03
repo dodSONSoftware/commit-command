@@ -22,6 +22,13 @@ pub struct SourceGitlink {
     pub path: Vec<u8>,
     pub oid: ObjectId,
 }
+/// Unique path/child pairs present in outgoing commit trees. No remote proof.
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+pub struct OutgoingGitlink {
+    pub path: Vec<u8>,
+    pub oid: ObjectId,
+    pub example_commit: ObjectId,
+}
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct PushPreview {
     pub source_ref: String,
@@ -41,5 +48,6 @@ pub struct PushPreview {
     pub outgoing: Vec<OutgoingCommit>,
     pub outgoing_truncated: bool,
     pub source_gitlinks: Vec<SourceGitlink>,
+    pub outgoing_gitlinks: Vec<OutgoingGitlink>,
     pub upstream_matches: bool,
 }

@@ -27,6 +27,7 @@ const preview: PushPreview = {
   ],
   outgoing_truncated: true,
   source_gitlinks: [],
+  outgoing_gitlinks: [],
   upstream_matches: false,
 };
 it("renders a bounded historical comparison without execution controls or HTML interpretation", () => {
@@ -74,5 +75,37 @@ it("shows committed child requirements without implying remote availability", ()
     screen.getByText(/Child checkouts and remote availability/),
   ).toHaveTextContent("separate proof");
   expect(container.querySelector("img")).toBeNull();
+  expect(screen.queryByRole("button")).toBeNull();
+});
+it("shows removed history requirements even with no source gitlinks", () => {
+  const { container } = render(
+    <PushPreviewResult
+      preview={{
+        ...preview,
+        outgoing_gitlinks: [
+          {
+            path: Array.from(new TextEncoder().encode("removed/<script>")),
+            oid: { format: "sha1", hex: "d".repeat(40) },
+            example_commit: { format: "sha1", hex: "e".repeat(40) },
+          },
+        ],
+      }}
+    />,
+  );
+  expect(
+    screen.getByText("Child requirements across outgoing history · 1"),
+  ).toBeVisible();
+  expect(
+    screen.getByRole("heading", { name: "Child commits in source · 0" }),
+  ).toBeVisible();
+  expect(screen.getByText(/removed\/<script>/)).toHaveTextContent(
+    "e".repeat(40),
+  );
+  expect(
+    screen.getByText(/Unique path and child-commit pairs/),
+  ).toHaveTextContent(
+    "availability on intended child remotes is still unproven",
+  );
+  expect(container.querySelector("script")).toBeNull();
   expect(screen.queryByRole("button")).toBeNull();
 });

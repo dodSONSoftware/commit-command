@@ -175,6 +175,9 @@ Current M5B checkpoint: reviewed branch downloads and separately reviewed offlin
 
 ### M5C Add separately reviewed individual and bulk push
 
+Latest prerequisite: [outgoing-history requirements](reports/M5C_HISTORY_DEPENDENCIES_2026-11-02.md) now inventories unique path/child pairs across every outgoing commit tree, including removed/replaced links and merge-side history beyond the display cap. Successful inventories are complete within the explicit 256-tree/1,024-requirement bounds; larger scopes refuse. Historical child URL/mapping resolution, explicit destination selection, fresh server reachability, ordering and exact push authority remain open. Source-only limitations in the prior checkpoint below are superseded by this inventory, not by remote proof.
+
+
 Latest local prerequisite: [source child requirements](reports/M5C_SOURCE_DEPENDENCIES_2026-11-02.md) lists exact source-tree gitlink paths/OIDs without child checkout/network access. This is not remote proof; outgoing-history requirements (including removed/replaced links), intended child destinations/reachability, dependency ordering and actual separate push authority remain open. No push performed.
 
 

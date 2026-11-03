@@ -69,6 +69,65 @@ fn source_gitlinks(s: &inspection::Session<'_>, oid: &ObjectId) -> Result<Vec<So
     }
     Ok(links)
 }
+fn outgoing_gitlinks(
+    s: &inspection::Session<'_>,
+    range: &str,
+    expected_count: u32,
+) -> Result<Vec<OutgoingGitlink>> {
+    use std::collections::{btree_map::Entry, BTreeMap, BTreeSet};
+    // This list is independent of the 100-commit presentation limit and includes
+    // all merge parents reachable from source but not the observed destination.
+    let list = inspection::output_text(s.git(&[
+        "rev-list",
+        "--topo-order",
+        "--no-commit-header",
+        "--format=%H %T",
+        "--max-count=10001",
+        range,
+        "--",
+    ])?)?;
+    let mut trees = BTreeSet::new();
+    let mut requirements = BTreeMap::new();
+    let mut count = 0;
+    for line in list.lines() {
+        let (commit, tree) = line
+            .split_once(' ')
+            .ok_or_else(|| fail(ErrorKind::InvalidData, "Invalid outgoing tree listing"))?;
+        let commit = ObjectId::parse(commit, &s.format)?;
+        let tree = ObjectId::parse(tree, &s.format)?;
+        count += 1;
+        if !trees.insert(tree.hex.clone()) {
+            continue;
+        }
+        if trees.len() > 256 {
+            return Err(fail(
+                ErrorKind::OutputLimit,
+                "Outgoing history exceeds 256 distinct trees",
+            ));
+        }
+        for link in source_gitlinks(s, &tree)? {
+            let key = (link.path.clone(), link.oid.hex.clone());
+            let requirement_count = requirements.len();
+            if let Entry::Vacant(entry) = requirements.entry(key) {
+                if requirement_count == 1024 {
+                    return Err(fail(
+                        ErrorKind::OutputLimit,
+                        "Outgoing history exceeds 1,024 child requirements",
+                    ));
+                }
+                entry.insert(OutgoingGitlink {
+                    path: link.path,
+                    oid: link.oid,
+                    example_commit: commit.clone(),
+                });
+            }
+        }
+    }
+    if count != expected_count {
+        return Err(stale());
+    }
+    Ok(requirements.into_values().collect())
+}
 impl ControlledWrites {
     pub(crate) fn push_preview(
         &mut self,
@@ -213,6 +272,7 @@ impl ControlledWrites {
                 return Err(stale());
             }
             let source_gitlinks = source_gitlinks(s, &source_oid)?;
+            let outgoing_gitlinks = outgoing_gitlinks(s, &range, outgoing)?;
             Ok(PushPreview {
                 source_ref: source_ref.clone(),
                 source_oid,
@@ -231,6 +291,7 @@ impl ControlledWrites {
                 outgoing_truncated: outgoing > commits.len() as u32,
                 outgoing: commits,
                 source_gitlinks,
+                outgoing_gitlinks,
                 upstream_matches: report.upstream_remote.as_deref()
                     == Some(current.remote.as_str())
                     && report.upstream_ref.as_deref() == Some(current.reference.as_str()),

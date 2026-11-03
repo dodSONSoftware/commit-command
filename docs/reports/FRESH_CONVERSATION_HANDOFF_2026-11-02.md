@@ -1,5 +1,11 @@
 # Fresh conversation handoff — November 2, 2026
 
+## Latest M5C outgoing-history dependency checkpoint
+
+Read `docs/reports/M5C_HISTORY_DEPENDENCIES_2026-11-02.md`. Local push previews now inventory unique raw-path/child-OID pairs across all outgoing commit trees, including removed/replaced and merge-side links beyond the 100-commit display cap. Each pair has one example parent; identical trees deduplicated. More than 256 distinct trees or 1,024 requirements refuses rather than returning partial success. No child checkout/network/credential access or push authority. This supersedes the prior source-only history gap below, but historical URL/mapping changes and intended-child-remote reachability proof remain open. See `docs/validation/m5c-history-dependencies/validation-summary.json` for actual checks. No native presentation acceptance of the new section is claimed.
+
+Next: historical child mapping/destination review and fresh scoped reachability evidence, then selected dependency ordering and exact separate non-force push authority/hook/recovery work, respecting no-push. M5B operator-only SecurityAgent acceptance remains open; do not replay removed fixtures or retry policy-blocked app control. Preserve unrelated files, keep ordinary writes disabled, commit locally and never push.
+
 ## Latest M5C local dependency prerequisite
 
 Read `docs/reports/M5C_SOURCE_DEPENDENCIES_2026-11-02.md`. Push previews now list exact source-tree gitlink raw paths/OIDs, with no child checkout/network access, bounded 1,024-entry refusal and explicit UI disclaimer. SHA-1/SHA-256 and unusual byte paths are covered. This is source-only inventory, not outgoing-history completeness or server reachability evidence. No actual push implementation/execution/authority was added; no push performed. See `docs/validation/m5c-source-dependencies/validation-summary.json` for final checks. Native presentation of the new section is not claimed. Continue bounded outgoing-history requirements, explicitly reviewed intended child/destination reachability evidence and separate non-force push authority/recovery, preserving no-push boundary. M5B operator-only SecurityAgent acceptance remains open, as described below. Preserve unrelated changes; commit locally and do not push.

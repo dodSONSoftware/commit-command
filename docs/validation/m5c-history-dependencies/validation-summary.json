@@ -1,0 +1,30 @@
+{
+  "base_commit": "e63d56c",
+  "focused_application_push_preview": {
+    "passed": 9,
+    "ignored": 0
+  },
+  "focused_renderer": {
+    "passed": 4
+  },
+  "all_feature_transport_suite": {
+    "passed": 61,
+    "ignored": 4
+  },
+  "core_all_target_all_feature_clippy": "passed",
+  "core_format": "passed",
+  "desktop_full_gate": "passed",
+  "renderer_tests": 58,
+  "host_tests_per_configuration": 13,
+  "contracts_type_lint_format_build_default_release": "passed",
+  "full_core_five_feature_matrix_rerun": false,
+  "native_new_section": "not run",
+  "ordinary_bundle_refreshed": true,
+  "outgoing_commit_tree_inventory": "complete unique path/OID pairs within explicit bounds; one example occurrence per pair",
+  "distinct_tree_limit": 256,
+  "unique_requirement_limit": 1024,
+  "historical_destinations_or_child_reachability_proven": false,
+  "push_implemented_or_executed": false,
+  "ordinary_writes_enabled": false,
+  "unrelated_work_preserved": true
+}

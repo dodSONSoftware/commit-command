@@ -37,7 +37,7 @@ export function PushPreviewResult({ preview }: { preview: PushPreview }) {
           These gitlinks come from the exact source commit. Child checkouts and
           remote availability were not inspected. Parent push still requires
           separate proof of child reachability on the intended child remotes,
-          including requirements from outgoing history.
+          including the outgoing-history requirements below.
         </p>
         {preview.source_gitlinks.map((link) => (
           <p key={JSON.stringify(link.path)}>
@@ -45,6 +45,25 @@ export function PushPreviewResult({ preview }: { preview: PushPreview }) {
           </p>
         ))}
       </section>
+      <details>
+        <summary>
+          Child requirements across outgoing history ·{" "}
+          {preview.outgoing_gitlinks.length}
+        </summary>
+        <p>
+          Unique path and child-commit pairs from every outgoing commit tree,
+          including links later replaced or removed. These are local
+          requirements; availability on intended child remotes is still
+          unproven. The example parent commit records one occurrence, not every
+          occurrence.
+        </p>
+        {preview.outgoing_gitlinks.map((link) => (
+          <p key={JSON.stringify([link.path, link.oid.hex])}>
+            {bytes(link.path)} · <code>{link.oid.hex}</code> · example parent{" "}
+            <code>{link.example_commit.hex}</code>
+          </p>
+        ))}
+      </details>
       {(preview.relation === "behind" || preview.relation === "diverged") && (
         <p role="alert">
           The selected update is not a fast forward relative to the observed

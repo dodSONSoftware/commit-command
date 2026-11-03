@@ -1051,6 +1051,7 @@ export interface PushPreview {
   observed_oid: ObjectId;
   outgoing: OutgoingCommit[];
   outgoing_count: number;
+  outgoing_gitlinks: OutgoingGitlink[];
   outgoing_truncated: boolean;
   relation: PushRelation;
   remote: string;
@@ -1068,6 +1069,18 @@ export interface OutgoingCommit {
   oid: ObjectId;
   subject: number[];
   subject_truncated: boolean;
+  [k: string]: unknown;
+}
+/**
+ * Unique path/child pairs present in outgoing commit trees. No remote proof.
+ *
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "OutgoingGitlink".
+ */
+export interface OutgoingGitlink {
+  example_commit: ObjectId;
+  oid: ObjectId;
+  path: number[];
   [k: string]: unknown;
 }
 /**

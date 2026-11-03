@@ -2475,6 +2475,10 @@ fn local_push_preview_inventories_committed_gitlinks_without_reading_children_or
             .find(|l| l.path == raw_path)
             .unwrap();
         assert_eq!(link.oid.hex, child);
+        assert!(preview
+            .outgoing_gitlinks
+            .iter()
+            .any(|l| l.path == raw_path && l.oid.hex == child));
         assert_eq!(tree_bytes(&t.f.repo), before);
         assert_eq!(tree_bytes(&t.remote), remote);
         assert!(!t.f.repo.join("nested").exists());
@@ -2516,6 +2520,219 @@ fn local_push_preview_refuses_excessive_source_gitlinks_without_partial_inventor
         )
         .unwrap_err();
     assert_eq!(error.kind, ErrorKind::OutputLimit);
+    assert_eq!(tree_bytes(&t.f.repo), before);
+    assert_eq!(tree_bytes(&t.remote), remote);
+}
+
+#[test]
+fn local_push_preview_covers_removed_replaced_and_merged_gitlinks_beyond_display_limit() {
+    for sha256 in [false, true] {
+        let mut t = setup_format(true, sha256);
+        trust(&mut t);
+        let observation = observed(&mut t);
+        let base = observation.oid.as_ref().unwrap().hex.clone();
+        let width = if sha256 { 64 } else { 40 };
+        let path = "nested/child\twith\nbytes";
+        let a = "a".repeat(width);
+        let b = "b".repeat(width);
+        let c = "c".repeat(width);
+        t.f.git(&[
+            "update-index",
+            "--add",
+            "--cacheinfo",
+            &format!("160000,{a},{path}"),
+        ]);
+        t.f.git(&["commit", "-qm", "Introduce child"]);
+        let introduced = String::from_utf8(t.f.git(&["rev-parse", "HEAD"]))
+            .unwrap()
+            .trim()
+            .to_owned();
+        t.f.git(&["update-index", "--cacheinfo", &format!("160000,{b},{path}")]);
+        t.f.git(&["commit", "-qm", "Replace child"]);
+        t.f.git(&["update-index", "--force-remove", "--", path]);
+        t.f.git(&["commit", "-qm", "Remove child"]);
+        let main = String::from_utf8(t.f.git(&["rev-parse", "HEAD"]))
+            .unwrap()
+            .trim()
+            .to_owned();
+        let final_tree = String::from_utf8(t.f.git(&["rev-parse", "HEAD^{tree}"]))
+            .unwrap()
+            .trim()
+            .to_owned();
+        t.f.git(&[
+            "update-index",
+            "--add",
+            "--cacheinfo",
+            &format!("160000,{c},{path}"),
+        ]);
+        let side_tree = String::from_utf8(t.f.git(&["write-tree"]))
+            .unwrap()
+            .trim()
+            .to_owned();
+        let side = String::from_utf8(t.f.git(&[
+            "commit-tree",
+            &side_tree,
+            "-p",
+            &base,
+            "-m",
+            "Child only on side history",
+        ]))
+        .unwrap()
+        .trim()
+        .to_owned();
+        t.f.git(&["read-tree", "HEAD"]);
+        let mut parent = String::from_utf8(t.f.git(&[
+            "commit-tree",
+            &final_tree,
+            "-p",
+            &main,
+            "-p",
+            &side,
+            "-m",
+            "Merge without final gitlink",
+        ]))
+        .unwrap()
+        .trim()
+        .to_owned();
+        for i in 0..101 {
+            parent = String::from_utf8(t.f.git(&[
+                "commit-tree",
+                &final_tree,
+                "-p",
+                &parent,
+                "-m",
+                &format!("Later commit {i}"),
+            ]))
+            .unwrap()
+            .trim()
+            .to_owned();
+        }
+        t.f.git(&["update-ref", "refs/heads/main", &parent]);
+        let before = tree_bytes(&t.f.repo);
+        let remote = tree_bytes(&t.remote);
+        let preview = push_preview(&mut t, &observation.plan.id);
+        assert!(preview.source_gitlinks.is_empty());
+        assert!(preview.outgoing_truncated);
+        assert!(!preview.outgoing.iter().any(|v| v.oid.hex == introduced));
+        assert_eq!(preview.outgoing_gitlinks.len(), 3);
+        for oid in [&a, &b, &c] {
+            let link = preview
+                .outgoing_gitlinks
+                .iter()
+                .find(|v| &v.oid.hex == oid)
+                .unwrap();
+            assert_eq!(link.path, path.as_bytes());
+            assert_eq!(link.oid.format, preview.source_oid.format);
+            let raw = t.f.git(&["ls-tree", "-r", "-z", &link.example_commit.hex]);
+            assert!(raw.windows(oid.len()).any(|v| v == oid.as_bytes()));
+        }
+        assert_eq!(
+            preview
+                .outgoing_gitlinks
+                .iter()
+                .find(|v| v.oid.hex == c)
+                .unwrap()
+                .example_commit
+                .hex,
+            side
+        );
+        assert_eq!(tree_bytes(&t.f.repo), before);
+        assert_eq!(tree_bytes(&t.remote), remote);
+        assert!(!t.f.repo.join("nested").exists());
+    }
+}
+
+#[test]
+fn local_push_preview_refuses_excessive_history_requirements_even_when_source_fits() {
+    let mut t = setup(true);
+    trust(&mut t);
+    let observation = observed(&mut t);
+    let child = "a".repeat(40);
+    let mut input = Vec::new();
+    for i in 0..1024 {
+        input.extend_from_slice(format!("160000 {child}\tchild-{i}\0").as_bytes());
+    }
+    use std::io::Write;
+    let mut process = std::process::Command::new("git")
+        .current_dir(&t.f.repo)
+        .args(["update-index", "-z", "--index-info"])
+        .stdin(std::process::Stdio::piped())
+        .spawn()
+        .unwrap();
+    process.stdin.take().unwrap().write_all(&input).unwrap();
+    assert!(process.wait().unwrap().success());
+    t.f.git(&["commit", "-qm", "Record 1024 child requirements"]);
+    let boundary = push_preview(&mut t, &observation.plan.id);
+    assert_eq!(boundary.outgoing_gitlinks.len(), 1024);
+    t.f.git(&[
+        "update-index",
+        "--cacheinfo",
+        &format!("160000,{},child-0", "b".repeat(40)),
+    ]);
+    t.f.git(&["commit", "-qm", "Replace one of the children"]);
+    let before = tree_bytes(&t.f.repo);
+    let remote = tree_bytes(&t.remote);
+    let error = t
+        .app
+        .request(
+            t.app.epoch(),
+            Request::PushPreview {
+                workspace: t.workspace.clone(),
+                worktree: t.worktree.clone(),
+                observation: observation.plan.id,
+            },
+        )
+        .unwrap_err();
+    assert_eq!(error.kind, ErrorKind::OutputLimit);
+    assert!(error
+        .to_string()
+        .contains("Outgoing history exceeds 1,024 child requirements"));
+    assert_eq!(tree_bytes(&t.f.repo), before);
+    assert_eq!(tree_bytes(&t.remote), remote);
+}
+
+#[test]
+fn local_push_preview_refuses_excessive_distinct_history_trees() {
+    let mut t = setup(true);
+    trust(&mut t);
+    let observation = observed(&mut t);
+    let mut parent = observation.oid.as_ref().unwrap().hex.clone();
+    for i in 1..=257 {
+        t.f.git(&[
+            "update-index",
+            "--add",
+            "--cacheinfo",
+            &format!("160000,{i:040x},child"),
+        ]);
+        let tree = String::from_utf8(t.f.git(&["write-tree"])).unwrap();
+        parent = String::from_utf8(t.f.git(&[
+            "commit-tree",
+            tree.trim(),
+            "-p",
+            &parent,
+            "-m",
+            "Distinct tree",
+        ]))
+        .unwrap()
+        .trim()
+        .to_owned();
+    }
+    t.f.git(&["update-ref", "refs/heads/main", &parent]);
+    let before = tree_bytes(&t.f.repo);
+    let remote = tree_bytes(&t.remote);
+    let error = t
+        .app
+        .request(
+            t.app.epoch(),
+            Request::PushPreview {
+                workspace: t.workspace.clone(),
+                worktree: t.worktree.clone(),
+                observation: observation.plan.id,
+            },
+        )
+        .unwrap_err();
+    assert_eq!(error.kind, ErrorKind::OutputLimit);
+    assert!(error.to_string().contains("256 distinct trees"));
     assert_eq!(tree_bytes(&t.f.repo), before);
     assert_eq!(tree_bytes(&t.remote), remote);
 }
