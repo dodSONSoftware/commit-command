@@ -2,6 +2,13 @@
 
 export type Request =
   | {
+      kind: "authentication_settings";
+    }
+  | {
+      change: Change;
+      kind: "review_authentication";
+    }
+  | {
       cursor?: Cursor | null;
       kind: "graph";
       scope: HistoryScope;
@@ -214,6 +221,37 @@ export type Request =
       kind: "review_recovery";
       operation: string;
       workspace: string;
+    };
+export type Change =
+  | {
+      id?: string | null;
+      kind: "save";
+      name: string;
+      policy: ProfilePolicy;
+    }
+  | {
+      id: string;
+      kind: "delete";
+    }
+  | {
+      kind: "assign";
+      profile?: string | null;
+      remote: string;
+      workspace: string;
+      worktree: string;
+    };
+export type ProfilePolicy =
+  | {
+      account: string;
+      ca_file?: string | null;
+      helper: string;
+      kind: "https";
+    }
+  | {
+      agent_socket: string;
+      kind: "ssh";
+      known_hosts: string;
+      public_identity: string;
     };
 export type HistoryScope =
   | {

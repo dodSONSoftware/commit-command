@@ -1,0 +1,21 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+error[E0433]: cannot find `https_credentials` in `super`
+  --> tests/support/authentication_profiles.rs:34:25
+   |
+34 |     let secret = super::https_credentials::policy(t);
+   |                         ^^^^^^^^^^^^^^^^^ could not find `https_credentials` in the crate root
+
+error[E0433]: cannot find `https_credentials` in `super`
+   --> tests/support/authentication_profiles.rs:101:12
+    |
+101 |     super::https_credentials::assert_private(&t, &secret);
+    |            ^^^^^^^^^^^^^^^^^ could not find `https_credentials` in the crate root
+
+error[E0433]: cannot find `https_credentials` in `super`
+   --> tests/support/authentication_profiles.rs:145:12
+    |
+145 |     super::https_credentials::assert_private(&t, &secret);
+    |            ^^^^^^^^^^^^^^^^^ could not find `https_credentials` in the crate root
+
+For more information about this error, try `rustc --explain E0433`.
+error: could not compile `gitfleet-core` (test "remote_observation") due to 3 previous errors

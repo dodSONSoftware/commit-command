@@ -1,0 +1,20 @@
+git version 2.56.0
+rustc 1.99.1 (58cf8f9c3 2026-10-13)
+cargo 1.99.1 (5f94df478 2026-08-27)
+v22.22.3
+10.9.8
+
+> gitfleet-desktop@0.1.1 typecheck
+> tsc --noEmit
+
+
+> gitfleet-desktop@0.1.1 lint
+> eslint . --max-warnings 0
+
+
+/Users/randydodson/Documents/_code/git-fleet/app/desktop/src/views/AuthenticationSettings.tsx
+  49:16  warning  The ref value 'sequence.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sequence.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+✖ 1 problem (0 errors, 1 warning)
+
+ESLint found too many warnings (maximum: 0).

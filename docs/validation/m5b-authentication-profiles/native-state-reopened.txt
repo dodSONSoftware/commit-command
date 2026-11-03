@@ -1,0 +1,25 @@
+[
+  {
+    "discovery": {
+      "excluded_names": [
+        "node_modules",
+        ".venv",
+        "target",
+        "dist",
+        "build",
+        ".gitfleet-rust-lab"
+      ],
+      "excluded_patterns": []
+    },
+    "display_root": {
+      "encoding": "utf8",
+      "value": "/private/tmp/gitfleet-auth-profiles-e60zj5q6/workspace"
+    },
+    "id": "1459ebd0-9e60-44d2-a31c-2d25bab267bf",
+    "name": "Native authentication profiles",
+    "root": {
+      "encoding": "utf8",
+      "value": "/private/tmp/gitfleet-auth-profiles-e60zj5q6/workspace"
+    }
+  }
+]

@@ -32,7 +32,7 @@ fn tool_path<'a>(plan: &'a ObservationPlan, role: &str) -> Result<&'a NativePath
         .map(|t| &t.path)
         .ok_or_else(stale)
 }
-fn toolchain(
+pub(super) fn toolchain(
     options: &ReadOptions,
     ca: Option<&Path>,
     transport: &Transport,
@@ -312,8 +312,17 @@ impl ControlledWrites {
             remote,
             options,
         )?;
+        let (transport_options, authentication_profile) = crate::authentication::effective(
+            self.workspace.connection(),
+            &self.options.remote,
+            workspace,
+            &entry.id,
+            remote,
+            &resolved.url,
+            &resolved.transport,
+        )?;
         let local = if resolved.transport == Transport::Local {
-            Some(local_target(&root, &resolved.url, &self.options.remote)?)
+            Some(local_target(&root, &resolved.url, &transport_options)?)
         } else {
             None
         };
@@ -323,16 +332,16 @@ impl ControlledWrites {
         }
         let mut tools = toolchain(
             options,
-            self.options.remote.ca_file.as_deref(),
+            transport_options.ca_file.as_deref(),
             &resolved.transport,
         )?;
         if resolved.transport == Transport::Ssh {
             tools.extend(super::ssh_transport::bindings(
-                self.options.remote.ssh.as_ref(),
+                transport_options.ssh.as_ref(),
             )?);
         }
         let authentication = if resolved.transport == Transport::Https {
-            if let Some(policy) = self.options.remote.https_credentials.as_ref() {
+            if let Some(policy) = transport_options.https_credentials.as_ref() {
                 tools.extend(crate::credentials::bindings(policy)?);
                 Some(crate::credentials::scope(&resolved.url, &policy.account)?)
             } else {
@@ -365,6 +374,7 @@ impl ControlledWrites {
             local_target: local.as_deref().map(NativePath::from_path),
             local_binding,
             authentication,
+            authentication_profile,
         };
         Ok(plan)
     }
@@ -477,9 +487,21 @@ impl ControlledWrites {
         {
             return Err(stale());
         }
+        let (transport_options, profile) = crate::authentication::effective(
+            self.workspace.connection(),
+            &self.options.remote,
+            &plan.workspace,
+            &plan.worktree,
+            &plan.remote,
+            &resolved.url,
+            &resolved.transport,
+        )?;
+        if profile != plan.authentication_profile {
+            return Err(stale());
+        }
         if plan.transport == Transport::Ssh {
             super::ssh_transport::validate_destination(&resolved.url)?;
-            let current = super::ssh_transport::bindings(self.options.remote.ssh.as_ref())?;
+            let current = super::ssh_transport::bindings(transport_options.ssh.as_ref())?;
             let expected = plan
                 .tools
                 .iter()
@@ -491,9 +513,7 @@ impl ControlledWrites {
             }
         }
         if plan.transport == Transport::Https {
-            let actual = self
-                .options
-                .remote
+            let actual = transport_options
                 .https_credentials
                 .as_ref()
                 .map(|p| crate::credentials::scope(&resolved.url, &p.account))
@@ -501,7 +521,7 @@ impl ControlledWrites {
             if actual != plan.authentication {
                 return Err(stale());
             }
-            if let Some(policy) = self.options.remote.https_credentials.as_ref() {
+            if let Some(policy) = transport_options.https_credentials.as_ref() {
                 let expected = plan
                     .tools
                     .iter()

@@ -1,0 +1,6 @@
+
+> gitfleet-desktop@0.1.1 typecheck
+> tsc --noEmit
+
+src/views/AuthenticationSettings.tsx(63,50): error TS2551: Property 'value' does not exist on type 'string'. Did you mean 'valueOf'?
+src/views/AuthenticationSettings.tsx(63,80): error TS2551: Property 'value' does not exist on type 'string'. Did you mean 'valueOf'?

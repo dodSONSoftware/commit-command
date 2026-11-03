@@ -16,6 +16,7 @@ use std::{
 /// Trusted host policy. Renderer requests cannot set transport roots or CA files.
 #[derive(Debug, Clone, Default)]
 pub struct TransportOptions {
+    pub credential_bridge: Option<PathBuf>,
     pub local_fixture_root: Option<PathBuf>,
     pub ca_file: Option<PathBuf>,
     pub ssh: Option<SshPolicy>,

@@ -176,7 +176,8 @@ fn decode(payload: &str) -> Result<Envelope, String> {
 fn mutating_request(request: &Request) -> bool {
     matches!(
         request,
-        Request::ReviewTrust { .. }
+        Request::ReviewAuthentication { .. }
+            | Request::ReviewTrust { .. }
             | Request::ReviewBatch { .. }
             | Request::ReviewRemoteObservation { .. }
             | Request::ReviewFetchCapture { .. }
@@ -208,6 +209,7 @@ fn dispatch<R: tauri::Runtime>(
                 | Request::Update { .. }
                 | Request::Remove { .. }
                 | Request::Propose { .. }
+                | Request::ReviewAuthentication { .. }
                 | Request::ReviewTrust { .. }
                 | Request::ReviewBatch { .. }
                 | Request::ReviewRemoteObservation { .. }
@@ -846,6 +848,12 @@ mod tests {
     }
     #[test]
     fn bulk_review_uses_the_same_write_gate_as_individual_proposals() {
+        assert!(mutating_request(&Request::ReviewAuthentication {
+            change: gitfleet_core::authentication::Change::Delete {
+                id: "profile".into()
+            }
+        }));
+        assert!(!mutating_request(&Request::AuthenticationSettings {}));
         assert!(mutating_request(&Request::ReviewBatch {
             workspace: "w".into(),
             selections: Vec::new(),

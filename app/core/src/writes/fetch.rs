@@ -40,6 +40,12 @@ pub(super) fn check_artifact_budget(root: &Path, max_bytes: u64, max_entries: us
             } else if metadata.is_file() {
                 size = size.saturating_add(metadata.len());
             } else {
+                #[cfg(feature = "write-test-support")]
+                {
+                    // Disposable test-support builds retain exact entry/type evidence.
+                    use std::os::unix::fs::MetadataExt;
+                    eprintln!("ARTIFACT_DIAGNOSTIC path={:?} type={:?} mode={:o} inode={} links={} size={}", entry.path().strip_prefix(root).unwrap_or(&entry.path()),metadata.file_type(),metadata.mode(),metadata.ino(),metadata.nlink(),metadata.len());
+                }
                 return Err(unsupported("Unsafe fetch artifact type"));
             }
             if count > max_entries || size > max_bytes {

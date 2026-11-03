@@ -32,3 +32,6 @@ pub mod remote;
 
 #[cfg(feature = "application-services")]
 pub mod credentials;
+
+#[cfg(feature = "application-services")]
+pub mod authentication;

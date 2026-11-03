@@ -1,0 +1,18 @@
+{
+  "bundle": "/private/tmp/gitfleet-auth-profiles-e60zj5q6/GitFleet Profile Acceptance.app",
+  "binary_sha256": "79e9157586494e4a26cfa71fcd1268f8151ccf704974aaa85b426fb188b6a7a2",
+  "features": [
+    "custom-protocol",
+    "desktop-writes"
+  ],
+  "source_base": "9792942",
+  "startup": "--data-dir only; no helper/account/CA/SSH startup flags",
+  "form_input": "Native typed literal apostrophe retest passed after disabling correction/capitalization/spellcheck",
+  "ordinary_bundle": "/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri/target/debug/bundle/macos/GitFleet.app",
+  "ordinary_features": [
+    "custom-protocol"
+  ],
+  "ordinary_binary_sha256": "91b099c616ff6462ac52c6dfe8d3947936b4e8243bb7cc0736db7bc4f953fbf1",
+  "source_manifest_sha256": "fd3b9ece3d26009a4152e91b5b4517739d1a5282b70960d9d9b63a5e432aa4c6",
+  "native_source_manifest_sha256": "efdd0a69bef5662a9a215b39a9e2e32dbf34a72026acabc140c3501f7a7b0f34"
+}

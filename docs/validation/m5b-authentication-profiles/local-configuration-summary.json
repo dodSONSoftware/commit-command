@@ -1,0 +1,7 @@
+{
+  "global_helper_classes": [],
+  "ssh_agent_environment_present": false,
+  "git_executable": "/opt/homebrew/bin/git",
+  "private_server_contacted": false,
+  "credential_store_accessed": false
+}

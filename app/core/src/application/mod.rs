@@ -1,5 +1,6 @@
 //! Presentation-independent application/session boundary. No native UI or transport APIs.
 mod audit;
+mod authentication;
 pub use audit::{
     OperationAuditEntry, OperationAuditKind, OperationAuditPage, OperationAuditQuery,
     OperationAuditRecord, OperationAuditResult,
@@ -45,6 +46,10 @@ fn stale() -> Error {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Request {
+    AuthenticationSettings {},
+    ReviewAuthentication {
+        change: crate::authentication::Change,
+    },
     Graph {
         workspace: String,
         worktree: String,
@@ -249,6 +254,7 @@ pub struct OperationPage {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "kind", content = "value", rename_all = "snake_case")]
 pub enum Data {
+    AuthenticationSettings(crate::authentication::Settings),
     Graph(crate::graph::Page),
     Activity(exploration::ActivityReport),
     OperationAudit(OperationAuditPage),
@@ -651,6 +657,12 @@ impl Application {
                     &WorktreeId(worktree),
                     &self.read_options,
                 )?))
+            }
+            Request::AuthenticationSettings {} => {
+                Data::AuthenticationSettings(self.authentication_settings()?)
+            }
+            Request::ReviewAuthentication { change } => {
+                Data::Review(self.review_authentication(change)?)
             }
             Request::ReviewRemoteObservation {
                 workspace,

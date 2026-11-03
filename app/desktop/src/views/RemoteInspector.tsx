@@ -7,6 +7,7 @@ import type {
   PushPreview,
 } from "../services/response.generated";
 import { bytes, pathText } from "../stores/model";
+import { AuthenticationSettings } from "./AuthenticationSettings";
 import { ObservationRecords } from "./ObservationHistory";
 import { PushPreviewResult } from "./PushPreviewResult";
 import { FetchCaptureRecords } from "./FetchCaptureHistory";
@@ -35,6 +36,7 @@ export function RemoteInspector({
   } | null>(null);
   const previewSequence = useRef(0);
   const previewContext = `${workspace}:${worktree}:${revision ?? 0}`;
+  const [showAuthentication, setShowAuthentication] = useState(false);
   const [report, setReport] = useState<Inspection | null>(null);
   const [remote, setRemote] = useState("");
   const [reference, setReference] = useState("");
@@ -121,6 +123,26 @@ export function RemoteInspector({
       >
         Inspect remote destinations
       </button>
+      <button
+        disabled={busy}
+        onClick={() => setShowAuthentication((v) => !v)}
+        aria-expanded={showAuthentication}
+      >
+        Authentication profiles and assignments
+      </button>
+      {showAuthentication && (
+        <AuthenticationSettings
+          key={`${workspace}:${worktree}`}
+          bridge={bridge}
+          workspace={workspace}
+          worktree={worktree}
+          remotes={report?.remotes.map((r) => r.name) ?? []}
+          busy={busy}
+          enabled={enabled}
+          revision={revision}
+          act={act}
+        />
+      )}
       {report && (
         <>
           <p>

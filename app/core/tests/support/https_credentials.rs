@@ -6,7 +6,7 @@ use std::{
     time::{Duration, Instant},
 };
 const ACCOUNT: &str = "fixture's account";
-fn policy(t: &mut Test) -> String {
+pub(super) fn policy(t: &mut Test) -> String {
     let secret = format!("fixture-token-{}", uuid::Uuid::new_v4());
     let selected = t.f.root.join("helper policy's files");
     fs::create_dir(&selected).unwrap();
@@ -32,7 +32,7 @@ fn policy(t: &mut Test) -> String {
     reopen(t);
     secret
 }
-fn assert_private(t: &Test, secret: &str) {
+pub(super) fn assert_private(t: &Test, secret: &str) {
     fn base64(value: &[u8]) -> Vec<u8> {
         let alphabet = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
         let mut out = Vec::new();

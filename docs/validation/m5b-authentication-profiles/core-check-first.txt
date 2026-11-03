@@ -1,0 +1,16 @@
+    Checking gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+error[E0596]: cannot borrow `self.writes.workspace` as mutable, as it is behind a `&` reference
+  --> src/application/authentication.rs:12:20
+   |
+12 |         auth::load(self.writes.workspace.connection())
+   |                    ^^^^^^^^^^^^^^^^^^^^^ `self` is a `&` reference, so it cannot be borrowed as mutable
+   |
+help: consider changing this to be a mutable reference
+   |
+11 |     pub(super) fn authentication_settings(&mut self) -> Result<Settings> {
+   |                                            +++
+
+For more information about this error, try `rustc --explain E0596`.
+error: could not compile `gitfleet-core` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `gitfleet-core` (lib test) due to 1 previous error

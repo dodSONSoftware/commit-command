@@ -1,0 +1,65 @@
+{
+  "core": {
+    "final_full_gate_exit_code": 0,
+    "matrix": {
+      "default": {
+        "passed": 54,
+        "ignored": 1
+      },
+      "experimental-writes": {
+        "passed": 89,
+        "ignored": 2
+      },
+      "controlled-writes": {
+        "passed": 79,
+        "ignored": 1
+      },
+      "application-services": {
+        "passed": 179,
+        "ignored": 2
+      },
+      "all-features": {
+        "passed": 223,
+        "ignored": 6
+      }
+    },
+    "new_profile_tests": 6,
+    "application_transport_suite_passed": 48,
+    "all_feature_transport_suite_passed": 52,
+    "initial_full_gate_exit_code": 101,
+    "initial_failure": "Existing all-feature SSH offline import refused Unsafe fetch artifact type; root cause remains unknown",
+    "diagnostic_transport_rerun": {
+      "passed": 52,
+      "ignored": 2,
+      "offending_entry_captured": false
+    },
+    "diagnostics": "Retained only under disposable write-test-support; strict guard unchanged"
+  },
+  "desktop": {
+    "final_gate_exit_code": 0,
+    "renderer_passed": 54,
+    "native_host_passed_per_configuration": 13,
+    "new_renderer_cases": 3,
+    "native_path_correction": "Native smart-quote defect fixed and typed apostrophe retest passed"
+  },
+  "native": {
+    "app_startup": "--data-dir only; no authentication startup flags",
+    "decline": true,
+    "save_without_lookup": true,
+    "assign_without_lookup": true,
+    "profile_authenticated_observation": true,
+    "unassign_without_lookup": true,
+    "ordinary_restart_no_replay": true,
+    "ordinary_mutations_disabled": true,
+    "repository_remote_and_credential_store_preserved": true,
+    "user_credentials_or_private_server_accessed": false,
+    "cleanup": "All fixture processes exited and state reopened"
+  },
+  "limitations": [
+    "No actual Gitea or OS Keychain/helper interaction acceptance.",
+    "Manual path entry; friendly file/helper/agent selection remains follow-up.",
+    "Real unlock/sign-in/denied/locked-store/prompt-cancellation compatibility remains open.",
+    "Recurring artifact type refusal is not diagnosed by successful reruns.",
+    "Ordinary writes remain disabled."
+  ]
+}

@@ -71,6 +71,7 @@ fn setup_format(local: bool, sha256: bool) -> Test {
         global_config: Some(global),
         signer_home: Some(home),
         remote: TransportOptions {
+            credential_bridge: None,
             local_fixture_root: local.then(|| f.root.clone()),
             ca_file: None,
             ssh: None,
@@ -1371,6 +1372,7 @@ fn fetch_import_sigkill_before_and_after_publication_never_replays() {
             global_config: Some(root.join("global.config")),
             signer_home: Some(root.join("home")),
             remote: TransportOptions {
+                credential_bridge: None,
                 local_fixture_root: Some(root.clone()),
                 ca_file: None,
                 ssh: None,
@@ -2160,6 +2162,7 @@ fn upstream_sigkill_recovery_never_replays_and_removes_only_owned_config_lock() 
             global_config: Some(root.join("global.config")),
             signer_home: Some(root.join("home")),
             remote: TransportOptions {
+                credential_bridge: None,
                 local_fixture_root: Some(root.clone()),
                 ca_file: None,
                 ssh: None,
@@ -2397,3 +2400,6 @@ mod ssh_transport_tests;
 
 #[path = "support/https_credentials.rs"]
 mod https_credential_tests;
+
+#[path = "support/authentication_profiles.rs"]
+mod authentication_profiles;

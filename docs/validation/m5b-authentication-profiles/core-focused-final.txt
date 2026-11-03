@@ -1,0 +1,13 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.41s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-a5b0bae5745a2202)
+
+running 5 tests
+test authentication_profiles::profiles_require_native_approval_persist_and_are_not_implicitly_assigned ... ok
+test authentication_profiles::assigned_profile_refuses_destination_drift_and_requires_unassignment_before_delete ... ok
+test authentication_profiles::profile_and_remote_isolation_and_tool_drift_block_lookup ... ok
+test authentication_profiles::settings_review_refuses_changed_helper_or_destination_and_cancelled_application ... ok
+test authentication_profiles::explicitly_assigned_profile_authenticates_capture_without_host_credential_flags ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 42 filtered out; finished in 13.02s
+

@@ -314,3 +314,32 @@ mod ssh_transport;
 pub(crate) fn credential_fingerprint(path: &Path) -> Result<String> {
     adapter::program_fingerprint(path)
 }
+
+#[cfg(feature = "application-services")]
+pub(crate) fn authentication_tools(
+    options: &crate::remote::TransportOptions,
+    transport: &crate::remote::Transport,
+) -> Result<Vec<crate::remote::observation::ToolBinding>> {
+    let mut tools = remote::toolchain(
+        &ReadOptions::default(),
+        options.ca_file.as_deref(),
+        transport,
+    )?;
+    if *transport == crate::remote::Transport::Ssh {
+        tools.extend(ssh_transport::bindings(options.ssh.as_ref())?);
+    }
+    if let Some(policy) = &options.https_credentials {
+        tools.extend(crate::credentials::bindings(policy)?);
+    }
+    Ok(tools)
+}
+
+#[cfg(feature = "application-services")]
+impl ControlledWrites {
+    pub(crate) fn authentication_options(&self) -> crate::remote::TransportOptions {
+        self.options.remote.clone()
+    }
+    pub(crate) fn authentication_global_config(&self) -> Option<&Path> {
+        self.options.global_config.as_deref()
+    }
+}

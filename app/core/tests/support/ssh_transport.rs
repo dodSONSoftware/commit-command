@@ -415,3 +415,49 @@ fn ssh_server_failure_diagnostics_are_not_retained_in_results_or_journals() {
     assert!(!raw.contains("FIXTURE-SSH-SERVER-SECRET"));
     assert_eq!(before, tree_bytes(&t.f.repo));
 }
+
+#[test]
+fn reviewed_ssh_profile_assignment_works_without_host_ssh_flags() {
+    use gitfleet_core::authentication::{Change, ProfilePolicy};
+    let mut t = setup(false);
+    let _s = server(&mut t);
+    let policy = t.options.remote.ssh.take().unwrap();
+    reopen(&mut t);
+    let r = super::authentication_profiles::change(
+        &mut t,
+        Change::Save {
+            id: None,
+            name: "Gitea SSH".into(),
+            policy: ProfilePolicy::Ssh {
+                known_hosts: policy.known_hosts.to_str().unwrap().into(),
+                public_identity: policy.public_identity.to_str().unwrap().into(),
+                agent_socket: policy.agent_socket.to_str().unwrap().into(),
+            },
+        },
+    );
+    super::authentication_profiles::apply(&mut t, &r, true).unwrap();
+    let id = super::authentication_profiles::settings(&mut t).profiles[0]
+        .id
+        .clone();
+    let change = Change::Assign {
+        workspace: t.workspace.clone(),
+        worktree: t.worktree.clone(),
+        remote: "origin".into(),
+        profile: Some(id),
+    };
+    let r = super::authentication_profiles::change(&mut t, change);
+    super::authentication_profiles::apply(&mut t, &r, true).unwrap();
+    trust(&mut t);
+    let before = tree_bytes(&t.f.repo);
+    let r = remote_review(&mut t);
+    assert!(r.summary.contains("Authentication profile: Gitea SSH"));
+    assert!(r.summary.contains("externally"));
+    let result = confirm(&mut t, &r, Cancellation::default());
+    assert_eq!(
+        result.phase,
+        ObservationPhase::Complete,
+        "{:?}",
+        result.issue
+    );
+    assert_eq!(before, tree_bytes(&t.f.repo));
+}

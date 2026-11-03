@@ -1,0 +1,9 @@
+{
+  "client_processes_exited": true,
+  "exact_fixture_server_sent_sigterm": 36753,
+  "state_reopened": true,
+  "generated_credentials": "Protected disposable fixture only; not saved in evidence",
+  "ordinary_controls_observed_disabled": true,
+  "native_literal_apostrophe_path_retest_passed": true,
+  "all_fixture_processes_exited": true
+}

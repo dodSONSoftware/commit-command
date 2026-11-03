@@ -6,6 +6,11 @@
  */
 export type Data =
   | {
+      kind: "authentication_settings";
+      value: Settings;
+      [k: string]: unknown;
+    }
+  | {
       kind: "graph";
       value: Page;
       [k: string]: unknown;
@@ -117,6 +122,45 @@ export type Data =
     }
   | {
       kind: "done";
+      [k: string]: unknown;
+    };
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ProfilePolicy".
+ */
+export type ProfilePolicy =
+  | {
+      account: string;
+      ca_file?: string | null;
+      helper: string;
+      kind: "https";
+    }
+  | {
+      agent_socket: string;
+      kind: "ssh";
+      known_hosts: string;
+      public_identity: string;
+    };
+/**
+ * `display` is never used to reconstruct a path. Byte/wide encodings round-trip.
+ *
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "NativePath".
+ */
+export type NativePath =
+  | {
+      encoding: "utf8";
+      value: string;
+      [k: string]: unknown;
+    }
+  | {
+      encoding: "unix_bytes";
+      value: number[];
+      [k: string]: unknown;
+    }
+  | {
+      encoding: "windows_wide";
+      value: number[];
       [k: string]: unknown;
     };
 /**
@@ -243,28 +287,6 @@ export type Phase =
   | "published_with_post_processing_failure"
   | "needs_manual_reconciliation"
   | "uncertain_outcome";
-/**
- * `display` is never used to reconstruct a path. Byte/wide encodings round-trip.
- *
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "NativePath".
- */
-export type NativePath =
-  | {
-      encoding: "utf8";
-      value: string;
-      [k: string]: unknown;
-    }
-  | {
-      encoding: "unix_bytes";
-      value: number[];
-      [k: string]: unknown;
-    }
-  | {
-      encoding: "windows_wide";
-      value: number[];
-      [k: string]: unknown;
-    };
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "BatchPhase".
@@ -408,6 +430,46 @@ export interface Response {
   data: Data;
   epoch: number;
   version: number;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "Settings".
+ */
+export interface Settings {
+  assignments: Assignment[];
+  profiles: Profile[];
+  revision: string;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "Assignment".
+ */
+export interface Assignment {
+  destination: string;
+  profile: string;
+  remote: string;
+  workspace: string;
+  worktree: string;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "Profile".
+ */
+export interface Profile {
+  id: string;
+  name: string;
+  policy: ProfilePolicy;
+  tools: ToolBinding[];
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ToolBinding".
+ */
+export interface ToolBinding {
+  fingerprint: string;
+  path: NativePath;
+  role: string;
   [k: string]: unknown;
 }
 /**
@@ -643,6 +705,7 @@ export interface Observation {
  */
 export interface ObservationPlan {
   authentication?: HelperScope | null;
+  authentication_profile?: ProfileBinding | null;
   config_digest: string;
   created_at_ms: number;
   destination: string;
@@ -670,6 +733,15 @@ export interface HelperScope {
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ProfileBinding".
+ */
+export interface ProfileBinding {
+  id: string;
+  name: string;
+  revision: string;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "Metadata".
  */
 export interface Metadata {
@@ -680,16 +752,6 @@ export interface Metadata {
   object_format: ObjectFormat;
   root: NativePath;
   root_binding: string;
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "ToolBinding".
- */
-export interface ToolBinding {
-  fingerprint: string;
-  path: NativePath;
-  role: string;
   [k: string]: unknown;
 }
 /**
@@ -721,6 +783,7 @@ export interface FetchArtifact {
  */
 export interface FetchCapturePlan {
   authentication?: HelperScope | null;
+  authentication_profile?: ProfileBinding | null;
   config_digest: string;
   created_at_ms: number;
   destination: string;
@@ -757,6 +820,7 @@ export interface FetchImport {
  */
 export interface FetchImportPlan {
   authentication?: HelperScope | null;
+  authentication_profile?: ProfileBinding | null;
   bundle_bytes: number;
   bundle_digest: string;
   capture_id: string;
@@ -796,6 +860,7 @@ export interface UpstreamOperation {
  */
 export interface UpstreamPlan {
   authentication?: HelperScope | null;
+  authentication_profile?: ProfileBinding | null;
   candidate_digest: string;
   config_digest: string;
   created_at_ms: number;

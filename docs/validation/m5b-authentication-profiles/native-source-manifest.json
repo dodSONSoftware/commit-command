@@ -1,0 +1,27 @@
+{
+  "base": "9792942",
+  "files": {
+    "app/core/src/application/authentication.rs": "0d16320d40f3c06ef71808ef48816bfb029a654463eb77193b6afb50a00414d7",
+    "app/core/src/application/mod.rs": "2378d2490dc3c15c88ea947b4bdcdd34696dab88280a4ee29fe7fbd02df76f92",
+    "app/core/src/application/review.rs": "cec6fa3138be3b944f651c9cc73667f7cdb6577bc21b6d69f28428efbfec62b9",
+    "app/core/src/authentication.rs": "574b12fcf1c341c11fdf9a104405939c1dde658e14dfba7b6a1c79898a8e98bd",
+    "app/core/src/lib.rs": "5a7113222278f698d5a9191148f03fc1017038c09cacd21ee1eae5ed19ddbf13",
+    "app/core/src/remote.rs": "1208a04c18bc1022f627e2c5fd224e9e1f75f2c312b7c09f9bc83a5250d01f6f",
+    "app/core/src/remote/observation.rs": "1ed90468395d91b771b5408bfd590c869523d69bb46d04547c5bf00a110101cd",
+    "app/core/src/writes/fetch.rs": "72834721db19f7b11bf0c5642d66443ee0960beed845c31c487df42202a1ba43",
+    "app/core/src/writes/mod.rs": "e74c3eafb983a2a544218276229fb9b44a4db800e47f189eb5637505783229a1",
+    "app/core/src/writes/remote.rs": "2e6c41a2f117dbb526ac73ba570b1f5d84eca1b29c65ee3e74f1f589a3b74648",
+    "app/core/tests/remote_observation.rs": "e615b7b054cbf846c00cd6d1b86459a547243d6f25a4d26fdaff30298b115680",
+    "app/core/tests/support/authentication_profiles.rs": "2779d199a6a41cbb75c27326cc17297e8586ef8709055db131893c14b5118fba",
+    "app/core/tests/support/https_credentials.rs": "96e6a7cb1149cbdccc64160b2b0c6cb6f9ef9edb89b7998278d530ca0f907c4c",
+    "app/core/tests/support/ssh_transport.rs": "c685d09c5545d61fa89bf44f556ad72ae673033f796843d380a5b9d5ed8c1ef8",
+    "app/desktop/src-tauri/src/host_options.rs": "c2c3c6fbebf7e95c04c3747c70863c837138e7b150659ee72c90e6d06bcd312a",
+    "app/desktop/src-tauri/src/main.rs": "1d63dbf998f76f0952330520e19ae639a0c33ac0653dc7a20cb6d418620469ae",
+    "app/desktop/src/services/request.generated.ts": "cb80fbdc35946b3902f74992ac4408de57000fb0cd109fe13fbf158a2f6e376d",
+    "app/desktop/src/services/response.generated.ts": "6ed4f978b429115f87d6a414584c883081f06b6ac626fd64c11bf9c570c2fbe2",
+    "app/desktop/src/views/AuthenticationSettings.test.tsx": "1ef825c0af86f0c1a8091432e38f110383f1db405bf2cecab34884811452c090",
+    "app/desktop/src/views/AuthenticationSettings.tsx": "d45d417b267a3234d3061dab5e5c2146bb72cd15536d715498eb08022558732a",
+    "app/desktop/src/views/RemoteInspector.tsx": "ec32680b6e60cf70fef97d1c9e783703d3f7deca79019ea2d4546a494e037d29"
+  },
+  "note": "Native opt-in acceptance artifact predates only test-support-only artifact diagnostics; final ordinary artifact includes final source. All production profile/settings logic and exact-path form correction are in the native artifact."
+}

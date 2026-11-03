@@ -1,0 +1,84 @@
+{
+  "review_id": "16d0c00a-2756-4a2e-a786-437fa14b74f4",
+  "repository_id": "251c52fb-1b51-4464-b8be-d4d2faf0d393",
+  "worktree_id": "24e170ec-cad7-48e5-bf2e-8de9e1736667",
+  "metadata": {
+    "root": {
+      "encoding": "utf8",
+      "value": "/private/tmp/gitfleet-auth-profiles-e60zj5q6/workspace/repository"
+    },
+    "git_dir": {
+      "encoding": "utf8",
+      "value": "/private/tmp/gitfleet-auth-profiles-e60zj5q6/workspace/repository/.git"
+    },
+    "common_dir": {
+      "encoding": "utf8",
+      "value": "/private/tmp/gitfleet-auth-profiles-e60zj5q6/workspace/repository/.git"
+    },
+    "root_binding": "16777229:49863489:Some(SystemTime { tv_sec: 1793671263, tv_nsec: 156774117 })",
+    "git_binding": "16777229:49863495:Some(SystemTime { tv_sec: 1793671263, tv_nsec: 161943738 })",
+    "common_binding": "16777229:49863495:Some(SystemTime { tv_sec: 1793671263, tv_nsec: 161943738 })",
+    "object_format": "sha1"
+  },
+  "binding": "eb0b7b69b18aec684fd82600ff1c4d91ecc49714b712a3dc9c1701f19bcfd0d3",
+  "hooks": [],
+  "signing": null,
+  "config_hash": "1028e704ccb3004139c9df8211a4e7da1265c185a09e451021711d830e9e72b0",
+  "config_origins": [
+    [
+      102,
+      105,
+      108,
+      101,
+      58,
+      47,
+      111,
+      112,
+      116,
+      47,
+      104,
+      111,
+      109,
+      101,
+      98,
+      114,
+      101,
+      119,
+      47,
+      101,
+      116,
+      99,
+      47,
+      103,
+      105,
+      116,
+      99,
+      111,
+      110,
+      102,
+      105,
+      103
+    ],
+    [
+      102,
+      105,
+      108,
+      101,
+      58,
+      46,
+      103,
+      105,
+      116,
+      47,
+      99,
+      111,
+      110,
+      102,
+      105,
+      103
+    ]
+  ],
+  "signer_home": null,
+  "digest": "1fe5e9204cd7c9ca0c5e2eef047e6b23ac696baa88cf4765e21c9d242f63fddd"
+}
+Trust permits scoped writes and execution of reviewed local tools/hooks, which are not sandboxed. Type APPROVE: {"trusted":true}

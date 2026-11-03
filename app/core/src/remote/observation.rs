@@ -26,6 +26,8 @@ pub struct ObservationPlan {
     pub local_binding: Option<String>,
     #[serde(default)]
     pub authentication: Option<crate::credentials::HelperScope>,
+    #[serde(default)]
+    pub authentication_profile: Option<crate::authentication::ProfileBinding>,
 }
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "snake_case")]

@@ -9,6 +9,7 @@ pub struct ReviewDisplay {
     pub content: String,
 }
 pub(super) enum Action {
+    Authentication(Box<super::authentication::SettingsPlan>),
     Trust {
         workspace: WorkspaceId,
         reviews: Vec<TrustReview>,
@@ -127,6 +128,11 @@ impl Application {
     pub(super) fn set_review(&mut self, action: Action) -> Result<ReviewDisplay> {
         let id = Uuid::new_v4().to_string();
         let (title, summary, content) = match &action {
+            Action::Authentication(plan) => (
+                "Review authentication settings".into(),
+                format!("Requested change:\n{}\nSave the exact nonsecret profiles and remote assignments below. Selected helpers run unsandboxed as your user and may prompt during separately approved operations. Saving settings does not call a credential helper, contact a server, trust a repository or approve any network operation. Unknown or changed SSH host keys stop execution; verify and update known_hosts externally. Any settings revision invalidates outstanding authenticated network reviews.",plan.description),
+                serde_json::to_string_pretty(plan)?,
+            ),
             Action::Write(p) => self.describe_write(p)?,
             Action::Batch(record) => self.describe_batch(record)?,
             Action::UpstreamSetup(plan)=>(
@@ -260,6 +266,7 @@ impl Application {
             ));
         }
         let result = match p.action {
+            Action::Authentication(plan) => self.apply_authentication(*plan, cancellation)?,
             Action::UpstreamSetup(plan) => {
                 self.active(&plan.transport.workspace.0)?;
                 self.entry(&plan.transport.workspace.0, &plan.transport.worktree.0)?;
@@ -335,6 +342,19 @@ impl Application {
 }
 
 fn transport_summary(plan: &crate::remote::observation::ObservationPlan) -> String {
+    let profile = plan
+        .authentication_profile
+        .as_ref()
+        .map(|p| {
+            format!(
+                "Authentication profile: {} · {} · settings revision {}\n",
+                p.name, p.id, p.revision
+            )
+        })
+        .unwrap_or_default();
+    format!("{profile}{}", transport_policy_summary(plan))
+}
+fn transport_policy_summary(plan: &crate::remote::observation::ObservationPlan) -> String {
     if plan.transport == crate::remote::Transport::Ssh {
         let bindings = plan
             .tools
@@ -343,7 +363,7 @@ fn transport_summary(plan: &crate::remote::observation::ObservationPlan) -> Stri
             .map(|b| format!("{}: {:?} · {}", b.role, b.path, b.fingerprint))
             .collect::<Vec<_>>()
             .join("\n");
-        format!("SSH authenticates only the reviewed public identity through the selected agent. Strict known-hosts verification is required; no password/keychain fallback, private-key loading, forwarding or host-key writes.\n{bindings}")
+        format!("SSH authenticates only the reviewed public identity through the selected agent. Strict known-hosts verification is required; unknown or changed keys stop execution. Verify and update known_hosts externally; no password/keychain fallback, private-key loading, forwarding or host-key writes.\n{bindings}")
     } else if let Some(scope) = &plan.authentication {
         let helper = plan
             .tools

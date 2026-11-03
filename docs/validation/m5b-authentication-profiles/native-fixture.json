@@ -1,0 +1,18 @@
+{
+  "root": "/private/tmp/gitfleet-auth-profiles-e60zj5q6",
+  "home": "/private/tmp/gitfleet-auth-profiles-e60zj5q6/home",
+  "state": "/private/tmp/gitfleet-auth-profiles-e60zj5q6/state",
+  "repository": "/private/tmp/gitfleet-auth-profiles-e60zj5q6/workspace/repository",
+  "remote_repository": "/private/tmp/gitfleet-auth-profiles-e60zj5q6/remote.git",
+  "workspace": "1459ebd0-9e60-44d2-a31c-2d25bab267bf",
+  "worktree": "24e170ec-cad7-48e5-bf2e-8de9e1736667",
+  "baseline_oid": "cadb7b5e702e60984b0159911535275de63d2909",
+  "target_oid": "711421fa37089207d0001d9f60e56695526be7ff",
+  "url": "https://127.0.0.1:64168/repo.git",
+  "ca_file": "/private/tmp/gitfleet-auth-profiles-e60zj5q6/certificate.pem",
+  "helper": "/private/tmp/gitfleet-auth-profiles-e60zj5q6/helper policy's files/credential helper.py",
+  "account": "fixture-account@example.invalid",
+  "server_pid": 36753,
+  "bundle": "/private/tmp/gitfleet-auth-profiles-e60zj5q6/GitFleet Profile Acceptance.app",
+  "provenance": "Only generated disposable credentials/CA/repos; CLI fixture trust; zero network-operation records seeded; actual authentication and publication require native approval."
+}

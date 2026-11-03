@@ -68,6 +68,8 @@ pub fn parse(
                     .into(),
             ),
         };
+    options.remote.credential_bridge =
+        Some(std::env::current_exe().map_err(|_| "Credential bridge executable unavailable")?);
     options.remote.ca_file = ca;
     options.remote.https_credentials = match (helper, account) {
         (None, None) => None,

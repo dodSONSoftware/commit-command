@@ -1,0 +1,25 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.28s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-a5b0bae5745a2202)
+
+running 4 tests
+test authentication_profiles::profiles_require_native_approval_persist_and_are_not_implicitly_assigned ... ok
+test authentication_profiles::assigned_profile_refuses_destination_drift_and_requires_unassignment_before_delete ... ok
+test authentication_profiles::settings_review_refuses_changed_helper_or_destination_and_cancelled_application ... ok
+test authentication_profiles::explicitly_assigned_profile_authenticates_capture_without_host_credential_flags ... FAILED
+
+failures:
+
+---- authentication_profiles::explicitly_assigned_profile_authenticates_capture_without_host_credential_flags stdout ----
+
+thread 'authentication_profiles::explicitly_assigned_profile_authenticates_capture_without_host_credential_flags' (18166847) panicked at tests/support/authentication_profiles.rs:160:10:
+called `Result::unwrap_err()` on an `Ok` value: Response { version: 1, epoch: 1, data: Review(ReviewDisplay { id: "65a958ce-82fb-4af2-8c70-0a5c67f3929a", epoch: 1, expires_at_ms: 1793671726984, title: "Review branch download for fetch", summary: "Download refs/heads/main on remote origin from https://127.0.0.1:64102/repo.git.\nExpected observed commit: 4221508abd057f61b1c7b038577b6b8b1ae92f9f\nThe downloaded branch must still match that exact commit.\nObjects stay in isolated app storage. This does not update this checkout, tracking refs, index, working files, tags or upstreams. Import requires a separate review.\nHTTPS verifies certificates and hostnames against the reviewed trust source and rejects redirects. No credentials or credential helpers are used.\nManaged credential helpers, proxy, SSH commands, hooks and submodule recursion are disabled.\nLimits: 10,000 objects, 64 MiB uncompressed/bundle, 128 MiB polled artifact budget and the bounded process deadline.", content: "{\n  \"id\": \"7e171ec1-f52a-461e-b4c4-c8a5c6f83994\",\n  \"workspace\": \"eafa9243-c711-44e7-9ccd-0bb412deee1d\",\n  \"worktree\": \"0f9a4f86-c9d8-444e-95e3-3ca35e4b8103\",\n  \"metadata\": {\n    \"root\": {\n      \"encoding\": \"utf8\",\n      \"value\": \"/private/var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-m0-95347-1793671115865273000-2/repo\"\n    },\n    \"git_dir\": {\n      \"encoding\": \"utf8\",\n      \"value\": \"/private/var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-m0-95347-1793671115865273000-2/repo/.git\"\n    },\n    \"common_dir\": {\n      \"encoding\": \"utf8\",\n      \"value\": \"/private/var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-m0-95347-1793671115865273000-2/repo/.git\"\n    },\n    \"root_binding\": \"16777229:49835770:Some(SystemTime { tv_sec: 1793671115, tv_nsec: 865526788 })\",\n    \"git_binding\": \"16777229:49835774:Some(SystemTime { tv_sec: 1793671115, tv_nsec: 873411887 })\",\n    \"common_binding\": \"16777229:49835774:Some(SystemTime { tv_sec: 1793671115, tv_nsec: 873411887 })\",\n    \"object_format\": \"sha1\"\n  },\n  \"remote\": \"origin\",\n  \"reference\": \"refs/heads/main\",\n  \"destination\": \"https://127.0.0.1:64102/repo.git\",\n  \"transport\": \"https\",\n  \"config_digest\": \"d000f83e118e637fa9cee41397c7ba3b428d36d80718850b89674c2753a0c14b\",\n  \"generation\": \"fd79620789ffd2c7dd745f0e9c75430e01831ba9319457658b2c25c616ef9863\",\n  \"created_at_ms\": 1793671126969,\n  \"tools\": [\n    {\n      \"role\": \"git\",\n      \"path\": {\n        \"encoding\": \"utf8\",\n        \"value\": \"/opt/homebrew/Cellar/git/2.56.0_1/bin/git\"\n      },\n      \"fingerprint\": \"70feb0465f5896154abd7405231483f4b0cd99e3855fcc4d86e08b66869d1007\"\n    },\n    {\n      \"role\": \"https_helper\",\n      \"path\": {\n        \"encoding\": \"utf8\",\n        \"value\": \"/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-remote-https\"\n      },\n      \"fingerprint\": \"ea516f1cfced38527ec4d627d6843c84f4960252ce78adaa87b35e2bd2bd2ddb\"\n    },\n    {\n      \"role\": \"exec_directory\",\n      \"path\": {\n        \"encoding\": \"utf8\",\n        \"value\": \"/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core\"\n      },\n      \"fingerprint\": \"16777229:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })\"\n    }\n  ],\n  \"local_target\": null,\n  \"local_binding\": null,\n  \"authentication\": null,\n  \"authentication_profile\": null,\n  \"observation_id\": \"49571d80-34e3-44c9-98ee-f59f7180086f\",\n  \"expected_oid\": {\n    \"format\": \"sha1\",\n    \"hex\": \"4221508abd057f61b1c7b038577b6b8b1ae92f9f\"\n  }\n}" }) }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    authentication_profiles::explicitly_assigned_profile_authenticates_capture_without_host_credential_flags
+
+test result: FAILED. 3 passed; 1 failed; 0 ignored; 0 measured; 42 filtered out; finished in 11.13s
+
+error: test failed, to rerun pass `--test remote_observation`

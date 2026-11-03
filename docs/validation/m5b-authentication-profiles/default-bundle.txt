@@ -1,0 +1,1 @@
+/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri/target/debug/bundle/macos/GitFleet.app
