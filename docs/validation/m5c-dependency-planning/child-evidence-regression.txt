@@ -1,0 +1,15 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-a5b0bae5745a2202)
+
+running 8 tests
+test child_evidence::historical_mappings_refuse_ambiguity_unsafe_relative_urls_secrets_and_nonregular_blobs ... ok
+test child_evidence::historical_mapping_contexts_are_bounded_without_partial_success ... ok
+test child_evidence::historical_mappings_keep_url_changes_and_ignore_working_files_and_includes ... ok
+test child_evidence::child_evidence_rejects_historical_destination_mismatch ... ok
+test child_evidence::real_agent_authenticated_child_evidence_resolves_relative_ssh_mapping_without_new_contact ... ok
+test child_evidence::child_evidence_rejects_mismatches_expiry_missing_objects_config_drift_and_cancellation ... ok
+test child_evidence::relative_child_mapping_uses_selected_parent_destination_and_proves_observed_ancestry ... ok
+test child_evidence::selected_child_observation_proves_only_actual_ancestry_and_preserves_all_repositories ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 64 filtered out; finished in 30.48s
+

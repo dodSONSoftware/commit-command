@@ -1,0 +1,85 @@
+{
+  "date": "2026-11-03",
+  "core_full_gate": {
+    "status": "passed",
+    "log": "core-validation-final.txt",
+    "configurations": [
+      {
+        "configuration": "default",
+        "passed": 54,
+        "failed": 0,
+        "ignored": 1
+      },
+      {
+        "configuration": "experimental-writes",
+        "passed": 89,
+        "failed": 0,
+        "ignored": 2
+      },
+      {
+        "configuration": "controlled-writes",
+        "passed": 79,
+        "failed": 0,
+        "ignored": 1
+      },
+      {
+        "configuration": "application-services",
+        "passed": 208,
+        "failed": 0,
+        "ignored": 4
+      },
+      {
+        "configuration": "all-features",
+        "passed": 252,
+        "failed": 0,
+        "ignored": 8
+      }
+    ],
+    "lab": {
+      "passed": 23,
+      "skipped": 1
+    }
+  },
+  "desktop_full_gate": {
+    "status": "passed",
+    "renderer_tests": 63,
+    "native_host_tests_per_configuration": 13,
+    "configurations": [
+      "default",
+      "all-features"
+    ],
+    "checks": [
+      "typecheck",
+      "lint",
+      "contracts",
+      "format",
+      "renderer build",
+      "native builds",
+      "strict Clippy",
+      "release build"
+    ],
+    "log": "desktop-validation-final.txt"
+  },
+  "focused": {
+    "planner_integration_tests": 7,
+    "graph_unit_tests": 2,
+    "existing_child_evidence_regression_tests": 8,
+    "planner_renderer_tests": 3
+  },
+  "retained_initial_failures": {
+    "logs": [
+      "core-focused.txt",
+      "core-focused-final.txt"
+    ],
+    "cause": "test SQLite integer extraction requested unsigned u64; corrected to i64; subsequent focused and complete gates passed"
+  },
+  "native_planner_acceptance": "not run; pending fresh disposable three-level acceptance",
+  "source_manifest": "source-manifest.json",
+  "network_or_push_authority_added": false,
+  "push_performed": false,
+  "ordinary_writes_enabled": false,
+  "unrelated_work_preserved": [
+    "local commit 6ebadb9",
+    "untracked LICENSE (excluded from checkpoint)"
+  ]
+}

@@ -939,6 +939,10 @@ mod tests {
                 "child_worktree":"child", "child_observation":"child-observation"
             }
         })).unwrap()));
+        assert!(!mutating_request(&Request::PushDependencyPlan {
+            workspace: "w".into(),
+            selections: Vec::new()
+        }));
         assert!(!mutating_request(&Request::FetchImports {
             workspace: "w".into(),
             offset: 0

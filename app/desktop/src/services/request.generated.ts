@@ -98,6 +98,11 @@ export type Request =
       worktree: string;
     }
   | {
+      kind: "push_dependency_plan";
+      selections: PushPlanningSelection[];
+      workspace: string;
+    }
+  | {
       kind: "review_fetch_capture";
       observation: string;
       workspace: string;
@@ -433,6 +438,15 @@ export interface ChildReachabilitySelection {
   path: number[];
   source_oid: ObjectId;
   [k: string]: unknown;
+}
+/**
+ * Explicit planning selection. Nothing in this request authorizes publication.
+ */
+export interface PushPlanningSelection {
+  children: ChildReachabilitySelection[];
+  observation: string;
+  source_oid: ObjectId;
+  worktree: string;
 }
 export interface DiscoveryOptions {
   excluded_names: string[];

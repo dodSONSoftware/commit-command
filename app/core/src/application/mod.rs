@@ -122,6 +122,10 @@ pub enum Request {
         worktree: String,
         selection: crate::remote::push::ChildReachabilitySelection,
     },
+    PushDependencyPlan {
+        workspace: String,
+        selections: Vec<crate::remote::push::PushPlanningSelection>,
+    },
     ReviewFetchCapture {
         workspace: String,
         worktree: String,
@@ -273,6 +277,7 @@ pub enum Data {
     FetchCaptures(crate::remote::fetch::FetchCapturePage),
     PushPreview(crate::remote::push::PushPreview),
     ChildReachability(Box<crate::remote::push::ChildReachability>),
+    PushDependencyPlan(crate::remote::push::PushDependencyPlan),
     FetchImports(crate::remote::fetch::FetchImportPage),
     Workspaces(WorkspaceList),
     Inventory(InventoryView),
@@ -727,6 +732,36 @@ impl Application {
                 let review = self.writes.inspect_upstream_recovery(&id, &operation)?;
                 self.entry(&workspace, &review.operation.plan.transport.worktree.0)?;
                 Data::Review(self.set_review(review::Action::UpstreamRecovery(Box::new(review)))?)
+            }
+            Request::PushDependencyPlan {
+                workspace,
+                selections,
+            } => {
+                if selections.is_empty()
+                    || selections.len() > 32
+                    || selections.iter().map(|s| s.children.len()).sum::<usize>() > 256
+                {
+                    return Err(invalid(
+                        "Choose 1–32 worktrees and at most 256 child bindings",
+                    ));
+                }
+                let id = self.active(&workspace)?;
+                let mut entries = std::collections::BTreeMap::new();
+                for selection in &selections {
+                    for worktree in std::iter::once(&selection.worktree)
+                        .chain(selection.children.iter().map(|c| &c.child_worktree))
+                    {
+                        if !entries.contains_key(worktree) {
+                            entries.insert(worktree.clone(), self.entry(&workspace, worktree)?);
+                        }
+                    }
+                }
+                let mut options = self.read_options.clone();
+                options.timeout = Duration::from_secs(60);
+                Data::PushDependencyPlan(
+                    self.writes
+                        .push_dependency_plan(&id, &entries, selections, &options)?,
+                )
             }
             Request::ChildReachability {
                 workspace,

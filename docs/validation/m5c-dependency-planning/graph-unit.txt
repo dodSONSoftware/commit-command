@@ -1,0 +1,10 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.79s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-9096797290332d67)
+
+running 2 tests
+test writes::push_dependencies::tests::stable_order_visits_only_selected_nodes_children_first ... ok
+test writes::push_dependencies::tests::cycle_witness_excludes_acyclic_dependents_and_independent_nodes ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 20 filtered out; finished in 0.00s
+

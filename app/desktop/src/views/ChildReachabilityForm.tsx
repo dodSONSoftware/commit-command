@@ -14,6 +14,7 @@ export function ChildReachabilityForm({
   preview,
   busy,
   act,
+  onEvidence,
 }: {
   bridge: Bridge;
   workspace: string;
@@ -21,6 +22,7 @@ export function ChildReachabilityForm({
   preview: PushPreview;
   busy: boolean;
   act: (action: () => Promise<void>) => Promise<void>;
+  onEvidence?: (evidence: ChildReachability) => void;
 }) {
   const [entries, setEntries] = useState<StoredWorktree[]>([]);
   const [child, setChild] = useState("");
@@ -182,6 +184,11 @@ export function ChildReachabilityForm({
           {new Date(result.child_observed_at_ms).toISOString()}. This result
           grants no push authority and must be revalidated before execution.
         </p>
+      )}
+      {result && onEvidence && (
+        <button disabled={busy} onClick={() => onEvidence(result)}>
+          Use checked child selection for planning
+        </button>
       )}
     </section>
   );

@@ -1,0 +1,25 @@
+{
+  "base_commit": "6ebadb9bc25d434a0214f55ea3651adda6bcdbdc",
+  "source_sha256": {
+    "app/core/src/application/mod.rs": "123778c32d8dd8fd7eb7e395bbccb9cda06ebc422eaac3f84d7b38be21624877",
+    "app/core/src/remote/push.rs": "374b0efdf34ae8541b52053b282f9fa590e24b894213ff30c89ebc95ca84371c",
+    "app/core/src/writes/child_reachability.rs": "2162ab10b8a1caca9011d5b528a9bffa393e5711a668d8553e5f4f4d5d13379a",
+    "app/core/src/writes/mod.rs": "df4fec46c84da93c0715523dab15086ae67112b4f45b12d675079584ee14379d",
+    "app/core/src/writes/push_dependencies.rs": "0d257fc295e3b7403530ee61afe1c7315f94f08321e313ee635a2feba4649934",
+    "app/core/tests/remote_observation.rs": "0ac64db6bb65e8a94f9ddfe6bd417f1db95379871f99a1ba4b6172685f32abf6",
+    "app/core/tests/support/child_evidence.rs": "1739f3bc7e2de1b66cba3c5efadf3f7d4156309f3e626158b9a517306d45c55d",
+    "app/core/tests/support/push_dependencies.rs": "a8ea2adbd62b43777697db03d11342354936479e912d958324cf229d248fb722",
+    "app/desktop/src-tauri/src/main.rs": "2865056ab3bbd9877f706ab100e86a4e98f0f92dc9db2e43e55e4729ee63560a",
+    "app/desktop/src/services/request.generated.ts": "06dd6f931d201c556d258ec8b9fed433e921c0b3ae6248cde4a75a7f9d256904",
+    "app/desktop/src/services/response.generated.ts": "a61dd969b0ee9f745078116f8a038011624c981f9c87235f8f2ee19ce15bd2a5",
+    "app/desktop/src/views/App.tsx": "91b8085207962e1348c1b3ef9218c1dd49debb2e8036b8e891cc1373a12043eb",
+    "app/desktop/src/views/ChildReachabilityForm.tsx": "2e93f3ddcc7f349628f3a63c4c519443172eba6dfb2fc0c6a3fa6f9a92de6353",
+    "app/desktop/src/views/PushDependencyPlanner.test.tsx": "6e26a72bc387979ca2f89b7a1db838e83e44913a6a5013f05693c7b7d812d335",
+    "app/desktop/src/views/PushDependencyPlanner.tsx": "c0523cb797a762e3f4053d04b68d43f9abb621aeb6edef6aa05acf246a811b73"
+  },
+  "native_planner_acceptance": "not run",
+  "unrelated_untracked_preserved": [
+    "LICENSE"
+  ],
+  "push_performed": false
+}

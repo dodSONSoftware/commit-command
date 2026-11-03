@@ -2739,3 +2739,6 @@ fn local_push_preview_refuses_excessive_distinct_history_trees() {
 
 #[path = "support/child_evidence.rs"]
 mod child_evidence;
+
+#[path = "support/push_dependencies.rs"]
+mod push_dependencies;

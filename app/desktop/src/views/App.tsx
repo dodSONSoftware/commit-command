@@ -6,6 +6,7 @@ import {
   type CSSProperties,
 } from "react";
 import type { Bridge } from "../services/bridge";
+import { PushDependencyPlanner } from "./PushDependencyPlanner";
 import { value } from "../services/bridge";
 import type {
   Workspace,
@@ -750,6 +751,16 @@ export function App({ bridge }: { bridge: Bridge }) {
             )
           ) : !nav.active_tab ? (
             <>
+              {workspace && (
+                <PushDependencyPlanner
+                  key={`${workspace}:${resultsRevision}`}
+                  bridge={bridge}
+                  workspace={workspace}
+                  entries={entries}
+                  busy={busy}
+                  act={act}
+                />
+              )}
               <div className="page-title">
                 <div>
                   <span className="eyebrow">YOUR PROJECT, IN VIEW</span>

@@ -1,0 +1,13 @@
+
+> gitfleet-desktop@0.1.1 test
+> vitest run --run src/views/PushDependencyPlanner.test.tsx src/views/ChildReachabilityForm.test.tsx
+
+
+ RUN  v4.1.12 /Users/randydodson/Documents/_code/git-fleet/app/desktop
+
+
+ Test Files  2 passed (2)
+      Tests  4 passed (4)
+   Start at  00:04:29
+   Duration  786ms (transform 91ms, setup 72ms, import 191ms, tests 444ms, environment 459ms)
+

@@ -1,0 +1,11 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.56s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-a5b0bae5745a2202)
+
+running 3 tests
+test push_dependencies::planning_blocks_non_fast_forward_and_expired_root_without_children ... ok
+test push_dependencies::planning_refuses_two_selected_sources_for_one_destination_branch ... ok
+test push_dependencies::planning_never_adds_unselected_children_and_requires_remote_evidence ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 71 filtered out; finished in 17.79s
+

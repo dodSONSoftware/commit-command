@@ -1,0 +1,14 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.76s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-a5b0bae5745a2202)
+
+running 5 tests
+test push_dependencies::selected_child_without_required_commit_cannot_satisfy_parent ... ok
+test push_dependencies::planning_never_adds_unselected_children_and_requires_remote_evidence ... ok
+test push_dependencies::selected_two_repository_cycle_returns_closed_witness_and_no_order ... ok
+test push_dependencies::multilevel_selected_chain_is_ordered_grandchild_child_parent ... ok
+test push_dependencies::selected_pending_child_is_conditional_and_unselected_pending_child_blocks has been running for over 60 seconds
+test push_dependencies::selected_pending_child_is_conditional_and_unselected_pending_child_blocks ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 67 filtered out; finished in 69.98s
+

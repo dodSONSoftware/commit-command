@@ -1,6 +1,6 @@
 use super::*;
 use gitfleet_core::remote::push::{ChildReachability, ChildReachabilitySelection};
-fn config_child(t: &Test, url: &str) {
+pub(super) fn config_child(t: &Test, url: &str) {
     fs::write(
         t.f.repo.join(".gitmodules"),
         format!("[submodule \"fixture\"]\npath = child\nurl = {url}\n"),
@@ -8,7 +8,7 @@ fn config_child(t: &Test, url: &str) {
     .unwrap();
     t.f.git(&["add", ".gitmodules"]);
 }
-fn commit_link(t: &Test, oid: &str) {
+pub(super) fn commit_link(t: &Test, oid: &str) {
     t.f.git(&[
         "update-index",
         "--add",
@@ -150,7 +150,7 @@ fn evidence(
     };
     Ok(*value)
 }
-fn setup_evidence(sha256: bool, unrelated: bool) -> (Test, ChildReachabilitySelection) {
+pub(super) fn setup_evidence(sha256: bool, unrelated: bool) -> (Test, ChildReachabilitySelection) {
     let mut t = setup_format(true, sha256);
     let child = t.f.repo.join("child");
     t.f.git(&[

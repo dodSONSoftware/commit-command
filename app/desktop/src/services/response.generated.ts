@@ -71,6 +71,11 @@ export type Data =
       [k: string]: unknown;
     }
   | {
+      kind: "push_dependency_plan";
+      value: PushDependencyPlan;
+      [k: string]: unknown;
+    }
+  | {
       kind: "fetch_imports";
       value: FetchImportPage;
       [k: string]: unknown;
@@ -406,6 +411,12 @@ export type SigningPreference = "configured" | "unsigned";
  */
 export type PushRelation =
   "up_to_date" | "fast_forward" | "behind" | "diverged";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "DependencyState".
+ */
+export type DependencyState =
+  "already_reachable" | "selected_child_required" | "blocked";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "Availability".
@@ -1144,6 +1155,49 @@ export interface ChildReachabilitySelection {
   parent_observation: string;
   path: number[];
   source_oid: ObjectId;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "PushDependencyPlan".
+ */
+export interface PushDependencyPlan {
+  /**
+   * Closed cycle witness, not merely the set of transitively blocked nodes.
+   */
+  cycle: string[];
+  dependencies: PushDependency[];
+  generated_at_ms: number;
+  issues: string[];
+  items: PlannedPush[];
+  order: string[];
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "PushDependency".
+ */
+export interface PushDependency {
+  child_observation?: string | null;
+  child_observed_at_ms?: number | null;
+  child_oid: ObjectId;
+  child_selected: boolean;
+  child_worktree?: string | null;
+  gitmodules_blob?: ObjectId | null;
+  issue?: string | null;
+  observed_child_oid?: ObjectId | null;
+  parent_worktree: string;
+  path: number[];
+  state: DependencyState;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "PlannedPush".
+ */
+export interface PlannedPush {
+  preview: PushPreview;
+  worktree: string;
   [k: string]: unknown;
 }
 /**

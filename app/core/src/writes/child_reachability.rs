@@ -27,6 +27,51 @@ impl ControlledWrites {
             &selection.parent_observation,
             &remaining(options, started)?,
         )?;
+        let mut result = self.child_reachability_from_preview(
+            workspace,
+            parent,
+            child,
+            selection,
+            &preview,
+            &remaining(options, started)?,
+        )?;
+        let after = self.push_preview(
+            workspace,
+            parent,
+            &result.selection.parent_observation,
+            &remaining(options, started)?,
+        )?;
+        if after.source_oid != preview.source_oid
+            || after.generation != preview.generation
+            || after.config_digest != preview.config_digest
+            || now_ms()
+                .checked_sub(result.child_observed_at_ms)
+                .is_none_or(|age| age > 300_000)
+        {
+            return Err(stale());
+        }
+        result.checked_at_ms = now_ms();
+        Ok(result)
+    }
+    /// Only Core-captured previews may enter here. Callers revalidate the parent
+    /// after all child checks; renderer requests never provide preview contents.
+    pub(super) fn child_reachability_from_preview(
+        &mut self,
+        workspace: &WorkspaceId,
+        parent: &crate::workspace::StoredWorktree,
+        child: &crate::workspace::StoredWorktree,
+        selection: ChildReachabilitySelection,
+        preview: &PushPreview,
+        options: &ReadOptions,
+    ) -> Result<ChildReachability> {
+        let started = Instant::now();
+        if parent.id == child.id {
+            return Err(unsupported("Select a distinct child worktree explicitly"));
+        }
+        self.completed_observation(&preview.observation_id, workspace, &parent.id)?;
+        if preview.observation_id != selection.parent_observation {
+            return Err(stale());
+        }
         if preview.source_oid != selection.source_oid {
             return Err(stale());
         }
@@ -119,21 +164,11 @@ impl ControlledWrites {
             },
         )?;
         self.revalidate_transport(&current, &remaining(options, started)?)?;
-        let after = self.push_preview(
-            workspace,
-            parent,
-            &selection.parent_observation,
-            &remaining(options, started)?,
-        )?;
-        if after.source_oid != preview.source_oid
-            || after.generation != preview.generation
-            || after.config_digest != preview.config_digest
-            || !fresh()
-        {
+        if !fresh() {
             return Err(stale());
         }
         Ok(ChildReachability {
-            parent: preview,
+            parent: preview.clone(),
             selection,
             mapping,
             child_remote: current.remote,

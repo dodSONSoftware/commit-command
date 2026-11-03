@@ -1,5 +1,12 @@
 # Fresh conversation handoff — November 2, 2026
 
+## Latest checkpoint — November 3: multi-level local dependency planning
+
+Read `docs/reports/M5C_DEPENDENCY_PLANNING_2026-11-03.md` and `docs/validation/m5c-dependency-planning/validation-summary.json` first. Explicit independent selected roots, all historical child bindings, conditional child-first order, actual closed cycle witnesses, unavailable unselected-child blocking and no auto-enrollment are implemented. Core recomputes previews and revalidates child/source contexts and observation freshness; no renderer-provided evidence authority. Any blocker removes the entire order. Plan limits: 32 selected nodes, 256 bindings/contexts, 2 MiB, 60-second deadline. No push/network action, review capability, executor or default-write change was added.
+
+Full Core gate passed 54/89/79/208/252 (direct ignores 1/2/1/4/8), desktop 63 renderer/13 host per configuration and all build/type/lint/contracts/format/Clippy/release checks. Evidence is saved;  actual native planner acceptance remains NOT RUN. Next: fresh disposable three-level native parent-only blocked / explicitly selected grandchild → child → parent acceptance, selection invalidation and ordinary restart/no replay with exact repository/remote/journal preservation. Then exact separate non-force push/hook/recovery work within the no-push boundary. Do not reuse deleted credential fixtures or bypass SecurityAgent restrictions. Preserve the open operator-only Keychain prompt and direct SCP port-22 OS-facility gaps. Ordinary writes stay disabled. The user's local commit `6ebadb9` is preserved; unrelated untracked `LICENSE` must remain untouched/unstaged. Save reports and local commits; never push. Earlier gaps below are superseded only by actual new evidence.
+
+
 ## Latest relative/SCP child-evidence acceptance checkpoint
 
 Read `docs/reports/M5C_RELATIVE_CHILD_ACCEPTANCE_2026-11-02.md`. Relative child declarations resolve with Git directory semantics against the explicitly selected/observed parent destination, shown alongside the declaration/resolved child URL. Supported SCP URLs retain exact home/absolute path spelling and explicit login through inspection/review/SSH transport/evidence; no guessed username, SSH config or port. Authority/home escape and ambiguous path spellings refuse. Unsupported SCP query/fragment display leakage was reproduced and fixed by withholding rejected spellings.
