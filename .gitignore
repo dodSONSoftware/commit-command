@@ -4,12 +4,6 @@ target/
 *.pdb
 *.dSYM/
 
-# Rust build artifacts
-target/
-
-# Generated GitFleet lab results
-/app/core/results.json
-
 # GitFleet diagnostic output
 /app/core/results.json
 
