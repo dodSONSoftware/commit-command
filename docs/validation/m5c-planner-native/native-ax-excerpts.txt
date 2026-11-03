@@ -1,0 +1,53 @@
+Selected excerpts transcribed from actual cua_repl accessibility observations on November 3, 2026.
+This is an excerpt record, not a raw replayable automation trace. Element indices changed between observations.
+
+1. Parent-only result (both descendants remained unselected)
+checkbox Plan push for parent/child/grand, Value: 0
+checkbox Plan push for parent/child, Value: 0
+checkbox Plan push for parent, Value: 1
+heading Child selections in this plan · 1
+heading Dependency planning blocked
+parent · child · parent/child · Blocked · Unselected child is not reachable remotely; select it explicitly or obtain fresh remote evidence
+
+2. Selecting child invalidated the blocked result, parent preview and adopted binding
+checkbox Plan push for parent/child, Value: 1
+button (disabled) Inspect selected push sources
+button (disabled) Build local dependency plan
+The prior Push dependencies for parent and Push dependency planning result containers were removed.
+
+3. Expired initial root observation refused without an order
+Error: stale_review: Push planning context changed; inspect and select again
+All three original observations were then refreshed through independent stored-plan and native approvals.
+
+4. Fresh selected three-level plan
+heading Conditional review order
+No Git writes or network operations were executed. Selected children must be reviewed separately; availability must be checked again after any child publication and before the parent operation. This plan grants no push authority.
+1 parent/child/grand
+2 parent/child
+3 parent
+parent/child · grand · parent/child/grand · Selected child must publish first; remote availability remains unproven
+parent · child · parent/child · Selected child must publish first; remote availability remains unproven
+
+5. Native Cmd+Q from the successful result
+cua_repl reported App quit. Exact owned PID 32288 exited, independently verified using ps.
+
+6. Same acceptance bundle restart, expanded planner
+checkbox Plan push for parent/child/grand, Value: 0
+checkbox Plan push for parent/child, Value: 0
+checkbox Plan push for parent, Value: 0
+button (disabled) Inspect selected push sources
+button (disabled) Build local dependency plan
+Workspace and repository tabs restored; no previews, bindings, plan or operation resumed.
+
+7. Observation-change invalidation after restart
+Inspected parent using refreshed 2026-11-03T06:34:17.324Z observation. Changed planned branch selection to the older observation (same destination/ref/OID, different record).
+After React settled: no Push dependencies for or Push dependency planning result containers; button (disabled) Build local dependency plan. Parent remained selected and both descendants unselected.
+An immediate sample preceded the asynchronous state update; the following fresh AX snapshots confirmed complete invalidation. No application defect or source patch was inferred from that intermediate sample.
+
+8. Ordinary default build restart
+Read-only desktop · native write acceptance pending
+Expanded planner: all three Plan push checkboxes Value: 0; Inspect selected push sources and Build local dependency plan disabled; no previews/bindings/result.
+Parent Remotes and upstream: inspected origin https://127.0.0.1:58031/parent.git, selected origin and entered refs/heads/main. Review remote observation remained disabled. Review upstream setup and Review branch download were disabled for existing completed records.
+Native Cmd+Q: App quit.
+
+Menu handling: early combined click/Down/Return actions sometimes left placeholders unchanged. Opening and observing a settled native menu before keyboard selection succeeded. Some focus-change tool interruptions required fresh AX observations. No hidden API, IPC injection, synthetic observation seeding or approval bypass was used.

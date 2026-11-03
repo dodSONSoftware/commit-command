@@ -1,0 +1,8 @@
+{
+  "bundle": "/private/tmp/gitfleet-plan-native-6wogj0cz/GitFleet Planner Acceptance.app",
+  "binary_sha256": "3795ee51970c5b78d9627f4f966208530e3d1baf3910e0d6c5351aedb8500cd5",
+  "features": [
+    "desktop-writes"
+  ],
+  "source_commit": "13c58961c8d4cda84889c5eee95b6f66fc1e06f6"
+}

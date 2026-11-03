@@ -1,0 +1,25 @@
+{
+  "state_keys": [
+    "active",
+    "bulk-composer:a376df56-3cf4-4c3f-af28-1367abd0ce7d",
+    "config_revision",
+    "definition:a376df56-3cf4-4c3f-af28-1367abd0ce7d",
+    "native_window_placement",
+    "remote-observation:31337804-db13-4b7f-b063-b398c465ecae",
+    "remote-observation:710bf880-7aeb-4458-be3d-25874f664d8d",
+    "remote-observation:a1a13d27-6a09-4c64-8271-bde0d6362e60",
+    "remote-observation:bbbd05a0-58ff-4b94-9e96-6c0d7ccddbef",
+    "remote-observation:d4c62a95-2c20-4f4c-bd76-fc0225129a0f",
+    "remote-observation:e0bb5124-3deb-4750-8658-103565d61d0f",
+    "scan:a376df56-3cf4-4c3f-af28-1367abd0ce7d"
+  ],
+  "write_operation_count": 0,
+  "requests": [
+    "{\"method\": \"GET\", \"path\": \"/parent.git/info/refs\"}",
+    "{\"method\": \"GET\", \"path\": \"/child.git/info/refs\"}",
+    "{\"method\": \"GET\", \"path\": \"/grand.git/info/refs\"}",
+    "{\"method\": \"GET\", \"path\": \"/parent.git/info/refs\"}",
+    "{\"method\": \"GET\", \"path\": \"/child.git/info/refs\"}",
+    "{\"method\": \"GET\", \"path\": \"/grand.git/info/refs\"}"
+  ]
+}

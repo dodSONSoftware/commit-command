@@ -1,0 +1,13 @@
+{
+  "fixture_marker_verified": true,
+  "acceptance_and_ordinary_fixture_apps_exited": true,
+  "owned_server_pid": 31827,
+  "server_exited_or_zombie_no_listener": true,
+  "loopback_port_closed": true,
+  "private_tls_key_removed": true,
+  "no_system_certificate_installation": true,
+  "no_credentials_used": true,
+  "ordinary_bundle_hash_verified": true,
+  "repositories_state_and_public_certificate_retained_for_evidence": true,
+  "no_push": true
+}

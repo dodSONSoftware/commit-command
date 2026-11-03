@@ -1,0 +1,51 @@
+{
+  "date": "2026-11-03",
+  "source_commit": "13c5896",
+  "application_source_changes": false,
+  "actual_native_checks": {
+    "three_separately_reviewed_initial_observations": true,
+    "three_separately_reviewed_refreshed_observations": true,
+    "parent_only_unselected_missing_child_blocks": true,
+    "no_implicit_child_or_grandchild_selection": true,
+    "selected_scope_change_clears_source_binding_and_blocked_result": true,
+    "expired_root_observation_refuses_no_order": true,
+    "fresh_conditional_order": [
+      "parent/child/grand",
+      "parent/child",
+      "parent"
+    ],
+    "conditional_dependency_edges": 2,
+    "native_quit_from_successful_plan": true,
+    "same_bundle_restart_empty_planner_no_replay": true,
+    "observation_change_clears_source_and_disables_build": true,
+    "ordinary_restart_empty_planner_no_replay": true,
+    "ordinary_review_observation_upstream_download_remain_disabled": true
+  },
+  "preservation": {
+    "all_three_worktree_file_and_mode_snapshots_unchanged": true,
+    "all_three_bare_remote_snapshots_unchanged": true,
+    "completed_observations": 6,
+    "write_operations": 0,
+    "fetch_capture_import_records": 0,
+    "server_requests_after_six_approvals": 6,
+    "additional_requests_during_planning_and_restarts": 0,
+    "observations_synthetic": false
+  },
+  "native_cycle_ui_acceptance": "not run; graph/Core/renderer tests belong to preceding implementation checkpoint",
+  "artifact_records": [
+    "native-artifact.json",
+    "ordinary-artifact.json",
+    "native-source-manifest.json"
+  ],
+  "cleanup": "cleanup.json",
+  "unrelated_work": "LICENSE preserved and excluded; prior commits unchanged",
+  "push_performed": false,
+  "ordinary_writes_enabled": false,
+  "validation_this_checkpoint": {
+    "acceptance_build": "passed; desktop-writes debug",
+    "ordinary_build": "passed; default debug",
+    "planner_renderer_tests": 3,
+    "python_syntax": "both scripts parsed successfully",
+    "full_core_and_desktop_suites": "not rerun; unchanged source validated at 13c5896"
+  }
+}

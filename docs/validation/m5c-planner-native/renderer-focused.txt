@@ -1,0 +1,13 @@
+
+> gitfleet-desktop@0.1.1 test
+> vitest run src/views/PushDependencyPlanner.test.tsx
+
+
+ RUN  v4.1.12 /Users/randydodson/Documents/_code/git-fleet/app/desktop
+
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  00:42:56
+   Duration  741ms (transform 52ms, setup 32ms, import 100ms, tests 310ms, environment 218ms)
+

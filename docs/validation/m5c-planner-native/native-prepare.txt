@@ -1,0 +1,29 @@
+{
+  "root": "/private/tmp/gitfleet-plan-native-6wogj0cz",
+  "workspace_root": "/private/tmp/gitfleet-plan-native-6wogj0cz/workspace",
+  "state": "/private/tmp/gitfleet-plan-native-6wogj0cz/state",
+  "workspace": "a376df56-3cf4-4c3f-af28-1367abd0ce7d",
+  "worktrees": {
+    "grand": "493aeeec-f8ca-4596-9e27-dbc182324686",
+    "child": "977426df-d00c-4b17-a5db-c0cf24b91a57",
+    "parent": "c760af74-0769-479a-9ea9-84d75b0ff777"
+  },
+  "parent": "/private/tmp/gitfleet-plan-native-6wogj0cz/workspace/parent",
+  "child": "/private/tmp/gitfleet-plan-native-6wogj0cz/workspace/parent/child",
+  "grand": "/private/tmp/gitfleet-plan-native-6wogj0cz/workspace/parent/child/grand",
+  "server_pid": 31827,
+  "base": "https://127.0.0.1:58031",
+  "ca_file": "/private/tmp/gitfleet-plan-native-6wogj0cz/certificate.pem",
+  "observed_oids": {
+    "parent": "2c98a7272675e0188d0cd414d4090f1949c65d07",
+    "child": "2c98a7272675e0188d0cd414d4090f1949c65d07",
+    "grand": "2c98a7272675e0188d0cd414d4090f1949c65d07"
+  },
+  "source_oids": {
+    "parent": "bd5172a6592bbe348ffcc9b983850cfba708c2d7",
+    "child": "d309852e11bae94aaec1cd88e24ed4a45c862241",
+    "grand": "edaa8ef66a7625230f76ddc07143ebabf5325822"
+  },
+  "private_server_contacted": false,
+  "credentials_used": false
+}
