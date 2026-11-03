@@ -1,0 +1,8 @@
+{
+  "bundle": "/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri/target/debug/bundle/macos/GitFleet.app",
+  "sha256": "fe437daa1fc091ec5cfec898419231055deabe45cb8ac30ddcda917df8617332",
+  "features": [
+    "custom-protocol"
+  ],
+  "desktop_writes": false
+}

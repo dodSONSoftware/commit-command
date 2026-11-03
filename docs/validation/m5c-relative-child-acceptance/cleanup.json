@@ -1,0 +1,10 @@
+{
+  "fixture_server_stopped": true,
+  "fixture_tls_private_key_removed": true,
+  "owned_fixture_processes_gone": true,
+  "ordinary_app_closed": true,
+  "repository_preservation": "native-restart.json",
+  "credentials_or_keychain_used": false,
+  "private_server_contacted": false,
+  "push_performed": false
+}

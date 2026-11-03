@@ -110,3 +110,37 @@ it("shows removed history requirements even with no source gitlinks", () => {
   expect(container.querySelector("script")).toBeNull();
   expect(screen.queryByRole("button")).toBeNull();
 });
+it("shows the declared relative URL and selected parent resolution base", () => {
+  render(
+    <PushPreviewResult
+      preview={{
+        ...preview,
+        outgoing_gitlinks: [
+          {
+            path: [99],
+            oid: preview.source_oid,
+            example_commit: preview.source_oid,
+            mappings: [
+              {
+                gitmodules_blob: preview.source_oid,
+                example_commit: preview.source_oid,
+                declared_url: "../child.git",
+                resolution_base: "https://example.invalid/team/parent.git",
+                destination: {
+                  display: "https://example.invalid/team/child.git",
+                  transport: "https",
+                  credentials_hidden: false,
+                  restrictions: [],
+                },
+                issue: null,
+              },
+            ],
+          },
+        ],
+      }}
+    />,
+  );
+  expect(screen.getByText(/Declared ..\/child.git/)).toHaveTextContent(
+    "Relative to selected parent https://example.invalid/team/parent.git",
+  );
+});

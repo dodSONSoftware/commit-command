@@ -1,0 +1,57 @@
+{
+  "base_commit": "29ea9de",
+  "core_full_gate": "passed",
+  "core_feature_matrix": {
+    "default": {
+      "passed": 54,
+      "ignored": 1
+    },
+    "experimental": {
+      "passed": 89,
+      "ignored": 2
+    },
+    "controlled": {
+      "passed": 79,
+      "ignored": 1
+    },
+    "application": {
+      "passed": 199,
+      "ignored": 4
+    },
+    "all": {
+      "passed": 243,
+      "ignored": 8
+    }
+  },
+  "lab": {
+    "passed": 23,
+    "skipped": 1
+  },
+  "application_remote_suite": {
+    "passed": 65,
+    "ignored": 2
+  },
+  "all_feature_remote_suite": {
+    "passed": 69,
+    "ignored": 4
+  },
+  "desktop_full_gate": "passed",
+  "renderer_tests": 60,
+  "host_tests_per_configuration": 13,
+  "contracts_type_lint_format_build_clippy_default_release": "passed",
+  "url_unit_tests": 2,
+  "offline_git_relative_cases": 10,
+  "offline_scp_diagnostics": 4,
+  "remote_inspection_regression_suite": 10,
+  "actual_ssh_agent_child_evidence": "passed; exact fixture routing; no extra request during proof",
+  "native_https_relative_child_evidence": "passed on recorded opt-in artifact before final unsupported-SCP refusal-only hardening",
+  "native_selection_clearing": "passed",
+  "ordinary_final_restart_no_replay": "passed on exact final hardened artifact; prior build hash retained separately",
+  "scp_port_22_connection_acceptance": "not run: OS bind EACCES; no existing service contacted",
+  "credentials_used_in_native_fixture": false,
+  "user_credentials_keys_or_private_server_accessed": false,
+  "native_cleanup": "cleanup.json",
+  "ordinary_writes_enabled": false,
+  "push_implemented_or_executed": false,
+  "unrelated_work_preserved": true
+}

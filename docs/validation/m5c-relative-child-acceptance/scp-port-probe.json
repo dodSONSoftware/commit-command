@@ -1,0 +1,6 @@
+{
+  "loopback_port_22_bind_available": false,
+  "errno": 13,
+  "reason": "[Errno 13] Permission denied",
+  "existing_service_contacted": false
+}

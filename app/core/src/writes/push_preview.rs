@@ -73,6 +73,7 @@ fn outgoing_gitlinks(
     s: &inspection::Session<'_>,
     range: &str,
     expected_count: u32,
+    base: &str,
 ) -> Result<Vec<OutgoingGitlink>> {
     use std::collections::{BTreeMap, BTreeSet};
     // This list is independent of the 100-commit presentation limit and includes
@@ -130,7 +131,7 @@ fn outgoing_gitlinks(
                     "Outgoing history exceeds 1,024 child requirements",
                 ));
             }
-            let mapping = mappings.mapping(&link.path, &commit);
+            let mapping = mappings.mapping(&link.path, &commit, base);
             let entry = requirements.entry(key).or_insert_with(|| OutgoingGitlink {
                 path: link.path,
                 oid: link.oid,
@@ -149,7 +150,9 @@ fn outgoing_gitlinks(
                         "Outgoing history exceeds 4,096 mapping contexts",
                     ));
                 }
-                detail_bytes += mapping.destination.as_ref().map_or(0, |d| d.display.len());
+                detail_bytes += mapping.declared_url.as_ref().map_or(0, String::len)
+                    + mapping.resolution_base.as_ref().map_or(0, String::len)
+                    + mapping.destination.as_ref().map_or(0, |d| d.display.len());
                 if detail_bytes > 2 * 1024 * 1024 {
                     return Err(fail(
                         ErrorKind::OutputLimit,
@@ -309,7 +312,7 @@ impl ControlledWrites {
                 return Err(stale());
             }
             let source_gitlinks = source_gitlinks(s, &source_oid)?;
-            let outgoing_gitlinks = outgoing_gitlinks(s, &range, outgoing)?;
+            let outgoing_gitlinks = outgoing_gitlinks(s, &range, outgoing, &current.destination)?;
             Ok(PushPreview {
                 source_ref: source_ref.clone(),
                 source_oid,

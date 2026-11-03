@@ -1,0 +1,20 @@
+{
+  "root": "/private/tmp/gitfleet-child-native-goukkxip",
+  "workspace_root": "/private/tmp/gitfleet-child-native-goukkxip/workspace",
+  "state": "/private/tmp/gitfleet-child-native-goukkxip/state",
+  "workspace": "b07fed61-d665-4c64-a1ee-1e1cc453633a",
+  "worktrees": {
+    "parent": "441ca331-1338-4afa-927a-9ed1e9ba43bd",
+    "child": "f2a47337-f386-4195-98c3-425f3ecbcc4a"
+  },
+  "parent": "/private/tmp/gitfleet-child-native-goukkxip/workspace/parent",
+  "child": "/private/tmp/gitfleet-child-native-goukkxip/workspace/parent/child",
+  "server_pid": 94091,
+  "base": "https://127.0.0.1:55174",
+  "ca_file": "/private/tmp/gitfleet-child-native-goukkxip/certificate.pem",
+  "child_required": "0aff2e0d09162c4b037314b57b620a1d09cd919c",
+  "child_tip": "d7e458047bb13527491743657065b54251651712",
+  "private_server_contacted": false,
+  "credentials_used": false,
+  "bundle": "/private/tmp/gitfleet-child-native-goukkxip/GitFleet Child Evidence.app"
+}

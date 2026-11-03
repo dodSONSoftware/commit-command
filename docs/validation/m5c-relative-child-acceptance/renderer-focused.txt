@@ -1,0 +1,56 @@
+
+> gitfleet-desktop@0.1.1 test
+> vitest run --run src/views/ChildReachabilityForm.test.tsx src/views/PushPreviewResult.test.tsx
+
+
+ RUN  v4.1.12 /Users/randydodson/Documents/_code/git-fleet/app/desktop
+
+ ❯ src/views/ChildReachabilityForm.test.tsx (1 test | 1 failed) 120ms
+   × requires explicit mapping, repository and approved observation; sends only a local evidence request 119ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/views/ChildReachabilityForm.test.tsx > requires explicit mapping, repository and approved observation; sends only a local evidence request
+AssertionError: expected last "vi.fn()" call to have been called with [ Array(1) ]
+
+- Expected
++ Received
+
+@@ -6,20 +6,18 @@
+        "child_oid": {
+          "format": "sha1",
+          "hex": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        },
+        "child_worktree": "child",
+-       "declared_url": null,
+        "gitmodules_blob": {
+          "format": "sha1",
+          "hex": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        },
+        "parent_observation": "parent-observation",
+        "path": [
+          99,
+        ],
+-       "resolution_base": null,
+        "source_oid": {
+          "format": "sha1",
+          "hex": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        },
+      },
+
+ ❯ src/views/ChildReachabilityForm.test.tsx:168:19
+    166|     "Reachable from observed child branch",
+    167|   );
+    168|   expect(request).toHaveBeenLastCalledWith({
+       |                   ^
+    169|     kind: "child_reachability",
+    170|     workspace: "ws",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 4 passed (5)
+   Start at  23:23:59
+   Duration  617ms (transform 70ms, setup 83ms, import 173ms, tests 211ms, environment 540ms)
+

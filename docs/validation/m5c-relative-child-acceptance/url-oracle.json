@@ -1,0 +1,110 @@
+{
+  "git_version": "git version 2.56.0",
+  "relative_cases": [
+    {
+      "base": "https://example.invalid/team/parent.git",
+      "declared": "../child.git",
+      "git_result": "https://example.invalid/team/child.git",
+      "matches_application_golden_case": true
+    },
+    {
+      "base": "https://example.invalid/team/parent.git/",
+      "declared": "./child.git",
+      "git_result": "https://example.invalid/team/parent.git/child.git",
+      "matches_application_golden_case": true
+    },
+    {
+      "base": "ssh://git@example.invalid:2222/team/parent.git",
+      "declared": "../../child.git",
+      "git_result": "ssh://git@example.invalid:2222/child.git",
+      "matches_application_golden_case": true
+    },
+    {
+      "base": "ssh://git@example.invalid/~/team/parent.git",
+      "declared": "../child.git",
+      "git_result": "ssh://git@example.invalid/~/team/child.git",
+      "matches_application_golden_case": true
+    },
+    {
+      "base": "git@example.invalid:team/parent.git",
+      "declared": "../child.git",
+      "git_result": "git@example.invalid:team/child.git",
+      "matches_application_golden_case": true
+    },
+    {
+      "base": "git@example.invalid:team/parent.git",
+      "declared": "../../child.git",
+      "git_result": "git@example.invalid:child.git",
+      "matches_application_golden_case": true
+    },
+    {
+      "base": "git@example.invalid:/team/parent.git",
+      "declared": "../../child.git",
+      "git_result": "git@example.invalid:/child.git",
+      "matches_application_golden_case": true
+    },
+    {
+      "base": "git@[::1]:team/parent.git",
+      "declared": "./child.git",
+      "git_result": "git@[::1]:team/parent.git/child.git",
+      "matches_application_golden_case": true
+    },
+    {
+      "base": "/fixture/remotes/parent.git",
+      "declared": "../child.git",
+      "git_result": "/fixture/remotes/child.git",
+      "matches_application_golden_case": true
+    },
+    {
+      "base": "file:///fixture/remotes/parent.git",
+      "declared": "../child.git",
+      "git_result": "file:///fixture/remotes/child.git",
+      "matches_application_golden_case": true
+    }
+  ],
+  "scp_diagnostics": [
+    {
+      "url": "git@example.invalid:team/repo.git",
+      "git_parse": [
+        "Diag: url=git@example.invalid:team/repo.git",
+        "Diag: protocol=ssh",
+        "Diag: userandhost=git@example.invalid",
+        "Diag: port=NONE",
+        "Diag: path=team/repo.git"
+      ]
+    },
+    {
+      "url": "git@example.invalid:/team/repo.git",
+      "git_parse": [
+        "Diag: url=git@example.invalid:/team/repo.git",
+        "Diag: protocol=ssh",
+        "Diag: userandhost=git@example.invalid",
+        "Diag: port=NONE",
+        "Diag: path=/team/repo.git"
+      ]
+    },
+    {
+      "url": "git@example.invalid:~/team/repo.git",
+      "git_parse": [
+        "Diag: url=git@example.invalid:~/team/repo.git",
+        "Diag: protocol=ssh",
+        "Diag: userandhost=git@example.invalid",
+        "Diag: port=NONE",
+        "Diag: path=~/team/repo.git"
+      ]
+    },
+    {
+      "url": "git@[::1]:team/repo.git",
+      "git_parse": [
+        "Diag: url=git@[::1]:team/repo.git",
+        "Diag: protocol=ssh",
+        "Diag: userandhost=git@::1",
+        "Diag: port=NONE",
+        "Diag: path=team/repo.git"
+      ]
+    }
+  ],
+  "network_calls_executed": false,
+  "initializer_allowed_protocols": "none",
+  "diagnostic_allowed_protocol": "ssh; --diag-url exits before connecting"
+}

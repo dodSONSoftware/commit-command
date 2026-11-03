@@ -40,6 +40,8 @@ const preview: PushPreview = {
       mappings: [
         {
           gitmodules_blob: blob,
+          declared_url: null,
+          resolution_base: null,
           example_commit: oid,
           destination: {
             display: "https://example.invalid/child.git",

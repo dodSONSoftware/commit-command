@@ -1094,10 +1094,12 @@ export interface OutgoingGitlink {
  * via the `definition` "HistoricalMapping".
  */
 export interface HistoricalMapping {
+  declared_url?: string | null;
   destination?: Destination | null;
   example_commit: ObjectId;
   gitmodules_blob?: ObjectId | null;
   issue?: string | null;
+  resolution_base?: string | null;
   [k: string]: unknown;
 }
 /**

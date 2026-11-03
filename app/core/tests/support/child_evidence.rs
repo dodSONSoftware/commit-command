@@ -59,13 +59,13 @@ fn historical_mappings_keep_url_changes_and_ignore_working_files_and_includes() 
     }
 }
 #[test]
-fn historical_mappings_refuse_ambiguity_relative_urls_secrets_and_nonregular_blobs() {
+fn historical_mappings_refuse_ambiguity_unsafe_relative_urls_secrets_and_nonregular_blobs() {
     let mut t = setup(true);
     trust(&mut t);
     let observation = observed(&mut t);
     let child = "a".repeat(40);
     for content in [
-        "[submodule \"one\"]\npath=child\nurl=../relative.git\n",
+        "[submodule \"one\"]\npath=child\nurl=../../../../../../../../../../outside.git\n",
         "[submodule \"one\"]\npath=child\nurl=https://user:fixture-hidden-secret@example.invalid/repo.git?fixture-hidden-secret\n",
         "[submodule \"one\"]\npath=child\nurl=https://example.invalid/one.git\nurl=https://example.invalid/two.git\n",
         "[submodule \"one\"]\npath=child\nurl\nurl=https://example.invalid/one.git\n",
@@ -460,4 +460,89 @@ fn child_evidence_rejects_historical_destination_mismatch() {
     );
     assert_eq!(tree_bytes(&t.f.repo), before);
     assert_eq!(tree_bytes(&t.f.root.join("child-remote.git")), remote);
+}
+
+#[test]
+fn relative_child_mapping_uses_selected_parent_destination_and_proves_observed_ancestry() {
+    for sha256 in [false, true] {
+        let (mut t, mut selection) = setup_evidence(sha256, false);
+        config_child(&t, "../child-remote.git");
+        commit_link(&t, &selection.child_oid.hex);
+        let preview = push_preview(&mut t, &selection.parent_observation);
+        let mapping = preview.outgoing_gitlinks[0]
+            .mappings
+            .iter()
+            .find(|m| m.declared_url.as_deref() == Some("../child-remote.git"))
+            .unwrap();
+        assert!(mapping.issue.is_none());
+        assert_eq!(
+            mapping.resolution_base.as_deref(),
+            Some(preview.destination.as_str())
+        );
+        selection.source_oid = preview.source_oid.clone();
+        selection.gitmodules_blob = mapping.gitmodules_blob.clone().unwrap();
+        let before = tree_bytes(&t.f.repo);
+        let remote = tree_bytes(&t.f.root.join("child-remote.git"));
+        let value = evidence(&mut t, selection).unwrap();
+        assert!(value.reachable);
+        assert_eq!(
+            value.mapping.declared_url.as_deref(),
+            Some("../child-remote.git")
+        );
+        assert_eq!(tree_bytes(&t.f.repo), before);
+        assert_eq!(tree_bytes(&t.f.root.join("child-remote.git")), remote);
+    }
+}
+
+#[test]
+fn real_agent_authenticated_child_evidence_resolves_relative_ssh_mapping_without_new_contact() {
+    let (mut t, mut selection) = setup_evidence(false, false);
+    let _server = super::ssh_transport_tests::server(&mut t);
+    let parent_url = String::from_utf8(t.f.git(&["remote", "get-url", "origin"]))
+        .unwrap()
+        .trim()
+        .to_owned();
+    let child_remote = t.f.root.join("child-remote.git");
+    let child_url = parent_url
+        .strip_suffix(t.remote.to_str().unwrap())
+        .unwrap()
+        .to_owned()
+        + child_remote.to_str().unwrap();
+    fs::write(t.f.root.join("ssh-routing.json"),serde_json::to_vec(&serde_json::json!({t.remote.to_str().unwrap():t.remote.to_str().unwrap(),child_remote.to_str().unwrap():child_remote.to_str().unwrap()})).unwrap()).unwrap();
+    t.f.git(&[
+        "-C",
+        t.f.repo.join("child").to_str().unwrap(),
+        "remote",
+        "set-url",
+        "origin",
+        &child_url,
+    ]);
+    config_child(&t, "../child-remote.git");
+    commit_link(&t, &selection.child_oid.hex);
+    let parent_id = std::mem::replace(&mut t.worktree, selection.child_worktree.clone());
+    trust(&mut t);
+    let observed_child = observed(&mut t);
+    assert_eq!(observed_child.phase, ObservationPhase::Complete);
+    t.worktree = parent_id;
+    trust(&mut t);
+    let observed_parent = observed(&mut t);
+    assert_eq!(observed_parent.phase, ObservationPhase::Complete);
+    let preview = push_preview(&mut t, &observed_parent.plan.id);
+    let mapping = preview.outgoing_gitlinks[0]
+        .mappings
+        .iter()
+        .find(|m| m.declared_url.as_deref() == Some("../child-remote.git"))
+        .unwrap();
+    assert_eq!(mapping.destination.as_ref().unwrap().display, child_url);
+    selection.parent_observation = observed_parent.plan.id;
+    selection.child_observation = observed_child.plan.id;
+    selection.source_oid = preview.source_oid;
+    selection.gitmodules_blob = mapping.gitmodules_blob.clone().unwrap();
+    let before = tree_bytes(&t.f.repo);
+    let remote = tree_bytes(&child_remote);
+    let requests = fs::read(t.f.root.join("ssh-requests")).unwrap();
+    assert!(evidence(&mut t, selection).unwrap().reachable);
+    assert_eq!(fs::read(t.f.root.join("ssh-requests")).unwrap(), requests);
+    assert_eq!(tree_bytes(&t.f.repo), before);
+    assert_eq!(tree_bytes(&child_remote), remote);
 }

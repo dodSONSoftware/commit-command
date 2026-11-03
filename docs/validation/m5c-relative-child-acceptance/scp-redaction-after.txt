@@ -1,0 +1,18 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.88s
+     Running tests/remote_inspection.rs (app/core/target/debug/deps/remote_inspection-4251459876928727)
+
+running 10 tests
+test malformed_scp_style_userinfo_cannot_leak_a_password_in_inspection ... ok
+test explicit_pushurl_suppresses_pushinsteadof_and_multiple_destinations_stay_visible ... ok
+test effective_fetch_push_rewrites_case_sensitive_names_origins_and_upstream_are_read_only ... ok
+test missing_upstream_detached_head_and_cancellation_are_explicit ... ok
+test inspection_never_executes_configured_helpers_and_never_returns_embedded_secrets ... ok
+test helper_and_hostile_destinations_are_withheld_and_controls_fail_closed ... ok
+test unsupported_scp_query_and_fragment_values_are_withheld ... ok
+test explicit_ssh_login_is_visible_but_password_query_fragment_and_encoded_login_stay_withheld ... ok
+test scope_limits_malformed_names_and_case_insensitive_tls_overrides_fail_safely ... ok
+test push_remote_precedence_is_only_a_suggestion_and_unknown_or_local_upstream_is_reported ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.86s
+

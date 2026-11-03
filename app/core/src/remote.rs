@@ -3,6 +3,7 @@ pub mod fetch;
 pub mod observation;
 pub mod push;
 pub mod upstream;
+pub(crate) mod urls;
 use crate::{domain::*, inspection, process, Error, ErrorKind, Result};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -179,6 +180,14 @@ fn remote_name(name: &str) -> bool {
             .all(|b| b.is_ascii_alphanumeric() || b"._-/".contains(&b))
 }
 pub(crate) fn destination(raw: &str) -> Destination {
+    if urls::scp_parts(raw).is_some() {
+        return Destination {
+            display: raw.into(),
+            transport: Transport::Ssh,
+            credentials_hidden: false,
+            restrictions: Vec::new(),
+        };
+    }
     let mut result = Destination {
         display: String::new(),
         transport: Transport::Unsupported,
@@ -244,21 +253,10 @@ pub(crate) fn destination(raw: &str) -> Destination {
         .is_some_and(|prefix| prefix.contains(':'))
     {
         result.transport = Transport::Ssh;
-        // SCP-style login names are not credentials, but never display a password-like prefix.
-        let (host, path) = raw.split_once(':').unwrap_or_default();
-        if path.contains('@') {
-            result.display = "[ambiguous SCP-style destination withheld]".into();
-            result.credentials_hidden = true;
-            result
-                .restrictions
-                .push("Use an explicit SSH URL without embedded password information".into());
-            return result;
-        }
-        result.credentials_hidden = host.contains('@');
-        result.display = format!(
-            "{}:{}",
-            host.rsplit('@').next().unwrap_or(host).escape_default(),
-            path.escape_default()
+        result.display = "[unsupported SCP-style destination withheld]".into();
+        result.credentials_hidden = true;
+        result.restrictions.push(
+            "Use supported SCP syntax with an explicit plain login, or an explicit SSH URL".into(),
         );
     } else {
         result.transport = Transport::Local;

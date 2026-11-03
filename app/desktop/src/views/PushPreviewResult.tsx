@@ -73,6 +73,10 @@ export function PushPreviewResult({ preview }: { preview: PushPreview }) {
                 {mapping.issue
                   ? ` · ${text(mapping.issue)}`
                   : " · Requires explicit child selection and observation"}
+                {mapping.declared_url &&
+                  ` · Declared ${text(mapping.declared_url)}`}
+                {mapping.resolution_base &&
+                  ` · Relative to selected parent ${text(mapping.resolution_base)}`}
               </p>
             ))}
           </div>

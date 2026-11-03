@@ -94,8 +94,10 @@ impl MappingFile {
         }
         Ok(result)
     }
-    pub(super) fn mapping(&self, path: &[u8], commit: &ObjectId) -> HistoricalMapping {
+    pub(super) fn mapping(&self, path: &[u8], commit: &ObjectId, base: &str) -> HistoricalMapping {
         let mut result = HistoricalMapping {
+            declared_url: None,
+            resolution_base: None,
             gitmodules_blob: self.blob.clone(),
             example_commit: commit.clone(),
             destination: None,
@@ -122,16 +124,35 @@ impl MappingFile {
             result.issue = Some("Historical child URL exceeds 4,096 bytes; value withheld".into());
             return result;
         }
-        let destination: Destination = crate::remote::destination(url);
+        let relative = url.starts_with("./") || url.starts_with("../");
+        let resolved = if relative {
+            let Some(value) = crate::remote::urls::relative_url(base, url) else {
+                result.issue = Some("Relative child URL cannot be resolved safely against the selected parent destination".into());
+                return result;
+            };
+            result.resolution_base = Some(base.into());
+            value
+        } else {
+            url.into()
+        };
+        if resolved.len() > 4096 {
+            result.issue = Some("Resolved child URL exceeds 4,096 bytes".into());
+            return result;
+        }
+        let destination: Destination = crate::remote::destination(&resolved);
         if destination.credentials_hidden
             || !destination.restrictions.is_empty()
             || !matches!(
                 destination.transport,
                 Transport::Https | Transport::Ssh | Transport::Local
             )
-            || (!url.contains("://") && !Path::new(url).is_absolute())
+            || (!resolved.contains("://")
+                && !Path::new(&resolved).is_absolute()
+                && crate::remote::urls::scp_parts(&resolved).is_none())
         {
-            result.issue = Some("Historical child URL requires an explicit supported absolute destination without credentials; relative URLs need separate resolution".into());
+            result.issue = Some("Historical child URL requires a supported destination without credentials or ambiguous path spelling".into());
+        } else {
+            result.declared_url = Some(url.into());
         }
         result.destination = Some(destination);
         result

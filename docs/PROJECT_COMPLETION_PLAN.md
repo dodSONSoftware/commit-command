@@ -175,6 +175,9 @@ Current M5B checkpoint: reviewed branch downloads and separately reviewed offlin
 
 ### M5C Add separately reviewed individual and bulk push
 
+Latest [relative/SCP child acceptance](reports/M5C_RELATIVE_CHILD_ACCEPTANCE_2026-11-02.md) adds supported directory-relative URLs bound to the explicitly selected parent destination and exact-preserving SCP SSH syntax. Native verified-TLS child evidence/selection clearing/ordinary no replay and actual isolated SSH-agent child evidence passed. Direct SCP port-22 acceptance is OS-bind-permission blocked; no root/global changes. Unsupported spellings stay blocked/withheld. Multi-level selected dependency planning and actual separate push authority/hook/recovery remain open. Historical relative/native-form gaps below are superseded only within this supported envelope.
+
+
 Latest checkpoint: [historical child mapping and observed reachability](reports/M5C_CHILD_MAPPING_EVIDENCE_2026-11-02.md) preserves committed `.gitmodules` contexts and adds explicit child/mapping/approved-observation selection with local ancestry checks. Exact destinations, repository/configuration/auth/tool bindings and five-minute observation freshness are enforced. Relative URLs remain blocked; native/authenticated child-evidence chain acceptance, multi-level selected dependency planning and exact push authority remain open. These results are historical evidence, not push grants or a guarantee of current server state.
 
 

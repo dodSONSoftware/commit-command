@@ -6,7 +6,7 @@ use std::{
     process::{Child, Command, Stdio},
     time::{Duration, Instant},
 };
-struct Server {
+pub(super) struct Server {
     server: Child,
     agent: Child,
     socket: PathBuf,
@@ -28,7 +28,7 @@ fn run(command: &mut Command) {
         String::from_utf8_lossy(&o.stderr)
     );
 }
-fn server(t: &mut Test) -> Server {
+pub(super) fn server(t: &mut Test) -> Server {
     fs::write(
         t.f.root.join(".gitfleet-ssh-fixture"),
         b"disposable SSH transport test",
@@ -77,7 +77,7 @@ fn server(t: &mut Test) -> Server {
     let script = t.f.root.join("serve.py");
     let upload = String::from_utf8(t.f.git(&["--exec-path"])).unwrap();
     let upload = PathBuf::from(upload.trim()).join("git-upload-pack");
-    fs::write(&script,format!("import os,sys,time,select\nfrom pathlib import Path\nr=Path({:?})\nwith (r/'ssh-requests').open('a') as f:f.write(os.environ.get('SSH_ORIGINAL_COMMAND','')+'\\n')\nwhile (r/'hold-ssh').exists():\n if select.select([sys.stdin],[],[],.02)[0] and not os.read(0,65536):sys.exit(0)\nos.execv({:?},[{:?},{:?}])\n",t.f.root.to_str().unwrap(),upload.to_str().unwrap(),upload.to_str().unwrap(),t.remote.to_str().unwrap())).unwrap();
+    fs::write(&script,format!("import os,sys,time,select,json,shlex\nfrom pathlib import Path\nr=Path({:?})\nwith (r/'ssh-requests').open('a') as f:f.write(os.environ.get('SSH_ORIGINAL_COMMAND','')+'\\n')\nwhile (r/'hold-ssh').exists():\n if select.select([sys.stdin],[],[],.02)[0] and not os.read(0,65536):sys.exit(0)\ntarget={:?}\nif (r/'ssh-routing.json').exists():\n args=shlex.split(os.environ.get('SSH_ORIGINAL_COMMAND',''))\n routes=json.loads((r/'ssh-routing.json').read_text())\n if len(args)!=2 or args[0]!='git-upload-pack' or args[1] not in routes:sys.exit(2)\n target=routes[args[1]]\nos.execv({:?},[{:?},target])\n",t.f.root.to_str().unwrap(),t.remote.to_str().unwrap(),upload.to_str().unwrap(),upload.to_str().unwrap())).unwrap();
     let config = t.f.root.join("sshd.conf");
     let user = String::from_utf8(Command::new("id").arg("-un").output().unwrap().stdout).unwrap();
     fs::write(&config,format!("ListenAddress 127.0.0.1\nPort {port}\nHostKey \"{}\"\nPidFile {}\nAuthorizedKeysFile \"{}\"\nAllowUsers {}\nStrictModes yes\nPasswordAuthentication no\nKbdInteractiveAuthentication no\nUsePAM no\nAllowAgentForwarding no\nAllowTcpForwarding no\nX11Forwarding no\nPermitTTY no\nForceCommand /usr/bin/python3 {}\nLogLevel VERBOSE\n",keys.join("host").display(),t.f.root.join("sshd.pid").display(),keys.join("client.pub").display(),user.trim(),script.display())).unwrap();

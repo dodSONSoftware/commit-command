@@ -1,0 +1,18 @@
+{
+  "base_commit": "29ea9de972e01dd09df16691832532c2be7da3b5",
+  "files_sha256": {
+    "app/core/src/remote.rs": "3ae0224774ce389b4bf9b2ebcd39cd29f9405e07b270bc1b8d5d741f48870e78",
+    "app/core/src/remote/push.rs": "36539c76a9552a82c667b6666e3143a42ce4b5417f41392e293383f102bb7fbb",
+    "app/core/src/remote/urls.rs": "eda146f95228ceafd0a45a713aa0c2e4f0ad8d67804ab44ba26dba18e59db5cf",
+    "app/core/src/writes/push_mappings.rs": "18799de98a0c1d457267a09b411ef7708fb87bb92ae77e68fd529951aeb04b67",
+    "app/core/src/writes/push_preview.rs": "30ddf6db098fdde6a8e323024992040e4c19edb91a5c98fc3185bb8932cff2a1",
+    "app/core/src/writes/ssh_transport.rs": "078b664e5cfcdc6998c9c5fb8da931e77d45c25ccfbf98cea7e9b0964b2a6b34",
+    "app/core/tests/remote_inspection.rs": "0bf9794f2519eaacc3c7dadd40b6b623f9a31fb59e5b12c9ba70221c5e72002f",
+    "app/core/tests/support/child_evidence.rs": "b393f7def867553bb80b44de45edc593f8945fbec5ff1575b55d2561aee55f07",
+    "app/core/tests/support/ssh_transport.rs": "6868275b8382471fbc67e91eba2c3fa8570e79489b5baaa6ea78cfb71f64b718",
+    "app/desktop/src/services/response.generated.ts": "f7113e9d8cf1e8d1133e00aa78e39b1a23dff0ebd33861f9ca9dbe49167ce37e",
+    "app/desktop/src/views/ChildReachabilityForm.test.tsx": "dd8da06a6df9c197d65225018eafcc381b2e58c8b5131ff4e51e5cd5424f40e4",
+    "app/desktop/src/views/PushPreviewResult.test.tsx": "8b8d5290fdaa9df16e0f483b4cfd9f6df020cabdc5269ea4d3e27d0f2af3cf98",
+    "app/desktop/src/views/PushPreviewResult.tsx": "0a0d01a0d277309c9acfa0c973d0c70a95f0b09fcd17ad7dbab0502eb83e49e6"
+  }
+}

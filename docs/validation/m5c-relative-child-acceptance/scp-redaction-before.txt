@@ -1,0 +1,22 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.35s
+     Running tests/remote_inspection.rs (app/core/target/debug/deps/remote_inspection-4251459876928727)
+
+running 1 test
+test unsupported_scp_query_and_fragment_values_are_withheld ... FAILED
+
+failures:
+
+---- unsupported_scp_query_and_fragment_values_are_withheld stdout ----
+
+thread 'unsupported_scp_query_and_fragment_values_are_withheld' (23845061) panicked at tests/remote_inspection.rs:316:9:
+assertion failed: !serde_json::to_string(&report).unwrap().contains("SCP_PRIVATE_VALUE")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    unsupported_scp_query_and_fragment_values_are_withheld
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 9 filtered out; finished in 0.15s
+
+error: test failed, to rerun pass `--test remote_inspection`

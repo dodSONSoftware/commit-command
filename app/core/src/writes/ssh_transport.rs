@@ -232,6 +232,9 @@ pub(super) fn command(bindings: &[ToolBinding], home: &Path) -> Result<String> {
         .join(" "))
 }
 pub(super) fn validate_destination(raw: &str) -> Result<()> {
+    if crate::remote::urls::scp_parts(raw).is_some() {
+        return Ok(());
+    }
     let value =
         url::Url::parse(raw).map_err(|_| unsupported("SSH requires a canonical ssh:// URL"))?;
     if !raw.starts_with("ssh://")

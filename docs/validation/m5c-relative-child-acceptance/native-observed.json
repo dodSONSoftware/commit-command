@@ -1,0 +1,170 @@
+{
+  "records": {
+    "remote-observation:f0ae6bf6-695d-4ae0-a504-cf7310e6ec1f": {
+      "version": 1,
+      "session": "f9c96a2b-2f9a-43c4-b9f3-90b626bbf46e",
+      "value": {
+        "plan": {
+          "id": "f0ae6bf6-695d-4ae0-a504-cf7310e6ec1f",
+          "workspace": "b07fed61-d665-4c64-a1ee-1e1cc453633a",
+          "worktree": "441ca331-1338-4afa-927a-9ed1e9ba43bd",
+          "metadata": {
+            "root": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-child-native-goukkxip/workspace/parent"
+            },
+            "git_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-child-native-goukkxip/workspace/parent/.git"
+            },
+            "common_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-child-native-goukkxip/workspace/parent/.git"
+            },
+            "root_binding": "16777229:51375862:Some(SystemTime { tv_sec: 1793683608, tv_nsec: 343157114 })",
+            "git_binding": "16777229:51375865:Some(SystemTime { tv_sec: 1793683608, tv_nsec: 348519484 })",
+            "common_binding": "16777229:51375865:Some(SystemTime { tv_sec: 1793683608, tv_nsec: 348519484 })",
+            "object_format": "sha1"
+          },
+          "remote": "origin",
+          "reference": "refs/heads/main",
+          "destination": "https://127.0.0.1:55174/parent.git",
+          "transport": "https",
+          "config_digest": "e0bf624d37493c1df24f9adadab83079fe6a2469cd149487cb104faadd62ab0f",
+          "generation": "236eb9509a8cac7f5fad96d4c61c39bf85a98c7ea943a5459f5d928b72e43d5f",
+          "created_at_ms": 1793683756361,
+          "tools": [
+            {
+              "role": "git",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/bin/git"
+              },
+              "fingerprint": "70feb0465f5896154abd7405231483f4b0cd99e3855fcc4d86e08b66869d1007"
+            },
+            {
+              "role": "https_helper",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-remote-https"
+              },
+              "fingerprint": "ea516f1cfced38527ec4d627d6843c84f4960252ce78adaa87b35e2bd2bd2ddb"
+            },
+            {
+              "role": "exec_directory",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+              },
+              "fingerprint": "16777229:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })"
+            },
+            {
+              "role": "certificate_authority",
+              "path": {
+                "encoding": "utf8",
+                "value": "/private/tmp/gitfleet-child-native-goukkxip/certificate.pem"
+              },
+              "fingerprint": "1f9687c37bbed96909753f4f91cf11f39b968d4a640a1dd85164d4b099dec786"
+            }
+          ],
+          "local_target": null,
+          "local_binding": null,
+          "authentication": null,
+          "authentication_profile": null
+        },
+        "phase": "complete",
+        "oid": {
+          "format": "sha1",
+          "hex": "0aff2e0d09162c4b037314b57b620a1d09cd919c"
+        },
+        "observed_at_ms": 1793683767561,
+        "issue": null
+      }
+    },
+    "remote-observation:d9cdbffe-1e1d-415b-98f7-cab74c399f82": {
+      "version": 1,
+      "session": "f9c96a2b-2f9a-43c4-b9f3-90b626bbf46e",
+      "value": {
+        "plan": {
+          "id": "d9cdbffe-1e1d-415b-98f7-cab74c399f82",
+          "workspace": "b07fed61-d665-4c64-a1ee-1e1cc453633a",
+          "worktree": "f2a47337-f386-4195-98c3-425f3ecbcc4a",
+          "metadata": {
+            "root": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-child-native-goukkxip/workspace/parent/child"
+            },
+            "git_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-child-native-goukkxip/workspace/parent/child/.git"
+            },
+            "common_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-child-native-goukkxip/workspace/parent/child/.git"
+            },
+            "root_binding": "16777229:51375910:Some(SystemTime { tv_sec: 1793683608, tv_nsec: 382723257 })",
+            "git_binding": "16777229:51375911:Some(SystemTime { tv_sec: 1793683608, tv_nsec: 387679124 })",
+            "common_binding": "16777229:51375911:Some(SystemTime { tv_sec: 1793683608, tv_nsec: 387679124 })",
+            "object_format": "sha1"
+          },
+          "remote": "origin",
+          "reference": "refs/heads/main",
+          "destination": "https://127.0.0.1:55174/child.git",
+          "transport": "https",
+          "config_digest": "e511506e677f91959b5781b30e03cbefd0edee2a32606b1605ea3ae6db3fdd9d",
+          "generation": "c6be463e8cff7f655a7389fe81ecfebd8ed60f656e525bd4eb0531727699900a",
+          "created_at_ms": 1793683792035,
+          "tools": [
+            {
+              "role": "git",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/bin/git"
+              },
+              "fingerprint": "70feb0465f5896154abd7405231483f4b0cd99e3855fcc4d86e08b66869d1007"
+            },
+            {
+              "role": "https_helper",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-remote-https"
+              },
+              "fingerprint": "ea516f1cfced38527ec4d627d6843c84f4960252ce78adaa87b35e2bd2bd2ddb"
+            },
+            {
+              "role": "exec_directory",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+              },
+              "fingerprint": "16777229:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })"
+            },
+            {
+              "role": "certificate_authority",
+              "path": {
+                "encoding": "utf8",
+                "value": "/private/tmp/gitfleet-child-native-goukkxip/certificate.pem"
+              },
+              "fingerprint": "1f9687c37bbed96909753f4f91cf11f39b968d4a640a1dd85164d4b099dec786"
+            }
+          ],
+          "local_target": null,
+          "local_binding": null,
+          "authentication": null,
+          "authentication_profile": null
+        },
+        "phase": "complete",
+        "oid": {
+          "format": "sha1",
+          "hex": "d7e458047bb13527491743657065b54251651712"
+        },
+        "observed_at_ms": 1793683806021,
+        "issue": null
+      }
+    }
+  },
+  "requests_sha256": "0921cf54b7226991389cc7cd744caa68a520b0b328476f56465c247d74cc6609",
+  "request_count": 3,
+  "repository_and_server_snapshots_unchanged": true,
+  "no_write_capture_import_records": true
+}

@@ -305,3 +305,20 @@ fn explicit_ssh_login_is_visible_but_password_query_fragment_and_encoded_login_s
         assert_eq!(before, tree_bytes(&f.repo));
     }
 }
+
+#[test]
+fn unsupported_scp_query_and_fragment_values_are_withheld() {
+    let f = Fixture::new();
+    f.commit_file();
+    for value in [
+        "git@example.invalid:repo?SCP_PRIVATE_VALUE",
+        "git@example.invalid:repo#SCP_PRIVATE_VALUE",
+    ] {
+        f.git(&["config", "remote.origin.url", value]);
+        let report = gitfleet_core::remote::inspect(&f.repo, None, &Default::default()).unwrap();
+        assert!(!serde_json::to_string(&report)
+            .unwrap()
+            .contains("SCP_PRIVATE_VALUE"));
+        assert!(report.remotes[0].fetch[0].credentials_hidden);
+    }
+}

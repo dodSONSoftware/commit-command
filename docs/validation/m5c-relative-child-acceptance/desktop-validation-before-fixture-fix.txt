@@ -1,0 +1,79 @@
+git version 2.56.0
+rustc 1.99.1 (58cf8f9c3 2026-10-13)
+cargo 1.99.1 (5f94df478 2026-08-27)
+v22.22.3
+10.9.8
+
+> gitfleet-desktop@0.1.1 typecheck
+> tsc --noEmit
+
+
+> gitfleet-desktop@0.1.1 lint
+> eslint . --max-warnings 0
+
+
+> gitfleet-desktop@0.1.1 contracts
+> node scripts/contracts.mjs --check
+
+
+> gitfleet-desktop@0.1.1 format:check
+> prettier --check src scripts *.json *.ts *.html
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> gitfleet-desktop@0.1.1 test
+> vitest run
+
+
+ RUN  v4.1.12 /Users/randydodson/Documents/_code/git-fleet/app/desktop
+
+ ❯ src/views/ChildReachabilityForm.test.tsx (1 test | 1 failed) 225ms
+   × requires explicit mapping, repository and approved observation; sends only a local evidence request 224ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/views/ChildReachabilityForm.test.tsx > requires explicit mapping, repository and approved observation; sends only a local evidence request
+AssertionError: expected last "vi.fn()" call to have been called with [ Array(1) ]
+
+- Expected
++ Received
+
+@@ -6,20 +6,18 @@
+        "child_oid": {
+          "format": "sha1",
+          "hex": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        },
+        "child_worktree": "child",
+-       "declared_url": null,
+        "gitmodules_blob": {
+          "format": "sha1",
+          "hex": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        },
+        "parent_observation": "parent-observation",
+        "path": [
+          99,
+        ],
+-       "resolution_base": null,
+        "source_oid": {
+          "format": "sha1",
+          "hex": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        },
+      },
+
+ ❯ src/views/ChildReachabilityForm.test.tsx:168:19
+    166|     "Reachable from observed child branch",
+    167|   );
+    168|   expect(request).toHaveBeenLastCalledWith({
+       |                   ^
+    169|     kind: "child_reachability",
+    170|     workspace: "ws",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 15 passed (16)
+      Tests  1 failed | 58 passed (59)
+   Start at  23:26:03
+   Duration  4.52s (transform 901ms, setup 1.83s, import 2.87s, tests 6.11s, environment 13.06s)
+

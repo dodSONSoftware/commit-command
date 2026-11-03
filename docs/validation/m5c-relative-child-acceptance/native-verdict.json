@@ -1,0 +1,14 @@
+{
+  "observed_ui_text": "Reachable from observed child branch",
+  "declared_url": "../child.git",
+  "resolved_destination": "https://127.0.0.1:55174/child.git",
+  "explicit_parent_base": "https://127.0.0.1:55174/parent.git",
+  "required_child_oid": "0aff2e0d09162c4b037314b57b620a1d09cd919c",
+  "observed_child_oid": "d7e458047bb13527491743657065b54251651712",
+  "git_ancestry_oracle_matches": true,
+  "ui_warns_no_push_authority": true,
+  "choices_initially_empty": true,
+  "independent_no_extra_contact": "native-proof.json",
+  "selection_change_cleared_evidence": true,
+  "ordinary_final_restart_read_only": true
+}

@@ -32,6 +32,8 @@ pub struct OutgoingGitlink {
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct HistoricalMapping {
+    pub declared_url: Option<String>,
+    pub resolution_base: Option<String>,
     pub gitmodules_blob: Option<ObjectId>,
     pub example_commit: ObjectId,
     pub destination: Option<super::Destination>,

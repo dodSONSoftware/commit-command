@@ -1,0 +1,9 @@
+{
+  "bundle": "/private/tmp/gitfleet-child-native-goukkxip/GitFleet Child Evidence.app",
+  "sha256": "56839247b21cb9d31b133aafd45b9a8e09de8d96ad7addafb6396fe1938ce033",
+  "features": [
+    "custom-protocol",
+    "desktop-writes"
+  ],
+  "base_commit": "29ea9de972e01dd09df16691832532c2be7da3b5"
+}
