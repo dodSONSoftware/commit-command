@@ -117,6 +117,11 @@ pub enum Request {
         worktree: String,
         observation: String,
     },
+    ChildReachability {
+        workspace: String,
+        worktree: String,
+        selection: crate::remote::push::ChildReachabilitySelection,
+    },
     ReviewFetchCapture {
         workspace: String,
         worktree: String,
@@ -267,6 +272,7 @@ pub enum Data {
     RemoteObservations(crate::remote::observation::ObservationPage),
     FetchCaptures(crate::remote::fetch::FetchCapturePage),
     PushPreview(crate::remote::push::PushPreview),
+    ChildReachability(Box<crate::remote::push::ChildReachability>),
     FetchImports(crate::remote::fetch::FetchImportPage),
     Workspaces(WorkspaceList),
     Inventory(InventoryView),
@@ -721,6 +727,21 @@ impl Application {
                 let review = self.writes.inspect_upstream_recovery(&id, &operation)?;
                 self.entry(&workspace, &review.operation.plan.transport.worktree.0)?;
                 Data::Review(self.set_review(review::Action::UpstreamRecovery(Box::new(review)))?)
+            }
+            Request::ChildReachability {
+                workspace,
+                worktree,
+                selection,
+            } => {
+                let entry = self.entry(&workspace, &worktree)?;
+                let child = self.entry(&workspace, &selection.child_worktree)?;
+                let id = self.active(&workspace)?;
+                let mut options = self.read_options.clone();
+                options.timeout = Duration::from_secs(30);
+                Data::ChildReachability(Box::new(
+                    self.writes
+                        .child_reachability(&id, &entry, &child, selection, &options)?,
+                ))
             }
             Request::PushPreview {
                 workspace,

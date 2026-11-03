@@ -178,7 +178,7 @@ fn remote_name(name: &str) -> bool {
             .bytes()
             .all(|b| b.is_ascii_alphanumeric() || b"._-/".contains(&b))
 }
-fn destination(raw: &str) -> Destination {
+pub(crate) fn destination(raw: &str) -> Destination {
     let mut result = Destination {
         display: String::new(),
         transport: Transport::Unsupported,

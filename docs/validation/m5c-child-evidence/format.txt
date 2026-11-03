@@ -1,0 +1,11 @@
+src/views/ChildReachabilityForm.tsx 37ms
+[error] src/views/RemoteInspector.tsx: SyntaxError: ')' expected. (363:11)
+[error]   361 |       {preview?.context === previewContext && (
+[error]   362 |           <PushPreviewResult preview={preview.value} />
+[error] > 363 |           {preview.value.outgoing_gitlinks.some((r) => r.mappings.some((m) => !m.issue && m.gitmodules_blob)) && (
+[error]       |           ^
+[error]   364 |             <ChildReachabilityForm key={`${previewContext}:${preview.value.generated_at_ms}`} bridge={bridge} workspace={workspace} worktree={worktree} preview={preview.value} busy={busy} act={act} />
+[error]   365 |           )}
+[error]   366 |       )}
+src/views/PushPreviewResult.tsx 9ms
+src/views/PushPreviewResult.test.tsx 7ms (unchanged)

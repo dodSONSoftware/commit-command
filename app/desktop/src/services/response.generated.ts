@@ -66,6 +66,11 @@ export type Data =
       [k: string]: unknown;
     }
   | {
+      kind: "child_reachability";
+      value: ChildReachability;
+      [k: string]: unknown;
+    }
+  | {
       kind: "fetch_imports";
       value: FetchImportPage;
       [k: string]: unknown;
@@ -1079,8 +1084,20 @@ export interface OutgoingCommit {
  */
 export interface OutgoingGitlink {
   example_commit: ObjectId;
+  mappings: HistoricalMapping[];
   oid: ObjectId;
   path: number[];
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "HistoricalMapping".
+ */
+export interface HistoricalMapping {
+  destination?: Destination | null;
+  example_commit: ObjectId;
+  gitmodules_blob?: ObjectId | null;
+  issue?: string | null;
   [k: string]: unknown;
 }
 /**
@@ -1092,6 +1109,39 @@ export interface OutgoingGitlink {
 export interface SourceGitlink {
   oid: ObjectId;
   path: number[];
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ChildReachability".
+ */
+export interface ChildReachability {
+  checked_at_ms: number;
+  child_config_digest: string;
+  child_destination: string;
+  child_generation: string;
+  child_observed_at_ms: number;
+  child_reference: string;
+  child_remote: string;
+  mapping: HistoricalMapping;
+  observed_child_oid: ObjectId;
+  parent: PushPreview;
+  reachable: boolean;
+  selection: ChildReachabilitySelection;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ChildReachabilitySelection".
+ */
+export interface ChildReachabilitySelection {
+  child_observation: string;
+  child_oid: ObjectId;
+  child_worktree: string;
+  gitmodules_blob: ObjectId;
+  parent_observation: string;
+  path: number[];
+  source_oid: ObjectId;
   [k: string]: unknown;
 }
 /**

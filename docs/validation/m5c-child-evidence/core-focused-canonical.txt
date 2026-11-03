@@ -1,0 +1,12 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.40s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-a5b0bae5745a2202)
+
+running 4 tests
+test child_evidence::historical_mappings_refuse_ambiguity_relative_urls_secrets_and_nonregular_blobs ... ok
+test child_evidence::historical_mappings_keep_url_changes_and_ignore_working_files_and_includes ... ok
+test child_evidence::child_evidence_rejects_mismatches_expiry_missing_objects_config_drift_and_cancellation ... ok
+test child_evidence::selected_child_observation_proves_only_actual_ancestry_and_preserves_all_repositories ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 59 filtered out; finished in 27.34s
+

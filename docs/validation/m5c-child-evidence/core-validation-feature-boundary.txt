@@ -1,0 +1,391 @@
+git version 2.56.0
+rustc 1.99.1 (58cf8f9c3 2026-10-13)
+cargo 1.99.1 (5f94df478 2026-08-27)
+LibreSSL 3.3.6
+OpenSSH_10.5p1, LibreSSL 3.3.6
+gpg (GnuPG) 2.5.24
+Core layout/manifest checks passed. Runtime safety is verified separately by Cargo tests.
+   Compiling rusqlite v0.41.0
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.87s
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running unittests src/lib.rs (target/debug/deps/gitfleet_core-98f34aac5a3f532e)
+
+running 7 tests
+test locking::tests::explicit_release_does_not_wait_for_duplicated_descriptors ... ok
+test process::tests::trusted_artifact_check_prevents_spawn_and_reaps_running_process ... ok
+test process::tests::bounded_process_limits_and_cancellation_reap_children ... ok
+test process::tests::bounded_input_checks_writer_completion_and_descendant_timeout ... ok
+test process::tests::global_permits_never_exceed_four ... ok
+test inspection::consistency_tests::ref_and_config_mutation_during_read_are_rejected ... ok
+test inspection::consistency_tests::multi_command_reads_for_one_worktree_are_serialized ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.43s
+
+     Running unittests src/bin/gitfleet_cli.rs (target/debug/deps/gitfleet_cli-751593ce767d86cd)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/graph_activity.rs (target/debug/deps/graph_activity-7eb24f50ead8519c)
+
+running 5 tests
+test activity_does_not_prune_recent_ancestors_behind_older_committer_dates ... ok
+test sha256_graph_retains_full_object_ids ... ok
+test activity_uses_committer_time_and_deduplicates_branches_with_explicit_truncation ... ok
+test unborn_graph_and_activity_are_empty_and_malformed_graph_lanes_are_rejected ... ok
+test graph_uses_actual_merge_parents_and_preserves_lanes_across_pages_without_writes ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.76s
+
+     Running tests/inspection.rs (target/debug/deps/inspection-db3c97d1279458da)
+
+running 12 tests
+test non_utf8_filename_remains_git_quoted_without_mutation ... ignored, M0 host filesystem rejects non-UTF-8 filename creation (EPERM); requires a supporting filesystem
+test nested_directory_is_not_accepted_as_worktree_root ... ok
+test included_filter_configuration_is_rejected ... ok
+test missing_promisor_object_cannot_launch_a_remote_helper ... ok
+test worktree_filter_configuration_is_rejected ... ok
+test cli_does_not_inherit_git_repository_or_config_overrides ... ok
+test content_filters_are_rejected_without_mutation ... ok
+test configured_helper_sentinels_are_not_executed ... ok
+test inspection_and_cli_preserve_dirty_repository_bytes ... ok
+test newline_filename_remains_git_quoted_without_mutation ... ok
+test unmerged_index_can_be_inspected_without_write_tree ... ok
+test unborn_and_detached_head_can_be_inspected ... ok
+
+test result: ok. 11 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 2.00s
+
+     Running tests/m1_read.rs (target/debug/deps/m1_read-43d05fd3c5a09d12)
+
+running 16 tests
+test byte_safe_parsers_roundtrip_non_utf8_names_and_reject_malformed_records ... ok
+test conflict_stages_and_merge_state_are_structured_without_mutation ... ok
+test cancelled_deadline_output_and_preview_limits_are_typed_without_repo_mutation ... ok
+test unborn_history_is_empty_and_history_limits_are_checked ... ok
+test local_upstream_comparison_never_claims_remote_freshness ... ok
+test split_index_is_read_only_and_sparse_configuration_fails_closed ... ok
+test structured_status_distinguishes_partial_staging_rename_binary_modes_and_conflicts ... ok
+test executable_mode_and_deletion_diffs_are_explicit ... ok
+test symlink_leaf_is_not_dereferenced_and_parent_escape_and_fifo_are_rejected ... ok
+test missing_upstream_and_shallow_boundary_are_explicit ... ok
+test literal_newline_and_binary_previews_preserve_scope_and_bytes ... ok
+test sha256_repository_inspection_and_blob_ids_are_format_aware ... ok
+test root_commit_diff_and_staged_unstaged_blobs_have_independent_oracles ... ok
+test history_dag_merge_parents_tags_pagination_and_stale_cursors ... ok
+test helper_sentinels_are_suppressed_for_every_history_diff_and_failure_path ... ok
+test cli_and_library_inspection_contracts_agree_for_all_read_modes ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.22s
+
+     Running tests/m1_workspace.rs (target/debug/deps/m1_workspace-dae20fca6b7c20f3)
+
+running 15 tests
+test invalid_and_newer_configs_and_schemas_are_preserved ... ok
+test unversioned_unknown_database_is_not_migrated_and_empty_database_is_backed_up ... ok
+test failed_atomic_config_save_preserves_previous_toml_and_memory ... ok
+test state_inside_checkout_and_invalid_workspace_definitions_are_rejected ... ok
+test cli_and_service_workspace_results_agree_and_preserve_repository_bytes ... ok
+test saved_workspaces_restart_activate_rename_update_remove_and_lock ... ok
+test startup_reconciles_authoritative_toml_after_database_update_was_interrupted ... ok
+test changing_workspace_root_invalidates_old_inventory_and_refresh_scope ... ok
+test targeted_refresh_does_not_rediscover_and_replacement_requires_rescan ... ok
+test clones_with_identical_head_have_distinct_identities ... ok
+test partial_permission_scan_and_glob_exclusions_preserve_known_identity ... ok
+test submodule_gitlinks_and_child_dirt_are_reported_without_recursive_helpers ... ok
+test exclusions_partial_scans_and_unavailable_entries_are_explicit ... ok
+test identities_survive_restart_and_verified_move_but_not_copies_or_replacement ... ok
+test mixed_inventory_classifies_nested_submodule_and_linked_worktrees ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.54s
+
+    Checking rusqlite v0.41.0
+    Checking gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.36s
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.16s
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.02s
+     Running unittests src/lib.rs (target/debug/deps/gitfleet_core-833334e2b22230e2)
+
+running 7 tests
+test locking::tests::explicit_release_does_not_wait_for_duplicated_descriptors ... ok
+test process::tests::trusted_artifact_check_prevents_spawn_and_reaps_running_process ... ok
+test process::tests::bounded_process_limits_and_cancellation_reap_children ... ok
+test process::tests::global_permits_never_exceed_four ... ok
+test process::tests::bounded_input_checks_writer_completion_and_descendant_timeout ... ok
+test inspection::consistency_tests::ref_and_config_mutation_during_read_are_rejected ... ok
+test inspection::consistency_tests::multi_command_reads_for_one_worktree_are_serialized ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.37s
+
+     Running unittests src/bin/gitfleet_cli.rs (target/debug/deps/gitfleet_cli-532206e482d7b3be)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/gitfleet_lab.rs (target/debug/deps/gitfleet_lab-5f423a2baf1506e4)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/acceptance.rs (target/debug/deps/acceptance-d413b9c95e424d91)
+
+running 24 tests
+test external_index_changed ... ok
+test hook_changes_selected_worktree ... ok
+test prepare_hook_rewrites_message ... ok
+test hook_rewrites_message ... ok
+test hook_stages_unapproved ... ok
+test real_sigkill_before_ref ... ok
+test real_sigkill_after_ref ... ok
+test successful_gpg_signing ... ignored, optional positive GPG signing; run explicitly with a working GPG installation
+test crash_then_external_index_edit ... ok
+test partial_staging_commits_index_only ... ok
+test real_sigkill_after_reconcile ... ok
+test selected_staged_preserves_other_staging ... ok
+test partial_staging_commits_worktree ... ok
+test mixed_selected_sources ... ok
+test selected_rename_pair ... ok
+test hook_modifies_only_worktree ... ok
+test post_commit_hook ... ok
+test selected_worktree_changed_after_review ... ok
+test stale_head_before_cas ... ok
+test signing_missing_key ... ok
+test selected_unstaged_deletion ... ok
+test untracked_selected ... ok
+test space_in_path ... ok
+test selected_worktree_preserves_other_staging ... ok
+
+test result: ok. 23 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 1.55s
+
+     Running tests/core_behaviour.rs (target/debug/deps/core_behaviour-3dedb6b12bcf9448)
+
+running 6 tests
+test prevent_parent_path_escape ... ok
+test read_only_status_is_available ... ok
+test discovery_does_not_follow_symlinked_directories ... ok
+test discovery_canonicalizes_symlinked_root ... ok
+test discover_nested_repositories_and_gitfile_marker ... ok
+test discover_linked_worktree_with_git_file ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.65s
+
+     Running tests/graph_activity.rs (target/debug/deps/graph_activity-46abee7b586201b3)
+
+running 5 tests
+test activity_does_not_prune_recent_ancestors_behind_older_committer_dates ... ok
+test sha256_graph_retains_full_object_ids ... ok
+test activity_uses_committer_time_and_deduplicates_branches_with_explicit_truncation ... ok
+test unborn_graph_and_activity_are_empty_and_malformed_graph_lanes_are_rejected ... ok
+test graph_uses_actual_merge_parents_and_preserves_lanes_across_pages_without_writes ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.78s
+
+     Running tests/inspection.rs (target/debug/deps/inspection-061b724fead7dec7)
+
+running 12 tests
+test non_utf8_filename_remains_git_quoted_without_mutation ... ignored, M0 host filesystem rejects non-UTF-8 filename creation (EPERM); requires a supporting filesystem
+test included_filter_configuration_is_rejected ... ok
+test nested_directory_is_not_accepted_as_worktree_root ... ok
+test worktree_filter_configuration_is_rejected ... ok
+test cli_does_not_inherit_git_repository_or_config_overrides ... ok
+test missing_promisor_object_cannot_launch_a_remote_helper ... ok
+test content_filters_are_rejected_without_mutation ... ok
+test newline_filename_remains_git_quoted_without_mutation ... ok
+test configured_helper_sentinels_are_not_executed ... ok
+test inspection_and_cli_preserve_dirty_repository_bytes ... ok
+test unmerged_index_can_be_inspected_without_write_tree ... ok
+test unborn_and_detached_head_can_be_inspected ... ok
+
+test result: ok. 11 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 1.62s
+
+     Running tests/m1_read.rs (target/debug/deps/m1_read-4d9433079ad7ca43)
+
+running 16 tests
+test byte_safe_parsers_roundtrip_non_utf8_names_and_reject_malformed_records ... ok
+test unborn_history_is_empty_and_history_limits_are_checked ... ok
+test executable_mode_and_deletion_diffs_are_explicit ... ok
+test conflict_stages_and_merge_state_are_structured_without_mutation ... ok
+test symlink_leaf_is_not_dereferenced_and_parent_escape_and_fifo_are_rejected ... ok
+test literal_newline_and_binary_previews_preserve_scope_and_bytes ... ok
+test cancelled_deadline_output_and_preview_limits_are_typed_without_repo_mutation ... ok
+test local_upstream_comparison_never_claims_remote_freshness ... ok
+test split_index_is_read_only_and_sparse_configuration_fails_closed ... ok
+test structured_status_distinguishes_partial_staging_rename_binary_modes_and_conflicts ... ok
+test sha256_repository_inspection_and_blob_ids_are_format_aware ... ok
+test missing_upstream_and_shallow_boundary_are_explicit ... ok
+test root_commit_diff_and_staged_unstaged_blobs_have_independent_oracles ... ok
+test history_dag_merge_parents_tags_pagination_and_stale_cursors ... ok
+test cli_and_library_inspection_contracts_agree_for_all_read_modes ... ok
+test helper_sentinels_are_suppressed_for_every_history_diff_and_failure_path ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.51s
+
+     Running tests/m1_workspace.rs (target/debug/deps/m1_workspace-c2441f6550d8b87c)
+
+running 15 tests
+test invalid_and_newer_configs_and_schemas_are_preserved ... ok
+test unversioned_unknown_database_is_not_migrated_and_empty_database_is_backed_up ... ok
+test failed_atomic_config_save_preserves_previous_toml_and_memory ... ok
+test state_inside_checkout_and_invalid_workspace_definitions_are_rejected ... ok
+test saved_workspaces_restart_activate_rename_update_remove_and_lock ... ok
+test cli_and_service_workspace_results_agree_and_preserve_repository_bytes ... ok
+test startup_reconciles_authoritative_toml_after_database_update_was_interrupted ... ok
+test changing_workspace_root_invalidates_old_inventory_and_refresh_scope ... ok
+test clones_with_identical_head_have_distinct_identities ... ok
+test targeted_refresh_does_not_rediscover_and_replacement_requires_rescan ... ok
+test submodule_gitlinks_and_child_dirt_are_reported_without_recursive_helpers ... ok
+test partial_permission_scan_and_glob_exclusions_preserve_known_identity ... ok
+test exclusions_partial_scans_and_unavailable_entries_are_explicit ... ok
+test identities_survive_restart_and_verified_move_but_not_copies_or_replacement ... ok
+test mixed_inventory_classifies_nested_submodule_and_linked_worktrees ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.45s
+
+     Running tests/write_regressions.rs (target/debug/deps/write_regressions-0fa953cafdcad693)
+
+running 6 tests
+test journal_phase_serialization_preserves_legacy_spelling ... ok
+test unknown_journal_phase_is_rejected ... ok
+test same_oid_branch_switch_invalidates_prepared_plan ... ok
+test nonzero_hook_preserves_refs_index_and_worktree ... ok
+test partial_staging_and_binary_content_have_independent_oracles ... ok
+test selected_pathspec_magic_is_a_literal_filename ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.87s
+
+    Checking gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.05s
+   Compiling rusqlite v0.41.0
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+error[E0433]: cannot find `remote` in the crate root
+  --> src/writes/child_reachability.rs:4:12
+   |
+ 4 | use crate::remote::push::*;
+   |            ^^^^^^ could not find `remote` in the crate root
+   |
+note: found an item that was configured out
+  --> src/lib.rs:31:9
+   |
+30 | #[cfg(feature = "application-services")]
+   |       -------------------------------- the item is gated behind the `application-services` feature
+31 | pub mod remote;
+   |         ^^^^^^
+
+error[E0433]: cannot find `remote` in the crate root
+  --> src/writes/push_mappings.rs:4:12
+   |
+ 4 | use crate::remote::{push::HistoricalMapping, Destination, Transport};
+   |            ^^^^^^ could not find `remote` in the crate root
+   |
+note: found an item that was configured out
+  --> src/lib.rs:31:9
+   |
+30 | #[cfg(feature = "application-services")]
+   |       -------------------------------- the item is gated behind the `application-services` feature
+31 | pub mod remote;
+   |         ^^^^^^
+
+error[E0432]: unresolved import `crate::remote`
+  --> src/writes/push_mappings.rs:4:12
+   |
+ 4 | use crate::remote::{push::HistoricalMapping, Destination, Transport};
+   |            ^^^^^^ could not find `remote` in the crate root
+   |
+note: found an item that was configured out
+  --> src/lib.rs:31:9
+   |
+30 | #[cfg(feature = "application-services")]
+   |       -------------------------------- the item is gated behind the `application-services` feature
+31 | pub mod remote;
+   |         ^^^^^^
+
+error[E0432]: unresolved import `super::push_preview`
+  --> src/writes/child_reachability.rs:2:12
+   |
+ 2 | use super::push_preview::{complete_history, remaining};
+   |            ^^^^^^^^^^^^ could not find `push_preview` in `super`
+   |
+note: found an item that was configured out
+  --> src/writes/mod.rs:18:5
+   |
+17 | #[cfg(feature = "application-services")]
+   |       -------------------------------- the item is gated behind the `application-services` feature
+18 | mod push_preview;
+   |     ^^^^^^^^^^^^
+
+error[E0433]: cannot find `remote` in the crate root
+   --> src/writes/push_mappings.rs:125:47
+    |
+125 |         let destination: Destination = crate::remote::destination(url);
+    |                                               ^^^^^^ could not find `remote` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:31:9
+    |
+ 30 | #[cfg(feature = "application-services")]
+    |       -------------------------------- the item is gated behind the `application-services` feature
+ 31 | pub mod remote;
+    |         ^^^^^^
+
+error[E0425]: cannot find type `ChildReachabilitySelection` in this scope
+  --> src/writes/child_reachability.rs:17:20
+   |
+17 |         selection: ChildReachabilitySelection,
+   |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ChildReachability` in this scope
+  --> src/writes/child_reachability.rs:19:17
+   |
+19 |     ) -> Result<ChildReachability> {
+   |                 ^^^^^^^^^^^^^^^^^ not found in this scope
+   |
+help: you might be missing a type parameter
+   |
+11 | impl<ChildReachability> ControlledWrites {
+   |     +++++++++++++++++++
+
+error[E0422]: cannot find struct, variant or union type `ChildReachability` in this scope
+   --> src/writes/child_reachability.rs:135:12
+    |
+135 |         Ok(ChildReachability {
+    |            ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0599]: no method named `push_preview` found for mutable reference `&mut writes::ControlledWrites` in the current scope
+  --> src/writes/child_reachability.rs:24:28
+   |
+24 |         let preview = self.push_preview(
+   |                       -----^^^^^^^^^^^^ method not found in `&mut writes::ControlledWrites`
+
+error[E0599]: no method named `completed_observation` found for mutable reference `&mut writes::ControlledWrites` in the current scope
+  --> src/writes/child_reachability.rs:51:18
+   |
+51 |             self.completed_observation(&selection.child_observation, workspace, &child.id)?;
+   |                  ^^^^^^^^^^^^^^^^^^^^^ method not found in `&mut writes::ControlledWrites`
+
+error[E0599]: no method named `prepare_transport_plan` found for mutable reference `&mut writes::ControlledWrites` in the current scope
+  --> src/writes/child_reachability.rs:62:28
+   |
+62 |         let current = self.prepare_transport_plan(
+   |                       -----^^^^^^^^^^^^^^^^^^^^^^ method not found in `&mut writes::ControlledWrites`
+
+error[E0599]: no method named `revalidate_transport` found for mutable reference `&mut writes::ControlledWrites` in the current scope
+   --> src/writes/child_reachability.rs:121:14
+    |
+121 |         self.revalidate_transport(&current, &remaining(options, started)?)?;
+    |              ^^^^^^^^^^^^^^^^^^^^ method not found in `&mut writes::ControlledWrites`
+
+error[E0599]: no method named `push_preview` found for mutable reference `&mut writes::ControlledWrites` in the current scope
+   --> src/writes/child_reachability.rs:122:26
+    |
+122 |         let after = self.push_preview(
+    |                     -----^^^^^^^^^^^^ method not found in `&mut writes::ControlledWrites`
+
+Some errors have detailed explanations: E0422, E0425, E0432, E0433, E0599.
+For more information about an error, try `rustc --explain E0422`.
+error: could not compile `gitfleet-core` (lib) due to 13 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `gitfleet-core` (lib test) due to 13 previous errors

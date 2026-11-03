@@ -87,6 +87,7 @@ it("shows removed history requirements even with no source gitlinks", () => {
             path: Array.from(new TextEncoder().encode("removed/<script>")),
             oid: { format: "sha1", hex: "d".repeat(40) },
             example_commit: { format: "sha1", hex: "e".repeat(40) },
+            mappings: [],
           },
         ],
       }}

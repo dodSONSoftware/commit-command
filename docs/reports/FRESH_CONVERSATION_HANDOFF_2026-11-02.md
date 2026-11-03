@@ -1,5 +1,11 @@
 # Fresh conversation handoff — November 2, 2026
 
+## Latest M5C historical mapping and child evidence checkpoint
+
+Read `docs/reports/M5C_CHILD_MAPPING_EVIDENCE_2026-11-02.md`. Outgoing gitlink requirements now retain separate committed `.gitmodules` blob contexts, with redacted destination/issue and example parent. No includes or working files supply mappings. New explicit child-evidence form and scoped Core request recompute the exact parent requirement and check required child ancestry against a recent separately approved child branch observation. Destination, repository/config/auth/tool bindings, five-minute freshness, shallow/missing objects, cancellation and final context checks fail closed. No request initiates network/authentication or grants push authority. Relative/shorthand URLs remain unsupported; new native form and authenticated transport-chain acceptance are not claimed.
+
+See `docs/validation/m5c-child-evidence/validation-summary.json` for final actual gates and manifests. Next: supported URL-resolution/transport acceptance, multi-level dependency/cycle/selection planning and separate exact individual/bulk non-force push/hook/recovery authority, respecting no-push. Keep the operator-only SecurityAgent acceptance gap open; no policy bypass or reuse of deleted credential fixtures. Preserve unrelated files, keep ordinary writes disabled, save reports and commit locally. Older gaps below are historical and superseded only where the new report provides evidence.
+
 ## Latest M5C outgoing-history dependency checkpoint
 
 Read `docs/reports/M5C_HISTORY_DEPENDENCIES_2026-11-02.md`. Local push previews now inventory unique raw-path/child-OID pairs across all outgoing commit trees, including removed/replaced and merge-side links beyond the 100-commit display cap. Each pair has one example parent; identical trees deduplicated. More than 256 distinct trees or 1,024 requirements refuses rather than returning partial success. No child checkout/network/credential access or push authority. This supersedes the prior source-only history gap below, but historical URL/mapping changes and intended-child-remote reachability proof remain open. See `docs/validation/m5c-history-dependencies/validation-summary.json` for actual checks. No native presentation acceptance of the new section is claimed.

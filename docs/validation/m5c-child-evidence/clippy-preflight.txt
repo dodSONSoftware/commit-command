@@ -1,0 +1,30 @@
+    Checking gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+error: large size difference between variants
+   --> src/application/mod.rs:262:1
+    |
+262 | / pub enum Data {
+263 | |     AuthenticationSettings(crate::authentication::Settings),
+264 | |     AuthenticationChoices(crate::authentication::Choices),
+265 | |     Graph(crate::graph::Page),
+...   |
+274 | |     PushPreview(crate::remote::push::PushPreview),
+    | |     --------------------------------------------- the second-largest variant contains at least 336 bytes
+275 | |     ChildReachability(crate::remote::push::ChildReachability),
+    | |     --------------------------------------------------------- the largest variant contains at least 848 bytes
+...   |
+288 | |     Done,
+289 | | }
+    | |_^ the entire enum is at least 848 bytes
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#large_enum_variant
+    = note: `-D clippy::large-enum-variant` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::large_enum_variant)]`
+help: consider boxing the large fields or introducing indirection in some other way to reduce the total size of the enum
+    |
+275 -     ChildReachability(crate::remote::push::ChildReachability),
+275 +     ChildReachability(Box<crate::remote::push::ChildReachability>),
+    |
+
+error: could not compile `gitfleet-core` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `gitfleet-core` (lib test) due to 1 previous error

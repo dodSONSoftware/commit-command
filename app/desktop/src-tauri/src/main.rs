@@ -930,6 +930,15 @@ mod tests {
             worktree: "t".into(),
             observation: "o".into()
         }));
+        assert!(!mutating_request(&serde_json::from_value::<Request>(json!({
+            "kind":"child_reachability", "workspace":"ws", "worktree":"parent",
+            "selection":{
+                "parent_observation":"parent-observation", "source_oid":{"format":"sha1","hex":"a".repeat(40)},
+                "path":[99], "child_oid":{"format":"sha1","hex":"b".repeat(40)},
+                "gitmodules_blob":{"format":"sha1","hex":"c".repeat(40)},
+                "child_worktree":"child", "child_observation":"child-observation"
+            }
+        })).unwrap()));
         assert!(!mutating_request(&Request::FetchImports {
             workspace: "w".into(),
             offset: 0

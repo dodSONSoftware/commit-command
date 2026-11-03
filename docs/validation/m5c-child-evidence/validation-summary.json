@@ -1,0 +1,54 @@
+{
+  "base_commit": "313f382",
+  "core_feature_matrix": {
+    "default": {
+      "passed": 54,
+      "ignored": 1
+    },
+    "experimental": {
+      "passed": 89,
+      "ignored": 2
+    },
+    "controlled": {
+      "passed": 79,
+      "ignored": 1
+    },
+    "application": {
+      "passed": 194,
+      "ignored": 4
+    },
+    "all": {
+      "passed": 238,
+      "ignored": 8
+    }
+  },
+  "core_full_gate": "passed",
+  "lab": {
+    "passed": 23,
+    "skipped": 1
+  },
+  "focused_child_evidence_tests": 6,
+  "application_remote_suite": {
+    "passed": 63,
+    "ignored": 2
+  },
+  "all_feature_remote_suite": {
+    "passed": 67,
+    "ignored": 4
+  },
+  "renderer_focused": 8,
+  "desktop_full_gate": "passed",
+  "renderer_tests": 59,
+  "host_tests_per_configuration": 13,
+  "contracts_type_lint_format_build_clippy_default_release": "passed",
+  "historical_mapping": "committed blobs with no includes; explicit supported absolute destinations only",
+  "child_reachability": "local ancestry against exact selected separately approved branch observation; max age 300000ms",
+  "automatic_network_or_credential_lookup_added": false,
+  "new_live_native_form_acceptance": "not run",
+  "authenticated_child_evidence_ui_chain": "not run",
+  "relative_and_scp_child_urls": "unsupported; refused",
+  "ordinary_bundle_refreshed": true,
+  "ordinary_writes_enabled": false,
+  "push_implemented_or_executed": false,
+  "unrelated_work_preserved": true
+}

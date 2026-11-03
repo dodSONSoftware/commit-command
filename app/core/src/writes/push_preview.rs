@@ -8,13 +8,13 @@ fn stale() -> Error {
         "Push preview context changed; inspect and observe again",
     )
 }
-fn remaining(options: &ReadOptions, start: Instant) -> Result<ReadOptions> {
+pub(super) fn remaining(options: &ReadOptions, start: Instant) -> Result<ReadOptions> {
     options.check(start)?;
     let mut next = options.clone();
     next.timeout = next.timeout.saturating_sub(start.elapsed());
     Ok(next)
 }
-fn complete_history(s: &inspection::Session<'_>) -> Result<()> {
+pub(super) fn complete_history(s: &inspection::Session<'_>) -> Result<()> {
     for path in [
         s.common_dir.join("shallow"),
         s.common_dir.join("info/grafts"),
@@ -74,7 +74,7 @@ fn outgoing_gitlinks(
     range: &str,
     expected_count: u32,
 ) -> Result<Vec<OutgoingGitlink>> {
-    use std::collections::{btree_map::Entry, BTreeMap, BTreeSet};
+    use std::collections::{BTreeMap, BTreeSet};
     // This list is independent of the 100-commit presentation limit and includes
     // all merge parents reachable from source but not the observed destination.
     let list = inspection::output_text(s.git(&[
@@ -89,6 +89,8 @@ fn outgoing_gitlinks(
     let mut trees = BTreeSet::new();
     let mut requirements = BTreeMap::new();
     let mut count = 0;
+    let mut mapping_count = 0;
+    let mut detail_bytes = 0;
     for line in list.lines() {
         let (commit, tree) = line
             .split_once(' ')
@@ -105,21 +107,56 @@ fn outgoing_gitlinks(
                 "Outgoing history exceeds 256 distinct trees",
             ));
         }
-        for link in source_gitlinks(s, &tree)? {
+        let links = source_gitlinks(s, &tree)?;
+        if links.is_empty() {
+            continue;
+        }
+        let mappings = super::push_mappings::MappingFile::read(s, &tree)?;
+        for link in links {
             let key = (link.path.clone(), link.oid.hex.clone());
             let requirement_count = requirements.len();
-            if let Entry::Vacant(entry) = requirements.entry(key) {
-                if requirement_count == 1024 {
+            if !requirements.contains_key(&key) {
+                detail_bytes += link.path.len();
+                if detail_bytes > 2 * 1024 * 1024 {
                     return Err(fail(
                         ErrorKind::OutputLimit,
-                        "Outgoing history exceeds 1,024 child requirements",
+                        "Outgoing dependency details exceed 2 MiB",
                     ));
                 }
-                entry.insert(OutgoingGitlink {
-                    path: link.path,
-                    oid: link.oid,
-                    example_commit: commit.clone(),
-                });
+            }
+            if requirement_count == 1024 && !requirements.contains_key(&key) {
+                return Err(fail(
+                    ErrorKind::OutputLimit,
+                    "Outgoing history exceeds 1,024 child requirements",
+                ));
+            }
+            let mapping = mappings.mapping(&link.path, &commit);
+            let entry = requirements.entry(key).or_insert_with(|| OutgoingGitlink {
+                path: link.path,
+                oid: link.oid,
+                example_commit: commit.clone(),
+                mappings: Vec::new(),
+            });
+            if !entry
+                .mappings
+                .iter()
+                .any(|m| m.gitmodules_blob == mapping.gitmodules_blob)
+            {
+                mapping_count += 1;
+                if mapping_count > 4096 {
+                    return Err(fail(
+                        ErrorKind::OutputLimit,
+                        "Outgoing history exceeds 4,096 mapping contexts",
+                    ));
+                }
+                detail_bytes += mapping.destination.as_ref().map_or(0, |d| d.display.len());
+                if detail_bytes > 2 * 1024 * 1024 {
+                    return Err(fail(
+                        ErrorKind::OutputLimit,
+                        "Outgoing dependency details exceed 2 MiB",
+                    ));
+                }
+                entry.mappings.push(mapping);
             }
         }
     }

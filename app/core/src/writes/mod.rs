@@ -8,10 +8,14 @@ mod adapter;
 #[cfg(feature = "application-services")]
 mod application;
 #[cfg(feature = "application-services")]
+mod child_reachability;
+#[cfg(feature = "application-services")]
 mod fetch;
 #[cfg(feature = "application-services")]
 mod fetch_import;
 mod policy;
+#[cfg(feature = "application-services")]
+mod push_mappings;
 #[cfg(feature = "application-services")]
 mod push_preview;
 #[cfg(feature = "application-services")]

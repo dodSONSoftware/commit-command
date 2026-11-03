@@ -175,6 +175,9 @@ Current M5B checkpoint: reviewed branch downloads and separately reviewed offlin
 
 ### M5C Add separately reviewed individual and bulk push
 
+Latest checkpoint: [historical child mapping and observed reachability](reports/M5C_CHILD_MAPPING_EVIDENCE_2026-11-02.md) preserves committed `.gitmodules` contexts and adds explicit child/mapping/approved-observation selection with local ancestry checks. Exact destinations, repository/configuration/auth/tool bindings and five-minute observation freshness are enforced. Relative URLs remain blocked; native/authenticated child-evidence chain acceptance, multi-level selected dependency planning and exact push authority remain open. These results are historical evidence, not push grants or a guarantee of current server state.
+
+
 Latest prerequisite: [outgoing-history requirements](reports/M5C_HISTORY_DEPENDENCIES_2026-11-02.md) now inventories unique path/child pairs across every outgoing commit tree, including removed/replaced links and merge-side history beyond the display cap. Successful inventories are complete within the explicit 256-tree/1,024-requirement bounds; larger scopes refuse. Historical child URL/mapping resolution, explicit destination selection, fresh server reachability, ordering and exact push authority remain open. Source-only limitations in the prior checkpoint below are superseded by this inventory, not by remote proof.
 
 

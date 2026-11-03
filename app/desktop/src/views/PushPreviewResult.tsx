@@ -58,10 +58,24 @@ export function PushPreviewResult({ preview }: { preview: PushPreview }) {
           occurrence.
         </p>
         {preview.outgoing_gitlinks.map((link) => (
-          <p key={JSON.stringify([link.path, link.oid.hex])}>
-            {bytes(link.path)} · <code>{link.oid.hex}</code> · example parent{" "}
-            <code>{link.example_commit.hex}</code>
-          </p>
+          <div key={JSON.stringify([link.path, link.oid.hex])}>
+            <p>
+              {bytes(link.path)} · <code>{link.oid.hex}</code> · example parent{" "}
+              <code>{link.example_commit.hex}</code>
+            </p>
+            {link.mappings.map((mapping, i) => (
+              <p key={i}>
+                Historical mapping ·{" "}
+                {mapping.gitmodules_blob?.hex ?? "missing .gitmodules"} ·{" "}
+                {mapping.destination
+                  ? text(mapping.destination.display)
+                  : "No usable destination"}
+                {mapping.issue
+                  ? ` · ${text(mapping.issue)}`
+                  : " · Requires explicit child selection and observation"}
+              </p>
+            ))}
+          </div>
         ))}
       </details>
       {(preview.relation === "behind" || preview.relation === "diverged") && (

@@ -28,6 +28,39 @@ pub struct OutgoingGitlink {
     pub path: Vec<u8>,
     pub oid: ObjectId,
     pub example_commit: ObjectId,
+    pub mappings: Vec<HistoricalMapping>,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+pub struct HistoricalMapping {
+    pub gitmodules_blob: Option<ObjectId>,
+    pub example_commit: ObjectId,
+    pub destination: Option<super::Destination>,
+    pub issue: Option<String>,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+pub struct ChildReachabilitySelection {
+    pub parent_observation: String,
+    pub source_oid: ObjectId,
+    pub path: Vec<u8>,
+    pub child_oid: ObjectId,
+    pub gitmodules_blob: ObjectId,
+    pub child_worktree: String,
+    pub child_observation: String,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+pub struct ChildReachability {
+    pub parent: PushPreview,
+    pub selection: ChildReachabilitySelection,
+    pub mapping: HistoricalMapping,
+    pub child_remote: String,
+    pub child_destination: String,
+    pub child_reference: String,
+    pub observed_child_oid: ObjectId,
+    pub child_observed_at_ms: u64,
+    pub child_generation: String,
+    pub child_config_digest: String,
+    pub checked_at_ms: u64,
+    pub reachable: bool,
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct PushPreview {

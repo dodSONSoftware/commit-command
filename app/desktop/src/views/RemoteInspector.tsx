@@ -10,6 +10,7 @@ import { bytes, pathText } from "../stores/model";
 import { AuthenticationSettings } from "./AuthenticationSettings";
 import { ObservationRecords } from "./ObservationHistory";
 import { PushPreviewResult } from "./PushPreviewResult";
+import { ChildReachabilityForm } from "./ChildReachabilityForm";
 import { FetchCaptureRecords } from "./FetchCaptureHistory";
 const text = (value: string) =>
   bytes(Array.from(new TextEncoder().encode(value)));
@@ -358,7 +359,22 @@ export function RemoteInspector({
         }}
       />
       {preview?.context === previewContext && (
-        <PushPreviewResult preview={preview.value} />
+        <>
+          <PushPreviewResult preview={preview.value} />
+          {preview.value.outgoing_gitlinks.some((r) =>
+            r.mappings.some((m) => !m.issue && m.gitmodules_blob),
+          ) && (
+            <ChildReachabilityForm
+              key={`${previewContext}:${preview.value.generated_at_ms}`}
+              bridge={bridge}
+              workspace={workspace}
+              worktree={worktree}
+              preview={preview.value}
+              busy={busy}
+              act={act}
+            />
+          )}
+        </>
       )}
       {observations?.next != null && (
         <button

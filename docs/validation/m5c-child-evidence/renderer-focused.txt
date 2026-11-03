@@ -1,0 +1,13 @@
+
+> gitfleet-desktop@0.1.1 test
+> vitest run --run src/views/ChildReachabilityForm.test.tsx src/views/PushPreviewResult.test.tsx src/views/RemoteInspector.test.tsx
+
+
+ RUN  v4.1.12 /Users/randydodson/Documents/_code/git-fleet/app/desktop
+
+
+ Test Files  3 passed (3)
+      Tests  8 passed (8)
+   Start at  22:33:00
+   Duration  677ms (transform 186ms, setup 140ms, import 310ms, tests 386ms, environment 727ms)
+

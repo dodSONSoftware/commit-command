@@ -1,0 +1,22 @@
+{
+  "base_commit": "313f38237d87427e98e590dd01e6d40949a24b8e",
+  "files_sha256": {
+    "app/core/src/application/mod.rs": "f13c6e3b69e25d2e75f300b6972fca27884d863480002fd1b464c675c8a8e213",
+    "app/core/src/remote.rs": "e4130e1480b24e8227d090a26c6f0fe6027cc2b60e7b608a5b9892037f71c993",
+    "app/core/src/remote/push.rs": "ef5bb90636d3b953c075c5d094b4c21262b61531cabd4d0a66b348eefd67ddd2",
+    "app/core/src/writes/child_reachability.rs": "df99e07e956d5ec1d68571e034942cac1c89289b66ab62b1294f7aeb33b5ad51",
+    "app/core/src/writes/mod.rs": "db17fa8b3eaf56ff24e1aa5e7e6125d180c4036bda662deaf68675184b7d70ed",
+    "app/core/src/writes/push_mappings.rs": "0d33decf3940682ed5eb3ddfd68a8b79f38d4f9d6ac0c24cb156f41488cec663",
+    "app/core/src/writes/push_preview.rs": "ced0dce2b978543762f01137b9d86e7780fe1469227fe5c18d0209c72e1877c1",
+    "app/core/tests/remote_observation.rs": "b56875d0329581fd28f79c0e5a2e2ec30fd7b8a3076094073f9a892acb15b186",
+    "app/core/tests/support/child_evidence.rs": "d4b10ce03605cca8e4f8dbbe32f49e7655bf31e9ac0b600db326b133e2f73038",
+    "app/desktop/src-tauri/src/main.rs": "3f6aba941849a093b0ec6ba4da7d3a0075617de3f912293b0ef5efe6bf93445a",
+    "app/desktop/src/services/request.generated.ts": "6bd2b0ee3a6d124b57bddafd3833c2da88e25eaeb32af9479fc1b7963dde63f1",
+    "app/desktop/src/services/response.generated.ts": "b1c2fe34a5b31c11c4949d2b55a9d6b16c828dbdccf6d3d58d8c117c010a0b68",
+    "app/desktop/src/views/ChildReachabilityForm.test.tsx": "a0f1c1f6e245fcdf65a54bdf6d35bad24047133a3093d179a25ea43e3c447587",
+    "app/desktop/src/views/ChildReachabilityForm.tsx": "93ea8d462e5f4ce58f5ce8acb523c9f4733f99cf611ff6b69d468a17d8334a19",
+    "app/desktop/src/views/PushPreviewResult.test.tsx": "489e00e964906cb1e8b559b98f3cd7331dce574ada5177c31d27b69b814cba8e",
+    "app/desktop/src/views/PushPreviewResult.tsx": "c8cf4ee50aaa61bb039762fc08a652e1165e9e89ac106852f50645a9c6be7ed5",
+    "app/desktop/src/views/RemoteInspector.tsx": "e0269edefa7e914006d8e6e647980798de21d38cc1341966cbb493c4b4820a3e"
+  }
+}

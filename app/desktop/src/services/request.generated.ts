@@ -92,6 +92,12 @@ export type Request =
       worktree: string;
     }
   | {
+      kind: "child_reachability";
+      selection: ChildReachabilitySelection;
+      workspace: string;
+      worktree: string;
+    }
+  | {
       kind: "review_fetch_capture";
       observation: string;
       workspace: string;
@@ -417,6 +423,16 @@ export interface BatchConfiguration {
   hooks: HookPolicy;
   mode: BatchMode;
   signing: SigningPreference;
+}
+export interface ChildReachabilitySelection {
+  child_observation: string;
+  child_oid: ObjectId;
+  child_worktree: string;
+  gitmodules_blob: ObjectId;
+  parent_observation: string;
+  path: number[];
+  source_oid: ObjectId;
+  [k: string]: unknown;
 }
 export interface DiscoveryOptions {
   excluded_names: string[];

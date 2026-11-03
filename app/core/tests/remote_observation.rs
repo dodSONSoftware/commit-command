@@ -2736,3 +2736,6 @@ fn local_push_preview_refuses_excessive_distinct_history_trees() {
     assert_eq!(tree_bytes(&t.f.repo), before);
     assert_eq!(tree_bytes(&t.remote), remote);
 }
+
+#[path = "support/child_evidence.rs"]
+mod child_evidence;
