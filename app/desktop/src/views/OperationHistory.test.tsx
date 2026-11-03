@@ -296,3 +296,89 @@ it("shows partial publication truthfully and requests only guarded recovery or f
     ),
   ).toBe(true);
 });
+it("renders interrupted pre-push checks as unpublished history without retry authority", async () => {
+  const transport = observation("observed").plan;
+  const source = { format: "sha1" as const, hex: "a".repeat(40) };
+  const previous = { format: "sha1" as const, hex: "b".repeat(40) };
+  const item: OperationAuditEntry = {
+    id: "check",
+    created_at_ms: 1,
+    operation_kind: "push_check",
+    result: "interrupted",
+    record: {
+      kind: "push_check",
+      value: {
+        phase: "interrupted",
+        checked_at_ms: null,
+        source_oid: source,
+        hook_passed: false,
+        published: false,
+        issue: "Hook interrupted; inspect effects before fresh review",
+        plan: {
+          id: "check",
+          workspace: "ws",
+          worktree: "repo",
+          created_at_ms: 1,
+          selection: {
+            worktree: "repo",
+            observation: "observed",
+            source_oid: source,
+            children: [],
+          },
+          preview: {
+            source_ref: "refs/heads/main",
+            source_oid: source,
+            remote: "origin",
+            destination: transport.destination,
+            destination_ref: "refs/heads/main",
+            observed_oid: previous,
+            observation_id: "observed",
+            observed_at_ms: 1,
+            generated_at_ms: 1,
+            generation: "g",
+            config_digest: "c",
+            relation: "fast_forward",
+            outgoing_count: 1,
+            incoming_count: 0,
+            outgoing: [],
+            outgoing_truncated: false,
+            source_gitlinks: [],
+            outgoing_gitlinks: [],
+            upstream_matches: false,
+          },
+          dependencies: [],
+          transport,
+          hooks: "execute",
+          hook: null,
+          hook_args: ["origin", transport.destination],
+          hook_stdin: `refs/heads/main ${source.hex} refs/heads/main ${previous.hex}\n`,
+          digest: "bound",
+        },
+      },
+    },
+  };
+  const request = vi.fn<Bridge["request"]>().mockResolvedValue({
+    kind: "operation_audit",
+    value: { items: [item], next: null },
+  });
+  render(
+    <OperationHistory
+      bridge={bridge(request)}
+      workspace="ws"
+      entries={[fixtureEntry("repo", "repo")]}
+      busy={false}
+      revision={0}
+      act={run}
+    />,
+  );
+  await screen.findByRole("heading", { name: "Pre-push check · interrupted" });
+  expect(
+    screen.getByText(/No publication was started by Core/),
+  ).toHaveTextContent("never replayed");
+  expect(
+    screen.queryByRole("button", { name: /retry|push now|resume/i }),
+  ).toBeNull();
+  expect(request.mock.calls.every(([r]) => r.kind === "operation_audit")).toBe(
+    true,
+  );
+});

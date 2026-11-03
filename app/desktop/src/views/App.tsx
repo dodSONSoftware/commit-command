@@ -753,6 +753,7 @@ export function App({ bridge }: { bridge: Bridge }) {
             <>
               {workspace && (
                 <PushDependencyPlanner
+                  enabled={writesEnabled}
                   key={`${workspace}:${resultsRevision}`}
                   bridge={bridge}
                   workspace={workspace}

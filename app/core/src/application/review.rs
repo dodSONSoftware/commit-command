@@ -15,6 +15,7 @@ pub(super) enum Action {
         reviews: Vec<TrustReview>,
     },
     Write(Box<Proposal>),
+    PushCheck(Box<crate::remote::push_check::PushCheckPlan>),
     Batch(BatchRecord),
     RemoteObservation(Box<crate::remote::observation::ObservationPlan>),
     FetchCapture(Box<crate::remote::fetch::FetchCapturePlan>),
@@ -131,6 +132,11 @@ impl Application {
             Action::Authentication(plan) => (
                 "Review authentication settings".into(),
                 format!("Requested change:\n{}\nSave the exact nonsecret profiles and remote assignments below. Selected helpers run unsandboxed as your user and may prompt during separately approved operations. Saving settings does not call a credential helper, contact a server, trust a repository or approve any network operation. Unknown or changed SSH host keys stop execution; verify and update known_hosts externally. Any settings revision invalidates outstanding authenticated network reviews.",plan.description),
+                serde_json::to_string_pretty(plan)?,
+            ),
+            Action::PushCheck(plan) => (
+                "Review pre-push hook check — no publication".into(),
+                format!("Check {} at {} for {} on {}.\nExpected remote commit: {}\nHook policy: {:?}\nAll required child commits must already be reachable from fresh, separately approved observations. Conditional child order is not success.\nApproval runs only the exact reviewed pre-push hook (unless explicitly bypassed) and revalidates context. Hooks run unsandboxed as your user and can modify files or contact servers. Raw output is not retained. Core starts no push transport and changes no refs or upstreams. A completed check grants no publication authority and cannot be reused or replayed. Future push execution requires a new exact review.\nReview digest: {}",plan.preview.source_ref,plan.preview.source_oid.hex,plan.preview.destination_ref,plan.preview.destination,plan.preview.observed_oid.hex,plan.hooks,plan.digest),
                 serde_json::to_string_pretty(plan)?,
             ),
             Action::Write(p) => self.describe_write(p)?,
@@ -254,6 +260,7 @@ impl Application {
                     .application_cancel_proposal(&proposal.operation_id)?,
                 Action::Batch(record) => self.cancel_batch_record(&mut record.clone())?,
                 Action::RemoteObservation(plan) => self.writes.cancel_observation(&plan.id)?,
+                Action::PushCheck(plan) => self.writes.cancel_push_check(&plan.id)?,
                 Action::UpstreamSetup(plan) => self.writes.cancel_upstream(&plan.transport.id)?,
                 Action::FetchImport(plan) => self.writes.cancel_import(&plan.transport.id)?,
                 Action::FetchCapture(plan) => self.writes.cancel_capture(&plan.transport.id)?,
@@ -267,6 +274,15 @@ impl Application {
         }
         let result = match p.action {
             Action::Authentication(plan) => self.apply_authentication(*plan, cancellation)?,
+            Action::PushCheck(plan) => {
+                self.active(&plan.workspace.0)?;
+                let entries = self.push_check_entries(&plan.workspace.0, &plan.selection)?;
+                serde_json::to_value(self.writes.execute_push_check(
+                    &plan,
+                    &entries,
+                    cancellation,
+                )?)?
+            }
             Action::UpstreamSetup(plan) => {
                 self.active(&plan.transport.workspace.0)?;
                 self.entry(&plan.transport.workspace.0, &plan.transport.worktree.0)?;

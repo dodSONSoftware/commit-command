@@ -98,6 +98,12 @@ export type Request =
       worktree: string;
     }
   | {
+      hooks: HookPolicy;
+      kind: "review_push_check";
+      selection: PushPlanningSelection;
+      workspace: string;
+    }
+  | {
       kind: "push_dependency_plan";
       selections: PushPlanningSelection[];
       workspace: string;
@@ -286,7 +292,8 @@ export type OperationAuditKind =
   | "remote_observation"
   | "fetch_capture"
   | "fetch_import"
-  | "upstream_setup";
+  | "upstream_setup"
+  | "push_check";
 export type OperationAuditResult =
   | "pending"
   | "complete"

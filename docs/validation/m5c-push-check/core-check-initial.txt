@@ -1,0 +1,29 @@
+    Checking gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+error[E0596]: cannot borrow `self.workspace` as mutable, as it is behind a `&` reference
+  --> src/writes/push_check.rs:58:9
+   |
+58 |         self.workspace.connection().execute(
+   |         ^^^^^^^^^^^^^^ `self` is a `&` reference, so it cannot be borrowed as mutable
+   |
+help: consider changing this to be a mutable reference
+   |
+53 |     fn persist_push_check(&mut self, stored: &Stored) -> Result<()> {
+   |                            +++
+
+error[E0596]: cannot borrow `self.workspace` as mutable, as it is behind a `&` reference
+  --> src/writes/push_check.rs:82:39
+   |
+82 |           let payload: Option<String> = self
+   |  _______________________________________^
+83 | |             .workspace
+   | |______________________^ `self` is a `&` reference, so it cannot be borrowed as mutable
+   |
+help: consider changing this to be a mutable reference
+   |
+80 |     fn load_push_check(&mut self, id: &str) -> Result<Stored> {
+   |                         +++
+
+For more information about this error, try `rustc --explain E0596`.
+error: could not compile `gitfleet-core` (lib) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `gitfleet-core` (lib test) due to 2 previous errors

@@ -20,7 +20,9 @@ export function PushDependencyPlanner({
   entries,
   busy,
   act,
+  enabled = false,
 }: {
+  enabled?: boolean;
   bridge: Bridge;
   workspace: string;
   entries: StoredWorktree[];
@@ -34,6 +36,9 @@ export function PushDependencyPlanner({
   const [bindings, setBindings] = useState<
     Record<string, ChildReachabilitySelection[]>
   >({});
+  const [hooks, setHooks] = useState<Record<string, "execute" | "bypass_all">>(
+    {},
+  );
   const [plan, setPlan] = useState<PushDependencyPlan | null>(null);
   const invalidate = () => {
     setSources([]);
@@ -176,6 +181,50 @@ export function PushDependencyPlanner({
         >
           <h3>{label(source.worktree)}</h3>
           <PushPreviewResult preview={source.preview} />
+          <label>
+            Pre-push hook policy for {label(source.worktree)}
+            <select
+              value={hooks[source.worktree] ?? "execute"}
+              disabled={busy}
+              onChange={(e) => {
+                const selected = e.target.value;
+                if (selected === "execute" || selected === "bypass_all")
+                  setHooks((old) => ({ ...old, [source.worktree]: selected }));
+              }}
+            >
+              <option value="execute">Execute supported pre-push hook</option>
+              <option value="bypass_all">
+                Explicitly bypass pre-push hook
+              </option>
+            </select>
+          </label>
+          <button
+            disabled={busy || !enabled}
+            onClick={() =>
+              void act(async () => {
+                await bridge.request({
+                  kind: "review_push_check",
+                  workspace,
+                  selection: {
+                    worktree: source.worktree,
+                    observation: source.preview.observation_id,
+                    source_oid: source.preview.source_oid,
+                    children: bindings[source.worktree] ?? [],
+                  },
+                  hooks: hooks[source.worktree] ?? "execute",
+                });
+              })
+            }
+          >
+            Review pre-push check for {label(source.worktree)}
+          </button>
+          <p>
+            This separate approval can run the reviewed hook. It publishes
+            nothing and grants no push authority. Every required child must
+            already be reachable remotely; a conditional plan is insufficient.
+            Hook effects may change files or contact servers.
+          </p>
+
           {source.preview.outgoing_gitlinks.length > 0 && (
             <ChildReachabilityForm
               bridge={bridge}

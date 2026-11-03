@@ -275,6 +275,24 @@ pub(super) fn preflight_locked(
     }
 }
 pub(super) fn hooks(meta: &Metadata, values: &BTreeMap<String, String>) -> Result<Vec<Hook>> {
+    named_hooks(
+        meta,
+        values,
+        &[
+            "pre-commit",
+            "prepare-commit-msg",
+            "commit-msg",
+            "post-commit",
+            "post-index-change",
+            "reference-transaction",
+        ],
+    )
+}
+pub(super) fn named_hooks(
+    meta: &Metadata,
+    values: &BTreeMap<String, String>,
+    names: &[&str],
+) -> Result<Vec<Hook>> {
     let root = meta.root.to_path()?;
     if values
         .get("core.hookspath")
@@ -293,14 +311,7 @@ pub(super) fn hooks(meta: &Metadata, values: &BTreeMap<String, String>) -> Resul
         meta.common_dir.to_path()?.join("hooks")
     };
     let mut result = Vec::new();
-    for name in [
-        "pre-commit",
-        "prepare-commit-msg",
-        "commit-msg",
-        "post-commit",
-        "post-index-change",
-        "reference-transaction",
-    ] {
+    for &name in names {
         let source = directory.join(name);
         if !source.exists() {
             continue;

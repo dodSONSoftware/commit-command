@@ -1,0 +1,12 @@
+{
+  "fixture_marker_verified": true,
+  "both_fixture_apps_exited": true,
+  "server_pid": 2497,
+  "server_exited_or_zombie_and_listener_closed": true,
+  "private_tls_key_removed": true,
+  "ordinary_default_bundle_restored_and_hash_matches_tested_artifact": true,
+  "hook_runs_after_all_restarts": 1,
+  "public_fixture_evidence_retained": true,
+  "no_push_executed": true,
+  "no_credentials_or_global_system_changes": true
+}

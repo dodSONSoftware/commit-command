@@ -1,0 +1,12 @@
+{
+  "runs": 1,
+  "args": [
+    "/private/tmp/gitfleet-push-check-native-ga2ddsf3/workspace/parent/child/grand",
+    "origin",
+    "https://127.0.0.1:59405/grand.git"
+  ],
+  "stdin": "refs/heads/main 225d92f06af4157c58db331b9079060cfe05d254 refs/heads/main 2245a1df69916c76654303501c5bf10b5d213e73\n",
+  "raw_hook_output_retained_by_app": false,
+  "all_managed_worktrees_and_remotes_preserved": true,
+  "published": false
+}

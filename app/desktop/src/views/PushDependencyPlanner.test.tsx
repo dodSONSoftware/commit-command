@@ -86,7 +86,7 @@ function observed(id: string): Observation {
     observed_at_ms: 1,
   };
 }
-function setup(cycle = false) {
+function setup(cycle = false, enabled = false) {
   const entries = [fixtureEntry("a", "a"), fixtureEntry("b", "b")];
   const request = vi.fn<Bridge["request"]>().mockImplementation(async (r) => {
     if (r.kind === "remote_observations")
@@ -117,6 +117,18 @@ function setup(cycle = false) {
           child_config_digest: "c-b",
           checked_at_ms: 2,
           reachable: false,
+        },
+      };
+    if (r.kind === "review_push_check")
+      return {
+        kind: "review",
+        value: {
+          id: "separate-check",
+          epoch: 1,
+          expires_at_ms: 99,
+          title: "Pre-push check",
+          summary: "No publication",
+          content: "{}",
         },
       };
     if (r.kind === "push_dependency_plan") {
@@ -167,6 +179,7 @@ function setup(cycle = false) {
   render(
     <PushDependencyPlanner
       bridge={bridge}
+      enabled={enabled}
       workspace="ws"
       entries={entries}
       busy={false}
@@ -326,4 +339,53 @@ it("shows the closed cycle witness without a partial order", async () => {
   expect(
     screen.getByRole("heading", { name: "Dependency planning blocked" }),
   ).toBeVisible();
+});
+
+it("keeps separately approved hook checks disabled in the ordinary build", async () => {
+  setup();
+  fireEvent.click(screen.getByText("Plan push dependencies locally"));
+  await choose("a");
+  await inspect();
+  expect(
+    screen.getByRole("button", {
+      name: "Review pre-push check for /tmp/project/a",
+    }),
+  ).toBeDisabled();
+});
+it("submits exact saved child selections and explicit hook policy for independent review", async () => {
+  const request = setup(false, true);
+  fireEvent.click(screen.getByText("Plan push dependencies locally"));
+  await choose("a");
+  await inspect();
+  await saveChild();
+  fireEvent.change(
+    screen.getByLabelText("Pre-push hook policy for /tmp/project/a"),
+    { target: { value: "bypass_all" } },
+  );
+  fireEvent.click(
+    screen.getByRole("button", {
+      name: "Review pre-push check for /tmp/project/a",
+    }),
+  );
+  await waitFor(() =>
+    expect(request).toHaveBeenCalledWith({
+      kind: "review_push_check",
+      workspace: "ws",
+      selection: {
+        worktree: "a",
+        observation: "obs-a",
+        source_oid: oid("a"),
+        children: [
+          expect.objectContaining({
+            child_worktree: "b",
+            child_observation: "obs-b",
+          }),
+        ],
+      },
+      hooks: "bypass_all",
+    }),
+  );
+  expect(
+    screen.getByText(/This separate approval can run the reviewed hook/),
+  ).toHaveTextContent("publishes nothing");
 });

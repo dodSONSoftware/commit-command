@@ -1,0 +1,17 @@
+{
+  "source": "/opt/homebrew/opt/git/share/man/man5/githooks.5",
+  "sha256": "d30193ba9f622b178abdb69be877b8d51f9655c736f94aadde1bd82f98409057",
+  "verified_contract": {
+    "argv": [
+      "remote name",
+      "remote location"
+    ],
+    "stdin": "local-ref SP local-oid SP remote-ref SP remote-oid LF",
+    "cwd": "non-bare working-tree root",
+    "unsupported_scope": [
+      "new remote branch",
+      "ref deletion"
+    ]
+  },
+  "note": "Installed Git manual inspected; fixture payload assertions independently verify emitted arguments, stdin and cwd."
+}

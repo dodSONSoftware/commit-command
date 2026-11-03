@@ -21,6 +21,7 @@ const kinds = [
   "fetch_capture",
   "fetch_import",
   "upstream_setup",
+  "push_check",
 ] as const;
 const operationName = (kind: string) =>
   kind === "fetch_capture"
@@ -237,6 +238,31 @@ export function OperationHistory({
             )}
             {item.record.kind === "fetch_capture" && (
               <FetchCaptureRecords items={[item.record.value]} />
+            )}
+            {item.record.kind === "push_check" && (
+              <article aria-label="Pre-push hook check record">
+                <h3>Pre-push check · {item.record.value.phase}</h3>
+                <p>
+                  {item.record.value.plan.preview.destination} ·{" "}
+                  {item.record.value.plan.preview.destination_ref}
+                </p>
+                <p>
+                  {item.record.value.plan.preview.source_ref} ·{" "}
+                  {item.record.value.source_oid.hex}
+                </p>
+                <p>
+                  Hook policy: {item.record.value.plan.hooks} · hook passed:{" "}
+                  {String(item.record.value.hook_passed)}
+                </p>
+                <p>
+                  No publication was started by Core. This record grants no push
+                  authority. Interrupted hooks are never replayed; inspect
+                  effects before a fresh review.
+                </p>
+                {item.record.value.issue && (
+                  <p role="alert">{item.record.value.issue}</p>
+                )}
+              </article>
             )}
             {item.record.kind === "upstream_setup" && (
               <UpstreamRecord

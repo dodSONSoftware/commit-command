@@ -1,0 +1,42 @@
+{
+  "date": "2026-11-03",
+  "scope": "Native approved pre-push hook checks; no publication authority or executor",
+  "native_checks": {
+    "credential_free_verified_loopback_https_observation": true,
+    "independent_hook_review_and_native_decline": true,
+    "decline_runs_no_hook": true,
+    "fresh_review_and_native_approval": true,
+    "exact_cwd_argv_stdin": true,
+    "hook_runs": 1,
+    "complete_and_cancelled_unpublished_history_visible": true,
+    "native_quit_and_same_artifact_restart_no_replay": true,
+    "ordinary_default_action_disabled_after_local_source_preview": true
+  },
+  "preservation": {
+    "all_three_worktrees_and_bare_remotes_unchanged": true,
+    "write_operations": 0,
+    "fetch_capture_import_records": 0,
+    "remote_observations": 1,
+    "server_read_requests": 1,
+    "push_check_records": {
+      "cancelled": 1,
+      "complete": 1
+    },
+    "core_publication_started": false,
+    "additional_observations_requests_or_hook_runs_on_restart": 0
+  },
+  "unrun": [
+    "native running-hook interruption/crash",
+    "actual push approval/execution",
+    "publication-uncertainty reconciliation",
+    "bulk publication gating"
+  ],
+  "artifacts": [
+    "native-artifact.json",
+    "ordinary-artifact.json",
+    "source-manifest.json"
+  ],
+  "cleanup": "cleanup.json",
+  "unrelated_work": "untracked LICENSE untouched and excluded",
+  "git_push_executed": false
+}

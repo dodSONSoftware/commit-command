@@ -1,0 +1,8 @@
+{
+  "bundle": "/private/tmp/gitfleet-push-check-native-ga2ddsf3/GitFleet Push Check Acceptance.app",
+  "binary_sha256": "ed12fcec643621809b1bc849884e0c25a41df3587b13c5996510bad1174851de",
+  "features": [
+    "desktop-writes"
+  ],
+  "source_manifest": "source-manifest.json"
+}

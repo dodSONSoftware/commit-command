@@ -51,7 +51,7 @@ fn plan(
     };
     Ok(value)
 }
-fn pending_child(sha256: bool) -> (Test, ChildReachabilitySelection) {
+pub(super) fn pending_child(sha256: bool) -> (Test, ChildReachabilitySelection) {
     let (mut t, mut binding) = setup_evidence(sha256, false);
     let child = t.f.repo.join("child");
     fs::write(child.join("new.txt"), b"Selected outgoing child commit\n").unwrap();
@@ -79,7 +79,7 @@ fn pending_child(sha256: bool) -> (Test, ChildReachabilitySelection) {
     binding.gitmodules_blob = r.mappings[0].gitmodules_blob.clone().unwrap();
     (t, binding)
 }
-fn all_bindings(
+pub(super) fn all_bindings(
     t: &mut Test,
     id: &str,
     observation: &str,

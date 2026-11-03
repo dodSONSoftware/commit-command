@@ -239,7 +239,8 @@ export type OperationAuditKind =
   | "remote_observation"
   | "fetch_capture"
   | "fetch_import"
-  | "upstream_setup";
+  | "upstream_setup"
+  | "push_check";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "OperationAuditRecord".
@@ -273,6 +274,11 @@ export type OperationAuditRecord =
   | {
       kind: "upstream_setup";
       value: UpstreamOperation;
+      [k: string]: unknown;
+    }
+  | {
+      kind: "push_check";
+      value: PushCheck;
       [k: string]: unknown;
     };
 /**
@@ -381,6 +387,29 @@ export type UpstreamPhase =
   | "observed_configuration";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "PushCheckPhase".
+ */
+export type PushCheckPhase =
+  "proposed" | "running" | "complete" | "blocked" | "cancelled" | "interrupted";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "DependencyState".
+ */
+export type DependencyState =
+  "already_reachable" | "selected_child_required" | "blocked";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "HookPolicy".
+ */
+export type HookPolicy = "execute" | "bypass_all";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "PushRelation".
+ */
+export type PushRelation =
+  "up_to_date" | "fast_forward" | "behind" | "diverged";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "OperationAuditResult".
  */
 export type OperationAuditResult =
@@ -392,11 +421,6 @@ export type OperationAuditResult =
   | "needs_attention";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "HookPolicy".
- */
-export type HookPolicy = "execute" | "bypass_all";
-/**
- * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "BatchMode".
  */
 export type BatchMode = "review_all" | "index_only";
@@ -405,18 +429,6 @@ export type BatchMode = "review_all" | "index_only";
  * via the `definition` "SigningPreference".
  */
 export type SigningPreference = "configured" | "unsigned";
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "PushRelation".
- */
-export type PushRelation =
-  "up_to_date" | "fast_forward" | "behind" | "diverged";
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "DependencyState".
- */
-export type DependencyState =
-  "already_reachable" | "selected_child_required" | "blocked";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "Availability".
@@ -942,6 +954,185 @@ export interface ConfigBinding {
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "PushCheck".
+ */
+export interface PushCheck {
+  checked_at_ms?: number | null;
+  hook_passed: boolean;
+  issue?: string | null;
+  phase: PushCheckPhase;
+  plan: PushCheckPlan;
+  published: boolean;
+  source_oid: ObjectId;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "PushCheckPlan".
+ */
+export interface PushCheckPlan {
+  created_at_ms: number;
+  dependencies: PushDependency[];
+  digest: string;
+  hook?: Hook | null;
+  /**
+   * @minItems 2
+   * @maxItems 2
+   */
+  hook_args: [string, string];
+  hook_stdin: string;
+  hooks: HookPolicy;
+  id: string;
+  preview: PushPreview;
+  selection: PushPlanningSelection;
+  transport: ObservationPlan;
+  workspace: string;
+  worktree: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "PushDependency".
+ */
+export interface PushDependency {
+  child_observation?: string | null;
+  child_observed_at_ms?: number | null;
+  child_oid: ObjectId;
+  child_selected: boolean;
+  child_worktree?: string | null;
+  gitmodules_blob?: ObjectId | null;
+  issue?: string | null;
+  observed_child_oid?: ObjectId | null;
+  parent_worktree: string;
+  path: number[];
+  state: DependencyState;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "Hook".
+ */
+export interface Hook {
+  executable: boolean;
+  fingerprint: string;
+  framework: boolean;
+  name: string;
+  resolved: NativePath;
+  source: NativePath;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "PushPreview".
+ */
+export interface PushPreview {
+  config_digest: string;
+  destination: string;
+  destination_ref: string;
+  generated_at_ms: number;
+  generation: string;
+  incoming_count: number;
+  observation_id: string;
+  observed_at_ms: number;
+  observed_oid: ObjectId;
+  outgoing: OutgoingCommit[];
+  outgoing_count: number;
+  outgoing_gitlinks: OutgoingGitlink[];
+  outgoing_truncated: boolean;
+  relation: PushRelation;
+  remote: string;
+  source_gitlinks: SourceGitlink[];
+  source_oid: ObjectId;
+  source_ref: string;
+  upstream_matches: boolean;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "OutgoingCommit".
+ */
+export interface OutgoingCommit {
+  oid: ObjectId;
+  subject: number[];
+  subject_truncated: boolean;
+  [k: string]: unknown;
+}
+/**
+ * Unique path/child pairs present in outgoing commit trees. No remote proof.
+ *
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "OutgoingGitlink".
+ */
+export interface OutgoingGitlink {
+  example_commit: ObjectId;
+  mappings: HistoricalMapping[];
+  oid: ObjectId;
+  path: number[];
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "HistoricalMapping".
+ */
+export interface HistoricalMapping {
+  declared_url?: string | null;
+  destination?: Destination | null;
+  example_commit: ObjectId;
+  gitmodules_blob?: ObjectId | null;
+  issue?: string | null;
+  resolution_base?: string | null;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "Destination".
+ */
+export interface Destination {
+  credentials_hidden: boolean;
+  display: string;
+  restrictions: string[];
+  transport: Transport;
+  [k: string]: unknown;
+}
+/**
+ * A committed gitlink, without child checkout or remote reachability evidence.
+ *
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "SourceGitlink".
+ */
+export interface SourceGitlink {
+  oid: ObjectId;
+  path: number[];
+  [k: string]: unknown;
+}
+/**
+ * Explicit planning selection. Nothing in this request authorizes publication.
+ *
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "PushPlanningSelection".
+ */
+export interface PushPlanningSelection {
+  children: ChildReachabilitySelection[];
+  observation: string;
+  source_oid: ObjectId;
+  worktree: string;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ChildReachabilitySelection".
+ */
+export interface ChildReachabilitySelection {
+  child_observation: string;
+  child_oid: ObjectId;
+  child_worktree: string;
+  gitmodules_blob: ObjectId;
+  parent_observation: string;
+  path: number[];
+  source_oid: ObjectId;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "AuditPage".
  */
 export interface AuditPage {
@@ -1015,17 +1206,6 @@ export interface Remote {
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "Destination".
- */
-export interface Destination {
-  credentials_hidden: boolean;
-  display: string;
-  restrictions: string[];
-  transport: Transport;
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "ConfigOrigin".
  */
 export interface ConfigOrigin {
@@ -1053,79 +1233,6 @@ export interface FetchCapturePage {
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "PushPreview".
- */
-export interface PushPreview {
-  config_digest: string;
-  destination: string;
-  destination_ref: string;
-  generated_at_ms: number;
-  generation: string;
-  incoming_count: number;
-  observation_id: string;
-  observed_at_ms: number;
-  observed_oid: ObjectId;
-  outgoing: OutgoingCommit[];
-  outgoing_count: number;
-  outgoing_gitlinks: OutgoingGitlink[];
-  outgoing_truncated: boolean;
-  relation: PushRelation;
-  remote: string;
-  source_gitlinks: SourceGitlink[];
-  source_oid: ObjectId;
-  source_ref: string;
-  upstream_matches: boolean;
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "OutgoingCommit".
- */
-export interface OutgoingCommit {
-  oid: ObjectId;
-  subject: number[];
-  subject_truncated: boolean;
-  [k: string]: unknown;
-}
-/**
- * Unique path/child pairs present in outgoing commit trees. No remote proof.
- *
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "OutgoingGitlink".
- */
-export interface OutgoingGitlink {
-  example_commit: ObjectId;
-  mappings: HistoricalMapping[];
-  oid: ObjectId;
-  path: number[];
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "HistoricalMapping".
- */
-export interface HistoricalMapping {
-  declared_url?: string | null;
-  destination?: Destination | null;
-  example_commit: ObjectId;
-  gitmodules_blob?: ObjectId | null;
-  issue?: string | null;
-  resolution_base?: string | null;
-  [k: string]: unknown;
-}
-/**
- * A committed gitlink, without child checkout or remote reachability evidence.
- *
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "SourceGitlink".
- */
-export interface SourceGitlink {
-  oid: ObjectId;
-  path: number[];
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "ChildReachability".
  */
 export interface ChildReachability {
@@ -1145,20 +1252,6 @@ export interface ChildReachability {
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "ChildReachabilitySelection".
- */
-export interface ChildReachabilitySelection {
-  child_observation: string;
-  child_oid: ObjectId;
-  child_worktree: string;
-  gitmodules_blob: ObjectId;
-  parent_observation: string;
-  path: number[];
-  source_oid: ObjectId;
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "PushDependencyPlan".
  */
 export interface PushDependencyPlan {
@@ -1171,24 +1264,6 @@ export interface PushDependencyPlan {
   issues: string[];
   items: PlannedPush[];
   order: string[];
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "PushDependency".
- */
-export interface PushDependency {
-  child_observation?: string | null;
-  child_observed_at_ms?: number | null;
-  child_oid: ObjectId;
-  child_selected: boolean;
-  child_worktree?: string | null;
-  gitmodules_blob?: ObjectId | null;
-  issue?: string | null;
-  observed_child_oid?: ObjectId | null;
-  parent_worktree: string;
-  path: number[];
-  state: DependencyState;
   [k: string]: unknown;
 }
 /**

@@ -1,0 +1,8 @@
+{
+  "observed_to_post_check_network_and_observation_records_exactly_equal": true,
+  "server_read_requests": 1,
+  "unpublished_checks": 2,
+  "hook_run_count_after_all_restarts": 1,
+  "write_operation_count": 0,
+  "generated_tls_private_key_absent": true
+}

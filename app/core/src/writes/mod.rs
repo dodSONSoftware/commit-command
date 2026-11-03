@@ -15,6 +15,8 @@ mod fetch;
 mod fetch_import;
 mod policy;
 #[cfg(feature = "application-services")]
+mod push_check;
+#[cfg(feature = "application-services")]
 mod push_dependencies;
 #[cfg(feature = "application-services")]
 mod push_mappings;

@@ -1,0 +1,45 @@
+Selected excerpts transcribed from actual cua_repl accessibility observations on November 3, 2026. This is not a raw replayable automation trace.
+
+Grandchild observation: separate Rust review followed by native exact-operation approval contacted only https://127.0.0.1:59405/grand.git, refs/heads/main. Core result phase complete; observed baseline 2245a1df69916c76654303501c5bf10b5d213e73.
+
+New action in planner:
+Review pre-push check for parent/child/grand
+This separate approval can run the reviewed hook. It publishes nothing and grants no push authority. Every required child must already be reachable remotely; a conditional plan is insufficient. Hook effects may change files or contact servers.
+
+Native approval title: Review pre-push hook check — no publication
+Check refs/heads/main at 225d92f06af4157c58db331b9079060cfe05d254 for refs/heads/main on https://127.0.0.1:59405/grand.git.
+Expected remote commit: 2245a1df69916c76654303501c5bf10b5d213e73
+Hook policy: Execute
+All required child commits must already be reachable from fresh, separately approved observations. Conditional child order is not success.
+Approval runs only the exact reviewed pre-push hook (unless explicitly bypassed) and revalidates context. Hooks run unsandboxed as your user and can modify files or contact servers. Raw output is not retained. Core starts no push transport and changes no refs or upstreams. A completed check grants no publication authority and cannot be reused or replayed. Future push execution requires a new exact review.
+
+First native confirmation: Cancel.
+Not completed: Native confirmation was declined
+A consumed or stale review requires a fresh proposal.
+Independent SQLite/file oracle: cancelled journal, published false, hook invocation marker absent.
+
+New proposal, independent native confirmation: Approve exact operation.
+Core result — inspect the exact outcome below:
+"hook_passed": true
+"phase": "complete"
+Independent file/SQLite oracle: hook ran exactly once; exact cwd, both argv and stdin matched; published false; all worktrees/remotes unchanged.
+
+Operation results:
+push check · complete
+Pre-push check · complete
+Hook policy: execute · hook passed: true
+push check · cancelled
+Pre-push check · cancelled
+Hook policy: execute · hook passed: false
+No publication was started by Core. This record grants no push authority. Interrupted hooks are never replayed; inspect effects before a fresh review.
+
+Native Cmd+Q: App quit. Exact owned original PID 81724 independently verified exited.
+Same-artifact restart: planner selections all zero; Inspect selected push sources and Build local dependency plan disabled. Historical complete/cancelled records retained with no retry/resume control. Hook invocation count still one; no new network request or operation record.
+
+Ordinary default restart after local preview of grandchild:
+Pre-push hook policy for parent/child/grand: Execute supported pre-push hook
+button (disabled) Review pre-push check for parent/child/grand
+Monitoring active workspace Read-only desktop · native write acceptance pending
+Native Cmd+Q completed. Independent final oracle retained one hook run, one completed observation, the same two check records and exact repository/remote/request preservation.
+
+No native hook interruption/crash or native dependency-publication acceptance was claimed. The running-hook cancellation case was an automated Core test; orphaned-running recovery used an explicitly injected disposable journal phase. UI tools occasionally needed fresh app bindings or settled menu observations before inputs took effect; no hidden IPC, approval bypass or synthetic native observation was used.

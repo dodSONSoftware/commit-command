@@ -1,0 +1,17 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.58s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-a5b0bae5745a2202)
+
+running 9 tests
+test push_check::restart_projects_orphaned_checks_as_interrupted_without_replaying_hooks ... ok
+test push_check::conditional_selected_child_is_not_remote_success_for_parent_check ... ok
+test push_check::running_hook_cancellation_stops_check_and_cannot_replay ... ok
+test push_check::hook_source_mutation_blocks_completion_without_rolling_back_hook_effects ... ok
+test push_check::rejected_or_precancelled_check_keeps_no_raw_hook_output_or_authority ... ok
+test push_check::changed_hook_or_source_invalidates_approved_check_before_hook ... ok
+test push_check::decline_bypass_and_unsupported_manager_never_run_hook ... ok
+test push_check::native_capability_runs_exact_pre_push_payload_once_without_publication ... ok
+test push_check::child_gate_requires_new_observation_after_fixture_remote_advances ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 74 filtered out; finished in 57.16s
+

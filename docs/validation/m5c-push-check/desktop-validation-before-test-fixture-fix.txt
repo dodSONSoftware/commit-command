@@ -1,0 +1,10 @@
+git version 2.56.0
+rustc 1.99.1 (58cf8f9c3 2026-10-13)
+cargo 1.99.1 (5f94df478 2026-08-27)
+v22.22.3
+10.9.8
+
+> gitfleet-desktop@0.1.1 typecheck
+> tsc --noEmit
+
+src/views/OperationHistory.test.tsx(365,6): error TS2741: Property 'revision' is missing in type '{ bridge: Bridge; workspace: string; entries: StoredWorktree[]; busy: false; act: (action: () => Promise<void>) => Promise<void>; }' but required in type '{ bridge: Bridge; workspace: string; entries: StoredWorktree[]; busy: boolean; act: (action: () => Promise<void>) => Promise<void>; revision: number; }'.

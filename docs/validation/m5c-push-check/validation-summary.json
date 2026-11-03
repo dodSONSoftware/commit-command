@@ -1,0 +1,96 @@
+{
+  "date": "2026-11-03",
+  "scope": "Separately reviewed pre-push checks only; publication authority/transport/bulk/uncertain-publication recovery remain open",
+  "base_commit": "6f952caa29e2af5bde4a4c9834be8831490a0352",
+  "core_full_gate": {
+    "status": "passed",
+    "RUST_TEST_THREADS": 4,
+    "configurations": [
+      {
+        "configuration": "default",
+        "passed": 54,
+        "failed": 0,
+        "ignored": 1
+      },
+      {
+        "configuration": "experimental-writes",
+        "passed": 89,
+        "failed": 0,
+        "ignored": 2
+      },
+      {
+        "configuration": "controlled-writes",
+        "passed": 79,
+        "failed": 0,
+        "ignored": 1
+      },
+      {
+        "configuration": "application-services",
+        "passed": 217,
+        "failed": 0,
+        "ignored": 4
+      },
+      {
+        "configuration": "all-features",
+        "passed": 261,
+        "failed": 0,
+        "ignored": 8
+      }
+    ],
+    "lab": {
+      "passed": 23,
+      "skipped": 1
+    },
+    "log": "core-validation-final.txt"
+  },
+  "desktop_full_gate": {
+    "status": "passed",
+    "renderer_tests": 66,
+    "native_host_tests_per_configuration": 13,
+    "configurations": [
+      "default",
+      "all-features"
+    ],
+    "log": "desktop-validation-final.txt",
+    "checks": [
+      "typecheck",
+      "lint",
+      "contracts",
+      "format",
+      "renderer build",
+      "debug/release native builds",
+      "strict Clippy"
+    ]
+  },
+  "focused": {
+    "new_core_integration_tests": 9,
+    "new_renderer_tests": 3,
+    "core_log": "core-focused-final.txt"
+  },
+  "retained_initial_failures": [
+    {
+      "log": "core-validation-default-concurrency.txt",
+      "reason": "Existing credential-helper timeout occurred before startup marker under default concurrent load; its two-second timeout and all assertions remain unchanged. Isolated case and entire four-thread matrix passed."
+    },
+    {
+      "log": "desktop-validation-before-test-fixture-fix.txt",
+      "reason": "New history renderer fixture missing required revision prop; corrected before final gate."
+    },
+    {
+      "logs": [
+        "core-check-initial.txt",
+        "core-check.txt",
+        "core-focused.txt",
+        "core-focused-corrected.txt"
+      ],
+      "reason": "Compile/setup corrections and restart writer-lock/canonical cwd fixture assertions, retained for provenance; final complete gates passed."
+    }
+  ],
+  "native_acceptance": "native-verdict.json",
+  "cleanup": "cleanup.json",
+  "source_manifest": "source-manifest.json",
+  "git_push_executed": false,
+  "ordinary_writes_enabled": false,
+  "actual_publication_executor_implemented": false,
+  "unrelated_LICENSE_preserved_and_excluded": true
+}

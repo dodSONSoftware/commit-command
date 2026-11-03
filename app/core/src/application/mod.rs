@@ -122,6 +122,11 @@ pub enum Request {
         worktree: String,
         selection: crate::remote::push::ChildReachabilitySelection,
     },
+    ReviewPushCheck {
+        workspace: String,
+        selection: crate::remote::push::PushPlanningSelection,
+        hooks: HookPolicy,
+    },
     PushDependencyPlan {
         workspace: String,
         selections: Vec<crate::remote::push::PushPlanningSelection>,
@@ -416,6 +421,24 @@ impl Application {
         }
         Ok(entry)
     }
+    fn push_check_entries(
+        &self,
+        workspace: &str,
+        selection: &crate::remote::push::PushPlanningSelection,
+    ) -> Result<std::collections::BTreeMap<String, StoredWorktree>> {
+        if selection.children.len() > 256 {
+            return Err(invalid("At most 256 child bindings"));
+        }
+        let mut entries = std::collections::BTreeMap::new();
+        for id in std::iter::once(&selection.worktree)
+            .chain(selection.children.iter().map(|c| &c.child_worktree))
+        {
+            if !entries.contains_key(id) {
+                entries.insert(id.clone(), self.entry(workspace, id)?);
+            }
+        }
+        Ok(entries)
+    }
     fn abandon_review(&mut self) -> Result<()> {
         if let Some(pending) = self.pending.take() {
             match pending.action {
@@ -423,6 +446,7 @@ impl Application {
                     .writes
                     .application_cancel_proposal(&proposal.operation_id)?,
                 review::Action::Batch(mut record) => self.cancel_batch_record(&mut record)?,
+                review::Action::PushCheck(plan) => self.writes.cancel_push_check(&plan.id)?,
                 review::Action::UpstreamSetup(plan) => {
                     self.writes.cancel_upstream(&plan.transport.id)?
                 }
@@ -732,6 +756,27 @@ impl Application {
                 let review = self.writes.inspect_upstream_recovery(&id, &operation)?;
                 self.entry(&workspace, &review.operation.plan.transport.worktree.0)?;
                 Data::Review(self.set_review(review::Action::UpstreamRecovery(Box::new(review)))?)
+            }
+            Request::ReviewPushCheck {
+                workspace,
+                selection,
+                hooks,
+            } => {
+                let id = self.active(&workspace)?;
+                let entries = self.push_check_entries(&workspace, &selection)?;
+                self.abandon_review()?;
+                let mut options = self.read_options.clone();
+                options.timeout = Duration::from_secs(60);
+                let plan = self
+                    .writes
+                    .propose_push_check(&id, &entries, selection, hooks, &options)?;
+                match self.set_review(review::Action::PushCheck(Box::new(plan.clone()))) {
+                    Ok(display) => Data::Review(display),
+                    Err(error) => {
+                        self.writes.cancel_push_check(&plan.id)?;
+                        return Err(error);
+                    }
+                }
             }
             Request::PushDependencyPlan {
                 workspace,

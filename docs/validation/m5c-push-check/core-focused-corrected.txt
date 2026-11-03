@@ -1,0 +1,36 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.96s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-a5b0bae5745a2202)
+
+running 7 tests
+test push_check::restart_projects_orphaned_checks_as_interrupted_without_replaying_hooks ... FAILED
+test push_check::conditional_selected_child_is_not_remote_success_for_parent_check ... ok
+test push_check::hook_source_mutation_blocks_completion_without_rolling_back_hook_effects ... ok
+test push_check::native_capability_runs_exact_pre_push_payload_once_without_publication ... FAILED
+test push_check::rejected_or_precancelled_check_keeps_no_raw_hook_output_or_authority ... ok
+test push_check::changed_hook_or_source_invalidates_approved_check_before_hook ... ok
+test push_check::decline_bypass_and_unsupported_manager_never_run_hook ... ok
+
+failures:
+
+---- push_check::restart_projects_orphaned_checks_as_interrupted_without_replaying_hooks stdout ----
+
+thread 'push_check::restart_projects_orphaned_checks_as_interrupted_without_replaying_hooks' (26260769) panicked at tests/support/push_check.rs:301:75:
+called `Result::unwrap()` on an `Err` value: Error { kind: Busy, message: "GitFleet data directory already has a writer" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- push_check::native_capability_runs_exact_pre_push_payload_once_without_publication stdout ----
+
+thread 'push_check::native_capability_runs_exact_pre_push_payload_once_without_publication' (26260767) panicked at tests/support/push_check.rs:126:9:
+assertion `left == right` failed
+  left: "/private/var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-m0-79118-1793689200202084000-4/repo\norigin\n/var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-m0-79118-1793689200202084000-4/remote.git\n"
+ right: "/var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-m0-79118-1793689200202084000-4/repo\norigin\n/var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-m0-79118-1793689200202084000-4/remote.git\n"
+
+
+failures:
+    push_check::native_capability_runs_exact_pre_push_payload_once_without_publication
+    push_check::restart_projects_orphaned_checks_as_interrupted_without_replaying_hooks
+
+test result: FAILED. 5 passed; 2 failed; 0 ignored; 0 measured; 74 filtered out; finished in 25.33s
+
+error: test failed, to rerun pass `--test remote_observation`

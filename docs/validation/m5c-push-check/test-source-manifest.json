@@ -1,0 +1,8 @@
+{
+  "app/core/tests/m3_application.rs": "d117d7b3cc93dd94a130c5507770ea3cba52c0f2343431d714087038073c4c3d",
+  "app/core/tests/remote_observation.rs": "7ae45f72c6d8b859b6d9054c132e5362f58d9a5ee704d3100158efa0292b4e61",
+  "app/core/tests/support/push_check.rs": "497aa3f7ae96a5d7475bc5ed4f7b99463eb703839c6378f94c79bba79bf1ed6f",
+  "app/core/tests/support/push_dependencies.rs": "9e047ba54d39a94ca13c383beef10626843860d383d79538ebdbb0896edff5d9",
+  "app/desktop/src/views/PushDependencyPlanner.test.tsx": "3c7faf1d15ffae4dd54091da723c8d767d2258beb9fa269499911c7533a2c5fe",
+  "app/desktop/src/views/OperationHistory.test.tsx": "8bf45e8f170c6ed1a8bbe466fc8c672591d6d8c79be327c252d5ce87ae609643"
+}

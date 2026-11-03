@@ -1,0 +1,29 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+error[E0560]: struct `gitfleet_core::application::MonitoringOptions` has no field named `background`
+   --> tests/support/push_check.rs:301:9
+    |
+301 |         background: false,
+    |         ^^^^^^^^^^ `gitfleet_core::application::MonitoringOptions` does not have this field
+    |
+    = note: available fields are: `debounce`, `maximum_coalescing`, `status_interval`, `discovery_interval`
+
+error[E0061]: this function takes 2 arguments but 3 arguments were supplied
+   --> tests/support/push_check.rs:304:13
+    |
+304 |     t.app = Application::open(&t.f.root.join("state"), t.options.clone(), monitor).unwrap();
+    |             ^^^^^^^^^^^^^^^^^                                             ------- unexpected argument #3 of type `gitfleet_core::application::MonitoringOptions`
+    |
+note: associated function defined here
+   --> src/application/mod.rs:332:12
+    |
+332 |     pub fn open(directory: &Path, options: Options) -> Result<Self> {
+    |            ^^^^
+help: remove the extra argument
+    |
+304 -     t.app = Application::open(&t.f.root.join("state"), t.options.clone(), monitor).unwrap();
+304 +     t.app = Application::open(&t.f.root.join("state"), t.options.clone()).unwrap();
+    |
+
+Some errors have detailed explanations: E0061, E0560.
+For more information about an error, try `rustc --explain E0061`.
+error: could not compile `gitfleet-core` (test "remote_observation") due to 2 previous errors
