@@ -16,6 +16,12 @@ pub struct OutgoingCommit {
     pub subject: Vec<u8>,
     pub subject_truncated: bool,
 }
+/// A committed gitlink, without child checkout or remote reachability evidence.
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+pub struct SourceGitlink {
+    pub path: Vec<u8>,
+    pub oid: ObjectId,
+}
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct PushPreview {
     pub source_ref: String,
@@ -34,5 +40,6 @@ pub struct PushPreview {
     pub incoming_count: u32,
     pub outgoing: Vec<OutgoingCommit>,
     pub outgoing_truncated: bool,
+    pub source_gitlinks: Vec<SourceGitlink>,
     pub upstream_matches: bool,
 }

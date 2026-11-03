@@ -1,0 +1,9 @@
+{
+  "binary": "/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri/target/debug/bundle/macos/GitFleet.app/Contents/MacOS/gitfleet-desktop",
+  "sha256": "38628f3f67237c5d90b0a5ede190692c8fc9ba469cbe95002307af9de97bea91",
+  "features": [
+    "custom-protocol"
+  ],
+  "desktop_writes": false,
+  "native_launch_this_checkpoint": false
+}

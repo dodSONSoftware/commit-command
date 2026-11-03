@@ -175,6 +175,9 @@ Current M5B checkpoint: reviewed branch downloads and separately reviewed offlin
 
 ### M5C Add separately reviewed individual and bulk push
 
+Latest local prerequisite: [source child requirements](reports/M5C_SOURCE_DEPENDENCIES_2026-11-02.md) lists exact source-tree gitlink paths/OIDs without child checkout/network access. This is not remote proof; outgoing-history requirements (including removed/replaced links), intended child destinations/reachability, dependency ordering and actual separate push authority remain open. No push performed.
+
+
 Push review binds worktree identity, source ref/OID, effective destination, outgoing commits, hook policy, upstream changes and dependency evidence. Refresh remote knowledge only through explicit network activity. Reject non-fast-forward/divergent, unsupported detached, ambiguous-destination and force push cases. Recheck source state immediately before execution, handle server rejection, and observe actual remote state after uncertain interruption. Never automatically retry an ambiguous publication.
 
 For selected parent pushes, prove required child commits are available on the intended reachable child remote; use reachability evidence rather than a local tracking ref alone. Push selected dependencies first, never unselected children. Present missing upstream as a separate explicit reviewed config change. Implement and test applicable pre-push hook stdin/arguments and explicit bypass semantics; unsupported managers/configurations remain fail closed.

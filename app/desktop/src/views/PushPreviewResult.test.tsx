@@ -26,6 +26,7 @@ const preview: PushPreview = {
     },
   ],
   outgoing_truncated: true,
+  source_gitlinks: [],
   upstream_matches: false,
 };
 it("renders a bounded historical comparison without execution controls or HTML interpretation", () => {
@@ -49,5 +50,29 @@ it("reports divergence relative to the observation with no force action", () => 
   expect(screen.getByRole("alert")).toHaveTextContent(
     "not a fast forward relative to the observed commit",
   );
+  expect(screen.queryByRole("button")).toBeNull();
+});
+it("shows committed child requirements without implying remote availability", () => {
+  const { container } = render(
+    <PushPreviewResult
+      preview={{
+        ...preview,
+        source_gitlinks: [
+          {
+            path: Array.from(new TextEncoder().encode("nested/<img>")),
+            oid: { format: "sha1", hex: "c".repeat(40) },
+          },
+        ],
+      }}
+    />,
+  );
+  expect(
+    screen.getByRole("heading", { name: "Child commits in source · 1" }),
+  ).toBeVisible();
+  expect(screen.getByText(/nested\/<img>/)).toHaveTextContent("c".repeat(40));
+  expect(
+    screen.getByText(/Child checkouts and remote availability/),
+  ).toHaveTextContent("separate proof");
+  expect(container.querySelector("img")).toBeNull();
   expect(screen.queryByRole("button")).toBeNull();
 });

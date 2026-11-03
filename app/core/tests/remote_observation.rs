@@ -2408,3 +2408,114 @@ mod https_credential_tests;
 mod artifact_initialization;
 #[path = "support/authentication_profiles.rs"]
 mod authentication_profiles;
+
+#[test]
+fn local_push_preview_inventories_committed_gitlinks_without_reading_children_or_index() {
+    use std::os::unix::ffi::OsStringExt;
+    for sha256 in [false, true] {
+        let mut t = setup_format(true, sha256);
+        trust(&mut t);
+        let observation = observed(&mut t);
+        let width = if sha256 { 64 } else { 40 };
+        let child = "a".repeat(width);
+        let staged = "b".repeat(width);
+        let path = "nested/child\twith\nbytes";
+        t.f.git(&[
+            "update-index",
+            "--add",
+            "--cacheinfo",
+            &format!("160000,{child},{path}"),
+        ]);
+        t.f.git(&["commit", "-qm", "Record unavailable child commit"]);
+        // No child exists. A newer index entry must not replace the committed
+        // dependency requirement.
+        t.f.git(&[
+            "update-index",
+            "--cacheinfo",
+            &format!("160000,{staged},{path}"),
+        ]);
+        let raw_path = vec![b'n', b'o', b'n', b'u', b't', b'f', b'8', 0xff];
+        let raw = std::ffi::OsString::from_vec(raw_path.clone());
+        let status = std::process::Command::new("git")
+            .current_dir(&t.f.repo)
+            .args([
+                "-c",
+                "core.hooksPath=",
+                "update-index",
+                "--add",
+                "--cacheinfo",
+                "160000",
+                &child,
+            ])
+            .arg(&raw)
+            .status()
+            .unwrap();
+        assert!(status.success());
+        // Commit both byte paths, then stage a third OID. Preview reads HEAD.
+        t.f.git(&["commit", "-qm", "Record byte path"]);
+        t.f.git(&[
+            "update-index",
+            "--cacheinfo",
+            &format!("160000,{child},{path}"),
+        ]);
+        let before = tree_bytes(&t.f.repo);
+        let remote = tree_bytes(&t.remote);
+        let preview = push_preview(&mut t, &observation.plan.id);
+        assert_eq!(preview.source_gitlinks.len(), 2);
+        let link = preview
+            .source_gitlinks
+            .iter()
+            .find(|l| l.path == path.as_bytes())
+            .unwrap();
+        assert_eq!(link.oid.hex, staged);
+        assert_eq!(link.oid.format, preview.source_oid.format);
+        let link = preview
+            .source_gitlinks
+            .iter()
+            .find(|l| l.path == raw_path)
+            .unwrap();
+        assert_eq!(link.oid.hex, child);
+        assert_eq!(tree_bytes(&t.f.repo), before);
+        assert_eq!(tree_bytes(&t.remote), remote);
+        assert!(!t.f.repo.join("nested").exists());
+        assert!(t.app.begin_confirmation(&preview.observation_id).is_err());
+    }
+}
+
+#[test]
+fn local_push_preview_refuses_excessive_source_gitlinks_without_partial_inventory() {
+    let mut t = setup(true);
+    trust(&mut t);
+    let observation = observed(&mut t);
+    let child = "a".repeat(40);
+    let mut input = Vec::new();
+    for i in 0..1025 {
+        input.extend_from_slice(format!("160000 {child}\tchild-{i}\0").as_bytes());
+    }
+    use std::io::Write;
+    let mut process = std::process::Command::new("git")
+        .current_dir(&t.f.repo)
+        .args(["update-index", "-z", "--index-info"])
+        .stdin(std::process::Stdio::piped())
+        .spawn()
+        .unwrap();
+    process.stdin.take().unwrap().write_all(&input).unwrap();
+    assert!(process.wait().unwrap().success());
+    t.f.git(&["commit", "-qm", "Too many child requirements"]);
+    let before = tree_bytes(&t.f.repo);
+    let remote = tree_bytes(&t.remote);
+    let error = t
+        .app
+        .request(
+            t.app.epoch(),
+            Request::PushPreview {
+                workspace: t.workspace.clone(),
+                worktree: t.worktree.clone(),
+                observation: observation.plan.id,
+            },
+        )
+        .unwrap_err();
+    assert_eq!(error.kind, ErrorKind::OutputLimit);
+    assert_eq!(tree_bytes(&t.f.repo), before);
+    assert_eq!(tree_bytes(&t.remote), remote);
+}

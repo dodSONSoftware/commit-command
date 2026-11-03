@@ -1,0 +1,70 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.09s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-883e37a5b39e3193)
+
+running 62 tests
+test artifact_initialization::artifact_init_probe_worker ... ignored, subprocess-only controlled Git initialization probe
+test fetch_capture_detects_remote_branch_drift_without_importing_downloaded_objects ... ok
+test decline_cancellation_and_configuration_drift_never_contact_a_remote ... ok
+test certificate_source_drift_requires_new_review_before_any_request ... ok
+test fetch_capture_decline_precancel_and_configuration_drift_cannot_import_or_contact_a_server ... ok
+test fetch_import_crash_worker ... ignored, subprocess-only disposable SIGKILL worker
+test fetch_capture_rejects_missing_or_absent_sources_and_loses_authority_on_restart ... ok
+test authentication_failure_never_uses_a_configured_helper_or_retains_raw_server_text ... ok
+test fetch_capture_requires_fresh_native_authority_and_produces_exact_verified_bundle_without_managed_mutation ... ok
+test https_credential_tests::actual_gitea_and_osxkeychain_read_download_import_and_missing_account ... ignored, opt-in loopback Gitea + exact generated macOS Keychain fixture; never uses user credentials
+test fetch_capture_downloads_real_objects_over_verified_https_with_managed_helpers_isolated ... ok
+test authentication_profiles::profiles_require_native_approval_persist_and_are_not_implicitly_assigned ... ok
+test authentication_profiles::assigned_profile_refuses_destination_drift_and_requires_unassignment_before_delete ... ok
+test fetch_import_adds_exact_objects_and_one_tracking_ref_with_separate_authority ... ok
+test authentication_profiles::profile_and_remote_isolation_and_tool_drift_block_lookup ... ok
+test artifact_initialization::persistent_initialization_symlink_is_still_refused_before_object_import ... ok
+test https_credential_tests::cancellation_after_credential_lookup_starts_reaps_the_helper_and_preserves_state ... ok
+test https_credential_tests::completed_https_transport_reaps_helper_background_descendants ... ok
+test fetch_import_storage_failure_requires_fresh_observation_and_preserves_foreign_lock ... ok
+test authentication_profiles::explicitly_assigned_profile_authenticates_capture_without_host_credential_flags ... ok
+test artifact_initialization::git_initialization_probe_is_transient_and_never_accepted_as_a_completed_artifact ... ok
+test authentication_profiles::settings_review_refuses_changed_helper_or_destination_and_cancelled_application ... ok
+test fetch_capture_refuses_authentication_redirects_and_cancels_a_proven_running_request ... ok
+test https_credential_tests::credential_helper_timeout_is_bounded_by_the_owning_network_operation ... ok
+test https_credential_tests::approved_https_helper_authenticates_downloads_and_imports_without_persisting_or_mutating_credentials ... ok
+test https_credential_tests::osxkeychain_password_only_response_and_private_state_extensions_authenticate_without_persistence ... ok
+test local_push_preview_bounds_outgoing_details_and_loses_no_exact_count ... ok
+test local_push_preview_refuses_excessive_source_gitlinks_without_partial_inventory ... ok
+test https_credential_tests::helper_credentials_never_bypass_tls_hostname_validation_or_follow_redirects ... ok
+test missing_remote_branch_is_observed_absent_without_creating_a_destination ... ok
+test fetch_import_updates_packed_expected_old_for_sha1_and_sha256 ... ok
+test fetch_import_sigkill_before_and_after_publication_never_replays ... ok
+test local_push_preview_reports_up_to_date_and_fast_forward_without_authority_or_mutation ... ok
+test https_requires_a_valid_certificate_hostname_and_refuses_redirects ... ok
+test observation_needs_independent_native_authority_and_changes_neither_repository ... ok
+test https_credential_tests::isolated_os_keychain_locked_missing_and_cancelled_reads_preserve_search_list_and_credentials ... ok
+test running_https_observation_is_cancelled_after_the_actual_request_starts ... ok
+test restart_exposes_an_orphaned_review_but_never_restores_authority ... ok
+test local_push_preview_inventories_committed_gitlinks_without_reading_children_or_index ... ok
+test upstream_crash_worker ... ignored, subprocess-only disposable upstream SIGKILL worker
+test fetch_import_rejects_aliases_and_shared_lock_and_orphaned_authority ... ok
+test ssh_transport_tests::ssh_server_failure_diagnostics_are_not_retained_in_results_or_journals ... ok
+test https_credential_tests::wrong_missing_and_changed_account_credentials_fail_without_store_or_erase ... ok
+test untrusted_or_ordinary_local_destinations_never_gain_network_authority ... ok
+test ssh_transport_tests::reviewed_ssh_profile_assignment_works_without_host_ssh_flags ... ok
+test https_credential_tests::declined_stale_or_cancelled_https_reviews_never_read_a_credential ... ok
+test upstream_restart_revokes_setup_capability_without_creating_a_config_lock ... ok
+test ssh_transport_tests::ssh_agent_authenticates_only_selected_identity_then_downloads_and_imports_offline ... ok
+test verified_https_observation_ignores_managed_helpers_proxies_and_unsafe_tls_settings ... ok
+test ssh_transport_tests::ssh_cancels_proven_authenticated_observation_and_download_without_repository_mutation ... ok
+test upstream_setup_adds_only_missing_keys_preserves_bytes_and_requires_new_trust ... ok
+test fetch_import_decline_cancel_tamper_config_and_ref_drift_fail_closed ... ok
+test upstream_shared_config_is_visible_to_linked_worktrees_without_touching_either_checkout ... ok
+test ssh_transport_tests::ssh_unknown_or_changed_host_and_wrong_selected_identity_fail_without_fallback ... ok
+test https_credential_tests::malformed_oversized_and_failing_helpers_cannot_expose_a_secret_or_authenticate ... ok
+test upstream_storage_failure_after_rename_and_foreign_lock_recovery_stay_truthful ... ok
+test local_push_preview_requires_explicit_objects_then_reports_behind_and_diverged ... ok
+test ssh_transport_tests::ssh_policy_drift_decline_and_precancel_never_authenticate ... ok
+test local_push_preview_refuses_ambiguous_changed_or_unsupported_context_without_effects ... ok
+test upstream_sigkill_recovery_never_replays_and_removes_only_owned_config_lock ... ok
+test upstream_decline_stale_config_head_trust_and_foreign_locks_preserve_repository ... ok
+test upstream_setup_refuses_unsupported_policy_and_preserves_attributes_without_persisting_secrets ... ok
+
+test result: ok. 58 passed; 0 failed; 4 ignored; 0 measured; 0 filtered out; finished in 88.09s
+

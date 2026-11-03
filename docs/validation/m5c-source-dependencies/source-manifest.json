@@ -1,0 +1,12 @@
+{
+  "base_commit": "de28dead9b65d15236fc4e809e18333ed1a7fd6b",
+  "files_sha256": {
+    "app/core/src/remote/push.rs": "be1bf1cb6fb8681ca22443bd86214425dc8937e410ab1aefd1aa88d6b01feb5c",
+    "app/core/src/writes/push_preview.rs": "33bb1d5373d605b2b5d243e6b763db776218139bdc71b36109978eae5a64fef1",
+    "app/core/tests/remote_observation.rs": "977d2ddc784e3ff64108ca2345ac94b9690e2ce6c01ce16e191396f010b604ca",
+    "app/desktop/src/services/response.generated.ts": "83ce52be1472be26fa03c2d7159da18f75dd47cba72ca4f6a3e521496a77e13d",
+    "app/desktop/src/views/PushPreviewResult.test.tsx": "b641646e5dcc4822d98be7fd311c6ad1decdd64a7044526e80424c91b91eccd5",
+    "app/desktop/src/views/PushPreviewResult.tsx": "6a65f1262997c3a1af5ec5541db58682e50ecc65675caefb9df26b8dd4146803",
+    "app/desktop/src/views/RemoteInspector.test.tsx": "63fbb4c6d862b2220233509f411749a1ff7442bbb14d3852c31d8fec9ab0aa3a"
+  }
+}

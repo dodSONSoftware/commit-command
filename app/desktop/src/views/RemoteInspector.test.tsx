@@ -231,6 +231,7 @@ it("prepares a branch download only from a completed observation with an OID and
           incoming_count: 0,
           outgoing: [],
           outgoing_truncated: false,
+          source_gitlinks: [],
           upstream_matches: false,
         },
       };

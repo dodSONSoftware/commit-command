@@ -1,0 +1,13 @@
+
+> gitfleet-desktop@0.1.1 test
+> vitest run --run src/views/PushPreviewResult.test.tsx
+
+
+ RUN  v4.1.12 /Users/randydodson/Documents/_code/git-fleet/app/desktop
+
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  21:58:21
+   Duration  631ms (transform 32ms, setup 53ms, import 89ms, tests 76ms, environment 317ms)
+

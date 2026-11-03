@@ -1,0 +1,7 @@
+
+> gitfleet-desktop@0.1.1 typecheck
+> tsc --noEmit
+
+src/views/PushPreviewResult.tsx(35,40): error TS18046: 'preview.source_gitlinks' is of type 'unknown'.
+src/views/PushPreviewResult.tsx(42,10): error TS18046: 'preview.source_gitlinks' is of type 'unknown'.
+src/views/PushPreviewResult.tsx(42,39): error TS7006: Parameter 'link' implicitly has an 'any' type.

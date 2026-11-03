@@ -31,6 +31,20 @@ export function PushPreviewResult({ preview }: { preview: PushPreview }) {
         Configured upstream matches this selection:{" "}
         {String(preview.upstream_matches)}.
       </p>
+      <section aria-label="Source child commit requirements">
+        <h4>Child commits in source · {preview.source_gitlinks.length}</h4>
+        <p>
+          These gitlinks come from the exact source commit. Child checkouts and
+          remote availability were not inspected. Parent push still requires
+          separate proof of child reachability on the intended child remotes,
+          including requirements from outgoing history.
+        </p>
+        {preview.source_gitlinks.map((link) => (
+          <p key={JSON.stringify(link.path)}>
+            {bytes(link.path)} · <code>{link.oid.hex}</code>
+          </p>
+        ))}
+      </section>
       {(preview.relation === "behind" || preview.relation === "diverged") && (
         <p role="alert">
           The selected update is not a fast forward relative to the observed

@@ -1,5 +1,6 @@
 //! No network or managed writes. A past observation is data, never execution approval.
 use super::*;
+use crate::domain::ObjectId;
 use crate::remote::{push::*, Transport};
 fn stale() -> Error {
     fail(
@@ -29,6 +30,44 @@ fn complete_history(s: &inspection::Session<'_>) -> Result<()> {
         }
     }
     Ok(())
+}
+fn source_gitlinks(s: &inspection::Session<'_>, oid: &ObjectId) -> Result<Vec<SourceGitlink>> {
+    // Read the committed tree, never .gitmodules URLs or child worktrees. Git does
+    // not descend into gitlinks, including uninitialized or absent children.
+    let tree = s.git(&["ls-tree", "-r", "-z", "--full-tree", &oid.hex, "--"])?;
+    let mut links = Vec::new();
+    for record in tree.split(|b| *b == 0).filter(|r| !r.is_empty()) {
+        let tab = record
+            .iter()
+            .position(|b| *b == b'\t')
+            .ok_or_else(|| fail(ErrorKind::InvalidData, "Invalid committed tree entry"))?;
+        let header = std::str::from_utf8(&record[..tab])
+            .map_err(|_| fail(ErrorKind::InvalidData, "Invalid committed tree header"))?;
+        let fields = header.split(' ').collect::<Vec<_>>();
+        if fields.len() != 3 {
+            return Err(fail(
+                ErrorKind::InvalidData,
+                "Invalid committed tree header",
+            ));
+        }
+        if fields[0] != "160000" {
+            continue;
+        }
+        if fields[1] != "commit" || record.len() == tab + 1 {
+            return Err(fail(ErrorKind::InvalidData, "Invalid committed gitlink"));
+        }
+        if links.len() == 1024 {
+            return Err(fail(
+                ErrorKind::OutputLimit,
+                "Source exceeds 1,024 gitlinks",
+            ));
+        }
+        links.push(SourceGitlink {
+            path: record[tab + 1..].to_vec(),
+            oid: ObjectId::parse(fields[2], &s.format)?,
+        });
+    }
+    Ok(links)
 }
 impl ControlledWrites {
     pub(crate) fn push_preview(
@@ -173,6 +212,7 @@ impl ControlledWrites {
             if commits.len() != outgoing.min(100) as usize {
                 return Err(stale());
             }
+            let source_gitlinks = source_gitlinks(s, &source_oid)?;
             Ok(PushPreview {
                 source_ref: source_ref.clone(),
                 source_oid,
@@ -190,6 +230,7 @@ impl ControlledWrites {
                 incoming_count: incoming,
                 outgoing_truncated: outgoing > commits.len() as u32,
                 outgoing: commits,
+                source_gitlinks,
                 upstream_matches: report.upstream_remote.as_deref()
                     == Some(current.remote.as_str())
                     && report.upstream_ref.as_deref() == Some(current.reference.as_str()),

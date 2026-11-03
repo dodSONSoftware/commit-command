@@ -1054,6 +1054,7 @@ export interface PushPreview {
   outgoing_truncated: boolean;
   relation: PushRelation;
   remote: string;
+  source_gitlinks: SourceGitlink[];
   source_oid: ObjectId;
   source_ref: string;
   upstream_matches: boolean;
@@ -1067,6 +1068,17 @@ export interface OutgoingCommit {
   oid: ObjectId;
   subject: number[];
   subject_truncated: boolean;
+  [k: string]: unknown;
+}
+/**
+ * A committed gitlink, without child checkout or remote reachability evidence.
+ *
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "SourceGitlink".
+ */
+export interface SourceGitlink {
+  oid: ObjectId;
+  path: number[];
   [k: string]: unknown;
 }
 /**
