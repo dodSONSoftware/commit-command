@@ -104,7 +104,7 @@ pub(crate) fn transaction(
             ));
         }
         if failure.is_some() && !terminated {
-            terminate(&mut child);
+            terminate(&mut child, Group::Owned);
             input.take();
             terminated = true;
         }
@@ -161,7 +161,7 @@ pub(crate) fn transaction(
                 Ok(Some(value)) => status = Some(value),
                 Ok(None) => {}
                 Err(_) => {
-                    terminate(&mut child);
+                    terminate(&mut child, Group::Owned);
                     status = child.wait().ok();
                     wait_failed = status.is_none();
                     failure = Some(Error::with_kind(

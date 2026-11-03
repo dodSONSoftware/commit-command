@@ -29,3 +29,6 @@ pub use error::{Error, ErrorKind, Result};
 pub mod application;
 #[cfg(feature = "application-services")]
 pub mod remote;
+
+#[cfg(feature = "application-services")]
+pub mod credentials;

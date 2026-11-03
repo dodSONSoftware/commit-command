@@ -1,3 +1,4 @@
+import { ReviewedHttpsAuthentication } from "./ReviewedHttpsAuthentication";
 import type { ObservationPage } from "../services/response.generated";
 import { bytes, pathText } from "../stores/model";
 const text = (value: string) =>
@@ -28,6 +29,9 @@ export function ObservationRecords({
             {observation.phase} · {text(observation.plan.remote)} ·{" "}
             {text(observation.plan.reference)}
           </h3>
+          <ReviewedHttpsAuthentication
+            scope={observation.plan.authentication}
+          />
           <p>
             <code>{observation.plan.id}</code> ·{" "}
             {pathText(observation.plan.metadata.root)}

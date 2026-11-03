@@ -90,12 +90,20 @@ fn reader(
     }
     Ok(result)
 }
-fn terminate(child: &mut std::process::Child) {
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Group {
+    Owned,
+    Transport,
+    Inherited,
+}
+fn terminate(child: &mut std::process::Child, group: Group) {
     #[cfg(unix)]
-    // Each child gets its own process group, so its owned descendants are reaped
-    // from pipe reads even when a Git helper is defective. Hostile setsid is outside scope.
-    unsafe {
-        libc::kill(-(child.id() as i32), libc::SIGKILL);
+    // Owned groups contain descendants; credential helper children inherit the
+    // outer Git group so cancellation cannot orphan them. Hostile setsid is outside scope.
+    if group != Group::Inherited {
+        unsafe {
+            libc::kill(-(child.id() as i32), libc::SIGKILL);
+        }
     }
     let _ = child.kill();
 }
@@ -111,10 +119,37 @@ pub(crate) fn bounded_input(
 }
 /// Trusted callers can bound owned artifacts while a child is running.
 pub(crate) fn bounded_input_checked(
+    command: Command,
+    options: &ReadOptions,
+    input: Option<Vec<u8>>,
+    check: impl Fn() -> Result<()>,
+) -> Result<Output> {
+    bounded_group(command, options, input, check, Group::Owned)
+}
+/// Transport helpers must remain inside the outer Git process group.
+#[cfg(feature = "application-services")]
+pub(crate) fn credential_helper(
+    command: Command,
+    options: &ReadOptions,
+    input: Vec<u8>,
+) -> Result<Output> {
+    bounded_group(command, options, Some(input), || Ok(()), Group::Inherited)
+}
+/// A completed network operation cannot leave background helper descendants.
+#[cfg(feature = "application-services")]
+pub(crate) fn transport(
+    command: Command,
+    options: &ReadOptions,
+    check: impl Fn() -> Result<()>,
+) -> Result<Output> {
+    bounded_group(command, options, None, check, Group::Transport)
+}
+fn bounded_group(
     mut command: Command,
     options: &ReadOptions,
     input: Option<Vec<u8>>,
     check: impl Fn() -> Result<()>,
+    group: Group,
 ) -> Result<Output> {
     check()?;
     let start = Instant::now();
@@ -128,7 +163,9 @@ pub(crate) fn bounded_input_checked(
     #[cfg(unix)]
     {
         use std::os::unix::process::CommandExt;
-        command.process_group(0);
+        if group != Group::Inherited {
+            command.process_group(0);
+        }
     }
     let mut child = command
         .stdin(if input.is_some() {
@@ -155,7 +192,7 @@ pub(crate) fn bounded_input_checked(
     let status = loop {
         if let Err(error) = options.check(start).and_then(|()| check()) {
             failure = Some(error);
-            terminate(&mut child);
+            terminate(&mut child, group);
             break child.wait()?;
         }
         if exceeded.load(Ordering::Relaxed) {
@@ -163,20 +200,23 @@ pub(crate) fn bounded_input_checked(
                 ErrorKind::OutputLimit,
                 "Inspection output limit exceeded",
             ));
-            terminate(&mut child);
+            terminate(&mut child, group);
             break child.wait()?;
         }
         match child.try_wait() {
             Ok(Some(status)) => break status,
             Ok(None) => std::thread::sleep(Duration::from_millis(5)),
             Err(error) => {
-                terminate(&mut child);
+                terminate(&mut child, group);
                 let _ = child.wait();
                 failure = Some(error.into());
                 break child.wait()?;
             }
         }
     };
+    if group == Group::Transport {
+        terminate(&mut child, group);
+    }
     // A descendant may still own a pipe after the main process exits.
     while !out.is_finished()
         || !err.is_finished()
@@ -186,14 +226,14 @@ pub(crate) fn bounded_input_checked(
     {
         if let Err(error) = options.check(start).and_then(|()| check()) {
             failure = Some(error);
-            terminate(&mut child);
+            terminate(&mut child, group);
         }
         if exceeded.load(Ordering::Relaxed) {
             failure = Some(Error::with_kind(
                 ErrorKind::OutputLimit,
                 "Inspection output limit exceeded",
             ));
-            terminate(&mut child);
+            terminate(&mut child, group);
         }
         std::thread::sleep(Duration::from_millis(2));
     }

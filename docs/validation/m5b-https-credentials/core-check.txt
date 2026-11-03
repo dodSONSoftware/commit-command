@@ -1,0 +1,42 @@
+    Checking gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+error[E0061]: this function takes 2 arguments but 1 argument was supplied
+   --> src/process/reference.rs:107:13
+    |
+107 |             terminate(&mut child);
+    |             ^^^^^^^^^------------ argument #2 of type `Group` is missing
+    |
+note: function defined here
+   --> src/process.rs:99:4
+    |
+ 99 | fn terminate(child: &mut std::process::Child, group: Group) {
+    |    ^^^^^^^^^                                  ------------
+help: provide the argument
+    |
+107 |             terminate(&mut child, /* Group */);
+    |                                 +++++++++++++
+
+error[E0061]: this function takes 2 arguments but 1 argument was supplied
+   --> src/process/reference.rs:164:21
+    |
+164 |                     terminate(&mut child);
+    |                     ^^^^^^^^^------------ argument #2 of type `Group` is missing
+    |
+note: function defined here
+   --> src/process.rs:99:4
+    |
+ 99 | fn terminate(child: &mut std::process::Child, group: Group) {
+    |    ^^^^^^^^^                                  ------------
+help: provide the argument
+    |
+164 |                     terminate(&mut child, /* Group */);
+    |                                         +++++++++++++
+
+error[E0063]: missing field `authentication` in initializer of `observation::ObservationPlan`
+   --> src/writes/remote.rs:314:20
+    |
+314 |         let plan = ObservationPlan {
+    |                    ^^^^^^^^^^^^^^^ missing `authentication`
+
+Some errors have detailed explanations: E0061, E0063.
+For more information about an error, try `rustc --explain E0061`.
+error: could not compile `gitfleet-core` (lib) due to 3 previous errors

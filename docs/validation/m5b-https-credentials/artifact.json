@@ -1,0 +1,17 @@
+{
+  "bundle": "/private/tmp/gitfleet-https-credentials-3y2flq0u/GitFleet HTTPS Acceptance.app",
+  "features": [
+    "custom-protocol",
+    "desktop-writes"
+  ],
+  "binary_sha256": "ab4e2465070c733d55ce3ef26c546afad49db741f1fa4587f265a658529bbdcd",
+  "source_base": "cbd0875",
+  "source": "Uncommitted HTTPS helper checkpoint; see source-manifest.json",
+  "review_text": "Readable helper path and SHA-256, no Rust debug representation",
+  "ordinary_bundle": "/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri/target/debug/bundle/macos/GitFleet.app",
+  "ordinary_binary_sha256": "1e2e346f7ce37bdb12541d00e08d922127fec2546ad1953e174556d66f2927c9",
+  "ordinary_features": [
+    "custom-protocol"
+  ],
+  "source_manifest_sha256": "6550438dbb8a46418d054b75a65c84599dd970c4f3dccb0b581ec8ef66854c6f"
+}

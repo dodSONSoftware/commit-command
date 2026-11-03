@@ -1,0 +1,53 @@
+{
+  "core": {
+    "matrix": {
+      "default": {
+        "passed": 54,
+        "ignored": 1
+      },
+      "experimental-writes": {
+        "passed": 89,
+        "ignored": 2
+      },
+      "controlled-writes": {
+        "passed": 79,
+        "ignored": 1
+      },
+      "application-services": {
+        "passed": 173,
+        "ignored": 2
+      },
+      "all-features": {
+        "passed": 217,
+        "ignored": 6
+      }
+    },
+    "exit_code": 0,
+    "new_credential_integration_cases": 8,
+    "new_protocol_unit_cases": 2,
+    "last_change": "Full matrix precedes review-summary presentation cleanup; final all-target/all-feature Clippy and exact rebuilt native artifact cover that cleanup."
+  },
+  "desktop": {
+    "renderer_passed": 51,
+    "host_passed_per_configuration": 13,
+    "full_gate_exit_code": 0
+  },
+  "native": {
+    "fixture_only": true,
+    "decline": true,
+    "changed_credential_after_review_rejected": true,
+    "authenticated_observation": true,
+    "authenticated_capture": true,
+    "separate_offline_import": true,
+    "quit_during_helper": true,
+    "restart": "passed: exact repository/journal/artifact/helper/request equality",
+    "default_controls": "observed disabled observation/download/import/upstream/trust controls; read-only desktop label",
+    "cleanup": "apps closed, held flag removed, exact server SIGTERM, state reopened; generated credentials remain in protected temporary fixture only"
+  },
+  "limitations": [
+    "Native OS credential store was not accessed or modified.",
+    "Trusted helper code is unsandboxed; only GitFleet forwarding is get-only.",
+    "Broader M5B settings/secure-storage/helper compatibility remains open.",
+    "Earlier SSH fetch-artifact guard refusal remains unexplained; this checkpoint does not diagnose it."
+  ]
+}

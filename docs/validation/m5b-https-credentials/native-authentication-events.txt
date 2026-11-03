@@ -1,0 +1,6 @@
+GET /repo.git/info/refs?service=git-upload-pack matched=False scheme=basic
+GET /repo.git/info/refs?service=git-upload-pack matched=True scheme=basic
+POST /repo.git/git-upload-pack matched=True scheme=basic
+GET /repo.git/info/refs?service=git-upload-pack matched=True scheme=basic
+POST /repo.git/git-upload-pack matched=True scheme=basic
+POST /repo.git/git-upload-pack matched=True scheme=basic

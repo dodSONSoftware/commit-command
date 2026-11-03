@@ -791,6 +791,11 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 fn main() {
+    if std::env::args_os().nth(1).as_deref()
+        == Some(std::ffi::OsStr::new("--gitfleet-credential-bridge"))
+    {
+        std::process::exit(gitfleet_core::credentials::bridge_main());
+    }
     if let Err(error) = run() {
         eprintln!("GitFleet startup failed: {error}");
         std::process::exit(1);

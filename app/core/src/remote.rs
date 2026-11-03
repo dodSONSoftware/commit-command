@@ -19,6 +19,7 @@ pub struct TransportOptions {
     pub local_fixture_root: Option<PathBuf>,
     pub ca_file: Option<PathBuf>,
     pub ssh: Option<SshPolicy>,
+    pub https_credentials: Option<HttpsCredentialPolicy>,
 }
 
 /// Explicit host policy; no private key or credential is accepted from IPC.
@@ -27,6 +28,14 @@ pub struct SshPolicy {
     pub known_hosts: PathBuf,
     pub public_identity: PathBuf,
     pub agent_socket: PathBuf,
+}
+
+/// A trusted executable implementing Git's username/password helper protocol.
+#[derive(Debug, Clone)]
+pub struct HttpsCredentialPolicy {
+    pub helper: PathBuf,
+    pub bridge: PathBuf,
+    pub account: String,
 }
 
 pub(crate) struct ResolvedDestination {

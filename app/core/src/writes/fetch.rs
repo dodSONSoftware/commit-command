@@ -217,9 +217,8 @@ impl ControlledWrites {
                 remaining.timeout = remaining.timeout.saturating_sub(started.elapsed());
                 let mut command = remote::command(&plan.transport, &repository, &home)?;
                 command.args(args);
-                let output = process::bounded_input_checked(command, &remaining, None, || {
-                    artifact_budget(&directory)
-                })?;
+                let output =
+                    process::transport(command, &remaining, || artifact_budget(&directory))?;
                 if !output.status.success() {
                     return Err(fail(ErrorKind::InspectionFailed,"Fetch download failed (transport, authentication, certificate, redirect, object validation or server rejection); raw server diagnostics are not retained"));
                 }

@@ -1,3 +1,4 @@
+import { ReviewedHttpsAuthentication } from "./ReviewedHttpsAuthentication";
 import type { FetchCapture } from "../services/response.generated";
 import { bytes, pathText } from "../stores/model";
 const text = (value: string) =>
@@ -19,6 +20,7 @@ export function FetchCaptureRecords({
             {capture.phase} · {text(capture.plan.remote)} ·{" "}
             {text(capture.plan.reference)}
           </h3>
+          <ReviewedHttpsAuthentication scope={capture.plan.authentication} />
           <p>
             <code>{capture.plan.id}</code> ·{" "}
             {pathText(capture.plan.metadata.root)}

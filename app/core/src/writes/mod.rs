@@ -309,3 +309,8 @@ pub struct RecoveryReview {
 
 #[cfg(feature = "application-services")]
 mod ssh_transport;
+
+#[cfg(feature = "application-services")]
+pub(crate) fn credential_fingerprint(path: &Path) -> Result<String> {
+    adapter::program_fingerprint(path)
+}

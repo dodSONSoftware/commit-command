@@ -1,4 +1,7 @@
 """Disposable read-only TLS Git fixture; never accepts receive-pack or writes."""
+import base64
+import hmac
+import json
 import http.server
 import os
 import pathlib
@@ -19,9 +22,26 @@ class Handler(http.server.BaseHTTPRequestHandler):
     def log_message(self, *_):
         pass
 
+    def authenticated(self):
+        policy=marker.parent / "basic-auth.json"
+        if not policy.exists():return True
+        credentials=json.loads(policy.read_text())
+        expected="Basic "+base64.b64encode((credentials["account"]+":"+credentials["password"]).encode()).decode()
+        matched=hmac.compare_digest(self.headers.get("Authorization", ""),expected)
+        with (marker.parent / "authentication-events").open("a") as stream:
+            scheme="basic" if self.headers.get("Authorization", "").startswith("Basic ") else "none-or-other"
+            stream.write(f"{self.command} {self.path} matched={matched} scheme={scheme}\n")
+        if matched:return True
+        self.send_response(401)
+        self.send_header("WWW-Authenticate", 'Basic realm="GitFleet disposable fixture"')
+        self.send_header("Content-Length", "0")
+        self.end_headers()
+        return False
+
     def do_GET(self):
         with marker.open("a") as stream:
             stream.write(f"{self.path} auth={self.headers.get('Authorization') is not None}\n")
+        if not self.authenticated():return
         override = marker.parent / "network-mode"
         selected = override.read_text().strip() if override.exists() else mode
         if selected == "slow":
@@ -52,6 +72,9 @@ class Handler(http.server.BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def do_POST(self):
+        with marker.open("a") as stream:
+            stream.write(f"{self.path} auth={self.headers.get('Authorization') is not None}\n")
+        if not self.authenticated():return
         if mode != "git":
             self.send_error(403)
             return

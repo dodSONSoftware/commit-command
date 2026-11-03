@@ -642,6 +642,7 @@ export interface Observation {
  * via the `definition` "ObservationPlan".
  */
 export interface ObservationPlan {
+  authentication?: HelperScope | null;
   config_digest: string;
   created_at_ms: number;
   destination: string;
@@ -657,6 +658,15 @@ export interface ObservationPlan {
   workspace: string;
   worktree: string;
   [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "HelperScope".
+ */
+export interface HelperScope {
+  account: string;
+  host: string;
+  path: string;
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
@@ -710,6 +720,7 @@ export interface FetchArtifact {
  * via the `definition` "FetchCapturePlan".
  */
 export interface FetchCapturePlan {
+  authentication?: HelperScope | null;
   config_digest: string;
   created_at_ms: number;
   destination: string;
@@ -745,6 +756,7 @@ export interface FetchImport {
  * via the `definition` "FetchImportPlan".
  */
 export interface FetchImportPlan {
+  authentication?: HelperScope | null;
   bundle_bytes: number;
   bundle_digest: string;
   capture_id: string;
@@ -783,6 +795,7 @@ export interface UpstreamOperation {
  * via the `definition` "UpstreamPlan".
  */
 export interface UpstreamPlan {
+  authentication?: HelperScope | null;
   candidate_digest: string;
   config_digest: string;
   created_at_ms: number;

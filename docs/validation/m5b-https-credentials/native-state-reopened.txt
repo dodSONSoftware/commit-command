@@ -1,0 +1,25 @@
+[
+  {
+    "discovery": {
+      "excluded_names": [
+        "node_modules",
+        ".venv",
+        "target",
+        "dist",
+        "build",
+        ".gitfleet-rust-lab"
+      ],
+      "excluded_patterns": []
+    },
+    "display_root": {
+      "encoding": "utf8",
+      "value": "/private/tmp/gitfleet-https-credentials-3y2flq0u/workspace"
+    },
+    "id": "ef67ae2b-c50a-4169-b132-328131fa9edd",
+    "name": "Native HTTPS helper acceptance",
+    "root": {
+      "encoding": "utf8",
+      "value": "/private/tmp/gitfleet-https-credentials-3y2flq0u/workspace"
+    }
+  }
+]

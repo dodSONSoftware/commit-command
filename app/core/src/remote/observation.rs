@@ -24,6 +24,8 @@ pub struct ObservationPlan {
     pub tools: Vec<ToolBinding>,
     pub local_target: Option<NativePath>,
     pub local_binding: Option<String>,
+    #[serde(default)]
+    pub authentication: Option<crate::credentials::HelperScope>,
 }
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "snake_case")]

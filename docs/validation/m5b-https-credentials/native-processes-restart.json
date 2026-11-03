@@ -1,0 +1,6 @@
+{
+  "all_owned_clients_exited": true,
+  "processes": [
+    "64602 64602 /Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python -I /Users/randydodson/Documents/_code/git-fleet/app/core/tests/support/https_observation.py /private/tmp/gitfleet-https-credentials-3y2flq0u/certificate.pem /private/tmp/gitfleet-https-credentials-3y2flq0u/key.pem /private/tmp/gitfleet-https-credentials-3y2flq0u/requests git f38c5c0b0211af4413951beebf03ee58374bc6b2 /private/tmp/gitfleet-https-credentials-3y2flq0u/remote.git"
+  ]
+}

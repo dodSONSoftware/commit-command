@@ -131,6 +131,10 @@ pub(super) fn command(plan: &ObservationPlan, cwd: &Path, home: &Path) -> Result
             "-c",
             "http.followRedirects=false",
             "-c",
+            "http.emptyAuth=false",
+            "-c",
+            "http.proactiveAuth=none",
+            "-c",
             "http.proxy=",
             "-c",
             "credential.helper=",
@@ -145,6 +149,22 @@ pub(super) fn command(plan: &ObservationPlan, cwd: &Path, home: &Path) -> Result
             "-c",
             "submodule.recurse=false",
         ]);
+    if let Some(scope) = &plan.authentication {
+        command
+            .args([
+                "-c",
+                "http.proactiveAuth=basic",
+                "-c",
+                "credential.useHttpPath=true",
+                "-c",
+            ])
+            .arg(format!("credential.username={}", scope.account))
+            .arg("-c")
+            .arg(format!(
+                "credential.helper={}",
+                crate::credentials::helper_command(scope, &plan.tools)?
+            ));
+    }
     if plan.transport == Transport::Ssh {
         command
             .env(
@@ -311,6 +331,16 @@ impl ControlledWrites {
                 self.options.remote.ssh.as_ref(),
             )?);
         }
+        let authentication = if resolved.transport == Transport::Https {
+            if let Some(policy) = self.options.remote.https_credentials.as_ref() {
+                tools.extend(crate::credentials::bindings(policy)?);
+                Some(crate::credentials::scope(&resolved.url, &policy.account)?)
+            } else {
+                None
+            }
+        } else {
+            None
+        };
         let plan = ObservationPlan {
             id: Uuid::new_v4().to_string(),
             workspace: workspace.clone(),
@@ -334,6 +364,7 @@ impl ControlledWrites {
             tools,
             local_target: local.as_deref().map(NativePath::from_path),
             local_binding,
+            authentication,
         };
         Ok(plan)
     }
@@ -389,7 +420,7 @@ impl ControlledWrites {
                 &url,
                 &plan.reference,
             ]);
-            let output = process::bounded_input(probe, &options, None)?;
+            let output = process::transport(probe, &options, || Ok(()))?;
             if output.status.code() == Some(2) && output.stdout.is_empty() {
                 return Ok(None);
             }
@@ -457,6 +488,29 @@ impl ControlledWrites {
                 .collect::<Vec<_>>();
             if current != expected {
                 return Err(stale());
+            }
+        }
+        if plan.transport == Transport::Https {
+            let actual = self
+                .options
+                .remote
+                .https_credentials
+                .as_ref()
+                .map(|p| crate::credentials::scope(&resolved.url, &p.account))
+                .transpose()?;
+            if actual != plan.authentication {
+                return Err(stale());
+            }
+            if let Some(policy) = self.options.remote.https_credentials.as_ref() {
+                let expected = plan
+                    .tools
+                    .iter()
+                    .filter(|t| t.role.starts_with("credential_"))
+                    .cloned()
+                    .collect::<Vec<_>>();
+                if crate::credentials::bindings(policy)? != expected {
+                    return Err(stale());
+                }
             }
         }
         validate_tools(plan)?;

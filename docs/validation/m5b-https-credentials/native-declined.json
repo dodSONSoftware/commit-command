@@ -1,0 +1,196 @@
+{
+  "repository": {
+    ".git/COMMIT_EDITMSG": {
+      "sha256": "37aea694bdc755009019751d8880f942621c753ddc40801de2b88039e5958ca9",
+      "mode": 33188
+    },
+    ".git/HEAD": {
+      "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+      "mode": 33188
+    },
+    ".git/config": {
+      "sha256": "7d0e8537b313bb0a068ba7114ad3ca8ca95768e155c034e849f091cd19695c75",
+      "mode": 33188
+    },
+    ".git/index": {
+      "sha256": "493ecc21b8abfbd604a75551b5384816e4e4abc96bb35eba45b5ddcdc6ad5c3d",
+      "mode": 33188
+    },
+    ".git/logs/HEAD": {
+      "sha256": "8f9e334bf7873d2de2b54120d3b795cff6f95a829186d315bf9f9dc4c798c984",
+      "mode": 33188
+    },
+    ".git/logs/refs/heads/main": {
+      "sha256": "8f9e334bf7873d2de2b54120d3b795cff6f95a829186d315bf9f9dc4c798c984",
+      "mode": 33188
+    },
+    ".git/objects/68/bba7d660962af059bea7105a8838175928f050": {
+      "sha256": "e3dc2afeadf1b73fe7b05959ee60d91154192af5f53198cd077481bddb656abd",
+      "mode": 33060
+    },
+    ".git/objects/99/a797ac5f201c5cd2db579b17ca6203c2e899f8": {
+      "sha256": "9bf5a02961fe2ff11c9f97ab95d89f33b2eb08a97787e85829930ec99aa09670",
+      "mode": 33060
+    },
+    ".git/objects/d1/7085f475aae965f0f0b8fddfb17ca3ca481002": {
+      "sha256": "e51af8b206ec69879b1b720979f9189038c2596ecf655c7acef72a20ee813504",
+      "mode": 33060
+    },
+    ".git/objects/e7/d53e32d457f33b08ece5ed62d8a79d72e66914": {
+      "sha256": "6fcf6da894ca8e0503da936da5c04d9aa1ab2cca64eded8c8ce1bebc13cdf4ed",
+      "mode": 33060
+    },
+    ".git/refs/heads/main": {
+      "sha256": "9af836d016041f22b7612e0d01a6728ec46aab69de1543bdbae54dacfd1e3b39",
+      "mode": 33188
+    },
+    "fixture.txt": {
+      "sha256": "fe0ed168888c5fa3ca9802c3a8e68f60e73188c95888da96b67b5e1531c8bcd3",
+      "mode": 33188
+    },
+    "untracked.txt": {
+      "sha256": "a52d78d9e128fbb8d54aba631bd91aa6c82f0be768ff00f94470ad08549cae67",
+      "mode": 33188
+    }
+  },
+  "remote_repository": {
+    "HEAD": {
+      "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+      "mode": 33188
+    },
+    "config": {
+      "sha256": "a7cad68026e77c38dcfb92e268e750eeec6375f66840a5b6c12dd2e602898108",
+      "mode": 33188
+    },
+    "objects/99/a797ac5f201c5cd2db579b17ca6203c2e899f8": {
+      "sha256": "9bf5a02961fe2ff11c9f97ab95d89f33b2eb08a97787e85829930ec99aa09670",
+      "mode": 33060
+    },
+    "objects/d1/7085f475aae965f0f0b8fddfb17ca3ca481002": {
+      "sha256": "e51af8b206ec69879b1b720979f9189038c2596ecf655c7acef72a20ee813504",
+      "mode": 33060
+    },
+    "objects/e7/d53e32d457f33b08ece5ed62d8a79d72e66914": {
+      "sha256": "6fcf6da894ca8e0503da936da5c04d9aa1ab2cca64eded8c8ce1bebc13cdf4ed",
+      "mode": 33060
+    },
+    "objects/f3/8c5c0b0211af4413951beebf03ee58374bc6b2": {
+      "sha256": "cba604df21b655bdfae34375e8cbe92d5f162b98ff7799c27d2ce994a20a9de8",
+      "mode": 33060
+    },
+    "packed-refs": {
+      "sha256": "230c53f94b2631965a1ba88d96d9e0e05d47fc91c79c07e768b64c69217aee0c",
+      "mode": 33188
+    },
+    "refs/heads/main": {
+      "sha256": "72256eddabab08ffbd02355fd03a140ae9072c585c08fa6e4c10945236f096cb",
+      "mode": 33188
+    }
+  },
+  "records": {
+    "remote-observation:677e18ca-7e12-499b-80c2-9743ad421b13": {
+      "version": 1,
+      "session": "84e22071-b45a-4289-8900-a342d916fd60",
+      "value": {
+        "plan": {
+          "id": "677e18ca-7e12-499b-80c2-9743ad421b13",
+          "workspace": "ef67ae2b-c50a-4169-b132-328131fa9edd",
+          "worktree": "2c1415a3-286c-4d26-8692-f59ff96467d2",
+          "metadata": {
+            "root": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-https-credentials-3y2flq0u/workspace/repository"
+            },
+            "git_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-https-credentials-3y2flq0u/workspace/repository/.git"
+            },
+            "common_dir": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-https-credentials-3y2flq0u/workspace/repository/.git"
+            },
+            "root_binding": "16777229:49802326:Some(SystemTime { tv_sec: 1793664359, tv_nsec: 128952521 })",
+            "git_binding": "16777229:49802342:Some(SystemTime { tv_sec: 1793664359, tv_nsec: 154982239 })",
+            "common_binding": "16777229:49802342:Some(SystemTime { tv_sec: 1793664359, tv_nsec: 154982239 })",
+            "object_format": "sha1"
+          },
+          "remote": "origin",
+          "reference": "refs/heads/main",
+          "destination": "https://127.0.0.1:63066/repo.git",
+          "transport": "https",
+          "config_digest": "8eeff89c9cfaa2149d3fb5a9ebd4ed99b6b68b50c35d91265dc655c77c9bc8e5",
+          "generation": "39ac2f451c4236a65a6f012e14606459d0d169cf5a6a8fdb8f883f4c43c168ce",
+          "created_at_ms": 1793664715763,
+          "tools": [
+            {
+              "role": "git",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/bin/git"
+              },
+              "fingerprint": "70feb0465f5896154abd7405231483f4b0cd99e3855fcc4d86e08b66869d1007"
+            },
+            {
+              "role": "https_helper",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-remote-https"
+              },
+              "fingerprint": "ea516f1cfced38527ec4d627d6843c84f4960252ce78adaa87b35e2bd2bd2ddb"
+            },
+            {
+              "role": "exec_directory",
+              "path": {
+                "encoding": "utf8",
+                "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+              },
+              "fingerprint": "16777229:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })"
+            },
+            {
+              "role": "certificate_authority",
+              "path": {
+                "encoding": "utf8",
+                "value": "/private/tmp/gitfleet-https-credentials-3y2flq0u/certificate.pem"
+              },
+              "fingerprint": "2bbddc013ea8b22dc6c8c6e19d69630ef4cbbcd49e62c291f27113a27b2a158e"
+            },
+            {
+              "role": "credential_helper",
+              "path": {
+                "encoding": "utf8",
+                "value": "/private/tmp/gitfleet-https-credentials-3y2flq0u/helper policy's files/credential helper.py"
+              },
+              "fingerprint": "edb2768cd7c527c441317bc0f27cf266e49fc9e67961101452ca91e878992e55"
+            },
+            {
+              "role": "credential_bridge",
+              "path": {
+                "encoding": "utf8",
+                "value": "/private/tmp/gitfleet-https-credentials-3y2flq0u/GitFleet HTTPS Acceptance.app/Contents/MacOS/gitfleet-desktop"
+              },
+              "fingerprint": "69edefcfa2487fbb02ea74a6fb9b1c60a3713a426bbe032fcfe4d7884d7647dd"
+            }
+          ],
+          "local_target": null,
+          "local_binding": null,
+          "authentication": {
+            "host": "127.0.0.1:63066",
+            "path": "repo.git",
+            "account": "fixture-account@example.invalid"
+          }
+        },
+        "phase": "cancelled",
+        "oid": null,
+        "observed_at_ms": null,
+        "issue": null
+      }
+    }
+  },
+  "helper_operations": [],
+  "http_requests": [],
+  "authentication_events": [],
+  "network_artifacts": {},
+  "credential_material_absent_from_app_state": true,
+  "helper_received_only_get": true,
+  "oracle": "PASSED"
+}

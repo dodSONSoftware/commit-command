@@ -1,0 +1,12 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.50s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-a5b0bae5745a2202)
+
+running 4 tests
+test https_credential_tests::approved_https_helper_authenticates_downloads_and_imports_without_persisting_or_mutating_credentials ... ok
+test https_credential_tests::cancellation_after_credential_lookup_starts_reaps_the_helper_and_preserves_state ... ok
+test https_credential_tests::declined_stale_or_cancelled_https_reviews_never_read_a_credential ... ok
+test https_credential_tests::wrong_missing_and_changed_account_credentials_fail_without_store_or_erase ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 34 filtered out; finished in 34.07s
+

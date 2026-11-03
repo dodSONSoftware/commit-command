@@ -82,3 +82,8 @@ required-features = ["application-services"]
 [[test]]
 name = "remote_observation"
 required-features = ["application-services"]
+
+[[bin]]
+name = "gitfleet-credential"
+path = "src/bin/gitfleet_credential.rs"
+required-features = ["application-services"]
