@@ -48,6 +48,15 @@ This register separates **explicitly agreed product behavior** from **proposed i
 | D-038 | Hooks policy | Per-repo remembered execute/bypass preference, always presented at review |
 | D-039 | Approved content | Final commit tree and message are immutable authorization boundaries |
 
+| D-040 | First-release platforms | macOS first; Linux and Windows explicitly deferred, with no support claim |
+| D-041 | Git authentication | Use existing OS-backed Git credential helpers and SSH agents; no GitFleet-managed credential store for the first-release Git workflow |
+| D-042 | First-release Git mutations | Commit, explicit fetch and separately reviewed non-force push; Pull and branch creation/switching/mutations deferred |
+| D-043 | Authentication selection | Named authentication profiles with explicit per-remote assignment; each network review shows exact destination and selected authentication policy |
+| D-044 | Authentication prompts | Selected helper may prompt for unlock/sign-in only during an explicitly approved operation; identify helper before approval, support cancellation, and never initiate background authentication |
+| D-045 | Ordinary write availability | Enable supported writes in the normal macOS build after required safety acceptance passes; per-worktree trust and independent native approval remain mandatory. Current default stays disabled until then |
+| D-046 | SSH host verification | Unknown or changed host keys stop execution with external verification/known_hosts update instructions; no in-app host-key approval or automatic trust update |
+| D-047 | Initial Git service priority | Prioritize a private Gitea server. HTTPS versus SSH and existing helper/agent are unknown; do not infer them or select credentials automatically. Local configuration inspection may inform a concrete proposal; live server access and user credentials retain their authorization boundaries |
+
 ## Proposed defaults / not explicitly finalized
 
 | Topic | Proposal | Condition |
@@ -81,7 +90,7 @@ This register separates **explicitly agreed product behavior** from **proposed i
 - Product owner/organization ID, signing identity, license and distribution approach.
 - Exact UX shortcuts, accessibility targets and desktop release OS minimums.
 - Default SemVer bump strategy in templates that enable the Action.
-- Which advanced Git operations (branch create/checkout, pull modes) are in initial delivery vs subsequent releases.
+- Pull and branch mutations are deferred by D-042; any later inclusion requires an explicit scope decision.
 - Supported minimum Git version and supported hook frameworks for v1.
 
 ## Change-control rule

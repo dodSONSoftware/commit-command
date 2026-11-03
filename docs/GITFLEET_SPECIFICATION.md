@@ -706,3 +706,18 @@ M3 is not complete, and ordinary desktop writes remain disabled in Rust and UI.
 Actual cancellation, guarded recovery, close/forced-interruption, remaining security
 cases and accessibility acceptance still require permitted testing.
 M0–M2 safety boundaries and exclusions remain; M4 and later are not authorized.
+
+
+## First-release scope amendment — November 2, 2026
+
+The product interview approved decisions D-040 through D-047 in the decision register. These decisions refine first-release scope where earlier text lists broader eventual capabilities:
+
+- Release macOS first. Linux and Windows requirements are explicitly deferred, not accepted or claimed as supported.
+- Prioritize compatibility with a private Gitea server. The user has not identified a transport, credential helper or SSH agent; inspect relevant local configuration before proposing those selections, without assuming live server or credential access.
+- Unknown or changed SSH host keys stop execution and provide external verification/known_hosts update instructions. No in-app host-key acceptance or automatic trust update.
+- Use existing OS-backed Git credential helpers and SSH agents. Git authentication does not introduce a GitFleet-managed credential store. Named authentication profiles are explicitly assigned to remotes; each network review identifies the exact destination and selected policy.
+- A selected helper may show its normal unlock/sign-in prompt during an explicitly approved operation, with cancellation supported. Background monitoring never initiates authentication.
+- Deliver commit, explicit fetch and separately reviewed non-force push. Pull and branch creation/switching/mutations are deferred.
+- Enable supported writes in the ordinary macOS build after the required safety acceptance passes. Per-worktree trust and independent native operation approval remain required. This is a conditional product decision, not evidence that acceptance has passed or permission to change the default immediately.
+
+AI, Actions and backup packages remain in the completion plan; this amendment does not defer them. Existing security, recovery and immutable authorization contracts remain binding.

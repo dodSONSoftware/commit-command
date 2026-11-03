@@ -10,6 +10,10 @@ bypass; see the [native close/Quit report](reports/M3_NATIVE_CLOSE_QUIT_2026-11-
 Continue remaining M3 theme/accessibility/recovery and completion packages.
 Local milestone/checkpoint commits are authorized; no push or ordinary-write default change.
 
+## Approved first-release interview decisions — November 2, 2026
+
+D-040–D-047 approve macOS-first delivery (Linux/Windows explicitly deferred), existing OS-backed Git helpers/SSH agents, named authentication profiles explicitly assigned per remote, and helper prompts only during approved operations with cancellation and no background authentication. Commit, explicit fetch and separately reviewed non-force push are in scope; Pull and branch mutations are deferred. Supported ordinary macOS writes should become enabled after the required safety acceptance passes, retaining per-worktree trust and independent native approval. Keep current defaults disabled until that condition is met. See the specification's first-release scope amendment. Private Gitea is the initial service priority; HTTPS/SSH and the existing helper/agent are unknown and should be investigated through relevant local configuration before proposing explicit selections. Unknown or changed SSH host keys stop execution with external verification/known_hosts instructions; no in-app host-key acceptance or automatic updates. This does not authorize live private-server access or use of user credentials.
+
 ## Completion scope and governing contracts
 
 The [specification](GITFLEET_SPECIFICATION.md), [decision register](DECISIONS_AND_OPEN_ITEMS.md), [acceptance matrix](ACCEPTANCE_MATRIX.md), [current status](IMPLEMENTATION_STATUS.md), and [November 2 native checkpoint](M3_NATIVE_ACCEPTANCE_HANDOFF_2026-11-02.md) govern execution. The historical M0–M2 contracts continue to govern supported Git behavior. This plan proposes implementation details; it does not change confirmed requirements.

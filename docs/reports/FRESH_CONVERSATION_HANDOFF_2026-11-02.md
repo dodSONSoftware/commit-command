@@ -1,5 +1,11 @@
 # Fresh conversation handoff — November 2, 2026
 
+## Product interview decisions — November 2, 2026
+
+D-040–D-047 are now approved in the decision register and reflected in the specification/completion plan: macOS-first release, Linux/Windows deferred; use existing OS-backed Git helpers and SSH agents; named authentication profiles assigned explicitly per remote; helper unlock/sign-in prompts only during approved operations, cancellable and never background initiated. Commit, explicit fetch and independently reviewed non-force push are in scope; Pull and branch mutations deferred. Enable ordinary supported writes only after required safety acceptance passes, preserving per-worktree trust/native approval; do not change the current default yet.
+
+Private Gitea is the user's first service priority. The user does not know the transport/helper/agent. Next investigate only relevant nonsecret local configuration to prepare explicit profile/settings choices; do not infer or automatically select credentials, connect to the private server, or access a user credential store based on this interview. Unknown/changed SSH host keys must stop with external verification/known_hosts update instructions; no in-app host-key acceptance/automatic updates. Enough product direction is available to continue M5B; later AI/backup/distribution decisions remain at their respective boundaries. Preserve unrelated work, commit checkpoints locally and never push.
+
 ## Latest reviewed HTTPS credential-helper checkpoint
 
 Host-selected scoped HTTPS helper/account authentication is implemented; see `docs/reports/M5B_HTTPS_CREDENTIAL_HELPER_2026-11-02.md` and the latest local commit. Native startup requires `--https-credential-helper /absolute/executable` plus `--https-credential-account account`; optional `--https-ca-file` binds fixture/private TLS trust without a global CA install. No secret argument/IPC/journal, renderer-selected policy, cache or credential-management UI. Exact independent native review binds endpoint/account/helper/bridge/current trust/configuration. Only Basic over verified TLS, no redirects; bridge forwards only get and discards store/erase. The trusted helper runs unsandboxed and may intrinsically access/change its store; do not call arbitrary helper execution read-only or sandboxed.
