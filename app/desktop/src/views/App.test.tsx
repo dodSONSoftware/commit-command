@@ -184,7 +184,14 @@ it("does not turn repository labels into executable markup", async () => {
   };
   const { container } = render(<App bridge={bridge} />);
   await screen.findByText("<img src=x onerror=evil()>");
-  expect(container.querySelector("img")).toBeNull();
+  // Repository labels stay text; only the four bundled banner images may render.
+  const images = Array.from(container.querySelectorAll("img"));
+  expect(images).toHaveLength(4);
+  for (const image of images)
+    expect(image.getAttribute("src")).toMatch(
+      /^\/src\/assets\/brand\/banner-(dark|light)\.svg$/,
+    );
+  expect(container.querySelector("[onerror]")).toBeNull();
 });
 it("renders and filters a 100-repository inventory without changing explicit selection", async () => {
   const { bridge } = fake();

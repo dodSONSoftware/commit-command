@@ -12,6 +12,7 @@
     "allow-job-status",
     "allow-cancel-job",
     "allow-desktop-capabilities",
+    "allow-open-project-repository",
     "allow-close-snapshot",
     "core:event:allow-listen",
     "core:event:allow-unlisten"

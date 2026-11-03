@@ -1,6 +1,6 @@
-# GitFleet
+# Commit Command
 
-GitFleet is a multi-repository workspace manager under development. M1 provides
+Commit Command (formerly GitFleet) is a multi-repository workspace manager under development. M1 provides
 headless workspaces, inspection, history and diffs; M2 adds explicitly trusted,
 reviewed controlled writes for the documented local macOS/APFS envelope.
 M3 adds a Tauri/React desktop adapter, scoped IPC and active-workspace monitoring.

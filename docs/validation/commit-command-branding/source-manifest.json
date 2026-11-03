@@ -1,0 +1,28 @@
+{
+  "base_commit": "ba7772147aa1d58f65660040eacc261004bbfa25",
+  "sha256": {
+    "README.md": "c44186410092a0a7e5b6c57cd8c106227c80137ea46f6ecbea0afe6cc1e280ff",
+    "app/desktop/index.html": "ec3befc86261d38257766900ea62df140be6af8c0fad96ce75898ed417d1ab0d",
+    "app/desktop/public/app-icon.png": "30629d9b5caae681a422d3f5a7163f28479e0eb81cffa91590c4db87a02bae0e",
+    "app/desktop/review.html": "2bd4aa9232e253381aabfda734763eeeb55f892d8a90552d8234fdd5db901ac0",
+    "app/desktop/scripts/dev-bundle.py": "1a1063d9bfbc74ecb5311e4a73f6cb8e207715bbc6c961afda83526665a33400",
+    "app/desktop/scripts/icon.py": "f9c3870321fa9a459f216fd7d5c1b9347051015019a58425bc22ec4ea5a40941",
+    "app/desktop/src-tauri/build.rs": "76cc0f1e1c14d84fec6b74b280cfd82180a43840439095520b1511d396651e09",
+    "app/desktop/src-tauri/capabilities/main.json": "2acc32a354361758179d982e5cc9b72794fa51dfa3f42d2fd15d9427f84e0a1e",
+    "app/desktop/src-tauri/icons/CommitCommand.icns": "4472e75438849cdb7858ddd7c41311f667391cdd8383caa6865c95d67455e6b7",
+    "app/desktop/src-tauri/icons/icon.png": "8ae6c772c45d3750dcef2af10e27c676edee24ae31f462927c56b9fd5ed2db70",
+    "app/desktop/src-tauri/src/main.rs": "8fc82242e5ef05f55e2c5529538d11633010b036b7e88bf5b0bcc7d7007871e7",
+    "app/desktop/src-tauri/tauri.conf.json": "a3033c4b6db3abadf7734a4a05e4a0c78d01cefbd37ce102230ad0c9b9343fef",
+    "app/desktop/src/assets.d.ts": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5",
+    "app/desktop/src/assets/brand/LICENSE.txt": "3a24462d348fd7fa782483253e474422fe752cf767caa637d0de6f9761ab50c1",
+    "app/desktop/src/assets/brand/banner-dark.svg": "d590c9361862ceac9a93b6b09ae2888c5eff26b3a2e2965ae7688a22fac91428",
+    "app/desktop/src/assets/brand/banner-light.svg": "8f52d4c437e4c371d8564e0fad8325798e1eca977199f82e84adefae38c20b83",
+    "app/desktop/src/review.ts": "d254c960ccb962d21883dfe5135223cfa70c31bdd4dc4237beedefed19e44e36",
+    "app/desktop/src/services/bridge.ts": "1fc38edcf62fdfcb434fe3ced3fe38164c901f20333cc22d03af8a594bc4c0a5",
+    "app/desktop/src/styles/app.css": "c7e0f724586e9d10bca87bc6cc7ef6c67ea4cdb99719d516d3fe259c349a1d14",
+    "app/desktop/src/views/App.test.tsx": "4c45a320fc7162db638af23369b42b3be2e23f1b5943cfa8a3b4efe96f9f13ea",
+    "app/desktop/src/views/App.tsx": "bccd8444b035675630c4e6a59ff70e1cfc50f408ef60c95a23ef956b89c31c29",
+    "app/desktop/src/views/ApplicationBrand.test.tsx": "6505a3297aaff217e40b95cea5d296e5ed8c791f54528216632e5916f38dea16",
+    "app/desktop/src/views/ApplicationBrand.tsx": "bf7b4f0c3d813e968d898898b8ccb6fb3f5380a6f05469eabc7cfb6771721415"
+  }
+}

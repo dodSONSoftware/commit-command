@@ -1,0 +1,8 @@
+src/views/ApplicationBrand.tsx 34ms
+src/views/App.tsx 89ms (unchanged)
+src/services/bridge.ts 7ms (unchanged)
+src/styles/app.css 49ms
+src/assets.d.ts 1ms (unchanged)
+index.html 9ms (unchanged)
+review.html 1ms (unchanged)
+src/review.ts 4ms (unchanged)

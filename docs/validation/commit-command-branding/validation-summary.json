@@ -1,0 +1,50 @@
+{
+  "date": "2026-11-03",
+  "visible_application_name": "Commit Command",
+  "application_identifier_preserved": "dev.gitfleet.desktop",
+  "desktop_full_gate": {
+    "status": "passed",
+    "renderer_tests": 69,
+    "native_host_tests_per_configuration": 13,
+    "checks": [
+      "typecheck",
+      "lint",
+      "format",
+      "contracts",
+      "renderer build",
+      "native debug/release builds",
+      "default/all-feature host tests",
+      "strict Clippy"
+    ]
+  },
+  "new_about_tests": 3,
+  "actual_native_acceptance": {
+    "banner_mouse_click": true,
+    "native_about_menu_same_dialog": true,
+    "developer_publisher_version_copyright_license_content": true,
+    "local_license_view_and_back": true,
+    "Escape_and_OK_dismissal": true,
+    "final_Escape_focus_returned_to_banner": true,
+    "light_and_dark_artwork_visual_checks": true,
+    "read_only_status_retained": true,
+    "native_quit": true
+  },
+  "pointer_cursor": "CSS cursor:pointer on the banner button; no system-wide cursor change",
+  "repository_button": {
+    "fixed_destination": "https://github.com/dodSONSoftware/commit-command",
+    "scope": "main window only; no URL/command accepted from IPC",
+    "validation": "renderer action/error test plus native review/stranger ACL denial; external browser launch not performed during native acceptance"
+  },
+  "asset_verification": "asset-verification.json",
+  "native_artifact": "native-artifact.json",
+  "preservation": {
+    "four_disposable_repositories_file_modes_bytes_and_symlinks_unchanged": true,
+    "write_and_network_operation_records": 0,
+    "root_LICENSE_unchanged_and_excluded": true,
+    "source_artwork_unchanged": true,
+    "saved_workspace_identity_and_data_paths_unchanged": true
+  },
+  "full_core_matrix": "not rerun; no Core changes",
+  "initial_failures": "typecheck caught About methods initially placed in wrong interface; fixed. Existing label-escaping test assumed zero images; updated to permit exactly the four static bundled images and forbid event handlers, then full gate passed. Initial XML verifier omitted harmless SVG g tag; verifier corrected without changing supplied artwork.",
+  "no_push": true
+}

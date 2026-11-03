@@ -1,5 +1,14 @@
 # Fresh conversation handoff — November 2, 2026
 
+## Latest checkpoint — November 3: application renamed Commit Command, branding/About accepted
+
+The user explicitly named the application **Commit Command**. Read `docs/reports/COMMIT_COMMAND_BRANDING_ABOUT_2026-11-03.md`. Supplied transparent light/dark banners replace the old header glyph/text and open a reference-style modal About dialog with a pointer cursor. Native About menu, local license/Back, metadata/current version and fixed repository action are wired. Supplied icns/native PNG/favicon integrated. Visible application/window/menu/review names and README introduction updated; internal `dev.gitfleet.desktop`, binary/crate identifiers and existing data paths remain stable.
+
+Full desktop gate passed 69 renderer/13 host tests per configuration plus all build/type/lint/contracts/format/Clippy/release checks. Actual native ordinary-build banner/menu activation, license/Back, Escape/OK, final focus restoration, light/dark visuals and Quit passed; four-repository preservation and zero operation records verified. Final tested ordinary app: `app/desktop/src-tauri/target/debug/bundle/macos/Commit Command.app`; its icon/resources and exact hashes are saved in `docs/validation/commit-command-branding`. Older GitFleet-named bundles were retained and may contain historical source; use the new bundle. The fixture app is closed. Original graphics and untracked root `LICENSE` remain untouched; only a packaged license copy is added.
+
+Branding request completed; existing publication authority/transport/bulk/uncertain-publication work below remains open. Preserve no-push and ordinary-write default boundaries. Continue only as authorized by subsequent user requests, preserve unrelated work, save reports and commit locally.
+
+
 ## Latest checkpoint — November 3: separately reviewed pre-push checks
 
 Read `docs/reports/M5C_REVIEWED_PUSH_CHECKS_2026-11-03.md` and `docs/validation/m5c-push-check/validation-summary.json` first. `ReviewPushCheck` uses the existing isolated Rust review and independent native confirmation for exact source/destination, recent already-reachable child evidence, pre-push hook manifest/policy/argv/stdin and context revalidation before/after a bounded real hook. This is **not publication authority**: Core invokes no push transport, journals `published: false`, and completed checks cannot be promoted to push tokens. Conditional selected-child planning does not satisfy the parent gate; a fresh actual child observation must prove reachability. Unified audit includes check phases; interrupted/orphaned checks never replay hooks and require inspection/fresh review.

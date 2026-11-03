@@ -1,0 +1,8 @@
+
+> gitfleet-desktop@0.1.1 typecheck
+> tsc --noEmit
+
+src/views/ApplicationBrand.tsx(39,17): error TS2339: Property 'onAboutRequested' does not exist on type 'Bridge'.
+src/views/ApplicationBrand.tsx(39,48): error TS7006: Parameter 'stop' implicitly has an 'any' type.
+src/views/ApplicationBrand.tsx(109,31): error TS2339: Property 'openProjectRepository' does not exist on type 'Bridge'.
+src/views/ApplicationBrand.tsx(113,18): error TS2339: Property 'openProjectRepository' does not exist on type 'Bridge'.

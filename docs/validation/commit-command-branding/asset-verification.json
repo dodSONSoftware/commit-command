@@ -1,0 +1,12 @@
+{
+  "byte_identical_source_assets": {
+    "app/desktop/src/assets/brand/banner-dark.svg": "docs/graphics/commit-command-brand-assets/commit-command-banner-dark-transparent.svg",
+    "app/desktop/src/assets/brand/banner-light.svg": "docs/graphics/commit-command-brand-assets/commit-command-banner-light-transparent.svg",
+    "app/desktop/src-tauri/icons/CommitCommand.icns": "docs/graphics/commit-command-brand-assets/CommitCommand.icns",
+    "app/desktop/src-tauri/icons/icon.png": "docs/graphics/commit-command-brand-assets/CommitCommand.iconset/icon_128x128.png",
+    "app/desktop/public/app-icon.png": "docs/graphics/commit-command-brand-assets/CommitCommand.iconset/icon_32x32.png",
+    "app/desktop/src/assets/brand/LICENSE.txt": "LICENSE"
+  },
+  "svg_has_no_script_event_handlers_or_external_links": true,
+  "root_LICENSE_unchanged_and_untracked": true
+}

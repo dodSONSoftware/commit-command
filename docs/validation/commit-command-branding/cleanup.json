@@ -1,0 +1,8 @@
+{
+  "owned_fixture_app_exited_after_native_quit": true,
+  "no_network_server_or_credentials_used": true,
+  "disposable_fixture_retained_for_evidence": true,
+  "ordinary_default_Commit_Command_bundle_ready": "/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri/target/debug/bundle/macos/Commit Command.app",
+  "older_development_bundles_not_deleted": true,
+  "no_push": true
+}

@@ -1,0 +1,7 @@
+{
+  "bundle": "/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri/target/debug/bundle/macos/Commit Command.app",
+  "binary_sha256": "f5962a7cc68efd0b6c73970707c2bf932c99ee266f37aa71feb74cbcf396e60c",
+  "icon_sha256": "4472e75438849cdb7858ddd7c41311f667391cdd8383caa6865c95d67455e6b7",
+  "features": "default; writes disabled",
+  "base_commit": "ba7772147aa1d58f65660040eacc261004bbfa25"
+}

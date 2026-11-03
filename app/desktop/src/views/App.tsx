@@ -6,6 +6,7 @@ import {
   type CSSProperties,
 } from "react";
 import type { Bridge } from "../services/bridge";
+import { ApplicationBrand } from "./ApplicationBrand";
 import { PushDependencyPlanner } from "./PushDependencyPlanner";
 import { value } from "../services/bridge";
 import type {
@@ -375,11 +376,7 @@ export function App({ bridge }: { bridge: Bridge }) {
   return (
     <div className="shell" inert={closing || loading}>
       <header className="topbar">
-        <div className="brand">
-          <span className="brand-icon">⑂</span>
-          <strong>GitFleet</strong>
-          <span className="edition">LOCAL WORKSPACE</span>
-        </div>
+        <ApplicationBrand bridge={bridge} />
         <div className="workspace-switch">
           <label htmlFor="workspace">Workspace</label>
           <select

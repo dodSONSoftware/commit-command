@@ -171,33 +171,112 @@ label {
   background: var(--panel);
   gap: 24px;
 }
-.brand {
+/* Supplied transparent artwork is selected independently of the saved theme mode. */
+.brand-button,
+.brand-button:hover {
+  display: block;
+  flex: 0 0 auto;
+  width: 260px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  cursor: pointer;
+}
+.brand-banner {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.brand-banner-light {
+  display: none;
+}
+:root[data-theme="light"] .brand-banner-dark {
+  display: none;
+}
+:root[data-theme="light"] .brand-banner-light {
+  display: block;
+}
+@media (prefers-color-scheme: light) {
+  :root[data-theme="system"] .brand-banner-dark {
+    display: none;
+  }
+  :root[data-theme="system"] .brand-banner-light {
+    display: block;
+  }
+}
+.about-dialog {
+  width: min(760px, calc(100vw - 40px));
+  max-height: calc(100dvh - 40px);
+  overflow: auto;
+  padding: 30px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--panel);
+  color: var(--text);
+  box-shadow: 0 24px 80px #0006;
+  font-size: 16px;
+}
+.about-dialog::backdrop {
+  background: #000a;
+}
+.about-banner {
+  width: min(100%, 580px);
+  margin: 4px auto 22px;
+}
+.about-publisher {
+  text-align: center;
+  color: var(--muted);
+}
+.about-dialog hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 26px 0;
+}
+.about-dialog h2 {
+  font-size: 24px;
+  margin: 0 0 8px;
+}
+.about-version {
+  color: var(--muted);
+  margin: 0;
+}
+.about-description {
+  margin: 28px 0;
+}
+.about-details {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 10px 24px;
+  margin-bottom: 36px;
+}
+.about-details dt {
+  color: var(--muted);
+}
+.about-details dd {
+  margin: 0;
+}
+.about-actions {
   display: flex;
   align-items: center;
   gap: 10px;
+  margin-top: 28px;
+  flex-wrap: wrap;
 }
-.brand strong {
-  font-size: 22px;
-  letter-spacing: -0.6px;
+.about-actions button {
+  min-height: 42px;
 }
-.brand-icon {
-  font-size: 31px;
-  color: var(--blue);
-  border: 1px solid #33567b;
-  background: #162d47;
-  border-radius: 9px;
-  width: 39px;
-  height: 39px;
-  text-align: center;
+.about-ok {
+  margin-left: auto;
+  min-width: 112px;
 }
-.edition {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 1.6px;
-  color: var(--muted);
-  border-left: 1px solid var(--line);
-  padding-left: 14px;
-  margin-left: 8px;
+.about-license {
+  max-height: 280px;
+  overflow: auto;
+  padding: 16px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 6px;
 }
 .workspace-switch {
   display: flex;

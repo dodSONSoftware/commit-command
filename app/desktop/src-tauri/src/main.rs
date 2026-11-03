@@ -19,7 +19,7 @@ use std::{
     },
     time::{Duration, Instant},
 };
-use tauri::{Manager, WebviewUrl, WebviewWindow, WebviewWindowBuilder};
+use tauri::{Emitter, Manager, WebviewUrl, WebviewWindow, WebviewWindowBuilder};
 use uuid::Uuid;
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -150,6 +150,25 @@ fn queue(host: &Host, task: Task) -> Result<(), String> {
     host.sender
         .try_send(task)
         .map_err(|_| "Application busy; request queue is bounded".into())
+}
+#[tauri::command]
+fn open_project_repository<R: tauri::Runtime>(window: WebviewWindow<R>) -> Result<(), String> {
+    check(&window, "main")?;
+    #[cfg(target_os = "macos")]
+    {
+        // Fixed application metadata only; IPC cannot supply a URL or shell command.
+        let status = std::process::Command::new("/usr/bin/open")
+            .arg("https://github.com/dodSONSoftware/commit-command")
+            .status()
+            .map_err(|_| "Could not open the project repository".to_string())?;
+        if status.success() {
+            Ok(())
+        } else {
+            Err("Could not open the project repository".into())
+        }
+    }
+    #[cfg(not(target_os = "macos"))]
+    Err("Opening the project repository is supported on macOS".into())
 }
 #[tauri::command]
 fn desktop_capabilities<R: tauri::Runtime>(window: WebviewWindow<R>) -> Result<Value, String> {
@@ -335,7 +354,7 @@ async fn pick_directory<R: tauri::Runtime>(
     let _lease = DialogLease::new(state.inner().clone())?;
     let path = tauri::async_runtime::spawn_blocking(move || {
         rfd::FileDialog::new()
-            .set_title("Choose GitFleet workspace root")
+            .set_title("Choose Commit Command workspace root")
             .set_parent(&window)
             .pick_folder()
     })
@@ -461,7 +480,7 @@ async fn review_confirm<R: tauri::Runtime>(
     let accepted = tauri::async_runtime::spawn_blocking(move || {
         rfd::MessageDialog::new()
             .set_parent(&window)
-            .set_title("GitFleet — Native approval")
+            .set_title("Commit Command — Native approval")
             .set_description(&display.summary)
             .set_level(rfd::MessageLevel::Warning)
             .set_buttons(rfd::MessageButtons::OkCancelCustom(
@@ -539,7 +558,7 @@ fn open_review(app: &tauri::AppHandle, host: Arc<Host>, display: &ReviewDisplay,
         }
         let built =
             WebviewWindowBuilder::new(&app, "review", WebviewUrl::App("review.html".into()))
-                .title("GitFleet — Authoritative review")
+                .title("Commit Command — Authoritative review")
                 .inner_size(1000., 800.)
                 .min_inner_size(700., 500.)
                 .devtools(false)
@@ -725,6 +744,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         .manage(host.clone())
         .invoke_handler(tauri::generate_handler![
             desktop_capabilities,
+            open_project_repository,
             dispatch,
             pick_directory,
             pick_authentication_file,
@@ -745,10 +765,16 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                 menu.remove_at(0)?;
                 let application = Submenu::with_items(
                     app,
-                    "GitFleet",
+                    "Commit Command",
                     true,
                     &[
-                        &PredefinedMenuItem::about(app, Some("About GitFleet"), None)?,
+                        &MenuItem::with_id(
+                            app,
+                            "gitfleet-about",
+                            "About Commit Command",
+                            true,
+                            None::<&str>,
+                        )?,
                         &PredefinedMenuItem::separator(app)?,
                         &PredefinedMenuItem::services(app, None)?,
                         &PredefinedMenuItem::separator(app)?,
@@ -758,7 +784,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                         &MenuItem::with_id(
                             app,
                             "gitfleet-quit",
-                            "Quit GitFleet",
+                            "Quit Commit Command",
                             true,
                             Some("Cmd+Q"),
                         )?,
@@ -770,6 +796,11 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                 app.on_menu_event(move |app, event| {
                     if event.id().as_ref() == "gitfleet-quit" {
                         shutdown::request(app.clone(), quit_host.clone());
+                    } else if event.id().as_ref() == "gitfleet-about" {
+                        if let Some(main) = app.get_webview_window("main") {
+                            let _ = main.set_focus();
+                            let _ = main.emit("commit-command-about", ());
+                        }
                     }
                 });
             }
@@ -777,7 +808,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             let page_loaded = std::sync::atomic::AtomicBool::new(false);
             let window =
                 WebviewWindowBuilder::new(app, "main", WebviewUrl::App("index.html".into()))
-                    .title("GitFleet")
+                    .title("Commit Command")
                     .visible(false)
                     .inner_size(1440., 940.)
                     .min_inner_size(window_state::MIN_WIDTH, window_state::MIN_HEIGHT)
@@ -835,7 +866,7 @@ fn main() {
         std::process::exit(gitfleet_core::credentials::bridge_main());
     }
     if let Err(error) = run() {
-        eprintln!("GitFleet startup failed: {error}");
+        eprintln!("Commit Command startup failed: {error}");
         std::process::exit(1);
     }
 }
@@ -1050,6 +1081,7 @@ mod tests {
             .manage(host.clone())
             .invoke_handler(tauri::generate_handler![
                 desktop_capabilities,
+                open_project_repository,
                 dispatch,
                 job_status,
                 cancel_job,
@@ -1140,6 +1172,12 @@ mod tests {
             .unwrap_err()
             .to_string()
             .contains("not allowed"));
+        for window in [&review, &stranger] {
+            assert!(invoke(window, "open_project_repository", json!({}))
+                .unwrap_err()
+                .to_string()
+                .contains("not allowed"));
+        }
         assert!(invoke(&main, "run_command", json!({"command":"touch sentinel"})).is_err());
         let job=invoke(&main,"dispatch",json!({"payload":json!({"version":1,"epoch":1,"request":{"kind":"workspaces"}}).to_string()})).unwrap();
         assert!(job.is_string());

@@ -1,0 +1,17 @@
+Selected excerpts transcribed from actual cua_repl observations, not a raw replayable trace.
+Window/App: Commit Command.
+button About Commit Command. Clicking opened the custom modal.
+Commit Command — Git workspace manager for macOS
+A dodson labs application
+Commit Command · version 0.1.1
+Local-first Git workspace manager for macOS.
+Developer Randy Dodson · Publisher dodson labs · Copyright © 2026 Randy Dodson · License MIT License
+View license… · GitHub repository… · OK
+View license showed the actual local MIT text and Back returned to About.
+Final artifact Escape dismissed the dialog: focused UI element was button About Commit Command.
+Native application menu: About Commit Command, Hide Commit Command, Quit Commit Command. About opened the same modal.
+Color theme Light: supplied dark-letter banner and light dialog inspected visually.
+Color theme Dark: supplied light-letter banner and dark dialog inspected visually.
+Read-only desktop · native write acceptance pending remained visible.
+Final native Cmd+Q: App quit.
+Browser repository launch was not invoked during native verification. The fixed action and ACL were tested separately.

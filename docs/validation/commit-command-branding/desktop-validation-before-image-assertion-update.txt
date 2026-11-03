@@ -1,0 +1,64 @@
+git version 2.56.0
+rustc 1.99.1 (58cf8f9c3 2026-10-13)
+cargo 1.99.1 (5f94df478 2026-08-27)
+v22.22.3
+10.9.8
+
+> gitfleet-desktop@0.1.1 typecheck
+> tsc --noEmit
+
+
+> gitfleet-desktop@0.1.1 lint
+> eslint . --max-warnings 0
+
+
+> gitfleet-desktop@0.1.1 contracts
+> node scripts/contracts.mjs --check
+
+
+> gitfleet-desktop@0.1.1 format:check
+> prettier --check src scripts *.json *.ts *.html
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> gitfleet-desktop@0.1.1 test
+> vitest run
+
+
+ RUN  v4.1.12 /Users/randydodson/Documents/_code/git-fleet/app/desktop
+
+ ❯ src/views/App.test.tsx (14 tests | 1 failed) 3232ms
+   × does not turn repository labels into executable markup 17ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/views/App.test.tsx > does not turn repository labels into executable markup
+AssertionError: expected <img …(3)></img> to be null
+
+- Expected:
+null
+
++ Received:
+<img
+  alt=""
+  class="brand-banner brand-banner-dark"
+  src="/src/assets/brand/banner-dark.svg"
+/>
+
+ ❯ src/views/App.test.tsx:187:42
+    185|   const { container } = render(<App bridge={bridge} />);
+    186|   await screen.findByText("<img src=x onerror=evil()>");
+    187|   expect(container.querySelector("img")).toBeNull();
+       |                                          ^
+    188| });
+    189| it("renders and filters a 100-repository inventory without changing ex…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 17 passed (18)
+      Tests  1 failed | 68 passed (69)
+   Start at  01:40:38
+   Duration  4.63s (transform 1.19s, setup 1.81s, import 4.21s, tests 7.18s, environment 12.11s)
+

@@ -13,6 +13,9 @@ export interface CloseSnapshot {
 }
 export interface Bridge {
   epoch: number;
+  onAboutRequested?(show: () => void): Promise<() => void>;
+  openProjectRepository?(): Promise<void>;
+
   onCloseRequested?(
     snapshot: () => CloseSnapshot,
     changed: (closing: boolean, error?: string) => void,
@@ -53,6 +56,12 @@ export class NativeBridge implements Bridge {
         }
       },
     );
+  }
+  onAboutRequested(show: () => void) {
+    return getCurrentWebviewWindow().listen("commit-command-about", show);
+  }
+  openProjectRepository() {
+    return invoke<void>("open_project_repository");
   }
   capabilities() {
     return invoke<{ writes_enabled: boolean }>("desktop_capabilities");

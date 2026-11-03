@@ -14,7 +14,7 @@ async function load() {
   );
   root.replaceChildren();
   root.append(
-    element("p", "GITFLEET · AUTHORITATIVE RUST REVIEW"),
+    element("p", "COMMIT COMMAND · AUTHORITATIVE RUST REVIEW"),
     element("h1", review.title),
     element(
       "p",
