@@ -1,0 +1,8 @@
+{
+  "hook_pid": 87858,
+  "child_pid": 87859,
+  "independent_ps_exit_code": 1,
+  "independent_ps_stdout": "",
+  "checked_after_native_cancel": true,
+  "external_kill_used": false
+}

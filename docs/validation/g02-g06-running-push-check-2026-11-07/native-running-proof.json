@@ -1,0 +1,9 @@
+{
+  "phase": "running",
+  "published": false,
+  "hook_invocations": 1,
+  "hook_pid": 87858,
+  "child_pid": 87859,
+  "observed_at_ns": 1794091508797750000,
+  "hook_started_mtime_ns": 1794091502579494347
+}

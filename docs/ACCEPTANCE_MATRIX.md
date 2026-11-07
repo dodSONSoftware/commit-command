@@ -345,6 +345,12 @@ confirmation Quit, workspace invalidation/dialog reuse, main close and ordered
 review replacement. A12–A17 remain partial for the remaining native renderer-reset,
 live caller, compatibility and recovery criteria; full gate closure is not inferred.
 
+Latest shared G02/G06 running-check follow-up: [native cancellation report](reports/G02_G06_RUNNING_PUSH_CHECK_CANCEL_2026-11-07.md)
+verifies a proven running supported pre-push hook and child stop through native
+Cancel review, durable cancelled/unpublished history, full repository/server
+preservation and restart without replay. Native Quit/crash during a check and
+bypass/manager interaction remain open; this is not push-publication acceptance.
+
 Latest November 7 disposition: [G01 closure / G02 recovery](reports/G01_NATIVE_SUPPORT_G02_RECOVERY_2026-11-07.md)
 adds real-webview denial/navigation probes, actual pending/issued-confirmation
 reload, close-delivery fallback and native before/after-ref SIGKILL with separately

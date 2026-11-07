@@ -1,0 +1,17 @@
+{
+  "core_push_check_tests_passed": 9,
+  "core_test_exit_code": 0,
+  "native_running_hook_cancel_passed": true,
+  "native_proven_running_before_cancel": true,
+  "hook_and_sleep_child_absent_after_cancel": true,
+  "native_restart_no_replay_passed": true,
+  "managed_and_bare_remote_bytes_modes_preserved": true,
+  "read_only_loopback_requests": 1,
+  "hook_invocations": 1,
+  "product_source_changed": false,
+  "full_desktop_gate_rerun": false,
+  "prior_full_desktop_gate_retained": "g02-active-sheet-2026-11-07",
+  "native_host_crash_tested": false,
+  "native_quit_during_running_check_tested": false,
+  "native_bypass_or_hook_manager_tested": false
+}

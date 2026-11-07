@@ -1,0 +1,16 @@
+{
+  "source_revision": "000015647c9b6ad2a4c7bc1d6bc3db7abdc2388f",
+  "native_artifact_sha256": "be2416339f6f32e3ce27c3565bf941be6a6ec06d5817aeaafaebde10a055a1e5",
+  "reused_validated_artifact": true,
+  "prior_manifest": "../g02-active-sheet-2026-11-07/manifest.json",
+  "prior_full_desktop_validation": "../g02-active-sheet-2026-11-07/desktop-validation.txt",
+  "features": [
+    "custom-protocol",
+    "desktop-writes",
+    "native-acceptance-support"
+  ],
+  "product_source_changed": false,
+  "fixture_script_sha256": "4459462de1c645e8a7f4ead27c1e8cf1c068d55507b8d5d56800f5d114ce0da7",
+  "hook_sha256": "c5f0c47a8866c12e74a3baa1720661e40127707d86d1c37a79613d8890a4165e",
+  "test_ca_sha256": "eb36d39219b1780a72102720c07fbd9a3b0f96c0f85f6a94ce2caea8bf6230d5"
+}
