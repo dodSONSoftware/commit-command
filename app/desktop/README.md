@@ -167,3 +167,10 @@ wrapper that forwards Tao's other callbacks. Direct termination fallback/retry a
 restart have selected native evidence; actual Dock/session and unanswered-sheet
 termination retain separate open cases. See the
 [termination fix report](../../docs/reports/G02_GUARDED_APPKIT_TERMINATION_2026-11-07.md).
+
+With an unanswered native confirmation attached, the tested macOS AppKit terminate
+call returns and leaves the sheet open. Explicitly dismiss it, then request Quit
+again. The [active-sheet acceptance report](../../docs/reports/G02_ACTIVE_SHEET_TERMINATION_2026-11-07.md)
+records actual delivery, no implicit approval, cancellation/retry and restart.
+Immediate native sheet cancellation/exit and actual Dock/session acceptance are
+not inferred. Test scheduling and delivery audit remain non-default.

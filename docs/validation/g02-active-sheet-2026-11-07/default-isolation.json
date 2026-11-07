@@ -1,0 +1,12 @@
+{
+  "debug": {
+    "sha256": "fb5a94a77271465e683f66dc813b23e47537baa7c2c40b166d361674fb2cad6b",
+    "test_request_class_dispatch_audit_and_private_pid_selector_absent": true
+  },
+  "release": {
+    "sha256": "ab60b56c32e104265c50c8cbec1a350db8d4ad1dd7491bef916e56e53d2e135f",
+    "test_request_class_dispatch_audit_and_private_pid_selector_absent": true
+  },
+  "default_graph_excludes_core_test_features": true,
+  "support_refuses_nonfixture": true
+}

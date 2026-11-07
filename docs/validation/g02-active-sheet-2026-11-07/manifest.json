@@ -1,0 +1,16 @@
+{
+  "base_revision": "83cbb12ac00bc03bdd517330adcdb357d835a470",
+  "source_sha256": {
+    "app/desktop/src-tauri/Cargo.toml": "14f62acd260c1d77042ffeb17c69b847bd21ae71338207792e34c443f466e360",
+    "app/desktop/src-tauri/Cargo.lock": "d70972c2de2b039055238311f5b0d749ebf21b35bad58db74a20a1ca6c359e73",
+    "app/desktop/src-tauri/src/native_acceptance.rs": "b72cbab729cf07b250548b79ac0725f19edb6e1baf6a8a5b876dd7347bc57b59",
+    "app/desktop/src-tauri/src/native_acceptance/termination.rs": "517aeee9ef5a09d3200616eb91f7deaaa9d3d2e6589afe89a725c8eb3a774f79",
+    "app/desktop/src-tauri/src/native_termination.rs": "0f56e90ab95985c4de3812390c666ef5fd97cf44109e8dddcda72189dde99103"
+  },
+  "features": [
+    "custom-protocol",
+    "desktop-writes",
+    "native-acceptance-support"
+  ],
+  "native_artifact_sha256": "be2416339f6f32e3ce27c3565bf941be6a6ec06d5817aeaafaebde10a055a1e5"
+}

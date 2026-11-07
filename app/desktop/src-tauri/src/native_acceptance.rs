@@ -110,28 +110,13 @@ fn probe(command: &str, args: &str, name: &str) -> String {
     }})()"#
     )
 }
+#[cfg(target_os = "macos")]
+mod termination;
 // Exercise AppKit's termination entry point, separately from the blocked Dock UI.
 #[cfg(target_os = "macos")]
 fn request_appkit_termination(app: &tauri::AppHandle) -> Result<(), String> {
-    app.run_on_main_thread(|| {
-        let Some(main_thread) = objc2::MainThreadMarker::new() else {
-            record("appkit_terminate_unavailable", json!({}));
-            return;
-        };
-        record("appkit_terminate_requested", json!({}));
-        let application = objc2_app_kit::NSApplication::sharedApplication(main_thread);
-        // AppKit must run this after Tauri releases its event-callback lock.
-        // SAFETY: NSObject's run-loop selector API schedules the owned NSApplication's
-        // fixed terminate: method with a nil sender. No external selector/argument exists.
-        unsafe {
-            let _: () = objc2::msg_send![&*application,
-                performSelector: objc2::sel!(terminate:),
-                withObject: std::ptr::null::<objc2::runtime::AnyObject>(),
-                afterDelay: 0_f64
-            ];
-        }
-    })
-    .map_err(|error| error.to_string())
+    app.run_on_main_thread(termination::schedule)
+        .map_err(|error| error.to_string())
 }
 #[cfg(not(target_os = "macos"))]
 fn request_appkit_termination(_: &tauri::AppHandle) -> Result<(), String> {

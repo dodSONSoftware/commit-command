@@ -1,0 +1,14 @@
+{
+  "desktop_validation_exit_code": 0,
+  "renderer_tests": 69,
+  "default_host_tests": 13,
+  "all_feature_host_tests": 16,
+  "direct_termination_exit_code": 0,
+  "restart_cleanup_exit_code": 0,
+  "active_sheet_dispatched_calls": 2,
+  "sheetless_dispatched_calls": 1,
+  "termination_decision_callbacks": 1,
+  "active_sheet_native_behavior": "request returned; no delegate callback; prompt stayed unanswered",
+  "native_control_automation": "Computer Use",
+  "dock_or_session_termination": "not exercised"
+}

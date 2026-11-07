@@ -10,7 +10,7 @@ custom-protocol = ["tauri/custom-protocol"]
 # Remains non-default until native approval/accessibility acceptance is completed.
 desktop-writes = []
 # Fixed native acceptance actions; startup refuses non-fixture state. Never default.
-native-acceptance-support = ["gitfleet-core/write-test-support"]
+native-acceptance-support = ["gitfleet-core/write-test-support", "dep:objc2-foundation"]
 [dependencies]
 gitfleet-core = { path = "../../core", features = ["application-services"] }
 tauri = { version = "=2.12.5", features = [] }
@@ -21,6 +21,8 @@ uuid = { version = "1", features = ["v4"] }
 [target.'cfg(target_os = "macos")'.dependencies]
 # Native delegate interception and opt-in WebKit test support use the pinned runtime.
 objc2 = "=0.6.5"
+# Test-only native run-loop scheduling/observation; version already locked transitively.
+objc2-foundation = { version = "=0.3.2", optional = true, default-features = false, features = ["std", "NSArray", "NSString", "NSRunLoop", "NSObjCRuntime"] }
 # Already used transitively by Tauri/rfd; explicit access is needed to cancel a sheet.
 objc2-app-kit = { version = "=0.3.2", default-features = false, features = ["std", "NSWindow", "NSApplication", "NSResponder"] }
 [build-dependencies]

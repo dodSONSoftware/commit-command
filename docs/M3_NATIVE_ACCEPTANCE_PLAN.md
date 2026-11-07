@@ -33,6 +33,10 @@ selected native host crash/recovery remain separate passes.
 The subsequent [native termination fix](reports/G02_GUARDED_APPKIT_TERMINATION_2026-11-07.md)
 accepts selected direct AppKit fallback/retry/restart cases; unanswered-sheet direct
 termination, actual Dock and session termination remain distinct open cases.
+[Active-sheet follow-up](reports/G02_ACTIVE_SHEET_TERMINATION_2026-11-07.md)
+now verifies actual native delivery and safe deferral with trust/commit sheets,
+explicit Cancel, fresh termination and restart; no immediate sheet cancellation or
+Dock/session pass is inferred. Earlier open-sheet statements are historical.
 Current gate dispositions remain in EXECUTION_STATUS.
 
 ## Safety, execution and evidence rules
