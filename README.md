@@ -1,23 +1,26 @@
 # Commit Command
 
-Commit Command (formerly GitFleet) is a multi-repository workspace manager under development. M1 provides
-headless workspaces, inspection, history and diffs; M2 adds explicitly trusted,
-reviewed controlled writes for the documented local macOS/APFS envelope.
-M3 adds a Tauri/React desktop adapter, scoped IPC and active-workspace monitoring.
-Native acceptance is partially exercised but incomplete, so M3 is not complete and
-ordinary desktop writes remain disabled. The latest user-observed native results
-and remaining gates are in the [November 2 handoff](docs/M3_NATIVE_ACCEPTANCE_HANDOFF_2026-11-02.md).
-The single Rust Core crate remains
-independent of Tauri/React. Default Core builds remain read-only for managed Git repositories.
+Commit Command (formerly GitFleet) is a macOS multi-repository Git workspace
+manager under development. It provides persistent workspaces, repository discovery
+and monitoring, status/diffs/history, commit graphs, workspace activity and operation
+audit. A presentation-independent Rust Core powers a Tauri/React desktop adapter.
 
-- [Specification and documentation](docs/README.md)
-- [Implementation status and validation](docs/IMPLEMENTATION_STATUS.md)
-- [Conversation handoff](docs/IMPLEMENTATION_HANDOFF.md)
-- [Core CLI examples](app/core/README.md)
-- [M1 contracts and safety envelope](docs/architecture/M1_READ_ONLY_WORKSPACES.md)
-- [M2 controlled-write contracts and limitations](docs/architecture/M2_CONTROLLED_WRITES.md)
-- [M3 desktop and IPC contracts](docs/architecture/M3_DESKTOP_AND_IPC.md)
-- [Desktop build and pending native acceptance](app/desktop/README.md)
+Controlled local and bulk commits, supported authenticated observation/fetch/import,
+upstream setup, push dependency planning and separately reviewed pre-push checks
+are implemented. **Ordinary desktop builds still disable trust/write/network
+execution while acceptance remains partial. Actual push publication, AI, SemVer
+Actions, general backup/restore and release readiness remain unfinished.**
+
+Start with the [current implementation and acceptance record](docs/EXECUTION_STATUS.md)
+for completed work, open gates G01–G11, scope limits, validation and next steps.
+Historical reports are evidence for their own checkpoints, not current status.
+
+- [Documentation index](docs/README.md)
+- [Product specification](docs/GITFLEET_SPECIFICATION.md)
+- [Requirement-to-code/test crosswalk](docs/REQUIREMENT_EXECUTION_CROSSWALK.md)
+- [Completion work packages](docs/PROJECT_COMPLETION_PLAN.md)
+- [Core CLI and safety envelope](app/core/README.md)
+- [Desktop build and validation](app/desktop/README.md)
 
 ```sh
 GITFLEET_TEST_GPG=/absolute/path/to/gpg sh app/core/scripts/validate.sh
@@ -26,5 +29,5 @@ GITFLEET_TEST_GPG=/absolute/path/to/gpg sh app/core/scripts/validate.sh
 Validation requires Rust 1.99+, Git 2.56.0+, Python 3 and a C toolchain. All Git
 writes use new disposable fixtures. macOS M2 validation requires GPG and SSH signing
 tools and an environment permitting isolated local gpg-agent sockets. Workspace state is stored in an explicitly
-selected application data directory outside managed repositories. M4 and later
-remain unauthorized. No commit, push, publication or deployment was done.
+selected application data directory outside managed repositories. The current record
+distinguishes implemented capabilities from unaccepted or future work. Development bundles and historical test passes are not release acceptance.

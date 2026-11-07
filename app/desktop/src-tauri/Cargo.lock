@@ -1373,6 +1373,8 @@ name = "gitfleet-desktop"
 version = "0.1.1"
 dependencies = [
  "gitfleet-core",
+ "objc2",
+ "objc2-app-kit",
  "rfd",
  "serde",
  "serde_json",

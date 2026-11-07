@@ -1,0 +1,40 @@
+{
+  "base_revision": "db29ba6dc421d81e67e3c36adf554bdd3f203d59",
+  "files": {
+    "app/core/src/application/mod.rs": "88c4c975a5e73709e751e55931f26c8fd60aaa7a96f2d48e1b86ad26e02d70ee",
+    "app/core/tests/m3_application.rs": "6ce0adf57cb215b6a09762df8d7042e20ce4fcaf7cf5fce0bf2895c8765ef519",
+    "app/desktop/src-tauri/Cargo.toml": "6e2c6bd0b98b7f465c1d85117c80e9b2e3e822a09788a0a8bf4d9be153abe993",
+    "app/desktop/src-tauri/Cargo.lock": "59e6c1ceccfe70b11924dc897f62d082811ddf6e1d8ee03a6740c6cc2a849e5e",
+    "app/desktop/src-tauri/src/main.rs": "1c0e1b77a213ca057f0aed51b2c8d5eee4525a12d2c2ed7b0731bc61ed33c5e9",
+    "app/desktop/src-tauri/src/native_acceptance.rs": "06df60b8f7d19a2ab9f60939ea2dcf1c7b128e8c2d79c8738ee9e08ea45ce325",
+    "app/desktop/src-tauri/src/native_dialog.rs": "e85fbf4957f231ae01582ba1dff78dd10d74f0aa47d5d9363a764e3cd7397a1d",
+    "app/desktop/src-tauri/src/shutdown.rs": "e084875a50da8c785244d874ff81cb6e61900eea8f40cc57ec17db5734b26863",
+    "app/desktop/src-tauri/src/security.rs": "69ad6e7daa53a812573d98e90382788e0d6f2dc7ef847448b350fa4b8344fb8b"
+  },
+  "native_artifacts": {
+    "g01": {
+      "sha256": "cc78be82c67962b1175a3f763493cbd8d20798a70cfe7423d2987d64412f7f50",
+      "features": [
+        "custom-protocol",
+        "desktop-writes",
+        "native-acceptance-support"
+      ]
+    },
+    "g02-before": {
+      "sha256": "fbd0cc54fdfc5f967f2e445118b967003426992231c63ad897fe8327aef30766",
+      "features": [
+        "custom-protocol",
+        "desktop-writes",
+        "native-acceptance-support"
+      ]
+    },
+    "g02-after": {
+      "sha256": "fbd0cc54fdfc5f967f2e445118b967003426992231c63ad897fe8327aef30766",
+      "features": [
+        "custom-protocol",
+        "desktop-writes",
+        "native-acceptance-support"
+      ]
+    }
+  }
+}

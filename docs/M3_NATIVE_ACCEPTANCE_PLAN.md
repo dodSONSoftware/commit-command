@@ -1,5 +1,13 @@
 # M3 native acceptance plan and results checklist
 
+Current gate disposition and next work are maintained in
+[EXECUTION_STATUS.md](EXECUTION_STATUS.md), gates G01–G04. This document supplies
+test procedures and a historical checklist. Selected later Cancel/recovery,
+close/Quit, theme and geometry passes are linked from the current record; older
+untested labels below do not reopen those cases. Remaining criteria still require
+evidence, and ordinary writes remain disabled.
+
+
 Prepared: 2026-11-01. **Original procedure and historical checklist.** No native
 tests were run when first saving it. Current execution/results supersede only the
 explicitly retested cases; see [execution status](EXECUTION_STATUS.md) and the
@@ -14,6 +22,15 @@ authorized local milestone commits in chat. Pushing remains prohibited.
 Use two separate runs: first the ordinary read-only desktop, then an explicitly
 feature-enabled acceptance build targeting fresh disposable repositories. Keep
 ordinary feature defaults unchanged throughout.
+
+Latest November 7: [G01 closure / G02 recovery](reports/G01_NATIVE_SUPPORT_G02_RECOVERY_2026-11-07.md)
+closes G01 within its documented envelope using fixed non-default native test
+support. Subsequent [actual renderer-loss acceptance](reports/G02_ACTUAL_RENDERER_LOSS_2026-11-07.md)
+passed the auto-reload path with pending/issued confirmation and saved draft.
+G02 still requires permitted Dock/system termination and remaining phase coverage;
+Dock access is organization-policy blocked. Injected close-delivery fallback and
+selected native host crash/recovery remain separate passes.
+Current gate dispositions remain in EXECUTION_STATUS.
 
 ## Safety, execution and evidence rules
 

@@ -1,0 +1,13 @@
+{
+  "stage": "before-publication",
+  "hook_runs": 0,
+  "operations": [
+    {
+      "id": "3d27fc92-0e42-4e65-b9cb-7e2cfacd7920",
+      "phase": "proposed",
+      "published": false,
+      "reason": null
+    }
+  ],
+  "all_repositories_preserved": true
+}

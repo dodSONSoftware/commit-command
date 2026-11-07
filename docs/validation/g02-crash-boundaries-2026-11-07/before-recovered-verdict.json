@@ -1,0 +1,13 @@
+{
+  "case": "before",
+  "stage": "recovered",
+  "head": "649600e5db9cd0a7b8b1bd55cf5c6e6fcb0f42b0",
+  "commit_count": 2,
+  "phase": "cancelled_before_publication",
+  "journal_published": false,
+  "actual_ref_advanced": false,
+  "index_entries_preserved": true,
+  "working_files_and_other_repositories_preserved": true,
+  "operation_id": "ecbdaf84-faf4-4eae-a117-bd6b8823f88c",
+  "reason": "Aborted without replay; unreferenced objects/artifacts retained"
+}

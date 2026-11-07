@@ -3,7 +3,12 @@
 **Version:** 1.0 · **Date:** November 1, 2026  
 **Companion:** `GITFLEET_SPECIFICATION.md`
 
-Current execution updates are recorded in [execution status](EXECUTION_STATUS.md),
+Current acceptance disposition and remaining work are maintained only in
+[the current record, gates G01–G11](EXECUTION_STATUS.md#open-acceptance-and-implementation-gates).
+This matrix preserves original criteria and dated evidence; it is not a second
+current task queue. No gate is newly accepted by documentation reconciliation.
+
+Historical execution updates are recorded in [execution status](EXECUTION_STATUS.md),
 [the requirement crosswalk](REQUIREMENT_EXECUTION_CROSSWALK.md) and milestone reports.
 The original rows below retain the baseline assessment; dated follow-up ledgers and
 reports supersede their earlier test status. A later automated pass does not imply
@@ -326,6 +331,27 @@ The table combines these bounded results with the historical
 [M3 automated evidence](validation/m3/README.md) and [IPC contracts](architecture/M3_DESKTOP_AND_IPC.md).
 “Pass” remains bounded to the identified evidence; partial gates are not closed.
 
+November 7 G01 follow-up: [report](reports/G01_REVIEW_AUTHORITY_2026-11-07.md)
+adds actual native hostile-text exact publication, native decline/close, same-OID
+branch rejection, review replacement and workspace-change cancellation evidence,
+plus two Core regressions and expanded origin tests. A12–A15 remain partial;
+outstanding-confirmation/reload/live-caller/unusual-filename and policy criteria
+remain explicit in the report and current G01 tracker.
+
+
+November 7 continuation: [G01/G02 lifecycle report](reports/G01_G02_CONFIRMATION_LIFECYCLE_2026-11-07.md)
+adds unusual-filename SSH/direct-hook publication and fixes/retests outstanding
+confirmation Quit, workspace invalidation/dialog reuse, main close and ordered
+review replacement. A12–A17 remain partial for the remaining native renderer-reset,
+live caller, compatibility and recovery criteria; full gate closure is not inferred.
+
+Latest November 7 disposition: [G01 closure / G02 recovery](reports/G01_NATIVE_SUPPORT_G02_RECOVERY_2026-11-07.md)
+adds real-webview denial/navigation probes, actual pending/issued-confirmation
+reload, close-delivery fallback and native before/after-ref SIGKILL with separately
+approved recovery. **G01 accepted within envelope**; overall M3 and G02 remain
+partial. Earlier paragraphs describe historical checkpoints. G03/G06 criteria are
+not waived by G01 closure.
+
 | Gate | Criterion | Status and evidence |
 |---|---|---|
 | M3-A01 | Independent Core and thin desktop adapter | Pass: Core feature builds without Tauri/React; separate native adapter path dependency, no Core split/layout reorganization. |
@@ -339,12 +365,12 @@ The table combines these bounded results with the historical
 | M3-A09 | Read-only Git boundary | Pass: M0 helper sentinels/state snapshots retained; scoped M3 reads, proposals, declined/replaced reviews preserve repository bytes. |
 | M3-A10 | Actual command ACL separation | Pass under Tauri mock runtime with actual generated context: allowed main calls, denied main→review, review→dispatch and unprivileged calls; platform-specific origin checks. Not a live-OS approval test. |
 | M3-A11 | Strict bounded input/scope | Pass: unknown/nested approval fields, oversize/version inputs, foreign IDs, invalid paths/picker/state, queues and dialog concurrency rejected. |
-| M3-A12 | Independent human authorization | Partial: Core capability/decline/replay/session tests and later user-observed native trust/write confirmations exist. Actual post-expiry native approval and removed-workspace review now rejected with zero trust/write records and repository preservation; see [lifetime report](reports/M3_REVIEW_LIFETIME_2026-11-02.md). Broader context/lifecycle cases remain open; no ordinary write exposure. |
-| M3-A13 | Exact trusted review | Partial: operation-specific review displays exact index source/patch and JSON message. Native HTML-like text was inert and bidi controls escaped. Exact hostile-byte publication and remaining context/review criteria remain open. |
-| M3-A14 | Trust, hooks and signing-policy presentation | Partial: trust/no inheritance/revocation, hooks and signing have prior evidence; trust auto-refresh fix natively retested. General hook managers remain unsupported; remaining native policy cases open. |
-| M3-A15 | Desktop-controlled stage/unstage/commit/signing | Partial: user-observed index-only publication, stage/unstage and independently verified isolated SSH/OpenPGP signatures and missing-key failures. Remaining native criteria/evidence reconciliation are open; full details in the checkpoint. |
-| M3-A16 | Results and guarded recovery UI | Partial: durable cancellation and native interrupted hooks_running inspection/explicit guarded abort passed without replay or repository mutation. Other native recovery phases remain open. |
-| M3-A17 | Last-window shutdown and cancellation | Partial: actual Cancel during hook/read, ordinary last-window close, held-read close, close during running write, lock reopen and exact fixture process termination passed. Forced interruption/guarded abort at hooks_running passed. Immediate close/Cmd+Q/save-failure/retry and final draft capture also passed ([report](reports/M3_NATIVE_CLOSE_QUIT_2026-11-02.md)). Missing-renderer/Dock/system terminate, broader native phases and full review/main lifecycle remain open. |
+| M3-A12 | Independent human authorization | Accepted within G01 envelope: actual independent native approval, decline, expiry/context invalidation and pending/issued-confirmation reload passed across the November 7 reports. Actual main/review/unprivileged webviews rejected forbidden commands; wrong-page/origin navigations denied. Broader lifecycle/accessibility remains A17/G03. |
+| M3-A13 | Exact trusted review | Accepted within G01 envelope: exact hostile-text message/index bytes, escaped unusual UTF-8 filename and signed publication independently verified; actual reload/replacement/context changes invalidate stale authority. See [closure report](reports/G01_NATIVE_SUPPORT_G02_RECOVERY_2026-11-07.md). Non-UTF-8 filesystem acceptance remains unproven. |
+| M3-A14 | Trust, hooks and signing-policy presentation | Partial overall (G06): G01 presentation cases accepted using exact trust/hook/signer review and selected SSH/direct-hook evidence plus dated OpenPGP results. Broader compatibility and unsupported manager/interactive signer exclusions remain; no general support inferred. |
+| M3-A15 | Desktop-controlled stage/unstage/commit/signing | Partial overall: selected native stage/unstage/index-only exact publication and isolated SSH/OpenPGP evidence retained; G01 fidelity accepted. Broader native compatibility, accessibility and ordinary artifact enablement remain G06/G03/G04. |
+| M3-A16 | Results and guarded recovery UI | Partial: earlier hooks-running abort plus actual native SIGKILL at publication_pending/reference_updated, restart without replay, separately approved abort/index reconciliation passed. Published outcome freshly observed despite stale journal flag. See [recovery report](reports/G01_NATIVE_SUPPORT_G02_RECOVERY_2026-11-07.md). Remaining required phase-specific coverage stays G02. |
+| M3-A17 | Last-window shutdown and cancellation | Partial: prior Cancel/close/read/write/draft retry and outstanding-sheet Quit/main-close passed. One suppressed close delivery exercised native fallback, Keep app open and successful retry with draft preserved; real reload cancelled issued confirmation. Actual main renderer-process loss now passed for auto-reload with pending/issued confirmation, saved draft, dialog reuse and restart/no replay. Dock Quit is policy blocked; system/session termination remains open. See [latest report](reports/G02_ACTUAL_RENDERER_LOSS_2026-11-07.md). |
 | M3-A18 | State/migration/locking preservation | Pass at Core level: schema-2 backup/schema-3 migration, restore/newer-invalid state checks, known schema-3 reopen, atomic config bounds and independent duplicated-descriptor lock regression. |
 | M3-A19 | Native accessibility/visual/lifecycle quality | Partial: selected native geometry/layout/focus observations and keyboard Return on initially focused Cancel review passed. Selected declared CSS contrast checks and native keyboard/AX/Light rendering now passed; see the [accessibility report](reports/M3_ACCESSIBILITY_2026-11-02.md). Interactive Light/Dark switching and Dark restart passed ([theme report](reports/M3_NATIVE_THEME_2026-11-02.md)); actual 1×/2× window restoration/minimum repair passed ([geometry report](reports/M3_MIXED_DPI_WINDOW_RESTORE_2026-11-02.md)). Full VoiceOver and remaining layout/scale/display-reconfiguration checks are open. |
 | M3-A20 | Complete evidence and handoff | Partial: new reports contain durable scrubbed evidence, source/feature/binary hashes and fixture identities. Older observations remain historical; final release artifact and unfinished gates are not accepted. |

@@ -1,0 +1,14 @@
+{
+  "restored_default_executable": {
+    "path": "/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri/target/debug/gitfleet-desktop",
+    "sha256": "76b03674f97bef873371b67030f14cbfc55ac479c85071e42ec21e9b209dfc36"
+  },
+  "ordinary_development_bundle": {
+    "path": "/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri/target/debug/bundle/macos/Commit Command.app/Contents/MacOS/gitfleet-desktop",
+    "sha256": "20fab1b3e91c5a19dbdda91ce4da6dcf7d85a64fdaf4ac4985300447c7e76e79"
+  },
+  "isolated_acceptance_executable": {
+    "path": "/private/tmp/gitfleet-m3-native-34nfrrc_/Commit Command G01.app/Contents/MacOS/gitfleet-desktop",
+    "sha256": "0d230653c22281086753022287634b13b1b49bb0ab62a75ebb16f60149e06e4f"
+  }
+}

@@ -1,4 +1,12 @@
-# GitFleet implementation status
+# Commit Command — Implementation status archive
+
+Reconciled November 7, 2026. For current implementation, open acceptance gates
+and next work, use [the current record](EXECUTION_STATUS.md). This page preserves
+dated checkpoints; its older stop/resume, authorization, missing-feature and test
+statements describe their original sessions and are not current instructions.
+Supported technical contracts remain binding unless explicitly superseded.
+
+## Historical checkpoint content
 
 Current execution follow-up (November 2, 2026): **stopped at the user's request to
 restart Codex**. The [close-draft checkpoint and resume handoff](reports/M3_CLOSE_DRAFT_HANDOFF_2026-11-02.md)
@@ -70,7 +78,7 @@ can enable it. Read-only recovery inspection is available; execution stays gated
 The [November 2 native handoff](M3_NATIVE_ACCEPTANCE_HANDOFF_2026-11-02.md)
 records later user-observed results supported by terminal output and screenshots;
 the documenting agent did not independently reproduce them. The
-[native checklist](M3_NATIVE_ACCEPTANCE_PLAN.md#results-checklist) now distinguishes
+[native checklist](M3_NATIVE_ACCEPTANCE_PLAN.md#historical-results-checklist) now distinguishes
 those observations from failed, unsupported and untested criteria. Desktop write
 defaults are unchanged. Historical November 1 evidence is preserved verbatim.
 

@@ -1,0 +1,11 @@
+{
+  "root": "/private/tmp/gitfleet-m3-native-34nfrrc_",
+  "workspace_root": "/private/tmp/gitfleet-m3-native-34nfrrc_/workspace",
+  "data_directory": "/private/tmp/gitfleet-m3-native-34nfrrc_/state",
+  "workspace_id": "35ee659a-18dd-4255-afe5-9f446e72298c",
+  "app_path": "/private/tmp/gitfleet-m3-native-34nfrrc_/Commit Command G01.app",
+  "binary_sha256": "0d230653c22281086753022287634b13b1b49bb0ab62a75ebb16f60149e06e4f",
+  "expected_message": "<script>fixture_only()</script>\n\nExact message: \u202eRTL\u2066isolate\u2069\u001b control\n",
+  "expected_blob_sha256": "b8cdd1814983986f27e7c5ed74b78162845d9092893bda07a8151e6f4ca5bd35",
+  "pid": 23363
+}

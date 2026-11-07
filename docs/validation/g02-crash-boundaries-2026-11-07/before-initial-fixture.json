@@ -1,0 +1,12 @@
+{
+  "root": "/private/tmp/gitfleet-m3-native-f4u_m_m6",
+  "workspace_root": "/private/tmp/gitfleet-m3-native-f4u_m_m6/workspace",
+  "data_directory": "/private/tmp/gitfleet-m3-native-f4u_m_m6/state",
+  "workspace_id": "2d86afac-07ac-4cb7-9921-8f04b1233814",
+  "app_path": "/private/tmp/gitfleet-m3-native-f4u_m_m6/Commit Command Crash Acceptance.app",
+  "binary_sha256": "7ec38e547d4a5152795d6cde2e96c065cf5295ff876d8674d3f5ae634323d788",
+  "head_before": "3b152d2f65dc2caa28316ea64cc9a22740707053",
+  "index_entries_before": "3130303634342062366632363237366562356333623339663636326435373466356237393166383933633366326463203009524541444d452e6d6400313030363434203638666162316261336236363663623433396462613435306330393565636263653930376634343320300973657474696e67732e746f6d6c00",
+  "expected_blob_sha256": "b4bde5311c946a3083f1b2d234f998df7ef2f965523311bb1a9ad0c0feb253eb",
+  "expected_message": "G02 before publication crash acceptance\n"
+}

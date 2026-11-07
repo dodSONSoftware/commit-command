@@ -1,0 +1,23 @@
+{
+  "desktop_validation": {
+    "exit_code": 0,
+    "renderer_tests": 69,
+    "host_default_tests": 13,
+    "host_all_features_tests": 15
+  },
+  "core_application": {
+    "exit_code": 0,
+    "passed": 24
+  },
+  "core_sigkill_matrix": {
+    "exit_code": 0,
+    "aggregate_tests": 1,
+    "checkpoints": 13
+  },
+  "native_recovery_exit_codes": {
+    "before": 0,
+    "after": 0
+  },
+  "initial_refused_fixture_exit_code": 0,
+  "scope": "targeted macOS native/Core acceptance; not full feature/signing/remote/release matrix"
+}

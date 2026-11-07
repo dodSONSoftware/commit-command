@@ -1,0 +1,54 @@
+   Compiling gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri)
+error: the borrowed expression implements the required traits
+   --> src/native_acceptance.rs:141:73
+    |
+141 | ... missing")?.eval(&probe("review_confirm", r#"{review:'native-acceptance-no-authority'}"#, "main-review")).map_err(|e| e.to_strin...
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: change this to: `probe("review_confirm", r#"{review:'native-acceptance-no-authority'}"#, "main-review")`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#needless_borrows_for_generic_args
+    = note: `-D clippy::needless-borrows-for-generic-args` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::needless_borrows_for_generic_args)]`
+
+error: the borrowed expression implements the required traits
+   --> src/native_acceptance.rs:142:105
+    |
+142 | ...eval(&probe("dispatch", r#"{payload:JSON.stringify({version:1,epoch:0,request:{kind:'workspaces'}})}"#, "review-main")).map_err(...
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: change this to: `probe("dispatch", r#"{payload:JSON.stringify({version:1,epoch:0,request:{kind:'workspaces'}})}"#, "review-main")`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#needless_borrows_for_generic_args
+
+error: the borrowed expression implements the required traits
+   --> src/native_acceptance.rs:147:138
+    |
+147 | ...al(&probe("dispatch", r#"{payload:JSON.stringify({version:1,epoch:0,request:{kind:'workspaces'}})}"#, "unprivileged-main")); } })
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: change this to: `probe("dispatch", r#"{payload:JSON.stringify({version:1,epoch:0,request:{kind:'workspaces'}})}"#, "unprivileged-main")`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#needless_borrows_for_generic_args
+
+error: this `if` statement can be collapsed
+   --> src/shutdown.rs:172:9
+    |
+172 | /         if !suppress_ack {
+173 | |             if app
+174 | |                 .emit_to("main", "gitfleet-close-request", token)
+175 | |                 .is_err()
+...   |
+179 | |         }
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#collapsible_if
+    = note: `-D clippy::collapsible-if` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::collapsible_if)]`
+help: collapse nested if block
+    |
+172 ~         if !suppress_ack
+173 ~             && app
+174 |                 .emit_to("main", "gitfleet-close-request", token)
+...
+177 |                 eprintln!("Renderer close request could not be delivered");
+178 ~             }
+    |
+
+error: could not compile `gitfleet-desktop` (bin "gitfleet-desktop") due to 4 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `gitfleet-desktop` (bin "gitfleet-desktop" test) due to 4 previous errors

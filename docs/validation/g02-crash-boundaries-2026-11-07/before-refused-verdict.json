@@ -1,0 +1,6 @@
+{
+  "head_unchanged": true,
+  "phase": "uncertain_outcome",
+  "published": false,
+  "reason": "InvalidRequest: Fault injection requires a disposable fixture"
+}

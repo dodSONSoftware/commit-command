@@ -1,0 +1,41 @@
+{
+  "stage": "context-final",
+  "trust_count": 1,
+  "operation_count": 5,
+  "operations": [
+    {
+      "id": "1473fd6e-797e-4bcc-a359-db98fa92c1d1",
+      "phase": "cancelled_before_publication",
+      "published": false,
+      "reason": "Application review was cancelled or replaced; no execution was started"
+    },
+    {
+      "id": "199b5cce-cd3d-4b4e-9cde-542608fa47e8",
+      "phase": "complete",
+      "published": true,
+      "reason": null
+    },
+    {
+      "id": "1db5756a-55f9-4f6d-b8ca-04980f7a9e9b",
+      "phase": "needs_reauthorization",
+      "published": false,
+      "reason": "StaleReview: Checked-out branch changed"
+    },
+    {
+      "id": "dc5b5cc5-e85c-4915-a86b-d8c077e148fb",
+      "phase": "cancelled_before_publication",
+      "published": false,
+      "reason": "Application review was cancelled or replaced; no execution was started"
+    },
+    {
+      "id": "50e14428-bc09-4511-a670-11293b7c1572",
+      "phase": "cancelled_before_publication",
+      "published": false,
+      "reason": "Application review was cancelled or replaced; no execution was started"
+    }
+  ],
+  "exact_message": true,
+  "exact_blob": true,
+  "excluded_content_preserved": true,
+  "head": "cbe5dff16f440b58702634561d7d9da9cfff8730"
+}

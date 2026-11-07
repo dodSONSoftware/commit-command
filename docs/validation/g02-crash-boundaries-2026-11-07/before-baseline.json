@@ -1,0 +1,278 @@
+{
+  "documentation/.git/COMMIT_EDITMSG": {
+    "sha256": "53e3deb2ec67f1d2fd93e2496adba8c5a841c289721c1aaa42a19ba44a2e2226",
+    "mode": 420
+  },
+  "documentation/.git/HEAD": {
+    "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+    "mode": 420
+  },
+  "documentation/.git/config": {
+    "sha256": "78404ea12a0436a2288c31079eaa1fc35a4a9211d489eb110c32ae7b3037cbdf",
+    "mode": 420
+  },
+  "documentation/.git/index": {
+    "sha256": "e62395ada75bc4e3191c5c9029818141aff6a8c6cc41062d6137d3683b8c143a",
+    "mode": 420
+  },
+  "documentation/.git/logs/HEAD": {
+    "sha256": "09d39211d0ae04a825ee9e5f1b980243cba2c7a8fbe3b715828548eedb54b829",
+    "mode": 420
+  },
+  "documentation/.git/logs/refs/heads/main": {
+    "sha256": "09d39211d0ae04a825ee9e5f1b980243cba2c7a8fbe3b715828548eedb54b829",
+    "mode": 420
+  },
+  "documentation/.git/objects/18/686d36545db4cd01ca738b1533e56a1df77470": {
+    "sha256": "9a27934ba1283eeb840859065626708e7f9581e7516d1cae20d2b94130ea18f6",
+    "mode": 292
+  },
+  "documentation/.git/objects/31/026fa4c1378c05988e14f7db27a67e5f616ed1": {
+    "sha256": "a21df897e4ab1ab87f0a325e59543bad5cfe1aeac827402fd4cf1a774c4fd1ed",
+    "mode": 292
+  },
+  "documentation/.git/objects/68/fab1ba3b666cb439dba450c095ecbce907f443": {
+    "sha256": "f73f3ff84964a5683fe4ac97a9acdee2c5dd5e487c904dbbeefd331f1577f037",
+    "mode": 292
+  },
+  "documentation/.git/objects/6a/ea1ab6d12c1b3efbd3c667a3ab667f0b786e2c": {
+    "sha256": "12931159ca4090913c0700d6fbd938bd6b8ea18ca3814489ee918fdfa6936631",
+    "mode": 292
+  },
+  "documentation/.git/objects/83/4a093f0f45969797536fd1b3c67839782fb01d": {
+    "sha256": "24c00e9a21d12a65d43447e3c6c48864564965dc2ace84f3a66e625613ec15b3",
+    "mode": 292
+  },
+  "documentation/.git/objects/b0/362c208e3846390b85ebbb47074a57b4e05cfb": {
+    "sha256": "7d25e6c6cc397600d20f35194bdb12a919f221067fb49147889fefcbf1c13656",
+    "mode": 292
+  },
+  "documentation/.git/objects/b6/c26c969f6adacfbf3af3554b758461d70fdef9": {
+    "sha256": "00200abc2a8af1f9305e9d9d98439bb07424409b7a7fe79bf83fc13b9b0a3e2f",
+    "mode": 292
+  },
+  "documentation/.git/refs/heads/main": {
+    "sha256": "055f3382516dd9e2691462339f67a94fda41a9afd68ca5a23da46fa463d7b7ad",
+    "mode": 420
+  },
+  "documentation/README.md": {
+    "sha256": "b1b3432d4702fedb6110881c8be98c0bdbd7d04e890a3d1fcdc4a2ac6734512b",
+    "mode": 420
+  },
+  "documentation/settings.toml": {
+    "sha256": "8ce93e29019c1214f8730b3a4f7a33c7c2fb004ab0b65cd3eed2b4abc1660a92",
+    "mode": 420
+  },
+  "engine/.git/COMMIT_EDITMSG": {
+    "sha256": "53e3deb2ec67f1d2fd93e2496adba8c5a841c289721c1aaa42a19ba44a2e2226",
+    "mode": 420
+  },
+  "engine/.git/HEAD": {
+    "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+    "mode": 420
+  },
+  "engine/.git/config": {
+    "sha256": "78404ea12a0436a2288c31079eaa1fc35a4a9211d489eb110c32ae7b3037cbdf",
+    "mode": 420
+  },
+  "engine/.git/index": {
+    "sha256": "7842b9b615264dd90f5e2ad7f6fb741ea662a2060d9b4f06222330908061f84d",
+    "mode": 420
+  },
+  "engine/.git/logs/HEAD": {
+    "sha256": "d94c49d4eece0d84897366e8273a50c63d4fa82245d8ca7254c55085bd00a403",
+    "mode": 420
+  },
+  "engine/.git/logs/refs/heads/main": {
+    "sha256": "d94c49d4eece0d84897366e8273a50c63d4fa82245d8ca7254c55085bd00a403",
+    "mode": 420
+  },
+  "engine/.git/objects/18/686d36545db4cd01ca738b1533e56a1df77470": {
+    "sha256": "9a27934ba1283eeb840859065626708e7f9581e7516d1cae20d2b94130ea18f6",
+    "mode": 292
+  },
+  "engine/.git/objects/37/6a11be72c8f396f826a9ef869eebb048dcb309": {
+    "sha256": "ea2bbb1abe836a79b5270349bec42ac030635d83313fd791a2473797c0614154",
+    "mode": 292
+  },
+  "engine/.git/objects/5f/fbe7a4446aa7314e62742ba88e942476f7b1c3": {
+    "sha256": "4a2ae2c5f00976f95c9bd0a3d0962ee38290d4af4aace6abff056c2bf05e9013",
+    "mode": 292
+  },
+  "engine/.git/objects/64/9600e5db9cd0a7b8b1bd55cf5c6e6fcb0f42b0": {
+    "sha256": "f9567e299943ebed5a9f4760a7a1ccc2c42d776005ec79ca2f97af16492ea411",
+    "mode": 292
+  },
+  "engine/.git/objects/68/fab1ba3b666cb439dba450c095ecbce907f443": {
+    "sha256": "f73f3ff84964a5683fe4ac97a9acdee2c5dd5e487c904dbbeefd331f1577f037",
+    "mode": 292
+  },
+  "engine/.git/objects/b6/f26276eb5c3b39f662d574f5b791f893c3f2dc": {
+    "sha256": "08a5aba712cccf00d25bb16f12a4a0e5b4cb8f8c4138d5c7a9c604c9f7ad7f1d",
+    "mode": 292
+  },
+  "engine/.git/objects/c1/258da70df312e14568c6af724e3d698f655a4f": {
+    "sha256": "e8aa6486db19f05431eb22d233c35cb4a71f3fd69eff739518197375193c8f33",
+    "mode": 292
+  },
+  "engine/.git/objects/da/be40efbce8b0ad3a486a80d222c0e78d6d16d2": {
+    "sha256": "5319de2ab9f5f8e11f8da652bc03d371247bb44bb30d6376d798a2d566d84f6b",
+    "mode": 292
+  },
+  "engine/.git/refs/heads/main": {
+    "sha256": "2c19316bc98d070d7d3d62ab44d9334f8ae2e1b79e3d59ff67fabb824d53a1e3",
+    "mode": 420
+  },
+  "engine/.gitfleet-m2-fixture": {
+    "sha256": "9b71624ad8a4d9fc9d2bdff63572bad09a01cd1cc0fe41b86dffe18d0fc271e1",
+    "mode": 420
+  },
+  "engine/README.md": {
+    "sha256": "f3064467b25c1d40c697e181658f493cc3d8b164aba0941ca7f91ca33dc1ee90",
+    "mode": 420
+  },
+  "engine/notes.txt": {
+    "sha256": "41b6f6859192ad488adc35f72587a1f578e27d78b1da6f240fe3bbfec004a826",
+    "mode": 420
+  },
+  "engine/plugins/audio/.git/COMMIT_EDITMSG": {
+    "sha256": "53e3deb2ec67f1d2fd93e2496adba8c5a841c289721c1aaa42a19ba44a2e2226",
+    "mode": 420
+  },
+  "engine/plugins/audio/.git/HEAD": {
+    "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+    "mode": 420
+  },
+  "engine/plugins/audio/.git/config": {
+    "sha256": "78404ea12a0436a2288c31079eaa1fc35a4a9211d489eb110c32ae7b3037cbdf",
+    "mode": 420
+  },
+  "engine/plugins/audio/.git/index": {
+    "sha256": "10b9d57bf4491c5994777cefe138320cad96d3dbacc15a3e40601a8f8b3ce856",
+    "mode": 420
+  },
+  "engine/plugins/audio/.git/logs/HEAD": {
+    "sha256": "3a71937e08696ab6028f4d6aeed25ffef6e58530ed772eaa9c3ab1641d15af66",
+    "mode": 420
+  },
+  "engine/plugins/audio/.git/logs/refs/heads/main": {
+    "sha256": "3a71937e08696ab6028f4d6aeed25ffef6e58530ed772eaa9c3ab1641d15af66",
+    "mode": 420
+  },
+  "engine/plugins/audio/.git/objects/11/d8df833d5d479bbd2a14cd3a3f0677b2b8b929": {
+    "sha256": "754a28038004f2ab5212c9ccee79dc4ab05b18967e91187108222481438821d2",
+    "mode": 292
+  },
+  "engine/plugins/audio/.git/objects/18/686d36545db4cd01ca738b1533e56a1df77470": {
+    "sha256": "9a27934ba1283eeb840859065626708e7f9581e7516d1cae20d2b94130ea18f6",
+    "mode": 292
+  },
+  "engine/plugins/audio/.git/objects/68/fab1ba3b666cb439dba450c095ecbce907f443": {
+    "sha256": "f73f3ff84964a5683fe4ac97a9acdee2c5dd5e487c904dbbeefd331f1577f037",
+    "mode": 292
+  },
+  "engine/plugins/audio/.git/objects/96/9cc63f5e60e0ed5a61d9881892085432c12660": {
+    "sha256": "2551662cbc560ec950c2b45d6e6f883c3ca1f43260615564c9498d7f0ce9a173",
+    "mode": 292
+  },
+  "engine/plugins/audio/.git/objects/e6/e79fb0aeddab92c066937417b59c0086e3716c": {
+    "sha256": "7e777af2d996e7208d0005e7c88a33d73ad63b8062fd14f01abfb85dd2d7be68",
+    "mode": 292
+  },
+  "engine/plugins/audio/.git/objects/ec/44c8d685d13e78d1fd6488d0b448c34e086e69": {
+    "sha256": "fba1bcab4539b204f18ed4d537c54b4dc8d7d93f182b464710d5c167e91fc79d",
+    "mode": 292
+  },
+  "engine/plugins/audio/.git/objects/f9/250b16d41dcd4318f162dcedb7199ebf9a4af7": {
+    "sha256": "96644afded8ef564117bddf25162b5732b737f0b68c371cb45dbbe5f2b1d7af7",
+    "mode": 292
+  },
+  "engine/plugins/audio/.git/refs/heads/main": {
+    "sha256": "ce5f0119a52dcf16d2062be9550416be21ea8934ab1d34b0515a6907a95f839c",
+    "mode": 420
+  },
+  "engine/plugins/audio/README.md": {
+    "sha256": "fc7e658f2934cf18ec67c6a4a1b600e8df023dd3ae4cdcc09283d52e549f07b6",
+    "mode": 420
+  },
+  "engine/plugins/audio/notes.txt": {
+    "sha256": "41b6f6859192ad488adc35f72587a1f578e27d78b1da6f240fe3bbfec004a826",
+    "mode": 420
+  },
+  "engine/plugins/audio/settings.toml": {
+    "sha256": "8ce93e29019c1214f8730b3a4f7a33c7c2fb004ab0b65cd3eed2b4abc1660a92",
+    "mode": 420
+  },
+  "engine/settings.toml": {
+    "sha256": "8ce93e29019c1214f8730b3a4f7a33c7c2fb004ab0b65cd3eed2b4abc1660a92",
+    "mode": 420
+  },
+  "tooling/.git/COMMIT_EDITMSG": {
+    "sha256": "53e3deb2ec67f1d2fd93e2496adba8c5a841c289721c1aaa42a19ba44a2e2226",
+    "mode": 420
+  },
+  "tooling/.git/HEAD": {
+    "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+    "mode": 420
+  },
+  "tooling/.git/config": {
+    "sha256": "78404ea12a0436a2288c31079eaa1fc35a4a9211d489eb110c32ae7b3037cbdf",
+    "mode": 420
+  },
+  "tooling/.git/index": {
+    "sha256": "46457e822f5c2b7b92faabf07eb4548deb21e8d03b64b548c05da8a5a2822abb",
+    "mode": 420
+  },
+  "tooling/.git/logs/HEAD": {
+    "sha256": "616ae4d0013996af6f8edc5b3519961a08ddcd005a1c71775b4f30b85e8acf70",
+    "mode": 420
+  },
+  "tooling/.git/logs/refs/heads/main": {
+    "sha256": "616ae4d0013996af6f8edc5b3519961a08ddcd005a1c71775b4f30b85e8acf70",
+    "mode": 420
+  },
+  "tooling/.git/objects/0a/ee6b637901bd5ba03997c961f3492bd9c87010": {
+    "sha256": "94664eaa9edfc7a484eb753f3867f02ff8b817c40fb73661dbb41af8bed2e81c",
+    "mode": 292
+  },
+  "tooling/.git/objects/18/686d36545db4cd01ca738b1533e56a1df77470": {
+    "sha256": "9a27934ba1283eeb840859065626708e7f9581e7516d1cae20d2b94130ea18f6",
+    "mode": 292
+  },
+  "tooling/.git/objects/2a/75956b829f074fab95204c7fe7514e7f1cf316": {
+    "sha256": "bf55cadcb8daf25bf125333d2dbcc94e2938413a65132bc49e329a4180b23cef",
+    "mode": 292
+  },
+  "tooling/.git/objects/5e/af226868f0a6bd524d101d594456847bd34851": {
+    "sha256": "100b87aa1d65be62415f5f1a06cb6637318b5635ae6a34e068a082f18738eb5f",
+    "mode": 292
+  },
+  "tooling/.git/objects/68/fab1ba3b666cb439dba450c095ecbce907f443": {
+    "sha256": "f73f3ff84964a5683fe4ac97a9acdee2c5dd5e487c904dbbeefd331f1577f037",
+    "mode": 292
+  },
+  "tooling/.git/objects/c7/7b45cf015484ae16d81e0491d67b4c686104fa": {
+    "sha256": "d5a29065bb51e2ae18f6edd85f42ef4a2bab5b4a17d464a808b4f50b79d75a74",
+    "mode": 292
+  },
+  "tooling/.git/objects/d5/c43d9de7c8db08b6d957df8c87377dc9336db7": {
+    "sha256": "076d1c63ca45d4876ffbc65d29acd7de2c44c928bc55b1c3ed5b6f9328f23d59",
+    "mode": 292
+  },
+  "tooling/.git/refs/heads/main": {
+    "sha256": "bbcf07ec3111e564e27624c17f9273269767ff28c6772a239813c4112d944705",
+    "mode": 420
+  },
+  "tooling/README.md": {
+    "sha256": "1376564339c46b5f88ab8ebb097e21f9a3d17dc495d4ef875e8572ba8fac2427",
+    "mode": 420
+  },
+  "tooling/notes.txt": {
+    "sha256": "41b6f6859192ad488adc35f72587a1f578e27d78b1da6f240fe3bbfec004a826",
+    "mode": 420
+  },
+  "tooling/settings.toml": {
+    "sha256": "8ce93e29019c1214f8730b3a4f7a33c7c2fb004ab0b65cd3eed2b4abc1660a92",
+    "mode": 420
+  }
+}

@@ -485,6 +485,10 @@ impl Application {
         self.restart_monitor()
     }
     #[cfg(feature = "write-test-support")]
+    pub fn set_write_test_fault(&mut self, fault: TestFault) {
+        self.writes.set_test_fault(fault);
+    }
+    #[cfg(feature = "write-test-support")]
     pub fn set_import_test_fault(
         &mut self,
         phase: crate::remote::fetch::FetchImportPhase,

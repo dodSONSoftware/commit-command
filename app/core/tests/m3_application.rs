@@ -1704,3 +1704,177 @@ fn unified_audit_pages_across_tied_sources_and_projects_orphans_without_rewritin
     )
     .is_err());
 }
+
+#[test]
+fn g01_hostile_review_text_preserves_exact_approved_message_and_index_blob() {
+    let (f, mut app, ws, wt) = setup();
+    trust(&mut app, &ws, &wt);
+    let path = "review\u{202e}name\n.txt";
+    let staged = b"<script>fixture_only()</script>\n\x1b[31m staged\n";
+    fs::write(f.repo.join(path), staged).unwrap();
+    f.git(&["add", "--", path]);
+    fs::write(f.repo.join(path), b"unapproved working bytes\n").unwrap();
+    fs::write(f.repo.join("file.txt"), b"excluded staged\n").unwrap();
+    f.git(&["add", "--", "file.txt"]);
+    let index_before = fs::read(f.repo.join(".git/index")).unwrap();
+    let parent = f.git(&["rev-parse", "HEAD"]);
+    let message = "<img src=x onerror=fixture_only()>\n\nExact \u{202e}RTL\u{2066}isolate\u{2069}\u{1b} bytes\n";
+    let Data::Review(review) = app
+        .request(
+            app.epoch(),
+            Request::Propose {
+                workspace: ws,
+                worktree: wt,
+                request: WriteRequest::Commit {
+                    selected: vec![SelectedPath {
+                        path: NativePath::from_path(Path::new(path)),
+                        source: ContentSource::Index,
+                    }],
+                    message: message.into(),
+                    hooks: HookPolicy::Execute,
+                    signing: SigningPreference::Configured,
+                },
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    for text in [&review.summary, &review.content] {
+        assert!(!text.contains(['\u{202e}', '\u{2066}', '\u{2069}', '\u{1b}']));
+    }
+    assert!(review
+        .content
+        .contains("<img src=x onerror=fixture_only()>"));
+    assert!(review.content.contains("\\u{202e}") || review.content.contains("\\u202e"));
+    assert_eq!(fs::read(f.repo.join(".git/index")).unwrap(), index_before);
+    assert_eq!(f.git(&["rev-parse", "HEAD"]), parent);
+    let (capability, _) = app.begin_confirmation(&review.id).unwrap();
+    let result = app
+        .confirm(capability, true, Cancellation::default())
+        .unwrap();
+    assert_eq!(result["phase"], "complete");
+    // Git independently inspects actual published bytes rather than trusting the result DTO.
+    let commit = f.git(&["cat-file", "commit", "HEAD"]);
+    let separator = commit
+        .windows(2)
+        .position(|bytes| bytes == b"\n\n")
+        .unwrap();
+    assert_eq!(&commit[separator + 2..], message.as_bytes());
+    assert_eq!(f.git(&["show", &format!("HEAD:{path}")]), staged);
+    assert_eq!(
+        fs::read(f.repo.join(path)).unwrap(),
+        b"unapproved working bytes\n"
+    );
+    assert_eq!(f.git(&["show", ":file.txt"]), b"excluded staged\n");
+    assert_eq!(f.git(&["rev-parse", "HEAD^"]), parent);
+    assert!(app.review(&review.id).is_err());
+}
+
+#[test]
+fn g01_replaced_or_closed_review_cannot_use_an_already_issued_confirmation() {
+    let (f, mut app, ws, wt) = setup();
+    let before = tree_bytes(&f.repo);
+    let request = || Request::ReviewTrust {
+        workspace: ws.clone(),
+        worktrees: vec![wt.clone()],
+    };
+    let Data::Review(first) = app.request(app.epoch(), request()).unwrap().data else {
+        panic!()
+    };
+    let (old_capability, _) = app.begin_confirmation(&first.id).unwrap();
+    let Data::Review(replacement) = app.request(app.epoch(), request()).unwrap().data else {
+        panic!()
+    };
+    assert!(app
+        .confirm(old_capability, true, Cancellation::default())
+        .is_err());
+    // The rejected old callback must not consume or approve the replacement.
+    assert!(app.review(&replacement.id).is_ok());
+    let (closed_capability, _) = app.begin_confirmation(&replacement.id).unwrap();
+    app.cancel_review(&replacement.id).unwrap();
+    assert!(app
+        .confirm(closed_capability, true, Cancellation::default())
+        .is_err());
+    let Data::Trust(status) = app
+        .request(app.epoch(), Request::TrustStatus { workspace: ws })
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert!(status.iter().all(|entry| entry.grant == "untrusted"));
+    assert_eq!(tree_bytes(&f.repo), before);
+}
+
+#[test]
+fn g01_g02_shutdown_or_reset_revokes_issued_commit_confirmation_without_running_hooks() {
+    use std::os::unix::fs::PermissionsExt;
+    for shutdown in [false, true] {
+        let (f, mut app, ws, wt) = setup();
+        let hook = f.repo.join(".git/hooks/pre-commit");
+        fs::create_dir_all(hook.parent().unwrap()).unwrap();
+        // A relative marker avoids embedding fixture paths in executable shell text.
+        fs::write(
+            &hook,
+            b"#!/bin/sh\nprintf 'unexpected hook execution' > g01-hook-marker\n",
+        )
+        .unwrap();
+        fs::set_permissions(&hook, fs::Permissions::from_mode(0o700)).unwrap();
+        trust(&mut app, &ws, &wt);
+        fs::write(f.repo.join("file.txt"), b"reviewed working content\n").unwrap();
+        let Data::Review(review) = app
+            .request(
+                app.epoch(),
+                Request::Propose {
+                    workspace: ws.clone(),
+                    worktree: wt,
+                    request: WriteRequest::Commit {
+                        selected: vec![SelectedPath {
+                            path: NativePath::from_path(Path::new("file.txt")),
+                            source: ContentSource::WorkingTree,
+                        }],
+                        message: "Must not publish after context loss\n".into(),
+                        hooks: HookPolicy::Execute,
+                        signing: SigningPreference::Configured,
+                    },
+                },
+            )
+            .unwrap()
+            .data
+        else {
+            panic!()
+        };
+        let (capability, _) = app.begin_confirmation(&review.id).unwrap();
+        let before = tree_bytes(&f.repo);
+        if shutdown {
+            app.shutdown().unwrap();
+        } else {
+            app.reset_presentation().unwrap();
+        }
+        assert!(app
+            .confirm(capability, true, Cancellation::default())
+            .is_err());
+        assert_eq!(tree_bytes(&f.repo), before);
+        assert!(!f.repo.join("g01-hook-marker").exists());
+        drop(app);
+        let mut reopened = Application::open(&f.root.join("state"), fixture_options(&f)).unwrap();
+        let Data::Operations(page) = reopened
+            .request(
+                reopened.epoch(),
+                Request::Operations {
+                    workspace: ws,
+                    offset: 0,
+                },
+            )
+            .unwrap()
+            .data
+        else {
+            panic!()
+        };
+        assert_eq!(page.items.len(), 1);
+        assert_eq!(page.items[0].phase, Phase::CancelledBeforePublication);
+        assert_eq!(tree_bytes(&f.repo), before);
+    }
+}

@@ -1,0 +1,23 @@
+{
+  "discovery": {
+    "excluded_names": [
+      "node_modules",
+      ".venv",
+      "target",
+      "dist",
+      "build",
+      ".gitfleet-rust-lab"
+    ],
+    "excluded_patterns": []
+  },
+  "display_root": {
+    "encoding": "utf8",
+    "value": "/private/tmp/gitfleet-m3-native-pkjsf9j2/workspace/tooling"
+  },
+  "id": "acb77bd2-aa28-470d-b288-1901463b81f8",
+  "name": "G01 Second Workspace",
+  "root": {
+    "encoding": "utf8",
+    "value": "/private/tmp/gitfleet-m3-native-pkjsf9j2/workspace/tooling"
+  }
+}

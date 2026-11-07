@@ -1,0 +1,13 @@
+{
+  "case": "after",
+  "stage": "restarted",
+  "head": "b25ff65828e89ef5f0ab235565ad0dca0487597d",
+  "commit_count": 3,
+  "phase": "reference_updated",
+  "journal_published": false,
+  "actual_ref_advanced": true,
+  "index_entries_preserved": true,
+  "working_files_and_other_repositories_preserved": true,
+  "operation_id": "e29c5d2e-4ef0-4299-a66e-c971bb999598",
+  "reason": null
+}

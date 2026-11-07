@@ -1,5 +1,9 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 mod host_options;
+#[cfg(feature = "native-acceptance-support")]
+mod native_acceptance;
+mod native_dialog;
+use native_dialog::close_review;
 mod security;
 mod shutdown;
 use shutdown::close_snapshot;
@@ -55,11 +59,17 @@ struct Host {
     shutdown_complete: std::sync::atomic::AtomicBool,
 }
 enum Task {
+    #[cfg(feature = "native-acceptance-support")]
+    AcceptanceFault(gitfleet_core::writes::Phase),
     Request {
         job: String,
         epoch: u64,
         request: Request,
         cancel: Cancellation,
+    },
+    ShowReview {
+        id: String,
+        generation: u64,
     },
     GetReview {
         id: String,
@@ -477,21 +487,20 @@ async fn review_confirm<R: tauri::Runtime>(
     if generation != state.generation.load(std::sync::atomic::Ordering::Acquire) {
         return Err("Presentation session changed".into());
     }
-    let accepted = tauri::async_runtime::spawn_blocking(move || {
-        rfd::MessageDialog::new()
-            .set_parent(&window)
-            .set_title("Commit Command — Native approval")
-            .set_description(&display.summary)
-            .set_level(rfd::MessageLevel::Warning)
-            .set_buttons(rfd::MessageButtons::OkCancelCustom(
-                "Approve exact operation".into(),
-                "Cancel".into(),
-            ))
-            .show()
-            == rfd::MessageDialogResult::Custom("Approve exact operation".into())
-    })
-    .await
-    .map_err(|_| "Native confirmation failed")?;
+    // A parented async sheet keeps the app event loop responsive to context
+    // invalidation and Quit while native confirmation is outstanding.
+    let accepted = rfd::AsyncMessageDialog::new()
+        .set_parent(&window)
+        .set_title("Commit Command — Native approval")
+        .set_description(&display.summary)
+        .set_level(rfd::MessageLevel::Warning)
+        .set_buttons(rfd::MessageButtons::OkCancelCustom(
+            "Approve exact operation".into(),
+            "Cancel".into(),
+        ))
+        .show()
+        .await
+        == rfd::MessageDialogResult::Custom("Approve exact operation".into());
     if generation != state.generation.load(std::sync::atomic::Ordering::Acquire) {
         return Err("Presentation session changed".into());
     }
@@ -540,7 +549,7 @@ fn review_cancel<R: tauri::Runtime>(
         cancel.cancel();
     }
     queue(&state, Task::CancelReview(id))?;
-    window.close().map_err(|_| "Cannot close review".into())
+    close_review(&window).map_err(|_| "Cannot close review".into())
 }
 fn open_review(app: &tauri::AppHandle, host: Arc<Host>, display: &ReviewDisplay, generation: u64) {
     let id = display.id.clone();
@@ -550,11 +559,14 @@ fn open_review(app: &tauri::AppHandle, host: Arc<Host>, display: &ReviewDisplay,
         if host.generation.load(std::sync::atomic::Ordering::Acquire) != generation {
             return;
         }
-        if let Some(old) = app.get_webview_window("review") {
-            let _ = old.close();
-        }
         if let Ok(mut current) = host.review.lock() {
             *current = Some(id.clone());
+        }
+        if let Some(old) = app.get_webview_window("review") {
+            // Close is asynchronous. The Destroyed run event requests the still-current
+            // review again after Tauri releases the label, rather than racing its teardown.
+            let _ = close_review(&old);
+            return;
         }
         let built =
             WebviewWindowBuilder::new(&app, "review", WebviewUrl::App("review.html".into()))
@@ -563,6 +575,12 @@ fn open_review(app: &tauri::AppHandle, host: Arc<Host>, display: &ReviewDisplay,
                 .min_inner_size(700., 500.)
                 .devtools(false)
                 .on_navigation(|url| security::authorize("review", url, "review").is_ok())
+                .on_document_title_changed(|window, title| {
+                    #[cfg(feature = "native-acceptance-support")]
+                    native_acceptance::record_probe_title(window.label(), &title);
+                    #[cfg(not(feature = "native-acceptance-support"))]
+                    let _ = (window, title);
+                })
                 .on_new_window(|_, _| tauri::webview::NewWindowResponse::Deny)
                 .build();
         if let Ok(window) = built {
@@ -614,7 +632,7 @@ fn worker(mut core: Application, rx: mpsc::Receiver<Task>, app: tauri::AppHandle
                         *review = None;
                     }
                     if let Some(review) = app.get_webview_window("review") {
-                        if let Err(error) = review.close() {
+                        if let Err(error) = close_review(&review) {
                             eprintln!("Obsolete review window could not be closed: {error}");
                         }
                     }
@@ -661,6 +679,21 @@ fn worker(mut core: Application, rx: mpsc::Receiver<Task>, app: tauri::AppHandle
                     .map(|picker| json!({"picker":picker,"display":task.path.to_string_lossy()}))
                     .map_err(|e| e.to_string());
                 let _ = task.reply.send(value);
+            }
+            #[cfg(feature = "native-acceptance-support")]
+            Ok(Task::AcceptanceFault(at)) => {
+                native_acceptance::record("commit_fault_armed", json!({"phase":at}));
+                core.set_write_test_fault(gitfleet_core::writes::TestFault {
+                    at,
+                    kind: gitfleet_core::writes::TestFaultKind::Sigkill,
+                });
+            }
+            Ok(Task::ShowReview { id, generation }) => {
+                if generation == host.generation.load(std::sync::atomic::Ordering::Acquire) {
+                    if let Ok(display) = core.review(&id) {
+                        open_review(&app, host.clone(), &display, generation);
+                    }
+                }
             }
             Ok(Task::GetReview { id, reply }) => {
                 let _ = reply.send(core.review(&id).map_err(|e| e.to_string()));
@@ -723,7 +756,11 @@ fn worker(mut core: Application, rx: mpsc::Receiver<Task>, app: tauri::AppHandle
 fn run() -> Result<(), Box<dyn std::error::Error>> {
     let (directory, options) =
         host_options::parse(std::env::args_os().skip(1), std::env::var_os("HOME"))?;
+    #[cfg(feature = "native-acceptance-support")]
+    native_acceptance::initialize(&directory)?;
     let mut core = Application::open(&directory, options)?;
+    #[cfg(feature = "native-acceptance-support")]
+    native_acceptance::validate_workspaces(&mut core, &directory)?;
     let saved_placement = core.window_placement()?;
     let (sender, rx) = mpsc::sync_channel(8);
     let host = Arc::new(Host {
@@ -804,6 +841,8 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                     }
                 });
             }
+            #[cfg(feature = "native-acceptance-support")]
+            native_acceptance::install(app.handle(), setup_host.clone())?;
             let page_host = setup_host.clone();
             let page_loaded = std::sync::atomic::AtomicBool::new(false);
             let window =
@@ -817,13 +856,29 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                         if payload.event() == tauri::webview::PageLoadEvent::Started
                             && page_loaded.swap(true, std::sync::atomic::Ordering::AcqRel)
                         {
+                            #[cfg(feature = "native-acceptance-support")]
+                            native_acceptance::record("main_renderer_reset", json!({}));
                             page_host.invalidate_presentation();
                             if let Some(review) = window.app_handle().get_webview_window("review") {
-                                let _ = review.close();
+                                let _ = close_review(&review);
                             }
                         }
                     })
-                    .on_navigation(|url| security::authorize("main", url, "main").is_ok())
+                    .on_navigation(|url| {
+                        let allowed = security::authorize("main", url, "main").is_ok();
+                        #[cfg(feature = "native-acceptance-support")]
+                        native_acceptance::record(
+                            "navigation",
+                            json!({"label":"main","allowed":allowed}),
+                        );
+                        allowed
+                    })
+                    .on_document_title_changed(|window, title| {
+                        #[cfg(feature = "native-acceptance-support")]
+                        native_acceptance::record_probe_title(window.label(), &title);
+                        #[cfg(not(feature = "native-acceptance-support"))]
+                        let _ = (window, title);
+                    })
                     .on_new_window(|_, _| tauri::webview::NewWindowResponse::Deny)
                     .build()?;
             if let Some(placement) = saved_placement {
@@ -847,6 +902,28 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         })
         .build(tauri::generate_context!())?
         .run(move |app, event| {
+            if let tauri::RunEvent::WindowEvent {
+                label,
+                event: tauri::WindowEvent::Destroyed,
+                ..
+            } = &event
+            {
+                if label == "review" {
+                    if let Ok(current) = host.review.lock() {
+                        if let Some(id) = current.as_ref() {
+                            let _ = queue(
+                                &host,
+                                Task::ShowReview {
+                                    id: id.clone(),
+                                    generation: host
+                                        .generation
+                                        .load(std::sync::atomic::Ordering::Acquire),
+                                },
+                            );
+                        }
+                    }
+                }
+            }
             if let tauri::RunEvent::ExitRequested { api, .. } = event {
                 if !host
                     .shutdown_complete

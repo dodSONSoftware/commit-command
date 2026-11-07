@@ -1,0 +1,6 @@
+{"detail":{"support":true},"event":"startup"}
+{"detail":{"allowed":true,"label":"main"},"event":"navigation"}
+{"detail":{"id":"accept-before-publication"},"event":"menu_action"}
+{"detail":{"phase":"publication_pending"},"event":"commit_fault_armed"}
+{"detail":{"support":true},"event":"startup"}
+{"detail":{"allowed":true,"label":"main"},"event":"navigation"}

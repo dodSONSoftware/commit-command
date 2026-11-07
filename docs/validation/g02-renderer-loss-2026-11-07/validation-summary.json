@@ -1,0 +1,11 @@
+{
+  "desktop_validation_exit_code": 0,
+  "renderer_tests": 69,
+  "default_host_tests": 13,
+  "all_features_host_tests": 16,
+  "initial_native_exit_code": 0,
+  "restart_native_exit_code": 0,
+  "dock": "organization policy blocked com.apple.dock",
+  "system_termination": "not exercised",
+  "ordinary_writes": "disabled"
+}

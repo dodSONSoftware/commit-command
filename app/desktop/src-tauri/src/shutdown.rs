@@ -146,7 +146,7 @@ pub(super) fn request(app: tauri::AppHandle, host: Arc<Host>) {
         }
     }
     if let Some(review) = app.get_webview_window("review") {
-        let _ = review.close();
+        let _ = close_review(&review);
     }
     let placement = app.get_webview_window("main").and_then(|window| {
         let _ = window.set_title("GitFleet — Closing safely…");
@@ -164,10 +164,15 @@ fn start(app: tauri::AppHandle, host: Arc<Host>, placement: Option<WindowPlaceme
     let attempt = host
         .close_state
         .begin(host.generation.load(std::sync::atomic::Ordering::Acquire));
+    #[cfg(feature = "native-acceptance-support")]
+    let suppress_ack = native_acceptance::take_close_ack_fault();
+    #[cfg(not(feature = "native-acceptance-support"))]
+    let suppress_ack = false;
     if let Ok((token, _)) = &attempt {
-        if app
-            .emit_to("main", "gitfleet-close-request", token)
-            .is_err()
+        if !suppress_ack
+            && app
+                .emit_to("main", "gitfleet-close-request", token)
+                .is_err()
         {
             eprintln!("Renderer close request could not be delivered");
         }

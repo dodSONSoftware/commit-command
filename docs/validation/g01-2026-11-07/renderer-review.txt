@@ -1,0 +1,13 @@
+
+> gitfleet-desktop@0.1.1 test
+> vitest run src/review.test.ts src/services/bridge.test.ts
+
+
+ RUN  v4.1.12 /Users/randydodson/Documents/_code/git-fleet/app/desktop
+
+
+ Test Files  2 passed (2)
+      Tests  10 passed (10)
+   Start at  13:48:41
+   Duration  515ms (transform 72ms, setup 84ms, import 103ms, tests 41ms, environment 520ms)
+

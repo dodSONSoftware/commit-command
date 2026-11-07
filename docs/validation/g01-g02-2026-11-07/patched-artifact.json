@@ -1,0 +1,8 @@
+{
+  "app_path": "/private/tmp/gitfleet-m3-native-pkjsf9j2/Commit Command G01 G02 Patched.app",
+  "sha256": "cabe896cd96a88e1f99829733c0b0ffc453f8cd54d8990f8e283ca29b711498d",
+  "features": [
+    "custom-protocol",
+    "desktop-writes"
+  ]
+}

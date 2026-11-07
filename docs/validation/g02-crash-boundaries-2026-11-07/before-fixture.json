@@ -1,0 +1,12 @@
+{
+  "root": "/var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-m3-native-uzn0csl3",
+  "workspace_root": "/var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-m3-native-uzn0csl3/gitfleet-workspace",
+  "data_directory": "/var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-m3-native-uzn0csl3/state",
+  "workspace_id": "d3382c90-ff64-4ea7-897c-af6aed310eca",
+  "app_path": "/var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-m3-native-uzn0csl3/Commit Command Crash Acceptance.app",
+  "binary_sha256": "fbd0cc54fdfc5f967f2e445118b967003426992231c63ad897fe8327aef30766",
+  "head_before": "649600e5db9cd0a7b8b1bd55cf5c6e6fcb0f42b0",
+  "index_entries_before": "3130303634342062366632363237366562356333623339663636326435373466356237393166383933633366326463203009524541444d452e6d6400313030363434203638666162316261336236363663623433396462613435306330393565636263653930376634343320300973657474696e67732e746f6d6c00",
+  "expected_blob_sha256": "b4bde5311c946a3083f1b2d234f998df7ef2f965523311bb1a9ad0c0feb253eb",
+  "expected_message": "G02 before publication crash acceptance\n"
+}

@@ -1,0 +1,9 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.86s
+     Running tests/m2_writes.rs (app/core/target/debug/deps/m2_writes-d4ba841881a355ba)
+
+running 1 test
+test sigkill_matrix_recovers_from_actual_ref_index_and_owned_locks_without_replay ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 30 filtered out; finished in 26.91s
+

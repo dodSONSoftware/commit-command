@@ -1,6 +1,13 @@
 # M5 remote inspection and operation boundary
 
-November 2, 2026. This document distinguishes implemented local inspection, reviewed branch observation and isolated fetch downloads from remaining managed import/ref-publication and push work. The local development repository must never be pushed by this execution session. Disposable test remotes are the validation boundary for future remote operation code.
+Reconciled November 7, 2026. [The current record](../EXECUTION_STATUS.md)
+owns acceptance status and next work. Local inspection, reviewed observation,
+authentication profiles, isolated fetch download, separate offline import/tracking-ref
+publication, guarded upstream setup, child evidence, dependency planning and reviewed
+pre-push hook checks are implemented within their documented subsets. Actual
+individual/bulk push publication and uncertain push-outcome recovery are not.
+Ordinary desktop write/network execution remains disabled. All routine validation
+uses disposable repositories and isolated services.
 
 ## Implemented: local inspection
 
@@ -18,27 +25,59 @@ The URL parser is the `url` crate already used by the desktop dependency graph. 
 
 `ReviewRemoteObservation` prepares one exact remote/full branch reference through the same native capability boundary, gated by `desktop-writes`. Trust, active workspace/worktree identity, effective configuration/generation and Git/HTTPS-helper/CA tool bindings are revalidated. Preparation performs no network activity. Decline, replacement, revocation and workspace invalidation cancel the pending proposal. Results live in versioned single-owner SQLite state, with per-worktree/workspace bounded pagination. Restart never restores confirmation authority or replays a running observation; orphaned/running records display as interrupted.
 
-Execution creates a private temporary bare transport repository and empty HOME under app-owned state. It clears inherited environment/configuration, disables lazy network activity, hooks, recursion, maintenance, credential helpers, proxies and cookies, verifies TLS certificates/hostnames and refuses redirects. No actual credentials are supplied in this initial policy. A separately configured CA is trusted host configuration, fingerprinted in the review; it cannot be supplied through IPC. Local file transport is restricted to a trusted host-configured disposable fixture root and is disabled in ordinary host configuration. Git and transport tool paths/content are bound to the review.
+Execution creates a private temporary bare transport repository and empty HOME under app-owned state. It clears inherited environment/configuration, disables lazy network activity, hooks, recursion, maintenance, credential helpers, proxies and cookies, verifies TLS certificates/hostnames and refuses redirects. The initial credential-free path supplies no credentials. Supported authenticated paths use the explicitly assigned scoped HTTPS helper or selected SSH agent policy; managed repository helper/proxy configuration stays disabled. A separately configured CA is trusted host configuration, fingerprinted in the review; it cannot be supplied through IPC. Local file transport is restricted to a trusted host-configured disposable fixture root and is disabled in ordinary host configuration. Git and transport tool paths/content are bound to the review.
 
 The only network command is an exact `ls-remote --refs --exit-code` for one validated full branch. Complete results contain an observed OID or explicit absence plus time; raw server diagnostics are discarded. Managed HEAD, objects, index, refs, working files and upstreams are preserved. This is a past server observation and never implies synchronization. Running cancellation terminates the bounded transport process group. The desktop requests review and reads results; it cannot supply approval or replay an observation.
 
-Tests use actual isolated local remotes and loopback TLS advertisements, including reviewed CA success, certificate and hostname failures, redirects, helper/proxy isolation, missing credentials, CA drift and cancellation after an HTTP request begins. No external service or actual user credentials are used. System credential/SSH support and actual native UI acceptance remain open.
+Tests use actual isolated local remotes and loopback TLS advertisements, including reviewed CA success, certificate and hostname failures, redirects, helper/proxy isolation, missing credentials, CA drift and cancellation after an HTTP request begins. No external service or actual user credentials are used. Supported scoped HTTPS helpers and strict SSH-agent reads now have selected native evidence; broader compatibility remains open. See [authentication](../AUTHENTICATION.md) and the current record.
 
 ## Implemented: reviewed fetch download stage
 
 ReviewFetchCapture selects a stored completed branch observation with an OID in the active worktree. A fresh native confirmation binds a new transport/configuration/tool/CA snapshot and expected OID; the old observation is data, not authorization. Shared transport helpers retain the observation isolation policy. Download fetches one exact branch into a new private bare repository, rejects tip drift, validates objects and produces a synced verified bundle with digest/size/count metadata. It never imports managed objects or updates managed refs, FETCH_HEAD, tags, branches, upstreams, index or working files.
 
-The download is bounded to 10,000 objects/64 MiB uncompressed and bundle bytes, shared process output/deadlines and a polled 128 MiB/1,024-entry artifact budget. The private process check can stop/reap owned work on artifact-limit failures; polling is not a hard OS quota. Version-1 records use schema-3 state, have scoped paged history/unified audit and never restore native authority after restart. No publication/replay endpoint exists. The ordinary desktop gate remains disabled. Current artifact path invocation requires UTF-8 app-data paths; full interoperability/native execution and retention remain open. See [fetch download report](../reports/M5B_FETCH_CAPTURE_2026-11-02.md).
+The download is bounded to 10,000 objects/64 MiB uncompressed and bundle bytes, shared process output/deadlines and a polled 128 MiB/1,024-entry artifact budget. The private process check can stop/reap owned work on artifact-limit failures; polling is not a hard OS quota. Version-1 records use schema-3 state, have scoped paged history/unified audit and never restore native authority after restart. The download stage itself offers no managed ref publication or replay; separate import has its own authority below. The ordinary desktop gate remains disabled. Current artifact path invocation requires UTF-8 app-data paths; broader interoperability/native coverage and retention remain open. See [fetch download report](../reports/M5B_FETCH_CAPTURE_2026-11-02.md).
 
-## Next: remaining fetch/push service
+## Implemented: import, upstream and push preparation
 
-1. Keep the read-only adapter's protocol ban. Network requests need distinct typed proposals, durable outcomes and independent native authorization. Trust alone never approves a fetch or push.
-2. Resolve exact destination/configuration, source/destination refs, source OID, hook/credential policy and dependency evidence. Bind them to workspace/worktree identities and a short-lived Rust-only review. Raw embedded credentials and ambiguous or unsupported destinations fail closed.
-3. Use a separate temporary transport repository under app-owned state so managed repository configuration cannot introduce credential commands, URL rewrites, proxies, upload/receive programs, refspecs, hooks, recursion or lazy network activity after review. Do not simply enable protocols on the inspection or M2 adapter.
-4. Start with verified HTTPS and controlled local fixture transport. SSH/credential-helper compatibility remains an explicit implementation/acceptance gate; it is not an agreed exclusion from the product. Preserve certificate/hostname verification and reject unreviewed redirects. External services and actual user credentials are unnecessary for routine tests.
-5. Explicitly authorized observation/fetch establishes remote knowledge. Local cached refs must not be presented as a current server observation. Fetch must have explicit bounded ref scope and journal actual local metadata changes. Git supports an empty `--refmap=` to avoid implicit configured mappings and atomic ref updates; [Git fetch documentation](https://git-scm.com/docs/git-fetch) defines those mechanics, but the service still needs its own reviewed publication/recovery contract.
-6. Push is a separate exact authorization: non-force update of a specified branch/OID/destination, explicit creation/upstream choices, correct pre-push hook stdin, supported credential handling, and final source/dependency checks. A child commit's availability on the intended reachable remote must be proved before its selected parent is published. No implicit child selection, force push, or push after commit/AI generation.
-7. Persist started/completed/failed/uncertain remote phases before side effects. Restart never replays publication. A cancelled/disconnected push with ambiguous publication requires fresh remote observation and review, rather than an automatic retry. Preserve successful prior batch items.
-8. Validate isolated local bare and loopback transport fixtures, origin/ref drift, server rejection, auth/transport failures, hooks, cancellation, uncertain outcomes and no implicit upstream/ref changes. Actual supported Keychain/SSH/native behavior requires separate platform evidence.
+- [Offline import](../reports/M5B_FETCH_IMPORT_2026-11-02.md) requires a fresh
+  review of the exact captured bundle, expected old tracking ref and repository
+  bindings. It has durable phases, guarded recovery and no restart replay.
+  [Selected native chain/recovery tests](../reports/M5B_NATIVE_FETCH_ACCEPTANCE_2026-11-02.md) passed.
+- [Upstream setup](../reports/M5B_GUARDED_UPSTREAM_2026-11-02.md) is a separate
+  missing-only configuration review/transaction with metadata preservation and
+  recovery. It is not branch creation or publication.
+- [Authentication profiles](../reports/M5B_AUTHENTICATION_PROFILES_2026-11-02.md)
+  explicitly bind nonsecret policies to worktree/remote destinations. Supported
+  [HTTPS](../reports/M5B_AUTHENTICATION_COMPATIBILITY_2026-11-02.md) and
+  [SSH](../reports/M5B_SSH_AGENT_TRANSPORT_2026-11-02.md) have selected actual
+  evidence; SecurityAgent operator cases and broader compatibility remain G06.
+- [Historical child mappings](../reports/M5C_CHILD_MAPPING_EVIDENCE_2026-11-02.md),
+  [relative/SCP resolution](../reports/M5C_RELATIVE_CHILD_ACCEPTANCE_2026-11-02.md)
+  and [dependency planning](../reports/M5C_DEPENDENCY_PLANNING_2026-11-03.md)
+  provide bounded outgoing-history requirements, explicit observation/ancestry
+  evidence, selected child-first order and cycle/block detection. Planning performs
+  no publication and conditional child selection is not remote success.
+- [Pre-push checks](../reports/M5C_REVIEWED_PUSH_CHECKS_2026-11-03.md) separately
+  authorize exact hook argv/stdin/policy and already-reachable child evidence.
+  Complete checks remain unpublished and cannot authorize a later push.
 
-Inspection, branch observation and isolated downloads do not fulfill managed fetch import/ref publication or push, credential storage, authenticated transport, bulk dependency reachability or uncertain-publication recovery. Those requirements remain open in the completion tracker.
+## Remaining publication contract — G07/G08
+
+Individual push needs its own short-lived Rust-owned exact source/OID, destination
+branch, authentication/tool/hook and dependency approval. Keep inspection protocols
+banned and transport configuration isolated. Reject ambiguous destinations,
+unsupported states, force/divergence and stale source or child evidence. Final hook
+timing and transport must be validated within publication authority; an earlier
+check is not an execution token.
+
+Record durable phases before side effects and distinguish rejection, cancellation,
+completed and uncertain publication. A disconnect may follow server acceptance:
+reconcile using fresh approved observation and actual state, never automatic replay.
+Bulk push must verify required children remotely before publishing parents, preserve
+successful items, stop successors on failure and require fresh review for retry.
+Do not select unselected children or push after a commit/AI run implicitly.
+
+Validate with disposable local bare/loopback remotes: server rejection and drift,
+credential/transport failure, exact hook payload, cancellation, uncertain outcomes,
+dependency failure and no unexpected destination/upstream creation. Current local
+planning/check evidence is not acceptance of this unimplemented executor.

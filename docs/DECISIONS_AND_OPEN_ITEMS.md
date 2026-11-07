@@ -1,5 +1,12 @@
 # GitFleet — Decision Register and Open Items
 
+Current implementation, acceptance and next work are maintained in
+[EXECUTION_STATUS.md](EXECUTION_STATUS.md). This document defines requirements
+and decisions; dated implementation/authorization appendices preserve their
+original checkpoints and do not override the current record. Documentation
+reconciliation does not change the approved product scope.
+
+
 **Version:** 1.0 · **Date:** November 1, 2026
 
 This register separates **explicitly agreed product behavior** from **proposed implementation defaults** and unresolved architectural validation. It should be updated whenever a requirement is changed.

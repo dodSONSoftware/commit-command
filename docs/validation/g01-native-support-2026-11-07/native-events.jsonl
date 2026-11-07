@@ -1,0 +1,23 @@
+{"detail":{"support":true},"event":"startup"}
+{"detail":{"allowed":true,"label":"main"},"event":"navigation"}
+{"detail":{"id":"accept-main-probe"},"event":"menu_action"}
+{"detail":{"label":"main","result":"Native acceptance:main-review:PASS denied"},"event":"ipc_probe"}
+{"detail":{"id":"accept-unprivileged"},"event":"menu_action"}
+{"detail":{"label":"native-probe","result":"Native acceptance:unprivileged-main:PASS denied"},"event":"ipc_probe"}
+{"detail":{"id":"accept-wrong-page"},"event":"menu_action"}
+{"detail":{"allowed":false,"label":"main"},"event":"navigation"}
+{"detail":{"id":"accept-wrong-origin"},"event":"menu_action"}
+{"detail":{"allowed":false,"label":"main"},"event":"navigation"}
+{"detail":{"id":"accept-review-probe"},"event":"menu_action"}
+{"detail":{"label":"review","result":"Native acceptance:review-main:PASS denied"},"event":"ipc_probe"}
+{"detail":{},"event":"reload_requested"}
+{"detail":{"id":"accept-reload"},"event":"menu_action"}
+{"detail":{"allowed":true,"label":"main"},"event":"navigation"}
+{"detail":{},"event":"main_renderer_reset"}
+{"detail":{},"event":"reload_requested"}
+{"detail":{"id":"accept-reload"},"event":"menu_action"}
+{"detail":{"allowed":true,"label":"main"},"event":"navigation"}
+{"detail":{},"event":"main_renderer_reset"}
+{"detail":{},"event":"close_ack_fault_armed"}
+{"detail":{"id":"accept-drop-ack"},"event":"menu_action"}
+{"detail":{},"event":"close_ack_suppressed"}

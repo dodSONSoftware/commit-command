@@ -1,0 +1,15 @@
+    let accepted = tauri::async_runtime::spawn_blocking(move || {
+        rfd::MessageDialog::new()
+            .set_parent(&window)
+            .set_title("Commit Command — Native approval")
+            .set_description(&display.summary)
+            .set_level(rfd::MessageLevel::Warning)
+            .set_buttons(rfd::MessageButtons::OkCancelCustom(
+                "Approve exact operation".into(),
+                "Cancel".into(),
+            ))
+            .show()
+            == rfd::MessageDialogResult::Custom("Approve exact operation".into())
+    })
+    .await
+    .map_err(|_| "Native confirmation failed")?;

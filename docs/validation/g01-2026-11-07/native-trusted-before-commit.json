@@ -1,0 +1,6 @@
+{
+  "stage": "trusted-before-commit",
+  "trust_count": 1,
+  "operation_count": 0,
+  "all_repositories_preserved": true
+}

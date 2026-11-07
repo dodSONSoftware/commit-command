@@ -1,14 +1,17 @@
-# GitFleet project completion plan
+# Commit Command project completion plan
 
-Prepared November 2, 2026. Status: execution authorized by the user in this chat. Implement the remaining milestones, validate them, save milestone reports in `docs/reports/` and make local milestone commits. Do not push. Native app access was successfully verified after the user added the GitFleet app rule and restarted Codex. Release publication and external service credentials remain separate boundaries.
+Reconciled November 7, 2026. This document defines detailed completion work
+packages and exit conditions. **[EXECUTION_STATUS.md](EXECUTION_STATUS.md) is the
+single current status, open-gate and next-action record.** Its G01–G11 queue maps
+the packages below to remaining work. Checkpoint paragraphs and the original
+planning baseline below preserve chronology and are not a parallel current queue.
 
-GitFleet should be completed by preserving its existing Rust services, closing M3 native acceptance, then implementing M4 through M8 in bounded packages. Each package below has a deliverable and an observable exit condition. The first release target is macOS; Linux and Windows acceptance must be resolved explicitly against the release requirements before claiming the entire specification complete.
-
-Execution resumed November 2 under the user's fresh-chat authorization. The
-pending close-draft native cases passed after fixing the predefined macOS Quit
-bypass; see the [native close/Quit report](reports/M3_NATIVE_CLOSE_QUIT_2026-11-02.md).
-Continue remaining M3 theme/accessibility/recovery and completion packages.
-Local milestone/checkpoint commits are authorized; no push or ordinary-write default change.
+Current sequence: existing-work acceptance closure → individual non-force push
+and uncertain-outcome recovery → bulk push → AI/Actions → backup/usability/release.
+Backup primitives precede later schema migrations. Ordinary writes remain disabled
+until applicable acceptance and an explicit default decision. First release is
+macOS; Linux and Windows are deferred. This reconciliation changes documentation
+only and does not authorize commits, push, live services or release actions.
 
 ## Approved first-release interview decisions — November 2, 2026
 
@@ -16,11 +19,11 @@ D-040–D-047 approve macOS-first delivery (Linux/Windows explicitly deferred), 
 
 ## Completion scope and governing contracts
 
-The [specification](GITFLEET_SPECIFICATION.md), [decision register](DECISIONS_AND_OPEN_ITEMS.md), [acceptance matrix](ACCEPTANCE_MATRIX.md), [current status](IMPLEMENTATION_STATUS.md), and [November 2 native checkpoint](M3_NATIVE_ACCEPTANCE_HANDOFF_2026-11-02.md) govern execution. The historical M0–M2 contracts continue to govern supported Git behavior. This plan proposes implementation details; it does not change confirmed requirements.
+The [specification](GITFLEET_SPECIFICATION.md), [decision register](DECISIONS_AND_OPEN_ITEMS.md), [acceptance matrix](ACCEPTANCE_MATRIX.md), [current status](EXECUTION_STATUS.md), and [November 2 native checkpoint](M3_NATIVE_ACCEPTANCE_HANDOFF_2026-11-02.md) govern execution. The historical M0–M2 contracts continue to govern supported Git behavior. This plan proposes implementation details; it does not change confirmed requirements.
 
 Completion means that the specified workspace, individual Git, graph/activity, bulk commit/push, AI, SemVer Action, backup/portability, accessibility and release workflows work together with evidence for their acceptance criteria. Every requirement must end in one of three explicit dispositions: accepted implementation, documented supported-envelope exclusion with required fail-closed behavior, or an agreed deferral. An untested requirement does not become an exclusion automatically.
 
-Hunk staging, individual hook toggles, arbitrary Actions, destructive reset/discard/amend/rebase workflows, multiple active workspaces, multiple presentation windows and additional adapters remain outside v1 unless the product scope is changed. Fetch is needed for the specified push workflow; the exact Pull and Branch actions remain an unresolved product decision, not implicit permission to add merge or checkout behavior.
+Hunk staging, individual hook toggles, arbitrary Actions, destructive reset/discard/amend/rebase workflows, multiple active workspaces, multiple presentation windows and additional adapters remain outside v1 unless the product scope is changed. Fetch preparation/import is implemented for the supported subset. Pull and branch mutations are deferred by D-042; they are not implicit permission to add merge or checkout behavior.
 
 The following rules apply throughout:
 
@@ -338,6 +341,11 @@ The project is complete for its agreed release scope only when:
 6. Source, dependency versions, licenses/notices and artifact hashes are recorded; no release claim relies solely on historical test counts or source-only review.
 7. The release is prepared for review. Commit, push, signing-service use, publication and deployment occur only within explicit authorization.
 
-## First execution package
+## Current entry point
 
-Begin with P0A: preserve the later non-secret native evidence, establish current source/binary provenance and create the full requirement crosswalk. Then run P0B and finish M3A/B using the existing checkpoint without repeating passed checks unnecessarily. The first new functional work is the remaining review/trust/layout/window-state defects; the first unfinished native operation is read-only guarded-recovery inspection followed by an actual timed Cancel action on a fresh disposable fixture. Stop at unresolved policy or authority boundaries while continuing independent authorized work.
+Use [the current next-work queue](EXECUTION_STATUS.md#next-work-and-exit-conditions).
+P0 is a completed historical baseline; do not restart its original evidence
+preservation package or repeat passed Cancel/close cases solely because an older
+checkpoint calls them untested. Close remaining G01–G06 criteria with evidence;
+G07 individual push is the next functional implementation package. Detailed
+package contracts above continue to govern those changes.

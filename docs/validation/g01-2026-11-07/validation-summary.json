@@ -1,0 +1,27 @@
+{
+  "gate": "G01",
+  "status": "in_progress",
+  "production_behavior_changed": false,
+  "native_fixture_exit_code": 0,
+  "automated": {
+    "core_application_passes": 23,
+    "native_host_passes_per_configuration": 13,
+    "native_host_configurations": [
+      "default",
+      "all-features"
+    ],
+    "renderer_review_bridge_passes": 10,
+    "clippy": "passed",
+    "rust_format": "passed"
+  },
+  "native_verdicts": [
+    "native-before.json",
+    "native-closed-and-declined-trust.json",
+    "native-context-final.json",
+    "native-declined-commit.json",
+    "native-published.json",
+    "native-trusted-before-commit.json"
+  ],
+  "limitations": "See G01_REVIEW_AUTHORITY_2026-11-07.md; no full signing/crash/release matrix or native outstanding-callback injection.",
+  "ordinary_target_executable_restored": true
+}

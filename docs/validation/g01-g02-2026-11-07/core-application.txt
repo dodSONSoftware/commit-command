@@ -1,0 +1,32 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.56s
+     Running tests/m3_application.rs (app/core/target/debug/deps/m3_application-60da97eb5ba79141)
+
+running 24 tests
+test native_window_placement_survives_restart_and_invalid_values_preserve_saved_state ... ok
+test navigation_migration_restart_and_newer_data_are_preserved ... ok
+test malformed_state_paths_duplicate_tabs_and_unknown_picker_cannot_modify_storage ... ok
+test final_presentation_snapshot_is_atomic_durable_and_never_grants_authority ... ok
+test g01_replaced_or_closed_review_cannot_use_an_already_issued_confirmation ... ok
+test bulk_composer_state_is_durable_workspace_scoped_and_does_not_change_git ... ok
+test invalid_bulk_preferences_do_not_replace_the_last_valid_draft ... ok
+test untrusted_remote_inspection_is_scoped_and_includes_host_configuration_without_helper_execution ... ok
+test scoped_reads_and_contracts_preserve_every_repository_byte ... ok
+test switching_workspace_stops_refreshing_inactive_repository_state ... ok
+test workspace_switch_invalidates_reviews_and_old_epoch_and_stops_old_watchers ... ok
+test interrupted_records_block_scope_loss_and_are_reported_for_guarded_recovery ... ok
+test review_text_escapes_bidi_and_reset_invalidates_picker_and_native_capability ... ok
+test trust_currentness_is_distinct_from_supported_hook_policy_eligibility ... ok
+test activity_deduplicates_linked_worktrees_and_audit_filters_real_operation_phases ... ok
+test unified_audit_pages_across_tied_sources_and_projects_orphans_without_rewriting_journals ... ok
+test operation_reviews_show_exact_content_and_only_applicable_commit_fields ... ok
+test g01_g02_shutdown_or_reset_revokes_issued_commit_confirmation_without_running_hooks ... ok
+test native_capability_is_required_decline_replay_and_context_changes_fail_closed ... ok
+test g01_hostile_review_text_preserves_exact_approved_message_and_index_blob ... ok
+test automatic_discovery_retains_identity_across_rename_and_missing_entries_after_removal ... ok
+test unified_audit_filters_real_local_batch_and_remote_records_without_mutation_or_authority ... ok
+test cancelled_and_replaced_reviews_record_nonpublication_and_cancellation_is_per_operation ... ok
+test notification_reconciliation_detects_external_edits_without_writes ... ok
+
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 12.56s
+

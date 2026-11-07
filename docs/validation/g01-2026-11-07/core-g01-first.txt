@@ -1,0 +1,11 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+error[E0609]: no field `trusted` on type `&TrustState`
+    --> tests/m3_application.rs:1807:46
+     |
+1807 |     assert!(status.iter().all(|entry| !entry.trusted));
+     |                                              ^^^^^^^ unknown field
+     |
+     = note: available fields are: `worktree`, `grant`, `validity`, `eligible`, `reason`, `policy`
+
+For more information about this error, try `rustc --explain E0609`.
+error: could not compile `gitfleet-core` (test "m3_application") due to 1 previous error

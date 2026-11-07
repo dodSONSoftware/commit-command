@@ -1,4 +1,12 @@
-# GitFleet implementation handoff
+# Commit Command — Implementation handoff archive
+
+Reconciled November 7, 2026. For current implementation, open acceptance gates
+and next work, use [the current record](EXECUTION_STATUS.md). This page preserves
+dated checkpoints; its older stop/resume, authorization, missing-feature and test
+statements describe their original sessions and are not current instructions.
+Supported technical contracts remain binding unless explicitly superseded.
+
+## Historical checkpoint content
 
 Updated: 2026-11-02. **M3 implementation exists, but M3 is not complete: native
 acceptance is partial and lifecycle/accessibility gates remain open.** The user authorized M3,

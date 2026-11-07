@@ -1,0 +1,2 @@
+exit_code=1
+Commit Command startup failed: Native acceptance support requires a newly created disposable native fixture

@@ -1,0 +1,14 @@
+{
+  "support_refuses_nonfixture": true,
+  "ordinary_artifacts": {
+    "debug": {
+      "sha256": "12c7a91f1e00a0f5632892a16375ea5ce1d9a407296f210eb513401eb5f4975e",
+      "test_menu_and_private_selector_absent": true
+    },
+    "release": {
+      "sha256": "e7e9d6cca3dc4909a4cd9614cdebc4a0cf5310663f649ace159f09e69809f418",
+      "test_menu_and_private_selector_absent": true
+    }
+  },
+  "default_graph_excludes_test_write_features": true
+}

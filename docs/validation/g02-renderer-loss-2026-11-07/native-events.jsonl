@@ -1,0 +1,14 @@
+{"detail":{"support":true},"event":"startup"}
+{"detail":{"allowed":true,"label":"main"},"event":"navigation"}
+{"detail":{"host_pid":17901,"pid":17908},"event":"renderer_kill_requested"}
+{"detail":{"pid":17908,"success":true},"event":"renderer_kill_result"}
+{"detail":{"id":"accept-kill-renderer"},"event":"menu_action"}
+{"detail":{"allowed":true,"label":"main"},"event":"navigation"}
+{"detail":{},"event":"main_renderer_reset"}
+{"detail":{"host_pid":17901,"pid":18478},"event":"renderer_kill_requested"}
+{"detail":{"pid":18478,"success":true},"event":"renderer_kill_result"}
+{"detail":{"id":"accept-kill-renderer"},"event":"menu_action"}
+{"detail":{"allowed":true,"label":"main"},"event":"navigation"}
+{"detail":{},"event":"main_renderer_reset"}
+{"detail":{"support":true},"event":"startup"}
+{"detail":{"allowed":true,"label":"main"},"event":"navigation"}

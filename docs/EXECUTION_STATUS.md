@@ -1,4 +1,230 @@
-# GitFleet completion execution status
+# Commit Command — current implementation and acceptance record
+
+Updated November 7, 2026. Reconciled against source at `db29ba6` and the dated
+reports below. This is the single maintained record of **current implementation,
+acceptance gaps and next work**. The specification and decision register define
+requirements; the crosswalk routes requirement IDs to code/tests; dated reports
+and validation artifacts preserve evidence. Older status statements do not override
+this record. Reconciliation does not accept new gates or change product scope.
+
+## Status meanings and availability
+
+- **Accepted within envelope:** the recorded milestone criteria passed only for
+  the documented environment and exclusions.
+- **Implemented / acceptance partial:** source exists and has automated and/or
+  selected native evidence; the full product criterion remains open.
+- **Not implemented:** required behavior still needs code and acceptance.
+- **Deferred / unsupported:** explicitly outside first-release scope or the
+  supported execution envelope; this is not a pass.
+- **Environment blocked:** a check could not exercise its intended behavior;
+  historical passes remain historical and are not replaced by a new pass.
+
+Ordinary desktop builds allow local inspection and app-state persistence, but
+reject trust/write/network execution in Rust. `desktop-writes` remains a non-default
+acceptance feature. Default Core builds expose no managed-repository writes.
+Local publication means a local ref advanced; it does not mean a server push.
+No push executor exists. Neither planning nor a completed hook check grants push
+authority. No default change, commit, push or release is authorized by this record.
+
+## Current capability and milestone disposition
+
+| Area | Current disposition | Evidence / remaining gate |
+|---|---|---|
+| P0 baseline | Accepted historical baseline | [P0 report](reports/P0_BASELINE_2026-11-02.md); current checks below do not replace the full baseline matrix |
+| M0–M1 Core inspection/workspaces | Implemented and accepted within recorded local envelope | [M1 contracts](architecture/M1_READ_ONLY_WORKSPACES.md), [M1 ledger](ACCEPTANCE_MATRIX.md#10-m1-acceptance-gates--completed-local-implementation); desktop/scale criteria remain separate |
+| M2 controlled stage/unstage/commit | Implemented and accepted within bounded macOS/APFS envelope | [M2 contracts](architecture/M2_CONTROLLED_WRITES.md), [M2 ledger](ACCEPTANCE_MATRIX.md#11-m2-acceptance-gates--controlled-writes); ordinary desktop exposure blocked by G01–G04 |
+| M3 desktop/lifecycle/reviews | Implemented; acceptance partial | [M3 ledger](ACCEPTANCE_MATRIX.md#12-m3-acceptance-gates--implementation-with-native-gates-open), [close/Quit](reports/M3_NATIVE_CLOSE_QUIT_2026-11-02.md), [review lifetime](reports/M3_REVIEW_LIFETIME_2026-11-02.md), [geometry](reports/M3_MIXED_DPI_WINDOW_RESTORE_2026-11-02.md); G01–G04 |
+| Branding/About | Selected automated/native visual acceptance passed | [Branding report](reports/COMMIT_COMMAND_BRANDING_ABOUT_2026-11-03.md); internal storage identifier preserved; release branding/signing work remains G11 |
+| M4 graph/activity/audit | Implemented; acceptance partial | [Graph/activity](reports/M4_READ_ONLY_PROGRESS_2026-11-02.md), [unified audit](reports/M4_UNIFIED_OPERATION_AUDIT_2026-11-02.md); G03, G10 |
+| M5A bulk local commits | Implemented; acceptance partial | [Bulk implementation](reports/M5A_LOCAL_BULK_PROGRESS_2026-11-02.md), [native bulk](reports/M5A_NATIVE_BULK_2026-11-02.md); G05 |
+| M5B inspection/authentication/fetch/upstream | Implemented for supported subset; acceptance partial | [Fetch native chain](reports/M5B_NATIVE_FETCH_ACCEPTANCE_2026-11-02.md), [authentication](reports/M5B_AUTHENTICATION_COMPATIBILITY_2026-11-02.md), [SSH](reports/M5B_SSH_AGENT_TRANSPORT_2026-11-02.md), [upstream](reports/M5B_GUARDED_UPSTREAM_2026-11-02.md); G06. Artifact initialization finding [fixed](reports/M5B_ARTIFACT_INITIALIZATION_FIX_2026-11-02.md) |
+| M5C push preview/child evidence/planning | Implemented; selected native acceptance passed | [Relative child evidence](reports/M5C_RELATIVE_CHILD_ACCEPTANCE_2026-11-02.md), [multi-level planning](reports/M5C_DEPENDENCY_PLANNING_2026-11-03.md), [native planner](reports/M5C_PLANNER_NATIVE_ACCEPTANCE_2026-11-03.md); G03, G06–G08 remain; no publication |
+| M5C independently reviewed pre-push hook check | Implemented; selected automated/native acceptance passed | [Check report](reports/M5C_REVIEWED_PUSH_CHECKS_2026-11-03.md); hook approval only, unpublished history/no replay; remaining native interruption/bypass/manager cases G06 |
+| M5C individual/bulk push publication | Not implemented | Exact publication authority, transport, rejection, uncertain outcome reconciliation and child-success coordination: G07–G08 |
+| M6 AI foundation | Not implemented | `app/core/src/ai/` contains only `.gitkeep`; profiles, providers, templates and exact context pipeline: G09 |
+| M7 AI commits / SemVer Actions | Not implemented | `app/core/src/actions/` contains only `.gitkeep`; deterministic recovery and separate bounded automatic authority: G09 |
+| M8 backup/retention/usability/release | Partial foundations only | Atomic storage, migrations and development bundles exist; general backup/restore, retention and release acceptance do not: G03, G10–G11 |
+
+## Open acceptance and implementation gates
+
+These stable gate IDs group the acceptance queue; they supplement, rather than
+renumber, original requirement IDs and M3-A criteria. G01 is **accepted within its
+recorded envelope**; G02–G11 remain **open**. Accepted rows remain here for traceability. Close a row only
+with criterion-level evidence, exact source/artifact/features where applicable,
+and explicit disposition of exclusions. A facility block is not a waiver.
+
+| Gate | Remaining work and closure evidence | Requirement / plan ownership |
+|---|---|---|
+| G01 — native authority/review fidelity | **Accepted within envelope, November 7:** remaining actual-webview caller/page/origin and pending/issued-confirmation reload cases passed using non-default native test support. Combined with prior exact-content/signing/lifecycle evidence, the enumerated G01 cases are closed. [Closure report](reports/G01_NATIVE_SUPPORT_G02_RECOVERY_2026-11-07.md). Accessibility, broader compatibility and ordinary write exposure remain G03/G06/G04. | M3-A12–A15; SEC-001–012, SEC-018–020; M3A/B |
+| G02 — lifecycle and recovery | **In progress, November 7:** actual main WebKit renderer loss with pending trust and issued commit confirmation now passed, including auto-reload, saved draft, cancellation, dialog reuse and restart/no replay. [Latest report](reports/G02_ACTUAL_RENDERER_LOSS_2026-11-07.md). Prior fallback and native publication-boundary recovery passes retained. Dock Quit is **facility blocked** by organization policy; system/session termination and remaining required phase-specific coverage stay open. | M3-A16–A17; SEC-013–017; WS-014; M3B |
+| G03 — accessibility, layouts and scale | Full VoiceOver/focus/review/dialog coverage, long/byte paths and large content, narrow/zoom layouts, display disconnect/reconfiguration, measured inventory/history/monitoring budgets. Selected contrast/theme/1×–2× geometry passes remain valid only for their recorded cases. | UI-001–005; M3-A04/06/07/19; M4; M8B |
+| G04 — ordinary write enablement | Reconcile all applicable safety prerequisites with G01–G03/G05–G06 and support exclusions, then obtain the explicit default-change decision. Validate the exact ordinary artifact with supported writes and independent approval. No current gate completion is inferred. | D-045; M3C; RELEASE-002 |
+| G05 — native bulk commit failures/dependencies | Actual submodule child-before-parent/fresh parent review, partial publication/failure, cancellation and reviewed retry of unfinished items; per-repo overrides and linked-worktree cases as applicable. Preserve successful/unselected content and do not replay published items. | GIT-013; BULK-001–007; M5A |
+| G06 — supported remote/check compatibility | Operator-assisted SecurityAgent Deny/Allow/unlock and lingering prompt dismissal; broader supported fetch/upstream topology/recovery cases; native running-hook interruption/crash and bypass/manager check interaction. Direct SCP port-22 acceptance remains facility blocked. Native planner cycle/accessibility/scale remains open. General OAuth/helper/agent support is not claimed. | M5B/C; PUSH-002; AUTHENTICATION.md; M8B |
+| G07 — individual push | Implement independent exact non-force publication approval, isolated transport, source/destination/auth/hook revalidation, rejection/drift handling, cancellation and durable uncertain-outcome reconciliation using fresh observation. Existing hook checks never become publication tokens. | PUSH-001/003/005/006; INV-009; M5C |
+| G08 — bulk push | Compose accepted individual push with fresh per-item authority, actual child availability before parents, no implicit child selection, cycle/block handling, partial-success preservation and fresh retry. Conditional planning is not remote success. | PUSH-004–006; INV-014; M5C |
+| G09 — AI and Actions | Implement M6 profiles/providers/templates/bounded exact context; M7 assisted candidates, deterministic SemVer preview/execution/recovery and separately bounded automatic authorization. Provider/model failures and imported definitions cannot broaden authority. | AI-001–017; ACT-001–003; INV-010–013; M6/M7 |
+| G10 — backup/portability/retention | Versioned export/import, consistent manual/rotating backups, previewed safe restore, malicious/interrupted archive tests and protection of unresolved recovery. Decide proposed 90-day history/ten-backup defaults before implementing cleanup. Migration backups alone do not meet this gate. | STATE-005–007; ACT-004; M4C/M8A |
+| G11 — reproducible release | Provision declared Git/Rust/signing prerequisites in CI and record actual results; resolve OS/architecture/tool delivery/identifier/signing/update policy; verify licenses/notices and exact packaged install/upgrade/migration/uninstall, signing/notarization and release invariants. A development bundle is not a release. | RELEASE-001–005; INV-001–015; M8C |
+
+### Latest G02 actual renderer-loss checkpoint — November 7, 2026
+
+[Renderer-loss report](reports/G02_ACTUAL_RENDERER_LOSS_2026-11-07.md) and
+[evidence](validation/g02-renderer-loss-2026-11-07/README.md) record two actual
+WebKit main-renderer terminations through a fixed native acceptance action targeting
+only the PID reported by the owned fixture WKWebView. Host survived, Tauri's normal
+termination handler reloaded main, and the existing reset path invalidated review
+authority. Pending trust granted nothing; an issued commit confirmation was
+cancelled before publication. The saved draft returned, a fresh OS dialog worked,
+and normal Quit/restart preserved state without replay. All four repositories'
+bytes/modes remained unchanged. No production lifecycle behavior changed.
+
+Full desktop validation passed: 69 renderer tests, 13 default / 16 all-feature host
+tests and all static/strict-Clippy/build checks. Default feature/artifact isolation
+and nonfixture refusal passed. No full Core/signing/remote matrix rerun is claimed.
+Dock access via Computer Use was denied by organization policy on `com.apple.dock`;
+no alternate UI driver was used. Dock remains blocked, system/session termination
+and further required phase-specific native cases remain open. Actual renderer loss
+is accepted only for the observed auto-reload path; persistent restart failure and
+unsaved keystroke durability are not established. Ordinary writes remain disabled.
+
+### Earlier G01 closure / G02 recovery — November 7, 2026 (historical)
+
+[Closure/recovery report](reports/G01_NATIVE_SUPPORT_G02_RECOVERY_2026-11-07.md),
+[G01 evidence](validation/g01-native-support-2026-11-07/README.md) and
+[G02 evidence](validation/g02-crash-boundaries-2026-11-07/README.md) close the
+remaining G01 live-native cases with fixed, non-default test support. Actual
+webviews rejected cross-caller IPC; wrong main page/origin navigations were denied.
+Real main reload invalidated pending trust and an issued native commit confirmation,
+with no unauthorized grant/publication and all repository bytes preserved.
+No IPC permission, independent-approval rule or default write policy changed.
+
+G02 additionally passed one suppressed close-delivery fallback with Keep app open,
+persisted draft and successful Quit retry, and actual native process SIGKILL at
+`publication_pending` / `reference_updated`. Restart did not replay either operation.
+Separately approved recovery aborted the first without publication and reconciled
+the already published second commit/index without creating a second commit.
+A refused incompatible crash fixture is recorded separately; Core's guard was
+not relaxed. Actual renderer-process loss and Dock/system termination remain open.
+
+Final checks passed: 69 renderer tests, 13 default / 15 all-feature host tests,
+24 Core application cases, the existing aggregate 13-checkpoint Core crash matrix,
+all desktop static/build/strict-Clippy checks, and default feature/artifact isolation.
+Native artifacts/source chronology and exclusions are explicit in the report.
+G01 acceptance is bounded; M3 overall, G02–G11 and ordinary write enablement stay open.
+
+### Earlier G01/G02 continuation — November 7, 2026 (historical)
+
+[Latest report](reports/G01_G02_CONFIRMATION_LIFECYCLE_2026-11-07.md) and
+[evidence](validation/g01-g02-2026-11-07/README.md) record three native lifecycle
+findings and fixes: synchronous confirmation blocked Quit, closing an async sheet's
+parent leaked its dialog lease, and replacement raced window-label teardown.
+Confirmation now uses a responsive native sheet, cancels that sheet explicitly on
+review teardown, and waits for Destroyed before revalidating/showing a replacement.
+No renderer authority, IPC command or write-default change was added.
+
+Actual native tests passed unusual filename/exact SSH-signed publication with a
+direct pre-commit hook, outstanding-confirmation Quit, workspace change followed
+by a fresh native dialog, main close with outstanding confirmation, and direct
+replacement with a different review ID and fresh native decline. Independent
+checks found exactly one fixture publication/hook run, five local operation records
+(one complete, four cancelled), no tooling trust grant and preserved excluded state.
+Full final desktop gate passed (69 renderer, 13 host per configuration and all
+static/build checks); Core application suite passed 24 cases. Generated private
+key removed and fixture processes exited. Ordinary writes remain disabled.
+
+At this earlier checkpoint G01 remained open for live renderer reset/reload and
+native caller/page adversarial cases; automated coverage is not substituted for those native cases. G02 remains
+open for missing-renderer fallback, Dock/system termination and additional recovery
+phases. Preserve earlier historical results and support exclusions; no full signing,
+crash, platform or release gate is closed by this continuation.
+
+### First G01 execution checkpoint — November 7, 2026
+
+[Acceptance report](reports/G01_REVIEW_AUTHORITY_2026-11-07.md) and
+[durable evidence](validation/g01-2026-11-07/README.md) record the first G01 pass.
+No production code or write default changed; two Core integration tests and expanded
+native origin assertions were added. The separate disposable native build published
+one explicitly approved local commit with exact hostile-text message/staged blob
+bytes and preserved excluded content. Decline, same-OID branch drift, replaced
+review and workspace change produced no additional publication. The fixture exited.
+
+This first checkpoint remains historical. The continuation above supersedes its
+then-open unusual-filename, selected signer/hook and outstanding-confirmation
+close/replacement observations. Mock-runtime/Core coverage is not relabeled as
+native acceptance. All gate-level dispositions are in the current rows above.
+
+### Supported scope and explicit deferrals
+
+First release is macOS; Linux/Windows are deferred by D-040 and are not accepted
+platforms. Controlled writes retain the M2 local APFS/files-ref/ordinary-index
+limits. Advanced indexes, unsupported hook managers/reference-transaction Execute,
+interactive/hardware-token signing, hostile same-user manipulation and OS/power-loss
+durability are not implicitly supported by process-crash tests. Non-UTF-8 filesystem
+acceptance remains unproven on the current host. See the M2 contract for exact rules.
+SSH uses the documented selected Ed25519 agent identity/strict known-host policy;
+HTTPS uses the documented scoped helper/TLS policy. Unsupported configurations must
+fail closed. Pull, branch mutations, destructive Git operations, hunk staging,
+individual hook toggles and arbitrary Actions remain deferred/outside v1.
+AI, SemVer Actions and backups remain in the approved product scope, not deferred.
+
+## Next work and exit conditions
+
+1. **Acceptance closure:** G01 is accepted within its recorded envelope. Continue
+   G02 with permitted Dock/system termination and remaining required phase-specific
+   cases, then G03/G05/G06; attach
+   criterion-level native evidence and classify facility blocks. Restore the full
+   reproducible automated matrix with isolated GPG and permitted local transport
+   fixtures. Do not reopen selected historical passes merely because an old intro
+   still lists them as untested. Ordinary writes stay disabled until G04 closes.
+2. **Next functional package — G07:** design and implement exact individual
+   non-force push and uncertain-outcome recovery. Validate with disposable local
+   remotes and loopback services, never a user repository or private server.
+3. **G08:** build bulk push on verified individual outcomes and fresh child-success
+   evidence. Exit only with partial-failure/retry and dependency acceptance.
+4. **G09:** AI foundation, deterministic Actions, then assisted/bounded automatic
+   commits, following the completion plan's separate authorization contracts.
+5. **G10–G11 and remaining G03:** complete state portability, measured usability and
+   exact macOS release acceptance. Strengthen backup primitives before later schema
+   migrations; do not postpone data safety until packaging.
+
+The user has authorized proceeding through acceptance steps and making a local
+Git commit after each completed, validated step. This includes committing the
+completed documentation/G01/G02 renderer-loss checkpoint. The queue does not
+itself change write defaults or authorize live services, pushes, release publication
+or deployment. Acceptance writes use only explicitly disposable fixtures.
+Organization-policy blocks remain blocks, not acceptance waivers.
+
+## Latest review validation — November 7, 2026
+
+These results were obtained during the preceding read-only project review at
+`db29ba6`, before this documentation reconciliation. They are a focused snapshot,
+not the full five-configuration/signing/crash/release gate. No native GUI acceptance
+was performed. Temporary raw logs are not durable release evidence.
+
+| Check | Observed result |
+|---|---|
+| Renderer tests | 69 passed across 18 files |
+| TypeScript, ESLint, generated contracts, frontend production build | Passed |
+| Native host tests, default configuration | 13 passed |
+| Core application integration | 21 passed |
+| Core units / bulk / graph / inspection / reads / workspaces | 22 / 11 / 5 / 11 / 16 / 15 passed; bulk subprocess and non-UTF-8 filesystem cases explicitly ignored |
+| Controlled-write integration | 24 passed, 1 failed: mandatory positive OpenPGP gate lacked `GITFLEET_TEST_GPG`; not a signing pass |
+| Remote inspection | 10 passed |
+| Remote observation | 52 passed, 29 failed, 2 ignored. HTTPS fixtures failed to bind loopback sockets (`Operation not permitted`); SSH fixtures timed out at startup. Transport acceptance remains unverified here |
+
+Historical passing matrices below remain evidence for their recorded sources and
+environments; this snapshot neither erases them nor attests the current release.
+Documentation-only validation for this reconciliation is recorded in the final
+change summary; application tests need rerunning only for subsequent code changes
+or unresolved acceptance work.
+
+## Historical checkpoint index — November 3, 2026
+
+The following original tracker is retained for provenance. Its counts, "next"
+labels and pending observations are dated; use the current tables above for work
+selection. Later reports listed here can supersede earlier checkpoint limitations.
+
 
 Updated November 3, 2026. Execution resumed under the user's fresh-chat authorization. Local checkpoint/milestone commits and reports are authorized; no push. Reasonable permission/facility blocks may be deferred; an unrun test is not a pass. Latest [native close/Quit report](reports/M3_NATIVE_CLOSE_QUIT_2026-11-02.md).
 

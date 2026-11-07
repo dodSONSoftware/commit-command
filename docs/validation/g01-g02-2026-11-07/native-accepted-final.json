@@ -1,0 +1,40 @@
+{
+  "stage": "accepted-final",
+  "hook_runs": 1,
+  "operations": [
+    {
+      "id": "3d27fc92-0e42-4e65-b9cb-7e2cfacd7920",
+      "phase": "complete",
+      "published": true,
+      "reason": null
+    },
+    {
+      "id": "f5f52a4d-60c7-4db6-94ad-30320cc934a7",
+      "phase": "cancelled_before_publication",
+      "published": false,
+      "reason": "Application review was cancelled or replaced; no execution was started"
+    },
+    {
+      "id": "67747957-5cf8-464b-82b6-bec0251bce71",
+      "phase": "cancelled_before_publication",
+      "published": false,
+      "reason": "Application review was cancelled or replaced; no execution was started"
+    },
+    {
+      "id": "6cb211b1-ed4d-4f64-a363-16c253350476",
+      "phase": "cancelled_before_publication",
+      "published": false,
+      "reason": "Application review was cancelled or replaced; no execution was started"
+    },
+    {
+      "id": "19c94cd4-7a12-4783-9c71-4117bce97697",
+      "phase": "cancelled_before_publication",
+      "published": false,
+      "reason": "Application review was cancelled or replaced; no execution was started"
+    }
+  ],
+  "signature_verification": "Good \"git\" signature for fixture@example.invalid with ED25519 key SHA256:hm6sI7CSk68e08z4LX3bgwB6xdu4dSFGco8MvtdNvLI\n",
+  "exact_selected_blob": true,
+  "excluded_index_and_worktrees_preserved": true,
+  "head": "d51352d574ed673f013d7b8c83dc23c5df7474a1"
+}

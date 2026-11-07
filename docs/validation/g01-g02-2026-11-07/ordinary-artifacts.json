@@ -1,0 +1,10 @@
+{
+  "restored_default_debug": {
+    "path": "/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri/target/debug/gitfleet-desktop",
+    "sha256": "68a0fa15cdf7ea2530f8ff5443c77fb456a4df02413873f440d1fedd35fa3c9a"
+  },
+  "default_release": {
+    "path": "/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri/target/release/gitfleet-desktop",
+    "sha256": "3b2e5936afcb7c6387984c604db7fe3e3906746db9aecd359be57fe9139b0434"
+  }
+}

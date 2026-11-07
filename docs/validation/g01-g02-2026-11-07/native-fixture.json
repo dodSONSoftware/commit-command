@@ -1,0 +1,15 @@
+{
+  "root": "/private/tmp/gitfleet-m3-native-pkjsf9j2",
+  "workspace_root": "/private/tmp/gitfleet-m3-native-pkjsf9j2/workspace",
+  "data_directory": "/private/tmp/gitfleet-m3-native-pkjsf9j2/state",
+  "workspace_id": "2366af34-fe68-42a1-8212-e3e27490335a",
+  "app_path": "/private/tmp/gitfleet-m3-native-pkjsf9j2/Commit Command G01 G02.app",
+  "binary_sha256": "0d230653c22281086753022287634b13b1b49bb0ab62a75ebb16f60149e06e4f",
+  "selected_name": "review\u202ename\n.txt",
+  "blob_sha256": "852acb515f3e0d53198fe4ece72806f88e422cce641784fe03873701db7afea8",
+  "expected_message": "G01 unusual filename with SSH signature\n\nExact reviewed bytes only.\n",
+  "hook_marker": "/private/tmp/gitfleet-m3-native-pkjsf9j2/hook-runs.txt",
+  "allowed_signers": "/private/tmp/gitfleet-m3-native-pkjsf9j2/allowed-signers",
+  "public_identity": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMqrGUTnplPZg/B6kzJrX0isQ+7F4BS76Y8QJNTrHHZJ randydodson@Randys-Mac-Studio.local",
+  "head_before": "3f241d9263c34a540b4b28cded3e217188ce43d5"
+}

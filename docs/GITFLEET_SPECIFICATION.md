@@ -1,5 +1,12 @@
 # GitFleet — Product and Technical Specification
 
+Current implementation, acceptance and next work are maintained in
+[EXECUTION_STATUS.md](EXECUTION_STATUS.md). This document defines requirements
+and decisions; dated implementation/authorization appendices preserve their
+original checkpoints and do not override the current record. Documentation
+reconciliation does not change the approved product scope.
+
+
 **Document version:** 1.0 — initial consolidated specification  
 **Date:** November 1, 2026  
 **Status:** Requirements baseline for review; not a declaration of production readiness  

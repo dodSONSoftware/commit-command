@@ -1,19 +1,18 @@
-# GitFleet desktop — M3 implementation, native acceptance pending
+# Commit Command desktop
 
-Tauri is a thin adapter to the existing, presentation-independent Core crate.
-The main React/TypeScript view and the dependency-minimal authoritative review
-view are separate bundles with separate command permissions. Core default builds
-remain read-only with respect to managed Git repositories.
+Tauri is a thin adapter to the presentation-independent Rust Core. Main and
+review bundles have separate command permissions. The application includes
+workspace inspection/monitoring, graph/activity/audit, controlled local/bulk commits,
+supported authentication/fetch/upstream and push preparation. Actual push execution,
+AI, Actions and general backup/release features remain unfinished.
 
-**M3 is not accepted as complete.** The earlier organization block on agent Computer
-Use is preserved in historical evidence. The [November 2 checkpoint](../../docs/M3_NATIVE_ACCEPTANCE_HANDOFF_2026-11-02.md)
-records later user-observed native read/write, approval, signing and restart results;
-these were not independently reproduced by the documenting agent. Actual cancellation,
-guarded recovery, close/forced-interruption and accessibility gates remain open.
-No policy bypass or ordinary-write enablement follows from those observations.
-The ordinary debug/release binary independently rejects desktop trust/write
-requests in Rust. Its write controls are disabled. Read-only recovery inspection
-is available, but its execution confirmation is also disabled.
+**Ordinary desktop trust/write/network execution remains disabled in Rust and UI.**
+`desktop-writes` is non-default and does not grant repository trust or operation
+approval. Read-only recovery inspection remains available; execution is gated.
+Use [the current record](../../docs/EXECUTION_STATUS.md) for remaining gates and
+next work. Selected native cancellation, recovery, close/Quit, theme and geometry
+cases have passed; broader acceptance remains partial. Checklists below retain
+dated details and must be read alongside the current record.
 
 ## Build and automated validation
 
@@ -46,6 +45,26 @@ origins are never accepted by the release caller checks.
 The dev identifier is provisional, not a release branding/signing decision. There
 is no installer, updater, notarization or distribution workflow. Local test `.app`
 bundles are development artifacts, not releases.
+
+## Fixed native acceptance support
+
+`native-acceptance-support` is a separate non-default test feature. It selects
+Core fault support but does not enable desktop writes. Build with
+`--features desktop-writes,native-acceptance-support` only for freshly generated,
+marked disposable fixtures. Startup rejects ordinary/unmarked state and checks
+initial workspace containment. The native menu provides fixed reload/caller/page
+probes, actual main-renderer termination on macOS, one-shot close-delivery
+suppression and two existing self-SIGKILL commit checkpoints. Renderer termination
+uses the owned WKWebView's runtime-checked private PID property only in this test
+feature; no caller-selected PID or general process endpoint is exposed. It adds no IPC permission or independent-approval bypass.
+
+Use the [closure/recovery report](../../docs/reports/G01_NATIVE_SUPPORT_G02_RECOVERY_2026-11-07.md)
+and linked evidence for exact artifact/fixture setup, Core's additional crash guard,
+results and exclusions. A suppressed acknowledgement is not an actual renderer
+crash. Actual renderer auto-reload acceptance is recorded in the
+[renderer-loss report](../../docs/reports/G02_ACTUAL_RENDERER_LOSS_2026-11-07.md).
+Ordinary default feature graphs/artifacts exclude this menu and Core test
+support. G01 is accepted within the documented envelope; G02 remains partial.
 
 ## Core and IPC contracts
 
@@ -80,7 +99,7 @@ and cannot promise rollback after publication.
 ## Native acceptance workflow — still required
 
 These steps require permitted native access or a human operator. They describe the
-full procedure; consult the [reconciled checklist](../../docs/M3_NATIVE_ACCEPTANCE_PLAN.md#results-checklist)
+full procedure; consult the [reconciled checklist](../../docs/M3_NATIVE_ACCEPTANCE_PLAN.md#historical-results-checklist)
 and November 2 checkpoint before repeating checks. User-observed cases remain distinct
 from agent verification. Renderer mocks cannot close the remaining native gates.
 

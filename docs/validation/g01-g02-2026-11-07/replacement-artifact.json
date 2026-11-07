@@ -1,0 +1,8 @@
+{
+  "app_path": "/private/tmp/gitfleet-m3-native-pkjsf9j2/Commit Command G01 G02 Replacement.app",
+  "sha256": "eba15016af246e2554d334729e55e9c26cdbff6a90a498a218d08d2404633cde",
+  "features": [
+    "custom-protocol",
+    "desktop-writes"
+  ]
+}

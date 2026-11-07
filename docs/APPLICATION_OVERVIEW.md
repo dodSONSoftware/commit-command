@@ -1,10 +1,12 @@
-# What GitFleet Is
+# What Commit Command Is
 
-Updated November 2, 2026. This document describes the application in this repository, separating implemented behavior from the intended finished product. It is an application overview, not a declaration that all features have passed acceptance or that GitFleet is ready for production use.
+Updated November 7, 2026. Current acceptance and next work are maintained in
+[EXECUTION_STATUS.md](EXECUTION_STATUS.md). This overview separates implemented
+capabilities from intended product features; it does not declare production readiness.
 
 ## The application in one paragraph
 
-**GitFleet is a local desktop workspace manager for developers working across multiple Git repositories.** You choose a directory containing your projects, and GitFleet discovers the repositories beneath it, presents their status together, and lets you inspect changes, commit history, and activity without opening each repository separately. Its controlled-write services support explicitly reviewed staging and commits, including batches across selected repositories. Those services are present in the code, but ordinary desktop builds keep trust grants, Git writes, and network execution disabled while acceptance work continues. The finished product is also intended to support separately approved fetch/push workflows, local AI assistance, and deterministic version-update Actions; those capabilities are unfinished.
+**Commit Command (formerly GitFleet) is a local desktop workspace manager for developers working across multiple Git repositories.** You choose a directory containing your projects, and GitFleet discovers the repositories beneath it, presents their status together, and lets you inspect changes, commit history, and activity without opening each repository separately. Its controlled-write services support explicitly reviewed staging and commits, including batches across selected repositories. Those services are present in the code, but ordinary desktop builds keep trust grants, Git writes, and network execution disabled while acceptance work continues. Supported separately reviewed observation, fetch download/import and upstream setup are implemented. Actual push publication, local AI assistance and deterministic version-update Actions remain unfinished.
 
 ## The problem it addresses
 
@@ -54,9 +56,11 @@ The following describes source capabilities. Feature availability and acceptance
 | Workspace activity | Timeline, activity lanes, and contribution heatmap derived from Git history, with filters and navigation into repository history. Activity lanes do not imply ancestry between unrelated repositories. |
 | Local controlled writes | Feature-gated full-file stage/unstage and selective commits, exact content/message review, trust checks, supported hook policies, signing, durable outcomes, and guarded recovery. |
 | Bulk local commits | Explicit selected-worktree batches, shared messages and per-repository choices, exclusions, index-only or working-content selection, dependency checks, and durable results. |
-| Operation records | Local operation phases and outcomes, batch results, and remote-observation history. Current desktop views expose these records; a unified audit projection also exists in Core. |
+| Operation records | Local operation phases and outcomes, batch results, and remote-observation history. Desktop views expose the unified audit chronology, filters and detailed records. |
 | Remote inspection | On-demand inspection of configured remotes, effective destinations, upstream settings, and policy issues, with sensitive URL fields redacted. This inspection does not contact servers. |
-| Remote branch observation | Feature-gated, independently reviewed observation of one exact remote branch in isolated transport storage. It records a timestamped object ID or absence without fetching into the managed repository. Native acceptance remains deferred. |
+| Remote branch observation | Feature-gated, independently reviewed observation of one exact remote branch in isolated transport storage. It records a timestamped object ID or absence without fetching into the managed repository. Selected native acceptance passed; broader supported compatibility remains open. |
+| Authentication and fetch | Named nonsecret HTTPS/SSH profiles and explicit assignments; reviewed authenticated observation, isolated verified bundle download, separately reviewed offline import/tracking-ref update, and guarded missing-only upstream setup. Ordinary execution remains gated. |
+| Push preparation | Local outgoing-history preview, historical gitlink mappings, explicit child reachability evidence, multi-level dependency planning and separately reviewed pre-push hook checks. None publishes commits to a server. |
 | Desktop state | Saved navigation, tabs, drafts, bulk composer preferences, theme, and panel/window state, with close/restart handling. |
 
 The Core also supplies a headless inspection CLI. A separate feature-gated interactive write CLI and disposable test tools exercise the controlled-write services; the ordinary inspection CLI exposes no Git mutation command. Its `commit` command reads a historical commit.
@@ -118,12 +122,12 @@ The initial desktop target is macOS. Portable Core design and cross-platform dep
 
 The specification describes a broader product than the current executable. Outstanding capabilities include:
 
-- Explicit fetch, authenticated remote transport, individual and bulk push, and guided upstream setup.
-- Remote dependency/reachability checks and uncertain push-outcome recovery.
+- Actual separately reviewed individual and bulk push publication, server rejection handling and uncertain push-outcome recovery.
+- Remaining native acceptance for implemented fetch/authentication/upstream and dependency planning/check workflows.
 - Local AI profiles, model discovery, commit-message candidates, templates, and context inspection.
 - User-initiated, bounded, explicitly authorized AI automatic commits.
 - Deterministic GitFleet Actions, initially version updates for supported SemVer files.
-- Hunk staging, broader hook compatibility, and additional accessibility/scale acceptance.
+- Additional accessibility/scale acceptance and clearly documented supported hook compatibility. Hunk staging and individual hook toggles remain post-v1.
 - Backup/import/export and retention interfaces, release packaging, signing/notarization, and distribution acceptance.
 
 GitFleet is a developer tool running on the local machine. It does not currently provide a cloud service, hosting platform, general coding agent, background auto-commit daemon, or full Git conflict-resolution suite. AI output, when implemented, will remain separate from authorization to change files or execute Git operations.
@@ -132,7 +136,7 @@ GitFleet is a developer tool running on the local machine. It does not currently
 
 The project is under active development. Package manifests identify Core and desktop as version `0.1.1`; this is not a production-readiness claim. The execution tracker records automated coverage and selected native acceptance across desktop lifecycle, graph/activity, local batches, and remote inspection. Broader native lifecycle, accessibility, scale, remote, and release gates remain open, and ordinary desktop writes remain disabled.
 
-Some repository introductions and historical milestone documents describe older checkpoints. Use the current execution tracker and specific reports for acceptance evidence, and the implementation for capability details. This overview was prepared by inspecting source, manifests, contracts, and documentation; no build, test suite, or native application acceptance run was performed to create it. Uncommitted implementation work present during inspection is not a released or fully validated feature.
+Some repository introductions and historical milestone documents describe older checkpoints. Use the current execution tracker and specific reports for acceptance evidence, and the implementation for capability details. The current record contains the November 7 focused validation results and environment blocks. Historical native reports attest only their recorded source/artifacts; implementation is not release acceptance.
 
 ## Further reading
 
