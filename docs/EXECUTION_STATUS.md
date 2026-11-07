@@ -56,7 +56,7 @@ and explicit disposition of exclusions. A facility block is not a waiver.
 | Gate | Remaining work and closure evidence | Requirement / plan ownership |
 |---|---|---|
 | G01 — native authority/review fidelity | **Accepted within envelope, November 7:** remaining actual-webview caller/page/origin and pending/issued-confirmation reload cases passed using non-default native test support. Combined with prior exact-content/signing/lifecycle evidence, the enumerated G01 cases are closed. [Closure report](reports/G01_NATIVE_SUPPORT_G02_RECOVERY_2026-11-07.md). Accessibility, broader compatibility and ordinary write exposure remain G03/G06/G04. | M3-A12–A15; SEC-001–012, SEC-018–020; M3A/B |
-| G02 — lifecycle and recovery | **In progress, November 7:** actual main WebKit renderer loss with pending trust and issued commit confirmation now passed, including auto-reload, saved draft, cancellation, dialog reuse and restart/no replay. [Latest report](reports/G02_ACTUAL_RENDERER_LOSS_2026-11-07.md). Prior fallback and native publication-boundary recovery passes retained. Dock Quit is **facility blocked** by organization policy; system/session termination and remaining required phase-specific coverage stay open. | M3-A16–A17; SEC-013–017; WS-014; M3B |
+| G02 — lifecycle and recovery | **In progress:** actual main renderer loss and publication-boundary recovery passed; direct AppKit termination now routes through guarded shutdown. Native missing-delivery Keep app open/retry, forwarding, restart and clean direct exit passed ([fix report](reports/G02_GUARDED_APPKIT_TERMINATION_2026-11-07.md)). Dock remains policy blocked; direct termination with unanswered OS sheet, session logout/restart and remaining active-execution combinations remain open. | M3-A16–A17; SEC-013–017; WS-014; M3B |
 | G03 — accessibility, layouts and scale | Full VoiceOver/focus/review/dialog coverage, long/byte paths and large content, narrow/zoom layouts, display disconnect/reconfiguration, measured inventory/history/monitoring budgets. Selected contrast/theme/1×–2× geometry passes remain valid only for their recorded cases. | UI-001–005; M3-A04/06/07/19; M4; M8B |
 | G04 — ordinary write enablement | Reconcile all applicable safety prerequisites with G01–G03/G05–G06 and support exclusions, then obtain the explicit default-change decision. Validate the exact ordinary artifact with supported writes and independent approval. No current gate completion is inferred. | D-045; M3C; RELEASE-002 |
 | G05 — native bulk commit failures/dependencies | Actual submodule child-before-parent/fresh parent review, partial publication/failure, cancellation and reviewed retry of unfinished items; per-repo overrides and linked-worktree cases as applicable. Preserve successful/unselected content and do not replay published items. | GIT-013; BULK-001–007; M5A |
@@ -67,7 +67,26 @@ and explicit disposition of exclusions. A facility block is not a waiver.
 | G10 — backup/portability/retention | Versioned export/import, consistent manual/rotating backups, previewed safe restore, malicious/interrupted archive tests and protection of unresolved recovery. Decide proposed 90-day history/ten-backup defaults before implementing cleanup. Migration backups alone do not meet this gate. | STATE-005–007; ACT-004; M4C/M8A |
 | G11 — reproducible release | Provision declared Git/Rust/signing prerequisites in CI and record actual results; resolve OS/architecture/tool delivery/identifier/signing/update policy; verify licenses/notices and exact packaged install/upgrade/migration/uninstall, signing/notarization and release invariants. A development bundle is not a release. | RELEASE-001–005; INV-001–015; M8C |
 
-### G02 direct AppKit termination diagnostic — November 7, 2026
+### Latest G02 guarded native termination — November 7, 2026
+
+[Fix/retest report](reports/G02_GUARDED_APPKIT_TERMINATION_2026-11-07.md) records
+public applicationShouldTerminate interception into the existing save/cancel/Core
+shutdown handshake, with original Tao delegate forwarding. Native missing-delivery
+fallback now supports Keep app open and a successful direct termination retry;
+restart restored the draft, representative forwarding probe passed and clean direct
+termination exited 0. All repository bytes/modes remained identical, zero grants/
+operations. Full desktop gate passed (69 renderer, 13 default / 16 all-feature host,
+static/Clippy/debug/release checks). Ordinary writes remain disabled.
+
+G02 remains open for Dock Quit (policy blocked), unanswered-sheet direct native
+termination (request did not reach the decision callback), operator-controlled
+session logout/restart and remaining active-execution combinations with G06.
+Do not substitute own-app fixture requests for actual Dock/session evidence.
+Completed checkpoint commits: `aad07d2` (G01/renderer recovery) and `904a8e5`
+(direct termination diagnostic); the validated fix is recorded by the commit
+containing this checkpoint.
+
+### G02 direct AppKit termination diagnostic — November 7, 2026 (historical)
 
 [Diagnostic report](reports/G02_APPKIT_TERMINATION_2026-11-07.md) records a corrected
 native terminate request that exited while bypassing the guarded close handshake.

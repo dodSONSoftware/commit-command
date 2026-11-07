@@ -30,6 +30,9 @@ passed the auto-reload path with pending/issued confirmation and saved draft.
 G02 still requires permitted Dock/system termination and remaining phase coverage;
 Dock access is organization-policy blocked. Injected close-delivery fallback and
 selected native host crash/recovery remain separate passes.
+The subsequent [native termination fix](reports/G02_GUARDED_APPKIT_TERMINATION_2026-11-07.md)
+accepts selected direct AppKit fallback/retry/restart cases; unanswered-sheet direct
+termination, actual Dock and session termination remain distinct open cases.
 Current gate dispositions remain in EXECUTION_STATUS.
 
 ## Safety, execution and evidence rules

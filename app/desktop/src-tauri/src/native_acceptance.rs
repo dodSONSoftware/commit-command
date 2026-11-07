@@ -188,6 +188,7 @@ pub(super) fn install(app: &tauri::AppHandle, host: Arc<Host>) -> tauri::Result<
     let submenu = Submenu::new(app, "Native acceptance", true)?;
     for (id, label) in [
         ("accept-reload", "Reload main renderer"),
+        ("accept-delegate-probe", "Probe native delegate forwarding"),
         (
             "accept-appkit-terminate",
             "Request direct AppKit termination",
@@ -222,6 +223,10 @@ pub(super) fn install(app: &tauri::AppHandle, host: Arc<Host>) -> tauri::Result<
         let result: Result<(), String> = (|| {
             match id {
                 "accept-reload" => { record("reload_requested",json!({})); main.ok_or("Main missing")?.reload().map_err(|e| e.to_string())?; }
+                "accept-delegate-probe" => {
+                    #[cfg(target_os = "macos")]
+                    app.run_on_main_thread(super::native_termination::probe_forwarding).map_err(|e|e.to_string())?;
+                }
                 "accept-appkit-terminate" => request_appkit_termination(app)?,
                 "accept-kill-renderer" => terminate_main_renderer(&main.ok_or("Main missing")?)?,
                 "accept-main-probe" => main.ok_or("Main missing")?.eval(probe("review_confirm", r#"{review:'native-acceptance-no-authority'}"#, "main-review")).map_err(|e| e.to_string())?,

@@ -3,6 +3,8 @@ mod host_options;
 #[cfg(feature = "native-acceptance-support")]
 mod native_acceptance;
 mod native_dialog;
+#[cfg(target_os = "macos")]
+mod native_termination;
 use native_dialog::close_review;
 mod security;
 mod shutdown;
@@ -841,6 +843,8 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                     }
                 });
             }
+            #[cfg(target_os = "macos")]
+            native_termination::install(app.handle().clone(), setup_host.clone())?;
             #[cfg(feature = "native-acceptance-support")]
             native_acceptance::install(app.handle(), setup_host.clone())?;
             let page_host = setup_host.clone();

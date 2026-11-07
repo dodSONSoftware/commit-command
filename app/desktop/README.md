@@ -161,3 +161,9 @@ See [M3 contracts](../../docs/architecture/M3_DESKTOP_AND_IPC.md),
 [current status](../../docs/IMPLEMENTATION_STATUS.md),
 [handoff](../../docs/IMPLEMENTATION_HANDOFF.md), and
 [evidence](../../docs/validation/m3/README.md).
+
+MacOS native termination also enters guarded shutdown through an application-delegate
+wrapper that forwards Tao's other callbacks. Direct termination fallback/retry and
+restart have selected native evidence; actual Dock/session and unanswered-sheet
+termination retain separate open cases. See the
+[termination fix report](../../docs/reports/G02_GUARDED_APPKIT_TERMINATION_2026-11-07.md).

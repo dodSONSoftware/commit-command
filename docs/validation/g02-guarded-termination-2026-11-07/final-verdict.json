@@ -1,0 +1,13 @@
+{
+  "repository_bytes_modes_preserved": true,
+  "trust_rows": 0,
+  "operations": 0,
+  "saved_draft_preserved": true,
+  "direct_termination_fallback_keep_open_and_retry_observed": true,
+  "restart_observed": true,
+  "delegate_forward_probe_passed": true,
+  "fixed_fallback_retry_exit_code": 0,
+  "fixed_clean_direct_exit_code": 0,
+  "sheet_context_cleanup_cmd_q_exit_code": 0,
+  "sheet_context_direct_termination": "not observed entering decision callback; remains open"
+}

@@ -1,0 +1,10 @@
+{
+  "debug": {
+    "sha256": "49c10dda90ddb7288a9c48ba574fef18de010fc4822ce05dc6c6ead49b54a446",
+    "test_menu_and_private_pid_selector_absent": true
+  },
+  "release": {
+    "sha256": "ab60b56c32e104265c50c8cbec1a350db8d4ad1dd7491bef916e56e53d2e135f",
+    "test_menu_and_private_pid_selector_absent": true
+  }
+}
