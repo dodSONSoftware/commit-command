@@ -1,0 +1,7 @@
+{"detail":{"support":true},"event":"startup"}
+{"detail":{"allowed":true,"label":"main"},"event":"navigation"}
+{"detail":{},"event":"close_ack_fault_armed"}
+{"detail":{"id":"accept-drop-ack"},"event":"menu_action"}
+{"detail":{},"event":"appkit_terminate_requested"}
+{"detail":{"id":"accept-appkit-terminate"},"event":"menu_action"}
+{"detail":{},"event":"appkit_terminate_requested"}

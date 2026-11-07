@@ -110,6 +110,33 @@ fn probe(command: &str, args: &str, name: &str) -> String {
     }})()"#
     )
 }
+// Exercise AppKit's termination entry point, separately from the blocked Dock UI.
+#[cfg(target_os = "macos")]
+fn request_appkit_termination(app: &tauri::AppHandle) -> Result<(), String> {
+    app.run_on_main_thread(|| {
+        let Some(main_thread) = objc2::MainThreadMarker::new() else {
+            record("appkit_terminate_unavailable", json!({}));
+            return;
+        };
+        record("appkit_terminate_requested", json!({}));
+        let application = objc2_app_kit::NSApplication::sharedApplication(main_thread);
+        // AppKit must run this after Tauri releases its event-callback lock.
+        // SAFETY: NSObject's run-loop selector API schedules the owned NSApplication's
+        // fixed terminate: method with a nil sender. No external selector/argument exists.
+        unsafe {
+            let _: () = objc2::msg_send![&*application,
+                performSelector: objc2::sel!(terminate:),
+                withObject: std::ptr::null::<objc2::runtime::AnyObject>(),
+                afterDelay: 0_f64
+            ];
+        }
+    })
+    .map_err(|error| error.to_string())
+}
+#[cfg(not(target_os = "macos"))]
+fn request_appkit_termination(_: &tauri::AppHandle) -> Result<(), String> {
+    Err("AppKit termination acceptance is macOS-only".into())
+}
 // WebKit's private PID property is used only by this opt-in fixture facility.
 // It is checked at runtime; no PID, selector, or signal is supplied by a renderer.
 #[cfg(target_os = "macos")]
@@ -162,6 +189,10 @@ pub(super) fn install(app: &tauri::AppHandle, host: Arc<Host>) -> tauri::Result<
     for (id, label) in [
         ("accept-reload", "Reload main renderer"),
         (
+            "accept-appkit-terminate",
+            "Request direct AppKit termination",
+        ),
+        (
             "accept-kill-renderer",
             "Terminate actual main renderer process",
         ),
@@ -191,6 +222,7 @@ pub(super) fn install(app: &tauri::AppHandle, host: Arc<Host>) -> tauri::Result<
         let result: Result<(), String> = (|| {
             match id {
                 "accept-reload" => { record("reload_requested",json!({})); main.ok_or("Main missing")?.reload().map_err(|e| e.to_string())?; }
+                "accept-appkit-terminate" => request_appkit_termination(app)?,
                 "accept-kill-renderer" => terminate_main_renderer(&main.ok_or("Main missing")?)?,
                 "accept-main-probe" => main.ok_or("Main missing")?.eval(probe("review_confirm", r#"{review:'native-acceptance-no-authority'}"#, "main-review")).map_err(|e| e.to_string())?,
                 "accept-review-probe" => app.get_webview_window("review").ok_or("Review missing")?.eval(probe("dispatch", r#"{payload:JSON.stringify({version:1,epoch:0,request:{kind:'workspaces'}})}"#, "review-main")).map_err(|e| e.to_string())?,

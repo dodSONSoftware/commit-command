@@ -67,6 +67,17 @@ and explicit disposition of exclusions. A facility block is not a waiver.
 | G10 — backup/portability/retention | Versioned export/import, consistent manual/rotating backups, previewed safe restore, malicious/interrupted archive tests and protection of unresolved recovery. Decide proposed 90-day history/ten-backup defaults before implementing cleanup. Migration backups alone do not meet this gate. | STATE-005–007; ACT-004; M4C/M8A |
 | G11 — reproducible release | Provision declared Git/Rust/signing prerequisites in CI and record actual results; resolve OS/architecture/tool delivery/identifier/signing/update policy; verify licenses/notices and exact packaged install/upgrade/migration/uninstall, signing/notarization and release invariants. A development bundle is not a release. | RELEASE-001–005; INV-001–015; M8C |
 
+### G02 direct AppKit termination diagnostic — November 7, 2026
+
+[Diagnostic report](reports/G02_APPKIT_TERMINATION_2026-11-07.md) records a corrected
+native terminate request that exited while bypassing the guarded close handshake.
+An armed missing-close-delivery fault was never consumed; no fallback appeared.
+No repository mutation, grant or operation occurred. This is a failed graceful
+termination criterion, not acceptance. A first test-control reentrancy hang was
+identified separately by stack sample and corrected through run-loop scheduling.
+Next: intercept the cancellable AppKit termination decision and route it into the
+existing shutdown handshake, then natively retest. Dock remains policy blocked.
+
 ### Latest G02 actual renderer-loss checkpoint — November 7, 2026
 
 [Renderer-loss report](reports/G02_ACTUAL_RENDERER_LOSS_2026-11-07.md) and

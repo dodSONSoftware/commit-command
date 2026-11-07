@@ -1,0 +1,9 @@
+{
+  "normal_shutdown_handshake_observed": false,
+  "fault_armed_but_not_consumed": true,
+  "native_host_exit_code": 0,
+  "repository_bytes_modes_preserved": true,
+  "trust_rows": 0,
+  "operations": 0,
+  "disposition": "direct termination bypasses guarded shutdown; G02 remains open"
+}
