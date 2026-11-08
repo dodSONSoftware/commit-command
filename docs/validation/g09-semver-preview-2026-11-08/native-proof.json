@@ -1,0 +1,12 @@
+{
+  "managed_bytes_modes_exact": true,
+  "version_bytes_and_crlf_unchanged": true,
+  "trust_and_old_operations_remote_journals_exact": true,
+  "control_still_untrusted": true,
+  "manual_draft_preserved_after_refusal_and_restart": true,
+  "source_artifact_hashes_verified": true,
+  "integrity": "ok",
+  "writer_lock_reopened": true,
+  "native_first_exit": 0,
+  "native_restart_exit": 0
+}

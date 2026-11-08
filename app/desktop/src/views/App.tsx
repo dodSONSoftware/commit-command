@@ -1,3 +1,4 @@
+import { VersionAction } from "./VersionAction";
 import {
   useCallback,
   useEffect,
@@ -1609,6 +1610,14 @@ function Repository({
             <div className="section-title">
               <h2>Commit composer</h2>
             </div>
+            <VersionAction
+              key={entry.id}
+              bridge={bridge}
+              workspace={workspace}
+              worktree={entry.id}
+              busy={busy}
+              act={act}
+            />
             <label>
               Inspector width
               <input

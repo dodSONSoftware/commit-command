@@ -1165,6 +1165,13 @@ mod tests {
             worktree: "t".into(),
             observation: "o".into()
         }));
+        assert!(!mutating_request(&Request::PreviewVersionFile {
+            workspace: "w".into(),
+            worktree: "t".into(),
+            path: gitfleet_core::domain::NativePath::Utf8("version".into()),
+            increment: gitfleet_core::actions::semver::Increment::Patch,
+            prerelease: gitfleet_core::actions::semver::PrereleasePolicy::Reject,
+        }));
         assert!(!mutating_request(&serde_json::from_value::<Request>(json!({
             "kind":"child_reachability", "workspace":"ws", "worktree":"parent",
             "selection":{

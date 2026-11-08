@@ -1,0 +1,18 @@
+{
+  "core_default": {
+    "passed": 66,
+    "ignored": 1,
+    "failed": 0
+  },
+  "core_application": {
+    "passed": 29,
+    "ignored": 0,
+    "failed": 0
+  },
+  "desktop": {
+    "renderer": 104,
+    "ordinary_host": 14,
+    "all_feature_host": 17,
+    "runner_exit": 0
+  }
+}

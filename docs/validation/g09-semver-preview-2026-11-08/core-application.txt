@@ -1,0 +1,10 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.41s
+     Running tests/m3_application.rs (app/core/target/debug/deps/m3_application-0302a75ece9818d8)
+
+running 2 tests
+test deterministic_version_preview_needs_no_trust_or_provider_and_preserves_drafts_and_git ... ok
+test version_preview_rejects_unsafe_files_and_crossing_repository_boundaries ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 27 filtered out; finished in 1.74s
+

@@ -7,6 +7,20 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G09 provider-free SemVer preview — implemented, selected acceptance passed
+
+[SemVer preview checkpoint](reports/G09_SEMVER_PREVIEW_2026-11-08.md): explicit
+read-only major/minor/patch preview now works in the ordinary composer without AI
+or trust. Strict plain-value syntax, LF/CRLF preservation, explicit prerelease policy,
+input bounds, unsafe-path/nested-repository refusal and frozen before/after comparison
+are implemented. No Action execution/staging/approval is implied. Focused 4 parser
+and 2 application tests, complete default 66 / application 29, strict Core Clippy,
+full desktop 104 / 14 / 17 and checks passed. Native ordinary untrusted preview,
+invalid-path refusal, manual draft persistence across restart, no preview replay,
+exact bytes/modes/old journals/trust, exits/integrity/lock and hashes passed.
+G09 remains open: durable approved invocation/execution/staging/recovery is next;
+AI providers/profiles/context/candidates/automatic authority remain unimplemented.
+
 ### November 8 G08 guided push queue — implemented, selected acceptance passed
 
 [Guided queue checkpoint](reports/G08_GUIDED_PUSH_QUEUE_2026-11-08.md): durable
@@ -656,7 +670,7 @@ authority. No default change, commit, push or release is authorized by this reco
 | M5C individual push publication | Implemented; selected acceptance passed | Separate exact native publication, isolated ancestry/expected-old transport and observation recovery; broader G07 acceptance remains |
 | M5C bulk push publication | Guided per-item queue implemented; selected automated/native acceptance passed | Durable child-first scheduling, fresh post-child evidence, partial stop/retry and no-replay restart; [G08 report](reports/G08_GUIDED_PUSH_QUEUE_2026-11-08.md); broader acceptance remains |
 | M6 AI foundation | Not implemented | `app/core/src/ai/` contains only `.gitkeep`; profiles, providers, templates and exact context pipeline: G09 |
-| M7 AI commits / SemVer Actions | Not implemented | `app/core/src/actions/` contains only `.gitkeep`; deterministic recovery and separate bounded automatic authority: G09 |
+| M7 AI commits / SemVer Actions | Read-only provider-free SemVer preview implemented; execution and AI commits pending | [G09 preview report](reports/G09_SEMVER_PREVIEW_2026-11-08.md); approved invocation, file/staging recovery and separately bounded AI authority remain |
 | M8 backup/retention/usability/release | Partial foundations only | Atomic storage, migrations and development bundles exist; general backup/restore, retention and release acceptance do not: G03, G10–G11 |
 
 ## Open acceptance and implementation gates
@@ -1026,8 +1040,9 @@ AI, SemVer Actions and backups remain in the approved product scope, not deferre
 3. **G08 remaining acceptance:** guided per-item coordination now has selected
    dependency/partial-stop/fresh-retry evidence. Expand native uninterrupted multi-level,
    authenticated topology, phase-specific interruption and usability coverage.
-4. **G09:** AI foundation, deterministic Actions, then assisted/bounded automatic
-   commits, following the completion plan's separate authorization contracts.
+4. **G09:** finish durable approved SemVer invocation/execution/staging/recovery on
+   the provider-free preview, then AI configuration/transport/context and assisted/
+   bounded automatic commits under separate authorization contracts.
 5. **G10–G11 and remaining G03:** complete state portability, measured usability and
    exact macOS release acceptance. Strengthen backup primitives before later schema
    migrations; do not postpone data safety until packaging.

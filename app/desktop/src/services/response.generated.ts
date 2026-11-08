@@ -6,6 +6,11 @@
  */
 export type Data =
   | {
+      kind: "version_preview";
+      value: VersionPreview;
+      [k: string]: unknown;
+    }
+  | {
       kind: "authentication_settings";
       value: Settings;
       [k: string]: unknown;
@@ -149,6 +154,18 @@ export type Data =
       kind: "done";
       [k: string]: unknown;
     };
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "Increment".
+ */
+export type Increment = "major" | "minor" | "patch";
+/**
+ * Prerelease handling is explicit, never inferred from a model or silently finalized.
+ *
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "PrereleasePolicy".
+ */
+export type PrereleasePolicy = "reject" | "discard_and_increment";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "ProfilePolicy".
@@ -527,6 +544,20 @@ export interface Response {
   epoch: number;
   version: number;
   [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "VersionPreview".
+ */
+export interface VersionPreview {
+  after: number[];
+  after_hash: string;
+  before: number[];
+  before_hash: string;
+  increment: Increment;
+  new: string;
+  old: string;
+  prerelease: PrereleasePolicy;
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema

@@ -2,6 +2,14 @@
 
 export type Request =
   | {
+      increment: Increment;
+      kind: "preview_version_file";
+      path: NativePath;
+      prerelease: PrereleasePolicy;
+      workspace: string;
+      worktree: string;
+    }
+  | {
       kind: "authentication_settings";
     }
   | {
@@ -275,6 +283,30 @@ export type Request =
       operation: string;
       workspace: string;
     };
+export type Increment = "major" | "minor" | "patch";
+/**
+ * `display` is never used to reconstruct a path. Byte/wide encodings round-trip.
+ */
+export type NativePath =
+  | {
+      encoding: "utf8";
+      value: string;
+      [k: string]: unknown;
+    }
+  | {
+      encoding: "unix_bytes";
+      value: number[];
+      [k: string]: unknown;
+    }
+  | {
+      encoding: "windows_wide";
+      value: number[];
+      [k: string]: unknown;
+    };
+/**
+ * Prerelease handling is explicit, never inferred from a model or silently finalized.
+ */
+export type PrereleasePolicy = "reject" | "discard_and_increment";
 export type Change =
   | {
       id?: string | null;
@@ -359,25 +391,6 @@ export type Phase =
   | "published_with_post_processing_failure"
   | "needs_manual_reconciliation"
   | "uncertain_outcome";
-/**
- * `display` is never used to reconstruct a path. Byte/wide encodings round-trip.
- */
-export type NativePath =
-  | {
-      encoding: "utf8";
-      value: string;
-      [k: string]: unknown;
-    }
-  | {
-      encoding: "unix_bytes";
-      value: number[];
-      [k: string]: unknown;
-    }
-  | {
-      encoding: "windows_wide";
-      value: number[];
-      [k: string]: unknown;
-    };
 export type HookPolicy = "execute" | "bypass_all";
 export type BatchMode = "review_all" | "index_only";
 export type SigningPreference = "configured" | "unsigned";

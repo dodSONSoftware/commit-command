@@ -1,6 +1,7 @@
 //! Headless inspection, separately gated controlled writes and a disposable commit experiment.
 //! See `docs/architecture/core-poc/LIMITATIONS.md` at the project root.
 
+pub mod actions;
 pub mod activity;
 #[cfg(feature = "experimental-writes")]
 pub mod commit;

@@ -2086,3 +2086,114 @@ fn inventory_exposes_scan_level_and_repository_inspection_failures_and_cache_ski
     };
     assert_eq!(view.scan.unwrap().issues.len(), 2);
 }
+
+#[test]
+fn deterministic_version_preview_needs_no_trust_or_provider_and_preserves_drafts_and_git() {
+    use gitfleet_core::actions::semver::{Increment, PrereleasePolicy};
+    let (f, mut app, ws, wt) = setup();
+    fs::write(f.repo.join("version"), b"1.4.2\r\n").unwrap();
+    let mut state = DesktopState::default();
+    state
+        .drafts
+        .insert(wt.clone(), "My manually composed message".into());
+    app.request(
+        app.epoch(),
+        Request::SaveState {
+            workspace: ws.clone(),
+            state: state.clone(),
+        },
+    )
+    .unwrap();
+    let before = tree_bytes(&f.repo);
+    let Data::VersionPreview(value) = app
+        .request(
+            app.epoch(),
+            Request::PreviewVersionFile {
+                workspace: ws.clone(),
+                worktree: wt.clone(),
+                path: NativePath::Utf8("version".into()),
+                increment: Increment::Patch,
+                prerelease: PrereleasePolicy::Reject,
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert_eq!(value.old, "1.4.2");
+    assert_eq!(value.new, "1.4.3");
+    assert_eq!(value.after, b"1.4.3\r\n");
+    assert_eq!(before, tree_bytes(&f.repo));
+    let Data::State(saved) = app
+        .request(
+            app.epoch(),
+            Request::LoadState {
+                workspace: ws.clone(),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert_eq!(saved.drafts, state.drafts);
+    let Data::Trust(trust) = app
+        .request(app.epoch(), Request::TrustStatus { workspace: ws })
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert_eq!(
+        trust.iter().find(|t| t.worktree == wt).unwrap().grant,
+        "untrusted"
+    );
+}
+#[test]
+fn version_preview_rejects_unsafe_files_and_crossing_repository_boundaries() {
+    use gitfleet_core::actions::semver::{Increment, PrereleasePolicy};
+    let (f, mut app, ws, wt) = setup();
+    fs::write(f.root.join("outside-version"), b"1.2.3").unwrap();
+    std::os::unix::fs::symlink(
+        f.root.join("outside-version"),
+        f.repo.join("linked-version"),
+    )
+    .unwrap();
+    std::os::unix::fs::symlink(&f.root, f.repo.join("linked-dir")).unwrap();
+    fs::create_dir(f.repo.join("nested")).unwrap();
+    fs::write(f.repo.join("nested/.git"), b"gitdir: unused").unwrap();
+    fs::write(f.repo.join("nested/version"), b"1.2.3").unwrap();
+    fs::write(f.repo.join("binary-version"), [255]).unwrap();
+    fs::write(f.repo.join("oversized-version"), vec![b'1'; 1025]).unwrap();
+    fs::write(f.repo.join("malformed-version"), b"1.2.3\n2.3.4\n").unwrap();
+    let before = tree_bytes(&f.repo);
+    for path in [
+        "../outside-version",
+        "/tmp/outside-version",
+        ".git/HEAD",
+        "linked-version",
+        "linked-dir/outside-version",
+        "nested/version",
+        "binary-version",
+        "oversized-version",
+        "malformed-version",
+        "missing-version",
+    ] {
+        assert!(
+            app.request(
+                app.epoch(),
+                Request::PreviewVersionFile {
+                    workspace: ws.clone(),
+                    worktree: wt.clone(),
+                    path: NativePath::Utf8(path.into()),
+                    increment: Increment::Patch,
+                    prerelease: PrereleasePolicy::Reject
+                }
+            )
+            .is_err(),
+            "{path}"
+        );
+    }
+    assert_eq!(before, tree_bytes(&f.repo));
+}

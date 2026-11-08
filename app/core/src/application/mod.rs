@@ -46,6 +46,13 @@ fn stale() -> Error {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Request {
+    PreviewVersionFile {
+        workspace: String,
+        worktree: String,
+        path: NativePath,
+        increment: crate::actions::semver::Increment,
+        prerelease: crate::actions::semver::PrereleasePolicy,
+    },
     AuthenticationSettings {},
     AuthenticationChoices {},
     ReviewAuthentication {
@@ -308,6 +315,7 @@ pub struct OperationPage {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "kind", content = "value", rename_all = "snake_case")]
 pub enum Data {
+    VersionPreview(crate::actions::semver::VersionPreview),
     AuthenticationSettings(crate::authentication::Settings),
     AuthenticationChoices(crate::authentication::Choices),
     Graph(crate::graph::Page),
@@ -618,6 +626,22 @@ impl Application {
             _ => {}
         }
         let data = match request {
+            Request::PreviewVersionFile {
+                workspace,
+                worktree,
+                path,
+                increment,
+                prerelease,
+            } => {
+                let entry = self.entry(&workspace, &worktree)?;
+                Data::VersionPreview(crate::actions::preview_version_file(
+                    &entry.metadata.root.to_path()?,
+                    &path,
+                    increment,
+                    prerelease,
+                    &self.read_options,
+                )?)
+            }
             Request::Graph {
                 workspace,
                 worktree,

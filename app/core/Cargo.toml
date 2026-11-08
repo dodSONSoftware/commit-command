@@ -24,6 +24,7 @@ rusqlite = { version = "=0.41.0", default-features = false, features = ["bundled
 uuid = { version = "1.29.0", features = ["v4"] }
 glob = "0.3.4"
 sha2 = "0.10.9"
+semver = "=1.0.28"
 sha1 = { version = "0.10.7", optional = true }
 notify = { version = "8.2.1", optional = true }
 schemars = { version = "1.2.3", optional = true }
