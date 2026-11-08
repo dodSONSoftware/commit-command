@@ -1,0 +1,18 @@
+{
+  "source_commit": "e9eeacd7bff064143b694789d52a277a276457f9",
+  "main_window_close_route": "native Cmd+W (not Cmd+Q)",
+  "scan_request_busy_before_close": true,
+  "native_closing_safely_observed": true,
+  "first_attempt_no_live_process_proof_not_counted": true,
+  "continuous_process_proof_samples": 219,
+  "initial_host_exit_code": 0,
+  "first_restart_rendered_without_reload": true,
+  "first_restart_repository_count": 80,
+  "exact_draft_visibly_recovered": true,
+  "final_quit_exit_code": 0,
+  "state_writer_lock_reopened_by_cli": true,
+  "state_inventory_count": 80,
+  "product_source_changed": false,
+  "tests_rerun": false,
+  "not_a_scale_or_remote_execution_acceptance": true
+}

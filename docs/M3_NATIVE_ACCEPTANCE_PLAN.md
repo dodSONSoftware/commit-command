@@ -125,6 +125,16 @@ error paths and exclusions are now visible independently of repository attention
 The previously recorded cache/scan-presentation findings are closed within this envelope;
 broader G02/G06/accessibility/scale remain open.
 
+### November 7 G02 active-scan main-window Close
+
+[Native case report](reports/G02_CLOSE_DURING_SCAN_2026-11-07.md): fresh ordinary
+80-repository fixture; Rescan in progress, live Git children sampled, then native
+main-window Cmd+W entered safe shutdown and host exited 0. First restart rendered
+without reload and recovered the exact draft; final Quit 0 and state writer lock
+reopened. Exact repository file bytes/modes preserved, zero trust/write/remote records.
+Selected M3 plan section 12 step 1 passed within this envelope. No source change or
+new automated suite. G02 remains partial; G06 remote compatibility is unchanged.
+
 ## Safety, execution and evidence rules
 
 - Perform interaction manually or through an organization-permitted native testing

@@ -1,0 +1,12 @@
+{
+  "root": "/private/tmp/commit-command-close-scan-veps8q6x",
+  "workspace_root": "/private/tmp/commit-command-close-scan-veps8q6x/workspace",
+  "state": "/private/tmp/commit-command-close-scan-veps8q6x/state",
+  "workspace": "6be183b9-cf3a-434e-9bef-b068a4da2a23",
+  "initial_worktree": "9fc0a565-f737-47bf-b2cd-00849efa7e79",
+  "repositories": 80,
+  "app": "/private/tmp/commit-command-close-scan-veps8q6x/Commit Command Scan Close Acceptance.app",
+  "binary_sha256": "aec8aa0bc52cd11b6a598686dee3583d03eb54965e4c9666a3cea21815d71570",
+  "features": "default release",
+  "source_commit": "e9eeacd7bff064143b694789d52a277a276457f9"
+}
