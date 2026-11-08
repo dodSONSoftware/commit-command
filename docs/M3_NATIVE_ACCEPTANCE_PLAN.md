@@ -179,6 +179,18 @@ Read-only checks confirm unchanged repositories, no helper invocation and zero
 trust/write/observation rows. **No remote-refusal pass claimed.** Resume only after
 specific fixture authorization; G02/G06 remain partial. No product patch.
 
+### November 7 G06 executable-helper refusal — authorized native pass
+
+[Completed native case](reports/G06_NATIVE_REMOTE_HELPER_REFUSAL_2026-11-07.md): user
+explicitly authorized only the prepared disposable worktree trust, resolving the
+previous automatic-review block. Native inspection classified/withheld the executable
+helper destination; origin/main observation preparation refused unsupported configuration
+before transport review. Exact files/modes preserved, sentinel never invoked, exactly
+one scoped trust record and zero observation/write/other remote-operation records.
+Acceptance and ordinary-restart Quit 0, final oracle unchanged and writer lock reopened.
+Selected unsupported-helper refusal passed; no code fix/full automated rerun. G06 remains
+partial; unsupported helpers remain unsupported and other G02/G06 limits persist.
+
 ## Safety, execution and evidence rules
 
 - Perform interaction manually or through an organization-permitted native testing

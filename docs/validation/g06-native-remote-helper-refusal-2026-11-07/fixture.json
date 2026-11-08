@@ -12,5 +12,7 @@
     "desktop-writes"
   ],
   "source_commit": "484d289cee1dbdfd0b357df88825224bd3561aa7",
-  "binary_sha256": "54809b4155865cbe835eae15a5f8c76ff6d2a8528addefec2fcbe89b585b275b"
+  "binary_sha256": "54809b4155865cbe835eae15a5f8c76ff6d2a8528addefec2fcbe89b585b275b",
+  "ordinary_app": "/private/tmp/gitfleet-g06-helper-di5z10fo/Commit Command Helper Refusal Ordinary.app",
+  "ordinary_binary_sha256": "aec8aa0bc52cd11b6a598686dee3583d03eb54965e4c9666a3cea21815d71570"
 }

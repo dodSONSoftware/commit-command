@@ -1,0 +1,16 @@
+{
+  "repository_bytes_modes_preserved": true,
+  "helper_invocation_marker_absent": true,
+  "sentinel_script_and_mode_intact": true,
+  "sqlite_integrity": "ok",
+  "explicit_trust_rows": 1,
+  "trust_scoped_to_authorized_worktree": true,
+  "local_write_operation_rows": 0,
+  "remote_operation_records": {
+    "remote-observation:": 0,
+    "fetch-capture:": 0,
+    "fetch-import:": 0,
+    "upstream:": 0,
+    "push-check:": 0
+  }
+}
