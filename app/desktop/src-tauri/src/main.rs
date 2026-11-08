@@ -547,6 +547,11 @@ fn review_cancel<R: tauri::Runtime>(
     review: String,
 ) -> Result<(), String> {
     let id = current_review(&window, &state, Some(&review))?;
+    #[cfg(feature = "native-acceptance-support")]
+    native_acceptance::record(
+        "review_cancel_requested",
+        json!({"id":id,"label":window.label()}),
+    );
     if let Some(cancel) = lock(&state.active)?.as_ref() {
         cancel.cancel();
     }
@@ -598,6 +603,10 @@ fn open_review(app: &tauri::AppHandle, host: Arc<Host>, display: &ReviewDisplay,
             let sender = host.sender.clone();
             let host = host.clone();
             window.on_window_event(move |event| {
+                #[cfg(feature = "native-acceptance-support")]
+                if matches!(event, tauri::WindowEvent::CloseRequested { .. }) {
+                    native_acceptance::record("review_window_close_requested", json!({"id":id}));
+                }
                 if matches!(event, tauri::WindowEvent::Destroyed) {
                     #[cfg(feature = "native-acceptance-support")]
                     native_acceptance::record("review_window_destroyed", json!({"id":id}));

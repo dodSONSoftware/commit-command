@@ -1,0 +1,23 @@
+[
+  {
+    "id": "bbf599f7-e45a-4b97-a13f-9f352f6dd687",
+    "phase": "cancelled",
+    "issues": [],
+    "worktrees": [
+      "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle"
+    ],
+    "operations": [
+      {
+        "id": "b72f3d31-e12c-41a7-8395-42f240c4e116",
+        "phase": "cancelled_before_publication",
+        "new_head": null,
+        "published": false,
+        "reconciled": false,
+        "message": "G05 preserve dirty unselected submodule\n",
+        "patch": "diff --git a/file.txt b/file.txt\nindex cae590f..f592333 100644\n--- a/file.txt\n+++ b/file.txt\n@@ -1 +1 @@\n-Review transition diagnostic round 1\n+G05 explicitly selected middle only\n",
+        "hooks": [],
+        "signing": null
+      }
+    ]
+  }
+]

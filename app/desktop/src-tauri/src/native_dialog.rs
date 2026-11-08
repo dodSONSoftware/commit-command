@@ -2,6 +2,11 @@
 use tauri::{Runtime, WebviewWindow};
 
 pub(super) fn close_review<R: Runtime>(window: &WebviewWindow<R>) -> tauri::Result<()> {
+    #[cfg(feature = "native-acceptance-support")]
+    super::native_acceptance::record(
+        "review_host_close_requested",
+        serde_json::json!({"label":window.label()}),
+    );
     let window = window.clone();
     let runner = window.clone();
     runner.run_on_main_thread(move || {

@@ -7,6 +7,20 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G05 dirty unselected submodule — preservation passed; ancestor status defect open
+
+[Omitted-child package](reports/G05_NATIVE_UNSELECTED_SUBMODULE_2026-11-08.md): only
+middle selected, dirty actual leaf omitted; native Cancel preserved setup, fresh
+separate approval committed only middle/file.txt. Leaf checkout/actual Git metadata,
+revoked ancestor metadata and independent control exact; no implicit enrollment or
+new grants. Ordinary restart retained selection/dirty leaf/results, writes disabled,
+exact files/records/no replay, exits 0/integrity/lock reopen passed. Expanded test-only
+tracing identifies renderer Cancel/host close/native close/Destroyed; expected Cancel
+signature verified, original intermittent trigger still open. Full desktop gate
+91/13/16 plus checks/builds/strict Clippy passed. Native Overview incorrectly calls
+ancestor Clean despite independent Git reporting M middle after child advances;
+fix this actual changed-gitlink status defect next. Do not infer full G05/G03 closure.
+
 ### November 8 G05 native bulk trust revocation — passed within envelope
 
 [Revocation package](reports/G05_NATIVE_BULK_REVOCATION_2026-11-08.md): native pending

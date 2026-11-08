@@ -1,0 +1,13 @@
+{
+  "stage": "after-restart",
+  "one_middle_commit": "662bd57b94051be630d74febfb365564b36687a3",
+  "unselected_dirty_leaf_checkout_metadata_exact": true,
+  "revoked_ancestor_and_control_exact": true,
+  "only_explicit_middle_enrolled": true,
+  "exact_content_message_unchanged_gitlink": true,
+  "working_files_modes_preserved": true,
+  "prior_records_unchanged": true,
+  "parent_remains_revoked_no_grants": true,
+  "integrity": "ok",
+  "restart_exact_files_records_no_replay": true
+}
