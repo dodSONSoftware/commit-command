@@ -1,0 +1,8 @@
+{
+  "hook_pid": 5734,
+  "child_pid": 5735,
+  "post_quit_ps_exit_code": 1,
+  "post_quit_ps_stdout": "",
+  "native_host_exit_code": 0,
+  "external_kill_used": false
+}

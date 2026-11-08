@@ -1,0 +1,10 @@
+{
+  "native_initial_quit_exit_code": 0,
+  "native_restart_cleanup_exit_code": 0,
+  "fixture_server_pid": 98256,
+  "fixture_server_stopped": true,
+  "fixture_private_tls_key_removed": true,
+  "hook_and_child_stopped_by_native_quit": true,
+  "external_hook_kill_used": false,
+  "managed_repositories_not_deleted": true
+}

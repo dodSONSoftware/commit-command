@@ -1,0 +1,31 @@
+{
+  "root": "/private/tmp/gitfleet-m3-native-ug18lsxw",
+  "workspace_root": "/private/tmp/gitfleet-m3-native-ug18lsxw/workspace",
+  "state": "/private/tmp/gitfleet-m3-native-ug18lsxw/state",
+  "workspace": "4ea37862-23a5-403a-ad4e-bd84d9b50feb",
+  "worktrees": {
+    "grand": "1ce55b78-95f1-470c-b237-4a6ae4df8339",
+    "parent": "2efacbf2-3d9f-4543-bc0c-3b9946154840",
+    "child": "636e38f6-ef1b-4158-b8e2-4e24543ba81d"
+  },
+  "parent": "/private/tmp/gitfleet-m3-native-ug18lsxw/workspace/parent",
+  "child": "/private/tmp/gitfleet-m3-native-ug18lsxw/workspace/parent/child",
+  "grand": "/private/tmp/gitfleet-m3-native-ug18lsxw/workspace/parent/child/grand",
+  "server_pid": 98256,
+  "base": "https://127.0.0.1:54460",
+  "ca_file": "/private/tmp/gitfleet-m3-native-ug18lsxw/certificate.pem",
+  "observed_oids": {
+    "parent": "89950c96aa86f1f3febbf6901a0a6ebc6623786e",
+    "child": "89950c96aa86f1f3febbf6901a0a6ebc6623786e",
+    "grand": "89950c96aa86f1f3febbf6901a0a6ebc6623786e"
+  },
+  "source_oids": {
+    "parent": "ce3526bcf5b3ed672070ba839650b21ed5058c9f",
+    "child": "afa2b4c882df30a3d8a3852ab3c86e005e942182",
+    "grand": "b3bac9968bb6202301e3fbabeea4124ad3723031"
+  },
+  "private_server_contacted": false,
+  "credentials_used": false,
+  "app_path": "/private/tmp/gitfleet-m3-native-ug18lsxw/Commit Command Running Quit Acceptance.app",
+  "binary_sha256": "be2416339f6f32e3ce27c3565bf941be6a6ec06d5817aeaafaebde10a055a1e5"
+}

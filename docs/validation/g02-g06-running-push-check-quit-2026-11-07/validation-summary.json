@@ -1,0 +1,22 @@
+{
+  "native_quit_during_proven_running_check_passed": true,
+  "native_running_proof_persisted_before_quit": true,
+  "native_host_exit_code": 0,
+  "native_restart_exit_code": 0,
+  "hook_and_child_absent_after_quit": true,
+  "native_restart_lock_release_verified": true,
+  "saved_draft_verified_before_quit_and_in_native_restart_ui": true,
+  "no_replay_or_extra_requests": true,
+  "managed_and_bare_remote_bytes_modes_preserved": true,
+  "read_only_loopback_requests": 1,
+  "hook_invocations": 1,
+  "elapsed_hook_start_to_cancelled_journal_ms": 5966.354,
+  "natural_hook_sleep_seconds": 45,
+  "final_observed_after_start_seconds": 120.367,
+  "product_source_changed": false,
+  "new_automated_matrix_rerun": false,
+  "prior_full_desktop_gate_retained": "g02-active-sheet-2026-11-07",
+  "prior_nine_core_tests_retained": "g02-g06-running-push-check-2026-11-07",
+  "native_host_crash_tested": false,
+  "main_close_or_direct_appkit_during_running_hook_tested": false
+}

@@ -38,8 +38,11 @@ now verifies actual native delivery and safe deferral with trust/commit sheets,
 explicit Cancel, fresh termination and restart; no immediate sheet cancellation or
 Dock/session pass is inferred. Earlier open-sheet statements are historical.
 The [shared G02/G06 running-hook case](reports/G02_G06_RUNNING_PUSH_CHECK_CANCEL_2026-11-07.md)
-now has actual native Cancel review/process cleanup/no-replay evidence. Quit or
-host crash during that running check remains a separate next case.
+has actual native Cancel review/process cleanup/no-replay evidence. The subsequent
+Quit case is recorded below; actual host crash remains a separate next case.
+[Cmd+Q during a running pre-push check](reports/G02_G06_RUNNING_PUSH_CHECK_QUIT_2026-11-07.md)
+now passed with process cleanup, draft/lock preservation and no replay. Older open
+Quit labels above are historical; actual host-crash acceptance remains separate.
 Current gate dispositions remain in EXECUTION_STATUS.
 
 ## Safety, execution and evidence rules

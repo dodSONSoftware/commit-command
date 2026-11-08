@@ -1,0 +1,19 @@
+{
+  "source_revision": "d56730db364bf9b964ee8737dadbd54a877ee298",
+  "native_artifact_sha256": "be2416339f6f32e3ce27c3565bf941be6a6ec06d5817aeaafaebde10a055a1e5",
+  "reused_validated_artifact": true,
+  "prior_manifest": "../g02-active-sheet-2026-11-07/manifest.json",
+  "prior_full_desktop_validation": "../g02-active-sheet-2026-11-07/desktop-validation.txt",
+  "prior_focused_core_tests": "../g02-g06-running-push-check-2026-11-07/core-push-check-tests.txt",
+  "features": [
+    "custom-protocol",
+    "desktop-writes",
+    "native-acceptance-support"
+  ],
+  "product_source_changed": false,
+  "fixture_script_sha256": "4459462de1c645e8a7f4ead27c1e8cf1c068d55507b8d5d56800f5d114ce0da7",
+  "hook_sha256": "5723dfe627b7a53590742ebc3d196c04bda9a6bf4c8d58c47026c0e2d10d2271",
+  "test_ca_sha256": "f76256cef6a97f953493a102d554072f237db7a1e4b18eef78418a1cf89735cd",
+  "tracked_app_tree_sha": "89c83c88da0284b0de2078c5d9a03e8a1d1aa5b9",
+  "tracked_app_tree_matches_validated_commit": "0000156"
+}
