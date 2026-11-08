@@ -1,0 +1,13 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+	precomposeunicode = true
+[user]
+	name = Scan Acceptance
+	email = fixture@example.invalid
+[remote "origin"]
+	url = ext::/private/tmp/gitfleet-g06-helper-di5z10fo/remote-helper-sentinel
+	fetch = +refs/heads/*:refs/remotes/origin/*

@@ -1,0 +1,9 @@
+{
+  "original_fixture_config_bytes_restored": true,
+  "isolated_state_writer_lock_reopened": true,
+  "blocked_journal_preserved": true,
+  "original_state_not_modified": true,
+  "acceptance_exit_code": 0,
+  "ordinary_restart_exit_code": 0,
+  "normal_user_app_untouched": true
+}

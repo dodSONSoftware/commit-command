@@ -1,0 +1,69 @@
+{
+  "plan": {
+    "id": "422663cc-c0c3-4903-83ed-e424c50e3374",
+    "workspace": "28e8de02-75b0-4799-8e2b-4e1f4b06f0b2",
+    "worktree": "f10b9195-4e1e-41b3-925b-51216d48464d",
+    "metadata": {
+      "root": {
+        "encoding": "utf8",
+        "value": "/private/tmp/gitfleet-g06-helper-di5z10fo/workspace/repository"
+      },
+      "git_dir": {
+        "encoding": "utf8",
+        "value": "/private/tmp/gitfleet-g06-helper-di5z10fo/workspace/repository/.git"
+      },
+      "common_dir": {
+        "encoding": "utf8",
+        "value": "/private/tmp/gitfleet-g06-helper-di5z10fo/workspace/repository/.git"
+      },
+      "root_binding": "16777233:53912376:Some(SystemTime { tv_sec: 1794111709, tv_nsec: 613752441 })",
+      "git_binding": "16777233:53912379:Some(SystemTime { tv_sec: 1794111709, tv_nsec: 613198520 })",
+      "common_binding": "16777233:53912379:Some(SystemTime { tv_sec: 1794111709, tv_nsec: 613198520 })",
+      "object_format": "sha1"
+    },
+    "remote": "origin",
+    "reference": "refs/heads/main",
+    "destination": "https://127.0.0.1:9/reviewed.git",
+    "transport": "https",
+    "config_digest": "3accdb5a3f2153f541bcc5309d4ed649f3b6fa99d1a4b13d24020a02dc0d095f",
+    "generation": "077a2f70f2de668a5b021fe7de70bbf62fe6c5a280497af00a51f89223b05d94",
+    "created_at_ms": 1794114124005,
+    "tools": [
+      {
+        "role": "git",
+        "path": {
+          "encoding": "utf8",
+          "value": "/opt/homebrew/Cellar/git/2.56.0_1/bin/git"
+        },
+        "fingerprint": "85ead3af59fd6debd564f4976f914d16d1602e1b623fba5e1073e37efd278dc0"
+      },
+      {
+        "role": "https_helper",
+        "path": {
+          "encoding": "utf8",
+          "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core/git-remote-https"
+        },
+        "fingerprint": "68ed0b42c06d51d7fa33487b1cd08a1ede2f31d5b2bbaca1a447e800d5022774"
+      },
+      {
+        "role": "exec_directory",
+        "path": {
+          "encoding": "utf8",
+          "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+        },
+        "fingerprint": "16777233:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })"
+      }
+    ],
+    "local_target": null,
+    "local_binding": null,
+    "authentication": null,
+    "authentication_profile": null
+  },
+  "phase": "blocked",
+  "oid": null,
+  "observed_at_ms": null,
+  "issue": {
+    "kind": "untrusted_repository",
+    "message": "Trust was revoked or its identity/configuration changed"
+  }
+}

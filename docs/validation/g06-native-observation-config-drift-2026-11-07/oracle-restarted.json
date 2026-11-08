@@ -1,0 +1,13 @@
+{
+  "expected_repository_bytes_modes_preserved": true,
+  "sqlite_integrity": "ok",
+  "blocked_observation_unchanged": true,
+  "observed_oid_and_time_absent": true,
+  "reviewed_destination_retained": "https://127.0.0.1:9/reviewed.git",
+  "trust_rows": 1,
+  "fixture_trust_revoked": true,
+  "local_write_operation_rows": 0,
+  "other_remote_records": 0,
+  "transport_storage_absent": true,
+  "helper_invocation_marker_absent": true
+}

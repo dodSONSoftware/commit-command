@@ -126,6 +126,18 @@ Acceptance and ordinary-restart Quit 0, final oracle unchanged and writer lock r
 Selected unsupported-helper refusal passed; no code fix/full automated rerun. G06 remains
 partial; unsupported helpers remain unsupported and other G02/G06 limits persist.
 
+### November 7 G06 observation review / configuration drift
+
+[Native stale-configuration case](reports/G06_NATIVE_OBSERVATION_CONFIG_DRIFT_2026-11-07.md):
+same explicitly authorized disposable repository, isolated state; renewed scoped trust,
+prepared exact observation review, then deliberately changed only remote config.
+Old native confirmation retained reviewed URL; approval returned blocked/untrusted
+before transport initialization, revoked trust, no OID/time. Ordinary restart retained
+identical history without replay; both exits 0, writer lock reopened. Exact expected
+repository baselines preserved; original config restored and previous case reverified.
+Selected trust/config-drift barrier passed; later URL-digest guard not independently
+isolated. No source fix/full-suite rerun. Other G02/G06 criteria remain open.
+
 ## Status meanings and availability
 
 - **Accepted within envelope:** the recorded milestone criteria passed only for
