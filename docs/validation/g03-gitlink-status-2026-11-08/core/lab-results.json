@@ -1,0 +1,942 @@
+{
+  "git_version": "git version 2.56.0",
+  "cases": {
+    "crash_then_external_index_edit": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:23658163dc2ad8c96ad91969ab341092d06c277a",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "b9dee37bc3bbe0d3f89835c932201288cd8770f3",
+        "head_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "index_tree": "4fdc2a2c1cb44d0f32e55344794f0c5a2212696b",
+        "status": "M  other.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "248f6a61a50219093c058104a36ebd151027e800",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "result": {
+        "reason": "Index lock missing and index differs; manual review required",
+        "status": "needs_manual_reconciliation"
+      },
+      "status": "needs_manual_reconciliation"
+    },
+    "external_index_changed": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:9100acc054ad2df2e724649e239fef43d41d1232"
+        ],
+        "head": "c3b532f9b993383684a3b3ab016a4e85b811ef1a",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "1790f99a1c1420cc638ff2cc1ee2254cb4851c27",
+        "status": "M  full.txt\nM  unrelated.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "c3b532f9b993383684a3b3ab016a4e85b811ef1a",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "result": {
+        "reason": "Git index changed after review",
+        "status": "blocked_external_index_change"
+      },
+      "status": "blocked_external_index_change"
+    },
+    "hook_changes_selected_worktree": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "caafca27952b32a5459059897bab02cf2498765e",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "MM full.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "caafca27952b32a5459059897bab02cf2498765e",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "result": {
+        "reason": "Hook changed selected working-tree content; review required",
+        "status": "blocked_before_commit"
+      },
+      "status": "blocked_before_commit"
+    },
+    "hook_modifies_only_worktree": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "55750b14f20124c1ffadde1ea166d0e567003e47",
+        "head_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": " M unrelated.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "fe11165b99d4029a4e640359cd39efd99e22a5dd",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "result": {
+        "new_head": "55750b14f20124c1ffadde1ea166d0e567003e47",
+        "status": "committed"
+      },
+      "status": "committed"
+    },
+    "hook_rewrites_message": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "73efdc5ea599ba883b078e0bcad1974f4a633586",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "73efdc5ea599ba883b078e0bcad1974f4a633586",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "result": {
+        "reason": "Hook changed approved tree or commit message; review required",
+        "status": "blocked_before_commit"
+      },
+      "status": "blocked_before_commit"
+    },
+    "hook_stages_unapproved": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "73efdc5ea599ba883b078e0bcad1974f4a633586",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt\n M unrelated.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "73efdc5ea599ba883b078e0bcad1974f4a633586",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "result": {
+        "reason": "Hook changed approved tree or commit message; review required",
+        "status": "blocked_before_commit"
+      },
+      "status": "blocked_before_commit"
+    },
+    "mixed_selected_sources": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:c8d11e919973894b77f3c9b5ee53765c1cd8679b",
+          "other.txt:100644:fa80683dc5c30e8e24d0ec22c8a62f99abad6a3b",
+          "partial.txt:100644:24b6a9aeb9cba6e3e4b009cebcd4f7aea63915d3",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "60fe381177b0f5f2acd0c384568ebf47b7eebb8f",
+        "head_tree": "619b439491c47f40f1a9d074321c5ab866a2213a",
+        "index_tree": "a80fd09646f3fd8cfed1a21bcd6268704ab4ce63",
+        "status": "M  other.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:c8d11e919973894b77f3c9b5ee53765c1cd8679b",
+          "other.txt:100644:fa80683dc5c30e8e24d0ec22c8a62f99abad6a3b",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "395c469aae4c831aaf5e89957b2246e5188ba426",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "9e9e188b6eb090ac7365bc67b4fc4ef1bd33745a",
+        "status": "M  full.txt\nM  other.txt\n M partial.txt"
+      },
+      "result": {
+        "new_head": "60fe381177b0f5f2acd0c384568ebf47b7eebb8f",
+        "status": "committed"
+      },
+      "status": "committed"
+    },
+    "partial_staging_commits_index_only": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:4b48deed3a433909bfd6b6ab3d4b91348b6af464",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:54936ca7b4a532dae38355cafcada5c33b6318ee",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "6341b0bc11dc2540a7e40c5d3acb59e12e469f62",
+        "head_tree": "550674075eb96ed5ae877ffc122ad1808629e58b",
+        "index_tree": "550674075eb96ed5ae877ffc122ad1808629e58b",
+        "status": " M partial.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:4b48deed3a433909bfd6b6ab3d4b91348b6af464",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:54936ca7b4a532dae38355cafcada5c33b6318ee",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "654f4d8536c051affd229a0ecad1ae7b1add7a50",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "550674075eb96ed5ae877ffc122ad1808629e58b",
+        "status": "MM partial.txt"
+      },
+      "result": {
+        "new_head": "6341b0bc11dc2540a7e40c5d3acb59e12e469f62",
+        "status": "committed"
+      },
+      "status": "committed"
+    },
+    "partial_staging_commits_worktree": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:4b48deed3a433909bfd6b6ab3d4b91348b6af464",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:b3ddd7f87f27551600dbdeacf9c935be8e7035b4",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "7ba109380ea4b4eac0b1d7a43c94ab404df079d4",
+        "head_tree": "745be43a25672753923151f5dcc11d90f0352b4d",
+        "index_tree": "745be43a25672753923151f5dcc11d90f0352b4d",
+        "status": ""
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:4b48deed3a433909bfd6b6ab3d4b91348b6af464",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:54936ca7b4a532dae38355cafcada5c33b6318ee",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "654f4d8536c051affd229a0ecad1ae7b1add7a50",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "550674075eb96ed5ae877ffc122ad1808629e58b",
+        "status": "MM partial.txt"
+      },
+      "result": {
+        "new_head": "7ba109380ea4b4eac0b1d7a43c94ab404df079d4",
+        "status": "committed"
+      },
+      "status": "committed"
+    },
+    "post_commit_hook": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "3d19c01f3c7192fa5605b01eec77a34dba697129",
+        "head_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "?? post-commit-marker.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "73efdc5ea599ba883b078e0bcad1974f4a633586",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "result": {
+        "new_head": "3d19c01f3c7192fa5605b01eec77a34dba697129",
+        "post_hook": "exit=Some(0), stderr=",
+        "status": "committed"
+      },
+      "status": "committed"
+    },
+    "prepare_hook_rewrites_message": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "caafca27952b32a5459059897bab02cf2498765e",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "caafca27952b32a5459059897bab02cf2498765e",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "result": {
+        "reason": "Hook changed approved tree or commit message; review required",
+        "status": "blocked_before_commit"
+      },
+      "status": "blocked_before_commit"
+    },
+    "real_sigkill_after_reconcile": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "b9dee37bc3bbe0d3f89835c932201288cd8770f3",
+        "head_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": ""
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "248f6a61a50219093c058104a36ebd151027e800",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "result": {
+        "new_head": "b9dee37bc3bbe0d3f89835c932201288cd8770f3",
+        "status": "already_complete"
+      },
+      "status": "already_complete"
+    },
+    "real_sigkill_after_ref": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "f0a2e1070ff3e1a3abd8e84a35a936eb208f82ba",
+        "head_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": ""
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "c3b532f9b993383684a3b3ab016a4e85b811ef1a",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "result": {
+        "new_head": "f0a2e1070ff3e1a3abd8e84a35a936eb208f82ba",
+        "status": "committed"
+      },
+      "status": "committed"
+    },
+    "real_sigkill_before_ref": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "c3b532f9b993383684a3b3ab016a4e85b811ef1a",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "c3b532f9b993383684a3b3ab016a4e85b811ef1a",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "result": {
+        "status": "aborted_before_ref"
+      },
+      "status": "aborted_before_ref"
+    },
+    "selected_rename_pair": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:4b48deed3a433909bfd6b6ab3d4b91348b6af464",
+          "other.txt:100644:10eb79a5643ed1545fd2f37ecdcfefa47d483b3e",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "renamed.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "5a2fa6260384de1f16160be1b6e75221adc46659",
+        "head_tree": "58a938a6a4bb86615a99c724c10946a87452c2ca",
+        "index_tree": "24d5f1d2803a12a2d5541172147ca16c573ad85e",
+        "status": "M  other.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:4b48deed3a433909bfd6b6ab3d4b91348b6af464",
+          "other.txt:100644:10eb79a5643ed1545fd2f37ecdcfefa47d483b3e",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "fe11165b99d4029a4e640359cd39efd99e22a5dd",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "d50d3e60ac70b7dcaab19cfcd029d4019a4bf16a",
+        "status": "M  other.txt\n D rename.txt\n?? renamed.txt"
+      },
+      "result": {
+        "new_head": "5a2fa6260384de1f16160be1b6e75221adc46659",
+        "status": "committed"
+      },
+      "status": "committed"
+    },
+    "selected_staged_preserves_other_staging": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:fc972c0966b49a46792ae730de0fa07eca08614f",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "41c5f09437ae83182517d420309d51d7269be3ec",
+        "head_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "index_tree": "78922e61c74ab04b717a6a6a5b0d35cc460b9d7f",
+        "status": "M  other.txt\n M unrelated.txt\n?? new.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:fc972c0966b49a46792ae730de0fa07eca08614f",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "04841452c6e100f2cccee7ec622524446e216c57",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "78922e61c74ab04b717a6a6a5b0d35cc460b9d7f",
+        "status": "M  full.txt\nM  other.txt\n M unrelated.txt\n?? new.txt"
+      },
+      "result": {
+        "new_head": "41c5f09437ae83182517d420309d51d7269be3ec",
+        "status": "committed"
+      },
+      "status": "committed"
+    },
+    "selected_unstaged_deletion": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "full.txt:100644:4b48deed3a433909bfd6b6ab3d4b91348b6af464",
+          "other.txt:100644:10eb79a5643ed1545fd2f37ecdcfefa47d483b3e",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "40b1b410e2644962fa0c1c0ed4a032ff10e590a6",
+        "head_tree": "d2fdb71414aea88d0d8bba627b3823eb65d0257d",
+        "index_tree": "563028b325713fb147985ef3bacc391ecc4614fe",
+        "status": "M  other.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:4b48deed3a433909bfd6b6ab3d4b91348b6af464",
+          "other.txt:100644:10eb79a5643ed1545fd2f37ecdcfefa47d483b3e",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "395c469aae4c831aaf5e89957b2246e5188ba426",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "d50d3e60ac70b7dcaab19cfcd029d4019a4bf16a",
+        "status": " D delete.txt\nM  other.txt"
+      },
+      "result": {
+        "new_head": "40b1b410e2644962fa0c1c0ed4a032ff10e590a6",
+        "status": "committed"
+      },
+      "status": "committed"
+    },
+    "selected_worktree_changed_after_review": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "caafca27952b32a5459059897bab02cf2498765e",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "MM full.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "caafca27952b32a5459059897bab02cf2498765e",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "result": {
+        "reason": "Selected working-tree content changed",
+        "status": "blocked_selected_worktree_change"
+      },
+      "status": "blocked_selected_worktree_change"
+    },
+    "selected_worktree_preserves_other_staging": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:fc972c0966b49a46792ae730de0fa07eca08614f",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "e4b7a9bf8fef472adfc709bd932bfc83d8b3f3f5",
+        "head_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "index_tree": "78922e61c74ab04b717a6a6a5b0d35cc460b9d7f",
+        "status": "M  other.txt\n M unrelated.txt\n?? new.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:fc972c0966b49a46792ae730de0fa07eca08614f",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "04841452c6e100f2cccee7ec622524446e216c57",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "78922e61c74ab04b717a6a6a5b0d35cc460b9d7f",
+        "status": "M  full.txt\nM  other.txt\n M unrelated.txt\n?? new.txt"
+      },
+      "result": {
+        "new_head": "e4b7a9bf8fef472adfc709bd932bfc83d8b3f3f5",
+        "status": "committed"
+      },
+      "status": "committed"
+    },
+    "signing_missing_key": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "248f6a61a50219093c058104a36ebd151027e800",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "248f6a61a50219093c058104a36ebd151027e800",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "result": {
+        "reason": "error: cannot run gitfleet-no-gpg-executable: No such file or directory\nerror: gpg failed to sign the data:\n(no gpg output)",
+        "status": "blocked_commit_tree_failure"
+      },
+      "status": "blocked_commit_tree_failure"
+    },
+    "space_in_path": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:4b48deed3a433909bfd6b6ab3d4b91348b6af464",
+          "other.txt:100644:10eb79a5643ed1545fd2f37ecdcfefa47d483b3e",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:9502d6c3789dbabba3169bde2daf4fe1732eee03",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "379f51bc293eecb2d5fd5a00ad1da852bbc1c03b",
+        "head_tree": "ac508527b6d8043236eee64e830f54d8da5929a1",
+        "index_tree": "a52f15696fc51f5f3ed604e5ef115c7e8e944cb0",
+        "status": "M  other.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:4b48deed3a433909bfd6b6ab3d4b91348b6af464",
+          "other.txt:100644:10eb79a5643ed1545fd2f37ecdcfefa47d483b3e",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:9502d6c3789dbabba3169bde2daf4fe1732eee03",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "fe11165b99d4029a4e640359cd39efd99e22a5dd",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "a52f15696fc51f5f3ed604e5ef115c7e8e944cb0",
+        "status": "M  other.txt\nM  \"space file.txt\""
+      },
+      "result": {
+        "new_head": "379f51bc293eecb2d5fd5a00ad1da852bbc1c03b",
+        "status": "committed"
+      },
+      "status": "committed"
+    },
+    "stale_head_before_cas": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "1bf851a9ea7e6211df5fa60d2c9060630dae8f4a",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "c3b532f9b993383684a3b3ab016a4e85b811ef1a",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "result": {
+        "reason": "HEAD differs from reviewed state",
+        "status": "blocked_stale_head"
+      },
+      "status": "blocked_stale_head"
+    },
+    "successful_gpg_signing": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "3877b14f2054fa90fc5e2e22fe81af4324bb6b57",
+        "head_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": ""
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "248f6a61a50219093c058104a36ebd151027e800",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "signature_verified": true,
+      "signed": true,
+      "status": "committed"
+    },
+    "untracked_selected": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:4b48deed3a433909bfd6b6ab3d4b91348b6af464",
+          "new.txt:100644:3151666398e7951f81d58893dc687970599625ab",
+          "other.txt:100644:10eb79a5643ed1545fd2f37ecdcfefa47d483b3e",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "8088cc9b588b94d56ae8a24d3466604ace2dbdc9",
+        "head_tree": "705241958930386da2618303a1c490a9be1a5a8d",
+        "index_tree": "df7f508fba8b5e59674d283c458a7291b122ca0a",
+        "status": "M  other.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:4b48deed3a433909bfd6b6ab3d4b91348b6af464",
+          "other.txt:100644:10eb79a5643ed1545fd2f37ecdcfefa47d483b3e",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "395c469aae4c831aaf5e89957b2246e5188ba426",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "d50d3e60ac70b7dcaab19cfcd029d4019a4bf16a",
+        "status": "M  other.txt\n?? new.txt"
+      },
+      "result": {
+        "new_head": "8088cc9b588b94d56ae8a24d3466604ace2dbdc9",
+        "status": "committed"
+      },
+      "status": "committed"
+    }
+  },
+  "passed": 24,
+  "skipped": 0,
+  "disclaimer": "Research-only; manual hook subset, local branches, ordinary indexes. Not production-safe."
+}

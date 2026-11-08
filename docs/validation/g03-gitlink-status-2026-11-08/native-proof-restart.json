@@ -1,0 +1,16 @@
+{
+  "exact_repository_files_modes": true,
+  "exact_old_operations_batches_no_replay": true,
+  "no_new_trust_parent_revoked": true,
+  "parent_index_gitlink_recorded": {
+    "path": {
+      "encoding": "utf8",
+      "value": "middle"
+    },
+    "oid": {
+      "format": "sha1",
+      "hex": "949253cc316c4811271f4eb272f1196a8027d10e"
+    }
+  },
+  "integrity": "ok"
+}

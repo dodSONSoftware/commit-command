@@ -1,0 +1,26 @@
+   Compiling libsqlite3-sys v0.39.1
+   Compiling rusqlite v0.41.0
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.00s
+     Running tests/m1_workspace.rs (app/core/target/debug/deps/m1_workspace-dae20fca6b7c20f3)
+
+running 1 test
+test inventory_tracks_observed_child_heads_against_current_parent_gitlinks ... FAILED
+
+failures:
+
+---- inventory_tracks_observed_child_heads_against_current_parent_gitlinks stdout ----
+
+thread 'inventory_tracks_observed_child_heads_against_current_parent_gitlinks' (6024562) panicked at tests/m1_workspace.rs:821:5:
+assertion `left == right` failed: A newly observed child commit must not leave its parent clean
+  left: 0
+ right: 1
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    inventory_tracks_observed_child_heads_against_current_parent_gitlinks
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 20 filtered out; finished in 1.06s
+
+error: test failed, to rerun pass `--test m1_workspace`

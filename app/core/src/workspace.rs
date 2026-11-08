@@ -1,10 +1,11 @@
 //! TOML owns definitions; SQLite owns identity/inventory. No Git writes live here.
 use crate::discovery::{self, DiscoveryOptions, Inventory};
-use crate::domain::{digest, Issue, NativePath, RepositoryId, WorkspaceId, WorktreeId};
+use crate::domain::{digest, Issue, NativePath, ObjectId, RepositoryId, WorkspaceId, WorktreeId};
 use crate::inspection::{self, Metadata, Snapshot};
 use crate::{Error, ErrorKind, Result};
 use rusqlite::{params, Connection, OptionalExtension};
 use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 use std::fs::{self, File, OpenOptions};
 use std::io::Write;
 use std::path::{Path, PathBuf};
@@ -70,6 +71,70 @@ pub struct WorkspaceService {
     database: Connection,
     config: Config,
     _writer: crate::locking::ExclusiveLock,
+}
+fn observed_heads(entries: &[StoredWorktree]) -> Result<BTreeMap<PathBuf, ObjectId>> {
+    entries
+        .iter()
+        .filter(|entry| {
+            matches!(entry.availability, Availability::Available) && entry.superseded_by.is_none()
+        })
+        .filter_map(|entry| {
+            entry.status.as_ref()?.head_oid.as_ref().map(|head| {
+                entry
+                    .metadata
+                    .root
+                    .to_path()
+                    .map(|path| (path, head.clone()))
+            })
+        })
+        .collect()
+}
+
+fn reflect_child_heads(
+    entry: &mut StoredWorktree,
+    heads: &BTreeMap<PathBuf, ObjectId>,
+) -> Result<()> {
+    if !matches!(entry.availability, Availability::Available) || entry.superseded_by.is_some() {
+        return Ok(());
+    }
+    let root = entry.metadata.root.to_path()?;
+    let Some(status) = entry.status.as_mut() else {
+        return Ok(());
+    };
+    for link in status.index_gitlinks.as_deref().unwrap_or_default() {
+        let child = root.join(link.path.relative()?);
+        if heads.get(&child).is_none_or(|head| head == &link.oid) {
+            continue;
+        }
+        if let Some(change) = status
+            .changes
+            .iter_mut()
+            .find(|change| change.path == link.path)
+        {
+            if change.conflict || change.index_mode != "160000" {
+                continue;
+            }
+            if change.worktree == '.' {
+                status.counts.unstaged += 1;
+            }
+            change.worktree = 'M';
+            change.submodule = "SC..".into();
+        } else {
+            status.counts.unstaged += 1;
+            status.changes.push(inspection::Change {
+                path: link.path.clone(),
+                original_path: None,
+                index: '.',
+                worktree: 'M',
+                conflict: false,
+                submodule: "SC..".into(),
+                head_mode: "160000".into(),
+                index_mode: "160000".into(),
+                worktree_mode: "160000".into(),
+            });
+        }
+    }
+    Ok(())
 }
 fn storage(message: &str) -> Error {
     Error::with_kind(ErrorKind::Storage, message)
@@ -518,38 +583,44 @@ impl WorkspaceService {
             ))
         })?;
         let workspace_id = &id.0;
-        rows.map(|row| {
-            let (id, repository_id, metadata, availability, status, issue) = row?;
-            let metadata: Metadata = serde_json::from_str(&metadata)?;
-            let root = metadata.root.to_path()?;
-            let display_path =
-                NativePath::from_path(root.strip_prefix(&workspace_root).unwrap_or(&root));
-            Ok(StoredWorktree {
-                display_path,
-                id: WorktreeId(id.clone()),
-                repository_id: RepositoryId(repository_id),
-                metadata,
-                availability: match availability.as_str() {
-                    "available" => Availability::Available,
-                    "missing" => Availability::Missing,
-                    _ => Availability::Unavailable,
-                },
-                status: status.map(|s| serde_json::from_str(&s)).transpose()?,
-                issue: issue.map(|s| serde_json::from_str(&s)).transpose()?,
-                untrusted: true,
-                superseded_by: self
-                    .database
-                    .query_row(
-                        "SELECT value FROM state WHERE key=?1",
-                        [format!("superseded:{}:{}", workspace_id, id)],
-                        |row| row.get::<_, String>(0),
-                    )
-                    .optional()?
-                    .map(|value| serde_json::from_str(&value))
-                    .transpose()?,
+        let mut entries = rows
+            .map(|row| {
+                let (id, repository_id, metadata, availability, status, issue) = row?;
+                let metadata: Metadata = serde_json::from_str(&metadata)?;
+                let root = metadata.root.to_path()?;
+                let display_path =
+                    NativePath::from_path(root.strip_prefix(&workspace_root).unwrap_or(&root));
+                Ok(StoredWorktree {
+                    display_path,
+                    id: WorktreeId(id.clone()),
+                    repository_id: RepositoryId(repository_id),
+                    metadata,
+                    availability: match availability.as_str() {
+                        "available" => Availability::Available,
+                        "missing" => Availability::Missing,
+                        _ => Availability::Unavailable,
+                    },
+                    status: status.map(|s| serde_json::from_str(&s)).transpose()?,
+                    issue: issue.map(|s| serde_json::from_str(&s)).transpose()?,
+                    untrusted: true,
+                    superseded_by: self
+                        .database
+                        .query_row(
+                            "SELECT value FROM state WHERE key=?1",
+                            [format!("superseded:{}:{}", workspace_id, id)],
+                            |row| row.get::<_, String>(0),
+                        )
+                        .optional()?
+                        .map(|value| serde_json::from_str(&value))
+                        .transpose()?,
+                })
             })
-        })
-        .collect()
+            .collect::<Result<Vec<_>>>()?;
+        let heads = observed_heads(&entries)?;
+        for entry in &mut entries {
+            reflect_child_heads(entry, &heads)?;
+        }
+        Ok(entries)
     }
     /// A targeted status refresh does not recursively rediscover the workspace.
     pub fn refresh(&mut self, workspace: &WorkspaceId, id: &WorktreeId) -> Result<StoredWorktree> {
@@ -561,8 +632,9 @@ impl WorkspaceService {
         id: &WorktreeId,
         options: &inspection::ReadOptions,
     ) -> Result<StoredWorktree> {
-        let old = self
-            .inventory(workspace)?
+        let entries = self.inventory(workspace)?;
+        let heads = observed_heads(&entries)?;
+        let old = entries
             .into_iter()
             .find(|entry| &entry.id == id)
             .ok_or_else(|| Error::with_kind(ErrorKind::InvalidRequest, "Unknown worktree"))?;
@@ -605,12 +677,14 @@ impl WorkspaceService {
             }
         };
         self.database.execute("UPDATE membership SET status=?3,issue=NULL,availability='available' WHERE workspace_id=?1 AND worktree_id=?2",params![workspace.0,id.0,serde_json::to_string(&status)?])?;
-        Ok(StoredWorktree {
+        let mut entry = StoredWorktree {
             status: Some(status),
             availability: Availability::Available,
             issue: None,
             ..old
-        })
+        };
+        reflect_child_heads(&mut entry, &heads)?;
+        Ok(entry)
     }
 }
 fn validate_config(config: &Config, directory: &Path) -> Result<()> {

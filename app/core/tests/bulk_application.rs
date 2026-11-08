@@ -448,6 +448,45 @@ fn real_submodule_commits_before_parent_and_changed_gitlink_requires_fresh_paren
     assert_eq!(fs::read(t.f.repo.join(".git/index")).unwrap(), index);
 
     let published_child = head(&t, child_index);
+    let before_diff = tree_bytes(&t.f.repo);
+    t.app
+        .request(
+            t.app.epoch(),
+            Request::Refresh {
+                workspace: t.ws.clone(),
+                worktree: t.entries[child_index].id.0.clone(),
+            },
+        )
+        .unwrap();
+    let Data::Diff(gitlink_diff) = t
+        .app
+        .request(
+            t.app.epoch(),
+            Request::Diff {
+                workspace: t.ws.clone(),
+                worktree: t.entries[parent].id.0.clone(),
+                mode: gitfleet_core::diff::DiffMode::Unstaged,
+                path: Some(NativePath::from_path(Path::new("modules/lib"))),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert_eq!(gitlink_diff.files.len(), 1);
+    assert_eq!(
+        gitlink_diff.files[0].old_oid.as_ref().unwrap().hex,
+        String::from_utf8(child_head.clone()).unwrap().trim()
+    );
+    assert_eq!(
+        gitlink_diff.files[0].new_oid.as_ref().unwrap().hex,
+        String::from_utf8(published_child.clone()).unwrap().trim()
+    );
+    let text = String::from_utf8(gitlink_diff.patch).unwrap();
+    assert!(text.contains("Observed child HEAD:"));
+    assert!(text.contains("Comparison uses the child's last local inspection."));
+    assert_eq!(tree_bytes(&t.f.repo), before_diff);
     let mut index_only = selection(&t, parent);
     index_only.mode = BatchMode::IndexOnly;
     let index_review = review(&mut t, vec![index_only]);

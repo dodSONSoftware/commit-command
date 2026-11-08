@@ -58,3 +58,8 @@ or report the ancestor clean merely because its own working files are unchanged.
 [Evidence](../validation/g05-native-unselected-submodule-2026-11-08/) contains exact
 setup/final snapshots, plans/records/trace, source/binary provenance, exit codes and
 oracles. Selected preservation is passed; status defect and wider gates remain open.
+
+
+Follow-up: ancestor false-clean status is fixed and natively retested in
+[G03 gitlink status](G03_GITLINK_STATUS_2026-11-08.md). The preserved omission case
+remains valid; the later source/runtime evidence owns corrected status acceptance.

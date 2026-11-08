@@ -156,6 +156,32 @@ impl Session<'_> {
         }
         Ok(result)
     }
+    pub(crate) fn index_gitlinks(&self) -> Result<Vec<IndexGitlink>> {
+        let bytes = self.git(&["ls-files", "--stage", "-z"])?;
+        let mut links = Vec::new();
+        for record in bytes.split(|b| *b == 0).filter(|r| !r.is_empty()) {
+            let tab = record
+                .iter()
+                .position(|b| *b == b'\t')
+                .ok_or_else(|| data_error("Invalid index record"))?;
+            let fields = std::str::from_utf8(&record[..tab])
+                .map_err(|_| data_error("Invalid index metadata"))?
+                .split(' ')
+                .collect::<Vec<_>>();
+            if fields.len() != 3 {
+                return Err(data_error("Invalid index metadata"));
+            }
+            if fields[0] == "160000" && fields[2] == "0" {
+                let path = NativePath::from_git(&record[tab + 1..])?;
+                path.relative()?;
+                links.push(IndexGitlink {
+                    path,
+                    oid: ObjectId::parse(fields[1], &self.format)?,
+                });
+            }
+        }
+        Ok(links)
+    }
     fn fingerprint(&self) -> Result<String> {
         let config = self.git(&["config", "--null", "--list", "--includes"])?;
         validate_config(&config)?;
@@ -381,6 +407,12 @@ pub struct Tracking {
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[cfg_attr(feature = "application-services", derive(schemars::JsonSchema))]
+pub struct IndexGitlink {
+    pub path: NativePath,
+    pub oid: ObjectId,
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "application-services", derive(schemars::JsonSchema))]
 pub struct Snapshot {
     pub head: Option<String>,
     pub branch: Option<String>,
@@ -391,6 +423,9 @@ pub struct Snapshot {
     pub detached: bool,
     pub counts: Counts,
     pub changes: Vec<Change>,
+    /// Own-index metadata only; workspace inventory compares independently inspected child HEADs.
+    #[serde(default)]
+    pub index_gitlinks: Option<Vec<IndexGitlink>>,
     pub tracking: Option<Tracking>,
     /// None in older persisted snapshots; Some(empty) means no configured remotes.
     #[serde(default)]
@@ -587,6 +622,7 @@ pub fn snapshot_with_options(repo: &Path, options: &ReadOptions) -> Result<Snaps
             head_oid,
             counts,
             changes,
+            index_gitlinks: Some(s.index_gitlinks()?),
             tracking,
             remotes: Some(remotes),
             operations,

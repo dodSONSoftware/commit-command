@@ -1,0 +1,10 @@
+{
+  "app/core/src/application/exploration.rs": "04967e8dafbeafad806e9881fd9245057a720aef64df4b6d2d2c7b3d8ac9eb76",
+  "app/core/src/application/mod.rs": "e78d1a9644ad58ee05067ef23d3a9da1e872128ee8a654f321cfc10a79f85296",
+  "app/core/src/discovery.rs": "355c7ab002fb99422b699e466a0d3277dcd42b2c5b3302a71c51bdcc9da242be",
+  "app/core/src/inspection.rs": "3590e90a6dc215f3d3c143cecdd7f0579040810a08c3d527c29b2083db3b1c97",
+  "app/core/src/workspace.rs": "ad4d7b754b60ba23c5002cf9bb3452bf40d1e756cae9c773410a40852240ddf7",
+  "app/core/tests/bulk_application.rs": "a29fb663c834194cd68106689a419c89e8726e0e8aff3f78eb87a31b74b76899",
+  "app/core/tests/m1_workspace.rs": "1f1870d62b35cef0f874df2c28a40da2923f28f6c6bdd4588c5dc0bf9af0807d",
+  "app/desktop/src/services/response.generated.ts": "6a066d91d0fcaa50db254aba00cf915245042c01929e3d9f798cb4c9448bb117"
+}

@@ -295,27 +295,18 @@ fn classify(report: &mut Inventory, options: &ReadOptions) -> Result<()> {
                     }
                 }
             }
-            let mut gitlinks = Vec::new();
-            let bytes = s.git(&["ls-files", "--stage", "-z"])?;
-            for record in bytes.split(|b| *b == 0).filter(|r| !r.is_empty()) {
-                let tab = record
-                    .iter()
-                    .position(|b| *b == b'\t')
-                    .ok_or_else(|| inspection::data_error("Invalid index record"))?;
-                let fields = std::str::from_utf8(&record[..tab])
-                    .map_err(|_| inspection::data_error("Invalid index metadata"))?
-                    .split(' ')
-                    .collect::<Vec<_>>();
-                if fields.len() != 3 {
-                    return Err(inspection::data_error("Invalid index metadata"));
-                }
-                if fields[0] == "160000" && fields[2] == "0" {
-                    gitlinks.push((
-                        NativePath::from_git(&record[tab + 1..])?,
-                        fields[1].to_owned(),
-                    ));
-                }
+            let gitlinks = match entry
+                .status
+                .as_ref()
+                .filter(|status| status.generation == s.generation)
+                .and_then(|status| status.index_gitlinks.as_ref())
+            {
+                Some(links) => links.clone(),
+                None => s.index_gitlinks()?,
             }
+            .into_iter()
+            .map(|link| (link.path, link.oid.hex))
+            .collect::<Vec<_>>();
             let worktrees = s.git(&["worktree", "list", "--porcelain", "-z"])?;
             let external = worktrees
                 .split(|b| *b == 0)

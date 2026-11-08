@@ -7,6 +7,19 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G03/G05 changed gitlink status — fixed and natively verified
+
+[Status fix](reports/G03_GITLINK_STATUS_2026-11-08.md): own-index gitlink OIDs now join
+independently inspected current child HEADs in workspace inventory. Parent counts/
+Changes rows reflect advanced child commits without recursive parent Git helpers;
+refresh/reversal/staged+unstaged merge stay correct. Inspector shows exact index/
+observed child OIDs, explicitly local observation data. Regression failed on old
+source then passed; full Core matrix 62/97/87/234/278 and lab 24 passed, full desktop
+91/13/16 plus format/types/lint/contracts/builds/strict Clippy passed. Ordinary native
+Rescan, targeted refresh, OID details and restart passed, exact repository files/modes,
+old journals/trusts/no replay preserved, exits 0/integrity/lock reopen. No new trust,
+publication or default change. G03 scale/accessibility and remaining gates stay open.
+
 ### November 8 G07 publication primitives — isolated Git proof passed, executor pending
 
 [Primitive contract](reports/G07_PUBLICATION_PRIMITIVES_2026-11-08.md): disposable
@@ -17,9 +30,9 @@ Approved reachable-object export also passed: exact object set in isolated store
 unselected branch blob absent, source config not loaded, managed files/modes exact.
 This is Git primitive evidence, not application push authority or G07 closure.
 Implement a separate publication review/journal/isolated transport path next; prior
-hook checks remain non-publication actions. G03 ancestor-status fix is in validation.
+hook checks remain non-publication actions. G03 ancestor-status fix passed as recorded above.
 
-### November 8 G05 dirty unselected submodule — preservation passed; ancestor status defect open
+### November 8 G05 dirty unselected submodule — preservation passed; status follow-up passed
 
 [Omitted-child package](reports/G05_NATIVE_UNSELECTED_SUBMODULE_2026-11-08.md): only
 middle selected, dirty actual leaf omitted; native Cancel preserved setup, fresh
@@ -29,9 +42,8 @@ new grants. Ordinary restart retained selection/dirty leaf/results, writes disab
 exact files/records/no replay, exits 0/integrity/lock reopen passed. Expanded test-only
 tracing identifies renderer Cancel/host close/native close/Destroyed; expected Cancel
 signature verified, original intermittent trigger still open. Full desktop gate
-91/13/16 plus checks/builds/strict Clippy passed. Native Overview incorrectly calls
-ancestor Clean despite independent Git reporting M middle after child advances;
-fix this actual changed-gitlink status defect next. Do not infer full G05/G03 closure.
+91/13/16 plus checks/builds/strict Clippy passed. Native Overview ancestor false-clean finding is now fixed and verified in the
+G03 gitlink-status report above. Do not infer full G05/G03 closure.
 
 ### November 8 G05 native bulk trust revocation — passed within envelope
 

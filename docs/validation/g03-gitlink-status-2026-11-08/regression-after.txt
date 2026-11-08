@@ -1,0 +1,11 @@
+   Compiling libsqlite3-sys v0.39.1
+   Compiling rusqlite v0.41.0
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.63s
+     Running tests/m1_workspace.rs (app/core/target/debug/deps/m1_workspace-dae20fca6b7c20f3)
+
+running 1 test
+test inventory_tracks_observed_child_heads_against_current_parent_gitlinks ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 20 filtered out; finished in 3.36s
+

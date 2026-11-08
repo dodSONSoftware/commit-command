@@ -740,3 +740,161 @@ fn cancelled_scan_still_returns_cancelled_and_preserves_saved_inventory() {
     );
     assert!(service.last_scan(&workspace.id).unwrap().unwrap().complete);
 }
+
+#[test]
+fn inventory_tracks_observed_child_heads_against_current_parent_gitlinks() {
+    let f = Fixture::new();
+    f.commit_file();
+    let source = Fixture::new();
+    source.commit_file();
+    f.git(&[
+        "-c",
+        "protocol.file.allow=always",
+        "submodule",
+        "add",
+        "-q",
+        source.repo.to_str().unwrap(),
+        "module",
+    ]);
+    f.git(&["commit", "-qm", "Register module"]);
+    let child = f.repo.join("module");
+    let child_path = child.to_str().unwrap();
+    for (key, value) in [
+        ("user.name", "Gitlink fixture"),
+        ("user.email", "fixture@example.invalid"),
+        ("commit.gpgsign", "false"),
+    ] {
+        f.git(&["-C", child_path, "config", key, value]);
+    }
+    let mut service = WorkspaceService::open(&f.root.join("state")).unwrap();
+    let workspace = service.create("gitlinks", &f.repo).unwrap();
+    let initial = service.scan(&workspace.id).unwrap();
+    let parent_id = initial
+        .entries
+        .iter()
+        .find(|e| e.metadata.root.to_path().unwrap() == fs::canonicalize(&f.repo).unwrap())
+        .unwrap()
+        .id
+        .clone();
+    let child_id = initial
+        .entries
+        .iter()
+        .find(|e| e.metadata.root.to_path().unwrap() == fs::canonicalize(&child).unwrap())
+        .unwrap()
+        .id
+        .clone();
+    let old_head = String::from_utf8(f.git(&["-C", child_path, "rev-parse", "HEAD"])).unwrap();
+    fs::write(child.join("file.txt"), b"advanced child\n").unwrap();
+    f.git(&["-C", child_path, "add", "file.txt"]);
+    f.git(&["-C", child_path, "commit", "-qm", "Advance child"]);
+    let new_head = String::from_utf8(f.git(&["-C", child_path, "rev-parse", "HEAD"])).unwrap();
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        let monitor = f.root.join("fsmonitor.sh");
+        fs::write(
+            &monitor,
+            format!(
+                "#!/bin/sh\n: > '{}'\n",
+                f.root.join("monitor-ran").display()
+            ),
+        )
+        .unwrap();
+        fs::set_permissions(&monitor, fs::Permissions::from_mode(0o755)).unwrap();
+        f.git(&[
+            "-C",
+            child_path,
+            "config",
+            "core.fsmonitor",
+            monitor.to_str().unwrap(),
+        ]);
+    }
+    let before = tree_bytes(&f.repo);
+    service.refresh(&workspace.id, &child_id).unwrap();
+    let parent = service
+        .inventory(&workspace.id)
+        .unwrap()
+        .into_iter()
+        .find(|e| e.id == parent_id)
+        .unwrap();
+    let status = parent.status.unwrap();
+    assert_eq!(
+        status.counts.unstaged, 1,
+        "A newly observed child commit must not leave its parent clean"
+    );
+    assert_eq!(
+        status
+            .changes
+            .iter()
+            .filter(|c| c.submodule == "SC.." && c.worktree == 'M')
+            .count(),
+        1
+    );
+    for _ in 0..2 {
+        let parent = service.refresh(&workspace.id, &parent_id).unwrap();
+        assert_eq!(parent.status.unwrap().counts.unstaged, 1);
+    }
+    assert_eq!(tree_bytes(&f.repo), before);
+    assert!(!f.root.join("monitor-ran").exists());
+
+    // Reverting the observed child HEAD clears the derived change, even with dirty child files.
+    f.git(&[
+        "-C",
+        child_path,
+        "update-ref",
+        "refs/heads/main",
+        old_head.trim(),
+    ]);
+    service.refresh(&workspace.id, &child_id).unwrap();
+    let parent = service.refresh(&workspace.id, &parent_id).unwrap();
+    assert_eq!(parent.status.unwrap().counts.unstaged, 0);
+    f.git(&[
+        "-C",
+        child_path,
+        "update-ref",
+        "refs/heads/main",
+        new_head.trim(),
+    ]);
+    service.refresh(&workspace.id, &child_id).unwrap();
+
+    // A staged gitlink uses its new index OID, and a later child change merges into one row.
+    f.git(&[
+        "update-index",
+        "--cacheinfo",
+        "160000",
+        new_head.trim(),
+        "module",
+    ]);
+    let parent = service.refresh(&workspace.id, &parent_id).unwrap();
+    let status = parent.status.unwrap();
+    assert_eq!((status.counts.staged, status.counts.unstaged), (1, 0));
+    f.git(&[
+        "-C",
+        child_path,
+        "update-ref",
+        "refs/heads/main",
+        old_head.trim(),
+    ]);
+    let before = tree_bytes(&f.repo);
+    service.refresh(&workspace.id, &child_id).unwrap();
+    let parent = service.refresh(&workspace.id, &parent_id).unwrap();
+    let status = parent.status.unwrap();
+    assert_eq!((status.counts.staged, status.counts.unstaged), (1, 1));
+    assert_eq!(
+        status
+            .changes
+            .iter()
+            .filter(|c| c.index_mode == "160000")
+            .count(),
+        1
+    );
+    let rescanned = service.scan(&workspace.id).unwrap();
+    let parent = rescanned
+        .entries
+        .iter()
+        .find(|e| e.id == parent_id)
+        .unwrap();
+    assert_eq!(parent.status.as_ref().unwrap().counts.unstaged, 1);
+    assert_eq!(tree_bytes(&f.repo), before);
+    assert!(!f.root.join("monitor-ran").exists());
+}

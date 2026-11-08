@@ -1380,6 +1380,10 @@ export interface Snapshot {
   generation: string;
   head?: string | null;
   head_oid?: ObjectId | null;
+  /**
+   * Own-index metadata only; workspace inventory compares independently inspected child HEADs.
+   */
+  index_gitlinks?: IndexGitlink[] | null;
   last_commit?: Commit | null;
   observed_at_ms: number;
   operations: string[];
@@ -1420,6 +1424,15 @@ export interface Counts {
   staged: number;
   unstaged: number;
   untracked: number;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "IndexGitlink".
+ */
+export interface IndexGitlink {
+  oid: ObjectId;
+  path: NativePath;
   [k: string]: unknown;
 }
 /**

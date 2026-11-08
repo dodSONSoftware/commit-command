@@ -1002,15 +1002,7 @@ impl Application {
                 worktree,
                 mode,
                 path,
-            } => {
-                let e = self.entry(&workspace, &worktree)?;
-                Data::Diff(diff::inspect_with_options(
-                    &e.metadata.root.to_path()?,
-                    mode,
-                    path.as_ref(),
-                    &self.read_options,
-                )?)
-            }
+            } => Data::Diff(self.workspace_diff(&workspace, &worktree, mode, path.as_ref())?),
             Request::Preview {
                 workspace,
                 worktree,
