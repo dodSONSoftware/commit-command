@@ -14,6 +14,18 @@ The original rows below retain the baseline assessment; dated follow-up ledgers 
 reports supersede their earlier test status. A later automated pass does not imply
 native or release acceptance.
 
+### November 8 G03 measured scale / partial scan recovery
+
+[Measured correctness fix](reports/G03_SCALE_PARTIAL_INVENTORY_2026-11-08.md): all six
+100/1,000/10,000-repository scans previously discarded results on deadline. Discovery
+now returns inspected entries with explicit incomplete/timeout issue; cancellation
+contract preserved. Repeated runs retain 88–93 entries near 15 seconds. Workspace 20,
+application 27, strict Core Clippy and full desktop gate (87/13/16) passed. Fresh
+ordinary native startup/live Rescan showed timeout details with retained inventory;
+exact repository preservation, no trust, Quit 0 and lock reopen passed. This closes
+the partial-result loss defect, not scale usability: incremental progress and broader
+G03 criteria remain open. G02 facility blocks retained; G04 still disabled.
+
 ### November 8 native SHA-256 offline import — complete
 
 [Final import package](reports/G06_NATIVE_SHA256_IMPORT_2026-11-08.md): retained

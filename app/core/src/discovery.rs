@@ -180,8 +180,19 @@ pub fn scan_with_options(
     let mut pending = vec![root.clone()];
     let start = Instant::now();
     let mut visited = 0;
+    let mut deadline_reached = false;
     while let Some(dir) = pending.pop() {
-        read_options.check(start)?;
+        if let Err(error) = read_options.check(start) {
+            if error.kind != ErrorKind::Timeout {
+                return Err(error);
+            }
+            report.issues.push(ScanIssue {
+                path: NativePath::from_path(&dir),
+                error: error.into(),
+            });
+            deadline_reached = true;
+            break;
+        }
         visited += 1;
         if visited > 100_000 {
             return Err(Error::with_kind(
@@ -248,7 +259,11 @@ pub fn scan_with_options(
     report
         .skipped_caches
         .sort_by_key(|path| path.to_path().ok());
-    classify(&mut report, read_options)?;
+    // Keep inspected entries visible when the traversal budget expires. Do not
+    // start relationship reads after that deadline or imply complete topology.
+    if !deadline_reached {
+        classify(&mut report, read_options)?;
+    }
     report.complete &= report.issues.is_empty();
     Ok(report)
 }

@@ -1,0 +1,20 @@
+{
+  "repository_files_modes_unchanged": true,
+  "stored_scan_updated_by_native_rescan": true,
+  "complete": false,
+  "retained_repositories": 93,
+  "issues": [
+    {
+      "path": {
+        "encoding": "utf8",
+        "value": "/private/tmp/gitfleet-g03-native-scale-0jkqe3q4/workspace/repo-054"
+      },
+      "error": {
+        "kind": "timeout",
+        "message": "Inspection timed out"
+      }
+    }
+  ],
+  "trust_rows": 0,
+  "sqlite_integrity": "ok"
+}

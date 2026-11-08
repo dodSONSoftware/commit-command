@@ -1,0 +1,14 @@
+{
+  "root": "/private/tmp/gitfleet-g03-native-scale-0jkqe3q4",
+  "workspace_root": "/private/tmp/gitfleet-g03-native-scale-0jkqe3q4/workspace",
+  "state": "/private/tmp/gitfleet-g03-native-scale-0jkqe3q4/state",
+  "workspace": "b624b127-9a51-47ce-8dde-e4ca36979906",
+  "repository_count": 100,
+  "returned_before_deadline": 93,
+  "app": "/private/tmp/gitfleet-g03-native-scale-0jkqe3q4/Commit Command G03 Scale.app",
+  "binary_sha256": "66dee3f410cb73fab07f9c7c06bc03ea4bc8f337e06daceaab2efba0af339232",
+  "features": [
+    "custom-protocol"
+  ],
+  "artifact": "fresh default release executable in ad-hoc local development bundle; not distribution release"
+}

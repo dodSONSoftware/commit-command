@@ -1,0 +1,22 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.41s
+     Running tests/m1_workspace.rs (app/core/target/debug/deps/m1_workspace-dae20fca6b7c20f3)
+
+running 1 test
+test expired_scan_is_reported_as_partial_without_marking_known_repositories_missing ... FAILED
+
+failures:
+
+---- expired_scan_is_reported_as_partial_without_marking_known_repositories_missing stdout ----
+
+thread 'expired_scan_is_reported_as_partial_without_marking_known_repositories_missing' (172092) panicked at tests/m1_workspace.rs:704:70:
+called `Result::unwrap()` on an `Err` value: Error { kind: Timeout, message: "Inspection timed out" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    expired_scan_is_reported_as_partial_without_marking_known_repositories_missing
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 19 filtered out; finished in 0.33s
+
+error: test failed, to rerun pass `--test m1_workspace`

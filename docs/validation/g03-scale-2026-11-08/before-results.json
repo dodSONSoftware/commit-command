@@ -1,0 +1,78 @@
+{
+  "platform": "macOS-27.2-arm64-arm-64bit",
+  "machine": "arm64",
+  "cpu_count": 16,
+  "fixture": "/private/tmp/gitfleet-scale-krqzc4as",
+  "git": "git version 2.56.0",
+  "cli_sha256": "bf1b2c4b2c4ee7c129a9929516300c9f91e156d14dce15272ca06d26b0919c86",
+  "scope": "Core CLI scan only; empty independent repos; no renderer/IPC/watcher/memory budget claim",
+  "first_pass_is_not_os_cache_cold": true,
+  "results": [
+    {
+      "repositories": 100,
+      "run": "first_pass",
+      "seconds": 15.013793957999999,
+      "timeout_seconds": 30,
+      "timed_out": false,
+      "exit": 1,
+      "output_bytes": 0,
+      "partial_json_available": false,
+      "error": "{\"error\":{\"kind\":\"timeout\",\"message\":\"Inspection timed out\"}}\n"
+    },
+    {
+      "repositories": 100,
+      "run": "warm",
+      "seconds": 15.137907708,
+      "timeout_seconds": 30,
+      "timed_out": false,
+      "exit": 1,
+      "output_bytes": 0,
+      "partial_json_available": false,
+      "error": "{\"error\":{\"kind\":\"timeout\",\"message\":\"Inspection timed out\"}}\n"
+    },
+    {
+      "repositories": 1000,
+      "run": "first_pass",
+      "seconds": 15.024475832999997,
+      "timeout_seconds": 30,
+      "timed_out": false,
+      "exit": 1,
+      "output_bytes": 0,
+      "partial_json_available": false,
+      "error": "{\"error\":{\"kind\":\"timeout\",\"message\":\"Inspection timed out\"}}\n"
+    },
+    {
+      "repositories": 1000,
+      "run": "warm",
+      "seconds": 15.060290666,
+      "timeout_seconds": 30,
+      "timed_out": false,
+      "exit": 1,
+      "output_bytes": 0,
+      "partial_json_available": false,
+      "error": "{\"error\":{\"kind\":\"timeout\",\"message\":\"Inspection timed out\"}}\n"
+    },
+    {
+      "repositories": 10000,
+      "run": "first_pass",
+      "seconds": 15.024720082999991,
+      "timeout_seconds": 30,
+      "timed_out": false,
+      "exit": 1,
+      "output_bytes": 0,
+      "partial_json_available": false,
+      "error": "{\"error\":{\"kind\":\"timeout\",\"message\":\"Inspection timed out\"}}\n"
+    },
+    {
+      "repositories": 10000,
+      "run": "warm",
+      "seconds": 15.049965584000006,
+      "timeout_seconds": 30,
+      "timed_out": false,
+      "exit": 1,
+      "output_bytes": 0,
+      "partial_json_available": false,
+      "error": "{\"error\":{\"kind\":\"timeout\",\"message\":\"Inspection timed out\"}}\n"
+    }
+  ]
+}

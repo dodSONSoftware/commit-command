@@ -1,0 +1,11 @@
+{
+  "platform": "macOS-27.2-arm64-arm-64bit",
+  "machine": "arm64",
+  "cpu_count": 16,
+  "fixture": "/private/tmp/gitfleet-scale-zt_ajjr0",
+  "git": "git version 2.56.0",
+  "cli_sha256": "65a3ffee124789584d010ab7d395d3bbc0e2525a556905d0d76165a988d749b1",
+  "scope": "Core CLI scan only; empty independent repos; no renderer/IPC/watcher/memory budget claim",
+  "first_pass_is_not_os_cache_cold": true,
+  "results": []
+}

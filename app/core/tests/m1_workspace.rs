@@ -686,3 +686,57 @@ fn tagged_caches_are_explicitly_skipped_without_hiding_other_broken_git_markers(
         assert!(report.skipped_caches.is_empty());
     }
 }
+
+#[test]
+fn expired_scan_is_reported_as_partial_without_marking_known_repositories_missing() {
+    use gitfleet_core::inspection::ReadOptions;
+    use std::time::Duration;
+    let f = Fixture::new();
+    f.commit_file();
+    let before = tree_bytes(&f.repo);
+    let mut service = WorkspaceService::open(&f.root.join("state")).unwrap();
+    let workspace = service.create("deadline", &f.repo).unwrap();
+    let original = service.scan(&workspace.id).unwrap().entries.remove(0);
+    let options = ReadOptions {
+        timeout: Duration::ZERO,
+        ..ReadOptions::default()
+    };
+    let partial = service.scan_with_options(&workspace.id, &options).unwrap();
+    assert!(!partial.scan.complete);
+    assert_eq!(partial.scan.issues.len(), 1);
+    assert_eq!(partial.scan.issues[0].error.kind, ErrorKind::Timeout);
+    assert_eq!(partial.entries.len(), 1);
+    assert_eq!(partial.entries[0].id, original.id);
+    assert!(matches!(
+        partial.entries[0].availability,
+        Availability::Unavailable
+    ));
+    let stored = service.last_scan(&workspace.id).unwrap().unwrap();
+    assert!(!stored.complete);
+    assert_eq!(stored.issues[0].error.kind, ErrorKind::Timeout);
+    assert_eq!(before, tree_bytes(&f.repo));
+}
+
+#[test]
+fn cancelled_scan_still_returns_cancelled_and_preserves_saved_inventory() {
+    use gitfleet_core::inspection::ReadOptions;
+    let f = Fixture::new();
+    let mut service = WorkspaceService::open(&f.root.join("state")).unwrap();
+    let workspace = service.create("cancel", &f.repo).unwrap();
+    service.scan(&workspace.id).unwrap();
+    let before = serde_json::to_value(service.inventory(&workspace.id).unwrap()).unwrap();
+    let options = ReadOptions::default();
+    options.cancellation.cancel();
+    assert_eq!(
+        service
+            .scan_with_options(&workspace.id, &options)
+            .unwrap_err()
+            .kind,
+        ErrorKind::Cancelled
+    );
+    assert_eq!(
+        before,
+        serde_json::to_value(service.inventory(&workspace.id).unwrap()).unwrap()
+    );
+    assert!(service.last_scan(&workspace.id).unwrap().unwrap().complete);
+}

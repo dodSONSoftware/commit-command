@@ -1,0 +1,102 @@
+{
+  "platform": "macOS-27.2-arm64-arm-64bit",
+  "machine": "arm64",
+  "cpu_count": 16,
+  "fixture": "/private/tmp/gitfleet-scale-rpjf_v4u",
+  "git": "git version 2.56.0",
+  "cli_sha256": "8370c373a36f884f38d21e772d3bc3a2df9989150a29e3a38f8bf3a8fcfb3638",
+  "scope": "Core CLI scan only; empty independent repos; no renderer/IPC/watcher/memory budget claim",
+  "first_pass_is_not_os_cache_cold": true,
+  "results": [
+    {
+      "repositories": 100,
+      "run": "first_pass",
+      "seconds": 15.201526917,
+      "timeout_seconds": 30,
+      "timed_out": false,
+      "exit": 0,
+      "output_bytes": 132806,
+      "complete": false,
+      "returned_repositories": 93,
+      "issues": 1,
+      "issue_kinds": [
+        "timeout"
+      ]
+    },
+    {
+      "repositories": 100,
+      "run": "warm",
+      "seconds": 15.161532292,
+      "timeout_seconds": 30,
+      "timed_out": false,
+      "exit": 0,
+      "output_bytes": 131383,
+      "complete": false,
+      "returned_repositories": 92,
+      "issues": 1,
+      "issue_kinds": [
+        "timeout"
+      ]
+    },
+    {
+      "repositories": 1000,
+      "run": "first_pass",
+      "seconds": 15.107052125000003,
+      "timeout_seconds": 30,
+      "timed_out": false,
+      "exit": 0,
+      "output_bytes": 127383,
+      "complete": false,
+      "returned_repositories": 89,
+      "issues": 1,
+      "issue_kinds": [
+        "timeout"
+      ]
+    },
+    {
+      "repositories": 1000,
+      "run": "warm",
+      "seconds": 15.267489165999997,
+      "timeout_seconds": 30,
+      "timed_out": false,
+      "exit": 0,
+      "output_bytes": 125957,
+      "complete": false,
+      "returned_repositories": 88,
+      "issues": 1,
+      "issue_kinds": [
+        "timeout"
+      ]
+    },
+    {
+      "repositories": 10000,
+      "run": "first_pass",
+      "seconds": 15.038430875000003,
+      "timeout_seconds": 30,
+      "timed_out": false,
+      "exit": 0,
+      "output_bytes": 131939,
+      "complete": false,
+      "returned_repositories": 92,
+      "issues": 1,
+      "issue_kinds": [
+        "timeout"
+      ]
+    },
+    {
+      "repositories": 10000,
+      "run": "warm",
+      "seconds": 15.141598875,
+      "timeout_seconds": 30,
+      "timed_out": false,
+      "exit": 0,
+      "output_bytes": 133368,
+      "complete": false,
+      "returned_repositories": 93,
+      "issues": 1,
+      "issue_kinds": [
+        "timeout"
+      ]
+    }
+  ]
+}
