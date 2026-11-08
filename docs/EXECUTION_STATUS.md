@@ -7,6 +7,14 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 7 current-source transport matrix — first configuration passed
+
+[Automated compatibility package](reports/G06_CURRENT_TRANSPORT_MATRIX_2026-11-07.md):
+application-services remote inspection 10 passed; remote execution 81 passed, 2
+explicitly ignored. Format and strict target Clippy passed. All-feature fault-enabled
+run continues. Full signing matrix still lacks the former isolated GPG tool; no
+native acceptance or whole-gate closure is inferred. G02/G06 remain partial.
+
 ### November 7 repository remote-status indicators
 
 [Remote-status report](reports/REPOSITORY_REMOTE_STATUS_2026-11-07.md): the overview

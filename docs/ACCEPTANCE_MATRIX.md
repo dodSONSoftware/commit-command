@@ -14,6 +14,14 @@ The original rows below retain the baseline assessment; dated follow-up ledgers 
 reports supersede their earlier test status. A later automated pass does not imply
 native or release acceptance.
 
+### November 7 current-source transport matrix — first configuration passed
+
+[Automated compatibility package](reports/G06_CURRENT_TRANSPORT_MATRIX_2026-11-07.md):
+application-services remote inspection 10 passed; remote execution 81 passed, 2
+explicitly ignored. Format and strict target Clippy passed. All-feature fault-enabled
+run continues. Full signing matrix still lacks the former isolated GPG tool; no
+native acceptance or whole-gate closure is inferred. G02/G06 remain partial.
+
 ### November 7 post-load startup follow-up
 
 [Diagnosis, patch and bounded retests](reports/G02_POST_LOAD_STARTUP_2026-11-07.md):

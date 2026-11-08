@@ -1,0 +1,116 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.53s
+     Running tests/remote_inspection.rs (app/core/target/debug/deps/remote_inspection-4251459876928727)
+
+running 10 tests
+test malformed_scp_style_userinfo_cannot_leak_a_password_in_inspection ... ok
+test effective_fetch_push_rewrites_case_sensitive_names_origins_and_upstream_are_read_only ... ok
+test unsupported_scp_query_and_fragment_values_are_withheld ... ok
+test inspection_never_executes_configured_helpers_and_never_returns_embedded_secrets ... ok
+test missing_upstream_detached_head_and_cancellation_are_explicit ... ok
+test explicit_pushurl_suppresses_pushinsteadof_and_multiple_destinations_stay_visible ... ok
+test helper_and_hostile_destinations_are_withheld_and_controls_fail_closed ... ok
+test explicit_ssh_login_is_visible_but_password_query_fragment_and_encoded_login_stay_withheld ... ok
+test scope_limits_malformed_names_and_case_insensitive_tls_overrides_fail_safely ... ok
+test push_remote_precedence_is_only_a_suggestion_and_unknown_or_local_upstream_is_reported ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.84s
+
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-a5b0bae5745a2202)
+
+running 83 tests
+test artifact_initialization::artifact_init_probe_worker ... ignored, subprocess-only controlled Git initialization probe
+test child_evidence::historical_mappings_refuse_ambiguity_unsafe_relative_urls_secrets_and_nonregular_blobs ... ok
+test child_evidence::historical_mapping_contexts_are_bounded_without_partial_success ... ok
+test authentication_failure_never_uses_a_configured_helper_or_retains_raw_server_text ... ok
+test certificate_source_drift_requires_new_review_before_any_request ... ok
+test child_evidence::historical_mappings_keep_url_changes_and_ignore_working_files_and_includes ... ok
+test child_evidence::child_evidence_rejects_historical_destination_mismatch ... ok
+test decline_cancellation_and_configuration_drift_never_contact_a_remote ... ok
+test authentication_profiles::profiles_require_native_approval_persist_and_are_not_implicitly_assigned ... ok
+test authentication_profiles::assigned_profile_refuses_destination_drift_and_requires_unassignment_before_delete ... ok
+test artifact_initialization::persistent_initialization_symlink_is_still_refused_before_object_import ... ok
+test fetch_capture_detects_remote_branch_drift_without_importing_downloaded_objects ... ok
+test fetch_capture_decline_precancel_and_configuration_drift_cannot_import_or_contact_a_server ... ok
+test authentication_profiles::profile_and_remote_isolation_and_tool_drift_block_lookup ... ok
+test https_credential_tests::actual_gitea_and_osxkeychain_read_download_import_and_missing_account ... ignored, opt-in loopback Gitea + exact generated macOS Keychain fixture; never uses user credentials
+test artifact_initialization::git_initialization_probe_is_transient_and_never_accepted_as_a_completed_artifact ... ok
+test fetch_capture_downloads_real_objects_over_verified_https_with_managed_helpers_isolated ... ok
+test fetch_capture_requires_fresh_native_authority_and_produces_exact_verified_bundle_without_managed_mutation ... ok
+test fetch_capture_rejects_missing_or_absent_sources_and_loses_authority_on_restart ... ok
+test child_evidence::real_agent_authenticated_child_evidence_resolves_relative_ssh_mapping_without_new_contact ... ok
+test authentication_profiles::explicitly_assigned_profile_authenticates_capture_without_host_credential_flags ... ok
+test child_evidence::child_evidence_rejects_mismatches_expiry_missing_objects_config_drift_and_cancellation ... ok
+test fetch_import_adds_exact_objects_and_one_tracking_ref_with_separate_authority ... ok
+test https_credential_tests::completed_https_transport_reaps_helper_background_descendants ... ok
+test authentication_profiles::settings_review_refuses_changed_helper_or_destination_and_cancelled_application ... ok
+test https_credential_tests::cancellation_after_credential_lookup_starts_reaps_the_helper_and_preserves_state ... ok
+test https_credential_tests::credential_helper_timeout_is_bounded_by_the_owning_network_operation ... ok
+test fetch_capture_refuses_authentication_redirects_and_cancels_a_proven_running_request ... ok
+test child_evidence::relative_child_mapping_uses_selected_parent_destination_and_proves_observed_ancestry ... ok
+test https_credential_tests::approved_https_helper_authenticates_downloads_and_imports_without_persisting_or_mutating_credentials ... ok
+test https_credential_tests::osxkeychain_password_only_response_and_private_state_extensions_authenticate_without_persistence ... ok
+test https_credential_tests::helper_credentials_never_bypass_tls_hostname_validation_or_follow_redirects ... ok
+test local_push_preview_bounds_outgoing_details_and_loses_no_exact_count ... ok
+test https_requires_a_valid_certificate_hostname_and_refuses_redirects ... ok
+test fetch_import_updates_packed_expected_old_for_sha1_and_sha256 ... ok
+test local_push_preview_refuses_excessive_source_gitlinks_without_partial_inventory ... ok
+test https_credential_tests::isolated_os_keychain_locked_missing_and_cancelled_reads_preserve_search_list_and_credentials ... ok
+test https_credential_tests::wrong_missing_and_changed_account_credentials_fail_without_store_or_erase ... ok
+test local_push_preview_covers_removed_replaced_and_merged_gitlinks_beyond_display_limit ... ok
+test missing_remote_branch_is_observed_absent_without_creating_a_destination ... ok
+test local_push_preview_inventories_committed_gitlinks_without_reading_children_or_index ... ok
+test local_push_preview_reports_up_to_date_and_fast_forward_without_authority_or_mutation ... ok
+test observation_needs_independent_native_authority_and_changes_neither_repository ... ok
+test local_push_preview_refuses_excessive_history_requirements_even_when_source_fits ... ok
+test local_push_preview_refuses_excessive_distinct_history_trees ... ok
+test child_evidence::selected_child_observation_proves_only_actual_ancestry_and_preserves_all_repositories has been running for over 60 seconds
+test https_credential_tests::declined_stale_or_cancelled_https_reviews_never_read_a_credential ... ok
+test https_credential_tests::malformed_oversized_and_failing_helpers_cannot_expose_a_secret_or_authenticate ... ok
+test fetch_import_rejects_aliases_and_shared_lock_and_orphaned_authority ... ok
+test child_evidence::selected_child_observation_proves_only_actual_ancestry_and_preserves_all_repositories ... ok
+test fetch_import_decline_cancel_tamper_config_and_ref_drift_fail_closed has been running for over 60 seconds
+test push_check::restart_projects_orphaned_checks_as_interrupted_without_replaying_hooks ... ok
+test fetch_import_decline_cancel_tamper_config_and_ref_drift_fail_closed ... ok
+test push_dependencies::planning_blocks_non_fast_forward_and_expired_root_without_children ... ok
+test push_check::conditional_selected_child_is_not_remote_success_for_parent_check ... ok
+test push_check::hook_source_mutation_blocks_completion_without_rolling_back_hook_effects ... ok
+test local_push_preview_requires_explicit_objects_then_reports_behind_and_diverged ... ok
+test push_check::running_hook_cancellation_stops_check_and_cannot_replay ... ok
+test restart_exposes_an_orphaned_review_but_never_restores_authority ... ok
+test running_https_observation_is_cancelled_after_the_actual_request_starts ... ok
+test local_push_preview_refuses_ambiguous_changed_or_unsupported_context_without_effects has been running for over 60 seconds
+test ssh_transport_tests::reviewed_ssh_profile_assignment_works_without_host_ssh_flags ... ok
+test push_dependencies::planning_refuses_two_selected_sources_for_one_destination_branch ... ok
+test push_check::rejected_or_precancelled_check_keeps_no_raw_hook_output_or_authority ... ok
+test ssh_transport_tests::ssh_server_failure_diagnostics_are_not_retained_in_results_or_journals ... ok
+test untrusted_or_ordinary_local_destinations_never_gain_network_authority ... ok
+test ssh_transport_tests::ssh_cancels_proven_authenticated_observation_and_download_without_repository_mutation ... ok
+test push_check::changed_hook_or_source_invalidates_approved_check_before_hook has been running for over 60 seconds
+test push_dependencies::planning_never_adds_unselected_children_and_requires_remote_evidence ... ok
+test push_check::child_gate_requires_new_observation_after_fixture_remote_advances has been running for over 60 seconds
+test push_check::decline_bypass_and_unsupported_manager_never_run_hook has been running for over 60 seconds
+test push_check::changed_hook_or_source_invalidates_approved_check_before_hook ... ok
+test local_push_preview_refuses_ambiguous_changed_or_unsupported_context_without_effects ... ok
+test ssh_transport_tests::ssh_agent_authenticates_only_selected_identity_then_downloads_and_imports_offline ... ok
+test push_check::native_capability_runs_exact_pre_push_payload_once_without_publication has been running for over 60 seconds
+test upstream_restart_revokes_setup_capability_without_creating_a_config_lock ... ok
+test push_dependencies::multilevel_selected_chain_is_ordered_grandchild_child_parent has been running for over 60 seconds
+test upstream_setup_adds_only_missing_keys_preserves_bytes_and_requires_new_trust ... ok
+test push_check::decline_bypass_and_unsupported_manager_never_run_hook ... ok
+test ssh_transport_tests::ssh_unknown_or_changed_host_and_wrong_selected_identity_fail_without_fallback ... ok
+test verified_https_observation_ignores_managed_helpers_proxies_and_unsafe_tls_settings ... ok
+test upstream_shared_config_is_visible_to_linked_worktrees_without_touching_either_checkout ... ok
+test push_dependencies::selected_child_without_required_commit_cannot_satisfy_parent ... ok
+test push_check::native_capability_runs_exact_pre_push_payload_once_without_publication ... ok
+test push_dependencies::selected_two_repository_cycle_returns_closed_witness_and_no_order ... ok
+test ssh_transport_tests::ssh_policy_drift_decline_and_precancel_never_authenticate ... ok
+test push_dependencies::multilevel_selected_chain_is_ordered_grandchild_child_parent ... ok
+test push_dependencies::selected_pending_child_is_conditional_and_unselected_pending_child_blocks has been running for over 60 seconds
+test upstream_decline_stale_config_head_trust_and_foreign_locks_preserve_repository ... ok
+test push_check::child_gate_requires_new_observation_after_fixture_remote_advances ... ok
+test upstream_setup_refuses_unsupported_policy_and_preserves_attributes_without_persisting_secrets ... ok
+test push_dependencies::selected_pending_child_is_conditional_and_unselected_pending_child_blocks ... ok
+
+test result: ok. 81 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 184.90s
+

@@ -1,0 +1,10 @@
+{
+  "source_commit": "4ed0a5ca43e69e504741e4992ead016e994d648c",
+  "platform": "macOS-27.2-arm64-arm-64bit",
+  "gpg_path_available": false,
+  "prior_gpg_artifact_present": false,
+  "scope": "remote_inspection and remote_observation; application-services and all-features; not full signing matrix",
+  "git": "git version 2.56.0",
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)"
+}
