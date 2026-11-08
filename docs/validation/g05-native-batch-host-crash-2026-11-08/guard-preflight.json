@@ -1,0 +1,9 @@
+{
+  "canonical_root_below_process_TMPDIR": "/private/tmp",
+  "immediate_repository_parent_prefix": "gitfleet-",
+  "repository_m2_markers_present": true,
+  "native_host_exact_marker_present": true,
+  "fixture_repository_bytes_modes_unchanged": true,
+  "no_trust_or_operations": true,
+  "expected_fault_phase": "reference_updated"
+}

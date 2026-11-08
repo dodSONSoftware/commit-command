@@ -7,6 +7,15 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G05 corrected batch host-crash fixture — ready, authorization pending
+
+[Corrected fixture](reports/G05_NATIVE_BATCH_HOST_CRASH_2026-11-08.md): required Core
+markers, parent layout and process temp root preflight passed; exact marked native
+host boundary retained. Fresh binaries include the uncertainty display fix. No trust,
+operations or repository changes beyond recorded preparation. Exact new alpha/beta
+trust review awaits specific authorization; control remains untrusted. Actual crash,
+partial-batch restart, guarded recovery and unfinished-only retry remain unrun.
+
 ### November 8 G05 uncertain publication display — fixed, crash case pending
 
 [Publication checkpoint](reports/G05_UNCONFIRMED_PUBLICATION_2026-11-08.md): actual
