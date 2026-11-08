@@ -1,0 +1,16 @@
+{
+  "root": "/private/tmp/gitfleet-g06-helper-di5z10fo",
+  "workspace_root": "/private/tmp/gitfleet-g06-helper-di5z10fo/workspace",
+  "repository": "/private/tmp/gitfleet-g06-helper-di5z10fo/workspace/repository",
+  "state": "/private/tmp/gitfleet-g06-helper-di5z10fo/state",
+  "workspace": "28e8de02-75b0-4799-8e2b-4e1f4b06f0b2",
+  "worktree": "f10b9195-4e1e-41b3-925b-51216d48464d",
+  "sentinel": "/private/tmp/gitfleet-g06-helper-di5z10fo/remote-helper-sentinel",
+  "app": "/private/tmp/gitfleet-g06-helper-di5z10fo/Commit Command Helper Refusal Acceptance.app",
+  "features": [
+    "custom-protocol",
+    "desktop-writes"
+  ],
+  "source_commit": "484d289cee1dbdfd0b357df88825224bd3561aa7",
+  "binary_sha256": "54809b4155865cbe835eae15a5f8c76ff6d2a8528addefec2fcbe89b585b275b"
+}

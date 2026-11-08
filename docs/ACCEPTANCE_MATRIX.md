@@ -101,6 +101,16 @@ Selected exit branch passed, complementing prior Keep app open evidence. Already
 draft used: no unsaved-edit loss/recovery claim. No product fix or new full automated
 suite. G02 remains partial; G06 remote compatibility is unchanged.
 
+### November 7 G06 executable-helper refusal preparation — authorization blocked
+
+[Prepared native case](reports/G06_NATIVE_REMOTE_HELPER_REFUSAL_2026-11-07.md): fresh
+disposable `ext::` remote-helper sentinel fixture and acceptance build prepared.
+Automatic approval review rejected the native fixture trust grant because specific
+access-change authorization is missing. User authorization requested; no bypass used.
+Read-only checks confirm unchanged repositories, no helper invocation and zero
+trust/write/observation rows. **No remote-refusal pass claimed.** Resume only after
+specific fixture authorization; G02/G06 remain partial. No product patch.
+
 ## How to read the status
 
 - **POC-tested:** Behavior exercised by the existing Python labs / Rust v0.1.1 *in a constrained experimental subset*. Does not mean production ready.
