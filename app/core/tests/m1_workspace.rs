@@ -510,3 +510,118 @@ fn changing_workspace_root_invalidates_old_inventory_and_refresh_scope() {
     );
     assert_eq!(before, tree_bytes(&f.repo));
 }
+
+#[test]
+fn replacement_recovery_preserves_history_and_restored_identity() {
+    let f = Fixture::new();
+    f.commit_file();
+    let state = f.root.join("state");
+    let mut service = WorkspaceService::open(&state).unwrap();
+    let workspace = service.create("recovery", &f.repo).unwrap();
+    let original = service.scan(&workspace.id).unwrap().entries.remove(0);
+    fs::rename(f.repo.join(".git"), f.root.join("original-git")).unwrap();
+    f.git(&["init", "-q"]);
+    assert_eq!(
+        service
+            .refresh(&workspace.id, &original.id)
+            .unwrap_err()
+            .kind,
+        ErrorKind::ConcurrentChange
+    );
+    let before = tree_bytes(&f.repo);
+    let recovered = service.scan(&workspace.id).unwrap();
+    let current = recovered
+        .entries
+        .iter()
+        .find(|e| e.superseded_by.is_none())
+        .unwrap();
+    assert_ne!(current.id, original.id);
+    assert_ne!(current.repository_id, original.repository_id);
+    assert!(current.untrusted);
+    let replacement_id = current.id.clone();
+    assert_eq!(
+        recovered
+            .entries
+            .iter()
+            .find(|e| e.id == original.id)
+            .unwrap()
+            .superseded_by
+            .as_ref(),
+        Some(&replacement_id)
+    );
+    assert_eq!(
+        service
+            .refresh(&workspace.id, &original.id)
+            .unwrap_err()
+            .kind,
+        ErrorKind::Unavailable
+    );
+    assert_eq!(before, tree_bytes(&f.repo));
+    for _ in 0..2 {
+        let entries = service.scan(&workspace.id).unwrap().entries;
+        assert_eq!(entries.len(), 2);
+        assert_eq!(
+            entries.iter().filter(|e| e.superseded_by.is_none()).count(),
+            1
+        );
+    }
+    drop(service);
+    let mut service = WorkspaceService::open(&state).unwrap();
+    assert_eq!(
+        service
+            .inventory(&workspace.id)
+            .unwrap()
+            .iter()
+            .filter(|e| e.superseded_by.is_some())
+            .count(),
+        1
+    );
+    // Missing/incomplete discovery cannot erase the historical distinction.
+    fs::rename(&f.repo, f.root.join("temporarily-away")).unwrap();
+    let missing = service.scan(&workspace.id).unwrap();
+    assert!(!missing.scan.complete);
+    assert_eq!(
+        missing
+            .entries
+            .iter()
+            .filter(|e| e.superseded_by.is_some())
+            .count(),
+        1
+    );
+    fs::rename(f.root.join("temporarily-away"), &f.repo).unwrap();
+    fs::rename(f.repo.join(".git"), f.root.join("replacement-git")).unwrap();
+    fs::rename(f.root.join("original-git"), f.repo.join(".git")).unwrap();
+    let restored = service.scan(&workspace.id).unwrap();
+    let active = restored
+        .entries
+        .iter()
+        .find(|e| e.superseded_by.is_none())
+        .unwrap();
+    assert_eq!(active.id, original.id);
+    assert_eq!(
+        restored
+            .entries
+            .iter()
+            .find(|e| e.id == replacement_id)
+            .unwrap()
+            .superseded_by
+            .as_ref(),
+        Some(&original.id)
+    );
+}
+
+#[test]
+fn failed_replacement_inspection_does_not_retire_original_identity() {
+    let f = Fixture::new();
+    f.commit_file();
+    let mut service = WorkspaceService::open(&f.root.join("state")).unwrap();
+    let workspace = service.create("recovery", &f.repo).unwrap();
+    let original = service.scan(&workspace.id).unwrap().entries.remove(0);
+    fs::rename(f.repo.join(".git"), f.root.join("old-git")).unwrap();
+    f.git(&["init", "-q"]);
+    f.git(&["config", "filter.block.clean", "must-not-run"]);
+    let result = service.scan(&workspace.id).unwrap();
+    assert!(!result.scan.complete);
+    assert!(result.entries.iter().all(|e| e.superseded_by.is_none()));
+    assert!(result.entries.iter().any(|e| e.id == original.id));
+}

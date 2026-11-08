@@ -832,3 +832,66 @@ it("captures the latest navigation and bulk draft on close before debounce and u
   unmount();
   expect(unsubscribe).toHaveBeenCalledOnce();
 });
+
+it("keeps a historical tab and draft separate from the replacement and active inventory", async () => {
+  const { bridge, requests } = fake();
+  const request = bridge.request.bind(bridge);
+  bridge.request = async (input): Promise<Payload> => {
+    if (input.kind === "inventory" || input.kind === "scan")
+      return {
+        kind: "inventory",
+        value: {
+          entries: [
+            {
+              ...fixtureEntry("old", "repo"),
+              availability: "missing",
+              superseded_by: "replacement",
+            },
+            fixtureEntry("replacement", "repo"),
+          ],
+          monitor: { running: true, epoch: 1, watched: 1, degraded: null },
+        },
+      };
+    if (input.kind === "load_state")
+      return {
+        kind: "state",
+        value: {
+          ...initialState,
+          active_tab: "old",
+          tabs: [
+            {
+              worktree: "old",
+              view: "changes",
+              filter: "",
+              source: "working_tree",
+              scroll: 0,
+            },
+          ],
+          drafts: { old: "Keep this draft" },
+        },
+      };
+    return request(input);
+  };
+  render(<App bridge={bridge} />);
+  await screen.findByRole("heading", { name: "Repository unavailable" });
+  expect(screen.queryByRole("textbox", { name: "Message" })).toBeNull();
+  await userEvent.click(
+    screen.getByText("Historical repository identities · 1"),
+  );
+  expect(
+    screen.getByRole("textbox", { name: /Preserved historical draft/ }),
+  ).toHaveValue("Keep this draft");
+  await userEvent.click(
+    screen.getByRole("button", { name: "Open inspected replacement" }),
+  );
+  expect(await screen.findByRole("textbox", { name: "Message" })).toHaveValue(
+    "",
+  );
+  await userEvent.click(screen.getByRole("button", { name: "▦ Overview" }));
+  expect(screen.getAllByRole("checkbox", { name: "Select repo" })).toHaveLength(
+    1,
+  );
+  expect(
+    requests.some((r) => r.kind === "review_trust" || r.kind === "propose"),
+  ).toBe(false);
+});

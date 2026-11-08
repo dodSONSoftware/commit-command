@@ -182,7 +182,7 @@ impl Monitor {
                         Some("Root watch unavailable; periodic reconciliation active".into());
                 }
                 let mut paths = std::collections::BTreeSet::new();
-                for e in entries {
+                for e in entries.iter().filter(|e| e.superseded_by.is_none()) {
                     for p in [&e.metadata.git_dir, &e.metadata.common_dir] {
                         let p = p.to_path()?;
                         if !p.starts_with(&root) {

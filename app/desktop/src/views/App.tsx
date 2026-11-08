@@ -41,6 +41,7 @@ import {
 import { WorkspaceActivity } from "./WorkspaceActivity";
 import { HistoryGraph } from "./HistoryGraph";
 import { BulkCommit } from "./BulkCommit";
+import { RepositoryIdentityRecovery } from "./RepositoryIdentityRecovery";
 import { RepositoryRemoteStatus } from "./RepositoryRemoteStatus";
 import { RemoteInspector } from "./RemoteInspector";
 import { OperationHistory } from "./OperationHistory";
@@ -48,7 +49,8 @@ type Source = "index" | "working_tree";
 export function App({ bridge }: { bridge: Bridge }) {
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [workspace, setWorkspace] = useState<string | null>(null);
-  const [entries, setEntries] = useState<StoredWorktree[]>([]);
+  const [allEntries, setEntries] = useState<StoredWorktree[]>([]);
+  const entries = allEntries.filter((e) => !e.superseded_by);
   const [nav, setNav] = useState<DesktopState>(initialState);
   const [bulkComposer, setBulkComposer] =
     useState<BulkComposerState>(initialBulkComposer);
@@ -127,7 +129,7 @@ export function App({ bridge }: { bridge: Bridge }) {
   }, [bridge]);
   const activeWorkspace = workspaces.find((w) => w.id === workspace);
   const root = activeWorkspace ? pathText(activeWorkspace.root) : "";
-  const entry = entries.find((e) => e.id === nav.active_tab);
+  const entry = allEntries.find((e) => e.id === nav.active_tab);
   const tab = nav.tabs.find((t) => t.worktree === nav.active_tab);
   const act = useCallback(async (action: () => Promise<void>) => {
     setPendingActions((count) => count + 1);
@@ -426,7 +428,7 @@ export function App({ bridge }: { bridge: Bridge }) {
           ▦ Overview
         </button>
         {nav.tabs.map((t) => {
-          const e = entries.find((e) => e.id === t.worktree);
+          const e = allEntries.find((e) => e.id === t.worktree);
           return (
             <div
               className={`tab ${nav.active_tab === t.worktree && !showOperations && !showActivity && !showBulk ? "active" : ""}`}
@@ -689,6 +691,25 @@ export function App({ bridge }: { bridge: Bridge }) {
               </button>
             </div>
           )}
+          {workspace && (
+            <RepositoryIdentityRecovery
+              entries={allEntries}
+              drafts={nav.drafts}
+              busy={busy}
+              onRescan={() =>
+                act(async () => {
+                  await bridge.request({ kind: "scan", workspace });
+                  await inventory(workspace);
+                })
+              }
+              onOpen={(replacement) => {
+                setNav(openTab(nav, replacement));
+                setShowOperations(false);
+                setShowActivity(false);
+                setShowBulk(false);
+              }}
+            />
+          )}
           {showBulk && workspace ? (
             <BulkCommit
               revision={resultsRevision}
@@ -741,7 +762,7 @@ export function App({ bridge }: { bridge: Bridge }) {
                 key={workspace}
                 bridge={bridge}
                 workspace={workspace}
-                entries={entries}
+                entries={allEntries}
                 busy={busy}
                 act={act}
                 revision={resultsRevision}
@@ -1000,7 +1021,7 @@ export function App({ bridge }: { bridge: Bridge }) {
                 </div>
               )}
             </>
-          ) : entry && tab ? (
+          ) : entry && tab && !entry.superseded_by ? (
             <Repository
               key={`${workspace}/${entry.id}`}
               bridge={bridge}
@@ -1021,8 +1042,8 @@ export function App({ bridge }: { bridge: Bridge }) {
             <div className="empty">
               <h1>Repository unavailable</h1>
               <p>
-                This tab is preserved. Rescan or resolve its root; no other
-                repository is substituted.
+                This tab and its draft are preserved. Review repository identity
+                recovery above or rescan; no other repository is substituted.
               </p>
             </div>
           )}

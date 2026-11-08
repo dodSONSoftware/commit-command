@@ -388,7 +388,7 @@ impl Application {
             .into_iter()
             .find(|e| e.id.0 == worktree)
             .ok_or_else(|| invalid("Unknown worktree"))?;
-        if !matches!(entry.availability, Availability::Available) {
+        if entry.superseded_by.is_some() || !matches!(entry.availability, Availability::Available) {
             return Err(Error::with_kind(
                 ErrorKind::Unavailable,
                 "Worktree is unavailable",
@@ -679,6 +679,7 @@ impl Application {
             }
             Request::Scan { workspace } => {
                 let id = self.active(&workspace)?;
+                self.abandon_review()?;
                 self.writes
                     .workspace
                     .scan_with_options(&id, &self.read_options)?;
@@ -1133,6 +1134,9 @@ impl Application {
         }
         if work.status {
             for e in self.writes.workspace.inventory(&id)? {
+                if e.superseded_by.is_some() {
+                    continue;
+                }
                 if let Err(error) = self.writes.workspace.refresh(&id, &e.id) {
                     self.monitor.failure(&error);
                 }

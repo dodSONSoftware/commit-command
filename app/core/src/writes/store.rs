@@ -120,14 +120,16 @@ impl ControlledWrites {
             .into_iter()
             .find(|e| &e.id == worktree)
             .ok_or_else(|| fail(ErrorKind::InvalidRequest, "Unknown worktree"))?;
-        if !matches!(
-            entry.availability,
-            crate::workspace::Availability::Available
-        ) || !entry
-            .metadata
-            .root
-            .to_path()?
-            .starts_with(definition.root.to_path()?)
+        if entry.superseded_by.is_some()
+            || !matches!(
+                entry.availability,
+                crate::workspace::Availability::Available
+            )
+            || !entry
+                .metadata
+                .root
+                .to_path()?
+                .starts_with(definition.root.to_path()?)
         {
             return Err(fail(
                 ErrorKind::Unavailable,

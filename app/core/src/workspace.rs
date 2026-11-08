@@ -54,6 +54,9 @@ pub struct StoredWorktree {
     pub status: Option<Snapshot>,
     pub issue: Option<Issue>,
     pub untrusted: bool,
+    /// Historical identity replaced at the same path by a locally inspected identity.
+    #[serde(default)]
+    pub superseded_by: Option<WorktreeId>,
 }
 #[derive(Debug, Serialize)]
 #[cfg_attr(feature = "application-services", derive(schemars::JsonSchema))]
@@ -406,6 +409,7 @@ impl WorkspaceService {
             &workspace.discovery,
             options,
         )?;
+        let previous = self.inventory(id)?;
         let transaction = self.database.transaction()?;
         transaction.execute(
             "UPDATE membership SET availability=?2 WHERE workspace_id=?1",
@@ -445,6 +449,25 @@ impl WorkspaceService {
                 )
                 .optional()?;
             let worktree_id = worktree_id.unwrap_or_else(|| Uuid::new_v4().to_string());
+            // A successful inspection establishes a current identity at this exact
+            // path. Keep old IDs and their state; never transfer authority or drafts.
+            if entry.status.is_some() {
+                transaction.execute(
+                    "DELETE FROM state WHERE key=?1",
+                    [format!("superseded:{}:{}", id.0, worktree_id)],
+                )?;
+                for old in &previous {
+                    if old.id.0 != worktree_id && old.metadata.root == metadata.root {
+                        transaction.execute(
+                            "INSERT OR REPLACE INTO state(key,value) VALUES(?1,?2)",
+                            params![
+                                format!("superseded:{}:{}", id.0, old.id.0),
+                                serde_json::to_string(&WorktreeId(worktree_id.clone()))?
+                            ],
+                        )?;
+                    }
+                }
+            }
             let serialized = serde_json::to_string(metadata)?;
             transaction.execute("INSERT INTO worktrees(id,repository_id,binding,metadata) VALUES(?1,?2,?3,?4) ON CONFLICT(binding) DO UPDATE SET metadata=excluded.metadata",params![worktree_id,repository_id,binding,serialized])?;
             transaction.execute("INSERT OR REPLACE INTO membership(workspace_id,worktree_id,availability,status,issue) VALUES(?1,?2,?3,?4,?5)",params![id.0,worktree_id,if entry.status.is_some(){"available"}else{"unavailable"},entry.status.as_ref().map(serde_json::to_string).transpose()?,entry.issue.as_ref().map(serde_json::to_string).transpose()?])?;
@@ -494,6 +517,7 @@ impl WorkspaceService {
                 row.get::<_, Option<String>>(5)?,
             ))
         })?;
+        let workspace_id = &id.0;
         rows.map(|row| {
             let (id, repository_id, metadata, availability, status, issue) = row?;
             let metadata: Metadata = serde_json::from_str(&metadata)?;
@@ -502,7 +526,7 @@ impl WorkspaceService {
                 NativePath::from_path(root.strip_prefix(&workspace_root).unwrap_or(&root));
             Ok(StoredWorktree {
                 display_path,
-                id: WorktreeId(id),
+                id: WorktreeId(id.clone()),
                 repository_id: RepositoryId(repository_id),
                 metadata,
                 availability: match availability.as_str() {
@@ -513,6 +537,16 @@ impl WorkspaceService {
                 status: status.map(|s| serde_json::from_str(&s)).transpose()?,
                 issue: issue.map(|s| serde_json::from_str(&s)).transpose()?,
                 untrusted: true,
+                superseded_by: self
+                    .database
+                    .query_row(
+                        "SELECT value FROM state WHERE key=?1",
+                        [format!("superseded:{}:{}", workspace_id, id)],
+                        |row| row.get::<_, String>(0),
+                    )
+                    .optional()?
+                    .map(|value| serde_json::from_str(&value))
+                    .transpose()?,
             })
         })
         .collect()
@@ -532,6 +566,12 @@ impl WorkspaceService {
             .into_iter()
             .find(|entry| &entry.id == id)
             .ok_or_else(|| Error::with_kind(ErrorKind::InvalidRequest, "Unknown worktree"))?;
+        if old.superseded_by.is_some() {
+            return Err(Error::with_kind(
+                ErrorKind::Unavailable,
+                "Historical repository identity; rescan to inspect the current repository",
+            ));
+        }
         let root = old.metadata.root.to_path()?;
         let workspace_root = self.definition(workspace)?.root.to_path()?;
         let refreshed = (|| -> Result<Snapshot> {

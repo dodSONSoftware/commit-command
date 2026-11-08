@@ -40,7 +40,12 @@ in managed project marker files. No identity grants trust: every stored entry re
 Aliases canonicalize; friendly supplied workspace roots and relative display paths
 remain separate from identity. A verified same-filesystem move retains IDs if all
 required bindings still match. Copies/replacements get new bindings; old entries
-remain missing/unavailable. Matching is conservative evidence, not a cryptographic
+remain missing/unavailable. After successful local inspection of a different identity
+at the exact same canonical path, the workspace records `superseded_by` for the old
+identity. Historical IDs, state and audit records are retained, but the desktop
+excludes them from active inventory and monitoring. Failed inspection never proves
+a replacement. Restoring the original filesystem identity can make it current again
+on rescan; no path-only rebinding or transfer of trust, approvals or drafts occurs. Matching is conservative evidence, not a cryptographic
 identity guarantee against inode reuse or a malicious local actor.
 
 Metadata classifies shared worktrees, independently nested repos, and submodule

@@ -92,6 +92,16 @@ reload and preserved exact draft/history/repository state with no replay. Diagno
 launches did not recapture the intermittent blank, so broader startup reliability
 remains open; earlier blank evidence is retained. G02/G06 stay partial.
 
+### November 7 repository identity recovery
+
+[Recovery implementation and acceptance](reports/REPOSITORY_IDENTITY_RECOVERY_2026-11-07.md):
+local Rescan and review separates verified same-path replacements from historical
+identities, retains drafts/history, blocks historical execution and invalidates pending
+reviews without transferring trust. Missing/failed inspection remains unresolved.
+17 workspace / 26 application tests and full desktop checks (83 / 13 / 16) passed;
+selected ordinary native recovery presentation verified. G02/G06 remain partial;
+broader lifecycle/accessibility/default-write gates are unchanged.
+
 ## Safety, execution and evidence rules
 
 - Perform interaction manually or through an organization-permitted native testing

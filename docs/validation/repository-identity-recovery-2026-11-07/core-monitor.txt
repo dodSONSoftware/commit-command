@@ -1,0 +1,22 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.57s
+     Running tests/m3_application.rs (app/core/target/debug/deps/m3_application-60da97eb5ba79141)
+
+running 1 test
+test recovered_historical_identities_do_not_degrade_periodic_monitoring ... FAILED
+
+failures:
+
+---- recovered_historical_identities_do_not_degrade_periodic_monitoring stdout ----
+
+thread 'recovered_historical_identities_do_not_degrade_periodic_monitoring' (3193769) panicked at tests/m3_application.rs:2020:9:
+Some("Root watch unavailable; periodic reconciliation active")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    recovered_historical_identities_do_not_degrade_periodic_monitoring
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 25 filtered out; finished in 0.67s
+
+error: test failed, to rerun pass `--test m3_application`

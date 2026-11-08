@@ -1878,3 +1878,160 @@ fn g01_g02_shutdown_or_reset_revokes_issued_commit_confirmation_without_running_
         assert_eq!(tree_bytes(&f.repo), before);
     }
 }
+
+#[test]
+fn identity_recovery_keeps_drafts_and_trust_scoped_and_invalidates_pending_review() {
+    let (f, mut app, ws, wt) = setup();
+    trust(&mut app, &ws, &wt);
+    let mut state = DesktopState::default();
+    state.drafts.insert(wt.clone(), "Historical draft".into());
+    state.active_tab = Some(wt.clone());
+    state.tabs.push(RepositoryTab {
+        worktree: wt.clone(),
+        ..RepositoryTab::default()
+    });
+    app.request(
+        app.epoch(),
+        Request::SaveState {
+            workspace: ws.clone(),
+            state: state.clone(),
+        },
+    )
+    .unwrap();
+    let Data::Review(review) = app
+        .request(
+            app.epoch(),
+            Request::ReviewTrust {
+                workspace: ws.clone(),
+                worktrees: vec![wt.clone()],
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    let (cap, _) = app.begin_confirmation(&review.id).unwrap();
+    fs::rename(f.repo.join(".git"), f.root.join("old-git")).unwrap();
+    f.git(&["init", "-q"]);
+    let before = tree_bytes(&f.repo);
+    let Data::Inventory(inventory) = app
+        .request(
+            app.epoch(),
+            Request::Scan {
+                workspace: ws.clone(),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    let current = inventory
+        .entries
+        .iter()
+        .find(|e| e.superseded_by.is_none())
+        .unwrap();
+    assert_ne!(current.id.0, wt);
+    assert!(app.confirm(cap, true, Cancellation::default()).is_err());
+    let Data::Trust(states) = app
+        .request(
+            app.epoch(),
+            Request::TrustStatus {
+                workspace: ws.clone(),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert_eq!(
+        states
+            .iter()
+            .find(|s| s.worktree == current.id.0)
+            .unwrap()
+            .grant,
+        "untrusted"
+    );
+    assert!(app
+        .request(
+            app.epoch(),
+            Request::Refresh {
+                workspace: ws.clone(),
+                worktree: wt.clone()
+            }
+        )
+        .is_err());
+    let Data::State(restored) = app
+        .request(
+            app.epoch(),
+            Request::LoadState {
+                workspace: ws.clone(),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert_eq!(restored.drafts, state.drafts);
+    assert_eq!(restored.active_tab, Some(wt));
+    assert!(!restored.drafts.contains_key(&current.id.0));
+    assert_eq!(before, tree_bytes(&f.repo));
+}
+
+#[test]
+fn recovered_historical_identities_do_not_degrade_periodic_monitoring() {
+    let (f, mut app, ws) = fast_setup();
+    fs::rename(f.repo.join(".git"), f.root.join("old-git")).unwrap();
+    f.git(&["init", "-q"]);
+    app.request(
+        app.epoch(),
+        Request::Scan {
+            workspace: ws.clone(),
+        },
+    )
+    .unwrap();
+    let Data::Inventory(initial) = app
+        .request(
+            app.epoch(),
+            Request::Inventory {
+                workspace: ws.clone(),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    let initial_degradation = initial.monitor.degraded;
+    let before = tree_bytes(&f.repo);
+    let start = std::time::Instant::now();
+    while start.elapsed() < std::time::Duration::from_millis(1400) {
+        app.reconcile().unwrap();
+        let Data::Inventory(inventory) = app
+            .request(
+                app.epoch(),
+                Request::Inventory {
+                    workspace: ws.clone(),
+                },
+            )
+            .unwrap()
+            .data
+        else {
+            panic!()
+        };
+        assert_eq!(
+            inventory
+                .entries
+                .iter()
+                .filter(|e| e.superseded_by.is_some())
+                .count(),
+            1
+        );
+        assert_eq!(inventory.monitor.degraded, initial_degradation);
+        std::thread::sleep(std::time::Duration::from_millis(80));
+    }
+    assert_eq!(before, tree_bytes(&f.repo));
+}

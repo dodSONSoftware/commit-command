@@ -1360,6 +1360,10 @@ export interface StoredWorktree {
   metadata: Metadata;
   repository_id: string;
   status?: Snapshot | null;
+  /**
+   * Historical identity replaced at the same path by a locally inspected identity.
+   */
+  superseded_by?: string | null;
   untrusted: boolean;
   [k: string]: unknown;
 }
