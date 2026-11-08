@@ -17,6 +17,7 @@ pub enum OperationAuditKind {
     FetchImport,
     UpstreamSetup,
     PushCheck,
+    PushPublication,
 }
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "snake_case")]
@@ -48,6 +49,7 @@ pub enum OperationAuditRecord {
     FetchImport(Box<FetchImport>),
     UpstreamSetup(Box<UpstreamOperation>),
     PushCheck(Box<crate::remote::push_check::PushCheck>),
+    PushPublication(Box<crate::remote::push_publication::PushPublication>),
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct OperationAuditEntry {
@@ -100,6 +102,11 @@ WITH sources AS (
          'push_check', json_extract(value,'$.value.phase'), value,
          json_extract(value,'$.value.plan.worktree')
     FROM state WHERE key LIKE 'push-check:%' AND json_extract(value,'$.value.plan.workspace')=?1
+  UNION ALL
+  SELECT 'push_publication', substr(key,18), json_extract(value,'$.value.plan.created_at_ms'),
+         'push_publication', json_extract(value,'$.value.phase'), value,
+         json_extract(value,'$.value.plan.check.worktree')
+    FROM state WHERE key LIKE 'push-publication:%' AND json_extract(value,'$.value.plan.check.workspace')=?1
 ), classified AS (
   SELECT *, CASE
     WHEN source='local' AND phase IN ('proposed','approved') AND id IS NOT ?8 THEN 'interrupted'
@@ -109,6 +116,9 @@ WITH sources AS (
     WHEN source='import' AND phase='proposed' AND id IS NOT ?12 THEN 'interrupted'
     WHEN source='upstream' AND phase='proposed' AND id IS NOT ?13 THEN 'interrupted'
     WHEN source='push_check' AND (phase='running' OR (phase='proposed' AND id IS NOT ?14)) THEN 'interrupted'
+    WHEN source='push_publication' AND phase IN ('checking','preparing') THEN 'interrupted'
+    WHEN source='push_publication' AND phase='proposed' AND id IS NOT ?15 THEN 'interrupted'
+    WHEN source='push_publication' AND phase='reconciled' AND json_extract(payload,'$.value.remote_state')='approved_source_present' THEN 'complete'
     WHEN phase='complete' THEN 'complete'
     WHEN phase='blocked' THEN 'blocked'
     WHEN phase IN ('cancelled','cancelled_before_publication','aborted') THEN 'cancelled'
@@ -162,11 +172,23 @@ impl Application {
             // Scope by stored IDs so removed/unavailable checkouts remain inspectable.
             Uuid::parse_str(worktree).map_err(|_| invalid("Invalid audit worktree ID"))?;
         }
-        let (mut write, mut batch, mut remote, mut fetch, mut import, mut upstream, mut push_check) =
-            (None, None, None, None, None, None, None);
+        let (
+            mut write,
+            mut batch,
+            mut remote,
+            mut fetch,
+            mut import,
+            mut upstream,
+            mut push_check,
+            mut publication,
+        ) = (None, None, None, None, None, None, None, None);
         if let Some(pending) = self.pending.as_ref().filter(|p| self.review(&p.id).is_ok()) {
             match &pending.action {
                 review::Action::PushCheck(p) => push_check = Some(p.id.clone()),
+                review::Action::PushPublication(p) => {
+                    publication = Some(p.id.clone());
+                    push_check = Some(p.check.id.clone());
+                }
                 review::Action::Write(p) => write = Some(p.operation_id.clone()),
                 review::Action::Batch(p) => batch = Some(p.id.clone()),
                 review::Action::RemoteObservation(p) => remote = Some(p.id.clone()),
@@ -197,7 +219,8 @@ impl Application {
                     fetch,
                     import,
                     upstream,
-                    push_check
+                    push_check,
+                    publication
                 ],
                 |r| {
                     Ok((
@@ -309,6 +332,20 @@ impl Application {
                         item.phase = FetchImportPhase::Interrupted;
                     }
                     OperationAuditRecord::FetchImport(Box::new(item))
+                }
+                "push_publication" => {
+                    let mut item = self.writes.publication_audit_detail(&payload)?;
+                    if item.plan.id != id
+                        || item.plan.check.workspace.0 != workspace
+                        || item.plan.created_at_ms != created
+                    {
+                        return Err(invalid("Inconsistent push publication audit record"));
+                    }
+                    if result == OperationAuditResult::Interrupted {
+                        item.phase =
+                            crate::remote::push_publication::PushPublicationPhase::Interrupted;
+                    }
+                    OperationAuditRecord::PushPublication(Box::new(item))
                 }
                 "push_check" => {
                     let mut item = self.writes.push_check_audit_detail(&payload)?;

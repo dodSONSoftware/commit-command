@@ -9,6 +9,8 @@ pub fn parse(
     home: Option<OsString>,
 ) -> Result<(PathBuf, Options), String> {
     let mut args = args.into_iter();
+    #[cfg(feature = "native-acceptance-support")]
+    let mut local_fixture = false;
     let mut directory = None;
     let mut known = None;
     let mut identity = None;
@@ -17,6 +19,14 @@ pub fn parse(
     let mut ca = None;
     let mut account = None;
     while let Some(flag) = args.next() {
+        #[cfg(feature = "native-acceptance-support")]
+        if flag == "--acceptance-local-transport" {
+            if local_fixture {
+                return Err("Duplicate startup option".into());
+            }
+            local_fixture = true;
+            continue;
+        }
         if flag == "--https-credential-account" {
             if account.is_some() {
                 return Err("Duplicate startup option".into());
@@ -55,6 +65,11 @@ pub fn parse(
         })
         .ok_or("HOME unavailable")?;
     let mut options = Options::default();
+    #[cfg(feature = "native-acceptance-support")]
+    if local_fixture {
+        options.remote.local_fixture_root =
+            Some(super::native_acceptance::fixture_root(&directory)?);
+    }
     options.remote.ssh =
         match (known, identity, agent) {
             (None, None, None) => None,
@@ -94,6 +109,20 @@ mod tests {
     use super::*;
     fn args(a: &[&str]) -> Vec<OsString> {
         a.iter().map(OsString::from).collect()
+    }
+    #[test]
+    fn local_transport_requires_sealed_native_fixture_and_never_defaults_on() {
+        let (_, options) = parse(args(&["--data-dir", "/tmp/state"]), None).unwrap();
+        assert!(options.remote.local_fixture_root.is_none());
+        assert!(parse(
+            args(&[
+                "--data-dir",
+                "/definitely-missing/state",
+                "--acceptance-local-transport"
+            ]),
+            None
+        )
+        .is_err());
     }
     #[test]
     fn https_helper_policy_is_explicit_complete_and_contains_no_password_option() {

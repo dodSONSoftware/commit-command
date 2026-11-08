@@ -1,0 +1,32 @@
+{
+  "default": {
+    "passed": 62,
+    "failed": 0,
+    "ignored": 1
+  },
+  "experimental-writes": {
+    "passed": 97,
+    "failed": 0,
+    "ignored": 2
+  },
+  "controlled-writes": {
+    "passed": 87,
+    "failed": 0,
+    "ignored": 1
+  },
+  "application-services": {
+    "passed": 243,
+    "failed": 0,
+    "ignored": 4
+  },
+  "all-features": {
+    "passed": 288,
+    "failed": 0,
+    "ignored": 9
+  },
+  "lab": {
+    "passed": 24,
+    "failed": 0,
+    "skipped": 0
+  }
+}

@@ -295,6 +295,34 @@ it("shows partial publication truthfully and requests only guarded recovery or f
   ).toBe(true);
 });
 it("renders interrupted pre-push checks as unpublished history without retry authority", async () => {
+  const item = checkRecord();
+  const request = vi.fn<Bridge["request"]>().mockResolvedValue({
+    kind: "operation_audit",
+    value: { items: [item], next: null },
+  });
+  render(
+    <OperationHistory
+      bridge={bridge(request)}
+      workspace="ws"
+      entries={[fixtureEntry("repo", "repo")]}
+      busy={false}
+      revision={0}
+      act={run}
+    />,
+  );
+  await screen.findByRole("heading", { name: "Pre-push check · interrupted" });
+  expect(
+    screen.getByText(/No publication was started by this check/),
+  ).toHaveTextContent("never replayed");
+  expect(
+    screen.queryByRole("button", { name: /retry|push now|resume/i }),
+  ).toBeNull();
+  expect(request.mock.calls.every(([r]) => r.kind === "operation_audit")).toBe(
+    true,
+  );
+});
+
+function checkRecord(): OperationAuditEntry {
   const transport = observation("observed").plan;
   const source = { format: "sha1" as const, hex: "a".repeat(40) };
   const previous = { format: "sha1" as const, hex: "b".repeat(40) };
@@ -355,28 +383,97 @@ it("renders interrupted pre-push checks as unpublished history without retry aut
       },
     },
   };
-  const request = vi.fn<Bridge["request"]>().mockResolvedValue({
-    kind: "operation_audit",
-    value: { items: [item], next: null },
+  return item;
+}
+
+it("records uncertain publication only through separately selected fresh observation review", async () => {
+  const check = checkRecord();
+  if (check.record.kind !== "push_check") throw new Error("Fixture mismatch");
+  const item: OperationAuditEntry = {
+    id: "publication",
+    created_at_ms: 1,
+    operation_kind: "push_publication",
+    result: "needs_attention",
+    record: {
+      kind: "push_publication",
+      value: {
+        plan: {
+          id: "publication",
+          created_at_ms: 1,
+          digest: "bound",
+          check: check.record.value.plan,
+        },
+        phase: "unconfirmed",
+        published: false,
+        may_have_published: true,
+        finished_at_ms: null,
+        observed_remote_oid: null,
+        remote_state: null,
+        reconciled_observation: null,
+        object_count: null,
+        object_bytes: null,
+        issue: null,
+      },
+    },
+  };
+  const request = vi.fn<Bridge["request"]>().mockImplementation(async (r) => {
+    if (r.kind === "remote_observations")
+      return {
+        kind: "remote_observations",
+        value: { items: [observation("fresh")], next: null },
+      };
+    if (r.kind === "review_push_publication_recovery")
+      return {
+        kind: "review",
+        value: {
+          id: "recovery",
+          epoch: 1,
+          expires_at_ms: 99,
+          title: "Recovery",
+          summary: "Record only",
+          content: "{}",
+        },
+      };
+    return { kind: "operation_audit", value: { items: [item], next: null } };
   });
   render(
     <OperationHistory
       bridge={bridge(request)}
       workspace="ws"
-      entries={[fixtureEntry("repo", "repo")]}
+      entries={[]}
       busy={false}
       revision={0}
       act={run}
     />,
   );
-  await screen.findByRole("heading", { name: "Pre-push check · interrupted" });
+  await screen.findByText(/Publication may have occurred/);
   expect(
-    screen.getByText(/No publication was started by Core/),
-  ).toHaveTextContent("never replayed");
-  expect(
-    screen.queryByRole("button", { name: /retry|push now|resume/i }),
-  ).toBeNull();
-  expect(request.mock.calls.every(([r]) => r.kind === "operation_audit")).toBe(
-    true,
+    screen.getByRole("button", { name: "Review publication recovery" }),
+  ).toBeDisabled();
+  fireEvent.click(
+    screen.getByRole("button", { name: "Load destination observations" }),
   );
+  await screen.findByRole("option", { name: /origin.*main/ });
+  fireEvent.change(screen.getByLabelText("Recovery observation"), {
+    target: { value: "fresh" },
+  });
+  fireEvent.click(
+    screen.getByRole("button", { name: "Review publication recovery" }),
+  );
+  await reactAct(async () => {});
+  expect(request).toHaveBeenCalledWith({
+    kind: "review_push_publication_recovery",
+    workspace: "ws",
+    operation: "publication",
+    observation: "fresh",
+  });
+  expect(
+    request.mock.calls.every(([r]) =>
+      [
+        "operation_audit",
+        "remote_observations",
+        "review_push_publication_recovery",
+      ].includes(r.kind),
+    ),
+  ).toBe(true);
 });

@@ -98,6 +98,8 @@ impl ControlledWrites {
             #[cfg(feature = "write-test-support")]
             test_fault: None,
             #[cfg(all(feature = "write-test-support", feature = "application-services"))]
+            publication_fault: None,
+            #[cfg(all(feature = "write-test-support", feature = "application-services"))]
             import_fault: None,
             #[cfg(all(feature = "write-test-support", feature = "application-services"))]
             upstream_fault: None,

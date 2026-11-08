@@ -171,7 +171,7 @@ impl ControlledWrites {
         self.options.process = previous;
         result
     }
-    fn revalidate_push_check(
+    pub(super) fn revalidate_push_check(
         &mut self,
         plan: &PushCheckPlan,
         entries: &BTreeMap<String, crate::workspace::StoredWorktree>,
@@ -210,6 +210,13 @@ impl ControlledWrites {
         }
         stored.value.phase = PushCheckPhase::Cancelled;
         self.persist_push_check(&stored)
+    }
+    pub(super) fn cancel_pending_push_check(&mut self, id: &str) -> Result<()> {
+        let stored = self.load_push_check(id)?;
+        if stored.session == self.session && stored.value.phase == PushCheckPhase::Proposed {
+            self.cancel_push_check(id)?;
+        }
+        Ok(())
     }
     pub(crate) fn execute_push_check(
         &mut self,

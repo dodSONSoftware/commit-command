@@ -6,9 +6,10 @@ and monitoring, status/diffs/history, commit graphs, workspace activity and oper
 audit. A presentation-independent Rust Core powers a Tauri/React desktop adapter.
 
 Controlled local and bulk commits, supported authenticated observation/fetch/import,
-upstream setup, push dependency planning and separately reviewed pre-push checks
-are implemented. **Ordinary desktop builds still disable trust/write/network
-execution while acceptance remains partial. Actual push publication, AI, SemVer
+upstream setup, push dependency planning, separately reviewed pre-push checks
+and exact individual fast-forward publication with uncertain-outcome recovery
+are implemented within bounded acceptance envelopes. **Ordinary desktop builds still disable trust/write/network
+execution while acceptance remains partial. Broader individual push acceptance, bulk push, AI, SemVer
 Actions, general backup/restore and release readiness remain unfinished.**
 
 Start with the [current implementation and acceptance record](docs/EXECUTION_STATUS.md)

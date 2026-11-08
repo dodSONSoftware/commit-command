@@ -212,6 +212,8 @@ fn mutating_request(request: &Request) -> bool {
             | Request::ReviewBatch { .. }
             | Request::ReviewRemoteObservation { .. }
             | Request::ReviewPushCheck { .. }
+            | Request::ReviewPushPublication { .. }
+            | Request::ReviewPushPublicationRecovery { .. }
             | Request::ReviewFetchCapture { .. }
             | Request::ReviewFetchImport { .. }
             | Request::ReviewFetchImportRecovery { .. }
@@ -246,6 +248,8 @@ fn dispatch<R: tauri::Runtime>(
                 | Request::ReviewBatch { .. }
                 | Request::ReviewRemoteObservation { .. }
                 | Request::ReviewPushCheck { .. }
+                | Request::ReviewPushPublication { .. }
+                | Request::ReviewPushPublicationRecovery { .. }
                 | Request::ReviewRecovery { .. }
                 | Request::ReviewFetchCapture { .. }
                 | Request::ReviewFetchImport { .. }
@@ -1081,6 +1085,24 @@ mod tests {
                 children: vec![]
             },
             hooks: gitfleet_core::writes::HookPolicy::Execute
+        }));
+        assert!(mutating_request(&Request::ReviewPushPublication {
+            workspace: "w".into(),
+            selection: gitfleet_core::remote::push::PushPlanningSelection {
+                worktree: "t".into(),
+                observation: "o".into(),
+                source_oid: gitfleet_core::domain::ObjectId {
+                    format: gitfleet_core::domain::ObjectFormat::Sha1,
+                    hex: "a".repeat(40)
+                },
+                children: vec![]
+            },
+            hooks: gitfleet_core::writes::HookPolicy::Execute
+        }));
+        assert!(mutating_request(&Request::ReviewPushPublicationRecovery {
+            workspace: "w".into(),
+            operation: "p".into(),
+            observation: "o".into()
         }));
         assert!(mutating_request(&Request::ReviewBatch {
             workspace: "w".into(),

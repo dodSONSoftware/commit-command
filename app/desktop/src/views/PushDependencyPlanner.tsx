@@ -224,6 +224,33 @@ export function PushDependencyPlanner({
             already be reachable remotely; a conditional plan is insufficient.
             Hook effects may change files or contact servers.
           </p>
+          <button
+            disabled={busy || !enabled}
+            onClick={() =>
+              void act(async () => {
+                await bridge.request({
+                  kind: "review_push_publication",
+                  workspace,
+                  selection: {
+                    worktree: source.worktree,
+                    observation: source.preview.observation_id,
+                    source_oid: source.preview.source_oid,
+                    children: bindings[source.worktree] ?? [],
+                  },
+                  hooks: hooks[source.worktree] ?? "execute",
+                });
+              })
+            }
+          >
+            Review exact push publication for {label(source.worktree)}
+          </button>
+          <p>
+            Publication requires its own exact native approval. It runs a fresh
+            reviewed check and attempts one fast-forward update of the approved
+            committed source. If transport is interrupted, inspect the
+            destination through a separately approved observation before any new
+            push review.
+          </p>
 
           {source.preview.outgoing_gitlinks.length > 0 && (
             <ChildReachabilityForm

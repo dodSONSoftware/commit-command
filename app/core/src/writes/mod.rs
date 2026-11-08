@@ -23,6 +23,8 @@ mod push_mappings;
 #[cfg(feature = "application-services")]
 mod push_preview;
 #[cfg(feature = "application-services")]
+mod push_publication;
+#[cfg(feature = "application-services")]
 mod remote;
 mod store;
 mod transaction;
@@ -286,6 +288,8 @@ pub struct ControlledWrites {
     recovery_reviews: BTreeMap<String, RecoveryReview>,
     #[cfg(feature = "write-test-support")]
     test_fault: Option<TestFault>,
+    #[cfg(all(feature = "write-test-support", feature = "application-services"))]
+    publication_fault: Option<(bool, TestFaultKind)>,
     #[cfg(all(feature = "write-test-support", feature = "application-services"))]
     import_fault: Option<(crate::remote::fetch::FetchImportPhase, TestFaultKind)>,
     #[cfg(all(feature = "write-test-support", feature = "application-services"))]

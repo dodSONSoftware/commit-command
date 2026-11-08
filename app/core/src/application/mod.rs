@@ -127,6 +127,16 @@ pub enum Request {
         selection: crate::remote::push::PushPlanningSelection,
         hooks: HookPolicy,
     },
+    ReviewPushPublication {
+        workspace: String,
+        selection: crate::remote::push::PushPlanningSelection,
+        hooks: HookPolicy,
+    },
+    ReviewPushPublicationRecovery {
+        workspace: String,
+        operation: String,
+        observation: String,
+    },
     PushDependencyPlan {
         workspace: String,
         selections: Vec<crate::remote::push::PushPlanningSelection>,
@@ -246,6 +256,8 @@ pub struct WorkspaceList {
     pub recovery: Vec<RecoveryNotice>,
     pub fetch_import_recovery: Vec<FetchImportNotice>,
     pub upstream_recovery: Vec<RemoteRecoveryNotice>,
+    #[serde(default)]
+    pub push_publication_recovery: Vec<RemoteRecoveryNotice>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct ScanSummary {
@@ -455,6 +467,9 @@ impl Application {
                     .application_cancel_proposal(&proposal.operation_id)?,
                 review::Action::Batch(mut record) => self.cancel_batch_record(&mut record)?,
                 review::Action::PushCheck(plan) => self.writes.cancel_push_check(&plan.id)?,
+                review::Action::PushPublication(plan) => {
+                    self.writes.cancel_publication(&plan.id)?
+                }
                 review::Action::UpstreamSetup(plan) => {
                     self.writes.cancel_upstream(&plan.transport.id)?
                 }
@@ -495,6 +510,10 @@ impl Application {
     #[cfg(feature = "write-test-support")]
     pub fn set_write_test_fault(&mut self, fault: TestFault) {
         self.writes.set_test_fault(fault);
+    }
+    #[cfg(feature = "write-test-support")]
+    pub fn set_publication_test_fault(&mut self, after_transport: bool, kind: TestFaultKind) {
+        self.writes.set_publication_fault(after_transport, kind);
     }
     #[cfg(feature = "write-test-support")]
     pub fn set_import_test_fault(
@@ -630,6 +649,7 @@ impl Application {
                 recovery: self.writes.application_pending()?,
                 fetch_import_recovery: self.writes.import_notices()?,
                 upstream_recovery: self.writes.upstream_notices()?,
+                push_publication_recovery: self.writes.publication_notices()?,
             }),
             Request::Create { name, picker } => {
                 let path = self.directory(&picker)?;
@@ -792,6 +812,44 @@ impl Application {
                         return Err(error);
                     }
                 }
+            }
+            Request::ReviewPushPublication {
+                workspace,
+                selection,
+                hooks,
+            } => {
+                let id = self.active(&workspace)?;
+                let entries = self.push_check_entries(&workspace, &selection)?;
+                self.abandon_review()?;
+                let plan = self.writes.propose_publication(
+                    &id,
+                    &entries,
+                    selection,
+                    hooks,
+                    &self.read_options,
+                )?;
+                match self.set_review(review::Action::PushPublication(Box::new(plan.clone()))) {
+                    Ok(display) => Data::Review(display),
+                    Err(error) => {
+                        self.writes.cancel_publication(&plan.id)?;
+                        return Err(error);
+                    }
+                }
+            }
+            Request::ReviewPushPublicationRecovery {
+                workspace,
+                operation,
+                observation,
+            } => {
+                let id = self.active(&workspace)?;
+                self.abandon_review()?;
+                let review =
+                    self.writes
+                        .inspect_publication_recovery(&id, &operation, &observation)?;
+                self.entry(&workspace, &review.operation.plan.check.worktree.0)?;
+                Data::Review(
+                    self.set_review(review::Action::PushPublicationRecovery(Box::new(review)))?,
+                )
             }
             Request::PushDependencyPlan {
                 workspace,

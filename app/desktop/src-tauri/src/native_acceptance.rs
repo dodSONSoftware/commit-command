@@ -12,7 +12,7 @@ use std::{
 static AUDIT: OnceLock<Mutex<File>> = OnceLock::new();
 static DROP_CLOSE_ACK: AtomicBool = AtomicBool::new(false);
 
-fn fixture_root(directory: &Path) -> Result<PathBuf, String> {
+pub(super) fn fixture_root(directory: &Path) -> Result<PathBuf, String> {
     let directory = directory
         .canonicalize()
         .map_err(|_| "Acceptance state must already exist")?;

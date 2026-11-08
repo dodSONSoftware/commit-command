@@ -1,0 +1,19 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.79s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-883e37a5b39e3193)
+
+running 11 tests
+test push_publication::approved_exact_fast_forward_publishes_once_without_managed_repository_changes ... ok
+test push_publication::actual_sigkill_before_and_after_transport_requires_observation_and_never_replays ... ok
+test push_publication::changed_local_destination_metadata_is_refused_before_transport ... ok
+test push_publication::cancellation_during_proven_server_check_is_uncertain_and_never_retried ... ok
+test push_publication::declined_and_precancelled_publication_never_changes_destination ... ok
+test push_publication::publication_crash_worker ... ignored, subprocess-only disposable SIGKILL worker
+test push_publication::publication_request_rejects_unreviewed_force_fields ... ok
+test push_publication::destination_movement_blocks_before_publication ... ok
+test push_publication::restart_projects_publishing_as_unconfirmed_without_replay ... ok
+test push_publication::server_rejection_remains_unconfirmed_until_separately_reviewed_observation ... ok
+test push_publication::source_or_hook_drift_invalidates_native_publication_approval ... ok
+
+test result: ok. 10 passed; 0 failed; 1 ignored; 0 measured; 89 filtered out; finished in 117.34s
+

@@ -240,7 +240,8 @@ export type OperationAuditKind =
   | "fetch_capture"
   | "fetch_import"
   | "upstream_setup"
-  | "push_check";
+  | "push_check"
+  | "push_publication";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "OperationAuditRecord".
@@ -279,6 +280,11 @@ export type OperationAuditRecord =
   | {
       kind: "push_check";
       value: PushCheck;
+      [k: string]: unknown;
+    }
+  | {
+      kind: "push_publication";
+      value: PushPublication;
       [k: string]: unknown;
     };
 /**
@@ -408,6 +414,27 @@ export type HookPolicy = "execute" | "bypass_all";
  */
 export type PushRelation =
   "up_to_date" | "fast_forward" | "behind" | "diverged";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "PushPublicationPhase".
+ */
+export type PushPublicationPhase =
+  | "proposed"
+  | "checking"
+  | "preparing"
+  | "publishing"
+  | "complete"
+  | "blocked"
+  | "cancelled"
+  | "interrupted"
+  | "unconfirmed"
+  | "reconciled";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "PushRemoteState".
+ */
+export type PushRemoteState =
+  "approved_source_present" | "expected_old_present" | "different" | "missing";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "OperationAuditResult".
@@ -1133,6 +1160,35 @@ export interface ChildReachabilitySelection {
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "PushPublication".
+ */
+export interface PushPublication {
+  finished_at_ms?: number | null;
+  issue?: Issue | null;
+  may_have_published: boolean;
+  object_bytes?: number | null;
+  object_count?: number | null;
+  observed_remote_oid?: ObjectId | null;
+  phase: PushPublicationPhase;
+  plan: PushPublicationPlan;
+  published: boolean;
+  reconciled_observation?: string | null;
+  remote_state?: PushRemoteState | null;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "PushPublicationPlan".
+ */
+export interface PushPublicationPlan {
+  check: PushCheckPlan;
+  created_at_ms: number;
+  digest: string;
+  id: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "AuditPage".
  */
 export interface AuditPage {
@@ -1291,6 +1347,7 @@ export interface FetchImportPage {
 export interface WorkspaceList {
   active?: string | null;
   fetch_import_recovery: RemoteRecoveryNotice[];
+  push_publication_recovery?: RemoteRecoveryNotice[];
   recovery: RecoveryNotice[];
   upstream_recovery: RemoteRecoveryNotice[];
   workspaces: Workspace[];

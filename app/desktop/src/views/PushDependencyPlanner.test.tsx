@@ -119,7 +119,7 @@ function setup(cycle = false, enabled = false) {
           reachable: false,
         },
       };
-    if (r.kind === "review_push_check")
+    if (r.kind === "review_push_check" || r.kind === "review_push_publication")
       return {
         kind: "review",
         value: {
@@ -351,6 +351,11 @@ it("keeps separately approved hook checks disabled in the ordinary build", async
       name: "Review pre-push check for /tmp/project/a",
     }),
   ).toBeDisabled();
+  expect(
+    screen.getByRole("button", {
+      name: "Review exact push publication for /tmp/project/a",
+    }),
+  ).toBeDisabled();
 });
 it("submits exact saved child selections and explicit hook policy for independent review", async () => {
   const request = setup(false, true);
@@ -388,4 +393,29 @@ it("submits exact saved child selections and explicit hook policy for independen
   expect(
     screen.getByText(/This separate approval can run the reviewed hook/),
   ).toHaveTextContent("publishes nothing");
+});
+
+it("requires an independent exact publication request with ordinary-build gating", async () => {
+  const request = setup(false, true);
+  fireEvent.click(screen.getByText("Plan push dependencies locally"));
+  await choose("a");
+  await inspect();
+  fireEvent.click(
+    screen.getByRole("button", {
+      name: "Review exact push publication for /tmp/project/a",
+    }),
+  );
+  await waitFor(() =>
+    expect(request).toHaveBeenCalledWith({
+      kind: "review_push_publication",
+      workspace: "ws",
+      selection: {
+        worktree: "a",
+        observation: "obs-a",
+        source_oid: oid("a"),
+        children: [],
+      },
+      hooks: "execute",
+    }),
+  );
 });

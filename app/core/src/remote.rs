@@ -3,6 +3,7 @@ pub mod fetch;
 pub mod observation;
 pub mod push;
 pub mod push_check;
+pub mod push_publication;
 pub mod upstream;
 pub(crate) mod urls;
 use crate::{domain::*, inspection, process, Error, ErrorKind, Result};

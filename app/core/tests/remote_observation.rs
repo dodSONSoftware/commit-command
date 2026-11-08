@@ -2745,3 +2745,6 @@ mod push_dependencies;
 
 #[path = "support/push_check.rs"]
 mod push_check;
+
+#[path = "support/push_publication.rs"]
+mod push_publication;

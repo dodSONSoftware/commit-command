@@ -1,6 +1,10 @@
 #!/bin/sh
 # All Git writes performed by these checks belong to new disposable fixtures.
 set -eu
+# Core deliberately permits four subprocesses. Bound the fixture runner too so
+# unrelated test setup cannot exhaust a read deadline while waiting for a permit.
+: "${RUST_TEST_THREADS:=4}"
+export RUST_TEST_THREADS
 cd "$(dirname "$0")/.."
 evidence_dir=${1:-target/m3-evidence}
 mkdir -p "$evidence_dir"
@@ -38,7 +42,7 @@ import platform
 import subprocess
 import sys
 from pathlib import Path
-metadata = {'platform': platform.platform(), 'architecture': platform.machine()}
+metadata = {'platform': platform.platform(), 'architecture': platform.machine(), 'rust_test_threads': os.environ.get('RUST_TEST_THREADS')}
 for command in ['git', 'rustc', 'cargo']:
     metadata[command] = subprocess.check_output([command, '--version'], text=True).strip()
 if os.environ.get('GITFLEET_TEST_GPG'):

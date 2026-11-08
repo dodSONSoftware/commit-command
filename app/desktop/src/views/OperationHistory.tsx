@@ -23,6 +23,7 @@ const kinds = [
   "fetch_import",
   "upstream_setup",
   "push_check",
+  "push_publication",
 ] as const;
 const operationName = (kind: string) =>
   kind === "fetch_capture"
@@ -106,9 +107,10 @@ export function OperationHistory({
           <span className="eyebrow">DURABLE CORE RECORDS</span>
           <h1>Operation results</h1>
           <p>
-            Local Git operations, commit batches, remote observations and branch
-            downloads and imports in one recorded chronology. Reading history
-            cannot repeat an operation or contact a server.
+            Local Git operations, commit batches, push publications, remote
+            observations and branch downloads and imports in one recorded
+            chronology. Reading history cannot repeat an operation or contact a
+            server.
           </p>
         </div>
         <button
@@ -240,6 +242,15 @@ export function OperationHistory({
             {item.record.kind === "fetch_capture" && (
               <FetchCaptureRecords items={[item.record.value]} />
             )}
+            {item.record.kind === "push_publication" && (
+              <PushPublicationRecord
+                bridge={bridge}
+                workspace={workspace}
+                item={item.record.value}
+                busy={busy}
+                act={act}
+              />
+            )}
             {item.record.kind === "push_check" && (
               <article aria-label="Pre-push hook check record">
                 <h3>Pre-push check · {item.record.value.phase}</h3>
@@ -256,7 +267,8 @@ export function OperationHistory({
                   {String(item.record.value.hook_passed)}
                 </p>
                 <p>
-                  No publication was started by Core. This record grants no push
+                  No publication was started by this check. Separately approved
+                  publication has its own record. This check grants no push
                   authority. Interrupted hooks are never replayed; inspect
                   effects before a fresh review.
                 </p>
@@ -397,6 +409,125 @@ function LocalRecord({
         <button onClick={() => onRecover(op.operation_id)}>
           Inspect guarded recovery
         </button>
+      )}
+    </article>
+  );
+}
+
+function PushPublicationRecord({
+  bridge,
+  workspace,
+  item,
+  busy,
+  act,
+}: {
+  bridge: Bridge;
+  workspace: string;
+  item: import("../services/response.generated").PushPublication;
+  busy: boolean;
+  act: (action: () => Promise<void>) => Promise<void>;
+}) {
+  const [observations, setObservations] = useState<
+    import("../services/response.generated").Observation[]
+  >([]);
+  const [observation, setObservation] = useState("");
+  const unresolved = [
+    "unconfirmed",
+    "interrupted",
+    "publishing",
+    "checking",
+    "preparing",
+  ].includes(item.phase);
+  return (
+    <article aria-label="Push publication record">
+      <h3>Exact push · {item.phase}</h3>
+      <p>
+        {item.plan.check.preview.destination} ·{" "}
+        {item.plan.check.preview.destination_ref}
+      </p>
+      <p>
+        Approved source: <code>{item.plan.check.preview.source_oid.hex}</code>
+      </p>
+      <p>
+        Expected previous tip:{" "}
+        <code>{item.plan.check.preview.observed_oid.hex}</code>
+      </p>
+      <p>
+        {item.published
+          ? "Verified publication completed."
+          : item.may_have_published
+            ? "Publication may have occurred. Inspect fresh destination evidence before any new approval."
+            : "No publication completion recorded."}
+      </p>
+      {item.remote_state && (
+        <p>
+          Observed destination: {item.remote_state.replaceAll("_", " ")}. This
+          records current state and does not prove which actor changed it.
+        </p>
+      )}
+      {item.issue && <p role="alert">{text(item.issue.message)}</p>}
+      {unresolved && (
+        <>
+          <p>
+            First approve a fresh destination observation in Remotes. Recovery
+            records that evidence only; it never retries a push or hook.
+          </p>
+          <button
+            disabled={busy}
+            onClick={() =>
+              void act(async () => {
+                const page = value(
+                  await bridge.request({
+                    kind: "remote_observations",
+                    workspace,
+                    worktree: item.plan.check.worktree,
+                    offset: 0,
+                  }),
+                  "remote_observations",
+                );
+                setObservations(
+                  page.items.filter((v) => v.phase === "complete"),
+                );
+                setObservation("");
+              })
+            }
+          >
+            Load destination observations
+          </button>
+          <label>
+            Recovery observation
+            <select
+              disabled={busy}
+              value={observation}
+              onChange={(e) => setObservation(e.target.value)}
+            >
+              <option value="">Choose fresh observation</option>
+              {observations.map((v) => (
+                <option key={v.plan.id} value={v.plan.id}>
+                  {v.plan.remote} · {v.plan.reference} ·{" "}
+                  {v.observed_at_ms
+                    ? new Date(v.observed_at_ms).toISOString()
+                    : "Unknown time"}
+                </option>
+              ))}
+            </select>
+          </label>
+          <button
+            disabled={busy || !observation}
+            onClick={() =>
+              void act(async () => {
+                await bridge.request({
+                  kind: "review_push_publication_recovery",
+                  workspace,
+                  operation: item.plan.id,
+                  observation,
+                });
+              })
+            }
+          >
+            Review publication recovery
+          </button>
+        </>
       )}
     </article>
   );

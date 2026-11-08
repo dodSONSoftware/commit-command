@@ -4,8 +4,8 @@ Reconciled November 7, 2026. [The current record](../EXECUTION_STATUS.md)
 owns acceptance status and next work. Local inspection, reviewed observation,
 authentication profiles, isolated fetch download, separate offline import/tracking-ref
 publication, guarded upstream setup, child evidence, dependency planning and reviewed
-pre-push hook checks are implemented within their documented subsets. Actual
-individual/bulk push publication and uncertain push-outcome recovery are not.
+pre-push hook checks, exact individual fast-forward publication and observed-outcome
+recovery are implemented within documented subsets. Bulk publication is unfinished.
 Ordinary desktop write/network execution remains disabled. All routine validation
 uses disposable repositories and isolated services.
 
@@ -61,9 +61,27 @@ The download is bounded to 10,000 objects/64 MiB uncompressed and bundle bytes, 
   authorize exact hook argv/stdin/policy and already-reachable child evidence.
   Complete checks remain unpublished and cannot authorize a later push.
 
-## Remaining publication contract — G07/G08
+## Implemented individual publication — G07 acceptance partial
 
-Individual push needs its own short-lived Rust-owned exact source/OID, destination
+[Exact publication](../reports/G07_EXACT_PUBLICATION_2026-11-08.md) adds a separate
+short-lived native approval and a new nested check. Only approved reachable objects
+are exported through isolated configuration; inventory, pack and artifact budgets
+remain enforced. Integrity and ancestry checks precede one atomic exact expected-old
+update. The explicit lease is a compare-and-swap guard after ancestry proof, never a
+user force option. Core preserves managed files/index/refs/config/upstream. The
+existing same fetch/push destination and already-reachable child requirements remain.
+
+A journal records `publishing` before spawning transport. Any post-boundary error is
+unconfirmed. Restart cannot restore approval or replay hooks/transport. Separately
+approved fresh observation plus recovery review records observed source/old/other/
+missing state, without inferring which actor changed a ref. Local fixture publication
+also rejects workspace/metadata overlap and non-standalone/symlink metadata. Ordinary
+write/network execution remains disabled. Selected automated and native evidence is
+in the linked report; broader authenticated/topology/interruption acceptance remains.
+
+## Remaining publication acceptance and bulk contract — G07/G08
+
+Individual push retains its own short-lived Rust-owned exact source/OID, destination
 branch, authentication/tool/hook and dependency approval. Keep inspection protocols
 banned and transport configuration isolated. Reject ambiguous destinations,
 unsupported states, force/divergence and stale source or child evidence. Final hook
@@ -79,5 +97,4 @@ Do not select unselected children or push after a commit/AI run implicitly.
 
 Validate with disposable local bare/loopback remotes: server rejection and drift,
 credential/transport failure, exact hook payload, cancellation, uncertain outcomes,
-dependency failure and no unexpected destination/upstream creation. Current local
-planning/check evidence is not acceptance of this unimplemented executor.
+dependency failure and no unexpected destination/upstream creation. Selected individual evidence does not establish full G07 or bulk executor acceptance.

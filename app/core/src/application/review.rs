@@ -16,6 +16,8 @@ pub(super) enum Action {
     },
     Write(Box<Proposal>),
     PushCheck(Box<crate::remote::push_check::PushCheckPlan>),
+    PushPublication(Box<crate::remote::push_publication::PushPublicationPlan>),
+    PushPublicationRecovery(Box<crate::remote::push_publication::PushPublicationRecovery>),
     Batch(BatchRecord),
     RemoteObservation(Box<crate::remote::observation::ObservationPlan>),
     FetchCapture(Box<crate::remote::fetch::FetchCapturePlan>),
@@ -133,6 +135,16 @@ impl Application {
                 "Review authentication settings".into(),
                 format!("Requested change:\n{}\nSave the exact nonsecret profiles and remote assignments below. Selected helpers run unsandboxed as your user and may prompt during separately approved operations. Saving settings does not call a credential helper, contact a server, trust a repository or approve any network operation. Unknown or changed SSH host keys stop execution; verify and update known_hosts externally. Any settings revision invalidates outstanding authenticated network reviews.",plan.description),
                 serde_json::to_string_pretty(plan)?,
+            ),
+            Action::PushPublication(plan) => (
+                "Review exact fast-forward push".into(),
+                format!("PUSH PUBLICATION\nWorktree: {}\nSource: {} at {}\nDestination: {} · {}\nExpected old commit: {}\nOutgoing commits: {}\nHook policy: {:?}\nThis new approval runs the reviewed pre-push check, exports only the approved committed object closure, checks the exact destination, and attempts one expected-old guarded fast-forward update. Core preserves managed files, refs, config and upstreams; reviewed hooks can have their own effects. No force update, destination creation, implicit child push or automatic retry is authorized. At most 10,000 objects / 64 MiB uncompressed; publication may refuse if these bounds are exceeded. Hooks run unsandboxed as your user. Cancellation or process loss after transport begins may leave publication unconfirmed. Approval includes destination observations immediately before and after this push; authenticated helper/agent policy is the bound policy in the exact plan.\nDigest: {}",plan.check.transport.metadata.root.display(),plan.check.preview.source_ref,plan.check.preview.source_oid.hex,plan.check.preview.destination,plan.check.preview.destination_ref,plan.check.preview.observed_oid.hex,plan.check.preview.outgoing_count,plan.check.hooks,plan.digest),
+                serde_json::to_string_pretty(plan)?,
+            ),
+            Action::PushPublicationRecovery(review) => (
+                "Review observed push outcome".into(),
+                format!("Operation: {}\nDestination: {} · {}\nSeparately approved observation: {}\nObserved state: {:?}\nRecord only this past observation of the destination. It does not prove which actor published a commit. No network, push, hook, ref change or automatic retry is authorized by this recovery approval.",review.operation.plan.id,review.operation.plan.check.preview.destination,review.operation.plan.check.preview.destination_ref,review.observation.plan.id,review.remote_state),
+                serde_json::to_string_pretty(review)?,
             ),
             Action::PushCheck(plan) => (
                 "Review pre-push hook check — no publication".into(),
@@ -261,6 +273,7 @@ impl Application {
                 Action::Batch(record) => self.cancel_batch_record(&mut record.clone())?,
                 Action::RemoteObservation(plan) => self.writes.cancel_observation(&plan.id)?,
                 Action::PushCheck(plan) => self.writes.cancel_push_check(&plan.id)?,
+                Action::PushPublication(plan) => self.writes.cancel_publication(&plan.id)?,
                 Action::UpstreamSetup(plan) => self.writes.cancel_upstream(&plan.transport.id)?,
                 Action::FetchImport(plan) => self.writes.cancel_import(&plan.transport.id)?,
                 Action::FetchCapture(plan) => self.writes.cancel_capture(&plan.transport.id)?,
@@ -274,6 +287,23 @@ impl Application {
         }
         let result = match p.action {
             Action::Authentication(plan) => self.apply_authentication(*plan, cancellation)?,
+            Action::PushPublication(plan) => {
+                self.active(&plan.check.workspace.0)?;
+                let entries =
+                    self.push_check_entries(&plan.check.workspace.0, &plan.check.selection)?;
+                serde_json::to_value(self.writes.execute_publication(
+                    &plan,
+                    &entries,
+                    cancellation,
+                )?)?
+            }
+            Action::PushPublicationRecovery(review) => {
+                self.active(&review.operation.plan.check.workspace.0)?;
+                if cancellation.is_cancelled() {
+                    return Err(Error::with_kind(ErrorKind::Cancelled, "Recovery cancelled"));
+                }
+                serde_json::to_value(self.writes.recover_publication(&review)?)?
+            }
             Action::PushCheck(plan) => {
                 self.active(&plan.workspace.0)?;
                 let entries = self.push_check_entries(&plan.workspace.0, &plan.selection)?;

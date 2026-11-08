@@ -77,7 +77,15 @@ export function App({ bridge }: { bridge: Bridge }) {
   const [upstreamRecovery, setUpstreamRecovery] = useState<
     RemoteRecoveryNotice[]
   >([]);
-  const recoveryNotices = [...recovery, ...importRecovery, ...upstreamRecovery];
+  const [publicationRecovery, setPublicationRecovery] = useState<
+    RemoteRecoveryNotice[]
+  >([]);
+  const recoveryNotices = [
+    ...recovery,
+    ...importRecovery,
+    ...upstreamRecovery,
+    ...publicationRecovery,
+  ];
   const context = useRef<string | null>(null);
   const loaded = useRef(false);
   const polling = useRef(false);
@@ -171,6 +179,7 @@ export function App({ bridge }: { bridge: Bridge }) {
     setRecovery(data.recovery);
     setImportRecovery(data.fetch_import_recovery);
     setUpstreamRecovery(data.upstream_recovery ?? []);
+    setPublicationRecovery(data.push_publication_recovery ?? []);
     const ws = data.active ?? null;
     if (context.current !== ws) {
       loaded.current = false;

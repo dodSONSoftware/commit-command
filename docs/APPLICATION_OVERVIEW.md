@@ -6,7 +6,7 @@ capabilities from intended product features; it does not declare production read
 
 ## The application in one paragraph
 
-**Commit Command (formerly GitFleet) is a local desktop workspace manager for developers working across multiple Git repositories.** You choose a directory containing your projects, and GitFleet discovers the repositories beneath it, presents their status together, and lets you inspect changes, commit history, and activity without opening each repository separately. Its controlled-write services support explicitly reviewed staging and commits, including batches across selected repositories. Those services are present in the code, but ordinary desktop builds keep trust grants, Git writes, and network execution disabled while acceptance work continues. Supported separately reviewed observation, fetch download/import and upstream setup are implemented. Actual push publication, local AI assistance and deterministic version-update Actions remain unfinished.
+**Commit Command (formerly GitFleet) is a local desktop workspace manager for developers working across multiple Git repositories.** You choose a directory containing your projects, and GitFleet discovers the repositories beneath it, presents their status together, and lets you inspect changes, commit history, and activity without opening each repository separately. Its controlled-write services support explicitly reviewed staging and commits, including batches across selected repositories. Those services are present in the code, but ordinary desktop builds keep trust grants, Git writes, and network execution disabled while acceptance work continues. Supported separately reviewed observation, fetch download/import and upstream setup are implemented. Exact individual fast-forward publication and separately reviewed observation recovery are implemented with selected acceptance; broader publication and bulk push, local AI assistance and deterministic version-update Actions remain unfinished.
 
 ## The problem it addresses
 
@@ -60,7 +60,7 @@ The following describes source capabilities. Feature availability and acceptance
 | Remote inspection | On-demand inspection of configured remotes, effective destinations, upstream settings, and policy issues, with sensitive URL fields redacted. This inspection does not contact servers. |
 | Remote branch observation | Feature-gated, independently reviewed observation of one exact remote branch in isolated transport storage. It records a timestamped object ID or absence without fetching into the managed repository. Selected native acceptance passed; broader supported compatibility remains open. |
 | Authentication and fetch | Named nonsecret HTTPS/SSH profiles and explicit assignments; reviewed authenticated observation, isolated verified bundle download, separately reviewed offline import/tracking-ref update, and guarded missing-only upstream setup. Ordinary execution remains gated. |
-| Push preparation | Local outgoing-history preview, historical gitlink mappings, explicit child reachability evidence, multi-level dependency planning and separately reviewed pre-push hook checks. None publishes commits to a server. |
+| Push preparation | Local outgoing-history preview, historical gitlink mappings, explicit child reachability evidence, multi-level dependency planning and separately reviewed pre-push hook checks. Checks and planning grant no publication authority. A separate exact individual push review can publish one existing branch through isolated transport; G07 acceptance remains partial. |
 | Desktop state | Saved navigation, tabs, drafts, bulk composer preferences, theme, and panel/window state, with close/restart handling. |
 
 The Core also supplies a headless inspection CLI. A separate feature-gated interactive write CLI and disposable test tools exercise the controlled-write services; the ordinary inspection CLI exposes no Git mutation command. Its `commit` command reads a historical commit.
@@ -122,7 +122,7 @@ The initial desktop target is macOS. Portable Core design and cross-platform dep
 
 The specification describes a broader product than the current executable. Outstanding capabilities include:
 
-- Actual separately reviewed individual and bulk push publication, server rejection handling and uncertain push-outcome recovery.
+- Broader individual push acceptance and bulk push coordination; exact individual publication, conservative uncertain outcomes and separately reviewed observation recovery now have selected automated/native evidence.
 - Remaining native acceptance for implemented fetch/authentication/upstream and dependency planning/check workflows.
 - Local AI profiles, model discovery, commit-message candidates, templates, and context inspection.
 - User-initiated, bounded, explicitly authorized AI automatic commits.

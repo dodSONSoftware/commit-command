@@ -3,7 +3,7 @@ use gitfleet_core::remote::{push::*, push_check::*};
 use gitfleet_core::writes::HookPolicy;
 use std::os::unix::fs::PermissionsExt;
 
-fn ready(sha256: bool) -> (Test, PushPlanningSelection) {
+pub(super) fn ready(sha256: bool) -> (Test, PushPlanningSelection) {
     let mut t = setup_format(true, sha256);
     trust(&mut t);
     let observation = observed(&mut t);

@@ -7,6 +7,24 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G07 exact individual publication — implemented, selected acceptance passed
+
+[Publication checkpoint](reports/G07_EXACT_PUBLICATION_2026-11-08.md): separate exact
+native approval, fresh pre-push check, bounded approved-object export, isolated
+ancestry-checked expected-old update, durable uncertainty and separately reviewed
+observation recovery implemented. Focused SHA-1/SHA-256, object exclusion/preservation,
+drift, refusal, proven running cancellation, actual pre/post-transport SIGKILL and
+no-replay recovery passed (10 tests plus explicitly invoked crash workers). Native
+leaf-only publication and ordinary read-only restart/history passed in the previously
+trusted fixture; managed files/modes, old journals and trust exact, parent revoked.
+Final source full Core matrix passed 62/97/87/243/288, lab 24/24; full desktop
+93/14/17 plus checks/builds/strict Clippy passed. Final-source native publication and
+ordinary restart/history, exits 0, integrity and lock reopen passed with exact hashes.
+Recovery rejects pre-attempt observations (regression failed before fix, passed after).
+Initial setup deadline failures and the run stopped for that fix are retained; the
+runner defaults to four workers matching Core's process cap. G07 remains partial;
+bulk publication is G08.
+
 ### November 8 G03/G05 changed gitlink status — fixed and natively verified
 
 [Status fix](reports/G03_GITLINK_STATUS_2026-11-08.md): own-index gitlink OIDs now join
@@ -20,7 +38,7 @@ Rescan, targeted refresh, OID details and restart passed, exact repository files
 old journals/trusts/no replay preserved, exits 0/integrity/lock reopen. No new trust,
 publication or default change. G03 scale/accessibility and remaining gates stay open.
 
-### November 8 G07 publication primitives — isolated Git proof passed, executor pending
+### November 8 G07 publication primitives — isolated Git proof passed
 
 [Primitive contract](reports/G07_PUBLICATION_PRIMITIVES_2026-11-08.md): disposable
 local bare fixture proved exact source export/import into an isolated repository,
@@ -29,8 +47,8 @@ to another ancestor of the approved source. No user repository/remote involved.
 Approved reachable-object export also passed: exact object set in isolated store,
 unselected branch blob absent, source config not loaded, managed files/modes exact.
 This is Git primitive evidence, not application push authority or G07 closure.
-Implement a separate publication review/journal/isolated transport path next; prior
-hook checks remain non-publication actions. G03 ancestor-status fix passed as recorded above.
+The separate executor checkpoint above now supplies selected application evidence;
+prior hook checks remain non-publication actions. G03 ancestor-status fix passed as recorded above.
 
 ### November 8 G05 dirty unselected submodule — preservation passed; status follow-up passed
 
@@ -590,7 +608,8 @@ authority. No default change, commit, push or release is authorized by this reco
 | M5B inspection/authentication/fetch/upstream | Implemented for supported subset; acceptance partial | [Fetch native chain](reports/M5B_NATIVE_FETCH_ACCEPTANCE_2026-11-02.md), [authentication](reports/M5B_AUTHENTICATION_COMPATIBILITY_2026-11-02.md), [SSH](reports/M5B_SSH_AGENT_TRANSPORT_2026-11-02.md), [upstream](reports/M5B_GUARDED_UPSTREAM_2026-11-02.md); G06. Artifact initialization finding [fixed](reports/M5B_ARTIFACT_INITIALIZATION_FIX_2026-11-02.md) |
 | M5C push preview/child evidence/planning | Implemented; selected native acceptance passed | [Relative child evidence](reports/M5C_RELATIVE_CHILD_ACCEPTANCE_2026-11-02.md), [multi-level planning](reports/M5C_DEPENDENCY_PLANNING_2026-11-03.md), [native planner](reports/M5C_PLANNER_NATIVE_ACCEPTANCE_2026-11-03.md); G03, G06–G08 remain; no publication |
 | M5C independently reviewed pre-push hook check | Implemented; selected automated/native acceptance passed | [Check report](reports/M5C_REVIEWED_PUSH_CHECKS_2026-11-03.md); hook approval only, unpublished history/no replay; selected native interruption/manager-refusal/bypass cases passed; broader G06 compatibility remains |
-| M5C individual/bulk push publication | Not implemented | Exact publication authority, transport, rejection, uncertain outcome reconciliation and child-success coordination: G07–G08 |
+| M5C individual push publication | Implemented; selected acceptance passed | Separate exact native publication, isolated ancestry/expected-old transport and observation recovery; broader G07 acceptance remains |
+| M5C bulk push publication | Not implemented | Build selected-child coordination on verified individual outcomes: G08 |
 | M6 AI foundation | Not implemented | `app/core/src/ai/` contains only `.gitkeep`; profiles, providers, templates and exact context pipeline: G09 |
 | M7 AI commits / SemVer Actions | Not implemented | `app/core/src/actions/` contains only `.gitkeep`; deterministic recovery and separate bounded automatic authority: G09 |
 | M8 backup/retention/usability/release | Partial foundations only | Atomic storage, migrations and development bundles exist; general backup/restore, retention and release acceptance do not: G03, G10–G11 |
@@ -611,7 +630,7 @@ and explicit disposition of exclusions. A facility block is not a waiver.
 | G04 — ordinary write enablement | Reconcile all applicable safety prerequisites with G01–G03/G05–G06 and support exclusions, then obtain the explicit default-change decision. Validate the exact ordinary artifact with supported writes and independent approval. No current gate completion is inferred. | D-045; M3C; RELEASE-002 |
 | G05 — native bulk commit failures/dependencies | **Partial:** real native child-first publication, stale-parent stop, corrected fresh gitlink review, parent-only retry/message override and ordinary restart passed ([package](reports/G05_NATIVE_SUBMODULE_2026-11-08.md)). Native linked-worktree independent trust/two-branch execution/restart also passed ([checkpoint](reports/G05_LINKED_WORKTREE_2026-11-08.md)). Selected actual host-crash/partial-publication/index recovery/unfinished-only retry also passed ([package](reports/G05_NATIVE_BATCH_HOST_CRASH_2026-11-08.md)). Native pre-publication host crash/owned-lock cleanup/restart also passed ([package](reports/G05_NATIVE_BATCH_PREPUBLICATION_2026-11-08.md)). Actual child-hook rejection/proven-running Cancel and separately approved supported-hook child retry/fresh parent gitlink approval/ordinary restart passed ([package](reports/G05_NATIVE_CHILD_HOOK_2026-11-08.md)); Native index-only partial staging and ordinary restart also passed ([package](reports/G05_NATIVE_PARTIAL_STAGING_2026-11-08.md)); other required dependency/selection and broader accessibility criteria retain their owning evidence requirements. Explicit relative-path exclusions for fresh-review-only gitlinks are implemented and natively verified ([checkpoint](reports/G05_BULK_EXCLUSIONS_2026-11-08.md)); Core eligibility remains authoritative. Preserve completed/unselected content and never replay successful items. | GIT-013; BULK-001–007; M5A |
 | G06 — supported remote/check compatibility | **In progress:** selected native executable-helper refusal after explicit fixture trust passed ([report](reports/G06_NATIVE_REMOTE_HELPER_REFUSAL_2026-11-07.md)); helpers remain unsupported.  native supported pre-push Cancel review, Cmd+Q, main-window Close and direct AppKit termination during proven running execution passed, including process cleanup and restart without replay ([AppKit report](reports/G02_G06_RUNNING_PUSH_CHECK_APPKIT_2026-11-07.md)). Actual running-check main-renderer loss now passed with host survival/cancellation/no replay; a subsequent normal restart blank reopens G02 presentation ([renderer report](reports/G02_G06_RUNNING_PUSH_CHECK_RENDERER_LOSS_2026-11-07.md)). Earlier running-check host crash and first-restart recovery passed in their fixture; original hook survival remains explicit ([startup retest](reports/G02_STARTUP_READINESS_2026-11-07.md)). Selected native detected-manager Execute refusal, OS-declined bypass and fresh approved bypass passed with zero hook execution and restart/no replay ([bypass report](reports/G06_NATIVE_MANAGER_BYPASS_2026-11-07.md)); unsupported managers remain unsupported for Execute. Operator SecurityAgent choices, broader fetch/upstream topology/recovery, planner cycle/accessibility/scale and direct SCP facility block retain their limits. | M5B/C; PUSH-002; AUTHENTICATION.md; M8B |
-| G07 — individual push | Implement independent exact non-force publication approval, isolated transport, source/destination/auth/hook revalidation, rejection/drift handling, cancellation and durable uncertain-outcome reconciliation using fresh observation. Existing hook checks never become publication tokens. | PUSH-001/003/005/006; INV-009; M5C |
+| G07 — individual push | Exact separate publication approval, isolated ancestry/expected-old transport, durable uncertainty and fresh-observation recovery implemented with selected automated/native evidence. Finish authenticated publication, broader topology/native interruption/recovery and usability acceptance. Existing hook checks never become publication tokens. | PUSH-001/003/005/006; INV-009; M5C |
 | G08 — bulk push | Compose accepted individual push with fresh per-item authority, actual child availability before parents, no implicit child selection, cycle/block handling, partial-success preservation and fresh retry. Conditional planning is not remote success. | PUSH-004–006; INV-014; M5C |
 | G09 — AI and Actions | Implement M6 profiles/providers/templates/bounded exact context; M7 assisted candidates, deterministic SemVer preview/execution/recovery and separately bounded automatic authorization. Provider/model failures and imported definitions cannot broaden authority. | AI-001–017; ACT-001–003; INV-010–013; M6/M7 |
 | G10 — backup/portability/retention | Versioned export/import, consistent manual/rotating backups, previewed safe restore, malicious/interrupted archive tests and protection of unresolved recovery. Decide proposed 90-day history/ten-backup defaults before implementing cleanup. Migration backups alone do not meet this gate. | STATE-005–007; ACT-004; M4C/M8A |
@@ -955,9 +974,10 @@ AI, SemVer Actions and backups remain in the approved product scope, not deferre
    reproducible automated matrix with isolated GPG and permitted local transport
    fixtures. Do not reopen selected historical passes merely because an old intro
    still lists them as untested. Ordinary writes stay disabled until G04 closes.
-2. **Next functional package — G07:** design and implement exact individual
-   non-force push and uncertain-outcome recovery. Validate with disposable local
-   remotes and loopback services, never a user repository or private server.
+2. **G07 remaining acceptance:** expand exact individual publication and recovery
+   acceptance to supported authenticated loopback transports, topology and native
+   interruption cases. The implementation and selected fixture evidence are above;
+   never use a user repository or private server as an implicit acceptance target.
 3. **G08:** build bulk push on verified individual outcomes and fresh child-success
    evidence. Exit only with partial-failure/retry and dependency acceptance.
 4. **G09:** AI foundation, deterministic Actions, then assisted/bounded automatic
