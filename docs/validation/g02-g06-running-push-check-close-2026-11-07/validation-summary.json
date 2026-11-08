@@ -1,0 +1,35 @@
+{
+  "base_revision": "542017c",
+  "product_source_changed": false,
+  "native_action": "Window > Close Window (performClose:) targeting main window",
+  "actual_running_hook_proven": true,
+  "host_exit_code": 0,
+  "restart_exit_code": 0,
+  "hook_child_cleanup_before_natural_finish": true,
+  "raw_check_phase": "cancelled",
+  "hook_passed": false,
+  "published": false,
+  "saved_draft_native_and_independent_verified": true,
+  "native_cancelled_history_verified": true,
+  "automatic_replay": false,
+  "hook_invocations": 1,
+  "read_only_request_count": 1,
+  "preservation_oracles": [
+    "closed",
+    "restarted",
+    "final"
+  ],
+  "automated_matrix_rerun": false,
+  "prior_automated_counts": {
+    "renderer": 69,
+    "default_host": 13,
+    "all_feature_host": 16
+  },
+  "g02": "open for remaining cases",
+  "g06": "open for remaining cases",
+  "evidence_python_syntax": "passed",
+  "evidence_json_parse": "passed",
+  "source_and_artifact_hashes": "matched",
+  "report_local_links": "passed",
+  "startup_readiness_event_assertions": "passed for both hosts"
+}

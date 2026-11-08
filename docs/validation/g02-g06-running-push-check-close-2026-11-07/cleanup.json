@@ -1,0 +1,12 @@
+{
+  "host_main_close_exit_code": 0,
+  "restart_cmd_q_exit_code": 0,
+  "original_hook_and_child_absent": true,
+  "hook_completion_marker_absent": true,
+  "final_elapsed_since_hook_start_ms": 101137.567231,
+  "external_host_hook_or_child_signal": false,
+  "exact_owned_tls_server_stopped": true,
+  "generated_tls_private_key_removed": true,
+  "fixture_repositories_preserved": true,
+  "installed_app_changed": false
+}

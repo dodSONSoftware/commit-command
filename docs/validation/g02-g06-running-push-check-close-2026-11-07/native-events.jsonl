@@ -1,0 +1,10 @@
+{"detail":{"support":true},"event":"startup"}
+{"detail":{"allowed":true,"label":"main"},"event":"navigation"}
+{"detail":{"elapsed_ms":145,"event":"Started","visible":false},"event":"main_page_load"}
+{"detail":{"elapsed_ms":198,"event":"Finished","visible":false},"event":"main_page_load"}
+{"detail":{"visible":true},"event":"main_initial_display"}
+{"detail":{"support":true},"event":"startup"}
+{"detail":{"allowed":true,"label":"main"},"event":"navigation"}
+{"detail":{"elapsed_ms":144,"event":"Started","visible":false},"event":"main_page_load"}
+{"detail":{"elapsed_ms":198,"event":"Finished","visible":false},"event":"main_page_load"}
+{"detail":{"visible":true},"event":"main_initial_display"}

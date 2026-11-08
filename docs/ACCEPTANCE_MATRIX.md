@@ -345,7 +345,15 @@ confirmation Quit, workspace invalidation/dialog reuse, main close and ordered
 review replacement. A12–A17 remain partial for the remaining native renderer-reset,
 live caller, compatibility and recovery criteria; full gate closure is not inferred.
 
-Latest G02 startup follow-up: [readiness fix/retest](reports/G02_STARTUP_READINESS_2026-11-07.md)
+Latest G02/G06 main-window Close follow-up: [Close report](reports/G02_G06_RUNNING_PUSH_CHECK_CLOSE_2026-11-07.md)
+verifies native `performClose:` targeting the foreground main window during proven
+running execution, normal exit, hook/child cleanup before natural completion,
+cancelled/not-passed/unpublished history, exact draft/repository preservation and
+first restart without replay. No product code changed; prior artifact/full desktop
+checks retained. Direct AppKit running-check termination and Dock/session remain
+separate; G02/G06 are still partial.
+
+Earlier G02 startup follow-up: [readiness fix/retest](reports/G02_STARTUP_READINESS_2026-11-07.md)
 closes reproduced premature empty-window display within the native fixture envelope.
 Initial display now waits for document completion; first restart after actual
 running-hook SIGKILL and a repeat idle-host crash restored draft/interrupted history.
