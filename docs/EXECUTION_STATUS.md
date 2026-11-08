@@ -7,6 +7,15 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G05 child/parent native batch — ready for fixture trust
+
+[Prepared package](reports/G05_NATIVE_SUBMODULE_2026-11-08.md): actual disposable
+parent/submodule plus dirty unselected control scanned; fresh acceptance artifact
+rendered exact two-worktree native trust review. No trust/write rows. Owning Core
+submodule ordering/fresh-parent regression passed. Exact fixture trust authorization
+requested; native mutation awaits reply. Independent work continues; no G05 pass
+is inferred and G04 remains disabled.
+
 ### November 8 G03 measured scale / partial scan recovery
 
 [Measured correctness fix](reports/G03_SCALE_PARTIAL_INVENTORY_2026-11-08.md): all six

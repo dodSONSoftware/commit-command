@@ -1,0 +1,25 @@
+{
+  "root": "/private/tmp/gitfleet-g05-submodule-fzz5ffky",
+  "workspace_root": "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace",
+  "parent": "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace/parent",
+  "child": "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace/parent/module",
+  "control": "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace/unselected",
+  "state": "/private/tmp/gitfleet-g05-submodule-fzz5ffky/state",
+  "workspace": "02447833-15bd-427f-b507-97d2dc4ff948",
+  "entries": {
+    "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace/parent": "3b02428c-0b46-4f68-b823-59b2585fa35b",
+    "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace/unselected": "552323a4-a46f-478d-8374-797eec1920f0",
+    "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace/parent/module": "8e41c396-4757-496b-931b-10c0873f2a9e"
+  },
+  "heads": {
+    "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace/parent": "a0039ba541273a4f076a3d6f3da7293b06a3bc85",
+    "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace/parent/module": "81f8a5e6cb101088b01373b282f025039080ac97",
+    "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace/unselected": "81f8a5e6cb101088b01373b282f025039080ac97"
+  },
+  "app": "/private/tmp/gitfleet-g05-submodule-fzz5ffky/Commit Command G05 Acceptance.app",
+  "binary_sha256": "1b8ce703d83e37cf221436111dcbbf52261ff0a188b739491eabe1ccc68c6afd",
+  "features": [
+    "custom-protocol",
+    "desktop-writes"
+  ]
+}

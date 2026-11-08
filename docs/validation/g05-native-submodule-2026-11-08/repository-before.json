@@ -1,0 +1,226 @@
+{
+  "unselected/file.txt": {
+    "sha256": "da6646c5c16c1b1f2bd4da46240b4f8f4ae646c44e8f6ebbeae8ccffa8e27f63",
+    "mode": 420
+  },
+  "unselected/.git/config": {
+    "sha256": "c431b5c105e11e99fa2d9aa61189534c677d079f20085572b1ebb9686f9b9aba",
+    "mode": 420
+  },
+  "unselected/.git/HEAD": {
+    "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+    "mode": 420
+  },
+  "unselected/.git/index": {
+    "sha256": "1bd41bd300a51339033c495aeb6b0f96ce84590859d3d95275ab42821b26a6b1",
+    "mode": 420
+  },
+  "unselected/.git/COMMIT_EDITMSG": {
+    "sha256": "1fadfb359b208ab53599ff341359afeaefd0a591c66b0add8ac0217fc73f41d2",
+    "mode": 420
+  },
+  "unselected/.git/objects/c1/770c0a7f315b7c26ce0d42e79685f7d3bf7dcc": {
+    "sha256": "5c72f67bae56f25d72e0faf0406dbc0020e8634b48945218aec9c6b3e1595ebc",
+    "mode": 292
+  },
+  "unselected/.git/objects/81/f8a5e6cb101088b01373b282f025039080ac97": {
+    "sha256": "6d809cd7d2d94bc2db4b47db26a736c35baef964bb1db182f58709804ffb4881",
+    "mode": 292
+  },
+  "unselected/.git/objects/72/cc6207533170dd67a1d182bd784bc78e84ae26": {
+    "sha256": "253eab5c495318e4fe00d6fef94379ae97a84a4214bf8bf64e798cc14485b215",
+    "mode": 292
+  },
+  "unselected/.git/logs/HEAD": {
+    "sha256": "115f3cc4f65d43a070390c18052732c902be6b424124476d42ecce353ab6a6e7",
+    "mode": 420
+  },
+  "unselected/.git/logs/refs/heads/main": {
+    "sha256": "115f3cc4f65d43a070390c18052732c902be6b424124476d42ecce353ab6a6e7",
+    "mode": 420
+  },
+  "unselected/.git/refs/heads/main": {
+    "sha256": "8b6156c2bca8ad85fcf9ea2c993ac732d6e16a3dfc3c9f1327912d68bdc21132",
+    "mode": 420
+  },
+  "parent/file.txt": {
+    "sha256": "da6646c5c16c1b1f2bd4da46240b4f8f4ae646c44e8f6ebbeae8ccffa8e27f63",
+    "mode": 420
+  },
+  "parent/.gitmodules": {
+    "sha256": "e1344057d0b762b39262432e0a662154dd934649bf81f711b83e0bbaf31c6155",
+    "mode": 420
+  },
+  "parent/module/file.txt": {
+    "sha256": "da6646c5c16c1b1f2bd4da46240b4f8f4ae646c44e8f6ebbeae8ccffa8e27f63",
+    "mode": 420
+  },
+  "parent/module/.git": {
+    "sha256": "eeba761be087ae47d48e9aa38755e1cc7b5d36444792bc3c552182bd1b2c73e4",
+    "mode": 420
+  },
+  "parent/.git/config": {
+    "sha256": "975223f2cb9ff92527a8e4b7586542591aea949f8982e51358e5d43afeafb631",
+    "mode": 420
+  },
+  "parent/.git/HEAD": {
+    "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+    "mode": 420
+  },
+  "parent/.git/index": {
+    "sha256": "c689d57a50813baf392d21476dd8d2d30ae8f643fe61ce9a25c9de7c95bf4dea",
+    "mode": 420
+  },
+  "parent/.git/COMMIT_EDITMSG": {
+    "sha256": "2f4d12381282a67506aa65d228ebd656c0f4e130228c16566cab44fe8785d179",
+    "mode": 420
+  },
+  "parent/.git/objects/c1/770c0a7f315b7c26ce0d42e79685f7d3bf7dcc": {
+    "sha256": "5c72f67bae56f25d72e0faf0406dbc0020e8634b48945218aec9c6b3e1595ebc",
+    "mode": 292
+  },
+  "parent/.git/objects/73/9294357be9744e03a41f6120871122cf35bc61": {
+    "sha256": "b87786785da42f2abc19b58643efddf9a58ba4a83a84253203d77b8322dcf7e2",
+    "mode": 292
+  },
+  "parent/.git/objects/81/f8a5e6cb101088b01373b282f025039080ac97": {
+    "sha256": "6d809cd7d2d94bc2db4b47db26a736c35baef964bb1db182f58709804ffb4881",
+    "mode": 292
+  },
+  "parent/.git/objects/72/cc6207533170dd67a1d182bd784bc78e84ae26": {
+    "sha256": "253eab5c495318e4fe00d6fef94379ae97a84a4214bf8bf64e798cc14485b215",
+    "mode": 292
+  },
+  "parent/.git/objects/a0/039ba541273a4f076a3d6f3da7293b06a3bc85": {
+    "sha256": "baba499edaf9a40068f53ce5f95fd5f7f2579d17489811486fe0d67343218028",
+    "mode": 292
+  },
+  "parent/.git/objects/b8/e90621966e01695219cd4987cfb9aac7b3aa63": {
+    "sha256": "a6cd91b2ea5a7e36c0d2b0d60a6f4ea133f5e7ada9d9ae88196cf10ff4486479",
+    "mode": 292
+  },
+  "parent/.git/logs/HEAD": {
+    "sha256": "df3f95fd8cdfb2fae3fe5e19ae908ccd59b55b526d567b014ba32d0d7fcc1026",
+    "mode": 420
+  },
+  "parent/.git/logs/refs/heads/main": {
+    "sha256": "df3f95fd8cdfb2fae3fe5e19ae908ccd59b55b526d567b014ba32d0d7fcc1026",
+    "mode": 420
+  },
+  "parent/.git/refs/heads/main": {
+    "sha256": "7a40c80f74ee2d15ec6f59d2c6ba1111c64a878f1600f7caa55efa5b8bdb0f2b",
+    "mode": 420
+  },
+  "parent/.git/modules/module/config": {
+    "sha256": "facecfc0c363e145c32e522521704e9122e111bac8451a70eabbfb6c919940e4",
+    "mode": 420
+  },
+  "parent/.git/modules/module/HEAD": {
+    "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+    "mode": 420
+  },
+  "parent/.git/modules/module/description": {
+    "sha256": "85ab6c163d43a17ea9cf7788308bca1466f1b0a8d1cc92e26e9bf63da4062aee",
+    "mode": 420
+  },
+  "parent/.git/modules/module/index": {
+    "sha256": "0681493ae398c32899e5a50ca206e6a3719ef783c42e29a84e1babd55da4744e",
+    "mode": 420
+  },
+  "parent/.git/modules/module/packed-refs": {
+    "sha256": "24867725202fe73963eebb2e61af7b546976ae8566966df202e2f4656f2abdab",
+    "mode": 420
+  },
+  "parent/.git/modules/module/objects/c1/770c0a7f315b7c26ce0d42e79685f7d3bf7dcc": {
+    "sha256": "5c72f67bae56f25d72e0faf0406dbc0020e8634b48945218aec9c6b3e1595ebc",
+    "mode": 292
+  },
+  "parent/.git/modules/module/objects/81/f8a5e6cb101088b01373b282f025039080ac97": {
+    "sha256": "6d809cd7d2d94bc2db4b47db26a736c35baef964bb1db182f58709804ffb4881",
+    "mode": 292
+  },
+  "parent/.git/modules/module/objects/72/cc6207533170dd67a1d182bd784bc78e84ae26": {
+    "sha256": "253eab5c495318e4fe00d6fef94379ae97a84a4214bf8bf64e798cc14485b215",
+    "mode": 292
+  },
+  "parent/.git/modules/module/info/exclude": {
+    "sha256": "6671fe83b7a07c8932ee89164d1f2793b2318058eb8b98dc5c06ee0a5a3b0ec1",
+    "mode": 420
+  },
+  "parent/.git/modules/module/logs/HEAD": {
+    "sha256": "cef2f598d4a54fda3ce6bc2f9326a607a2636d4d9322a61b48b0175c204f2473",
+    "mode": 420
+  },
+  "parent/.git/modules/module/logs/refs/heads/main": {
+    "sha256": "cef2f598d4a54fda3ce6bc2f9326a607a2636d4d9322a61b48b0175c204f2473",
+    "mode": 420
+  },
+  "parent/.git/modules/module/logs/refs/remotes/origin/HEAD": {
+    "sha256": "cef2f598d4a54fda3ce6bc2f9326a607a2636d4d9322a61b48b0175c204f2473",
+    "mode": 420
+  },
+  "parent/.git/modules/module/hooks/commit-msg.sample": {
+    "sha256": "efc1401b0e99d1ff51494d154d98b46c1e99059bcd8bf9f73cecde19fd3eb23b",
+    "mode": 493
+  },
+  "parent/.git/modules/module/hooks/pre-rebase.sample": {
+    "sha256": "4febce867790052338076f4e66cc47efb14879d18097d1d61c8261859eaaa7b3",
+    "mode": 493
+  },
+  "parent/.git/modules/module/hooks/sendemail-validate.sample": {
+    "sha256": "44ebfc923dc5466bc009602f0ecf067b9c65459abfe8868ddc49b78e6ced7a92",
+    "mode": 493
+  },
+  "parent/.git/modules/module/hooks/pre-commit.sample": {
+    "sha256": "57185b7b9f05239d7ab52db045f5b89eb31348d7b2177eab214f5eb872e1971b",
+    "mode": 493
+  },
+  "parent/.git/modules/module/hooks/applypatch-msg.sample": {
+    "sha256": "0223497a0b8b033aa58a3a521b8629869386cf7ab0e2f101963d328aa62193f7",
+    "mode": 493
+  },
+  "parent/.git/modules/module/hooks/fsmonitor-watchman.sample": {
+    "sha256": "9159720099ad5595b8e66645cbfd47763c1e920f46e0b50ae75e642bbec57ef0",
+    "mode": 493
+  },
+  "parent/.git/modules/module/hooks/pre-receive.sample": {
+    "sha256": "a4c3d2b9c7bb3fd8d1441c31bd4ee71a595d66b44fcf49ddb310252320169989",
+    "mode": 493
+  },
+  "parent/.git/modules/module/hooks/prepare-commit-msg.sample": {
+    "sha256": "e9ddcaa4189fddd25ed97fc8c789eca7b6ca16390b2392ae3276f0c8e1aa4619",
+    "mode": 493
+  },
+  "parent/.git/modules/module/hooks/post-update.sample": {
+    "sha256": "81765af2daef323061dcbc5e61fc16481cb74b3bac9ad8a174b186523586f6c5",
+    "mode": 493
+  },
+  "parent/.git/modules/module/hooks/pre-merge-commit.sample": {
+    "sha256": "d3825a70337940ebbd0a5c072984e13245920cdf8898bd225c8d27a6dfc9cb53",
+    "mode": 493
+  },
+  "parent/.git/modules/module/hooks/pre-applypatch.sample": {
+    "sha256": "e15c5b469ea3e0a695bea6f2c82bcf8e62821074939ddd85b77e0007ff165475",
+    "mode": 493
+  },
+  "parent/.git/modules/module/hooks/pre-push.sample": {
+    "sha256": "ecce9c7e04d3f5dd9d8ada81753dd1d549a9634b26770042b58dda00217d086a",
+    "mode": 493
+  },
+  "parent/.git/modules/module/hooks/update.sample": {
+    "sha256": "8d5f2fa83e103cf08b57eaa67521df9194f45cbdbcb37da52ad586097a14d106",
+    "mode": 493
+  },
+  "parent/.git/modules/module/hooks/push-to-checkout.sample": {
+    "sha256": "a53d0741798b287c6dd7afa64aee473f305e65d3f49463bb9d7408ec3b12bf5f",
+    "mode": 493
+  },
+  "parent/.git/modules/module/refs/heads/main": {
+    "sha256": "8b6156c2bca8ad85fcf9ea2c993ac732d6e16a3dfc3c9f1327912d68bdc21132",
+    "mode": 420
+  },
+  "parent/.git/modules/module/refs/remotes/origin/HEAD": {
+    "sha256": "2bb6a24aa0fc6c484100f5d51a29bbad841cd2c755f5d93faa204e5dbb4eb2b4",
+    "mode": 420
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "real_submodule_relationship": true,
+  "three_dirty_worktrees": true,
+  "explicit_parent_child_selection": true,
+  "unselected_control_not_selected": true,
+  "native_trust_review_exactly_two_paths": true,
+  "no_trust_or_write_rows": true,
+  "core_submodule_parent_rereview_regression_passed": true
+}
