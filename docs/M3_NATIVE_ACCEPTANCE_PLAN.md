@@ -82,6 +82,13 @@ startup presentation is reopened; prior document-readiness passes remain bounded
 Next investigate the retained post-load blank-window evidence. No source fix claimed.
 Current gate dispositions remain in EXECUTION_STATUS.
 
+### November 8 native SHA-256 — prepared, execution pending
+
+[Native format package](reports/G06_NATIVE_SHA256_2026-11-08.md): real SHA-256
+repository/remote and read-only loopback HTTPS fixture prepared; native initialized
+with zero trust grants/requests. Cancel, observation/download and restart follow.
+G02/G06 remain partial.
+
 ### November 7 full Core signing matrix — complete
 
 [Final signing package](reports/G06_FULL_SIGNING_MATRIX_2026-11-07.md): isolated pinned

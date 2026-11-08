@@ -7,6 +7,13 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 native SHA-256 — prepared, execution pending
+
+[Native format package](reports/G06_NATIVE_SHA256_2026-11-08.md): real SHA-256
+repository/remote and read-only loopback HTTPS fixture prepared; native initialized
+with zero trust grants/requests. Cancel, observation/download and restart follow.
+G02/G06 remain partial.
+
 ### November 7 full Core signing matrix — complete
 
 [Final signing package](reports/G06_FULL_SIGNING_MATRIX_2026-11-07.md): isolated pinned

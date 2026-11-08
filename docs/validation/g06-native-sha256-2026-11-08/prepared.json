@@ -1,0 +1,7 @@
+{
+  "sha256_64_character_oid": true,
+  "no_trust_rows": true,
+  "no_network_requests": true,
+  "disposable_only": true,
+  "native_initialization_created_write_schema": true
+}

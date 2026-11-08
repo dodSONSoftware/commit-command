@@ -1,0 +1,30 @@
+{
+  "FETCH_HEAD": {
+    "sha256": "9cf785b9af5866bb57b38adc78af551d3622b038d9d4d1123859c77a41be3d95",
+    "mode": 420
+  },
+  "HEAD": {
+    "sha256": "f6f2b945f6c411b02ba3da9c7ace88dcf71b6af65ba2e0d89aa82900042b5a10",
+    "mode": 420
+  },
+  "config": {
+    "sha256": "d1373a166e7b5577956c77bc3a1425a54db7f5dad2ad1d82a37b5c95c1bb9f5a",
+    "mode": 420
+  },
+  "objects/23/8a761ac64ee7b81496fedf82a4729bef640287b7286b96a02383e24e8dc998": {
+    "sha256": "a6ca69c4f1a4eeed2df9b10e5ffe22215354891a3f070098dd4930bb3e2c731b",
+    "mode": 292
+  },
+  "objects/3f/f889c96ce66897fe7a7b1c26358bc715a52dc5dee3364cd1f7e5e0545a40cd": {
+    "sha256": "592ac135c70315f322e80f24e05da1b0a08a712d4bbb9b2b3f7c6152a4a3cc93",
+    "mode": 292
+  },
+  "objects/f9/d9043e05d51519c22af20d276e4d9577e2f7125988e8080560dbdd8cba2d58": {
+    "sha256": "34ddb5afaf48d4591dd5fca0ba3c65a496faaf819fe79d88be84dc21809ae7d4",
+    "mode": 292
+  },
+  "refs/heads/main": {
+    "sha256": "b4af7f2b5c1d319f5844c4059bec1b628cbe45a73f2251961695cdec93c74b12",
+    "mode": 420
+  }
+}
