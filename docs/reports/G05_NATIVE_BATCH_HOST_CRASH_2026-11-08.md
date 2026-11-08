@@ -68,3 +68,24 @@ commit and clean index/worktree; beta/control still match original exact bytes/m
 Exactly the authorized pair has trust, SQLite integrity ok. Native unfinished-only
 selection reduced the composer to beta alone. See verify-recovery.json and the alpha
 snapshot guarding against any later retry mutation. Fresh beta execution remains next.
+
+## Unfinished-only fresh retry and final ordinary restart — passed
+
+Fresh batch ea0e07c1-b56b-4c84-bd98-55622295521f contained beta only, one exact file.txt
+patch, same reviewed message and zero blockers. Separate native approval completed
+operation 8d06851a-2511-4db3-a724-a3efcb182ee5 at beta commit
+5676b51c067b6ae7901c2529190ed1aa39de280c, published/reconciled true. Alpha's entire
+repository bytes/modes matched the post-recovery baseline throughout beta execution;
+one alpha commit, one beta commit, exact contents and clean indexes/worktrees.
+Unselected control stayed exact and untrusted. The old interrupted batch remains
+historical; the separate beta-only batch records actual new success. It is not
+rewritten as though the interrupted original execution had resumed.
+
+Final ordinary restart visibly retained successful beta-only and interrupted-original
+history, alpha/beta clean, control dirty, only beta selected, native preparation
+disabled. After Quit exit 0, exact repository bytes/modes and all operation/batch
+payloads matched the post-retry baseline. No replay, SQLite integrity ok, exactly two
+authorized trusts, writer-lock reopen passed. Native recovery process also exited 0.
+No new product changes or push. This closes the selected actual partial-batch host
+crash/index recovery/unfinished-only retry case, not G05 in its entirety. The new
+uncertainty presentation is natively verified in both bulk and operation history.
