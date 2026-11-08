@@ -82,11 +82,13 @@ startup presentation is reopened; prior document-readiness passes remain bounded
 Next investigate the retained post-load blank-window evidence. No source fix claimed.
 Current gate dispositions remain in EXECUTION_STATUS.
 
-### November 8 native SHA-256 — prepared, execution pending
+### November 8 native SHA-256 — untrusted barrier passed, authorization pending
 
 [Native format package](reports/G06_NATIVE_SHA256_2026-11-08.md): real SHA-256
 repository/remote and read-only loopback HTTPS fixture prepared; native initialized
-with zero trust grants/requests. Cancel, observation/download and restart follow.
+with zero trust grants/requests. Native observation review correctly refused the
+untrusted fixture; independent preservation/no-network oracle passed. Exact new
+fixture trust authorization requested; observation/download/restart remain pending.
 G02/G06 remain partial.
 
 ### November 7 full Core signing matrix — complete
