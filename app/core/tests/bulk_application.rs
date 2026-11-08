@@ -779,3 +779,70 @@ fn revoked_trust_revokes_the_whole_batch_capability_and_cancels_proposals() {
         .all(|o| o.phase == Phase::CancelledBeforePublication));
     assert_eq!(tree_bytes(&t.f.repo), before);
 }
+
+#[test]
+fn linked_worktree_batch_requires_independent_trust_and_preserves_unselected_checkout() {
+    let mut t = setup(2);
+    let linked = t.f.repo.join("linked");
+    t.f.git(&[
+        "worktree",
+        "add",
+        "-q",
+        "-b",
+        "bulk-linked",
+        linked.to_str().unwrap(),
+    ]);
+    fs::write(linked.join("file.txt"), b"linked working content\n").unwrap();
+    let Data::Inventory(inventory) = t
+        .app
+        .request(
+            t.app.epoch(),
+            Request::Scan {
+                workspace: t.ws.clone(),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    t.entries = inventory.entries;
+    let parent_root = fs::canonicalize(&t.f.repo).unwrap();
+    let parent = t
+        .entries
+        .iter()
+        .position(|e| e.metadata.root.to_path().unwrap() == parent_root)
+        .unwrap();
+    let child = t
+        .entries
+        .iter()
+        .position(|e| e.metadata.root.to_path().unwrap() == fs::canonicalize(&linked).unwrap())
+        .unwrap();
+    assert_eq!(
+        t.entries[parent].repository_id,
+        t.entries[child].repository_id
+    );
+    assert_ne!(t.entries[parent].id, t.entries[child].id);
+    trust(&mut t, parent);
+    let before = tree_bytes(&t.f.repo);
+    let requested = vec![selection(&t, parent), selection(&t, child)];
+    let blocked = review(&mut t, requested);
+    assert!(blocked.summary.contains("1 blocked"));
+    assert_eq!(confirm(&mut t, &blocked).record.phase, BatchPhase::Blocked);
+    assert_eq!(before, tree_bytes(&t.f.repo));
+    trust(&mut t, child);
+    let control = tree_bytes(&t.f.repo.join("child-1"));
+    let requested = vec![selection(&t, parent), selection(&t, child)];
+    let approved = review(&mut t, requested);
+    let result = confirm(&mut t, &approved);
+    assert_eq!(result.record.phase, BatchPhase::Complete);
+    assert_eq!(result.outcomes.len(), 2);
+    assert!(result.outcomes.iter().all(|outcome| outcome.published));
+    assert_ne!(head(&t, parent), head(&t, child));
+    assert_eq!(t.f.git(&["show", "main:file.txt"]), b"changed\n");
+    assert_eq!(
+        t.f.git(&["show", "bulk-linked:file.txt"]),
+        b"linked working content\n"
+    );
+    assert_eq!(control, tree_bytes(&t.f.repo.join("child-1")));
+}

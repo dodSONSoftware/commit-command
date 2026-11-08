@@ -7,6 +7,15 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G05 linked-worktree batch — Core verified, native pending
+
+[Linked-worktree checkpoint](reports/G05_LINKED_WORKTREE_2026-11-08.md): new regression
+passes independent trust, whole-batch untrusted refusal/preservation, two independent
+branch publications and unselected checkout preservation. Native sibling fixture and
+exact review prepared; grant/execution/restart remain pending specific authorization.
+No product patch or gate closure. Full Core matrix refresh is running separately;
+its initial sandboxed signer failure is not a pass.
+
 ### November 8 G05 explicit gitlink exclusions — implemented and verified
 
 [Exclusion checkpoint](reports/G05_BULK_EXCLUSIONS_2026-11-08.md): exact relative-path
