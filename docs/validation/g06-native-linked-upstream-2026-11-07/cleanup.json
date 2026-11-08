@@ -1,0 +1,10 @@
+{
+  "both_fixture_apps_exit_zero": true,
+  "isolated_writer_lock_reopened": true,
+  "temporary_linked_worktree_and_branch_removed": true,
+  "original_repository_bytes_modes_restored": true,
+  "original_case_state_untouched": true,
+  "owned_server_sigterm_pid": 15216,
+  "generated_private_key_removed": true,
+  "no_system_trust_modified": true
+}

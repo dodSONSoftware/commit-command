@@ -1,0 +1,12 @@
+{
+  "workspace_bytes_modes_preserved": true,
+  "real_observation_complete": true,
+  "observed_oid": "1008391da64d7debe65ed29a8f63bb1604f9a367",
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/grand.git/info/refs"
+    }
+  ],
+  "upstream_records": 0
+}

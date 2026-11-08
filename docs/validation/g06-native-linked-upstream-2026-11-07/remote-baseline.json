@@ -1,0 +1,94 @@
+{
+  "grand.git/HEAD": {
+    "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+    "mode": 420
+  },
+  "grand.git/config": {
+    "sha256": "f2fd1dc48bfbb265a4cd978806c68652412bba8bd49e5f89d56473d330a5120a",
+    "mode": 420
+  },
+  "grand.git/description": {
+    "sha256": "85ab6c163d43a17ea9cf7788308bca1466f1b0a8d1cc92e26e9bf63da4062aee",
+    "mode": 420
+  },
+  "grand.git/hooks/applypatch-msg.sample": {
+    "sha256": "0223497a0b8b033aa58a3a521b8629869386cf7ab0e2f101963d328aa62193f7",
+    "mode": 493
+  },
+  "grand.git/hooks/commit-msg.sample": {
+    "sha256": "efc1401b0e99d1ff51494d154d98b46c1e99059bcd8bf9f73cecde19fd3eb23b",
+    "mode": 493
+  },
+  "grand.git/hooks/fsmonitor-watchman.sample": {
+    "sha256": "9159720099ad5595b8e66645cbfd47763c1e920f46e0b50ae75e642bbec57ef0",
+    "mode": 493
+  },
+  "grand.git/hooks/post-update.sample": {
+    "sha256": "81765af2daef323061dcbc5e61fc16481cb74b3bac9ad8a174b186523586f6c5",
+    "mode": 493
+  },
+  "grand.git/hooks/pre-applypatch.sample": {
+    "sha256": "e15c5b469ea3e0a695bea6f2c82bcf8e62821074939ddd85b77e0007ff165475",
+    "mode": 493
+  },
+  "grand.git/hooks/pre-commit.sample": {
+    "sha256": "57185b7b9f05239d7ab52db045f5b89eb31348d7b2177eab214f5eb872e1971b",
+    "mode": 493
+  },
+  "grand.git/hooks/pre-merge-commit.sample": {
+    "sha256": "d3825a70337940ebbd0a5c072984e13245920cdf8898bd225c8d27a6dfc9cb53",
+    "mode": 493
+  },
+  "grand.git/hooks/pre-push.sample": {
+    "sha256": "ecce9c7e04d3f5dd9d8ada81753dd1d549a9634b26770042b58dda00217d086a",
+    "mode": 493
+  },
+  "grand.git/hooks/pre-rebase.sample": {
+    "sha256": "4febce867790052338076f4e66cc47efb14879d18097d1d61c8261859eaaa7b3",
+    "mode": 493
+  },
+  "grand.git/hooks/pre-receive.sample": {
+    "sha256": "a4c3d2b9c7bb3fd8d1441c31bd4ee71a595d66b44fcf49ddb310252320169989",
+    "mode": 493
+  },
+  "grand.git/hooks/prepare-commit-msg.sample": {
+    "sha256": "e9ddcaa4189fddd25ed97fc8c789eca7b6ca16390b2392ae3276f0c8e1aa4619",
+    "mode": 493
+  },
+  "grand.git/hooks/push-to-checkout.sample": {
+    "sha256": "a53d0741798b287c6dd7afa64aee473f305e65d3f49463bb9d7408ec3b12bf5f",
+    "mode": 493
+  },
+  "grand.git/hooks/sendemail-validate.sample": {
+    "sha256": "44ebfc923dc5466bc009602f0ecf067b9c65459abfe8868ddc49b78e6ced7a92",
+    "mode": 493
+  },
+  "grand.git/hooks/update.sample": {
+    "sha256": "8d5f2fa83e103cf08b57eaa67521df9194f45cbdbcb37da52ad586097a14d106",
+    "mode": 493
+  },
+  "grand.git/info/exclude": {
+    "sha256": "6671fe83b7a07c8932ee89164d1f2793b2318058eb8b98dc5c06ee0a5a3b0ec1",
+    "mode": 420
+  },
+  "grand.git/objects/10/08391da64d7debe65ed29a8f63bb1604f9a367": {
+    "sha256": "41d1320545e2d67369bed14f50f24da8066ed8c2db334bc1af110d618cf7bf64",
+    "mode": 292
+  },
+  "grand.git/objects/20/306f0364a59e3ad570b885123ea9308ed2f93a": {
+    "sha256": "ded1b49cb0d83fd8e3616bcd999ddc356c6b78ea45c617a3640b767355434582",
+    "mode": 292
+  },
+  "grand.git/objects/49/c172092d4554f2e9db0918c03c29cd89209584": {
+    "sha256": "ce52f604188d389664bd1c330e600124530ca6876bef1b41bfc1b0d4231e6fff",
+    "mode": 292
+  },
+  "grand.git/objects/ab/de3ceb6424c8e2fa1057e75f07cacd90bf70a9": {
+    "sha256": "6aa65913f384a12b0463f0314a2e07a8b9baf4c3538fc999093f9ea8b5bbe031",
+    "mode": 292
+  },
+  "grand.git/packed-refs": {
+    "sha256": "feb529cb88757804e8aad76d52e08ea050857fda490ebab52abfaab65f82f729",
+    "mode": 420
+  }
+}

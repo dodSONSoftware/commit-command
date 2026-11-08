@@ -150,6 +150,19 @@ fixture restored and earlier case reverified. Selected generation guard passed b
 stale-trust coverage; URL/auth/tool drift checks not independently isolated. No product
 fix/full-suite rerun. Other G02/G06 requirements remain open.
 
+### November 7 G06 linked-worktree upstream native chain
+
+[Native shared-config topology report](reports/G06_NATIVE_LINKED_UPSTREAM_2026-11-07.md):
+real approved loopback HTTPS observation, separately approved missing-only upstream
+setup completed/updated, exactly two shared-config keys visible from both worktrees.
+Both checkouts/common metadata otherwise unchanged; linked branch policy untouched,
+main trust revoked, no linked trust grant. Ordinary restart preserved both completed
+records/config with only one server GET total. Focused Core topology test passed;
+independent file/journal/request oracles passed, both exits 0 and lock reopened.
+Selected native linked-worktree upstream success gap closed; fixture restored/service
+stopped/key removed. No product patch/full-suite rerun. G06 remains partial; prioritize
+named recovery/topology packages rather than additional already-covered guard variants.
+
 ## Status meanings and availability
 
 - **Accepted within envelope:** the recorded milestone criteria passed only for
@@ -558,6 +571,28 @@ AI, SemVer Actions and backups remain in the approved product scope, not deferre
 5. **G10–G11 and remaining G03:** complete state portability, measured usability and
    exact macOS release acceptance. Strengthen backup primitives before later schema
    migrations; do not postpone data safety until packaging.
+
+### G02/G06 queue audit after linked-worktree upstream acceptance
+
+Recent guard/interruption cases are evidence of distinct barriers, not completion of
+whole gates. Group completed variants; do not repeat them without a new failure,
+source change or an explicitly uncovered requirement. Choose the next package using
+its owning criterion and state what its completion closes before execution.
+
+| Package | Current disposition | Concrete remaining work / handling |
+|---|---|---|
+| G02 shutdown/read interruption | Selected graceful Close, active scan Cancel/host loss, running-hook lifecycle and both missing-snapshot choices passed within reports | Do not add more equivalent scan/close variants merely to accumulate passes |
+| G02 startup | Initial React commit ordering defect fixed; bounded native restarts passed; earlier intermittent blank retained | Capture diagnostic state on an actual recurrence before reload; bounded clean launches do not prove a universal cause or guarantee |
+| G02 real OS entry points | Direct AppKit covered; actual Dock policy blocked; operator session termination distinct | Keep blocks explicit; no surrogate or destructive session termination without operator coordination |
+| G06 upstream topology | Selected missing-only setup/recovery history and now native linked-worktree success passed | **Next substantive target: native owned-config-lock recovery**, with a reproducible interrupted owned receipt and no fabricated ownership; failure/cancel/foreign-lock disposition must remain explicit |
+| G06 fetch/auth/format compatibility | Selected real HTTPS/SSH/auth chains have dated evidence; identified artifact initialization race already fixed | Native SHA-256/full topology package and current-source transport matrix remain; do not reopen the already diagnosed artifact race without new counterevidence |
+| G06 OS credentials / other transport exclusions | SecurityAgent choices and direct SCP facility limits retain prior blocks | Operator/facility-dependent work is not an unattended pass; unsupported helpers stay unsupported |
+| Planner accessibility/cycles/scale | Broader native criteria remain open; overlap with G03/G08 | Track as their own criteria, not repeated observation-guard tests; publication remains G07/G08 |
+
+The latest linked-worktree native chain closes one concrete topology criterion.
+Configuration-trust drift and same-OID generation drift are now grouped guard evidence;
+further URL/auth/tool variants are not the default next work unless tied to an explicit
+remaining criterion. G02/G06 are not closed by this queue audit.
 
 The user has authorized proceeding through acceptance steps and making a local
 Git commit after each completed, validated step. This includes committing the

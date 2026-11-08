@@ -1,0 +1,16 @@
+{
+  "only_shared_config_changed": true,
+  "original_config_prefix_preserved": true,
+  "exact_two_key_suffix_added": true,
+  "both_checkouts_other_files_bytes_modes_preserved": true,
+  "linked_branch_settings_untouched": true,
+  "bare_remote_bytes_modes_preserved": true,
+  "one_real_observation_get": true,
+  "observation_and_upstream_records_unchanged": true,
+  "upstream_complete_updated": true,
+  "main_trust_revoked": true,
+  "no_linked_trust_grant": true,
+  "local_write_operation_rows": 0,
+  "other_remote_operation_rows": 0,
+  "sqlite_integrity": "ok"
+}

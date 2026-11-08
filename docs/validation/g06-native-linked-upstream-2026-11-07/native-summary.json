@@ -1,0 +1,23 @@
+{
+  "native_inventory_distinct_worktrees_shared_repository": true,
+  "main_worktree_only_trust_granted": true,
+  "linked_worktree_not_trusted": true,
+  "real_loopback_https_observation_complete": true,
+  "real_discovery_get_count": 1,
+  "native_separate_upstream_review_approved": true,
+  "upstream_phase": "complete",
+  "configuration_result": "updated",
+  "shared_scope_warning_in_native_confirmation": true,
+  "exact_original_config_prefix_plus_two_keys": true,
+  "keys_visible_from_both_worktrees": true,
+  "linked_branch_settings_absent": true,
+  "both_checkouts_preserved_except_shared_config": true,
+  "main_trust_revoked_after_update": true,
+  "ordinary_restart_rendered_without_reload": true,
+  "both_completed_records_visible_on_restart": true,
+  "no_new_request_on_upstream_or_restart": true,
+  "both_app_quit_exit_codes": 0,
+  "product_patch": false,
+  "focused_core_linked_upstream_test_passed": true,
+  "new_full_automated_suite_run": false
+}

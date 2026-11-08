@@ -1,0 +1,9 @@
+{
+  "changed_files": [
+    "repository/.git/config"
+  ],
+  "original_config_prefix_sha256_preserved": true,
+  "keys_visible_in_both_worktrees": true,
+  "linked_current_branch_settings_absent": true,
+  "config_mode_preserved": true
+}

@@ -147,6 +147,19 @@ fixture restored and earlier case reverified. Selected generation guard passed b
 stale-trust coverage; URL/auth/tool drift checks not independently isolated. No product
 fix/full-suite rerun. Other G02/G06 requirements remain open.
 
+### November 7 G06 linked-worktree upstream native chain
+
+[Native shared-config topology report](reports/G06_NATIVE_LINKED_UPSTREAM_2026-11-07.md):
+real approved loopback HTTPS observation, separately approved missing-only upstream
+setup completed/updated, exactly two shared-config keys visible from both worktrees.
+Both checkouts/common metadata otherwise unchanged; linked branch policy untouched,
+main trust revoked, no linked trust grant. Ordinary restart preserved both completed
+records/config with only one server GET total. Focused Core topology test passed;
+independent file/journal/request oracles passed, both exits 0 and lock reopened.
+Selected native linked-worktree upstream success gap closed; fixture restored/service
+stopped/key removed. No product patch/full-suite rerun. G06 remains partial; prioritize
+named recovery/topology packages rather than additional already-covered guard variants.
+
 ## How to read the status
 
 - **POC-tested:** Behavior exercised by the existing Python labs / Rust v0.1.1 *in a constrained experimental subset*. Does not mean production ready.
