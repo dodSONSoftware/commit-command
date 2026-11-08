@@ -1,0 +1,66 @@
+{
+  "file.txt": {
+    "sha256": "3fdf41fa66aa84b20b785b50568315f08d716b7bb0a3fb3bcc703706427c8b93",
+    "mode": 420
+  },
+  ".gitfleet-m2-fixture": {
+    "sha256": "f4cdc528c7e7272fcf9b3d2b9bede0af4c455b289545c3a3edee7678c1417f72",
+    "mode": 420
+  },
+  ".git/config": {
+    "sha256": "e722828c4f4689c79757e0dd40d9f7a8aa3a74ea050440be5a40519c4af2c6da",
+    "mode": 420
+  },
+  ".git/HEAD": {
+    "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+    "mode": 420
+  },
+  ".git/index": {
+    "sha256": "46f14ccb0c6e742caf8cf5db73284bab2d832aa2f0b698ab43d3c7359fc31c0f",
+    "mode": 420
+  },
+  ".git/COMMIT_EDITMSG": {
+    "sha256": "416b36c5238bc990d34b5f35c5543a4f79e057f7683a5d426b6133771dbfab6d",
+    "mode": 420
+  },
+  ".git/objects/0e/c50254e358616dc1ee637e23fc661fc015f04f": {
+    "sha256": "642381c6511a4866959e08109559f5cb28e68d18cb76826e6eb971f6f5904ffd",
+    "mode": 384
+  },
+  ".git/objects/7d/fea12a042f8212b5a2b4355dab3fd1f88f1962": {
+    "sha256": "ef8ff535d2465403b1f6a3561096283232eca972fea65073e195ead28a624a37",
+    "mode": 292
+  },
+  ".git/objects/8a/d25e1867b319265fb2d60cd12be0c1e3b92508": {
+    "sha256": "ee7bca5455edf2ec9cf7527f882353ddc1e4090cb7553634ecae888fbf4a8ab5",
+    "mode": 384
+  },
+  ".git/objects/6b/8e834ee80c9a4228131f8b14da08d32eaa7766": {
+    "sha256": "df2ea9f2a40d0be82ed226e8abd04560b2da2176131663bd3cf62c4dc5f66f2d",
+    "mode": 384
+  },
+  ".git/objects/70/d6116366f0635871a307b571a9bb049d435f78": {
+    "sha256": "24997fbc88c1f32d967c200308b98e5042366d12358733bccecfc2ff7ed97f31",
+    "mode": 292
+  },
+  ".git/objects/13/815285028bcf1ec6b78391fb26cd13e156d19d": {
+    "sha256": "f321342c92f7ca9e5eb7e75beb7a9f5200773b3d7ba3c1921e65b97622d9693f",
+    "mode": 292
+  },
+  ".git/info/exclude": {
+    "sha256": "489440cb6303c9df5899a09375a680470fe99e0e7069bb95af6872da30fe15e3",
+    "mode": 420
+  },
+  ".git/logs/HEAD": {
+    "sha256": "1dc9a8123fbe61b555b33f36fe3bf8fa0b7ed1afe252b9fd08170f1cfab4c654",
+    "mode": 420
+  },
+  ".git/logs/refs/heads/main": {
+    "sha256": "1dc9a8123fbe61b555b33f36fe3bf8fa0b7ed1afe252b9fd08170f1cfab4c654",
+    "mode": 420
+  },
+  ".git/refs/heads/main": {
+    "sha256": "b9d7b4f906fa7ebd915c5e64930d57c0529539cc849d40446b927487123f681f",
+    "mode": 420
+  }
+}

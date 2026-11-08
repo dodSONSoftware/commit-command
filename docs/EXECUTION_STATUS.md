@@ -14,7 +14,7 @@ authorized alpha/beta; fresh native batch approval reached first ref update and
 SIGKILL exit -9. Alpha advanced once; beta/control exact bytes/modes preserved.
 First ordinary restart rendered interrupted history and the corrected unconfirmed
 publication label, preparation disabled; Quit 0, exact repository/operation records
-unchanged and no replay. Guarded reconciliation and unfinished-only retry remain next.
+unchanged and no replay. Separate native guarded index-only reconciliation now passed with one alpha commit and beta/control exact; unfinished-only selection chose beta alone. Fresh beta execution and final restart remain next.
 No Core guard changed, no push, no whole G05 closure.
 
 ### November 8 G05 uncertain publication display — fixed, crash case pending

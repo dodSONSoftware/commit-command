@@ -57,3 +57,14 @@ matched the crash snapshot; no replay. See ordinary-restart-proof.json and crash
 snapshots. This also natively verifies the uncertainty-label correction.
 Guarded index reconciliation and unfinished-only fresh retry are still next steps;
 this checkpoint does not accept their results or close G05.
+
+## Separate guarded recovery — passed
+
+Fresh acceptance restart inspected alpha operation 4b7c2569-d5ad-404b-8eec-345dde3a629b.
+Rust review identified the published ref and proposed only reconcile_index. Separate
+OS-native approval completed with published=true, index_reconciled=true, unchanged
+new_head and explicit skipped post-processing/no replay. Alpha has one exact-content
+commit and clean index/worktree; beta/control still match original exact bytes/modes.
+Exactly the authorized pair has trust, SQLite integrity ok. Native unfinished-only
+selection reduced the composer to beta alone. See verify-recovery.json and the alpha
+snapshot guarding against any later retry mutation. Fresh beta execution remains next.

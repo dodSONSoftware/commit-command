@@ -1,0 +1,8 @@
+{
+  "one_alpha_commit_no_replay": true,
+  "alpha_exact_content_clean_index": true,
+  "unselected_exact_bytes_modes": true,
+  "exact_authorized_two_trusts": true,
+  "integrity": "ok",
+  "beta_exact_bytes_modes_unchanged": true
+}
