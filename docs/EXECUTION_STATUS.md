@@ -7,6 +7,14 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 optional AI requirement confirmed
+
+D-048 makes AI an optional enhancement: supported manual workflows require no AI
+configuration/service; provider/model failures do not block manual work or discard
+drafts. Deterministic user-selected SemVer increments work without AI. Specification
+and M6/M7 plan now require no-AI/offline-provider acceptance. This is a requirement
+clarification, not implemented AI functionality or a new gate pass.
+
 ### November 8 native SHA-256 offline import — complete
 
 [Final import package](reports/G06_NATIVE_SHA256_IMPORT_2026-11-08.md): retained

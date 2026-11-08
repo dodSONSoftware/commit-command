@@ -208,6 +208,13 @@ Exit for M5: BULK-001 through 007 and PUSH-001 through 006 pass, including serve
 
 ## M6 Implement AI configuration and safe provider access
 
+D-048 is a required acceptance boundary: AI remains optional. Cover fresh installs
+without AI configuration and configured-but-unavailable providers/models. Manual
+messages, individual/bulk Git operations and deterministic SemVer increments must
+remain usable with drafts preserved and no implicit AI requests. AI-specific failures
+block only the affected AI operation; returning to manual work requires the normal
+review flow. Add focused Core/renderer/native coverage alongside M6/M7 implementation.
+
 ### M6A Add connections profiles templates and secure storage
 
 Populate `app/core/src/ai/` with bounded configuration, profile resolution and template/instruction modules. Add versioned TOML/text/SQLite storage as appropriate, migration backups and a narrow credential-store interface supplied by the native adapter. Core never depends on Tauri. Connections contain provider/endpoint/capabilities; profiles own model, editable system message and optional generation parameters. Resolve application → workspace → repository → operation overrides explicitly.

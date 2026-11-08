@@ -63,6 +63,7 @@ This register separates **explicitly agreed product behavior** from **proposed i
 | D-045 | Ordinary write availability | Enable supported writes in the normal macOS build after required safety acceptance passes; per-worktree trust and independent native approval remain mandatory. Current default stays disabled until then |
 | D-046 | SSH host verification | Unknown or changed host keys stop execution with external verification/known_hosts update instructions; no in-app host-key approval or automatic trust update |
 | D-047 | Initial Git service priority | Prioritize a private Gitea server. HTTPS versus SSH and existing helper/agent are unknown; do not infer them or select credentials automatically. Local configuration inspection may inform a concrete proposal; live server access and user credentials retain their authorization boundaries |
+| D-048 | Optional AI, confirmed November 8, 2026 | All supported manual Git workflows work without an AI connection, model, credentials or service. AI setup is optional; unavailable AI cannot block manual commits or other non-AI operations. SemVer Actions support deterministic user-selected increments without AI. |
 
 ## Proposed defaults / not explicitly finalized
 

@@ -409,6 +409,27 @@ The AI may suggest a supported Action definition, but **cannot create executable
 
 ## 11. Local AI subsystem
 
+### 11.0 AI is an optional enhancement
+
+Confirmed November 8, 2026 (D-048): Commit Command MUST support every supported
+manual Git workflow without an AI connection, model, credentials or running service.
+AI setup MUST NOT be required during onboarding or before manual work. Users can
+write/edit commit messages and perform supported individual/bulk Git operations
+through the normal trust/review flow without invoking AI. AI unavailability MUST NOT
+block unrelated non-AI operations or discard an existing manually edited message.
+
+An explicitly requested AI operation may fail and automatic AI commits must stop
+when analysis is unavailable; offer a deliberate return to manual composition with
+normal review rather than silently converting AI authorization into manual execution.
+Deterministic Actions, including user-selected major/minor/patch SemVer increments,
+MUST work without AI; AI suggestions are optional.
+
+Acceptance MUST cover a fresh install with no AI settings, an unreachable configured
+provider, a missing model and a failed/cancelled inference. Verify manual individual
+and bulk workflows remain usable, existing message drafts persist, deterministic
+Actions work, and non-AI operations issue no provider/model-discovery requests.
+These requirements do not broaden supported Git operations or relax existing gates.
+
 ### 11.1 AI connection and profile entities
 
 **AI Connection:** provider kind, HTTP(S) endpoint/IP/hostname/port, optional auth via OS secure storage, timeouts and connection capabilities. Ollama primary; OpenAI-compatible endpoint adapter for LM Studio and similar providers. No mandatory cloud provider.
