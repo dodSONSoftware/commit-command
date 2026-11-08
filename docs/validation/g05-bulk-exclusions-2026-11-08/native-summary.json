@@ -1,0 +1,12 @@
+{
+  "keyboard_enter_only_adds_exclusion": true,
+  "unknown_to_status_gitlink_visible_removable": true,
+  "fresh_native_proposal_excludes_only_requested_gitlink": true,
+  "review_cancelled_no_product_commit": true,
+  "ordinary_restart_exclusion_persisted": true,
+  "ordinary_execution_disabled": true,
+  "repository_and_prior_records_unchanged": true,
+  "both_exits": 0,
+  "state_lock_reopened": true,
+  "operator_child_commit_preparation_not_native_evidence": true
+}

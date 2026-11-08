@@ -89,3 +89,8 @@ All app Quit exits 0 and writer lock reopened. Fixture state/baselines retained.
 No live test service or credentials. This closes the named submodule/fresh-parent
 case and message-override checkpoint, not native cancellation/fault/linked-worktree,
 all exclusions/accessibility or the whole G05 gate.
+
+Follow-up: [explicit exclusion UI](G05_BULK_EXCLUSIONS_2026-11-08.md) now closes the
+fresh-review-only gitlink exclusion gap above. That case intentionally prepared a
+second child fixture commit; earlier one-child-commit assertions describe their
+historical checkpoint. Use the follow-up verify.py against the retained current state.

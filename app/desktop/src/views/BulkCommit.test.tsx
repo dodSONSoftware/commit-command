@@ -184,3 +184,72 @@ it("shows durable publication separately and retries only unfinished items with 
   expect(setSelected).toHaveBeenCalledWith(["b"]);
   expect(request).toHaveBeenCalledTimes(1);
 });
+
+it("adds an exact gitlink exclusion absent from restricted status without preparing a review on Enter", async () => {
+  const { request } = setup();
+  fireEvent.change(screen.getByLabelText("Shared commit message"), {
+    target: { value: "Reviewed parent" },
+  });
+  fireEvent.change(screen.getByLabelText("Additional exclusion · alpha"), {
+    target: { value: "modules/child" },
+  });
+  fireEvent.keyDown(screen.getByLabelText("Additional exclusion · alpha"), {
+    key: "Enter",
+  });
+  expect(screen.getByLabelText("Exclude modules/child")).toBeChecked();
+  expect(request.mock.calls.some(([r]) => r.kind === "review_batch")).toBe(
+    false,
+  );
+  fireEvent.click(
+    screen.getByRole("button", { name: "Prepare native bulk review" }),
+  );
+  await waitFor(() => {
+    const call = request.mock.calls.find(
+      ([r]) => r.kind === "review_batch",
+    )?.[0];
+    expect(call).toMatchObject({
+      kind: "review_batch",
+      selections: [
+        {
+          worktree: "a",
+          excluded: [{ encoding: "utf8", value: "modules/child" }],
+        },
+        { worktree: "b", excluded: [] },
+      ],
+    });
+  });
+});
+
+it("keeps manually added exclusions visible, exact and removable", async () => {
+  const { request } = setup();
+  fireEvent.change(screen.getByLabelText("Shared commit message"), {
+    target: { value: "Manual exclusions" },
+  });
+  const path = " modules/child ";
+  fireEvent.change(screen.getByLabelText("Additional exclusion · alpha"), {
+    target: { value: path },
+  });
+  fireEvent.click(
+    screen.getByRole("button", { name: "Add exclusion · alpha" }),
+  );
+  const checkbox = screen.getByLabelText("Exclude modules/child");
+  expect(checkbox).toBeChecked();
+  fireEvent.click(
+    screen.getByRole("button", { name: "Prepare native bulk review" }),
+  );
+  await waitFor(() => {
+    const call = request.mock.calls.find(
+      ([r]) => r.kind === "review_batch",
+    )?.[0];
+    expect(call).toMatchObject({
+      selections: [
+        { excluded: [{ encoding: "utf8", value: path }] },
+        { excluded: [] },
+      ],
+    });
+  });
+  fireEvent.click(checkbox);
+  expect(
+    screen.queryByLabelText("Exclude modules/child"),
+  ).not.toBeInTheDocument();
+});

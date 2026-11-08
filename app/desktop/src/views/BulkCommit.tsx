@@ -56,6 +56,9 @@ export function BulkCommit({
 }) {
   const shared = composer.message;
   const configuration = composer.configurations;
+  const [additionalPaths, setAdditionalPaths] = useState<
+    Record<string, string>
+  >({});
   const [results, setResults] = useState<BatchPage | null>(null);
   const chosen = selected.map((id) => entries.find((e) => e.id === id));
   const valid =
@@ -181,8 +184,24 @@ export function BulkCommit({
                 c.path,
                 ...(c.original_path ? [c.original_path] : []),
               ])
+              .concat(config.excluded)
               .map((p) => [JSON.stringify(p), p]),
           );
+          const additional = additionalPaths[entry.id] ?? "";
+          const addExclusion = () => {
+            if (!additional) return;
+            const path: BatchSelection["excluded"][number] = {
+              encoding: "utf8",
+              value: additional,
+            };
+            if (
+              !config.excluded.some(
+                (p) => JSON.stringify(p) === JSON.stringify(path),
+              )
+            )
+              change(entry.id, { excluded: [...config.excluded, path] });
+            setAdditionalPaths((current) => ({ ...current, [entry.id]: "" }));
+          };
           return (
             <fieldset key={entry.id} disabled={busy}>
               <legend>{repoName(entry)}</legend>
@@ -268,6 +287,38 @@ export function BulkCommit({
                   that no longer applies blocks this worktree until reviewed
                   again.
                 </p>
+                <p>
+                  A changed submodule gitlink may appear only in the fresh
+                  native review. Cancel that review to exclude its exact
+                  relative path here. Core checks every exclusion before
+                  preparing a new review.
+                </p>
+                <label>
+                  Additional exclusion · {repoName(entry)}
+                  <input
+                    value={additional}
+                    maxLength={4096}
+                    onChange={(event) =>
+                      setAdditionalPaths((current) => ({
+                        ...current,
+                        [entry.id]: event.target.value,
+                      }))
+                    }
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        event.preventDefault();
+                        addExclusion();
+                      }
+                    }}
+                  />
+                </label>
+                <button
+                  type="button"
+                  disabled={!additional}
+                  onClick={addExclusion}
+                >
+                  Add exclusion · {repoName(entry)}
+                </button>
                 {[...paths].map(([key, path]) => (
                   <label className="bulk-path" key={key}>
                     <input

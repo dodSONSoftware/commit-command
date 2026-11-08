@@ -1,0 +1,8 @@
+{
+  "repository_exact_bytes_modes_preserved": true,
+  "prior_operations_batches_unchanged": true,
+  "one_cancelled_proposal_only": true,
+  "no_application_publication": true,
+  "exact_original_two_trusts": true,
+  "sqlite_integrity": "ok"
+}

@@ -1,0 +1,37 @@
+{
+  "root": "/private/tmp/gitfleet-g05-submodule-fzz5ffky",
+  "workspace_root": "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace",
+  "parent": "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace/parent",
+  "child": "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace/parent/module",
+  "control": "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace/unselected",
+  "state": "/private/tmp/gitfleet-g05-submodule-fzz5ffky/state",
+  "workspace": "02447833-15bd-427f-b507-97d2dc4ff948",
+  "entries": {
+    "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace/parent": "3b02428c-0b46-4f68-b823-59b2585fa35b",
+    "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace/unselected": "552323a4-a46f-478d-8374-797eec1920f0",
+    "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace/parent/module": "8e41c396-4757-496b-931b-10c0873f2a9e"
+  },
+  "heads": {
+    "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace/parent": "a0039ba541273a4f076a3d6f3da7293b06a3bc85",
+    "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace/parent/module": "81f8a5e6cb101088b01373b282f025039080ac97",
+    "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace/unselected": "81f8a5e6cb101088b01373b282f025039080ac97"
+  },
+  "app": "/private/tmp/gitfleet-g05-submodule-fzz5ffky/Commit Command G05 Acceptance.app",
+  "binary_sha256": "1b8ce703d83e37cf221436111dcbbf52261ff0a188b739491eabe1ccc68c6afd",
+  "features": [
+    "custom-protocol",
+    "desktop-writes"
+  ],
+  "fixed_binary_sha256": "41ddd6c919f409d1a89f5d37658b488aeed8eb55945e4d5b4332590a96ceeaea",
+  "fixed_product_source_hashes": {
+    "app/core/src/application/bulk.rs": "f8d88a3b020c4d4205811393f20fd850d602e7839f05f6d1177049d45552bae6",
+    "app/core/src/discovery.rs": "67e16c362f7ca587f4fa3e33cc9e6e806fe454b3255bd30f39e86e73fdea59ce"
+  },
+  "ordinary_app": "/private/tmp/gitfleet-g05-submodule-fzz5ffky/Commit Command G05 Ordinary.app",
+  "ordinary_binary_sha256": "c0cc1a1338b8163cd10d3e84ab4f6fdb95fdfe734fd10ea0e06c940a2e8fa996",
+  "exclusion_old_child": "46c9c822b983bc17e29172d6238ba18780e75056",
+  "exclusion_new_child": "7ef924f7a6239a18515d6377a176994fcc99ff8b",
+  "prep": "operator-created disposable child commit; not native execution evidence",
+  "exclusion_ui_binary_sha256": "dd1cf97147b8ea3ecce6a662a6cab1314b90b89c614a3f231018d05bb5e04bec",
+  "exclusion_ui_ordinary_sha256": "c32c15f3b4fcfa5a9fcc0183d5076ff6c18020b06a16f541b071f8d415e8fcb8"
+}
