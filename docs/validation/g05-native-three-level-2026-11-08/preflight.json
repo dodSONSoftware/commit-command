@@ -1,0 +1,9 @@
+{
+  "complete_four_worktree_scan": true,
+  "actual_submodule_edges": 2,
+  "exact_repository_files_modes": true,
+  "no_trust_granted": true,
+  "no_write_operation_proposed": true,
+  "hooks_absent_signing_off": true,
+  "acceptance_binary_matches_validated_source": true
+}

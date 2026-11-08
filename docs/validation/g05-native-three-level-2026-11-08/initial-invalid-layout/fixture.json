@@ -1,0 +1,32 @@
+{
+  "root": "/private/tmp/gitfleet-g05-three-level-lywnuwnw",
+  "workspace_root": "/private/tmp/gitfleet-g05-three-level-lywnuwnw/workspace",
+  "parent": "/private/tmp/gitfleet-g05-three-level-lywnuwnw/workspace/parent",
+  "middle": "/private/tmp/gitfleet-g05-three-level-lywnuwnw/workspace/parent/middle",
+  "leaf": "/private/tmp/gitfleet-g05-three-level-lywnuwnw/workspace/parent/middle/leaf",
+  "control": "/private/tmp/gitfleet-g05-three-level-lywnuwnw/workspace/unselected",
+  "state": "/private/tmp/gitfleet-g05-three-level-lywnuwnw/state",
+  "workspace": "a22bef44-1c02-4256-89f2-53b23be6ecd5",
+  "entries": {
+    "/private/tmp/gitfleet-g05-three-level-lywnuwnw/workspace/parent/middle/leaf": "15ccae27-2ab5-4ff8-87e4-23f78efd19d4",
+    "/private/tmp/gitfleet-g05-three-level-lywnuwnw/workspace/parent/middle": "2e752191-51bf-47d0-9f70-2b875d7f28d9",
+    "/private/tmp/gitfleet-g05-three-level-lywnuwnw/workspace/unselected": "35e15d1a-eb00-4452-adde-277ff9dbdc5a",
+    "/private/tmp/gitfleet-g05-three-level-lywnuwnw/workspace/parent": "4a0c8c06-0d72-4229-ac49-62e002c2f0a1"
+  },
+  "heads": {
+    "/private/tmp/gitfleet-g05-three-level-lywnuwnw/workspace/parent": "62c54e0170a5fe06535c079827593dce38f201ab",
+    "/private/tmp/gitfleet-g05-three-level-lywnuwnw/workspace/parent/middle": "96a170559df38f5e1795082b3617259570cd83d6",
+    "/private/tmp/gitfleet-g05-three-level-lywnuwnw/workspace/parent/middle/leaf": "baff5d85eaf3e89506bccd3e06e657dbe20a0600",
+    "/private/tmp/gitfleet-g05-three-level-lywnuwnw/workspace/unselected": "baff5d85eaf3e89506bccd3e06e657dbe20a0600"
+  },
+  "app": "/private/tmp/gitfleet-g05-three-level-lywnuwnw/Commit Command Three Level Acceptance.app",
+  "ordinary_app": "/private/tmp/gitfleet-g05-three-level-lywnuwnw/Commit Command Three Level Ordinary.app",
+  "binary_sha256": "102b9429cefb03faa47ee7ac1abee8d2f9718574885fb587be62f9e7514e3f88",
+  "ordinary_sha256": "38654141986187c60e3ffdc69cefe340ae8ecb7d5b9c36af3a0da40e4fc89339",
+  "source_commit": "4c52595cd3745b64379790e7019333a842317fa0",
+  "features": [
+    "custom-protocol",
+    "desktop-writes",
+    "native-acceptance-support"
+  ]
+}

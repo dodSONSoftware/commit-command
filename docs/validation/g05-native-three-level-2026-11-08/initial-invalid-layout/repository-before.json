@@ -1,0 +1,362 @@
+{
+  "unselected/file.txt": {
+    "sha256": "f2ae83f170a9d299289a81d07195aa81afac75fd8e2327faacba73514197f6c5",
+    "mode": 420
+  },
+  "unselected/.git/config": {
+    "sha256": "f65775d9743bf76b27ef4c57b7c6bb5e8fa22556d7e62cffd274aaaf18542e8c",
+    "mode": 420
+  },
+  "unselected/.git/HEAD": {
+    "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+    "mode": 420
+  },
+  "unselected/.git/index": {
+    "sha256": "a55e8eff0fbc2dfe936c0e635cfd90c582ed8eeec4a340698863eff8b5502bdd",
+    "mode": 420
+  },
+  "unselected/.git/COMMIT_EDITMSG": {
+    "sha256": "416b36c5238bc990d34b5f35c5543a4f79e057f7683a5d426b6133771dbfab6d",
+    "mode": 420
+  },
+  "unselected/.git/objects/4e/a6478f5a4cef3d17f267ec60e24d51d6639756": {
+    "sha256": "0426b4ef9d5cd2e84d14d41ae41ef4474a7683ad26757667fbd3ae3fb9cfb9f0",
+    "mode": 292
+  },
+  "unselected/.git/objects/28/570ceda7ab419c0a297d7dced89cacf3099c67": {
+    "sha256": "121927c7af7474eb547bc86a57ffe2bb9ba1f1d6ad97399a744e09e48b64deda",
+    "mode": 292
+  },
+  "unselected/.git/objects/ba/ff5d85eaf3e89506bccd3e06e657dbe20a0600": {
+    "sha256": "7a29e091d755a39ef56c0ad7d4e35d4e8df49b7683bbc5a0e0c9ae0ef8d14d6e",
+    "mode": 292
+  },
+  "unselected/.git/logs/HEAD": {
+    "sha256": "c8b37792729ceae94c665f7a681cc0edbd8067d80d74a7b79da73dc2592bd904",
+    "mode": 420
+  },
+  "unselected/.git/logs/refs/heads/main": {
+    "sha256": "c8b37792729ceae94c665f7a681cc0edbd8067d80d74a7b79da73dc2592bd904",
+    "mode": 420
+  },
+  "unselected/.git/refs/heads/main": {
+    "sha256": "e29d2034584a659bde40cfcd4dc6e33d5b1a2d80cec2a862787bfd80ba9a075d",
+    "mode": 420
+  },
+  "parent/file.txt": {
+    "sha256": "d45b01c860dfa0a1e227fcb1c790241587ddc1b58ea2590b3998754c0144607d",
+    "mode": 420
+  },
+  "parent/.gitmodules": {
+    "sha256": "edc1ad44f7ea1cf4bcbab38a8b54d9fa9f119c371ff75db40cfc69b9f977532f",
+    "mode": 420
+  },
+  "parent/middle/file.txt": {
+    "sha256": "d45b01c860dfa0a1e227fcb1c790241587ddc1b58ea2590b3998754c0144607d",
+    "mode": 420
+  },
+  "parent/middle/.gitmodules": {
+    "sha256": "96e6f9ef681a3ed3718118f1173979687d2565e38953bd5fa636fa0166a8fc81",
+    "mode": 420
+  },
+  "parent/middle/.git": {
+    "sha256": "e16a7477a56651de9fab8e4e4ee722342abe62fb3a0be7d65b1d09f3da8af9d4",
+    "mode": 420
+  },
+  "parent/middle/leaf/file.txt": {
+    "sha256": "d45b01c860dfa0a1e227fcb1c790241587ddc1b58ea2590b3998754c0144607d",
+    "mode": 420
+  },
+  "parent/middle/leaf/.git": {
+    "sha256": "7cbcac4d97ca76171f6546a1ad3151260187f71dd40cabed921f7e5c6231924d",
+    "mode": 420
+  },
+  "parent/.git/config": {
+    "sha256": "1ec757b7cd20f1a93872014b0592b0c9df59690d7da18094f2d37723dbfaac06",
+    "mode": 420
+  },
+  "parent/.git/HEAD": {
+    "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+    "mode": 420
+  },
+  "parent/.git/index": {
+    "sha256": "dc4c3e4fab09caaedf647d69586973412bd69cf95e4fb675ae8ee02fd799ac90",
+    "mode": 420
+  },
+  "parent/.git/COMMIT_EDITMSG": {
+    "sha256": "79f215b40b7c6c8a1201bdce912c9d1adde865d58df26790ce601c0fe2973a0b",
+    "mode": 420
+  },
+  "parent/.git/objects/4e/a6478f5a4cef3d17f267ec60e24d51d6639756": {
+    "sha256": "0426b4ef9d5cd2e84d14d41ae41ef4474a7683ad26757667fbd3ae3fb9cfb9f0",
+    "mode": 292
+  },
+  "parent/.git/objects/7c/ca9b2f4b8c1e07c1d63f857cb2ca42b9b1b2d8": {
+    "sha256": "ea31d8452cddfa7d605b0675231104e24deac3726aeab782173ac8eaaadc84bf",
+    "mode": 292
+  },
+  "parent/.git/objects/28/570ceda7ab419c0a297d7dced89cacf3099c67": {
+    "sha256": "121927c7af7474eb547bc86a57ffe2bb9ba1f1d6ad97399a744e09e48b64deda",
+    "mode": 292
+  },
+  "parent/.git/objects/62/c54e0170a5fe06535c079827593dce38f201ab": {
+    "sha256": "df634dc1cfe752e577bc3f4e156954a39f7d195396539a80f29ef2b9df161b0c",
+    "mode": 292
+  },
+  "parent/.git/objects/ba/ff5d85eaf3e89506bccd3e06e657dbe20a0600": {
+    "sha256": "7a29e091d755a39ef56c0ad7d4e35d4e8df49b7683bbc5a0e0c9ae0ef8d14d6e",
+    "mode": 292
+  },
+  "parent/.git/objects/2c/c324c23b87b422afec0d9ba8cd4fdb99c6caf6": {
+    "sha256": "d9909f8c5bedc91f9d3a6694c84ac2734f9430ce56bed0b70374adf5cb38b490",
+    "mode": 292
+  },
+  "parent/.git/logs/HEAD": {
+    "sha256": "f423613f409678dba7e85640a3ac81e7329630efcabca20b6fc02f47ff6cf6f6",
+    "mode": 420
+  },
+  "parent/.git/logs/refs/heads/main": {
+    "sha256": "e8a9a7e6de10c4cda34c75f438e80867dbfb174a28776ad55a9fede04b55b636",
+    "mode": 420
+  },
+  "parent/.git/refs/heads/main": {
+    "sha256": "7490ce56aef7a55a31d49447a93b34e0b683414dd85c4a57c235f756519ade04",
+    "mode": 420
+  },
+  "parent/.git/modules/middle/config": {
+    "sha256": "1c48f0b1cca2076bda918c5a299a36d4552be61ecfaec37f45f168c57a01d4d2",
+    "mode": 420
+  },
+  "parent/.git/modules/middle/HEAD": {
+    "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+    "mode": 420
+  },
+  "parent/.git/modules/middle/description": {
+    "sha256": "85ab6c163d43a17ea9cf7788308bca1466f1b0a8d1cc92e26e9bf63da4062aee",
+    "mode": 420
+  },
+  "parent/.git/modules/middle/index": {
+    "sha256": "647a96a25bddbbecb0701d4de0dca90e5b82d2d6d36270136d07115d8cf5fed4",
+    "mode": 420
+  },
+  "parent/.git/modules/middle/packed-refs": {
+    "sha256": "fe8cdc94c1c87b44b57d4694172483fa8f4c293bd169e48d27a7987f27061d11",
+    "mode": 420
+  },
+  "parent/.git/modules/middle/objects/4e/a6478f5a4cef3d17f267ec60e24d51d6639756": {
+    "sha256": "0426b4ef9d5cd2e84d14d41ae41ef4474a7683ad26757667fbd3ae3fb9cfb9f0",
+    "mode": 292
+  },
+  "parent/.git/modules/middle/objects/28/570ceda7ab419c0a297d7dced89cacf3099c67": {
+    "sha256": "121927c7af7474eb547bc86a57ffe2bb9ba1f1d6ad97399a744e09e48b64deda",
+    "mode": 292
+  },
+  "parent/.git/modules/middle/objects/96/a170559df38f5e1795082b3617259570cd83d6": {
+    "sha256": "9474b11962bf99f99023abdb3846626e34e793f245c5178817c8b763d99bf8a1",
+    "mode": 292
+  },
+  "parent/.git/modules/middle/objects/52/e07cf6963970f368787aa4b50d72fddb8fe36c": {
+    "sha256": "09bb46635b5a9d796945e6c3031defb676b29703e6e95d2ff22b5e6d9ab5d505",
+    "mode": 292
+  },
+  "parent/.git/modules/middle/objects/ba/ff5d85eaf3e89506bccd3e06e657dbe20a0600": {
+    "sha256": "7a29e091d755a39ef56c0ad7d4e35d4e8df49b7683bbc5a0e0c9ae0ef8d14d6e",
+    "mode": 292
+  },
+  "parent/.git/modules/middle/objects/b8/8641e29b5d333dc22b849d921ccbdd1801d149": {
+    "sha256": "e38e03540bb3357aa9089b80cb047eaa8e64ec70eb73885050fe8fd7b8efb5ba",
+    "mode": 292
+  },
+  "parent/.git/modules/middle/info/exclude": {
+    "sha256": "6671fe83b7a07c8932ee89164d1f2793b2318058eb8b98dc5c06ee0a5a3b0ec1",
+    "mode": 420
+  },
+  "parent/.git/modules/middle/logs/HEAD": {
+    "sha256": "6f7512576b281b05ed8eea3c259acabceaa39cd7ec520ab2fbec815a51de24c4",
+    "mode": 420
+  },
+  "parent/.git/modules/middle/logs/refs/heads/main": {
+    "sha256": "19b0239a0b605036ad5f1a4d8561926534cf514ce5e550f9373194d425c98d80",
+    "mode": 420
+  },
+  "parent/.git/modules/middle/logs/refs/remotes/origin/HEAD": {
+    "sha256": "19b0239a0b605036ad5f1a4d8561926534cf514ce5e550f9373194d425c98d80",
+    "mode": 420
+  },
+  "parent/.git/modules/middle/hooks/commit-msg.sample": {
+    "sha256": "efc1401b0e99d1ff51494d154d98b46c1e99059bcd8bf9f73cecde19fd3eb23b",
+    "mode": 493
+  },
+  "parent/.git/modules/middle/hooks/pre-rebase.sample": {
+    "sha256": "4febce867790052338076f4e66cc47efb14879d18097d1d61c8261859eaaa7b3",
+    "mode": 493
+  },
+  "parent/.git/modules/middle/hooks/sendemail-validate.sample": {
+    "sha256": "44ebfc923dc5466bc009602f0ecf067b9c65459abfe8868ddc49b78e6ced7a92",
+    "mode": 493
+  },
+  "parent/.git/modules/middle/hooks/pre-commit.sample": {
+    "sha256": "57185b7b9f05239d7ab52db045f5b89eb31348d7b2177eab214f5eb872e1971b",
+    "mode": 493
+  },
+  "parent/.git/modules/middle/hooks/applypatch-msg.sample": {
+    "sha256": "0223497a0b8b033aa58a3a521b8629869386cf7ab0e2f101963d328aa62193f7",
+    "mode": 493
+  },
+  "parent/.git/modules/middle/hooks/fsmonitor-watchman.sample": {
+    "sha256": "9159720099ad5595b8e66645cbfd47763c1e920f46e0b50ae75e642bbec57ef0",
+    "mode": 493
+  },
+  "parent/.git/modules/middle/hooks/pre-receive.sample": {
+    "sha256": "a4c3d2b9c7bb3fd8d1441c31bd4ee71a595d66b44fcf49ddb310252320169989",
+    "mode": 493
+  },
+  "parent/.git/modules/middle/hooks/prepare-commit-msg.sample": {
+    "sha256": "e9ddcaa4189fddd25ed97fc8c789eca7b6ca16390b2392ae3276f0c8e1aa4619",
+    "mode": 493
+  },
+  "parent/.git/modules/middle/hooks/post-update.sample": {
+    "sha256": "81765af2daef323061dcbc5e61fc16481cb74b3bac9ad8a174b186523586f6c5",
+    "mode": 493
+  },
+  "parent/.git/modules/middle/hooks/pre-merge-commit.sample": {
+    "sha256": "d3825a70337940ebbd0a5c072984e13245920cdf8898bd225c8d27a6dfc9cb53",
+    "mode": 493
+  },
+  "parent/.git/modules/middle/hooks/pre-applypatch.sample": {
+    "sha256": "e15c5b469ea3e0a695bea6f2c82bcf8e62821074939ddd85b77e0007ff165475",
+    "mode": 493
+  },
+  "parent/.git/modules/middle/hooks/pre-push.sample": {
+    "sha256": "ecce9c7e04d3f5dd9d8ada81753dd1d549a9634b26770042b58dda00217d086a",
+    "mode": 493
+  },
+  "parent/.git/modules/middle/hooks/update.sample": {
+    "sha256": "8d5f2fa83e103cf08b57eaa67521df9194f45cbdbcb37da52ad586097a14d106",
+    "mode": 493
+  },
+  "parent/.git/modules/middle/hooks/push-to-checkout.sample": {
+    "sha256": "a53d0741798b287c6dd7afa64aee473f305e65d3f49463bb9d7408ec3b12bf5f",
+    "mode": 493
+  },
+  "parent/.git/modules/middle/refs/heads/main": {
+    "sha256": "3b44ce2e281c22b6a3ff657d34b9e374b5ed00f70090cd757cb66c3eca7bbea4",
+    "mode": 420
+  },
+  "parent/.git/modules/middle/refs/remotes/origin/HEAD": {
+    "sha256": "2bb6a24aa0fc6c484100f5d51a29bbad841cd2c755f5d93faa204e5dbb4eb2b4",
+    "mode": 420
+  },
+  "parent/.git/modules/middle/modules/leaf/config": {
+    "sha256": "061377c042386f9e7a1c43e0c2f99e6d7504452461c2f1b8ed5fa5a489106774",
+    "mode": 420
+  },
+  "parent/.git/modules/middle/modules/leaf/HEAD": {
+    "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+    "mode": 420
+  },
+  "parent/.git/modules/middle/modules/leaf/description": {
+    "sha256": "85ab6c163d43a17ea9cf7788308bca1466f1b0a8d1cc92e26e9bf63da4062aee",
+    "mode": 420
+  },
+  "parent/.git/modules/middle/modules/leaf/index": {
+    "sha256": "ba2ee25e7cc9ce31f3f856a2b0ef218eac1794cde5c23cb7a3e286a2e9916c6a",
+    "mode": 420
+  },
+  "parent/.git/modules/middle/modules/leaf/packed-refs": {
+    "sha256": "c799c4be477c2b0727bbd8b996dd0890a33866b7a91c92a17537f013c65a06c6",
+    "mode": 420
+  },
+  "parent/.git/modules/middle/modules/leaf/objects/4e/a6478f5a4cef3d17f267ec60e24d51d6639756": {
+    "sha256": "0426b4ef9d5cd2e84d14d41ae41ef4474a7683ad26757667fbd3ae3fb9cfb9f0",
+    "mode": 292
+  },
+  "parent/.git/modules/middle/modules/leaf/objects/28/570ceda7ab419c0a297d7dced89cacf3099c67": {
+    "sha256": "121927c7af7474eb547bc86a57ffe2bb9ba1f1d6ad97399a744e09e48b64deda",
+    "mode": 292
+  },
+  "parent/.git/modules/middle/modules/leaf/objects/ba/ff5d85eaf3e89506bccd3e06e657dbe20a0600": {
+    "sha256": "7a29e091d755a39ef56c0ad7d4e35d4e8df49b7683bbc5a0e0c9ae0ef8d14d6e",
+    "mode": 292
+  },
+  "parent/.git/modules/middle/modules/leaf/info/exclude": {
+    "sha256": "6671fe83b7a07c8932ee89164d1f2793b2318058eb8b98dc5c06ee0a5a3b0ec1",
+    "mode": 420
+  },
+  "parent/.git/modules/middle/modules/leaf/logs/HEAD": {
+    "sha256": "981d5612c517d04edd5e5479e2f9065112db7226b933babd5f1d962e2a4a434c",
+    "mode": 420
+  },
+  "parent/.git/modules/middle/modules/leaf/logs/refs/heads/main": {
+    "sha256": "7397af75c3d67cc22849b4fbc5573103268bcb7c37dd7189210b683bf84f3945",
+    "mode": 420
+  },
+  "parent/.git/modules/middle/modules/leaf/logs/refs/remotes/origin/HEAD": {
+    "sha256": "7397af75c3d67cc22849b4fbc5573103268bcb7c37dd7189210b683bf84f3945",
+    "mode": 420
+  },
+  "parent/.git/modules/middle/modules/leaf/hooks/commit-msg.sample": {
+    "sha256": "efc1401b0e99d1ff51494d154d98b46c1e99059bcd8bf9f73cecde19fd3eb23b",
+    "mode": 493
+  },
+  "parent/.git/modules/middle/modules/leaf/hooks/pre-rebase.sample": {
+    "sha256": "4febce867790052338076f4e66cc47efb14879d18097d1d61c8261859eaaa7b3",
+    "mode": 493
+  },
+  "parent/.git/modules/middle/modules/leaf/hooks/sendemail-validate.sample": {
+    "sha256": "44ebfc923dc5466bc009602f0ecf067b9c65459abfe8868ddc49b78e6ced7a92",
+    "mode": 493
+  },
+  "parent/.git/modules/middle/modules/leaf/hooks/pre-commit.sample": {
+    "sha256": "57185b7b9f05239d7ab52db045f5b89eb31348d7b2177eab214f5eb872e1971b",
+    "mode": 493
+  },
+  "parent/.git/modules/middle/modules/leaf/hooks/applypatch-msg.sample": {
+    "sha256": "0223497a0b8b033aa58a3a521b8629869386cf7ab0e2f101963d328aa62193f7",
+    "mode": 493
+  },
+  "parent/.git/modules/middle/modules/leaf/hooks/fsmonitor-watchman.sample": {
+    "sha256": "9159720099ad5595b8e66645cbfd47763c1e920f46e0b50ae75e642bbec57ef0",
+    "mode": 493
+  },
+  "parent/.git/modules/middle/modules/leaf/hooks/pre-receive.sample": {
+    "sha256": "a4c3d2b9c7bb3fd8d1441c31bd4ee71a595d66b44fcf49ddb310252320169989",
+    "mode": 493
+  },
+  "parent/.git/modules/middle/modules/leaf/hooks/prepare-commit-msg.sample": {
+    "sha256": "e9ddcaa4189fddd25ed97fc8c789eca7b6ca16390b2392ae3276f0c8e1aa4619",
+    "mode": 493
+  },
+  "parent/.git/modules/middle/modules/leaf/hooks/post-update.sample": {
+    "sha256": "81765af2daef323061dcbc5e61fc16481cb74b3bac9ad8a174b186523586f6c5",
+    "mode": 493
+  },
+  "parent/.git/modules/middle/modules/leaf/hooks/pre-merge-commit.sample": {
+    "sha256": "d3825a70337940ebbd0a5c072984e13245920cdf8898bd225c8d27a6dfc9cb53",
+    "mode": 493
+  },
+  "parent/.git/modules/middle/modules/leaf/hooks/pre-applypatch.sample": {
+    "sha256": "e15c5b469ea3e0a695bea6f2c82bcf8e62821074939ddd85b77e0007ff165475",
+    "mode": 493
+  },
+  "parent/.git/modules/middle/modules/leaf/hooks/pre-push.sample": {
+    "sha256": "ecce9c7e04d3f5dd9d8ada81753dd1d549a9634b26770042b58dda00217d086a",
+    "mode": 493
+  },
+  "parent/.git/modules/middle/modules/leaf/hooks/update.sample": {
+    "sha256": "8d5f2fa83e103cf08b57eaa67521df9194f45cbdbcb37da52ad586097a14d106",
+    "mode": 493
+  },
+  "parent/.git/modules/middle/modules/leaf/hooks/push-to-checkout.sample": {
+    "sha256": "a53d0741798b287c6dd7afa64aee473f305e65d3f49463bb9d7408ec3b12bf5f",
+    "mode": 493
+  },
+  "parent/.git/modules/middle/modules/leaf/refs/heads/main": {
+    "sha256": "e29d2034584a659bde40cfcd4dc6e33d5b1a2d80cec2a862787bfd80ba9a075d",
+    "mode": 420
+  },
+  "parent/.git/modules/middle/modules/leaf/refs/remotes/origin/HEAD": {
+    "sha256": "2bb6a24aa0fc6c484100f5d51a29bbad841cd2c755f5d93faa204e5dbb4eb2b4",
+    "mode": 420
+  }
+}

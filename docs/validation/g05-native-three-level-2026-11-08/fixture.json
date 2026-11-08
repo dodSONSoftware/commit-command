@@ -1,0 +1,32 @@
+{
+  "root": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr",
+  "workspace_root": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace",
+  "parent": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent",
+  "middle": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle",
+  "leaf": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle/leaf",
+  "control": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/unselected",
+  "state": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/state",
+  "workspace": "8fbb404a-a70e-47fe-a911-3bf94a4ee709",
+  "entries": {
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/unselected": "02fee984-8794-4793-b047-7dd0b709ba09",
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle/leaf": "0c13b924-9371-40ac-a754-2f6705a3afcb",
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent": "17c0aec8-df8d-4c6e-9ae3-5518aa395ea5",
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle": "407fa849-c4fa-4e1f-8fc8-bfb8e3822cb7"
+  },
+  "heads": {
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent": "18f9db137c8e018c61d7095716244ae9d5fb88f4",
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle": "2dbf7c743f1cf3e9b9120683d40dfedbb9301eed",
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle/leaf": "e9bfc641cb50a16e8914d1fe4b6b8be519560c37",
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/unselected": "e9bfc641cb50a16e8914d1fe4b6b8be519560c37"
+  },
+  "app": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/Commit Command Three Level Acceptance.app",
+  "ordinary_app": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/Commit Command Three Level Ordinary.app",
+  "binary_sha256": "102b9429cefb03faa47ee7ac1abee8d2f9718574885fb587be62f9e7514e3f88",
+  "ordinary_sha256": "38654141986187c60e3ffdc69cefe340ae8ecb7d5b9c36af3a0da40e4fc89339",
+  "source_commit": "4c52595cd3745b64379790e7019333a842317fa0",
+  "features": [
+    "custom-protocol",
+    "desktop-writes",
+    "native-acceptance-support"
+  ]
+}

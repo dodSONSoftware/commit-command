@@ -7,6 +7,16 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G05 native three-level fixture — prepared, exact trust pending
+
+[Native preparation](reports/G05_NATIVE_THREE_LEVEL_2026-11-08.md): four real
+repositories, two nested submodule edges, root/middle/leaf on main; no hooks/signing.
+Native authoritative review lists only the three test worktrees; control unselected.
+Exact preparation hashes/modes, zero trust rows and zero write operations verified.
+Native execution is not accepted. The earlier path-specific hook-fixture grant does
+not cover these new worktrees; exact trust authorization is required before granting
+access. No product patch, guard relaxation, push or personal state use.
+
 ### November 8 G05 three-level dependency chain — Core passed, native open
 
 [Three-level package](reports/G05_THREE_LEVEL_2026-11-08.md): new real root/middle/leaf
