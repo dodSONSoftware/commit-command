@@ -1,0 +1,19 @@
+{
+  "same_authorized_repository_and_isolated_state": true,
+  "native_scoped_trust_renewal": true,
+  "native_exact_observation_prepared_and_confirmed": true,
+  "same_oid_branch_switch": true,
+  "config_and_index_unchanged_by_switch": true,
+  "native_refusal_phase": "blocked",
+  "native_refusal_issue": "stale_review",
+  "trust_current_after_refusal": true,
+  "later_generation_barrier_exercised_without_stale_trust": true,
+  "ordinary_restart_rendered_without_reload": true,
+  "blocked_history_visible_on_restart": true,
+  "transport_storage_absent": true,
+  "observed_oid_and_time_absent": true,
+  "both_quit_exit_codes": 0,
+  "writer_lock_reopened": true,
+  "product_patch": false,
+  "new_full_automated_suite_run": false
+}

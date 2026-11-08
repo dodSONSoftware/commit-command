@@ -138,6 +138,18 @@ repository baselines preserved; original config restored and previous case rever
 Selected trust/config-drift barrier passed; later URL-digest guard not independently
 isolated. No source fix/full-suite rerun. Other G02/G06 criteria remain open.
 
+### November 7 G06 same-OID observation generation drift
+
+[Native generation-barrier report](reports/G06_NATIVE_OBSERVATION_GENERATION_DRIFT_2026-11-07.md):
+same authorized disposable repository/isolated state; prepared observation, switched
+to an existing alternate branch at the identical OID without config/index changes,
+then approved the old exact review. Core blocked stale_review while trust stayed
+current, with no transport storage/OID/time. Ordinary restart retained identical
+history, both exits 0 and writer lock reopened. Expected file baselines preserved;
+fixture restored and earlier case reverified. Selected generation guard passed beyond
+stale-trust coverage; URL/auth/tool drift checks not independently isolated. No product
+fix/full-suite rerun. Other G02/G06 requirements remain open.
+
 ## Status meanings and availability
 
 - **Accepted within envelope:** the recorded milestone criteria passed only for

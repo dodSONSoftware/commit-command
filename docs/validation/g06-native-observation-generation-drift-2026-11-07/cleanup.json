@@ -1,0 +1,12 @@
+{
+  "original_config_HEAD_and_log_bytes_restored": true,
+  "temporary_branch_files_removed": [
+    "repository/.git/logs/refs/heads/g06-observation-alt",
+    "repository/.git/refs/heads/g06-observation-alt"
+  ],
+  "isolated_state_writer_lock_reopened": true,
+  "acceptance_quit_exit_code": 0,
+  "ordinary_quit_exit_code": 0,
+  "normal_user_app_untouched": true,
+  "original_state_not_modified": true
+}

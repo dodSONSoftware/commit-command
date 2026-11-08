@@ -1,0 +1,11 @@
+{
+  "before_oid": "1008391da64d7debe65ed29a8f63bb1604f9a367",
+  "after_oid": "1008391da64d7debe65ed29a8f63bb1604f9a367",
+  "config_unchanged": true,
+  "index_unchanged": true,
+  "changed_files": [
+    "repository/.git/HEAD",
+    "repository/.git/logs/HEAD"
+  ],
+  "pending_observation_id": "a503cb8b-08de-4ad5-81ba-eb44125c7c26"
+}

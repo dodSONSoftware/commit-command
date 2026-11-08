@@ -1,0 +1,12 @@
+{
+  "expected_repository_bytes_modes_preserved": true,
+  "sqlite_integrity": "ok",
+  "blocked_record_unchanged": true,
+  "issue": "stale_review",
+  "observed_oid_and_time_absent": true,
+  "trust_row_still_unrevoked": true,
+  "local_write_operation_rows": 0,
+  "other_remote_records": 0,
+  "transport_storage_absent": true,
+  "helper_invocation_marker_absent": true
+}
