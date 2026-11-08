@@ -7,6 +7,16 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G07 publication primitives — isolated Git proof passed, executor pending
+
+[Primitive contract](reports/G07_PUBLICATION_PRIMITIVES_2026-11-08.md): disposable
+local bare fixture proved exact source export/import into an isolated repository,
+ancestry-checked publication and expected-old refusal when the server advances even
+to another ancestor of the approved source. No user repository/remote involved.
+This is Git primitive evidence, not application push authority or G07 closure.
+Implement a separate publication review/journal/isolated transport path next; prior
+hook checks remain non-publication actions. G03 ancestor-status fix is in validation.
+
 ### November 8 G05 dirty unselected submodule — preservation passed; ancestor status defect open
 
 [Omitted-child package](reports/G05_NATIVE_UNSELECTED_SUBMODULE_2026-11-08.md): only

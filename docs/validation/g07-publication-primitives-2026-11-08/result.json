@@ -1,0 +1,14 @@
+{
+  "root": "/private/tmp/gitfleet-g07-primitives-w85jivnn",
+  "git_version": "git version 2.56.0",
+  "base": "c89221c2f0b671071b1d60ea1e29a6a32440b7f1",
+  "first": "72bbf1d0d502f1caf99c499caa32877758a637db",
+  "intermediate": "b61ee5d8fe8cac7c956b0c89caff32a83101a666",
+  "approved": "85dd810bbede8734d29074b2385c1a1f899cd1bf",
+  "isolated_bundle_import_exact": true,
+  "planned_ancestry_proven_before_push": true,
+  "expected_old_guarded_ff_published": true,
+  "compatible_ancestor_server_drift_rejected": true,
+  "drift_ref_preserved": true,
+  "primitive_only_not_application_acceptance": true
+}

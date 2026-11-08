@@ -1,0 +1,3 @@
+To /private/tmp/gitfleet-g07-primitives-w85jivnn/remote.git
+!	85dd810bbede8734d29074b2385c1a1f899cd1bf:refs/heads/main	[rejected] (stale info)
+Done
