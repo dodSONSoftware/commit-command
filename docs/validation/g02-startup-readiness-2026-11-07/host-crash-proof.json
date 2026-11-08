@@ -1,0 +1,9 @@
+{
+  "signal": "SIGKILL",
+  "target_pid": 21409,
+  "only_native_host_signalled": true,
+  "processes_before": "21409  1161 21409 Ss+  /private/tmp/gitfleet-m3-native-m85ztlj4/Commit Command Startup Readiness Acceptance.app/Contents/MacOS/gitfleet-desktop --data-dir /private/tmp/gitfleet-m3-native-m85ztlj4/state --https-ca-file /private/tmp/gitfleet-m3-native-m85ztlj4/certificate.pem\n28221 21409 28221 S    /bin/sh /private/tmp/gitfleet-m3-native-m85ztlj4/workspace/parent/child/grand/.git/hooks/pre-push origin https://127.0.0.1:55489/grand.git\n28222 28221 28221 S    sleep 45\n",
+  "processes_after": "28221     1 28221 S    /bin/sh /private/tmp/gitfleet-m3-native-m85ztlj4/workspace/parent/child/grand/.git/hooks/pre-push origin https://127.0.0.1:55489/grand.git\n28222 28221 28221 S    sleep 45\n",
+  "hook_or_child_signalled": false,
+  "observed_at_ns": 1794102176428361000
+}

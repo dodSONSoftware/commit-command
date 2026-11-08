@@ -1,0 +1,109 @@
+[
+  {
+    "detail": {
+      "support": true
+    },
+    "event": "startup"
+  },
+  {
+    "detail": {
+      "allowed": true,
+      "label": "main"
+    },
+    "event": "navigation"
+  },
+  {
+    "detail": {
+      "elapsed_ms": 139,
+      "event": "Started",
+      "visible": false
+    },
+    "event": "main_page_load"
+  },
+  {
+    "detail": {
+      "elapsed_ms": 188,
+      "event": "Finished",
+      "visible": false
+    },
+    "event": "main_page_load"
+  },
+  {
+    "detail": {
+      "visible": true
+    },
+    "event": "main_initial_display"
+  },
+  {
+    "detail": {
+      "support": true
+    },
+    "event": "startup"
+  },
+  {
+    "detail": {
+      "allowed": true,
+      "label": "main"
+    },
+    "event": "navigation"
+  },
+  {
+    "detail": {
+      "elapsed_ms": 138,
+      "event": "Started",
+      "visible": false
+    },
+    "event": "main_page_load"
+  },
+  {
+    "detail": {
+      "elapsed_ms": 195,
+      "event": "Finished",
+      "visible": false
+    },
+    "event": "main_page_load"
+  },
+  {
+    "detail": {
+      "visible": true
+    },
+    "event": "main_initial_display"
+  },
+  {
+    "detail": {},
+    "event": "reload_requested"
+  },
+  {
+    "detail": {
+      "id": "accept-reload"
+    },
+    "event": "menu_action"
+  },
+  {
+    "detail": {
+      "allowed": true,
+      "label": "main"
+    },
+    "event": "navigation"
+  },
+  {
+    "detail": {
+      "elapsed_ms": 17953,
+      "event": "Started",
+      "visible": true
+    },
+    "event": "main_page_load"
+  },
+  {
+    "detail": {},
+    "event": "main_renderer_reset"
+  },
+  {
+    "detail": {
+      "elapsed_ms": 17962,
+      "event": "Finished",
+      "visible": true
+    },
+    "event": "main_page_load"
+  }
+]

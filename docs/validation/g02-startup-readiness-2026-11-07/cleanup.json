@@ -1,0 +1,14 @@
+{
+  "original_hook_pid": 28221,
+  "original_child_pid": 28222,
+  "original_processes_absent": true,
+  "original_hook_finished_naturally": true,
+  "hook_finished_mtime_ns": 1794102217642621413,
+  "external_hook_or_child_signal": false,
+  "running_hook_host_crash_tool_exit": 1,
+  "repeat_idle_host_crash_tool_exit": 1,
+  "final_cmd_q_host_exit": 0,
+  "exact_fixture_server_stopped": true,
+  "generated_private_key_removed": true,
+  "installed_app_changed": false
+}

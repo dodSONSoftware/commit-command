@@ -849,6 +849,9 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             native_acceptance::install(app.handle(), setup_host.clone())?;
             let page_host = setup_host.clone();
             let page_loaded = std::sync::atomic::AtomicBool::new(false);
+            let initially_shown = std::sync::atomic::AtomicBool::new(false);
+            #[cfg(feature = "native-acceptance-support")]
+            let page_started = Instant::now();
             let window =
                 WebviewWindowBuilder::new(app, "main", WebviewUrl::App("index.html".into()))
                     .title("Commit Command")
@@ -857,6 +860,15 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                     .min_inner_size(window_state::MIN_WIDTH, window_state::MIN_HEIGHT)
                     .devtools(false)
                     .on_page_load(move |window, payload| {
+                        #[cfg(feature = "native-acceptance-support")]
+                        native_acceptance::record(
+                            "main_page_load",
+                            json!({
+                                "event": format!("{:?}", payload.event()),
+                                "visible": window.is_visible().ok(),
+                                "elapsed_ms": page_started.elapsed().as_millis(),
+                            }),
+                        );
                         if payload.event() == tauri::webview::PageLoadEvent::Started
                             && page_loaded.swap(true, std::sync::atomic::Ordering::AcqRel)
                         {
@@ -866,6 +878,21 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                             if let Some(review) = window.app_handle().get_webview_window("review") {
                                 let _ = close_review(&review);
                             }
+                        }
+                        // WebKit loads asynchronously. Showing during setup exposes
+                        // an empty surface, particularly on a cold/crash restart.
+                        // Later renderer reloads must not unhide the user's window.
+                        if payload.event() == tauri::webview::PageLoadEvent::Finished
+                            && !initially_shown.swap(true, std::sync::atomic::Ordering::AcqRel)
+                        {
+                            if let Err(error) = window.show() {
+                                eprintln!("Commit Command window display failed: {error}");
+                            }
+                            #[cfg(feature = "native-acceptance-support")]
+                            native_acceptance::record(
+                                "main_initial_display",
+                                json!({"visible":window.is_visible().ok()}),
+                            );
                         }
                     })
                     .on_navigation(|url| {
@@ -888,7 +915,6 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             if let Some(placement) = saved_placement {
                 window_state::restore(&window, placement)?;
             }
-            window.show()?;
             let handle = app.handle().clone();
             let host = setup_host.clone();
             std::thread::Builder::new()

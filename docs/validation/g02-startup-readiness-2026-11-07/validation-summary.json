@@ -1,0 +1,44 @@
+{
+  "baseline_commit": "a89ecc6",
+  "full_desktop_script_exit": 0,
+  "renderer_tests": 69,
+  "default_host_tests": 13,
+  "all_feature_host_tests": 16,
+  "support_build_exit": 0,
+  "core_executor_changed": false,
+  "core_focused_tests_rerun": false,
+  "running_hook_crash": {
+    "host_pid": 21409,
+    "hook_pid": 28221,
+    "child_pid": 28222,
+    "first_restart_pid": 28285,
+    "first_restart_workspace_history_and_draft_verified": true
+  },
+  "additional_idle_host_crash": {
+    "host_pid": 28285,
+    "first_restart_pid": 29299,
+    "draft_and_history_verified": true
+  },
+  "native_renderer_reload_verified": true,
+  "actual_renderer_loss_recovery_verified": true,
+  "native_interrupted_history": true,
+  "raw_phase": "running",
+  "published": false,
+  "hook_passed": false,
+  "hook_invocations": 1,
+  "request_count": 1,
+  "preservation_stages": [
+    "crashed",
+    "restarted",
+    "final"
+  ],
+  "premature_initial_display_fixed": true,
+  "permanently_stuck_renderer_reproduced": false,
+  "g02": "open for other criteria",
+  "g06": "open for other criteria",
+  "evidence_python_syntax": "passed",
+  "evidence_json_parse": "passed",
+  "source_and_artifact_hashes": "matched",
+  "ordinary_default_debug_binary": "restored and hash-verified",
+  "report_local_links": "passed"
+}

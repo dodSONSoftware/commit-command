@@ -45,8 +45,15 @@ now passed with process cleanup, draft/lock preservation and no replay. Older op
 Quit labels above are historical. [Actual running-check host crash](reports/G02_G06_RUNNING_PUSH_CHECK_CRASH_2026-11-07.md)
 now has preservation/no-replay evidence and interrupted history/draft on second
 restart. Original hook survived and finished naturally; no crash cleanup guarantee.
-First valid restart was blank: reliable recovery presentation remains open and
-requires reproduction/diagnosis. G02/G06 remain partial.
+First valid restart was blank at that checkpoint. The subsequent
+[startup readiness fix/retest](reports/G02_STARTUP_READINESS_2026-11-07.md) reproduced
+premature display before document completion and fixed that boundary. A fresh
+running-hook SIGKILL and another idle-host crash both recovered on the first
+restart with draft/interrupted history and no replay. Three audited startups
+remained hidden through document completion and displayed once each; normal
+renderer reload and actual renderer loss also recovered. Fresh full desktop
+validation passed. Other G02/G06 criteria remain open; this does not establish
+hook cleanup after host loss or solve every possible WebKit failure.
 Current gate dispositions remain in EXECUTION_STATUS.
 
 ## Safety, execution and evidence rules

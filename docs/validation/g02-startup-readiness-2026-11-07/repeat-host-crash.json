@@ -1,0 +1,8 @@
+{
+  "target_pid": 28285,
+  "signal": "SIGKILL",
+  "only_exact_fixture_host_signalled": true,
+  "running_hook_claimed": false,
+  "process_before": "28285 /private/tmp/gitfleet-m3-native-m85ztlj4/Commit Command Startup Readiness Acceptance.app/Contents/MacOS/gitfleet-desktop --data-dir /private/tmp/gitfleet-m3-native-m85ztlj4/state --https-ca-file /private/tmp/gitfleet-m3-native-m85ztlj4/certificate.pem\n",
+  "time_ns": 1794102243076335000
+}

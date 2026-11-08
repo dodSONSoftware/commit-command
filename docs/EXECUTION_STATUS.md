@@ -56,27 +56,41 @@ and explicit disposition of exclusions. A facility block is not a waiver.
 | Gate | Remaining work and closure evidence | Requirement / plan ownership |
 |---|---|---|
 | G01 — native authority/review fidelity | **Accepted within envelope, November 7:** remaining actual-webview caller/page/origin and pending/issued-confirmation reload cases passed using non-default native test support. Combined with prior exact-content/signing/lifecycle evidence, the enumerated G01 cases are closed. [Closure report](reports/G01_NATIVE_SUPPORT_G02_RECOVERY_2026-11-07.md). Accessibility, broader compatibility and ordinary write exposure remain G03/G06/G04. | M3-A12–A15; SEC-001–012, SEC-018–020; M3A/B |
-| G02 — lifecycle and recovery | **In progress:** actual host SIGKILL during a proven running pre-push check exercised; preservation/no replay and interrupted history/draft on second restart passed. First valid restart was blank: reliable recovery presentation remains open ([latest report](reports/G02_G06_RUNNING_PUSH_CHECK_CRASH_2026-11-07.md)). Original hook survived and finished naturally; crash cleanup is not guaranteed. Prior Cancel/Quit cases retained; other entry-point and Dock/session limits remain. | M3-A16–A17; SEC-013–017; WS-014; M3B |
+| G02 — lifecycle and recovery | **In progress:** premature empty-window display reproduced and fixed by initial document-readiness gating. Rebuilt native artifact passed first restart after an actual running-hook host SIGKILL, repeat idle host crash, renderer reload/loss, draft/interrupted history and preservation/no replay ([latest report](reports/G02_STARTUP_READINESS_2026-11-07.md)). Original hook survived and finished naturally; crash cleanup is not guaranteed. Remaining running-check entry points and Dock/session limits remain. | M3-A16–A17; SEC-013–017; WS-014; M3B |
 | G03 — accessibility, layouts and scale | Full VoiceOver/focus/review/dialog coverage, long/byte paths and large content, narrow/zoom layouts, display disconnect/reconfiguration, measured inventory/history/monitoring budgets. Selected contrast/theme/1×–2× geometry passes remain valid only for their recorded cases. | UI-001–005; M3-A04/06/07/19; M4; M8B |
 | G04 — ordinary write enablement | Reconcile all applicable safety prerequisites with G01–G03/G05–G06 and support exclusions, then obtain the explicit default-change decision. Validate the exact ordinary artifact with supported writes and independent approval. No current gate completion is inferred. | D-045; M3C; RELEASE-002 |
 | G05 — native bulk commit failures/dependencies | Actual submodule child-before-parent/fresh parent review, partial publication/failure, cancellation and reviewed retry of unfinished items; per-repo overrides and linked-worktree cases as applicable. Preserve successful/unselected content and do not replay published items. | GIT-013; BULK-001–007; M5A |
-| G06 — supported remote/check compatibility | **In progress:** native supported pre-push Cancel review and Cmd+Q during proven running execution now passed, including process cleanup and restart without replay ([Quit report](reports/G02_G06_RUNNING_PUSH_CHECK_QUIT_2026-11-07.md)). Actual running-check host crash now has preservation/no-replay evidence, surviving original hook and an unresolved first-restart blank window ([crash report](reports/G02_G06_RUNNING_PUSH_CHECK_CRASH_2026-11-07.md)). Bypass/manager interaction remains; operator SecurityAgent choices, broader fetch/upstream topology/recovery, planner cycle/accessibility/scale and direct SCP facility block retain their limits. | M5B/C; PUSH-002; AUTHENTICATION.md; M8B |
+| G06 — supported remote/check compatibility | **In progress:** native supported pre-push Cancel review and Cmd+Q during proven running execution now passed, including process cleanup and restart without replay ([Quit report](reports/G02_G06_RUNNING_PUSH_CHECK_QUIT_2026-11-07.md)). Actual running-check host crash and first-restart recovery passed after the premature-display fix; original hook survival remains explicit ([startup retest](reports/G02_STARTUP_READINESS_2026-11-07.md)). Bypass/manager interaction remains; operator SecurityAgent choices, broader fetch/upstream topology/recovery, planner cycle/accessibility/scale and direct SCP facility block retain their limits. | M5B/C; PUSH-002; AUTHENTICATION.md; M8B |
 | G07 — individual push | Implement independent exact non-force publication approval, isolated transport, source/destination/auth/hook revalidation, rejection/drift handling, cancellation and durable uncertain-outcome reconciliation using fresh observation. Existing hook checks never become publication tokens. | PUSH-001/003/005/006; INV-009; M5C |
 | G08 — bulk push | Compose accepted individual push with fresh per-item authority, actual child availability before parents, no implicit child selection, cycle/block handling, partial-success preservation and fresh retry. Conditional planning is not remote success. | PUSH-004–006; INV-014; M5C |
 | G09 — AI and Actions | Implement M6 profiles/providers/templates/bounded exact context; M7 assisted candidates, deterministic SemVer preview/execution/recovery and separately bounded automatic authorization. Provider/model failures and imported definitions cannot broaden authority. | AI-001–017; ACT-001–003; INV-010–013; M6/M7 |
 | G10 — backup/portability/retention | Versioned export/import, consistent manual/rotating backups, previewed safe restore, malicious/interrupted archive tests and protection of unresolved recovery. Decide proposed 90-day history/ten-backup defaults before implementing cleanup. Migration backups alone do not meet this gate. | STATE-005–007; ACT-004; M4C/M8A |
 | G11 — reproducible release | Provision declared Git/Rust/signing prerequisites in CI and record actual results; resolve OS/architecture/tool delivery/identifier/signing/update policy; verify licenses/notices and exact packaged install/upgrade/migration/uninstall, signing/notarization and release invariants. A development bundle is not a release. | RELEASE-001–005; INV-001–015; M8C |
 
-### G02 startup reproduction in progress — November 7, 2026
+### Latest G02 startup readiness fix and native retest — November 7, 2026
 
-[Baseline reproduction](validation/g02-startup-readiness-2026-11-07/README.md)
-reproduced a transient empty native window on ordinary launch of the retained crash
-fixture; it later populated without relaunch. A controlled host SIGKILL followed by
-the first restart recovered the draft. Source shows initial visibility is requested
-before asynchronous document completion. A permanently stuck renderer has not been
-reproduced; readiness fix and native validation are next. G02 remains open.
+[Fix/retest report](reports/G02_STARTUP_READINESS_2026-11-07.md) and
+[evidence](validation/g02-startup-readiness-2026-11-07/README.md) record the
+reproduced transient startup exposure, committed baseline `a89ecc6`, and fix:
+keep the initial main window hidden until its document finishes loading. An
+HTML startup status covers React mounting. Later renderer navigation does not
+repeat initial display; approval and write defaults are unchanged.
 
-### Latest G02/G06 running-hook host crash — November 7, 2026
+A fresh actual running-hook SIGKILL test passed **on the first restart**, restoring
+draft and interrupted/not-passed history with no replay. A further idle-host crash
+also passed first restart. Normal renderer reload and actual renderer-process loss
+recovered. Three audited startups were hidden through document completion, each
+with exactly one initial display. Repository/remote/draft/request/journal oracles
+passed. Original hook survived and finished naturally, invocation count one.
+
+Fresh full desktop gate passed: 69 renderer / 13 default-host / 16 all-feature-host
+tests, type/contract/format/lint, strict Clippy and debug/release builds. Fixture
+service/key cleaned up. Premature-display finding closed within this envelope;
+a permanently stuck renderer was not reproduced as a separate failure. G02/G06
+remain open for other criteria: next running-check entry points include main Close
+and direct AppKit termination; Dock/session and bypass/manager remain separate.
+
+### Earlier G02/G06 running-hook host crash — November 7, 2026 (historical)
 
 [Crash report](reports/G02_G06_RUNNING_PUSH_CHECK_CRASH_2026-11-07.md) and
 [evidence](validation/g02-g06-running-push-check-crash-2026-11-07/README.md)
@@ -87,8 +101,8 @@ one invocation and no replay/publication. Raw check stays running/unpublished;
 audit projects interrupted, not passed, with fresh approval required.
 
 First valid restart showed a blank window; second clean restart restored draft and
-interrupted history. **Reliable first-restart presentation remains open.** Next:
-reproduce/diagnose that finding; other running-check termination entry points,
+interrupted history. First-restart presentation was open at that checkpoint; the
+startup readiness fix/retest above supersedes that finding. Other running-check entry points,
 Dock/session and G06 bypass/manager criteria remain separate. No product changes;
 artifact/source hashes verified, prior automated tests historical. Fixture cleaned
 up; ordinary writes stay disabled. G02/G06 remain open.

@@ -345,10 +345,19 @@ confirmation Quit, workspace invalidation/dialog reuse, main close and ordered
 review replacement. A12–A17 remain partial for the remaining native renderer-reset,
 live caller, compatibility and recovery criteria; full gate closure is not inferred.
 
-Latest G02/G06 running-host-crash follow-up: [crash report](reports/G02_G06_RUNNING_PUSH_CHECK_CRASH_2026-11-07.md)
+Latest G02 startup follow-up: [readiness fix/retest](reports/G02_STARTUP_READINESS_2026-11-07.md)
+closes reproduced premature empty-window display within the native fixture envelope.
+Initial display now waits for document completion; first restart after actual
+running-hook SIGKILL and a repeat idle-host crash restored draft/interrupted history.
+Renderer reload and actual renderer-process loss passed without repeated initial
+show. Fresh full desktop gate passed (69 renderer / 13 default / 16 all-feature
+host tests). Original orphan hook survival remains explicit. G02/G06 stay partial
+for remaining entry points, Dock/session and supported compatibility criteria.
+
+Earlier G02/G06 running-host-crash follow-up: [crash report](reports/G02_G06_RUNNING_PUSH_CHECK_CRASH_2026-11-07.md)
 records actual SIGKILL, exact preservation/no replay and interrupted audit/draft on
 second restart. Original hook survived and finished naturally. First valid restart
-was blank; reliable first-restart presentation remains open. G02/G06 stay partial.
+was blank; the later readiness fix/retest above supersedes that open finding.
 
 Earlier G02/G06 running-Quit follow-up: [Quit report](reports/G02_G06_RUNNING_PUSH_CHECK_QUIT_2026-11-07.md)
 verifies Cmd+Q during actual running pre-push execution, hook/child cleanup,
