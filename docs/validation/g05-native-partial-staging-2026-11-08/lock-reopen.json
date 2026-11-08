@@ -1,0 +1,25 @@
+[
+  {
+    "discovery": {
+      "excluded_names": [
+        "node_modules",
+        ".venv",
+        "target",
+        "dist",
+        "build",
+        ".gitfleet-rust-lab"
+      ],
+      "excluded_patterns": []
+    },
+    "display_root": {
+      "encoding": "utf8",
+      "value": "/private/tmp/gitfleet-m3-native-g05-child-29iydypi/workspace"
+    },
+    "id": "547756e5-a7a9-4b26-aad0-38e2cd0d9a3b",
+    "name": "G05 child hook interruption",
+    "root": {
+      "encoding": "utf8",
+      "value": "/private/tmp/gitfleet-m3-native-g05-child-29iydypi/workspace"
+    }
+  }
+]

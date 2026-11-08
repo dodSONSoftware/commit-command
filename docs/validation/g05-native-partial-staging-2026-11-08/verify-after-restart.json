@@ -1,0 +1,12 @@
+{
+  "one_parent_commit": "9e08a8efcfdcfce7496c3bbc2cdec0f3ab059f5f",
+  "head_and_index_exact_staged_blob": true,
+  "unstaged_and_untracked_preserved_bytes_modes": true,
+  "only_file_txt_committed": true,
+  "child_checkout_and_git_metadata_exact": true,
+  "unselected_control_exact_untrusted": true,
+  "hook_count_three_unchanged": true,
+  "prior_records_unchanged": true,
+  "integrity": "ok",
+  "restart_exact_files_records_no_replay": true
+}

@@ -1,0 +1,282 @@
+{
+  "gitfleet-batch/unselected/file.txt": {
+    "sha256": "8272c5e046cd3fe97a4511bd6aeea4b0feb1640709bf769914b75f160eaab34f",
+    "mode": 420
+  },
+  "gitfleet-batch/unselected/.git/config": {
+    "sha256": "df2247ab47c9623f002721ee3e23531d742ff3882d451fe6b3aa3fb2c145f99b",
+    "mode": 420
+  },
+  "gitfleet-batch/unselected/.git/HEAD": {
+    "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+    "mode": 420
+  },
+  "gitfleet-batch/unselected/.git/index": {
+    "sha256": "4a90cea977a62f27f2d7f3de3e6281b92df0fa7d1b7ff5450f5ff97a51d3c372",
+    "mode": 420
+  },
+  "gitfleet-batch/unselected/.git/COMMIT_EDITMSG": {
+    "sha256": "416b36c5238bc990d34b5f35c5543a4f79e057f7683a5d426b6133771dbfab6d",
+    "mode": 420
+  },
+  "gitfleet-batch/unselected/.git/objects/3b/f37bda48de6d8cc5dd530d53cf766d2784055f": {
+    "sha256": "6fd9a33c18a8a07fd30685ae7f8ebb0312dbfb39d392822ef77adcfae28e5158",
+    "mode": 292
+  },
+  "gitfleet-batch/unselected/.git/objects/0f/b295afa2af9a6a00d8ab6d7605781b03321f4f": {
+    "sha256": "195277044eeac5383c15b88778d1bd6d819847bd0a4aaf9cb92a5df92eb1a060",
+    "mode": 292
+  },
+  "gitfleet-batch/unselected/.git/objects/a7/2cc3bbda736f42a39029f62e16564ccb923d83": {
+    "sha256": "23d23ba462bcafc6a5021570bdf1d2fbe919d6ee1be75bf6091cd3a353ea893a",
+    "mode": 292
+  },
+  "gitfleet-batch/unselected/.git/logs/HEAD": {
+    "sha256": "add8bcb61252e3ebddcf5257adaaeef6da1a8fbf76e148aec55eb0b626374687",
+    "mode": 420
+  },
+  "gitfleet-batch/unselected/.git/logs/refs/heads/main": {
+    "sha256": "add8bcb61252e3ebddcf5257adaaeef6da1a8fbf76e148aec55eb0b626374687",
+    "mode": 420
+  },
+  "gitfleet-batch/unselected/.git/refs/heads/main": {
+    "sha256": "4cd9f8caf923f97ddc7ad93a319826e9faf31dcba25952c751549f9ec951ca07",
+    "mode": 420
+  },
+  "gitfleet-batch/gitfleet-parent/file.txt": {
+    "sha256": "820e0f541f7a25505e6bc873652b99a5da0fb96b5bb14c197c10a50902067cda",
+    "mode": 420
+  },
+  "gitfleet-batch/gitfleet-parent/untracked-preserve.txt": {
+    "sha256": "fb285ba919e62370765d4477f818fa808c3f2f528004699959e347b47d33339f",
+    "mode": 420
+  },
+  "gitfleet-batch/gitfleet-parent/.gitmodules": {
+    "sha256": "11b297493f41d37b47b17666c53174f906457e7a2e03906b2fbda42535ec8ec4",
+    "mode": 420
+  },
+  "gitfleet-batch/gitfleet-parent/.gitfleet-m2-fixture": {
+    "sha256": "f4cdc528c7e7272fcf9b3d2b9bede0af4c455b289545c3a3edee7678c1417f72",
+    "mode": 420
+  },
+  "gitfleet-batch/gitfleet-parent/module/file.txt": {
+    "sha256": "8272c5e046cd3fe97a4511bd6aeea4b0feb1640709bf769914b75f160eaab34f",
+    "mode": 420
+  },
+  "gitfleet-batch/gitfleet-parent/module/.gitfleet-m2-fixture": {
+    "sha256": "f4cdc528c7e7272fcf9b3d2b9bede0af4c455b289545c3a3edee7678c1417f72",
+    "mode": 420
+  },
+  "gitfleet-batch/gitfleet-parent/module/.git": {
+    "sha256": "eeba761be087ae47d48e9aa38755e1cc7b5d36444792bc3c552182bd1b2c73e4",
+    "mode": 420
+  },
+  "gitfleet-batch/gitfleet-parent/.git/config": {
+    "sha256": "f1fa85a58988f57053b0642af7d2dd16f7dee05abbf4d6731a0eccd98db3e3f7",
+    "mode": 420
+  },
+  "gitfleet-batch/gitfleet-parent/.git/HEAD": {
+    "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+    "mode": 420
+  },
+  "gitfleet-batch/gitfleet-parent/.git/index": {
+    "sha256": "8258fea4b393f5c6c101316608d8e34aae1887a925451e35469ff832621fdfb9",
+    "mode": 384
+  },
+  "gitfleet-batch/gitfleet-parent/.git/COMMIT_EDITMSG": {
+    "sha256": "2f4d12381282a67506aa65d228ebd656c0f4e130228c16566cab44fe8785d179",
+    "mode": 420
+  },
+  "gitfleet-batch/gitfleet-parent/.git/objects/3b/f37bda48de6d8cc5dd530d53cf766d2784055f": {
+    "sha256": "6fd9a33c18a8a07fd30685ae7f8ebb0312dbfb39d392822ef77adcfae28e5158",
+    "mode": 292
+  },
+  "gitfleet-batch/gitfleet-parent/.git/objects/9e/08a8efcfdcfce7496c3bbc2cdec0f3ab059f5f": {
+    "sha256": "07e1e294defd73c94b02eb17baa9f1a523efc45c52ac09896f84b24dc489a19c",
+    "mode": 384
+  },
+  "gitfleet-batch/gitfleet-parent/.git/objects/d8/a3375e73878ad1c741b27547fcd4b858229a35": {
+    "sha256": "4bd1e9c4994aae243830090ad705ca422c42a822b6d1c21d9acf71417c10240b",
+    "mode": 384
+  },
+  "gitfleet-batch/gitfleet-parent/.git/objects/ca/3229fb2ac41543518d9295b72689e6fae42f50": {
+    "sha256": "846e0494268ff092072b701f766cfdc6cade02d0602244397da5b33420a237a7",
+    "mode": 292
+  },
+  "gitfleet-batch/gitfleet-parent/.git/objects/31/7d70a1e62c0d21aaa52f2e9e7fd8cd71180b3d": {
+    "sha256": "e1e5f97dcc02866a65e47fb96e35c12d586cab39891e4d4b2d361d364e0cfacc",
+    "mode": 384
+  },
+  "gitfleet-batch/gitfleet-parent/.git/objects/5e/d0be46113ddddedcc73ea4c3ebac6381e7766e": {
+    "sha256": "1c887206fbe3309479936a620c2ddf3f7118bf78bdb941d5eb12cf62d647faca",
+    "mode": 384
+  },
+  "gitfleet-batch/gitfleet-parent/.git/objects/6d/7a8c2948b70e3d418258dd20c579f0333256de": {
+    "sha256": "105a784fd149ad87b479884ab63d705aa866cafa2f6ef0552a75c5fe372383ae",
+    "mode": 384
+  },
+  "gitfleet-batch/gitfleet-parent/.git/objects/0f/b295afa2af9a6a00d8ab6d7605781b03321f4f": {
+    "sha256": "195277044eeac5383c15b88778d1bd6d819847bd0a4aaf9cb92a5df92eb1a060",
+    "mode": 292
+  },
+  "gitfleet-batch/gitfleet-parent/.git/objects/d3/683cc2015395be7d18445f5e254efb7db211e6": {
+    "sha256": "ef576f739c39ff5d252be3a26fa20559f3a9be5b6cfb2fca9ed0b4eb9fdc4148",
+    "mode": 292
+  },
+  "gitfleet-batch/gitfleet-parent/.git/objects/a7/2cc3bbda736f42a39029f62e16564ccb923d83": {
+    "sha256": "23d23ba462bcafc6a5021570bdf1d2fbe919d6ee1be75bf6091cd3a353ea893a",
+    "mode": 292
+  },
+  "gitfleet-batch/gitfleet-parent/.git/objects/b8/be9af8b0763cbd6fd282ba15e0b98b1cdc8ed6": {
+    "sha256": "f93ff7d272862c9cd908819f859a58f39f5f7120ec866753f5adb6945c6deeb8",
+    "mode": 292
+  },
+  "gitfleet-batch/gitfleet-parent/.git/objects/2e/628b23880187c92ae97c24bcc1d4c73b21b27c": {
+    "sha256": "f49eddf5f0a9e15b89a2c11c052b503315c1d96a747e5538ec0c551157d9cb30",
+    "mode": 292
+  },
+  "gitfleet-batch/gitfleet-parent/.git/info/exclude": {
+    "sha256": "489440cb6303c9df5899a09375a680470fe99e0e7069bb95af6872da30fe15e3",
+    "mode": 420
+  },
+  "gitfleet-batch/gitfleet-parent/.git/logs/HEAD": {
+    "sha256": "9fd7d3957fdddd32c217d0bc22e0cdc52d2a38b310fcc69ac43deb5577da2be9",
+    "mode": 420
+  },
+  "gitfleet-batch/gitfleet-parent/.git/logs/refs/heads/main": {
+    "sha256": "9fd7d3957fdddd32c217d0bc22e0cdc52d2a38b310fcc69ac43deb5577da2be9",
+    "mode": 420
+  },
+  "gitfleet-batch/gitfleet-parent/.git/refs/heads/main": {
+    "sha256": "f5a01e3cdcd94eae0bc637b549a9443e8fd46d60be3f6356009fd8328cbae5dd",
+    "mode": 420
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/config": {
+    "sha256": "0d9826e7c9860c7ac749fbbd3d0d79db16f5774a5d162504a562c048564be6e4",
+    "mode": 420
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/HEAD": {
+    "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+    "mode": 420
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/description": {
+    "sha256": "85ab6c163d43a17ea9cf7788308bca1466f1b0a8d1cc92e26e9bf63da4062aee",
+    "mode": 420
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/index": {
+    "sha256": "f35e2ec5f66e86648ab40222e97e48c8f9f3630b195975e1f8103c1040cfc976",
+    "mode": 384
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/packed-refs": {
+    "sha256": "96f8f2268cd15a2af00beb2032cc05be4b1cacc7d83cda86306d1580709d334f",
+    "mode": 420
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/objects/3b/f37bda48de6d8cc5dd530d53cf766d2784055f": {
+    "sha256": "6fd9a33c18a8a07fd30685ae7f8ebb0312dbfb39d392822ef77adcfae28e5158",
+    "mode": 292
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/objects/b2/70f8b451d02046f7011564b96965b69478dd8d": {
+    "sha256": "5d306dbf2935965459bf884eea6fcdfc46913adc721523271da0313ab87bfe07",
+    "mode": 384
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/objects/d8/a3375e73878ad1c741b27547fcd4b858229a35": {
+    "sha256": "4bd1e9c4994aae243830090ad705ca422c42a822b6d1c21d9acf71417c10240b",
+    "mode": 384
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/objects/c8/a87fa75d0cd6904c89a20018ca5e142f57752e": {
+    "sha256": "3aedbe808a6d982d95ba8b5cab9fc821c804cbe67f7a86e237a6dbddbc65945b",
+    "mode": 384
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/objects/0f/b295afa2af9a6a00d8ab6d7605781b03321f4f": {
+    "sha256": "195277044eeac5383c15b88778d1bd6d819847bd0a4aaf9cb92a5df92eb1a060",
+    "mode": 292
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/objects/a7/2cc3bbda736f42a39029f62e16564ccb923d83": {
+    "sha256": "23d23ba462bcafc6a5021570bdf1d2fbe919d6ee1be75bf6091cd3a353ea893a",
+    "mode": 292
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/info/exclude": {
+    "sha256": "489440cb6303c9df5899a09375a680470fe99e0e7069bb95af6872da30fe15e3",
+    "mode": 420
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/logs/HEAD": {
+    "sha256": "dd0453d7dd464e8ccdf5323af9a13db09095367cdb3625e842951bfd082abf65",
+    "mode": 420
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/logs/refs/heads/main": {
+    "sha256": "dd0453d7dd464e8ccdf5323af9a13db09095367cdb3625e842951bfd082abf65",
+    "mode": 420
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/logs/refs/remotes/origin/HEAD": {
+    "sha256": "60f7f8ddcdc0c0ec0e2ff98ed7c7da087aee9f8bb60ec9a848daf023aa8b3c94",
+    "mode": 420
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/hooks/commit-msg.sample": {
+    "sha256": "efc1401b0e99d1ff51494d154d98b46c1e99059bcd8bf9f73cecde19fd3eb23b",
+    "mode": 493
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/hooks/pre-rebase.sample": {
+    "sha256": "4febce867790052338076f4e66cc47efb14879d18097d1d61c8261859eaaa7b3",
+    "mode": 493
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/hooks/sendemail-validate.sample": {
+    "sha256": "44ebfc923dc5466bc009602f0ecf067b9c65459abfe8868ddc49b78e6ced7a92",
+    "mode": 493
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/hooks/pre-commit.sample": {
+    "sha256": "57185b7b9f05239d7ab52db045f5b89eb31348d7b2177eab214f5eb872e1971b",
+    "mode": 493
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/hooks/applypatch-msg.sample": {
+    "sha256": "0223497a0b8b033aa58a3a521b8629869386cf7ab0e2f101963d328aa62193f7",
+    "mode": 493
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/hooks/fsmonitor-watchman.sample": {
+    "sha256": "9159720099ad5595b8e66645cbfd47763c1e920f46e0b50ae75e642bbec57ef0",
+    "mode": 493
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/hooks/pre-receive.sample": {
+    "sha256": "a4c3d2b9c7bb3fd8d1441c31bd4ee71a595d66b44fcf49ddb310252320169989",
+    "mode": 493
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/hooks/prepare-commit-msg.sample": {
+    "sha256": "e9ddcaa4189fddd25ed97fc8c789eca7b6ca16390b2392ae3276f0c8e1aa4619",
+    "mode": 493
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/hooks/post-update.sample": {
+    "sha256": "81765af2daef323061dcbc5e61fc16481cb74b3bac9ad8a174b186523586f6c5",
+    "mode": 493
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/hooks/pre-merge-commit.sample": {
+    "sha256": "d3825a70337940ebbd0a5c072984e13245920cdf8898bd225c8d27a6dfc9cb53",
+    "mode": 493
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/hooks/pre-applypatch.sample": {
+    "sha256": "e15c5b469ea3e0a695bea6f2c82bcf8e62821074939ddd85b77e0007ff165475",
+    "mode": 493
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/hooks/pre-commit": {
+    "sha256": "1ca3a0ce3c36c49cb9baa005b2b44c8d3571f1b212e8981b53a42c2ceafa1014",
+    "mode": 493
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/hooks/pre-push.sample": {
+    "sha256": "ecce9c7e04d3f5dd9d8ada81753dd1d549a9634b26770042b58dda00217d086a",
+    "mode": 493
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/hooks/update.sample": {
+    "sha256": "8d5f2fa83e103cf08b57eaa67521df9194f45cbdbcb37da52ad586097a14d106",
+    "mode": 493
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/hooks/push-to-checkout.sample": {
+    "sha256": "a53d0741798b287c6dd7afa64aee473f305e65d3f49463bb9d7408ec3b12bf5f",
+    "mode": 493
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/refs/heads/main": {
+    "sha256": "86858ec904d7dbde962797907eb1ef3bb8274f79cbe81bbe9af2efa8d75be80d",
+    "mode": 420
+  },
+  "gitfleet-batch/gitfleet-parent/.git/modules/module/refs/remotes/origin/HEAD": {
+    "sha256": "2bb6a24aa0fc6c484100f5d51a29bbad841cd2c755f5d93faa204e5dbb4eb2b4",
+    "mode": 420
+  }
+}
