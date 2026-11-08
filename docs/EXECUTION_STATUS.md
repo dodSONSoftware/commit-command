@@ -17,17 +17,17 @@ shell syntax passed. Hosted CI/Linux/Brew steps and distribution acceptance unru
 no push/release. G11 is partial. This independent prerequisite work ran while native
 G05 exact fixture-trust authorization was pending; remaining gates are not skipped.
 
-### November 8 G05 fresh-parent gitlink fix — native publication passed
+### November 8 G05 child/parent native case — complete within envelope
 
-[Native package](reports/G05_NATIVE_SUBMODULE_2026-11-08.md): child-first/stale-parent
-stop passed, then fresh parent review revealed an omitted unstaged gitlink. Fixed
-ReviewAll to include separately inspected changed submodule relationships without
-relaxing restricted status. Extended regression failed before/passed after, including
-index-only/exclusion boundaries. Core bulk suites 11/11 with explicit worker ignore,
-strict Clippy and full desktop 87/13/16 passed. Fixed native review displayed the new
-child OID; independent parent-only approval completed exactly once, preserving control
-and original configs. Ordinary restart remains next. Main bulk exclusion checklist
-coverage for discovered gitlinks and broader G05 criteria remain open; G04 disabled.
+[Final native package](reports/G05_NATIVE_SUBMODULE_2026-11-08.md): child-first commit,
+stale-parent stop, fixed fresh gitlink review, parent-only retry and exact message
+override passed. Incomplete pre-fix parent proposal cancelled before publication.
+Bulk regression failed before/passed after fix; Core suites 11/11, strict Clippy and
+full desktop 87/13/16 passed. Repeated ordinary restart retained history/default gate
+and exact files/batches with no replay; one child/one parent commit, control untouched,
+all exits 0 and lock reopened. First oracle's unsafe git status refresh was reproduced
+in a separate copy; corrected optional-locks-disabled oracle passed from explicit
+baseline. G05 remains partial for other cases; G04 remains disabled.
 
 ### November 8 G03 measured scale / partial scan recovery
 
@@ -362,13 +362,13 @@ and explicit disposition of exclusions. A facility block is not a waiver.
 | G02 — lifecycle and recovery | **Partial; facility blocks retained.** Initial React commit ordering defect fixed; renderer/host-loss and bounded restart/no-replay cases passed ([post-load report](reports/G02_POST_LOAD_STARTUP_2026-11-07.md)). Earlier intermittent blank remains counterevidence; capture diagnostics on recurrence before reload, rather than treating document Finished as proof of content. Actual Dock access rechecked November 8: organization policy still denies com.apple.dock; no surrogate accepted. Operator session termination and specifically uncovered phase/recovery cases remain open. | M3-A16–A17; SEC-013–017; WS-014; M3B |
 | G03 — accessibility, layouts and scale | Full VoiceOver/focus/review/dialog coverage, long/byte paths and large content, narrow/zoom layouts, display disconnect/reconfiguration, measured inventory/history/monitoring budgets. Selected contrast/theme/1×–2× geometry passes remain valid only for their recorded cases. | UI-001–005; M3-A04/06/07/19; M4; M8B |
 | G04 — ordinary write enablement | Reconcile all applicable safety prerequisites with G01–G03/G05–G06 and support exclusions, then obtain the explicit default-change decision. Validate the exact ordinary artifact with supported writes and independent approval. No current gate completion is inferred. | D-045; M3C; RELEASE-002 |
-| G05 — native bulk commit failures/dependencies | Actual submodule child-before-parent/fresh parent review, partial publication/failure, cancellation and reviewed retry of unfinished items; per-repo overrides and linked-worktree cases as applicable. Preserve successful/unselected content and do not replay published items. | GIT-013; BULK-001–007; M5A |
+| G05 — native bulk commit failures/dependencies | **Partial:** real native child-first publication, stale-parent stop, corrected fresh gitlink review, parent-only retry/message override and ordinary restart passed ([package](reports/G05_NATIVE_SUBMODULE_2026-11-08.md)). Remaining native cancellation/fault/partial-failure, linked-worktree and exclusion/accessibility coverage. Main exclusion checklist still lacks newly discovered unstaged gitlinks; Core explicit exclusion validation is tested. Preserve completed/unselected content and never replay successful items. | GIT-013; BULK-001–007; M5A |
 | G06 — supported remote/check compatibility | **In progress:** selected native executable-helper refusal after explicit fixture trust passed ([report](reports/G06_NATIVE_REMOTE_HELPER_REFUSAL_2026-11-07.md)); helpers remain unsupported.  native supported pre-push Cancel review, Cmd+Q, main-window Close and direct AppKit termination during proven running execution passed, including process cleanup and restart without replay ([AppKit report](reports/G02_G06_RUNNING_PUSH_CHECK_APPKIT_2026-11-07.md)). Actual running-check main-renderer loss now passed with host survival/cancellation/no replay; a subsequent normal restart blank reopens G02 presentation ([renderer report](reports/G02_G06_RUNNING_PUSH_CHECK_RENDERER_LOSS_2026-11-07.md)). Earlier running-check host crash and first-restart recovery passed in their fixture; original hook survival remains explicit ([startup retest](reports/G02_STARTUP_READINESS_2026-11-07.md)). Selected native detected-manager Execute refusal, OS-declined bypass and fresh approved bypass passed with zero hook execution and restart/no replay ([bypass report](reports/G06_NATIVE_MANAGER_BYPASS_2026-11-07.md)); unsupported managers remain unsupported for Execute. Operator SecurityAgent choices, broader fetch/upstream topology/recovery, planner cycle/accessibility/scale and direct SCP facility block retain their limits. | M5B/C; PUSH-002; AUTHENTICATION.md; M8B |
 | G07 — individual push | Implement independent exact non-force publication approval, isolated transport, source/destination/auth/hook revalidation, rejection/drift handling, cancellation and durable uncertain-outcome reconciliation using fresh observation. Existing hook checks never become publication tokens. | PUSH-001/003/005/006; INV-009; M5C |
 | G08 — bulk push | Compose accepted individual push with fresh per-item authority, actual child availability before parents, no implicit child selection, cycle/block handling, partial-success preservation and fresh retry. Conditional planning is not remote success. | PUSH-004–006; INV-014; M5C |
 | G09 — AI and Actions | Implement M6 profiles/providers/templates/bounded exact context; M7 assisted candidates, deterministic SemVer preview/execution/recovery and separately bounded automatic authorization. Provider/model failures and imported definitions cannot broaden authority. | AI-001–017; ACT-001–003; INV-010–013; M6/M7 |
 | G10 — backup/portability/retention | Versioned export/import, consistent manual/rotating backups, previewed safe restore, malicious/interrupted archive tests and protection of unresolved recovery. Decide proposed 90-day history/ten-backup defaults before implementing cleanup. Migration backups alone do not meet this gate. | STATE-005–007; ACT-004; M4C/M8A |
-| G11 — reproducible release | Provision declared Git/Rust/signing prerequisites in CI and record actual results; resolve OS/architecture/tool delivery/identifier/signing/update policy; verify licenses/notices and exact packaged install/upgrade/migration/uninstall, signing/notarization and release invariants. A development bundle is not a release. | RELEASE-001–005; INV-001–015; M8C |
+| G11 — reproducible release | Git provisioning/macOS signing-tool workflow now implemented and locally smoke-tested ([checkpoint](reports/G11_CI_PREREQUISITES_2026-11-08.md)); actual hosted/Linux/Brew results remain pending; resolve OS/architecture/tool delivery/identifier/signing/update policy; verify licenses/notices and exact packaged install/upgrade/migration/uninstall, signing/notarization and release invariants. A development bundle is not a release. | RELEASE-001–005; INV-001–015; M8C |
 
 ### Latest G02/G06 running-hook renderer loss / startup counterevidence — November 7, 2026
 

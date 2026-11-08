@@ -82,6 +82,14 @@ startup presentation is reopened; prior document-readiness passes remain bounded
 Next investigate the retained post-load blank-window evidence. No source fix claimed.
 Current gate dispositions remain in EXECUTION_STATUS.
 
+### November 8 G05 selected submodule retry chain — passed
+
+[Native package](reports/G05_NATIVE_SUBMODULE_2026-11-08.md): actual child commit,
+stale-parent stop, fixed gitlink-inclusive fresh parent-only review and exact override
+published once each; control unchanged. Core regression and full desktop gate passed.
+Corrected read-only oracle plus repeated ordinary restart verified exact preservation,
+no replay/default-write enablement and clean exit/lock reopen. Broader G05 remains open.
+
 ### November 8 G03 measured scale / partial scan recovery
 
 [Measured correctness fix](reports/G03_SCALE_PARTIAL_INVENTORY_2026-11-08.md): all six

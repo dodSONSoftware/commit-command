@@ -1,0 +1,15 @@
+{
+  "separate_disposable_copy_only": true,
+  "safe_status_preserved_index": true,
+  "ordinary_git_status_changed_index": true,
+  "before": {
+    "sha256": "620dd1a202b5bef5f943fcd40ba74b81f6bf8f379ba655cbd18828074884f1b4",
+    "mode": 384
+  },
+  "after": {
+    "sha256": "7096de97e7b989f3b3843fa71627736d942473b8a123fa1b94b3408cd89a1315",
+    "mode": 420
+  },
+  "postpublication_oracle_snapshot_preceded_unsafe_status": true,
+  "original_restart_mismatch_not_counted_as_preservation_pass": true
+}

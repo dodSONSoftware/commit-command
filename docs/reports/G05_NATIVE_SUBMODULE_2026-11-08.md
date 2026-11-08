@@ -1,5 +1,10 @@
 # G05 native submodule batch and fresh parent review — November 8, 2026
 
+Selected native child-first commit, stale-parent stop, fresh gitlink review, exact
+parent-only retry/override and ordinary restart are complete. The package exposed
+and fixed an omitted-gitlink selection defect. G05 overall remains partial; progress
+headings below are chronological checkpoints, not the current remaining queue.
+
 ## Preparation complete; native trust authorization pending
 
 New disposable parent, actual submodule and dirty unselected control created. Local
@@ -63,3 +68,24 @@ newly discovered unstaged gitlinks there remains a UI acceptance item, even thou
 Core accepts/validates explicit exclusions and the authoritative review includes the
 exact gitlink. This checkpoint does not accept all G05 override/linked-worktree/
 failure/cancellation/accessibility cases.
+
+## Ordinary restart completed after correcting the independent oracle
+
+First snapshot comparison detected changed parent index hash/mode. The oracle had
+taken its snapshot before invoking ordinary git status without GIT_OPTIONAL_LOCKS=0;
+that read can refresh the index. A separate disposable copy reproduced index writes
+with ordinary status and exact preservation with optional locks disabled. Product
+read transport already sets GIT_OPTIONAL_LOCKS=0. No product fix or application fault
+is inferred from the contaminated first comparison. Original post-publication snapshot
+retained as repository-after-parent-before-oracle-fix.json. Corrected oracle validates
+content/commit counts/configs, then establishes an explicit post-oracle baseline.
+
+Repeated ordinary restart rendered without reload, retained child publication,
+needs_reauthorization and completed parent-only history, with Prepare native bulk
+review disabled. Corrected restarted/final oracles passed byte/mode-exact repository
+and durable-batch equality; one child/one parent commit, exact blobs/messages/new
+gitlink, dirty unselected preservation and original two trusts. No replay or push.
+All app Quit exits 0 and writer lock reopened. Fixture state/baselines retained.
+No live test service or credentials. This closes the named submodule/fresh-parent
+case and message-override checkpoint, not native cancellation/fault/linked-worktree,
+all exclusions/accessibility or the whole G05 gate.

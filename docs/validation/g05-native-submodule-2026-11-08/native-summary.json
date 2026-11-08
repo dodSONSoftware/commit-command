@@ -1,0 +1,18 @@
+{
+  "exact_two_worktree_trust_authorized": true,
+  "control_unselected_untrusted_unchanged": true,
+  "native_child_first_publication": true,
+  "stale_parent_stopped_before_publication": true,
+  "incomplete_parent_proposal_cancelled": true,
+  "gitlink_omission_fixed_and_natively_reviewed": true,
+  "fresh_parent_only_approval": true,
+  "parent_message_override_verified": true,
+  "one_commit_per_selected_repo": true,
+  "corrected_readonly_oracle_restart_passed": true,
+  "ordinary_writes_disabled": true,
+  "no_replay_exact_files_batches": true,
+  "all_app_exits": 0,
+  "state_writer_lock_reopened": true,
+  "no_push_or_test_service": true,
+  "full_G05_closed": false
+}

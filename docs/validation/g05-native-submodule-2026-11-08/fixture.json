@@ -26,5 +26,7 @@
   "fixed_product_source_hashes": {
     "app/core/src/application/bulk.rs": "f8d88a3b020c4d4205811393f20fd850d602e7839f05f6d1177049d45552bae6",
     "app/core/src/discovery.rs": "67e16c362f7ca587f4fa3e33cc9e6e806fe454b3255bd30f39e86e73fdea59ce"
-  }
+  },
+  "ordinary_app": "/private/tmp/gitfleet-g05-submodule-fzz5ffky/Commit Command G05 Ordinary.app",
+  "ordinary_binary_sha256": "c0cc1a1338b8163cd10d3e84ab4f6fdb95fdfe734fd10ea0e06c940a2e8fa996"
 }

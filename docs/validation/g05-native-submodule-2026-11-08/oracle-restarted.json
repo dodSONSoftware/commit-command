@@ -1,0 +1,89 @@
+{
+  "child_head": "46c9c822b983bc17e29172d6238ba18780e75056",
+  "parent_head": "9312e26aab1068954be779b91313322544aa7ce4",
+  "one_child_commit_only": true,
+  "unselected_exact_bytes_modes_preserved": true,
+  "trust_exactly_authorized_pair": true,
+  "original_config_and_bindings_preserved": true,
+  "batch_child_before_parent": true,
+  "parent_stopped_before_publication": true,
+  "batches": [
+    {
+      "version": 1,
+      "id": "713c6c9f-db99-4b64-8657-32ff8c10fcd3",
+      "workspace": "02447833-15bd-427f-b507-97d2dc4ff948",
+      "created_at_ms": 1794158154902,
+      "phase": "cancelled",
+      "issue": null,
+      "items": [
+        {
+          "worktree": "3b02428c-0b46-4f68-b823-59b2585fa35b",
+          "path": {
+            "encoding": "utf8",
+            "value": "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace/parent"
+          },
+          "dependencies": [],
+          "operation": "c8732508-afac-4c69-8bbf-14fda1705fe2",
+          "issue": null
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "id": "bf3ee081-9a39-46e0-bfb0-6e5f00c7e520",
+      "workspace": "02447833-15bd-427f-b507-97d2dc4ff948",
+      "created_at_ms": 1794158516753,
+      "phase": "complete",
+      "issue": null,
+      "items": [
+        {
+          "worktree": "3b02428c-0b46-4f68-b823-59b2585fa35b",
+          "path": {
+            "encoding": "utf8",
+            "value": "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace/parent"
+          },
+          "dependencies": [],
+          "operation": "1ccdfd50-52bf-4f08-8496-6d97d53204c5",
+          "issue": null
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "id": "c75528a4-5ba6-4360-b130-eadcff6835d9",
+      "workspace": "02447833-15bd-427f-b507-97d2dc4ff948",
+      "created_at_ms": 1794158033215,
+      "phase": "needs_reauthorization",
+      "issue": {
+        "kind": "stale_review",
+        "message": "Selected submodule committed; review the parent again with its new gitlink"
+      },
+      "items": [
+        {
+          "worktree": "8e41c396-4757-496b-931b-10c0873f2a9e",
+          "path": {
+            "encoding": "utf8",
+            "value": "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace/parent/module"
+          },
+          "dependencies": [],
+          "operation": "ceadc3b4-09a7-4a78-917a-02707abfb507",
+          "issue": null
+        },
+        {
+          "worktree": "3b02428c-0b46-4f68-b823-59b2585fa35b",
+          "path": {
+            "encoding": "utf8",
+            "value": "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace/parent"
+          },
+          "dependencies": [
+            "8e41c396-4757-496b-931b-10c0873f2a9e"
+          ],
+          "operation": "f8298e02-80f9-47a4-980f-7f06d84c6ab4",
+          "issue": null
+        }
+      ]
+    }
+  ],
+  "sqlite_integrity": "ok",
+  "no_replay_exact_files_and_batches": true
+}

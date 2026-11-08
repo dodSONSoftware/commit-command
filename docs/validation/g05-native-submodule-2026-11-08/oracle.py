@@ -2,7 +2,7 @@
 from pathlib import Path
 import hashlib,json,os,sqlite3,stat,subprocess,sys
 out=Path(__file__).resolve().parent;f=json.loads((out/'fixture.json').read_text());stage=sys.argv[1];workspace=Path(f['workspace_root'])
-env={k:v for k,v in os.environ.items() if not k.startswith('GIT_')};env.update(GIT_CONFIG_GLOBAL='/dev/null',GIT_CONFIG_NOSYSTEM='1',GIT_TERMINAL_PROMPT='0')
+env={k:v for k,v in os.environ.items() if not k.startswith('GIT_')};env.update(GIT_CONFIG_GLOBAL='/dev/null',GIT_CONFIG_NOSYSTEM='1',GIT_TERMINAL_PROMPT='0',GIT_OPTIONAL_LOCKS='0')
 def git(repo,*args):return subprocess.check_output(['git','-c','core.hooksPath=','-c','maintenance.auto=false','-c','gc.auto=0','-C',repo,*args],env=env,text=True).strip()
 def snap():return {str(p.relative_to(workspace)):{'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'mode':stat.S_IMODE(p.stat().st_mode)} for p in workspace.rglob('*') if p.is_file()}
 before=json.loads((out/'repository-before.json').read_text());after=snap();assert {p:v for p,v in after.items() if p.startswith('unselected/')}=={p:v for p,v in before.items() if p.startswith('unselected/')};assert git(f['control'],'rev-parse','HEAD')==f['heads'][f['control']]
