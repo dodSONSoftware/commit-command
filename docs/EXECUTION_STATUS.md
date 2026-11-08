@@ -15,7 +15,7 @@ hooks_running with marker and actual hook/sleep process group. Native Cancel rea
 the group and cancelled both items before publication. Every repository byte/mode,
 hook hash and trust scope preserved. Ordinary restart retained exact operation/batch
 payloads, hook count two, no replay; read-only gate, exits 0, integrity and lock reopen
-passed. Successful fresh retry/parent gitlink review remains next. No product patch.
+passed. Fresh separately approved retry now ran hook a third time, made one child commit, preserved parent/control and stopped at needs_reauthorization. Exact parent-only gitlink approval remains next. No product patch.
 
 ### November 8 G05 pre-publication crash/cleanup/restart — passed
 

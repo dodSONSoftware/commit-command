@@ -75,3 +75,23 @@ bytes/modes preserved, no hook/commit replay. Acceptance and ordinary exits 0,
 writer-lock reopen passed. See cancellation-restart-proof.json, cancellation/group
 proof and records. Actual native child rejection and running Cancel gaps now passed;
 separately approved successful retry/parent gitlink review remains next. G05 stays partial.
+
+## Fresh supported-hook retry and stale-parent stop — passed
+
+Added only the release-child marker, leaving hook bytes/config/trust unchanged.
+Fresh native batch 4251b893-05c7-4c9a-9b22-9e24077c9b7b reviewed both exact plans and
+fixed hook; separate approval ran the child hook a third time and published exactly
+one child commit b270f8b451d02046f7011564b96965b69478dd8d. Correct exact message/tree,
+child clean according to optional-locks-disabled status, no earlier failed/cancelled
+operation replay. Batch stopped at needs_reauthorization; original parent proposal
+cancelled without publication because its future gitlink was not authorized.
+
+Parent HEAD/index/config/logs/working file and full independent control bytes/modes
+remain original. Prior rejection/cancellation operation/batch payloads unchanged,
+fixed hook/hash and exact two trusts unchanged, integrity ok. The first read-only
+oracle used git diff --name-only with refresh disabled; it reported a stat-only ghost.
+As established by the owning read-only diff fix, raw/name metadata alone is not
+content evidence. Corrected to safe status --porcelain and checked the oracle itself
+preserved all files; no index refresh or baseline overwrite. This was an oracle
+false positive, not additional repository modification. See verify-child-success.json.
+Fresh exact parent-only gitlink review/approval is still required and not yet accepted.

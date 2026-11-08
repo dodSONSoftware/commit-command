@@ -1,0 +1,130 @@
+{
+  "config": {
+    "sha256": "0d9826e7c9860c7ac749fbbd3d0d79db16f5774a5d162504a562c048564be6e4",
+    "mode": 420
+  },
+  "HEAD": {
+    "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+    "mode": 420
+  },
+  "description": {
+    "sha256": "85ab6c163d43a17ea9cf7788308bca1466f1b0a8d1cc92e26e9bf63da4062aee",
+    "mode": 420
+  },
+  "index": {
+    "sha256": "f35e2ec5f66e86648ab40222e97e48c8f9f3630b195975e1f8103c1040cfc976",
+    "mode": 384
+  },
+  "packed-refs": {
+    "sha256": "96f8f2268cd15a2af00beb2032cc05be4b1cacc7d83cda86306d1580709d334f",
+    "mode": 420
+  },
+  "objects/3b/f37bda48de6d8cc5dd530d53cf766d2784055f": {
+    "sha256": "6fd9a33c18a8a07fd30685ae7f8ebb0312dbfb39d392822ef77adcfae28e5158",
+    "mode": 292
+  },
+  "objects/b2/70f8b451d02046f7011564b96965b69478dd8d": {
+    "sha256": "5d306dbf2935965459bf884eea6fcdfc46913adc721523271da0313ab87bfe07",
+    "mode": 384
+  },
+  "objects/d8/a3375e73878ad1c741b27547fcd4b858229a35": {
+    "sha256": "4bd1e9c4994aae243830090ad705ca422c42a822b6d1c21d9acf71417c10240b",
+    "mode": 384
+  },
+  "objects/c8/a87fa75d0cd6904c89a20018ca5e142f57752e": {
+    "sha256": "3aedbe808a6d982d95ba8b5cab9fc821c804cbe67f7a86e237a6dbddbc65945b",
+    "mode": 384
+  },
+  "objects/0f/b295afa2af9a6a00d8ab6d7605781b03321f4f": {
+    "sha256": "195277044eeac5383c15b88778d1bd6d819847bd0a4aaf9cb92a5df92eb1a060",
+    "mode": 292
+  },
+  "objects/a7/2cc3bbda736f42a39029f62e16564ccb923d83": {
+    "sha256": "23d23ba462bcafc6a5021570bdf1d2fbe919d6ee1be75bf6091cd3a353ea893a",
+    "mode": 292
+  },
+  "info/exclude": {
+    "sha256": "489440cb6303c9df5899a09375a680470fe99e0e7069bb95af6872da30fe15e3",
+    "mode": 420
+  },
+  "logs/HEAD": {
+    "sha256": "dd0453d7dd464e8ccdf5323af9a13db09095367cdb3625e842951bfd082abf65",
+    "mode": 420
+  },
+  "logs/refs/heads/main": {
+    "sha256": "dd0453d7dd464e8ccdf5323af9a13db09095367cdb3625e842951bfd082abf65",
+    "mode": 420
+  },
+  "logs/refs/remotes/origin/HEAD": {
+    "sha256": "60f7f8ddcdc0c0ec0e2ff98ed7c7da087aee9f8bb60ec9a848daf023aa8b3c94",
+    "mode": 420
+  },
+  "hooks/commit-msg.sample": {
+    "sha256": "efc1401b0e99d1ff51494d154d98b46c1e99059bcd8bf9f73cecde19fd3eb23b",
+    "mode": 493
+  },
+  "hooks/pre-rebase.sample": {
+    "sha256": "4febce867790052338076f4e66cc47efb14879d18097d1d61c8261859eaaa7b3",
+    "mode": 493
+  },
+  "hooks/sendemail-validate.sample": {
+    "sha256": "44ebfc923dc5466bc009602f0ecf067b9c65459abfe8868ddc49b78e6ced7a92",
+    "mode": 493
+  },
+  "hooks/pre-commit.sample": {
+    "sha256": "57185b7b9f05239d7ab52db045f5b89eb31348d7b2177eab214f5eb872e1971b",
+    "mode": 493
+  },
+  "hooks/applypatch-msg.sample": {
+    "sha256": "0223497a0b8b033aa58a3a521b8629869386cf7ab0e2f101963d328aa62193f7",
+    "mode": 493
+  },
+  "hooks/fsmonitor-watchman.sample": {
+    "sha256": "9159720099ad5595b8e66645cbfd47763c1e920f46e0b50ae75e642bbec57ef0",
+    "mode": 493
+  },
+  "hooks/pre-receive.sample": {
+    "sha256": "a4c3d2b9c7bb3fd8d1441c31bd4ee71a595d66b44fcf49ddb310252320169989",
+    "mode": 493
+  },
+  "hooks/prepare-commit-msg.sample": {
+    "sha256": "e9ddcaa4189fddd25ed97fc8c789eca7b6ca16390b2392ae3276f0c8e1aa4619",
+    "mode": 493
+  },
+  "hooks/post-update.sample": {
+    "sha256": "81765af2daef323061dcbc5e61fc16481cb74b3bac9ad8a174b186523586f6c5",
+    "mode": 493
+  },
+  "hooks/pre-merge-commit.sample": {
+    "sha256": "d3825a70337940ebbd0a5c072984e13245920cdf8898bd225c8d27a6dfc9cb53",
+    "mode": 493
+  },
+  "hooks/pre-applypatch.sample": {
+    "sha256": "e15c5b469ea3e0a695bea6f2c82bcf8e62821074939ddd85b77e0007ff165475",
+    "mode": 493
+  },
+  "hooks/pre-commit": {
+    "sha256": "1ca3a0ce3c36c49cb9baa005b2b44c8d3571f1b212e8981b53a42c2ceafa1014",
+    "mode": 493
+  },
+  "hooks/pre-push.sample": {
+    "sha256": "ecce9c7e04d3f5dd9d8ada81753dd1d549a9634b26770042b58dda00217d086a",
+    "mode": 493
+  },
+  "hooks/update.sample": {
+    "sha256": "8d5f2fa83e103cf08b57eaa67521df9194f45cbdbcb37da52ad586097a14d106",
+    "mode": 493
+  },
+  "hooks/push-to-checkout.sample": {
+    "sha256": "a53d0741798b287c6dd7afa64aee473f305e65d3f49463bb9d7408ec3b12bf5f",
+    "mode": 493
+  },
+  "refs/heads/main": {
+    "sha256": "86858ec904d7dbde962797907eb1ef3bb8274f79cbe81bbe9af2efa8d75be80d",
+    "mode": 420
+  },
+  "refs/remotes/origin/HEAD": {
+    "sha256": "2bb6a24aa0fc6c484100f5d51a29bbad841cd2c755f5d93faa204e5dbb4eb2b4",
+    "mode": 420
+  }
+}

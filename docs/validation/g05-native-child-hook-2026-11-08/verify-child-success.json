@@ -1,0 +1,11 @@
+{
+  "one_exact_child_commit": true,
+  "hook_runs": 3,
+  "fixed_hook_unchanged": true,
+  "parent_head_index_config_files_unchanged": true,
+  "unselected_exact_bytes_modes": true,
+  "batch_needs_reauthorization": true,
+  "previous_cancel_rejection_records_unchanged": true,
+  "exact_two_authorized_trusts": true,
+  "integrity": "ok"
+}

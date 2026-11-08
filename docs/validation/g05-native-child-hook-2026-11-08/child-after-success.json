@@ -1,0 +1,14 @@
+{
+  "file.txt": {
+    "sha256": "8272c5e046cd3fe97a4511bd6aeea4b0feb1640709bf769914b75f160eaab34f",
+    "mode": 420
+  },
+  ".gitfleet-m2-fixture": {
+    "sha256": "f4cdc528c7e7272fcf9b3d2b9bede0af4c455b289545c3a3edee7678c1417f72",
+    "mode": 420
+  },
+  ".git": {
+    "sha256": "eeba761be087ae47d48e9aa38755e1cc7b5d36444792bc3c552182bd1b2c73e4",
+    "mode": 420
+  }
+}
