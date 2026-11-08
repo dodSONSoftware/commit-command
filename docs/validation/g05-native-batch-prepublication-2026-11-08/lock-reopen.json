@@ -1,0 +1,25 @@
+[
+  {
+    "discovery": {
+      "excluded_names": [
+        "node_modules",
+        ".venv",
+        "target",
+        "dist",
+        "build",
+        ".gitfleet-rust-lab"
+      ],
+      "excluded_patterns": []
+    },
+    "display_root": {
+      "encoding": "utf8",
+      "value": "/private/tmp/gitfleet-m3-native-g05-batch-w8awkopg/workspace"
+    },
+    "id": "a05f8ecb-763d-4bd0-83fc-a8fe12154854",
+    "name": "G05 partial batch crash",
+    "root": {
+      "encoding": "utf8",
+      "value": "/private/tmp/gitfleet-m3-native-g05-batch-w8awkopg/workspace"
+    }
+  }
+]

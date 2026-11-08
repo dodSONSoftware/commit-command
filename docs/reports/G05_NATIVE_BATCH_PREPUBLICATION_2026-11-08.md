@@ -25,3 +25,26 @@ checkpoint only. Separate guarded cleanup and final restart remain next.
 
 [Evidence](../validation/g05-native-batch-prepublication-2026-11-08/) records operator
 setup, original/post-crash baselines, native audit, exact artifacts and preservation.
+
+## Separate guarded cleanup and final ordinary restart — passed
+
+Fresh acceptance inspection proposed abort_unpublished: no publication evidence,
+remove only proven owned locks, retain unreferenced objects, no commit/hook replay.
+Separate authoritative/native approval returned cancelled_before_publication,
+published=false. The initial evidence script expected only index.lock; inspection
+of the recorded ownership and crash snapshot proved HEAD.lock was also owned and
+removed. Corrected oracle verifies both exact lock hashes against the recorded
+operation. No product patch or relaxation was needed for cleanup.
+
+All original repository bytes/modes remain exact, all three heads unchanged. Only
+three approved alpha objects remain added/unreferenced; only the owned index.lock
+and HEAD.lock were removed from the crash state. Beta's original proposed record
+remains unchanged/unexecuted; every earlier operation and batch payload unchanged.
+Exactly the same two trusted worktrees, control untrusted, integrity ok.
+
+Final ordinary restart displayed alpha cancelled, beta interrupted/proposed and the
+historical interrupted batch; no replay/automatic retry. Ordinary gate remained
+read-only. Quit exit 0. Exact post-cleanup repository bytes/modes and operation/batch
+payloads matched baseline, self-preserving oracle passed, writer lock reopened.
+Native cleanup also exited 0. This closes the selected pre-publication host crash /
+owned cleanup / restart case, not all G05. No new commits, pushes or trust grants.

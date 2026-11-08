@@ -1,0 +1,19 @@
+{
+  "all_heads_unchanged_no_publication": true,
+  "all_original_files_exact_bytes_modes": true,
+  "only_added_files": [
+    "gitfleet-batch/alpha/.git/objects/33/85485bba1621a21a7c8e24472e5343a5c76cbf",
+    "gitfleet-batch/alpha/.git/objects/47/80df2b03f2ff3424219edb185aef2d53cf6b7a",
+    "gitfleet-batch/alpha/.git/objects/d1/6c1122ba53c03efed7d9d29de8dd26875cd81a"
+  ],
+  "only_removed_crash_file": [
+    "gitfleet-batch/alpha/.git/HEAD.lock",
+    "gitfleet-batch/alpha/.git/index.lock"
+  ],
+  "prior_operations_batches_unchanged": true,
+  "successor_proposal_unchanged_unexecuted": true,
+  "native_abort_without_replay": true,
+  "exact_two_existing_trusts": true,
+  "integrity": "ok",
+  "final_restart_exact_files_records_no_replay": true
+}
