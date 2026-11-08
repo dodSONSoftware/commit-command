@@ -1,0 +1,13 @@
+
+> gitfleet-desktop@0.1.1 test
+> vitest run --run src/main.test.tsx
+
+
+ RUN  v4.1.12 /Users/randydodson/Documents/_code/git-fleet/app/desktop
+
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  21:16:35
+   Duration  363ms (transform 22ms, setup 33ms, import 12ms, tests 48ms, environment 187ms)
+

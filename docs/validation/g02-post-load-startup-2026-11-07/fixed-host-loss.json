@@ -1,0 +1,6 @@
+{
+  "exact_fixture_host_pid": 83764,
+  "signal": "SIGKILL",
+  "time_ns": 1794107971469404000,
+  "running_hook_claimed": false
+}

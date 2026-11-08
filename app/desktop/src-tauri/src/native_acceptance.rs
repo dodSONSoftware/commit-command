@@ -173,6 +173,7 @@ pub(super) fn install(app: &tauri::AppHandle, host: Arc<Host>) -> tauri::Result<
     let submenu = Submenu::new(app, "Native acceptance", true)?;
     for (id, label) in [
         ("accept-reload", "Reload main renderer"),
+        ("accept-startup-probe", "Inspect main startup state"),
         ("accept-delegate-probe", "Probe native delegate forwarding"),
         (
             "accept-appkit-terminate",
@@ -208,6 +209,21 @@ pub(super) fn install(app: &tauri::AppHandle, host: Arc<Host>) -> tauri::Result<
         let result: Result<(), String> = (|| {
             match id {
                 "accept-reload" => { record("reload_requested",json!({})); main.ok_or("Main missing")?.reload().map_err(|e| e.to_string())?; }
+                "accept-startup-probe" => main.ok_or("Main missing")?.eval(r#"(() => {
+                    const root = document.getElementById('root');
+                    const shell = document.querySelector('.shell');
+                    const rect = shell?.getBoundingClientRect();
+                    const style = shell && getComputedStyle(shell);
+                    document.title = 'Native acceptance:startup:' + JSON.stringify({
+                        ready: document.readyState, visibility: document.visibilityState,
+                        focused: document.hasFocus(), rootChildren: root?.childElementCount ?? null,
+                        shell: !!shell, inert: shell?.inert ?? null,
+                        width: innerWidth, height: innerHeight,
+                        shellWidth: rect?.width ?? null, shellHeight: rect?.height ?? null,
+                        display: style?.display ?? null, opacity: style?.opacity ?? null,
+                        tauri: !!window.__TAURI_INTERNALS__
+                    });
+                })()"#).map_err(|e| e.to_string())?,
                 "accept-delegate-probe" => {
                     #[cfg(target_os = "macos")]
                     app.run_on_main_thread(super::native_termination::probe_forwarding).map_err(|e|e.to_string())?;

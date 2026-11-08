@@ -82,6 +82,16 @@ startup presentation is reopened; prior document-readiness passes remain bounded
 Next investigate the retained post-load blank-window evidence. No source fix claimed.
 Current gate dispositions remain in EXECUTION_STATUS.
 
+### November 7 post-load startup follow-up
+
+[Diagnosis, patch and bounded retests](reports/G02_POST_LOAD_STARTUP_2026-11-07.md):
+a deterministic initial React commit ordering defect is fixed. Full checks passed
+(70 renderer / 13 default-host / 16 all-feature host tests); three native launches,
+including first restarts after renderer and host loss, recovered without manual
+reload and preserved exact draft/history/repository state with no replay. Diagnostic
+launches did not recapture the intermittent blank, so broader startup reliability
+remains open; earlier blank evidence is retained. G02/G06 stay partial.
+
 ## Safety, execution and evidence rules
 
 - Perform interaction manually or through an organization-permitted native testing

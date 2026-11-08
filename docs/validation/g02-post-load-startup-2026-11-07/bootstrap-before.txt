@@ -1,0 +1,30 @@
+
+> gitfleet-desktop@0.1.1 test
+> vitest run --run src/main.test.tsx
+
+
+ RUN  v4.1.12 /Users/randydodson/Documents/_code/git-fleet/app/desktop
+
+ ❯ src/main.test.tsx (1 test | 1 failed) 42ms
+   × commits the application shell before bootstrap module completion 42ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/main.test.tsx > commits the application shell before bootstrap module completion
+AssertionError: expected null not to be null
+ ❯ src/main.test.tsx:12:74
+     10|     '<div id="root"><p role="status">Starting Commit Command…</p></div…
+     11|   await import("./main");
+     12|   expect(document.querySelector('[aria-label="Application shell"]')).n…
+       |                                                                          ^
+     13|   expect(document.querySelector('[role="status"]')).toBeNull();
+     14| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  21:16:19
+   Duration  413ms (transform 23ms, setup 33ms, import 13ms, tests 42ms, environment 228ms)
+

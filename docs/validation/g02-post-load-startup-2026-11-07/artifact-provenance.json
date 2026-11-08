@@ -1,0 +1,31 @@
+{
+  "source_base": "3175aa86742be113dd1c31b688c1c2f5a359b2e1",
+  "source_sha256": {
+    "app/desktop/src/main.tsx": "adec4574f1e54d09629d1b5005b37fb6b71cb6ef79796ac335253d52056c60f5",
+    "app/desktop/src/main.test.tsx": "f5a28b5c021cde0823b9e4a23d64963fae0a394ffc17f20c80ce81dee9fc1c9a",
+    "app/desktop/src-tauri/src/main.rs": "1c18752242446ce8282e607dd00921917f34299842ed8d28b125517fddfe3fba",
+    "app/desktop/src-tauri/src/native_acceptance.rs": "c8382127136022f2ef4b70c3daa6d80d591035a092e6bb7bb23dbe2aaed62afa",
+    "app/desktop/src-tauri/Cargo.toml": "14f62acd260c1d77042ffeb17c69b847bd21ae71338207792e34c443f466e360",
+    "app/desktop/src-tauri/Cargo.lock": "d70972c2de2b039055238311f5b0d749ebf21b35bad58db74a20a1ca6c359e73"
+  },
+  "native_artifact_sha256": "75eba31a1a728104e02701078f474ea21358ca253dc9495eda876de1cc7ff05c",
+  "features": [
+    "custom-protocol",
+    "desktop-writes",
+    "native-acceptance-support"
+  ],
+  "frontend_dist_sha256": {
+    "app/desktop/dist/index.html": "4af51c66f895c6302d3af38f0f4a4c3a3c795753183dde3253815446cd776f05",
+    "app/desktop/dist/review.html": "ab23db23d2f7adc8404be65ce9394cfb09b43faa4e404530b9d6ccc0c3924d4e",
+    "app/desktop/dist/app-icon.png": "30629d9b5caae681a422d3f5a7163f28479e0eb81cffa91590c4db87a02bae0e",
+    "app/desktop/dist/assets/review-D5509lTd.js": "ab0c5931f32b4c8bb38f19b4178e8133ba620936289a3e2dd183d9dd141b5867",
+    "app/desktop/dist/assets/main-BPTNV4Ro.css": "57f78e378a1204b8c735a70808647dbf8f0c535ad0fcdbe256a829281dce8ef6",
+    "app/desktop/dist/assets/core-BqmcAG5b.js": "a18d59fa52519441821ee369c3492f592d40ec08486017b3f101ef13be52bfce",
+    "app/desktop/dist/assets/review-DAdDXWwp.css": "6b498f73c09c2af4422bfc3bb36fbcd1e1734b478d42a55255684e23fd88f066",
+    "app/desktop/dist/assets/main-kI9YxXsa.js": "52634be535b7996f442f593d0b33ed4d6bd0dc8f358dce08801e69824fc99c87",
+    "app/desktop/dist/assets/banner-dark-CHLMoucy.svg": "d590c9361862ceac9a93b6b09ae2888c5eff26b3a2e2965ae7688a22fac91428",
+    "app/desktop/dist/assets/banner-light-Cvs05R9C.svg": "8f52d4c437e4c371d8564e0fad8325798e1eca977199f82e84adefae38c20b83"
+  },
+  "default_debug_binary_restored": true,
+  "retained_original_fixture_artifact_restored": true
+}

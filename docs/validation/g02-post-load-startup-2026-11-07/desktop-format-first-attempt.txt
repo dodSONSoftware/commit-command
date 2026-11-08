@@ -1,0 +1,24 @@
+git version 2.56.0
+rustc 1.99.1 (58cf8f9c3 2026-10-13)
+cargo 1.99.1 (5f94df478 2026-08-27)
+v22.22.3
+10.9.8
+
+> gitfleet-desktop@0.1.1 typecheck
+> tsc --noEmit
+
+
+> gitfleet-desktop@0.1.1 lint
+> eslint . --max-warnings 0
+
+
+> gitfleet-desktop@0.1.1 contracts
+> node scripts/contracts.mjs --check
+
+
+> gitfleet-desktop@0.1.1 format:check
+> prettier --check src scripts *.json *.ts *.html
+
+Checking formatting...
+[warn] src/main.test.tsx
+[warn] Code style issues found in the above file. Run Prettier with --write to fix.

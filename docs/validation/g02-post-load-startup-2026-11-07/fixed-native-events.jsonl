@@ -1,0 +1,24 @@
+{"detail":{"support":true},"event":"startup"}
+{"detail":{"allowed":true,"label":"main"},"event":"navigation"}
+{"detail":{"elapsed_ms":134,"event":"Started","visible":false},"event":"main_page_load"}
+{"detail":{"elapsed_ms":185,"event":"Finished","visible":false},"event":"main_page_load"}
+{"detail":{"visible":true},"event":"main_initial_display"}
+{"detail":{"id":"accept-startup-probe"},"event":"menu_action"}
+{"detail":{"label":"main","result":"Native acceptance:startup:{\"ready\":\"complete\",\"visibility\":\"visible\",\"focused\":true,\"rootChildren\":1,\"shell\":true,\"inert\":false,\"width\":2255,\"height\":1546,\"shellWidth\":2255,\"shellHeight\":1546,\"display\":\"flex\",\"opacity\":\"1\",\"tauri\":true}"},"event":"ipc_probe"}
+{"detail":{"host_pid":83090,"pid":83093},"event":"renderer_kill_requested"}
+{"detail":{"pid":83093,"success":true},"event":"renderer_kill_result"}
+{"detail":{"id":"accept-kill-renderer"},"event":"menu_action"}
+{"detail":{"allowed":true,"label":"main"},"event":"navigation"}
+{"detail":{"elapsed_ms":24438,"event":"Started","visible":true},"event":"main_page_load"}
+{"detail":{},"event":"main_renderer_reset"}
+{"detail":{"elapsed_ms":24450,"event":"Finished","visible":true},"event":"main_page_load"}
+{"detail":{"support":true},"event":"startup"}
+{"detail":{"allowed":true,"label":"main"},"event":"navigation"}
+{"detail":{"elapsed_ms":131,"event":"Started","visible":false},"event":"main_page_load"}
+{"detail":{"elapsed_ms":183,"event":"Finished","visible":false},"event":"main_page_load"}
+{"detail":{"visible":true},"event":"main_initial_display"}
+{"detail":{"support":true},"event":"startup"}
+{"detail":{"allowed":true,"label":"main"},"event":"navigation"}
+{"detail":{"elapsed_ms":132,"event":"Started","visible":false},"event":"main_page_load"}
+{"detail":{"elapsed_ms":180,"event":"Finished","visible":false},"event":"main_page_load"}
+{"detail":{"visible":true},"event":"main_initial_display"}

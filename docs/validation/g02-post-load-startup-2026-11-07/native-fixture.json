@@ -1,0 +1,31 @@
+{
+  "root": "/private/tmp/gitfleet-m3-native-r3f_k7ew",
+  "workspace_root": "/private/tmp/gitfleet-m3-native-r3f_k7ew/workspace",
+  "state": "/private/tmp/gitfleet-m3-native-r3f_k7ew/state",
+  "workspace": "c9808d68-0605-4ac4-8d26-bc69bd1bd3e4",
+  "worktrees": {
+    "grand": "681c7b1b-4162-492c-a08e-5e1af9263540",
+    "parent": "689d6d25-a404-41a1-8437-ca3fb3a0bd70",
+    "child": "b133a0be-0087-4c76-88d6-c7f9a5ec8921"
+  },
+  "parent": "/private/tmp/gitfleet-m3-native-r3f_k7ew/workspace/parent",
+  "child": "/private/tmp/gitfleet-m3-native-r3f_k7ew/workspace/parent/child",
+  "grand": "/private/tmp/gitfleet-m3-native-r3f_k7ew/workspace/parent/child/grand",
+  "server_pid": 61909,
+  "base": "https://127.0.0.1:57308",
+  "ca_file": "/private/tmp/gitfleet-m3-native-r3f_k7ew/certificate.pem",
+  "observed_oids": {
+    "parent": "84b4b89662a7f419628c9b041b20b956a3344acd",
+    "child": "84b4b89662a7f419628c9b041b20b956a3344acd",
+    "grand": "84b4b89662a7f419628c9b041b20b956a3344acd"
+  },
+  "source_oids": {
+    "parent": "3c04401c7b93d0b1b27481d0f763eccc2417e9d0",
+    "child": "9ed5e8aabc9eae74c3f703e2f7241813df823a00",
+    "grand": "a6356af0889f64036b540fb1f858897a71304e16"
+  },
+  "private_server_contacted": false,
+  "credentials_used": false,
+  "app_path": "/private/tmp/gitfleet-m3-native-r3f_k7ew/Commit Command Startup Commit Acceptance.app",
+  "binary_sha256": "75eba31a1a728104e02701078f474ea21358ca253dc9495eda876de1cc7ff05c"
+}

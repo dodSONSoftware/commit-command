@@ -14,6 +14,16 @@ The original rows below retain the baseline assessment; dated follow-up ledgers 
 reports supersede their earlier test status. A later automated pass does not imply
 native or release acceptance.
 
+### November 7 post-load startup follow-up
+
+[Diagnosis, patch and bounded retests](reports/G02_POST_LOAD_STARTUP_2026-11-07.md):
+a deterministic initial React commit ordering defect is fixed. Full checks passed
+(70 renderer / 13 default-host / 16 all-feature host tests); three native launches,
+including first restarts after renderer and host loss, recovered without manual
+reload and preserved exact draft/history/repository state with no replay. Diagnostic
+launches did not recapture the intermittent blank, so broader startup reliability
+remains open; earlier blank evidence is retained. G02/G06 stay partial.
+
 ## How to read the status
 
 - **POC-tested:** Behavior exercised by the existing Python labs / Rust v0.1.1 *in a constrained experimental subset*. Does not mean production ready.
