@@ -60,3 +60,15 @@ approved only abort_unpublished; result aborted/unchanged. Candidate config was 
 published or replayed; only owned config.lock removed. All other repository/remote/
 transport file/mode baselines matched, normal Quit 0 and writer lock reopened.
 Foreign-lock and stale-fingerprint refusal, followed by clean owned recovery, remain.
+
+### Step 5 — foreign ownership and stale recovery refusal passed
+
+Prepared a native abort_unpublished review against the actual owned candidate, then
+externally saved that inode and replaced config.lock with a different inode containing
+identical bytes/mode. Old native approval returned Not completed: Upstream configuration
+review changed. Independent negative oracle verified the foreign inode/content and
+original journal/receipt/repo/remote/transport remained unchanged. A fresh review
+correctly proposed manual investigation with no writes/lock removal permitted; native
+confirmation was refused with Manual upstream investigation is required. The negative
+oracle passed again. No foreign file was removed or adopted. Clean restoration of the
+actual owned inode and fresh abort/restart remain to complete the package.

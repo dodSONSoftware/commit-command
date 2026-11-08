@@ -1,0 +1,9 @@
+{
+  "foreign_lock_same_inode_bytes_modes_preserved": true,
+  "original_owned_inode_saved_intact": true,
+  "repository_byte_mode_baseline_preserved": true,
+  "journal_and_receipt_exactly_unchanged": true,
+  "bare_remote_and_transport_artifacts_unchanged": true,
+  "no_new_local_write_records": true,
+  "sqlite_integrity": "ok"
+}

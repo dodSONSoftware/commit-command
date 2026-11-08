@@ -1,0 +1,10 @@
+{
+  "old_review_action": "abort_unpublished",
+  "replacement_same_bytes_mode_different_inode": true,
+  "old_native_approval_refused": "Upstream configuration review changed",
+  "fresh_review_action": "manual",
+  "fresh_manual_native_approval_refused": "Manual upstream investigation is required",
+  "foreign_inode_and_bytes_preserved": true,
+  "journal_receipt_unchanged": true,
+  "no_new_native_trust_grant": true
+}

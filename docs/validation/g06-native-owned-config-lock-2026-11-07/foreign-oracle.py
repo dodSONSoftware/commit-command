@@ -1,0 +1,9 @@
+"""Read-only checks that native refusals preserve an unowned same-content lock."""
+from pathlib import Path
+import json,hashlib,stat,sqlite3,sys
+out=Path(__file__).resolve().parent;f=json.loads((out/'foreign-fixture.json').read_text());proof=json.loads((out/'foreign-replacement.json').read_text());repo=Path(f['repository']);lock=repo/'.git/config.lock'
+def snapshot(root):return {str(p.relative_to(root)):{'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'mode':stat.S_IMODE(p.stat().st_mode)} for p in sorted(root.rglob('*')) if p.is_file()}
+assert snapshot(repo)==json.loads((out/'foreign-repository-before.json').read_text());assert lock.stat().st_ino==proof['foreign_inode'];saved=Path(proof['saved_owned_path']);assert saved.stat().st_ino==proof['owned_inode'];assert lock.read_bytes()==saved.read_bytes();assert hashlib.sha256(lock.read_bytes()).hexdigest()==proof['sha256']
+assert snapshot(Path(f['remote']))==json.loads((out/'foreign-remote-before.json').read_text());assert snapshot(Path(f['state'])/'network')==json.loads((out/'foreign-network-before.json').read_text());c=sqlite3.connect('file:'+f['state']+'/state.db?mode=ro',uri=True);rows=[json.loads(v) for(v,)in c.execute("select value from state where key like 'upstream:%'")];assert rows==[json.loads((out/'foreign-upstream-before.json').read_text())];assert c.execute('select count(*) from write_operations').fetchone()[0]==0;assert c.execute('pragma integrity_check').fetchone()[0]=='ok'
+result={'foreign_lock_same_inode_bytes_modes_preserved':True,'original_owned_inode_saved_intact':True,'repository_byte_mode_baseline_preserved':True,'journal_and_receipt_exactly_unchanged':True,'bare_remote_and_transport_artifacts_unchanged':True,'no_new_local_write_records':True,'sqlite_integrity':'ok'}
+(out/('foreign-'+sys.argv[1]+'.json')).write_text(json.dumps(result,indent=2)+'\n');print(result)
