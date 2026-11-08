@@ -1,0 +1,21 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-a5b0bae5745a2202)
+
+running 1 test
+test ssh_transport_tests::ssh_agent_authenticates_only_selected_identity_then_downloads_and_imports_offline ... FAILED
+
+failures:
+
+---- ssh_transport_tests::ssh_agent_authenticates_only_selected_identity_then_downloads_and_imports_offline stdout ----
+
+thread 'ssh_transport_tests::ssh_agent_authenticates_only_selected_identity_then_downloads_and_imports_offline' (1751682) panicked at tests/remote_observation.rs:83:77:
+called `Result::unwrap()` on an `Err` value: Error { kind: InvalidPath, message: "Application state resolves inside a repository" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    ssh_transport_tests::ssh_agent_authenticates_only_selected_identity_then_downloads_and_imports_offline
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 82 filtered out; finished in 0.08s
+
+error: test failed, to rerun pass `--test remote_observation`

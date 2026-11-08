@@ -1,0 +1,21 @@
+Full build log: /private/tmp/gitfleet-m2-tools/build-20261108-refresh.log
+SHA256: 28c71d1b6fbcc948801e579f7607b39d6cb0b86476ca08f51230a26283ef264f
+
+ /usr/bin/install -c -m 644 README '/private/tmp/gitfleet-m2-tools/install/share/doc/gnupg'
+/Library/Developer/CommandLineTools/usr/bin/make  install-data-hook
+make[3]: Nothing to be done for `install-data-hook'.
+gpg (GnuPG) 2.5.24
+libgcrypt 1.12.4
+Copyright (C) 2026 g10 Code GmbH
+License GNU GPL-3.0-or-later <https://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Home: /Users/randydodson/.gnupg
+Supported algorithms:
+Pubkey: RSA, Kyber, ELG, DSA, ECDH, ECDSA, EDDSA
+Cipher: IDEA, 3DES, CAST5, BLOWFISH, AES, AES192, AES256, TWOFISH,
+        CAMELLIA128, CAMELLIA192, CAMELLIA256
+Hash: SHA1, RIPEMD160, SHA256, SHA384, SHA512, SHA224
+Compression: Uncompressed, ZIP, ZLIB, BZIP2
+

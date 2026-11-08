@@ -1,0 +1,21 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.02s
+     Running tests/m2_writes.rs (app/core/target/debug/deps/m2_writes-e227507effebfe7c)
+
+running 1 test
+test openpgp_signing_positive_gate_requires_isolated_tool_and_keyring ... FAILED
+
+failures:
+
+---- openpgp_signing_positive_gate_requires_isolated_tool_and_keyring stdout ----
+
+thread 'openpgp_signing_positive_gate_requires_isolated_tool_and_keyring' (1752002) panicked at tests/m2_writes.rs:48:53:
+called `Result::unwrap()` on an `Err` value: Error { kind: InvalidPath, message: "Application state resolves inside a repository" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    openpgp_signing_positive_gate_requires_isolated_tool_and_keyring
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 24 filtered out; finished in 0.03s
+
+error: test failed, to rerun pass `--test m2_writes`

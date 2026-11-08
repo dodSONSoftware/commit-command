@@ -1,0 +1,89 @@
+{
+  "full_script_exit": 0,
+  "configurations": {
+    "default": {
+      "passed": 60,
+      "failed": 0,
+      "ignored": 1,
+      "ignored_entries": [
+        "test non_utf8_filename_remains_git_quoted_without_mutation ... ignored, M0 host filesystem rejects non-UTF-8 filename creation (EPERM); requires a supporting filesystem"
+      ],
+      "openpgp_positive_pass": false,
+      "ssh_positive_pass": false
+    },
+    "experimental-writes": {
+      "passed": 95,
+      "failed": 0,
+      "ignored": 2,
+      "ignored_entries": [
+        "test successful_gpg_signing ... ignored, optional positive GPG signing; run explicitly with a working GPG installation",
+        "test non_utf8_filename_remains_git_quoted_without_mutation ... ignored, M0 host filesystem rejects non-UTF-8 filename creation (EPERM); requires a supporting filesystem"
+      ],
+      "openpgp_positive_pass": false,
+      "ssh_positive_pass": false
+    },
+    "controlled-writes": {
+      "passed": 85,
+      "failed": 0,
+      "ignored": 1,
+      "ignored_entries": [
+        "test non_utf8_filename_remains_git_quoted_without_mutation ... ignored, M0 host filesystem rejects non-UTF-8 filename creation (EPERM); requires a supporting filesystem"
+      ],
+      "openpgp_positive_pass": true,
+      "ssh_positive_pass": false
+    },
+    "application-services": {
+      "passed": 230,
+      "failed": 0,
+      "ignored": 4,
+      "ignored_entries": [
+        "test batch_crash_worker ... ignored, subprocess worker invoked by the batch interruption test",
+        "test non_utf8_filename_remains_git_quoted_without_mutation ... ignored, M0 host filesystem rejects non-UTF-8 filename creation (EPERM); requires a supporting filesystem",
+        "test artifact_initialization::artifact_init_probe_worker ... ignored, subprocess-only controlled Git initialization probe",
+        "test https_credential_tests::actual_gitea_and_osxkeychain_read_download_import_and_missing_account ... ignored, opt-in loopback Gitea + exact generated macOS Keychain fixture; never uses user credentials"
+      ],
+      "openpgp_positive_pass": true,
+      "ssh_positive_pass": true
+    },
+    "all-features": {
+      "passed": 274,
+      "failed": 0,
+      "ignored": 8,
+      "ignored_entries": [
+        "test successful_gpg_signing ... ignored, optional positive GPG signing; run explicitly with a working GPG installation",
+        "test batch_crash_worker ... ignored, subprocess worker invoked by the batch interruption test",
+        "test non_utf8_filename_remains_git_quoted_without_mutation ... ignored, M0 host filesystem rejects non-UTF-8 filename creation (EPERM); requires a supporting filesystem",
+        "test crash_worker ... ignored, child-process crash worker; invoked and asserted by crash matrix, never a skipped acceptance scenario",
+        "test artifact_initialization::artifact_init_probe_worker ... ignored, subprocess-only controlled Git initialization probe",
+        "test fetch_import_crash_worker ... ignored, subprocess-only disposable SIGKILL worker",
+        "test https_credential_tests::actual_gitea_and_osxkeychain_read_download_import_and_missing_account ... ignored, opt-in loopback Gitea + exact generated macOS Keychain fixture; never uses user credentials",
+        "test upstream_crash_worker ... ignored, subprocess-only disposable upstream SIGKILL worker"
+      ],
+      "openpgp_positive_pass": true,
+      "ssh_positive_pass": true
+    }
+  },
+  "source_revision_at_completion": "0002d6e26324d46326483659efe0088d9367ecbd",
+  "environment": {
+    "platform": "macOS-27.2-arm64-arm-64bit",
+    "architecture": "arm64",
+    "git": "git version 2.56.0",
+    "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+    "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)",
+    "m2_gpg": [
+      "gpg (GnuPG) 2.5.24",
+      "libgcrypt 1.12.4",
+      "Copyright (C) 2026 g10 Code GmbH"
+    ]
+  },
+  "TMPDIR": "/private/tmp/gf-safe-1108",
+  "private_tmp_target": "/private/var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gf-safe-7q567s7i",
+  "execution": "outside sandbox for disposable signer/SSH sockets",
+  "no_product_changes_during_run": true,
+  "lab_case_count": 24,
+  "source_file_sha256": {
+    "app/core/src/application/bulk.rs": "f8d88a3b020c4d4205811393f20fd850d602e7839f05f6d1177049d45552bae6",
+    "app/core/src/discovery.rs": "67e16c362f7ca587f4fa3e33cc9e6e806fe454b3255bd30f39e86e73fdea59ce",
+    "app/core/tests/bulk_application.rs": "14d8055ccdd66459abed2291f11a2e26986604d22d51fd0ec44c340877a2c109"
+  }
+}

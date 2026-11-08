@@ -7,6 +7,14 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 full Core matrix — refreshed and passed
+
+[Fresh matrix](reports/G02_G11_CORE_MATRIX_2026-11-08.md): script exit 0, configurations
+60/95/85/230/274 passed, exact ignored reasons retained, lab 24/0. Builds, formatter
+and strict Clippy passed. Isolated signer restored from checksum-pinned sources;
+private outside-repository short temp path resolved agent/SSH fixture restrictions
+without weaker guards. Earlier failed attempts retained. No native/release gate waiver.
+
 ### November 8 G11 locked license declarations — inventoried
 
 [Inventory checkpoint](reports/G11_LICENSE_INVENTORY_2026-11-08.md): read-only offline
@@ -22,7 +30,7 @@ writable /private/tmp ancestry; an in-checkout trial correctly rejected app stat
 Short alias to private outside-repository storage passed real SSH and isolated GPG
 focused gates. CI now prepares mode-0700 RUNNER_TEMP storage and short macOS alias;
 YAML, all shell syntax and actual local workflow-step execution passed. No permission
-or product guard weakened. Hosted CI remains unrun; full matrix refresh still running.
+or product guard weakened. Hosted CI remains unrun; full Core matrix subsequently passed ([report](reports/G02_G11_CORE_MATRIX_2026-11-08.md)).
 
 ### November 8 G06 SHA-256 missing objects / packed tracking ref — native passed
 
@@ -43,7 +51,7 @@ unselected control/child preservation and unchanged excluded gitlink passed. Spe
 new-checkout trust granted after authorization; exact three trusted identities only.
 Ordinary restart retained history with preparation disabled and exact files/records,
 no replay; integrity and writer-lock reopen passed. G05 remains partial for other
-fault/cancellation cases. Full Core matrix refresh is separate and still running.
+fault/cancellation cases. Fresh full Core matrix also passed; broader native gates remain separate.
 
 ### November 8 G05 explicit gitlink exclusions — implemented and verified
 
@@ -780,7 +788,7 @@ its owning criterion and state what its completion closes before execution.
 | G02 startup | Initial React commit ordering defect fixed; bounded native restarts passed; earlier intermittent blank retained | Capture diagnostic state on an actual recurrence before reload; bounded clean launches do not prove a universal cause or guarantee |
 | G02 real OS entry points | Direct AppKit covered; actual Dock policy blocked; operator session termination distinct | Keep blocks explicit; no surrogate or destructive session termination without operator coordination |
 | G06 upstream topology | Selected missing-only setup/recovery history and now native linked-worktree success passed | Native owned-config-lock recovery package now passed (Cancel, empty/ready/pre-publication abort, stale/foreign refusal and ordinary restart); broader named topology/failure/accessibility criteria remain open |
-| G06 fetch/auth/format compatibility | Selected real HTTPS/SSH/auth chains have dated evidence; identified artifact initialization race already fixed | Full current-source five-configuration Core signing/transport matrix passed with restored isolated GPG. Native SHA-256 HTTPS observation/download now passed; native offline import with existing objects now passed; missing-object/packed-expected-old import now passed ([checkpoint](reports/G06_NATIVE_SHA256_MISSING_OBJECTS_2026-11-08.md)); upstream/check topology remains; fresh matrix rerun pending after private-temp correction; do not reopen the already diagnosed artifact race without new counterevidence |
+| G06 fetch/auth/format compatibility | Selected real HTTPS/SSH/auth chains have dated evidence; identified artifact initialization race already fixed | Full current-source five-configuration Core signing/transport matrix passed with restored isolated GPG. Native SHA-256 HTTPS observation/download now passed; native offline import with existing objects now passed; missing-object/packed-expected-old import now passed ([checkpoint](reports/G06_NATIVE_SHA256_MISSING_OBJECTS_2026-11-08.md)); upstream/check topology remains; fresh five-configuration Core matrix passed after private-temp correction; do not reopen the already diagnosed artifact race without new counterevidence |
 | G06 OS credentials / other transport exclusions | SecurityAgent choices and direct SCP facility limits retain prior blocks | Operator/facility-dependent work is not an unattended pass; unsupported helpers stay unsupported |
 | Planner accessibility/cycles/scale | Broader native criteria remain open; overlap with G03/G08 | Track as their own criteria, not repeated observation-guard tests; publication remains G07/G08 |
 
