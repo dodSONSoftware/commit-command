@@ -308,6 +308,8 @@ fn base() -> Command {
             "-c",
             "diff.external=",
             "-c",
+            "diff.autoRefreshIndex=false",
+            "-c",
             "log.showSignature=false",
         ]);
     command

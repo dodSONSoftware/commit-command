@@ -596,3 +596,35 @@ fn cli_and_library_inspection_contracts_agree_for_all_read_modes() {
     }
     assert_eq!(before, tree_bytes(&f.root));
 }
+
+#[cfg(unix)]
+#[test]
+fn clean_unstaged_diff_preserves_an_index_with_unpopulated_stat_cache() {
+    use std::os::unix::fs::PermissionsExt;
+    let f = Fixture::new();
+    f.commit_file();
+    fs::write(f.repo.join("tab\tfile.txt"), b"baseline\n").unwrap();
+    f.git(&["add", "--", "tab\tfile.txt"]);
+    f.git(&["commit", "-qm", "Second tracked file"]);
+    f.git(&["config", "diff.autoRefreshIndex", "true"]);
+    // A reconciled index may have correct tree entries without working-file stat data.
+    f.git(&["read-tree", "HEAD"]);
+    let index = f.repo.join(".git/index");
+    fs::set_permissions(&index, fs::Permissions::from_mode(0o600)).unwrap();
+    let before = tree_bytes(&f.repo);
+    let result = diff::inspect(&f.repo, DiffMode::Unstaged, None).unwrap();
+    assert!(result.files.is_empty());
+    assert!(result.patch.is_empty());
+    assert_eq!(
+        before,
+        tree_bytes(&f.repo),
+        "read-only diff refreshed the index"
+    );
+    fs::write(f.repo.join("tab\tfile.txt"), b"real content change\n").unwrap();
+    let before = tree_bytes(&f.repo);
+    let result = diff::inspect(&f.repo, DiffMode::Unstaged, None).unwrap();
+    assert_eq!(result.files.len(), 1);
+    assert_eq!(result.files[0].path, path("tab\tfile.txt"));
+    assert!(String::from_utf8_lossy(&result.patch).contains("+real content change"));
+    assert_eq!(before, tree_bytes(&f.repo));
+}

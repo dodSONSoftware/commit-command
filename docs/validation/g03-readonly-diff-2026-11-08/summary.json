@@ -1,0 +1,71 @@
+{
+  "full_script_exit": 0,
+  "configuration_results": {
+    "default": {
+      "passed": 61,
+      "failed": 0,
+      "ignored": 1,
+      "ignored_entries": [
+        "test non_utf8_filename_remains_git_quoted_without_mutation ... ignored, M0 host filesystem rejects non-UTF-8 filename creation (EPERM); requires a supporting filesystem"
+      ]
+    },
+    "experimental-writes": {
+      "passed": 96,
+      "failed": 0,
+      "ignored": 2,
+      "ignored_entries": [
+        "test successful_gpg_signing ... ignored, optional positive GPG signing; run explicitly with a working GPG installation",
+        "test non_utf8_filename_remains_git_quoted_without_mutation ... ignored, M0 host filesystem rejects non-UTF-8 filename creation (EPERM); requires a supporting filesystem"
+      ]
+    },
+    "controlled-writes": {
+      "passed": 86,
+      "failed": 0,
+      "ignored": 1,
+      "ignored_entries": [
+        "test non_utf8_filename_remains_git_quoted_without_mutation ... ignored, M0 host filesystem rejects non-UTF-8 filename creation (EPERM); requires a supporting filesystem"
+      ]
+    },
+    "application-services": {
+      "passed": 231,
+      "failed": 0,
+      "ignored": 4,
+      "ignored_entries": [
+        "test batch_crash_worker ... ignored, subprocess worker invoked by the batch interruption test",
+        "test non_utf8_filename_remains_git_quoted_without_mutation ... ignored, M0 host filesystem rejects non-UTF-8 filename creation (EPERM); requires a supporting filesystem",
+        "test artifact_initialization::artifact_init_probe_worker ... ignored, subprocess-only controlled Git initialization probe",
+        "test https_credential_tests::actual_gitea_and_osxkeychain_read_download_import_and_missing_account ... ignored, opt-in loopback Gitea + exact generated macOS Keychain fixture; never uses user credentials"
+      ]
+    },
+    "all-features": {
+      "passed": 275,
+      "failed": 0,
+      "ignored": 8,
+      "ignored_entries": [
+        "test successful_gpg_signing ... ignored, optional positive GPG signing; run explicitly with a working GPG installation",
+        "test batch_crash_worker ... ignored, subprocess worker invoked by the batch interruption test",
+        "test non_utf8_filename_remains_git_quoted_without_mutation ... ignored, M0 host filesystem rejects non-UTF-8 filename creation (EPERM); requires a supporting filesystem",
+        "test crash_worker ... ignored, child-process crash worker; invoked and asserted by crash matrix, never a skipped acceptance scenario",
+        "test artifact_initialization::artifact_init_probe_worker ... ignored, subprocess-only controlled Git initialization probe",
+        "test fetch_import_crash_worker ... ignored, subprocess-only disposable SIGKILL worker",
+        "test https_credential_tests::actual_gitea_and_osxkeychain_read_download_import_and_missing_account ... ignored, opt-in loopback Gitea + exact generated macOS Keychain fixture; never uses user credentials",
+        "test upstream_crash_worker ... ignored, subprocess-only disposable upstream SIGKILL worker"
+      ]
+    }
+  },
+  "lab_passed": 24,
+  "lab_skipped": 0,
+  "source_hashes": {
+    "app/core/src/process.rs": "0b8c351fba83f9af60cd243ad4a0a33e4001330da3e827504207db7e0961531c",
+    "app/core/src/diff.rs": "20d49bcca2cfa0f23b44cbe4bf263e51bb1bc0e57cf9e1f3453e5cfc2cb43e35",
+    "app/core/tests/m1_read.rs": "cdec0b3780aa6649eb2bed4f107c0bc32c1be6eccd386c5e0e3a45e11f458115"
+  },
+  "source_commit_at_completion": "72ad29e92ca3283d14aa3003a67d077b8a5970c3",
+  "source_was_dirty": true,
+  "desktop_renderer_default_host_all_feature_host": [
+    91,
+    13,
+    16
+  ],
+  "native_restart_corrected_oracle": "passed from post-oracle baseline; original failed baseline retained"
+}

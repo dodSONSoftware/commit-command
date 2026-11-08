@@ -85,6 +85,43 @@ fn raw(s: &Session<'_>, bytes: &[u8]) -> Result<Vec<FileChange>> {
     }
     Ok(files)
 }
+fn numstat_paths(bytes: &[u8]) -> Result<std::collections::BTreeSet<Vec<u8>>> {
+    let mut parts = bytes.split(|byte| *byte == 0);
+    let mut paths = std::collections::BTreeSet::new();
+    while let Some(record) = parts.next() {
+        if record.is_empty() {
+            continue;
+        }
+        let mut fields = record.splitn(3, |byte| *byte == b'\t');
+        for _ in 0..2 {
+            let count = fields
+                .next()
+                .ok_or_else(|| data_error("Missing diff count"))?;
+            if count != b"-" && (count.is_empty() || !count.iter().all(u8::is_ascii_digit)) {
+                return Err(data_error("Invalid diff count"));
+            }
+        }
+        let path = fields
+            .next()
+            .ok_or_else(|| data_error("Missing diff path"))?;
+        let path = if path.is_empty() {
+            let old = parts
+                .next()
+                .ok_or_else(|| data_error("Missing rename source"))?;
+            let new = parts
+                .next()
+                .ok_or_else(|| data_error("Missing rename destination"))?;
+            if old.is_empty() || new.is_empty() {
+                return Err(data_error("Empty rename path"));
+            }
+            new
+        } else {
+            path
+        };
+        paths.insert(path.to_vec());
+    }
+    Ok(paths)
+}
 fn args(s: &Session<'_>, mode: &DiffMode, patch: bool) -> Result<Vec<std::ffi::OsString>> {
     let mut args = strings(&[
         "diff",
@@ -177,9 +214,32 @@ pub fn inspect_with_options(
                 args.push(relative.as_os_str().to_owned());
             }
         }
-        let files = raw(s, &s.git_os(&metadata_args)?)?;
-        let current = if matches!(mode, DiffMode::Unstaged) {
+        let raw_files = raw(s, &s.git_os(&metadata_args)?)?;
+        let files = if matches!(mode, DiffMode::Unstaged) && !raw_files.is_empty() {
+            let mut counts_args = metadata_args.clone();
+            let raw_flag = counts_args
+                .iter_mut()
+                .find(|arg| *arg == "--raw")
+                .ok_or_else(|| data_error("Missing raw diff argument"))?;
+            *raw_flag = "--numstat".into();
+            let changed = numstat_paths(&s.git_os(&counts_args)?)?;
+            let mut files = Vec::new();
+            for file in &raw_files {
+                // Raw diff can report stat-cache misses even when blob content is equal.
+                let path = file.path.to_path()?;
+                if file.change != "M"
+                    || file.old_mode != file.new_mode
+                    || changed.contains(path.as_os_str().as_encoded_bytes())
+                {
+                    files.push(file.clone());
+                }
+            }
             files
+        } else {
+            raw_files.clone()
+        };
+        let current = if matches!(mode, DiffMode::Unstaged) {
+            raw_files
                 .iter()
                 .filter(|file| file.old_mode != "160000" && file.new_mode != "160000")
                 .map(|file| preview_in(s, &file.path))
@@ -196,7 +256,7 @@ pub fn inspect_with_options(
                 ));
             }
         }
-        if raw(s, &s.git_os(&metadata_args)?)? != files {
+        if raw(s, &s.git_os(&metadata_args)?)? != raw_files {
             return Err(Error::with_kind(
                 ErrorKind::ConcurrentChange,
                 "Diff metadata changed during inspection",

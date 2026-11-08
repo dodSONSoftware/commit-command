@@ -1,0 +1,22 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.35s
+     Running tests/m1_read.rs (app/core/target/debug/deps/m1_read-43d05fd3c5a09d12)
+
+running 1 test
+test clean_unstaged_diff_preserves_an_index_with_unpopulated_stat_cache ... FAILED
+
+failures:
+
+---- clean_unstaged_diff_preserves_an_index_with_unpopulated_stat_cache stdout ----
+
+thread 'clean_unstaged_diff_preserves_an_index_with_unpopulated_stat_cache' (3601058) panicked at tests/m1_read.rs:611:67:
+called `Result::unwrap()` on an `Err` value: Error { kind: ConcurrentChange, message: "Repository changed during inspection" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    clean_unstaged_diff_preserves_an_index_with_unpopulated_stat_cache
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 16 filtered out; finished in 0.13s
+
+error: test failed, to rerun pass `--test m1_read`

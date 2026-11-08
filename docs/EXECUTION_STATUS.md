@@ -29,16 +29,16 @@ trusts/integrity/lock reopen all passed; Quit 0 and preparation disabled. Earlie
 1fef386 overstatement remains withdrawn. Selected actual crash/recovery/beta-only
 retry chain is complete within this recorded envelope; broader G05 remains partial.
 
-### November 8 final index-preservation correction — validation in progress
+### November 8 read-only diff index refresh — fixed and fully validated
 
-Final restart oracle failed on beta index bytes/mode; 1fef386 incorrectly proceeded
-to commit a pass statement after the failed command. That exact-preservation claim
-is withdrawn pending corrected repeat. Operation/batch payloads stayed exact.
-Disposable-copy probe proves git diff refreshes the index even with optional locks
-disabled; the oracle took its baseline before that command. A focused Core regression
-also reproduced the read-only diff defect (ConcurrentChange). Explicit
-`diff.autoRefreshIndex=false` is now under validation in Core and oracle. Native crash,
-index recovery and beta-only retry proofs remain; final exact restart is not yet a pass.
+[Read-only diff fix](reports/G03_READONLY_DIFF_INDEX_2026-11-08.md): Core regression
+reproduced index mutation/ConcurrentChange on clean unstaged diff with empty stat
+cache. Restricted commands disable automatic index refresh; content-aware numstat
+filtering removes raw stat-only false positives. Read suite 17, full Core
+61/96/86/231/275, lab 24/0, strict Clippy and full desktop 91/13/16 passed. Exact
+source hashes match the separately verified ordinary restart artifact. The oracle
+failure and 1fef386 overstatement remain preserved/withdrawn; corrected repeat passed
+from an explicitly named post-oracle baseline. Broader G03/native/release gates open.
 
 ### November 8 G05 native partial-batch crash/recovery/retry — final preservation pending
 
