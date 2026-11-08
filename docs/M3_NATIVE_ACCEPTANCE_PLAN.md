@@ -246,6 +246,14 @@ transport snapshots otherwise exact. Ordinary restart retained resolved history 
 no replay/pending action; both exits 0, writer lock reopened. Empty/pre-publication
 and foreign/stale cases still in progress. No product patch; G02/G06 partial.
 
+### November 7 owned-lock recovery — boundary cases passed, negative cases ongoing
+
+[Recovery package steps 3–4](reports/G06_NATIVE_OWNED_CONFIG_LOCK_2026-11-07.md): native
+LockCreated empty-lock and PublicationPending candidate-lock recoveries both returned
+aborted/unchanged, removed only receipt-proven config.lock, preserved original config
+and all other repo/remote/transport files/modes. Both normal exits 0 and writer locks
+reopened. Foreign-lock/stale-fingerprint negative cases continue; package not yet closed.
+
 ## Safety, execution and evidence rules
 
 - Perform interaction manually or through an organization-permitted native testing

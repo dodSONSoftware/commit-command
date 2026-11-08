@@ -52,3 +52,11 @@ Fresh authoritative and native confirmation proposed abort_unpublished and retur
 aborted/unchanged. Only owned config.lock disappeared; all other repository, bare
 remote and transport-artifact file/mode baselines matched. Normal Quit 0 and writer
 lock reopened. Pre-publication and foreign/stale cases continue below.
+
+### Step 4 — PublicationPending native recovery passed
+
+Actual pre-rename journal and ready lock inspected natively. Independent confirmation
+approved only abort_unpublished; result aborted/unchanged. Candidate config was not
+published or replayed; only owned config.lock removed. All other repository/remote/
+transport file/mode baselines matched, normal Quit 0 and writer lock reopened.
+Foreign-lock and stale-fingerprint refusal, followed by clean owned recovery, remain.

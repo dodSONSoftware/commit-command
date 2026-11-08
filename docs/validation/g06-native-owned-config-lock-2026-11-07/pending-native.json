@@ -1,0 +1,10 @@
+{
+  "startup_attention_notice": true,
+  "native_phase": "publication_pending",
+  "native_action": "abort_unpublished",
+  "native_result": "aborted/unchanged",
+  "original_config_preserved": true,
+  "only_owned_lock_removed": true,
+  "exit_code": 0,
+  "writer_lock_reopened": true
+}
