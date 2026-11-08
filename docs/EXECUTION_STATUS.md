@@ -7,6 +7,16 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G05 pre-publication host crash — first restart passed
+
+[Distinct pre-publication package](reports/G05_NATIVE_BATCH_PREPUBLICATION_2026-11-08.md):
+same authorized alpha/beta, new explicit dirty fixture baseline. Fresh native batch
+approval reached publication_pending then SIGKILL -9. All heads unchanged, beta/control
+exact. First ordinary restart displayed interrupted/unconfirmed state without replay;
+exact crash files/modes and prior/new records preserved; Quit 0. Separate guarded
+cleanup/final restart remain next. Earlier fixture current-state oracles are historical
+after this intentional setup. No new trust, guard relaxation or push.
+
 ### November 8 G05 corrected final preservation — passed
 
 [Corrected final native repeat](reports/G05_NATIVE_BATCH_HOST_CRASH_2026-11-08.md):

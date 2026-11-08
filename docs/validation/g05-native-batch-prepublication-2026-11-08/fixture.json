@@ -1,0 +1,31 @@
+{
+  "root": "/private/tmp/gitfleet-m3-native-g05-batch-w8awkopg",
+  "workspace_root": "/private/tmp/gitfleet-m3-native-g05-batch-w8awkopg/workspace",
+  "state": "/private/tmp/gitfleet-m3-native-g05-batch-w8awkopg/state",
+  "workspace": "a05f8ecb-763d-4bd0-83fc-a8fe12154854",
+  "entries": {
+    "/private/tmp/gitfleet-m3-native-g05-batch-w8awkopg/workspace/gitfleet-batch/alpha": "d1d11b51-dda3-4279-8888-fedabfc8b058",
+    "/private/tmp/gitfleet-m3-native-g05-batch-w8awkopg/workspace/gitfleet-batch/unselected": "fa373385-6117-4bcd-86f1-9f7c10ecaa1d",
+    "/private/tmp/gitfleet-m3-native-g05-batch-w8awkopg/workspace/gitfleet-batch/beta": "fff81519-2b39-4187-b85b-bec43cf71dd2"
+  },
+  "heads": {
+    "alpha": "8ad25e1867b319265fb2d60cd12be0c1e3b92508",
+    "beta": "5676b51c067b6ae7901c2529190ed1aa39de280c",
+    "unselected": "46c7f28bc26172786276e1e9418985b6dd8dc56d"
+  },
+  "app": "/private/tmp/gitfleet-m3-native-g05-batch-w8awkopg/Commit Command Before Publication Fault.app",
+  "ordinary_app": "/private/tmp/gitfleet-m3-native-g05-batch-w8awkopg/Commit Command Before Publication Ordinary.app",
+  "binary_sha256": "102b9429cefb03faa47ee7ac1abee8d2f9718574885fb587be62f9e7514e3f88",
+  "ordinary_sha256": "38654141986187c60e3ffdc69cefe340ae8ecb7d5b9c36af3a0da40e4fc89339",
+  "features": [
+    "custom-protocol",
+    "desktop-writes",
+    "native-acceptance-support"
+  ],
+  "source_commit": "d1569c730de8e9f62237750e28adcaf86ec924ac",
+  "source_hashes": {
+    "app/core/src/process.rs": "0b8c351fba83f9af60cd243ad4a0a33e4001330da3e827504207db7e0961531c",
+    "app/core/src/diff.rs": "20d49bcca2cfa0f23b44cbe4bf263e51bb1bc0e57cf9e1f3453e5cfc2cb43e35"
+  },
+  "preparation": "operator-created dirty fixture content after prior completed case; earlier current-state oracles are now historical"
+}

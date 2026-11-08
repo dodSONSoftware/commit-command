@@ -1,0 +1,8 @@
+{
+  "host_exit": -9,
+  "ordinary_exit": 0,
+  "all_heads_unchanged": true,
+  "exact_files_modes_preserved_on_restart": true,
+  "prior_and_new_operations_unchanged_no_replay": true,
+  "native_publication_pending_unconfirmed_visible": true
+}
