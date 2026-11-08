@@ -1,0 +1,52 @@
+{
+  "copy": "/private/tmp/gf-index-oracle-dtxq0b7k/copy",
+  "results": [
+    {
+      "args": [
+        "diff",
+        "--cached",
+        "--name-only"
+      ],
+      "exit": 0,
+      "before": "7f7dd0a2cf826765d3be9dacae034541a0676e393f1919fc8870c36dc9ae82be",
+      "after": "7f7dd0a2cf826765d3be9dacae034541a0676e393f1919fc8870c36dc9ae82be",
+      "index_written": false,
+      "mode": "0o600"
+    },
+    {
+      "args": [
+        "diff",
+        "--name-only"
+      ],
+      "exit": 0,
+      "before": "7f7dd0a2cf826765d3be9dacae034541a0676e393f1919fc8870c36dc9ae82be",
+      "after": "0f878ceae0dcff487a371fdda3c03c396777bea405ae69ee59b2e634f80513b3",
+      "index_written": true,
+      "mode": "0o644"
+    },
+    {
+      "args": [
+        "--no-optional-locks",
+        "diff",
+        "--name-only"
+      ],
+      "exit": 0,
+      "before": "7f7dd0a2cf826765d3be9dacae034541a0676e393f1919fc8870c36dc9ae82be",
+      "after": "0f878ceae0dcff487a371fdda3c03c396777bea405ae69ee59b2e634f80513b3",
+      "index_written": true,
+      "mode": "0o644"
+    },
+    {
+      "args": [
+        "status",
+        "--porcelain"
+      ],
+      "exit": 0,
+      "before": "7f7dd0a2cf826765d3be9dacae034541a0676e393f1919fc8870c36dc9ae82be",
+      "after": "7f7dd0a2cf826765d3be9dacae034541a0676e393f1919fc8870c36dc9ae82be",
+      "index_written": false,
+      "mode": "0o600"
+    }
+  ],
+  "configured_diff_preserves_bytes_mode": true
+}

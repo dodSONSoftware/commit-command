@@ -7,7 +7,18 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
-### November 8 G05 native partial-batch crash/recovery/retry — passed
+### November 8 final index-preservation correction — validation in progress
+
+Final restart oracle failed on beta index bytes/mode; 1fef386 incorrectly proceeded
+to commit a pass statement after the failed command. That exact-preservation claim
+is withdrawn pending corrected repeat. Operation/batch payloads stayed exact.
+Disposable-copy probe proves git diff refreshes the index even with optional locks
+disabled; the oracle took its baseline before that command. A focused Core regression
+also reproduced the read-only diff defect (ConcurrentChange). Explicit
+`diff.autoRefreshIndex=false` is now under validation in Core and oracle. Native crash,
+index recovery and beta-only retry proofs remain; final exact restart is not yet a pass.
+
+### November 8 G05 native partial-batch crash/recovery/retry — final preservation pending
 
 [Actual crash package](reports/G05_NATIVE_BATCH_HOST_CRASH_2026-11-08.md): authorized
 alpha/beta exact batch reached first ref update then SIGKILL -9. First ordinary
@@ -16,7 +27,9 @@ Separate native guarded index-only recovery confirmed alpha publication. Fresh
 unfinished-only selection/review/approval committed beta alone; alpha byte/mode
 snapshot untouched, one commit per selected repository, control exact/untrusted.
 Final ordinary restart retained both histories with preparation disabled and exact
-files/operation/batch payloads; exits 0, integrity and lock reopen passed. New labels
+operation/batch payloads; beta index differed after the oracle diff refreshed it.
+Exact final file preservation is withdrawn pending corrected repeat. Exits 0,
+integrity and lock reopen passed. New labels
 natively verified. No guard/product patch/push/default change; broader G05 remains open.
 
 ### November 8 G05 uncertain publication display — fixed, crash case pending

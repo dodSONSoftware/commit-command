@@ -69,7 +69,7 @@ Exactly the authorized pair has trust, SQLite integrity ok. Native unfinished-on
 selection reduced the composer to beta alone. See verify-recovery.json and the alpha
 snapshot guarding against any later retry mutation. Fresh beta execution remains next.
 
-## Unfinished-only fresh retry and final ordinary restart — passed
+## Unfinished-only fresh retry — passed; initial final-preservation claim withdrawn
 
 Fresh batch ea0e07c1-b56b-4c84-bd98-55622295521f contained beta only, one exact file.txt
 patch, same reviewed message and zero blockers. Separate native approval completed
@@ -83,9 +83,20 @@ rewritten as though the interrupted original execution had resumed.
 
 Final ordinary restart visibly retained successful beta-only and interrupted-original
 history, alpha/beta clean, control dirty, only beta selected, native preparation
-disabled. After Quit exit 0, exact repository bytes/modes and all operation/batch
-payloads matched the post-retry baseline. No replay, SQLite integrity ok, exactly two
-authorized trusts, writer-lock reopen passed. Native recovery process also exited 0.
-No new product changes or push. This closes the selected actual partial-batch host
-crash/index recovery/unfinished-only retry case, not G05 in its entirety. The new
-uncertainty presentation is natively verified in both bulk and operation history.
+disabled. Quit and native recovery exits were 0. Operation/batch payloads stayed
+exact, integrity and scoped trust checks passed. However, beta index hash/mode
+changed relative to the recorded baseline. Commit 1fef386 incorrectly proceeded
+after that assertion failure and stated exact preservation; that statement is
+withdrawn. Actual crash, index recovery, one commit per repository and beta-only retry
+remain proven; final exact restart awaits a corrected repeat.
+
+The baseline was captured before the oracle ran git diff --name-only. A separate
+copy using the retained reconciled index reproduced this command rewriting index
+bytes and 0600 to 0644 despite GIT_OPTIONAL_LOCKS=0 and --no-optional-locks. Cached
+diff and status did not write. Explicit diff.autoRefreshIndex=false prevented it.
+See oracle-index-probe.json. The original baseline is preserved; the corrected
+oracle also checks its own before/after snapshot and uses separately named
+post-oracle-correction files. It does not silently overwrite the failed baseline.
+A fresh native repeat is required before accepting exact final preservation.
+Core's read-only diff reproduced the same auto-refresh defect; its separate fix
+and validation are in progress. No guard was relaxed and no push occurred.
