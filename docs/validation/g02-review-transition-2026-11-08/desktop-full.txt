@@ -1,0 +1,108 @@
+git version 2.56.0
+rustc 1.99.1 (58cf8f9c3 2026-10-13)
+cargo 1.99.1 (5f94df478 2026-08-27)
+v22.22.3
+10.9.8
+
+> gitfleet-desktop@0.1.1 typecheck
+> tsc --noEmit
+
+
+> gitfleet-desktop@0.1.1 lint
+> eslint . --max-warnings 0
+
+
+> gitfleet-desktop@0.1.1 contracts
+> node scripts/contracts.mjs --check
+
+
+> gitfleet-desktop@0.1.1 format:check
+> prettier --check src scripts *.json *.ts *.html
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> gitfleet-desktop@0.1.1 test
+> vitest run
+
+
+ RUN  v4.1.12 /Users/randydodson/Documents/_code/git-fleet/app/desktop
+
+
+ Test Files  23 passed (23)
+      Tests  91 passed (91)
+   Start at  13:56:46
+   Duration  4.79s (transform 1.46s, setup 1.73s, import 4.95s, tests 8.20s, environment 14.13s)
+
+
+> gitfleet-desktop@0.1.1 build
+> tsc --noEmit && vite build
+
+vite v7.3.7 building client environment for production...
+transforming...
+✓ 66 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                            0.58 kB │ gzip:     0.35 kB
+dist/review.html                           0.61 kB │ gzip:     0.36 kB
+dist/assets/banner-dark-CHLMoucy.svg   1,564.17 kB │ gzip: 1,184.09 kB
+dist/assets/banner-light-Cvs05R9C.svg  1,564.17 kB │ gzip: 1,184.09 kB
+dist/assets/review-DAdDXWwp.css            0.85 kB │ gzip:     0.49 kB
+dist/assets/main-B7yCCK3P.css             17.15 kB │ gzip:     4.13 kB
+dist/assets/core-BqmcAG5b.js               1.54 kB │ gzip:     0.80 kB
+dist/assets/review-D5509lTd.js             2.01 kB │ gzip:     1.01 kB
+dist/assets/main-B6qFl4ba.js             337.09 kB │ gzip:   100.27 kB
+✓ built in 459ms
+   Compiling gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.42s
+   Compiling gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.45s
+     Running unittests src/main.rs (src-tauri/target/debug/deps/gitfleet_desktop-7eea975624f9a3b3)
+
+running 13 tests
+test window_state::tests::minimum_dimensions_follow_destination_scale_and_fit_small_work_areas ... ok
+test window_state::tests::saved_geometry_fits_changed_display_and_preserves_valid_position ... ok
+test tests::production_configuration_has_no_remote_plugins_or_broad_permissions ... ok
+test shutdown::tests::close_snapshot_requires_exact_token_generation_and_is_consumed_once ... ok
+test tests::queue_dialog_and_shutdown_boundaries_fail_closed ... ok
+test host_options::tests::startup_requires_complete_explicit_ssh_policy_without_changing_default ... ok
+test host_options::tests::https_helper_policy_is_explicit_complete_and_contains_no_password_option ... ok
+test tests::renderer_reload_revokes_native_context_and_requests_core_reset ... ok
+test security::tests::actual_caller_and_page_are_required ... ok
+test shutdown::tests::malformed_unknown_oversized_and_incomplete_snapshots_are_rejected ... ok
+test tests::bulk_review_uses_the_same_write_gate_as_individual_proposals ... ok
+test tests::strict_envelope_rejects_oversize_version_unknown_fields_and_approval_json ... ok
+test tests::actual_generated_command_acl_separates_main_review_and_unprivileged_views ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+   Compiling gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.56s
+     Running unittests src/main.rs (src-tauri/target/debug/deps/gitfleet_desktop-48e0f9933c3d8fb3)
+
+running 16 tests
+test native_acceptance::tests::renderer_pid_guard_refuses_groups_system_and_host ... ok
+test window_state::tests::minimum_dimensions_follow_destination_scale_and_fit_small_work_areas ... ok
+test window_state::tests::saved_geometry_fits_changed_display_and_preserves_valid_position ... ok
+test native_acceptance::tests::refuses_ordinary_or_unmarked_state ... ok
+test tests::production_configuration_has_no_remote_plugins_or_broad_permissions ... ok
+test host_options::tests::startup_requires_complete_explicit_ssh_policy_without_changing_default ... ok
+test host_options::tests::https_helper_policy_is_explicit_complete_and_contains_no_password_option ... ok
+test shutdown::tests::close_snapshot_requires_exact_token_generation_and_is_consumed_once ... ok
+test tests::queue_dialog_and_shutdown_boundaries_fail_closed ... ok
+test tests::renderer_reload_revokes_native_context_and_requests_core_reset ... ok
+test shutdown::tests::malformed_unknown_oversized_and_incomplete_snapshots_are_rejected ... ok
+test security::tests::actual_caller_and_page_are_required ... ok
+test native_acceptance::tests::fixture_guard_requires_exact_marker_and_canonical_state ... ok
+test tests::bulk_review_uses_the_same_write_gate_as_individual_proposals ... ok
+test tests::strict_envelope_rejects_oversize_version_unknown_fields_and_approval_json ... ok
+test tests::actual_generated_command_acl_separates_main_review_and_unprivileged_views ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+    Checking gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.09s
+    Checking gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.99s
+   Compiling gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri)
+    Finished `release` profile [optimized] target(s) in 7.44s

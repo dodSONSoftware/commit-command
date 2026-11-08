@@ -558,6 +558,11 @@ fn open_review(app: &tauri::AppHandle, host: Arc<Host>, display: &ReviewDisplay,
     let app = app.clone();
     let runner = app.clone();
     let _ = runner.run_on_main_thread(move || {
+        #[cfg(feature = "native-acceptance-support")]
+        native_acceptance::record(
+            "review_open_requested",
+            json!({"id":id,"generation":generation}),
+        );
         if host.generation.load(std::sync::atomic::Ordering::Acquire) != generation {
             return;
         }
@@ -565,6 +570,8 @@ fn open_review(app: &tauri::AppHandle, host: Arc<Host>, display: &ReviewDisplay,
             *current = Some(id.clone());
         }
         if let Some(old) = app.get_webview_window("review") {
+            #[cfg(feature = "native-acceptance-support")]
+            native_acceptance::record("review_waiting_for_old_window", json!({"id":id}));
             // Close is asynchronous. The Destroyed run event requests the still-current
             // review again after Tauri releases the label, rather than racing its teardown.
             let _ = close_review(&old);
@@ -586,10 +593,14 @@ fn open_review(app: &tauri::AppHandle, host: Arc<Host>, display: &ReviewDisplay,
                 .on_new_window(|_, _| tauri::webview::NewWindowResponse::Deny)
                 .build();
         if let Ok(window) = built {
+            #[cfg(feature = "native-acceptance-support")]
+            native_acceptance::record("review_window_built", json!({"id":id}));
             let sender = host.sender.clone();
             let host = host.clone();
             window.on_window_event(move |event| {
                 if matches!(event, tauri::WindowEvent::Destroyed) {
+                    #[cfg(feature = "native-acceptance-support")]
+                    native_acceptance::record("review_window_destroyed", json!({"id":id}));
                     let _ = sender.try_send(Task::CancelReview(id.clone()));
                     if let Ok(mut current) = host.review.lock() {
                         if current.as_ref() == Some(&id) {
@@ -628,7 +639,17 @@ fn worker(mut core: Application, rx: mpsc::Receiver<Task>, app: tauri::AppHandle
                 }
                 let generation = host.generation.load(std::sync::atomic::Ordering::Acquire);
                 let previous_epoch = core.epoch();
+                #[cfg(feature = "native-acceptance-support")]
+                native_acceptance::record(
+                    "request_started",
+                    json!({"job":job,"kind":serde_json::to_value(&request).ok().and_then(|v|v.get("kind").cloned())}),
+                );
                 let result = core.request_with_cancellation(epoch, request, cancel);
+                #[cfg(feature = "native-acceptance-support")]
+                native_acceptance::record(
+                    "request_finished",
+                    json!({"job":job,"ok":result.is_ok(),"epoch":core.epoch()}),
+                );
                 if core.epoch() != previous_epoch {
                     if let Ok(mut review) = host.review.lock() {
                         *review = None;
@@ -691,6 +712,11 @@ fn worker(mut core: Application, rx: mpsc::Receiver<Task>, app: tauri::AppHandle
                 });
             }
             Ok(Task::ShowReview { id, generation }) => {
+                #[cfg(feature = "native-acceptance-support")]
+                native_acceptance::record(
+                    "review_show_queued",
+                    json!({"id":id,"generation":generation}),
+                );
                 if generation == host.generation.load(std::sync::atomic::Ordering::Acquire) {
                     if let Ok(display) = core.review(&id) {
                         open_review(&app, host.clone(), &display, generation);
@@ -720,7 +746,13 @@ fn worker(mut core: Application, rx: mpsc::Receiver<Task>, app: tauri::AppHandle
                 let _ = reply.send(result);
             }
             Ok(Task::CancelReview(id)) => {
-                if core.cancel_review(&id).is_ok() {
+                let cancelled = core.cancel_review(&id).is_ok();
+                #[cfg(feature = "native-acceptance-support")]
+                native_acceptance::record(
+                    "review_cancel_processed",
+                    json!({"id":id,"cancelled":cancelled}),
+                );
+                if cancelled {
                     host.completed
                         .fetch_add(1, std::sync::atomic::Ordering::Release);
                 }

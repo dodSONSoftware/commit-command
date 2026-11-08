@@ -1,0 +1,11 @@
+{
+  "diagnostic_round": 1,
+  "one_new_middle_and_parent_commit": true,
+  "leaf_no_new_commit_checkout_metadata_exact": true,
+  "all_working_files_modes_unchanged": true,
+  "control_exact_untrusted": true,
+  "correct_gitlinks_messages_content": true,
+  "previous_records_unchanged": true,
+  "exact_three_trusts": true,
+  "integrity": "ok"
+}

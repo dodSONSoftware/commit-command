@@ -1,0 +1,34 @@
+[
+  {
+    "id": "b1dd9019-742b-450c-84ca-18b959d6f372",
+    "phase": "needs_reauthorization",
+    "worktrees": [
+      "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle",
+      "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent"
+    ],
+    "operations": [
+      {
+        "id": "2b687d08-9612-4824-8d46-321c7160e266",
+        "phase": "complete",
+        "new_head": "949253cc316c4811271f4eb272f1196a8027d10e",
+        "published": true,
+        "reconciled": true,
+        "message": "G02 review transition diagnostic round 1\n",
+        "patch": "diff --git a/file.txt b/file.txt\nindex eaf1595..cae590f 100644\n--- a/file.txt\n+++ b/file.txt\n@@ -1 +1 @@\n-Reviewed native three-level content\n+Review transition diagnostic round 1\n",
+        "hooks": [],
+        "signing": null
+      },
+      {
+        "id": "38ebfb26-2e16-4fdb-be42-9f2ce02c2162",
+        "phase": "cancelled_before_publication",
+        "new_head": null,
+        "published": false,
+        "reconciled": false,
+        "message": "G02 review transition diagnostic round 1\n",
+        "patch": "diff --git a/file.txt b/file.txt\nindex eaf1595..cae590f 100644\n--- a/file.txt\n+++ b/file.txt\n@@ -1 +1 @@\n-Reviewed native three-level content\n+Review transition diagnostic round 1\n",
+        "hooks": [],
+        "signing": null
+      }
+    ]
+  }
+]

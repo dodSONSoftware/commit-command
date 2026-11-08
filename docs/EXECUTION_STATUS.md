@@ -7,6 +7,20 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G02/G05 completed-batch review transition — traced repeat passed, finding open
+
+[Instrumented diagnostic](reports/G02_REVIEW_TRANSITION_2026-11-08.md): fixture-only
+host tracing records request kinds and review IDs, not repository content/credentials.
+Repeated completed-child batch → close → select unfinished parent → fresh review,
+with separately approved local commits in existing authorized paths. Trace shows old
+consumed review cancellation rejected; fresh review built once and completed. No
+self-cancellation reproduced. Exact old records/leaf metadata/control preserved;
+rebuilt ordinary restart read-only/no replay, both exits 0/integrity/lock reopen passed.
+Full desktop validation 91 renderer / 13 default-host / 16 all-feature host, type/lint/
+contracts/format/build/strict Clippy passed. Original unexpected cancellation stays
+open; no speculative runtime fix. Next distinct G05 work: malformed/cyclic graph
+refusal coverage, then remaining native selection/revocation/accessibility criteria.
+
 ### November 8 G05 native three-level chain — selected execution/restart passed
 
 [Native package](reports/G05_NATIVE_THREE_LEVEL_2026-11-08.md): exact authorized

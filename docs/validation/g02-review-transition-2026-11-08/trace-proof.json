@@ -1,0 +1,7 @@
+{
+  "review_windows_built": 2,
+  "old_consumed_review_cancellation_rejected": true,
+  "fresh_review_self_cancellation": false,
+  "request_and_review_ids_only": true,
+  "original_finding": "not reproduced; remains open"
+}
