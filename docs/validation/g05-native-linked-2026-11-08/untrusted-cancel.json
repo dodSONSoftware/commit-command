@@ -1,0 +1,47 @@
+{
+  "repository_exact_bytes_modes": true,
+  "native_review": "2 selected; 1 blocked; untrusted_repository on linked-parent",
+  "batch": {
+    "version": 1,
+    "id": "2968c5af-135c-4f79-8dc3-ead2e4e6945d",
+    "workspace": "02447833-15bd-427f-b507-97d2dc4ff948",
+    "created_at_ms": 1794160305092,
+    "phase": "cancelled",
+    "issue": null,
+    "items": [
+      {
+        "worktree": "3b02428c-0b46-4f68-b823-59b2585fa35b",
+        "path": {
+          "encoding": "utf8",
+          "value": "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace/parent"
+        },
+        "dependencies": [],
+        "operation": "df3a8669-eef8-48ef-8f13-8ee0ba4fe682",
+        "issue": null
+      },
+      {
+        "worktree": "6b75835b-3029-4d73-8756-af2ed9a566bf",
+        "path": {
+          "encoding": "utf8",
+          "value": "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace/linked-parent"
+        },
+        "dependencies": [],
+        "operation": null,
+        "issue": {
+          "kind": "untrusted_repository",
+          "message": "Explicit worktree trust is required"
+        }
+      }
+    ]
+  },
+  "trust": [
+    [
+      "3b02428c-0b46-4f68-b823-59b2585fa35b",
+      0
+    ],
+    [
+      "8e41c396-4757-496b-931b-10c0873f2a9e",
+      0
+    ]
+  ]
+}

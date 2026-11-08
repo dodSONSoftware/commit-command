@@ -1,0 +1,11 @@
+{
+  "batch_complete": true,
+  "one_commit_per_selected_branch": true,
+  "exact_contents_messages": true,
+  "only_file_txt_committed": true,
+  "excluded_gitlink_unchanged": true,
+  "control_and_child_exact_bytes_modes": true,
+  "exact_three_authorized_trusts": true,
+  "integrity": "ok",
+  "restart_no_replay_exact_preservation": true
+}

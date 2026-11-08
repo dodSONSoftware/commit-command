@@ -1,0 +1,1 @@
+2026-11-08 11:51:45.928 gitfleet-desktop[70579:950130] error messaging the mach port for IMKCFRunLoopWakeUpReliable

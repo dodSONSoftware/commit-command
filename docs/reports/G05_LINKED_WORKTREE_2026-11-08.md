@@ -25,3 +25,25 @@ execution because it deliberately changes fixture working content.
 
 G05 remains partial. This checkpoint proves Core linked-checkout batch isolation;
 it does not prove native execution or complete the gate.
+
+## Native completion
+
+Specific authorization was received for the new linked checkout only (and separately
+for the named G06 fixture). The native untrusted review showed two selected/one
+blocked; Cancel preserved exact fixture bytes/modes and the original two trusts.
+Then authoritative and OS-native confirmation granted only linked-parent trust.
+Fresh batch `fb0e724f-5d0f-4bbf-a805-72903c3e29a4` reviewed the two exact file patches,
+independent messages, expected common starting HEAD, and zero blocked items.
+Native exact approval published main `f369e757e416e34e80d381d33b8340ebb13f5928`
+and linked branch `e6802d8ab7dcc19c6a6054972f75830390ab2c9f`. Both operations
+completed with reconciled indexes. One commit per selected branch, only file.txt
+changed, exact messages/content, parent gitlink unchanged. Control, child checkout
+and submodule metadata retained exact bytes/modes; trust set is exactly the three
+authorized worktrees. No push or signing/hook execution configured.
+
+Ordinary restart visibly retained complete/cancelled history and disabled native
+bulk preparation. Post-restart repository bytes/modes and all operation/batch records
+matched the post-execution baseline exactly: no replay. SQLite integrity and CLI
+writer-lock reopen passed. See verify-before-restart.json, verify-after-restart.json,
+untrusted-cancel.json and lock-reopen.json. Earlier preparation-pending statements
+above describe the first checkpoint; this follow-up closes this native case only.

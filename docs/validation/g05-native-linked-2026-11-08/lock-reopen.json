@@ -1,0 +1,25 @@
+[
+  {
+    "discovery": {
+      "excluded_names": [
+        "node_modules",
+        ".venv",
+        "target",
+        "dist",
+        "build",
+        ".gitfleet-rust-lab"
+      ],
+      "excluded_patterns": []
+    },
+    "display_root": {
+      "encoding": "utf8",
+      "value": "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace"
+    },
+    "id": "02447833-15bd-427f-b507-97d2dc4ff948",
+    "name": "G05 submodule acceptance",
+    "root": {
+      "encoding": "utf8",
+      "value": "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace"
+    }
+  }
+]
