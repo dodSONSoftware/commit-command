@@ -82,12 +82,14 @@ startup presentation is reopened; prior document-readiness passes remain bounded
 Next investigate the retained post-load blank-window evidence. No source fix claimed.
 Current gate dispositions remain in EXECUTION_STATUS.
 
-### November 8 native SHA-256 import — baseline prepared
+### November 8 native SHA-256 import — publication passed, restart pending
 
 [Offline import package](reports/G06_NATIVE_SHA256_IMPORT_2026-11-08.md): retained
 verified capture/trust and absent tracking ref validated; server remains stopped.
 Selected case tests separate import authority and exact ref creation; objects already
-exist locally. Native Cancel/import/restart remain pending. G02/G06 remain partial.
+exist locally. Cancel preserved files; fresh native offline import completed with
+only the exact tracking ref and one reflog entry added, no network. Ordinary restart
+remains pending. G02/G06 remain partial.
 
 ### November 8 native SHA-256 observation/download — complete
 

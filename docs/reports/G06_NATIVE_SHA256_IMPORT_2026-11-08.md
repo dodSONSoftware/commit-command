@@ -14,3 +14,26 @@ and incorrectly assumed its error exit code; quiet existence probe passed.
 
 Native Cancel, fresh import approval, exact ref/reflog and restart remain next.
 No product patch or new trust grant. [Evidence](../validation/g06-native-sha256-import-2026-11-08/).
+
+## Step 2 — Cancel and fresh native offline import passed
+
+Initial review Cancel preserved all repository files and produced no network request.
+A subsequent confirmation attempt encountered a UI-change automation refusal; durable
+history briefly appeared pending and ultimately recorded cancelled/not_attempted with
+objects_imported=false. It was not counted as an approved operation. Another fresh
+review/independent native confirmation completed: objects_imported=true, ref result
+updated. Native history displays one complete and two cancelled imports with full OID.
+
+Exact independent file/mode delta is only refs/remotes/origin/main and its reflog.
+Tracking ref equals the captured 64-character SHA256 OID; reflog has one line from
+64 zeroes to that OID. HEAD, config/upstream, index, working/untracked files, existing
+objects, tags and FETCH_HEAD remain baseline-exact. Bare remote, original isolated
+capture and prior journals unchanged; zero new requests. Import-created isolated
+scratch artifacts are confined to the completed import ID. Original trust row stays
+current; no new trust. SQLite integrity ok. Existing objects did not require new
+managed object files, so no missing-object transfer claim. Oracle corrections covered
+expected scratch artifacts and the actual expected_oid field; no product fix.
+
+Ordinary restart/no replay remains next. Earlier SHA256 observation oracle's no-import
+precondition describes its historical checkpoint; use this package's current oracle
+after this intentionally authorized tracking-ref creation.

@@ -1,0 +1,62 @@
+{
+  ".git/COMMIT_EDITMSG": {
+    "sha256": "04acd04a9d1756ff6ff578875b9447f6fad96097c7704d330f38fac92f998055",
+    "mode": 420
+  },
+  ".git/HEAD": {
+    "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+    "mode": 420
+  },
+  ".git/config": {
+    "sha256": "5fa9324eaea8c392a32eccc00c5a7da4ce052764336ae4232d23541160285e0c",
+    "mode": 420
+  },
+  ".git/index": {
+    "sha256": "80e12ccaf743174425dc0c40c645301b66d7a4af4d9f015213029e9ecde6fea6",
+    "mode": 420
+  },
+  ".git/logs/HEAD": {
+    "sha256": "b82ffd27d79fcb504e4c951ef5acfcd1337d93cfcb229163ae78186213b3642e",
+    "mode": 420
+  },
+  ".git/logs/refs/heads/main": {
+    "sha256": "b82ffd27d79fcb504e4c951ef5acfcd1337d93cfcb229163ae78186213b3642e",
+    "mode": 420
+  },
+  ".git/logs/refs/remotes/origin/main": {
+    "sha256": "d3993de0a9ee0560e5230fd4493e38cad78d06fb401cd53cf06164a8db35d2fb",
+    "mode": 420
+  },
+  ".git/objects/23/8a761ac64ee7b81496fedf82a4729bef640287b7286b96a02383e24e8dc998": {
+    "sha256": "a6ca69c4f1a4eeed2df9b10e5ffe22215354891a3f070098dd4930bb3e2c731b",
+    "mode": 292
+  },
+  ".git/objects/3f/f889c96ce66897fe7a7b1c26358bc715a52dc5dee3364cd1f7e5e0545a40cd": {
+    "sha256": "592ac135c70315f322e80f24e05da1b0a08a712d4bbb9b2b3f7c6152a4a3cc93",
+    "mode": 292
+  },
+  ".git/objects/97/21587f6f022ae80bf77386959fdbb75e39e7f903d6a141eb8ffcfbe3407a85": {
+    "sha256": "c8a54708099e25cb9330e08e807a9e76981852f656a1ec693d2d0eaab749abb3",
+    "mode": 292
+  },
+  ".git/objects/f9/d9043e05d51519c22af20d276e4d9577e2f7125988e8080560dbdd8cba2d58": {
+    "sha256": "34ddb5afaf48d4591dd5fca0ba3c65a496faaf819fe79d88be84dc21809ae7d4",
+    "mode": 292
+  },
+  ".git/refs/heads/main": {
+    "sha256": "b4af7f2b5c1d319f5844c4059bec1b628cbe45a73f2251961695cdec93c74b12",
+    "mode": 420
+  },
+  ".git/refs/remotes/origin/main": {
+    "sha256": "b4af7f2b5c1d319f5844c4059bec1b628cbe45a73f2251961695cdec93c74b12",
+    "mode": 420
+  },
+  "fixture.txt": {
+    "sha256": "863a1577fb6f447df3e51d97ef28de00d3e9dcd85e056893e4c75003ecc35a4b",
+    "mode": 420
+  },
+  "untracked.txt": {
+    "sha256": "a46cb0e196168915bb8aa36cdb587f26640d71eb8fd88e2d431e5c950bcdab68",
+    "mode": 420
+  }
+}
