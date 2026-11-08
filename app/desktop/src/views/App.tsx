@@ -41,6 +41,7 @@ import {
 import { WorkspaceActivity } from "./WorkspaceActivity";
 import { HistoryGraph } from "./HistoryGraph";
 import { BulkCommit } from "./BulkCommit";
+import { RepositoryRemoteStatus } from "./RepositoryRemoteStatus";
 import { RemoteInspector } from "./RemoteInspector";
 import { OperationHistory } from "./OperationHistory";
 type Source = "index" | "working_tree";
@@ -877,7 +878,7 @@ export function App({ bridge }: { bridge: Bridge }) {
                         <th scope="col">Unstaged</th>
                         <th scope="col">Untracked</th>
                         <th scope="col">Last commit</th>
-                        <th scope="col">Tracking</th>
+                        <th scope="col">Remote status</th>
                         <th scope="col">Trust / status</th>
                       </tr>
                     </thead>
@@ -932,16 +933,7 @@ export function App({ bridge }: { bridge: Bridge }) {
                             </small>
                           </td>
                           <td>
-                            <span>
-                              {e.status?.tracking
-                                ? `↑ ${e.status.tracking.ahead ?? "?"} ↓ ${e.status.tracking.behind ?? "?"}`
-                                : "—"}
-                            </span>
-                            {e.status?.tracking && (
-                              <small className="table-path">
-                                Local tracking refs
-                              </small>
-                            )}
+                            <RepositoryRemoteStatus snapshot={e.status} />
                           </td>
                           <td>
                             <span

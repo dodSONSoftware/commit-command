@@ -1379,6 +1379,10 @@ export interface Snapshot {
   observed_at_ms: number;
   operations: string[];
   /**
+   * None in older persisted snapshots; Some(empty) means no configured remotes.
+   */
+  remotes?: string[] | null;
+  /**
    * Compatibility diagnostic only. Structured consumers use changes/counts.
    */
   status: string;

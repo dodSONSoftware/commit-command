@@ -392,6 +392,9 @@ pub struct Snapshot {
     pub counts: Counts,
     pub changes: Vec<Change>,
     pub tracking: Option<Tracking>,
+    /// None in older persisted snapshots; Some(empty) means no configured remotes.
+    #[serde(default)]
+    pub remotes: Option<Vec<String>>,
     pub operations: Vec<String>,
     pub last_commit: Option<crate::history::Commit>,
     pub generation: String,
@@ -514,6 +517,10 @@ pub fn snapshot_with_options(repo: &Path, options: &ReadOptions) -> Result<Snaps
                 });
             }
         }
+        let remotes = output_text(s.git(&["remote"])?)?
+            .lines()
+            .map(str::to_owned)
+            .collect();
         let refs = s.refs()?;
         let tracking = branch
             .as_ref()
@@ -581,6 +588,7 @@ pub fn snapshot_with_options(repo: &Path, options: &ReadOptions) -> Result<Snaps
             counts,
             changes,
             tracking,
+            remotes: Some(remotes),
             operations,
             last_commit,
             generation: s.generation.clone(),

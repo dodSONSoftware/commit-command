@@ -1124,3 +1124,14 @@ footer button {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
+
+.remote-status details {
+  max-width: 280px;
+  margin-top: 6px;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+  color: var(--muted);
+}
+.remote-status summary {
+  cursor: pointer;
+}

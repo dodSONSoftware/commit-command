@@ -7,6 +7,16 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 7 repository remote-status indicators
+
+[Remote-status report](reports/REPOSITORY_REMOTE_STATUS_2026-11-07.md): the overview
+table now shows no remote, missing upstream, local up-to-date/ahead/behind/diverged
+counts and unknown/unavailable states, with expandable configuration/comparison/time
+details. No automatic remote contact. Legacy snapshots remain unknown until local
+rescan. Full desktop checks passed (79 / 13 / 16 tests); Core inspection 12 passed,
+one existing filesystem ignore. Selected ordinary native presentation verified.
+This is inspection/UI work; G02/G06 and ordinary write enablement remain open.
+
 ### November 7 post-load startup follow-up
 
 [Diagnosis, patch and bounded retests](reports/G02_POST_LOAD_STARTUP_2026-11-07.md):

@@ -293,3 +293,46 @@ fn missing_promisor_object_cannot_launch_a_remote_helper() {
     );
     assert_eq!(before, tree_bytes(&f.root));
 }
+
+#[test]
+fn remote_presence_and_tracking_counts_are_local_and_backward_compatible() {
+    let f = Fixture::new();
+    f.commit_file();
+    let initial = inspection::snapshot(&f.repo).unwrap();
+    assert_eq!(initial.remotes, Some(vec![]));
+    let mut legacy = serde_json::to_value(&initial).unwrap();
+    legacy.as_object_mut().unwrap().remove("remotes");
+    let restored: inspection::Snapshot = serde_json::from_value(legacy).unwrap();
+    assert_eq!(restored.remotes, None);
+
+    // An unreachable URL demonstrates that inspection needs no remote connection.
+    f.git(&[
+        "remote",
+        "add",
+        "origin",
+        "https://example.invalid/unreachable.git",
+    ]);
+    let state = inspection::snapshot(&f.repo).unwrap();
+    assert_eq!(state.remotes, Some(vec!["origin".into()]));
+    assert!(state.tracking.is_none());
+    f.git(&["config", "branch.main.remote", "origin"]);
+    f.git(&["config", "branch.main.merge", "refs/heads/main"]);
+    let missing = inspection::snapshot(&f.repo).unwrap();
+    assert!(missing.tracking.unwrap().behind.is_none());
+    f.git(&["update-ref", "refs/remotes/origin/main", "HEAD"]);
+    let equal = inspection::snapshot(&f.repo).unwrap().tracking.unwrap();
+    assert_eq!((equal.ahead, equal.behind), (Some(0), Some(0)));
+    f.git(&["commit", "--allow-empty", "-qm", "local"]);
+    let ahead = inspection::snapshot(&f.repo).unwrap().tracking.unwrap();
+    assert_eq!((ahead.ahead, ahead.behind), (Some(1), Some(0)));
+    f.git(&["checkout", "-qb", "server", "HEAD~1"]);
+    f.git(&["commit", "--allow-empty", "-qm", "remote"]);
+    f.git(&["update-ref", "refs/remotes/origin/main", "HEAD"]);
+    f.git(&["checkout", "-q", "main"]);
+    let diverged = inspection::snapshot(&f.repo).unwrap().tracking.unwrap();
+    assert_eq!((diverged.ahead, diverged.behind), (Some(1), Some(1)));
+    f.git(&["update-ref", "refs/heads/main", "HEAD~1"]);
+    let behind = inspection::snapshot(&f.repo).unwrap().tracking.unwrap();
+    assert_eq!((behind.ahead, behind.behind), (Some(0), Some(1)));
+    assert_unchanged(&f);
+}
