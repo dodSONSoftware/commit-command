@@ -1,0 +1,19 @@
+{
+  "host_pid": 7893,
+  "host_signal": "SIGKILL",
+  "host_tool_exit_code": 1,
+  "original_hook_pid": 17367,
+  "original_child_pid": 17369,
+  "survived_host_crash": true,
+  "hook_finished_marker": "finished\n",
+  "hook_finished_mtime_ns": 1794101544231938289,
+  "final_original_processes_absent": true,
+  "external_hook_or_child_signal": false,
+  "first_valid_restart_exit_code": 0,
+  "second_valid_restart_exit_code": 0,
+  "first_valid_restart_blank_window": true,
+  "second_valid_restart_history_and_draft_verified": true,
+  "excluded_invalid_restart_option": "--state-dir rejected before startup; corrected to --data-dir",
+  "server_stopped": true,
+  "generated_private_key_removed": true
+}

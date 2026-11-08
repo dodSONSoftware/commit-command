@@ -1,0 +1,24 @@
+{
+  "actual_host_sigkill_while_running": true,
+  "preservation_oracles": [
+    "crashed",
+    "restarted",
+    "final"
+  ],
+  "hook_invocations": 1,
+  "automatic_replay": false,
+  "raw_phase": "running",
+  "native_audit_phase": "interrupted",
+  "published": false,
+  "hook_passed": false,
+  "original_hook_survived_and_finished": true,
+  "first_valid_restart_blank": true,
+  "second_valid_restart_draft_and_history_passed": true,
+  "reliable_first_restart_acceptance": "open",
+  "product_source_changed": false,
+  "automated_matrix_rerun": false,
+  "g02": "open",
+  "g06": "open",
+  "python_syntax_and_json_parse": "passed",
+  "py_compile_attempt": "blocked by external Python cache directory; replaced with in-memory ast.parse"
+}
