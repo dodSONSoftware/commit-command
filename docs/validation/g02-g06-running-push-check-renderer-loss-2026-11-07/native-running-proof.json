@@ -1,0 +1,12 @@
+{
+  "phase": "running",
+  "published": false,
+  "hook_invocations": 1,
+  "hook_pid": 68396,
+  "child_pid": 68397,
+  "observed_at_ns": 1794105713285009000,
+  "hook_started_mtime_ns": 1794105705521381175,
+  "saved_draft_verified_before_renderer_loss": true,
+  "live_processes_before_renderer_loss": "62193  1161 62193 Ss+  /private/tmp/gitfleet-m3-native-r3f_k7ew/Commit Command Running Renderer Acceptance.app/Contents/MacOS/gitfleet-desktop --data-dir /private/tmp/gitfleet-m3-native-r3f_k7ew/state --https-ca-file /private/tmp/gitfleet-m3-native-r3f_k7ew/certificate.pem\n68396 62193 68396 S    /bin/sh /private/tmp/gitfleet-m3-native-r3f_k7ew/workspace/parent/child/grand/.git/hooks/pre-push origin https://127.0.0.1:57308/grand.git\n68397 68396 68396 S    sleep 45\n",
+  "host_pid": 62193
+}

@@ -1,0 +1,19 @@
+{
+  "running_renderer_loss": {
+    "obsolete_review_closed": true,
+    "native_window_menu_only_main_after_recovery": true,
+    "exact_draft_restored_in_surviving_host": true,
+    "native_history": "Pre-push check cancelled; hook passed false; Inspection cancelled; no push authority",
+    "automatic_renderer_recovery": true
+  },
+  "subsequent_normal_restart": {
+    "host_pid": 69008,
+    "blank_window_observed": true,
+    "observations": "Multiple AX reads lacked HTML content; screenshot showed blank dark native client area. Audit nevertheless recorded Started/Finished hidden, then visible initial display.",
+    "independent_journal_draft_preservation": "passed",
+    "automatic_first_restart_presentation": "not passed",
+    "explicit_native_reload": "restored exact draft and cancelled history in the same host",
+    "source_fix_claimed": false,
+    "startup_finding": "reopened"
+  }
+}

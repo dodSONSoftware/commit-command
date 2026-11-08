@@ -1,0 +1,9 @@
+{
+  "actual_renderer_kill": "passed",
+  "host_pid": 62193,
+  "renderer_pid": 62196,
+  "renderer_reset_after_kill": "passed",
+  "restart_document_completed_and_displayed": true,
+  "explicit_reload_reset_on_restart": "passed",
+  "note": "Page completion/display audit does not prove painted content; native restart was blank until explicit reload."
+}

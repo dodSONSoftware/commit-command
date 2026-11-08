@@ -1,0 +1,41 @@
+{
+  "base_revision": "46f1996",
+  "product_source_changed": false,
+  "running_hook_proven": true,
+  "native_action": "Terminate actual main renderer process",
+  "host_survived_same_pid": 62193,
+  "renderer_killed_pid": 62196,
+  "original_hook_child_cleaned_before_natural_finish": true,
+  "raw_phase": "cancelled",
+  "hook_passed": false,
+  "published": false,
+  "automatic_renderer_recovery_draft_history": "passed",
+  "obsolete_review_closed": true,
+  "normal_restart_presentation": "failed: blank after Finished and initial display; explicit reload required",
+  "restart_explicit_reload_draft_history": "passed",
+  "reliable_startup_finding": "reopened",
+  "preservation_oracles": [
+    "recovered",
+    "restarted",
+    "final"
+  ],
+  "hook_invocations": 1,
+  "request_count": 1,
+  "host_exit_codes": [
+    0,
+    0
+  ],
+  "automated_matrix_rerun": false,
+  "prior_automated_counts": {
+    "renderer": 69,
+    "default_host": 13,
+    "all_feature_host": 16
+  },
+  "g02": "open, startup finding reopened",
+  "g06": "open; selected running-renderer-loss case passed",
+  "evidence_python_syntax": "passed",
+  "evidence_json_parse": "passed",
+  "source_and_artifact_provenance": "matched",
+  "report_and_provenance_links": "passed",
+  "native_event_assertions": "passed; paint/presentation verdict remains separate"
+}

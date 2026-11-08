@@ -1,0 +1,11 @@
+{
+  "surviving_host_later_cmd_q_exit": 0,
+  "restart_later_cmd_q_exit": 0,
+  "hook_child_still_absent": true,
+  "completion_marker_absent": true,
+  "final_elapsed_since_hook_start_ms": 148906.841825,
+  "external_host_hook_or_child_signal": false,
+  "exact_owned_tls_server_stopped": true,
+  "generated_private_key_removed": true,
+  "repositories_preserved": true
+}

@@ -345,6 +345,14 @@ confirmation Quit, workspace invalidation/dialog reuse, main close and ordered
 review replacement. A12–A17 remain partial for the remaining native renderer-reset,
 live caller, compatibility and recovery criteria; full gate closure is not inferred.
 
+Latest G02/G06 renderer-loss follow-up: [report](reports/G02_G06_RUNNING_PUSH_CHECK_RENDERER_LOSS_2026-11-07.md)
+verifies actual main-renderer loss during a proven running hook, same-host survival,
+hook/child cancellation before natural finish, obsolete review closure and automatic
+draft/cancelled-history recovery without replay. A later normal restart was blank
+after document Finished/initial display; explicit reload restored it. **Reliable
+startup presentation reopened**; readiness patch retained but broader acceptance
+not established. G02/G06 stay partial. No code change or new automated matrix run.
+
 Latest G06 manager/bypass follow-up: [native report](reports/G06_NATIVE_MANAGER_BYPASS_2026-11-07.md)
 verifies detected-manager Execute refusal before review, explicit BypassAll in native
 reviews, OS decline with consumed review, fresh approved bypass with hook not passed,

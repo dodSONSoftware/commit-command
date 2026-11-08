@@ -2,6 +2,11 @@
 
 **Premature empty-window display reproduced and fixed; first restart after a real running-hook host crash passed on the rebuilt artifact. G02/G06 remain open for their other criteria.**
 
+**Later counterevidence:** the [running-hook renderer-loss checkpoint](G02_G06_RUNNING_PUSH_CHECK_RENDERER_LOSS_2026-11-07.md)
+observed a blank normal restart despite this Finished/display gate; explicit reload
+recovered the content. Reliable startup presentation is reopened. This report's
+recorded passes remain historical and do not establish closure of that broader symptom.
+
 ## Diagnosis and change
 
 The [preceding crash checkpoint](G02_G06_RUNNING_PUSH_CHECK_CRASH_2026-11-07.md) recorded a blank first valid restart and recovery on a second launch. The retained fixture and original binary reproduced an empty native window on an ordinary launch; it subsequently populated without a relaunch. A further exact-host SIGKILL and first restart also recovered the saved draft. This isolates a reproducible startup exposure rather than establishing corrupt operation state or a permanently stuck renderer. The baseline record was committed as `a89ecc6`.

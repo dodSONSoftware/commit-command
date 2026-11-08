@@ -73,6 +73,13 @@ proposed/approved. Cancelled and complete records remained unpublished/not passe
 with zero hook execution and no restart replay. This closes selected native refusal/
 bypass interaction, not installed-manager Execute compatibility. Other G02/G06
 criteria retain their dispositions; no product code changed.
+[Actual renderer loss during running pre-push execution](reports/G02_G06_RUNNING_PUSH_CHECK_RENDERER_LOSS_2026-11-07.md)
+now passed cancellation/recovery in the surviving host: exact renderer kill, old
+hook/child absent before natural finish, stale review closed, saved draft and
+cancelled history restored with no replay. However the subsequent normal restart
+was blank despite document Finished/show and needed explicit reload. Reliable
+startup presentation is reopened; prior document-readiness passes remain bounded.
+Next investigate the retained post-load blank-window evidence. No source fix claimed.
 Current gate dispositions remain in EXECUTION_STATUS.
 
 ## Safety, execution and evidence rules

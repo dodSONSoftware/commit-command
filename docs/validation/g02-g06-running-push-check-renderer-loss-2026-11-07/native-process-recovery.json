@@ -1,0 +1,16 @@
+{
+  "host_survived_same_pid": 62193,
+  "host_process": "62193  1161 62193 Ss+  /private/tmp/gitfleet-m3-native-r3f_k7ew/Commit Command Running Renderer Acceptance.app/Contents/MacOS/gitfleet-desktop --data-dir /private/tmp/gitfleet-m3-native-r3f_k7ew/state --https-ca-file /private/tmp/gitfleet-m3-native-r3f_k7ew/certificate.pem\n",
+  "killed_renderer_pid": 62196,
+  "original_renderer_hook_child_absent": [
+    62196,
+    68396,
+    68397
+  ],
+  "ps_returncode": 1,
+  "ps_stdout": "",
+  "observed_at_ns": 1794105724241948000,
+  "elapsed_since_hook_start_ms": 18720.566825,
+  "cleanup_before_natural_finish": true,
+  "external_host_hook_or_child_signal": false
+}

@@ -56,16 +56,40 @@ and explicit disposition of exclusions. A facility block is not a waiver.
 | Gate | Remaining work and closure evidence | Requirement / plan ownership |
 |---|---|---|
 | G01 — native authority/review fidelity | **Accepted within envelope, November 7:** remaining actual-webview caller/page/origin and pending/issued-confirmation reload cases passed using non-default native test support. Combined with prior exact-content/signing/lifecycle evidence, the enumerated G01 cases are closed. [Closure report](reports/G01_NATIVE_SUPPORT_G02_RECOVERY_2026-11-07.md). Accessibility, broader compatibility and ordinary write exposure remain G03/G06/G04. | M3-A12–A15; SEC-001–012, SEC-018–020; M3A/B |
-| G02 — lifecycle and recovery | **In progress:** direct AppKit termination during a proven running pre-push check passed: actual native dispatch/delegate interception, normal exit, hook/child cleanup before natural completion, cancelled/unpublished history, draft preservation and first restart/no replay ([latest report](reports/G02_G06_RUNNING_PUSH_CHECK_APPKIT_2026-11-07.md)). Prior main Close/Cancel/Quit/crash/startup passes retained; host-crash child cleanup is not guaranteed. Actual Dock (policy blocked), operator session termination and remaining phase-specific recovery criteria stay open. | M3-A16–A17; SEC-013–017; WS-014; M3B |
+| G02 — lifecycle and recovery | **In progress; startup finding reopened:** actual main-renderer loss during a proven running pre-push check passed with the same host surviving, hook/child cancellation, obsolete review closure and draft/history recovery. Subsequent normal restart was blank despite Finished/display audit and needed explicit reload ([latest report](reports/G02_G06_RUNNING_PUSH_CHECK_RENDERER_LOSS_2026-11-07.md)). Reliable startup presentation is open again; prior readiness/interruption passes remain bounded. Dock/session and other required recovery criteria remain open. | M3-A16–A17; SEC-013–017; WS-014; M3B |
 | G03 — accessibility, layouts and scale | Full VoiceOver/focus/review/dialog coverage, long/byte paths and large content, narrow/zoom layouts, display disconnect/reconfiguration, measured inventory/history/monitoring budgets. Selected contrast/theme/1×–2× geometry passes remain valid only for their recorded cases. | UI-001–005; M3-A04/06/07/19; M4; M8B |
 | G04 — ordinary write enablement | Reconcile all applicable safety prerequisites with G01–G03/G05–G06 and support exclusions, then obtain the explicit default-change decision. Validate the exact ordinary artifact with supported writes and independent approval. No current gate completion is inferred. | D-045; M3C; RELEASE-002 |
 | G05 — native bulk commit failures/dependencies | Actual submodule child-before-parent/fresh parent review, partial publication/failure, cancellation and reviewed retry of unfinished items; per-repo overrides and linked-worktree cases as applicable. Preserve successful/unselected content and do not replay published items. | GIT-013; BULK-001–007; M5A |
-| G06 — supported remote/check compatibility | **In progress:** native supported pre-push Cancel review, Cmd+Q, main-window Close and direct AppKit termination during proven running execution passed, including process cleanup and restart without replay ([AppKit report](reports/G02_G06_RUNNING_PUSH_CHECK_APPKIT_2026-11-07.md)). Actual running-check host crash and first-restart recovery passed after the premature-display fix; original hook survival remains explicit ([startup retest](reports/G02_STARTUP_READINESS_2026-11-07.md)). Selected native detected-manager Execute refusal, OS-declined bypass and fresh approved bypass passed with zero hook execution and restart/no replay ([bypass report](reports/G06_NATIVE_MANAGER_BYPASS_2026-11-07.md)); unsupported managers remain unsupported for Execute. Operator SecurityAgent choices, broader fetch/upstream topology/recovery, planner cycle/accessibility/scale and direct SCP facility block retain their limits. | M5B/C; PUSH-002; AUTHENTICATION.md; M8B |
+| G06 — supported remote/check compatibility | **In progress:** native supported pre-push Cancel review, Cmd+Q, main-window Close and direct AppKit termination during proven running execution passed, including process cleanup and restart without replay ([AppKit report](reports/G02_G06_RUNNING_PUSH_CHECK_APPKIT_2026-11-07.md)). Actual running-check main-renderer loss now passed with host survival/cancellation/no replay; a subsequent normal restart blank reopens G02 presentation ([renderer report](reports/G02_G06_RUNNING_PUSH_CHECK_RENDERER_LOSS_2026-11-07.md)). Earlier running-check host crash and first-restart recovery passed in their fixture; original hook survival remains explicit ([startup retest](reports/G02_STARTUP_READINESS_2026-11-07.md)). Selected native detected-manager Execute refusal, OS-declined bypass and fresh approved bypass passed with zero hook execution and restart/no replay ([bypass report](reports/G06_NATIVE_MANAGER_BYPASS_2026-11-07.md)); unsupported managers remain unsupported for Execute. Operator SecurityAgent choices, broader fetch/upstream topology/recovery, planner cycle/accessibility/scale and direct SCP facility block retain their limits. | M5B/C; PUSH-002; AUTHENTICATION.md; M8B |
 | G07 — individual push | Implement independent exact non-force publication approval, isolated transport, source/destination/auth/hook revalidation, rejection/drift handling, cancellation and durable uncertain-outcome reconciliation using fresh observation. Existing hook checks never become publication tokens. | PUSH-001/003/005/006; INV-009; M5C |
 | G08 — bulk push | Compose accepted individual push with fresh per-item authority, actual child availability before parents, no implicit child selection, cycle/block handling, partial-success preservation and fresh retry. Conditional planning is not remote success. | PUSH-004–006; INV-014; M5C |
 | G09 — AI and Actions | Implement M6 profiles/providers/templates/bounded exact context; M7 assisted candidates, deterministic SemVer preview/execution/recovery and separately bounded automatic authorization. Provider/model failures and imported definitions cannot broaden authority. | AI-001–017; ACT-001–003; INV-010–013; M6/M7 |
 | G10 — backup/portability/retention | Versioned export/import, consistent manual/rotating backups, previewed safe restore, malicious/interrupted archive tests and protection of unresolved recovery. Decide proposed 90-day history/ten-backup defaults before implementing cleanup. Migration backups alone do not meet this gate. | STATE-005–007; ACT-004; M4C/M8A |
 | G11 — reproducible release | Provision declared Git/Rust/signing prerequisites in CI and record actual results; resolve OS/architecture/tool delivery/identifier/signing/update policy; verify licenses/notices and exact packaged install/upgrade/migration/uninstall, signing/notarization and release invariants. A development bundle is not a release. | RELEASE-001–005; INV-001–015; M8C |
+
+### Latest G02/G06 running-hook renderer loss / startup counterevidence — November 7, 2026
+
+[Renderer-loss report](reports/G02_G06_RUNNING_PUSH_CHECK_RENDERER_LOSS_2026-11-07.md)
+and [evidence](validation/g02-g06-running-push-check-renderer-loss-2026-11-07/README.md)
+record actual main WebKit process SIGKILL after independent running-hook proof.
+Same host survived; original renderer/hook/child were absent 18.7 seconds after hook
+start, before natural finish. Main reset/reloaded, obsolete review closed, and exact
+draft/cancelled unpublished history recovered automatically with no replay.
+
+**Reliable startup presentation is reopened.** After a later normal Quit/restart,
+the window was blank across native AX/screenshot observations despite a Finished
+page-load event and successful initial show. Explicit native Reload main renderer
+restored draft/history in that same host without replay. Page completion/display
+therefore cannot by itself establish painted application content. The earlier
+readiness patch remains, but its passes do not close this broader startup symptom.
+Next: investigate the post-load blank restart using this retained fixture/evidence.
+
+Exact repository/remote/draft/journal/request assertions passed after renderer
+recovery, restart and final cleanup; one hook invocation and one discovery GET.
+Both app exits were 0; original hook/child remained absent past natural finish,
+owned service stopped and generated TLS key removed. No product source changed;
+prior automated validation is historical. G02/G06 remain open; this checkpoint
+accepts running renderer-loss cancellation, not automatic restart presentation.
 
 ### Latest G06 native manager refusal / explicit bypass — November 7, 2026
 
@@ -156,8 +180,9 @@ passed. Original hook survived and finished naturally, invocation count one.
 
 Fresh full desktop gate passed: 69 renderer / 13 default-host / 16 all-feature-host
 tests, type/contract/format/lint, strict Clippy and debug/release builds. Fixture
-service/key cleaned up. Premature-display finding closed within this envelope;
-a permanently stuck renderer was not reproduced as a separate failure. G02/G06
+service/key cleaned up. Premature-display finding was closed within that envelope;
+the newer blank normal restart above reopens reliable startup presentation despite
+Finished/display audit. G02/G06
 remain open for other criteria. The subsequent main-window Close pass is recorded
 above; direct AppKit termination, Dock/session and bypass/manager remain separate.
 
