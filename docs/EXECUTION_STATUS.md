@@ -7,6 +7,18 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G05 three-level dependency chain — Core passed, native open
+
+[Three-level package](reports/G05_THREE_LEVEL_2026-11-08.md): new real root/middle/leaf
+submodules test proves leaf-first exact dependency order, no staging in preparation,
+one leaf commit followed by a fresh middle review, then one middle commit followed
+by a fresh root review. Final exact gitlinks, one commit per worktree, preserved child
+checkouts and actual Git metadata verified. Bulk suite 13 passed / 1 subprocess worker
+ignored, format and strict target Clippy passed. Test-only change; this adds Core
+evidence, not native acceptance. Native three-level execution, invalid/cyclic input
+and remaining selection/accessibility cases remain explicit work, not repeated
+previously passed two-level cases.
+
 ### November 8 G05 native partial staging — passed
 
 [Partial-staging package](reports/G05_NATIVE_PARTIAL_STAGING_2026-11-08.md): existing

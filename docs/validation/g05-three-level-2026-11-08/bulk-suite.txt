@@ -1,0 +1,22 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.51s
+     Running tests/bulk_application.rs (app/core/target/debug/deps/bulk_application-ddcca4ea8d990b9c)
+
+running 14 tests
+test batch_crash_worker ... ignored, subprocess worker invoked by the batch interruption test
+test duplicate_selection_rejected_and_restart_cannot_replay_an_old_batch_capability ... ok
+test known_untrusted_item_blocks_entire_batch_before_any_repository_write ... ok
+test declined_batch_and_changed_selected_content_never_publish ... ok
+test index_only_batch_preserves_partial_staging_and_exclusions_are_exact ... ok
+test revoked_trust_revokes_the_whole_batch_capability_and_cancels_proposals ... ok
+test process_interruption_between_items_is_visible_and_restart_does_not_replay ... ok
+test explicit_batch_commits_only_selected_repositories_and_never_nested_children_implicitly ... ok
+test selected_linked_worktrees_share_locks_but_commit_only_their_own_branches ... ok
+test running_batch_cancellation_preserves_completed_item_and_never_starts_successors ... ok
+test linked_worktree_batch_requires_independent_trust_and_preserves_unselected_checkout ... ok
+test real_submodule_commits_before_parent_and_changed_gitlink_requires_fresh_parent_review ... ok
+test batch_stops_after_first_failure_preserves_success_and_cancels_unstarted_items ... ok
+test three_level_submodules_require_fresh_review_at_each_changed_parent ... ok
+
+test result: ok. 13 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 20.07s
+

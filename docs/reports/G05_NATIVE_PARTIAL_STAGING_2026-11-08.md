@@ -1,6 +1,9 @@
 # G05 native index-only partial staging — November 8, 2026
 
 Disposition: this case passed; G05 remains partial. No product source change.
+The November 2 native bulk report already recorded a selected index-only staged/
+working split. This repeat strengthens actual child-metadata and restart oracles in
+the current fixture; it is not a newly implemented capability or a second gate closure.
 Reused the exact already authorized parent in the child-hook fixture. No new trust,
 hook/config change, child execution or push. Existing child hook remains unchanged.
 Source/build provenance is retained in fixture.json (source 4c52595; acceptance and

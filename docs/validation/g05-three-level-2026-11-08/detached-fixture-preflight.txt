@@ -1,0 +1,22 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.49s
+     Running tests/bulk_application.rs (app/core/target/debug/deps/bulk_application-ddcca4ea8d990b9c)
+
+running 1 test
+test three_level_submodules_require_fresh_review_at_each_changed_parent ... FAILED
+
+failures:
+
+---- three_level_submodules_require_fresh_review_at_each_changed_parent stdout ----
+
+thread 'three_level_submodules_require_fresh_review_at_each_changed_parent' (5486004) panicked at tests/bulk_application.rs:105:10:
+called `Result::unwrap()` on an `Err` value: Error { kind: UnsupportedRepositoryState, message: "Controlled Git command failed; no success inferred" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    three_level_submodules_require_fresh_review_at_each_changed_parent
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 13 filtered out; finished in 2.42s
+
+error: test failed, to rerun pass `--test bulk_application`

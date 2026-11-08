@@ -472,6 +472,199 @@ fn real_submodule_commits_before_parent_and_changed_gitlink_requires_fresh_paren
     assert!(t.f.git(&["status", "--porcelain"]).is_empty());
 }
 
+#[test]
+fn three_level_submodules_require_fresh_review_at_each_changed_parent() {
+    let mut t = setup(1);
+    let leaf_source = Fixture::new();
+    leaf_source.commit_file();
+    let middle_source = Fixture::new();
+    middle_source.commit_file();
+    middle_source.git(&[
+        "-c",
+        "protocol.file.allow=always",
+        "submodule",
+        "add",
+        "-q",
+        leaf_source.repo.to_str().unwrap(),
+        "leaf",
+    ]);
+    middle_source.git(&["commit", "-qm", "Register leaf"]);
+    t.f.git(&[
+        "-c",
+        "protocol.file.allow=always",
+        "submodule",
+        "add",
+        "-q",
+        middle_source.repo.to_str().unwrap(),
+        "middle",
+    ]);
+    t.f.git(&["commit", "-qm", "Register middle"]);
+    t.f.git(&[
+        "-c",
+        "protocol.file.allow=always",
+        "submodule",
+        "update",
+        "--init",
+        "--recursive",
+    ]);
+    let paths = [
+        t.f.repo.clone(),
+        t.f.repo.join("middle"),
+        t.f.repo.join("middle/leaf"),
+    ];
+    for path in &paths {
+        // Recursive init checks out the leaf detached; controlled commits require a branch.
+        t.f.git(&["-C", path.to_str().unwrap(), "checkout", "-q", "main"]);
+
+        for (key, value) in [
+            ("user.name", "Three-level fixture"),
+            ("user.email", "fixture@example.invalid"),
+            ("commit.gpgsign", "false"),
+        ] {
+            t.f.git(&["-C", path.to_str().unwrap(), "config", key, value]);
+        }
+        fs::write(path.join("file.txt"), b"three-level reviewed content\n").unwrap();
+    }
+    t.app
+        .request(
+            t.app.epoch(),
+            Request::Scan {
+                workspace: t.ws.clone(),
+            },
+        )
+        .unwrap();
+    let Data::Inventory(inventory) = t
+        .app
+        .request(
+            t.app.epoch(),
+            Request::Inventory {
+                workspace: t.ws.clone(),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    t.entries = inventory.entries;
+    assert_eq!(t.entries.len(), 3);
+    let indices: Vec<_> = paths
+        .iter()
+        .map(|path| {
+            t.entries
+                .iter()
+                .position(|e| e.metadata.root.to_path().unwrap() == fs::canonicalize(path).unwrap())
+                .unwrap()
+        })
+        .collect();
+    let (root, middle, leaf) = (indices[0], indices[1], indices[2]);
+    for i in 0..3 {
+        trust(&mut t, i);
+    }
+    let original_heads: Vec<_> = (0..3).map(|i| head(&t, i)).collect();
+    let before = tree_bytes(&t.f.repo);
+    let requested = [root, middle, leaf]
+        .into_iter()
+        .map(|i| selection(&t, i))
+        .collect();
+    let first = review(&mut t, requested);
+    assert!(first.summary.contains("0 blocked"));
+    assert_eq!(
+        tree_bytes(&t.f.repo),
+        before,
+        "Preparation must not stage any worktree"
+    );
+    let Data::Batches(prepared) = t
+        .app
+        .request(
+            t.app.epoch(),
+            Request::Batches {
+                workspace: t.ws.clone(),
+                offset: 0,
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    let items = &prepared.items[0].record.items;
+    assert_eq!(
+        items.iter().map(|i| &i.worktree).collect::<Vec<_>>(),
+        vec![
+            &t.entries[leaf].id,
+            &t.entries[middle].id,
+            &t.entries[root].id
+        ]
+    );
+    assert!(items[0].dependencies.is_empty());
+    assert_eq!(items[1].dependencies, vec![t.entries[leaf].id.clone()]);
+    assert_eq!(items[2].dependencies, vec![t.entries[middle].id.clone()]);
+    let first_result = confirm(&mut t, &first);
+    assert_eq!(first_result.record.phase, BatchPhase::NeedsReauthorization);
+    assert!(first_result.outcomes[0].published);
+    assert!(first_result.outcomes[1..].iter().all(|o| !o.published));
+    assert_ne!(head(&t, leaf), original_heads[leaf]);
+    assert_eq!(head(&t, middle), original_heads[middle]);
+    assert_eq!(head(&t, root), original_heads[root]);
+    let leaf_after = tree_bytes(&paths[2]);
+    let leaf_metadata = t.entries[leaf].metadata.git_dir.to_path().unwrap();
+    let leaf_metadata_after = tree_bytes(&leaf_metadata);
+    let middle_before = tree_bytes(&paths[1]);
+
+    // Fresh middle approval still cannot authorize the root's future gitlink.
+    let requested = [root, middle]
+        .into_iter()
+        .map(|i| selection(&t, i))
+        .collect();
+    let second = review(&mut t, requested);
+    assert!(second.content.contains("diff --git a/leaf b/leaf"));
+    assert_eq!(tree_bytes(&paths[1]), middle_before);
+    let second_result = confirm(&mut t, &second);
+    assert_eq!(second_result.record.phase, BatchPhase::NeedsReauthorization);
+    assert!(second_result.outcomes[0].published);
+    assert!(second_result.outcomes[1..].iter().all(|o| !o.published));
+    assert_eq!(head(&t, root), original_heads[root]);
+    assert_eq!(tree_bytes(&paths[2]), leaf_after);
+    assert_eq!(tree_bytes(&leaf_metadata), leaf_metadata_after);
+    let middle_after = tree_bytes(&paths[1]);
+    let middle_metadata = t.entries[middle].metadata.git_dir.to_path().unwrap();
+    let middle_metadata_after = tree_bytes(&middle_metadata);
+    let root_selection = selection(&t, root);
+    let final_review = review(&mut t, vec![root_selection]);
+    assert!(final_review
+        .content
+        .contains("diff --git a/middle b/middle"));
+    let final_result = confirm(&mut t, &final_review);
+    assert_eq!(final_result.record.phase, BatchPhase::Complete);
+    assert!(final_result.outcomes[0].published);
+    assert_eq!(tree_bytes(&paths[1]), middle_after);
+    assert_eq!(tree_bytes(&middle_metadata), middle_metadata_after);
+    for (entry, original_head) in t.entries.iter().zip(&original_heads) {
+        let path = entry.metadata.root.to_path().unwrap();
+        let old = std::str::from_utf8(original_head).unwrap();
+        assert_eq!(
+            t.f.git(&[
+                "-C",
+                path.to_str().unwrap(),
+                "rev-list",
+                "--count",
+                &format!("{}..HEAD", old.trim())
+            ]),
+            b"1\n"
+        );
+        assert_eq!(
+            t.f.git(&["-C", path.to_str().unwrap(), "show", "HEAD:file.txt"]),
+            b"three-level reviewed content\n"
+        );
+    }
+    assert_eq!(t.f.git(&["rev-parse", "HEAD:middle"]), head(&t, middle));
+    assert_eq!(
+        t.f.git(&["-C", paths[1].to_str().unwrap(), "rev-parse", "HEAD:leaf"]),
+        head(&t, leaf)
+    );
+}
+
 fn slow_hook(t: &Test, index: usize, marker: &Path) {
     let hook = t.entries[index]
         .metadata

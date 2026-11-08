@@ -1,0 +1,2 @@
+error: target `bulk_application` in package `gitfleet-core` requires the features: `application-services`
+Consider enabling them by passing, e.g., `--features="application-services"`
