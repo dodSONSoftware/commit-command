@@ -1,0 +1,12 @@
+{
+  "root": "/private/tmp/commit-command-scan-crash-qlno8mqe",
+  "workspace_root": "/private/tmp/commit-command-scan-crash-qlno8mqe/workspace",
+  "state": "/private/tmp/commit-command-scan-crash-qlno8mqe/state",
+  "workspace": "641e81ae-2801-48b4-90c1-6181daaf29d6",
+  "initial_worktree": "a3af5e92-53ad-4c6f-ae08-76a43049764e",
+  "repositories": 80,
+  "app": "/private/tmp/commit-command-scan-crash-qlno8mqe/Commit Command Scan Crash Acceptance.app",
+  "binary_sha256": "aec8aa0bc52cd11b6a598686dee3583d03eb54965e4c9666a3cea21815d71570",
+  "features": "default release",
+  "source_commit": "00547b27ae1fe65f0209c5956e5f0cf8f8d0d519"
+}

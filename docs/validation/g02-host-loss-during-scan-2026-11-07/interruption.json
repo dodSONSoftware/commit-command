@@ -1,0 +1,16 @@
+{
+  "host_pid": 66331,
+  "host_command": "/private/tmp/commit-command-scan-crash-qlno8mqe/Commit Command Scan Crash Acceptance.app/Contents/MacOS/gitfleet-desktop --data-dir /private/tmp/commit-command-scan-crash-qlno8mqe/state",
+  "live_children": [
+    {
+      "pid": 69962,
+      "ppid": 66331,
+      "state": "R",
+      "command": "(git)"
+    }
+  ],
+  "proof_time_ns": 1794112047495591000,
+  "signal": "SIGKILL",
+  "target": "host only",
+  "signal_time_ns": 1794112047495608000
+}

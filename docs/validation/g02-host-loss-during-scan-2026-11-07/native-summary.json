@@ -1,0 +1,20 @@
+{
+  "signal": "SIGKILL",
+  "signalled_pid": 66331,
+  "target_host_only": true,
+  "native_rescan_visibly_running_before_arm": true,
+  "saved_draft_independently_checked_before_arm": true,
+  "host_returncode": -9,
+  "launcher_returncode": 0,
+  "first_restart_rendered_without_reload": true,
+  "first_restart_retained_inventory_count": 1,
+  "exact_draft_visibly_recovered": true,
+  "explicit_fresh_rescan_count": 80,
+  "explicit_fresh_rescan_complete": true,
+  "explicit_fresh_rescan_issues": 0,
+  "restart_normal_quit_returncode": 0,
+  "state_writer_lock_reopened_by_cli": true,
+  "final_inventory_count": 80,
+  "product_source_changes": false,
+  "new_automated_suites_run": false
+}

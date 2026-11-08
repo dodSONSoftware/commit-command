@@ -67,6 +67,18 @@ reopened. Exact repository file bytes/modes preserved, zero trust/write/remote r
 Selected M3 plan section 12 step 1 passed within this envelope. No source change or
 new automated suite. G02 remains partial; G06 remote compatibility is unchanged.
 
+### November 7 G02 active-scan native host loss
+
+[Forced read-interruption report](reports/G02_HOST_LOSS_DURING_SCAN_2026-11-07.md):
+fresh ordinary 80-repository fixture, native scan request active and live Git child
+proven before exact host-only SIGKILL. SQLite integrity and prior one-entry completed
+inventory preserved; first restart rendered and recovered saved draft without reload.
+Explicit fresh Rescan completed with 80 entries/zero issues; final Quit 0 and writer
+lock reopened. Repository file bytes/modes match baseline; zero trust/write/remote
+records. Selected bounded G02 case passed; no code fix or new automated suite.
+G02 remains partial, including Dock/session and broader startup/phase coverage;
+G06 remote compatibility is unchanged.
+
 ## How to read the status
 
 - **POC-tested:** Behavior exercised by the existing Python labs / Rust v0.1.1 *in a constrained experimental subset*. Does not mean production ready.
