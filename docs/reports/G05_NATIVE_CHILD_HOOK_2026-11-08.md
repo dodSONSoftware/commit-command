@@ -53,3 +53,25 @@ child, parent and independent control). Hook SHA unchanged; one marker run, exac
 authorized trusts, control untrusted, SQLite integrity ok. See verify-rejection.json
 and records-rejection.json. This closes the actual native child-hook rejection/parent
 stop case only; proven-running cancellation and separately approved retry remain next.
+
+## Proven-running native cancellation and ordinary restart — passed
+
+Removed only the outer reject-child marker; hook bytes/config/trust were unchanged.
+Fresh exact batch 100b545d-71f1-49bd-b672-23536a590381 separately approved. Before Cancel,
+the child marker existed with run count two, durable operation
+e56ba4ec-2f34-4c0c-adcc-af0f69cc2958 was hooks_running, actual /bin/sh hook PID 8782
+and sleep descendant were present in its owned process group 8782. The release-child
+marker did not exist. See proven-running.json; this was execution, not pending review.
+
+Native Cancel review stopped that active batch. Child and parent operation
+7b5a0835-9372-4ddc-bc4c-f9c35ffefb14 ended cancelled_before_publication, zero publication.
+The owned hook process and whole group were gone; no release marker was used to let
+it finish. Every repository byte/mode remained original, fixed hook unchanged, exact
+two trusts, control untrusted, integrity ok. No parent execution or owned lock residue.
+
+Ordinary restart displayed failed and cancelled history with native preparation
+disabled. Hook count stayed two; exact operation/batch payloads and all repository
+bytes/modes preserved, no hook/commit replay. Acceptance and ordinary exits 0,
+writer-lock reopen passed. See cancellation-restart-proof.json, cancellation/group
+proof and records. Actual native child rejection and running Cancel gaps now passed;
+separately approved successful retry/parent gitlink review remains next. G05 stays partial.

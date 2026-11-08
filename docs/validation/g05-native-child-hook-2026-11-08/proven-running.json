@@ -1,0 +1,30 @@
+{
+  "marker_exists": true,
+  "hook_runs": 2,
+  "running_operation": [
+    [
+      "e56ba4ec-2f34-4c0c-adcc-af0f69cc2958",
+      "hooks_running"
+    ]
+  ],
+  "hook_process": {
+    "pid": 8782,
+    "ppid": 88106,
+    "pgid": 8782,
+    "command": "/bin/sh /private/tmp/gitfleet-m3-native-g05-child-29iydypi/workspace/gitfleet-batch/gitfleet-parent/.git/modules/module/hooks/pre-commit"
+  },
+  "process_group": [
+    {
+      "pid": 8782,
+      "ppid": 88106,
+      "pgid": 8782,
+      "command": "/bin/sh /private/tmp/gitfleet-m3-native-g05-child-29iydypi/workspace/gitfleet-batch/gitfleet-parent/.git/modules/module/hooks/pre-commit"
+    },
+    {
+      "pid": 9211,
+      "ppid": 8782,
+      "pgid": 8782,
+      "command": "(sleep)"
+    }
+  ]
+}

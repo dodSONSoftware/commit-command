@@ -7,14 +7,15 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
-### November 8 G05 child-hook rejection — passed; running Cancel next
+### November 8 G05 child rejection / proven-running Cancel — passed
 
-[Child-hook checkpoint](reports/G05_NATIVE_CHILD_HOOK_2026-11-08.md): exact new pair
-explicitly authorized and granted via native review. Fresh child-first batch ran the
-fixed pre-commit hook once, rejected child and stopped parent before execution.
-No publication; every repository byte/mode preserved, hook hash unchanged, exact two
-trusts/control untrusted and integrity passed. Native proven-running cancellation,
-cleanup/restart and separately approved successful retry remain next. No product patch.
+[Native child-hook chain](reports/G05_NATIVE_CHILD_HOOK_2026-11-08.md): exact authorized
+pair; hook rejected once and stopped parent, then fresh approved batch reached proven
+hooks_running with marker and actual hook/sleep process group. Native Cancel reaped
+the group and cancelled both items before publication. Every repository byte/mode,
+hook hash and trust scope preserved. Ordinary restart retained exact operation/batch
+payloads, hook count two, no replay; read-only gate, exits 0, integrity and lock reopen
+passed. Successful fresh retry/parent gitlink review remains next. No product patch.
 
 ### November 8 G05 pre-publication crash/cleanup/restart — passed
 

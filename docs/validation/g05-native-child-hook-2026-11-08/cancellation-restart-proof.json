@@ -1,0 +1,7 @@
+{
+  "exact_operation_batch_payloads_preserved": true,
+  "ordinary_write_preparation_disabled": true,
+  "hook_runs_remain_two": true,
+  "acceptance_exit": 0,
+  "ordinary_exit": 0
+}
