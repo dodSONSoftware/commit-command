@@ -44,3 +44,11 @@ other repository, bare-remote and transport-artifact file/mode matched baseline.
 Ordinary restart rendered aborted history without a pending recovery action or replay;
 both exits 0 and writer lock reopened. No native trust grant or transport requested.
 Empty/pre-publication and foreign/stale cases remain in progress.
+
+### Step 3 — empty LockCreated native recovery passed
+
+Actual zero-byte receipt-proven lock was visible as lock_created/needs attention.
+Fresh authoritative and native confirmation proposed abort_unpublished and returned
+aborted/unchanged. Only owned config.lock disappeared; all other repository, bare
+remote and transport-artifact file/mode baselines matched. Normal Quit 0 and writer
+lock reopened. Pre-publication and foreign/stale cases continue below.
