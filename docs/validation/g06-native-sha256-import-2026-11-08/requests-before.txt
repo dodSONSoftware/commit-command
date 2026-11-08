@@ -1,0 +1,5 @@
+/repo.git/info/refs?service=git-upload-pack auth=False
+/repo.git/git-upload-pack auth=False
+/repo.git/info/refs?service=git-upload-pack auth=False
+/repo.git/git-upload-pack auth=False
+/repo.git/git-upload-pack auth=False

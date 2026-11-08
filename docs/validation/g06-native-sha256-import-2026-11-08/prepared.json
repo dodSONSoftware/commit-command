@@ -1,0 +1,8 @@
+{
+  "prior_capture_preservation_oracle_passed": true,
+  "tracking_ref_absent": true,
+  "existing_fixture_trust_active": true,
+  "server_stopped_key_removed": true,
+  "capture_objects_already_present_in_local_repository": true,
+  "scope": "offline SHA256 tracking-ref creation from retained verified capture; not proof of missing-object transfer"
+}

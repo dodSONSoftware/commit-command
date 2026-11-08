@@ -1,0 +1,20 @@
+{
+  "root": "/private/tmp/gitfleet-native-sha256-kp4v97qe",
+  "repository": "/private/tmp/gitfleet-native-sha256-kp4v97qe/workspace/repository",
+  "remote": "/private/tmp/gitfleet-native-sha256-kp4v97qe/remote.git",
+  "state": "/private/tmp/gitfleet-native-sha256-kp4v97qe/state",
+  "workspace": "4d366341-11d7-4da1-999c-32bf61b384d1",
+  "worktree": "8773cf8a-c98d-4454-b11b-cd2056a26763",
+  "oid": "238a761ac64ee7b81496fedf82a4729bef640287b7286b96a02383e24e8dc998",
+  "object_format": "sha256",
+  "url": "https://127.0.0.1:63896/repo.git",
+  "ca_file": "/private/tmp/gitfleet-native-sha256-kp4v97qe/certificate.pem",
+  "app": "/private/tmp/gitfleet-native-sha256-kp4v97qe/Commit Command SHA256 Acceptance.app",
+  "ordinary_app": "/private/tmp/gitfleet-native-sha256-kp4v97qe/Commit Command SHA256 Ordinary.app",
+  "server_pid": 66151,
+  "source_commit": "bcb8a5d17af0c23781cb157bd704f32fb3d59643",
+  "artifact_sha256": {
+    "acceptance": "54809b4155865cbe835eae15a5f8c76ff6d2a8528addefec2fcbe89b585b275b",
+    "ordinary": "aec8aa0bc52cd11b6a598686dee3583d03eb54965e4c9666a3cea21815d71570"
+  }
+}

@@ -14,6 +14,13 @@ The original rows below retain the baseline assessment; dated follow-up ledgers 
 reports supersede their earlier test status. A later automated pass does not imply
 native or release acceptance.
 
+### November 8 native SHA-256 import — baseline prepared
+
+[Offline import package](reports/G06_NATIVE_SHA256_IMPORT_2026-11-08.md): retained
+verified capture/trust and absent tracking ref validated; server remains stopped.
+Selected case tests separate import authority and exact ref creation; objects already
+exist locally. Native Cancel/import/restart remain pending. G02/G06 remain partial.
+
 ### November 8 native SHA-256 observation/download — complete
 
 [Final native format package](reports/G06_NATIVE_SHA256_2026-11-08.md): exact fixture

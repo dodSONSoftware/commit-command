@@ -7,6 +7,13 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 native SHA-256 import — baseline prepared
+
+[Offline import package](reports/G06_NATIVE_SHA256_IMPORT_2026-11-08.md): retained
+verified capture/trust and absent tracking ref validated; server remains stopped.
+Selected case tests separate import authority and exact ref creation; objects already
+exist locally. Native Cancel/import/restart remain pending. G02/G06 remain partial.
+
 ### November 8 native SHA-256 observation/download — complete
 
 [Final native format package](reports/G06_NATIVE_SHA256_2026-11-08.md): exact fixture
