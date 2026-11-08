@@ -70,7 +70,7 @@ async function load() {
     window.clearTimeout(expiry);
     confirm.disabled = true;
     status.textContent =
-      "Awaiting independent native approval. Closing or cancelling does not approve this plan.";
+      "Waiting for native approval or the approved operation to finish. Closing or cancelling requests a stop; it does not undo effects already made.";
     try {
       const result = await invoke<unknown>("review_confirm", {
         review: review.id,

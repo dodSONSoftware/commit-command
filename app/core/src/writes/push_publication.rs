@@ -233,6 +233,9 @@ impl ControlledWrites {
         }
         Ok(stored)
     }
+    pub(super) fn load_publication_for_batch(&mut self, id: &str) -> Result<PushPublication> {
+        Ok(self.load_publication(id)?.value)
+    }
     pub(crate) fn publication_audit_detail(&self, payload: &str) -> Result<PushPublication> {
         let stored = self.decode_publication(payload)?;
         let mut value = stored.value;
@@ -251,7 +254,7 @@ impl ControlledWrites {
         }
         Ok(value)
     }
-    fn validate_publication_target(&self, plan: &ObservationPlan) -> Result<()> {
+    pub(super) fn validate_publication_target(&self, plan: &ObservationPlan) -> Result<()> {
         let Some(target) = &plan.local_target else {
             return Ok(());
         };
@@ -302,6 +305,7 @@ impl ControlledWrites {
         selection: PushPlanningSelection,
         hooks: HookPolicy,
         options: &ReadOptions,
+        batch: Option<crate::remote::push_batch::PushBatchBinding>,
     ) -> Result<PushPublicationPlan> {
         // Always prepare a new check: a previously completed check is never publication authority.
         let check = self.propose_push_check(workspace, entries, selection, hooks, options)?;
@@ -314,6 +318,7 @@ impl ControlledWrites {
             created_at_ms: now_ms(),
             check,
             digest: String::new(),
+            batch,
         };
         plan.digest = plan_digest(&plan)?;
         let persisted = self.persist_publication(&Stored {
@@ -347,7 +352,8 @@ impl ControlledWrites {
         self.cancel_push_check(&stored.value.plan.check.id)?;
         stored.value.phase = PushPublicationPhase::Cancelled;
         stored.value.finished_at_ms = Some(now_ms());
-        self.persist_publication(&stored)
+        self.persist_publication(&stored)?;
+        self.finish_push_batch_publication(&stored.value)
     }
     pub(crate) fn execute_publication(
         &mut self,
@@ -367,6 +373,7 @@ impl ControlledWrites {
         options.cancellation = cancellation.clone();
         let previous = std::mem::replace(&mut self.options.process, options.clone());
         let result = (|| -> Result<()> {
+            self.start_push_batch_publication(plan)?;
             let start = Instant::now();
             let transport = &plan.check.transport;
             self.validate_publication_target(transport)?;
@@ -559,6 +566,7 @@ impl ControlledWrites {
         self.options.process = previous;
         saved?;
         cleanup?;
+        self.finish_push_batch_publication(&stored.value)?;
         Ok(stored.value)
     }
     pub(crate) fn publication_notices(

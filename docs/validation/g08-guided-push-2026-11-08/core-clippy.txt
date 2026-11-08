@@ -1,0 +1,16 @@
+    Checking gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+error[E0559]: variant `gitfleet_core::application::Request::Revoke` has no field named `worktrees`
+   --> tests/support/push_batch.rs:559:17
+    |
+559 |                 worktrees: vec![child.worktree.clone()],
+    |                 ^^^^^^^^^ unknown field
+    |
+help: a field with a similar name exists
+    |
+559 -                 worktrees: vec![child.worktree.clone()],
+559 +                 worktree: vec![child.worktree.clone()],
+    |
+
+For more information about this error, try `rustc --explain E0559`.
+error: could not compile `gitfleet-core` (test "remote_observation") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...

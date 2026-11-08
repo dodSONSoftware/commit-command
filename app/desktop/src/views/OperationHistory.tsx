@@ -24,6 +24,7 @@ const kinds = [
   "upstream_setup",
   "push_check",
   "push_publication",
+  "push_batch",
 ] as const;
 const operationName = (kind: string) =>
   kind === "fetch_capture"
@@ -241,6 +242,35 @@ export function OperationHistory({
             )}
             {item.record.kind === "fetch_capture" && (
               <FetchCaptureRecords items={[item.record.value]} />
+            )}
+            {item.record.kind === "push_batch" && (
+              <article aria-label="Guided push queue record">
+                <h3>Guided push queue · {item.record.value.phase}</h3>
+                <p>
+                  Planning data grants no authority. Each publication has its
+                  own independent exact review and outcome. Stopped or
+                  interrupted queues require fresh planning; history never
+                  resumes them.
+                </p>
+                {item.record.value.items.map((progress) => {
+                  const entry = entries.find((e) => e.id === progress.worktree);
+                  return (
+                    <p key={progress.worktree}>
+                      {entry ? pathText(entry.display_path) : progress.worktree}{" "}
+                      · {progress.phase.replaceAll("_", " ")}
+                      {progress.publication && (
+                        <>
+                          {" "}
+                          · <code>{progress.publication}</code>
+                        </>
+                      )}
+                    </p>
+                  );
+                })}
+                {item.record.value.issue && (
+                  <p role="alert">{text(item.record.value.issue.message)}</p>
+                )}
+              </article>
             )}
             {item.record.kind === "push_publication" && (
               <PushPublicationRecord
@@ -462,7 +492,7 @@ function PushPublicationRecord({
       {item.remote_state && (
         <p>
           Observed destination: {item.remote_state.replaceAll("_", " ")}. This
-          records current state and does not prove which actor changed it.
+          records the observed state and does not prove which actor changed it.
         </p>
       )}
       {item.issue && <p role="alert">{text(item.issue.message)}</p>}

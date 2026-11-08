@@ -1,0 +1,8 @@
+{
+  "managed_files_modes_exact": true,
+  "old_operations_journals_trust_exact": true,
+  "only_explicit_child_and_middle_published": true,
+  "fresh_child_observation_after_success_before_separate_parent_review": true,
+  "source_and_artifact_hashes_verified": true,
+  "integrity": "ok"
+}

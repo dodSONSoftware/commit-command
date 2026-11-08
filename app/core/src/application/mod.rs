@@ -127,6 +127,23 @@ pub enum Request {
         selection: crate::remote::push::PushPlanningSelection,
         hooks: HookPolicy,
     },
+    CreatePushBatch {
+        workspace: String,
+        selections: Vec<crate::remote::push_batch::PushBatchSelection>,
+    },
+    PushBatches {
+        workspace: String,
+        offset: usize,
+    },
+    PushBatch {
+        workspace: String,
+        id: String,
+    },
+    ReviewPushBatchItem {
+        workspace: String,
+        batch: String,
+        selection: crate::remote::push::PushPlanningSelection,
+    },
     ReviewPushPublication {
         workspace: String,
         selection: crate::remote::push::PushPlanningSelection,
@@ -258,6 +275,8 @@ pub struct WorkspaceList {
     pub upstream_recovery: Vec<RemoteRecoveryNotice>,
     #[serde(default)]
     pub push_publication_recovery: Vec<RemoteRecoveryNotice>,
+    #[serde(default)]
+    pub push_batch_recovery: Vec<RemoteRecoveryNotice>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct ScanSummary {
@@ -303,6 +322,8 @@ pub enum Data {
     PushPreview(crate::remote::push::PushPreview),
     ChildReachability(Box<crate::remote::push::ChildReachability>),
     PushDependencyPlan(crate::remote::push::PushDependencyPlan),
+    PushBatch(crate::remote::push_batch::PushBatch),
+    PushBatches(crate::remote::push_batch::PushBatchPage),
     FetchImports(crate::remote::fetch::FetchImportPage),
     Workspaces(WorkspaceList),
     Inventory(InventoryView),
@@ -650,6 +671,7 @@ impl Application {
                 fetch_import_recovery: self.writes.import_notices()?,
                 upstream_recovery: self.writes.upstream_notices()?,
                 push_publication_recovery: self.writes.publication_notices()?,
+                push_batch_recovery: self.writes.push_batch_notices()?,
             }),
             Request::Create { name, picker } => {
                 let path = self.directory(&picker)?;
@@ -813,6 +835,63 @@ impl Application {
                     }
                 }
             }
+            Request::CreatePushBatch {
+                workspace,
+                selections,
+            } => {
+                if selections.is_empty()
+                    || selections.len() > 32
+                    || selections
+                        .iter()
+                        .map(|s| s.selection.children.len())
+                        .sum::<usize>()
+                        > 256
+                {
+                    return Err(invalid(
+                        "Choose 1–32 worktrees and at most 256 child bindings",
+                    ));
+                }
+                let id = self.active(&workspace)?;
+                let mut entries = std::collections::BTreeMap::new();
+                for selected in &selections {
+                    entries.extend(self.push_check_entries(&workspace, &selected.selection)?);
+                }
+                let mut options = self.read_options.clone();
+                options.timeout = Duration::from_secs(60);
+                Data::PushBatch(
+                    self.writes
+                        .create_push_batch(&id, &entries, selections, &options)?,
+                )
+            }
+            Request::PushBatches { workspace, offset } => {
+                let id = self.active(&workspace)?;
+                Data::PushBatches(self.writes.push_batches(&id, offset)?)
+            }
+            Request::PushBatch { workspace, id } => {
+                let workspace = self.active(&workspace)?;
+                Data::PushBatch(self.writes.push_batch(&workspace, &id)?)
+            }
+            Request::ReviewPushBatchItem {
+                workspace,
+                batch,
+                selection,
+            } => {
+                let id = self.active(&workspace)?;
+                let entries = self.push_check_entries(&workspace, &selection)?;
+                self.abandon_review()?;
+                let mut options = self.read_options.clone();
+                options.timeout = Duration::from_secs(60);
+                let plan = self
+                    .writes
+                    .propose_push_batch_item(&id, &batch, &entries, selection, &options)?;
+                match self.set_review(review::Action::PushPublication(Box::new(plan.clone()))) {
+                    Ok(display) => Data::Review(display),
+                    Err(error) => {
+                        self.writes.cancel_publication(&plan.id)?;
+                        return Err(error);
+                    }
+                }
+            }
             Request::ReviewPushPublication {
                 workspace,
                 selection,
@@ -827,6 +906,7 @@ impl Application {
                     selection,
                     hooks,
                     &self.read_options,
+                    None,
                 )?;
                 match self.set_review(review::Action::PushPublication(Box::new(plan.clone()))) {
                     Ok(display) => Data::Review(display),

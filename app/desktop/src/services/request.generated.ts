@@ -104,6 +104,27 @@ export type Request =
       workspace: string;
     }
   | {
+      kind: "create_push_batch";
+      selections: PushBatchSelection[];
+      workspace: string;
+    }
+  | {
+      kind: "push_batches";
+      offset: number;
+      workspace: string;
+    }
+  | {
+      id: string;
+      kind: "push_batch";
+      workspace: string;
+    }
+  | {
+      batch: string;
+      kind: "review_push_batch_item";
+      selection: PushPlanningSelection;
+      workspace: string;
+    }
+  | {
       hooks: HookPolicy;
       kind: "review_push_publication";
       selection: PushPlanningSelection;
@@ -306,7 +327,8 @@ export type OperationAuditKind =
   | "fetch_import"
   | "upstream_setup"
   | "push_check"
-  | "push_publication";
+  | "push_publication"
+  | "push_batch";
 export type OperationAuditResult =
   | "pending"
   | "complete"
@@ -467,6 +489,10 @@ export interface PushPlanningSelection {
   observation: string;
   source_oid: ObjectId;
   worktree: string;
+}
+export interface PushBatchSelection {
+  hooks: HookPolicy;
+  selection: PushPlanningSelection;
 }
 export interface DiscoveryOptions {
   excluded_names: string[];

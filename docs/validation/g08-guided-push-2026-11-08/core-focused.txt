@@ -1,0 +1,13 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.80s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-883e37a5b39e3193)
+
+running 4 tests
+test push_batch::decline_stops_guided_queue_and_never_implicitly_publishes_parent ... ok
+test push_batch::guided_queue_publishes_child_then_freshly_reviewed_parent_without_managed_changes has been running for over 60 seconds
+test push_batch::restart_interrupts_unfinished_queue_without_restoring_item_authority ... ok
+test push_batch::unselected_missing_child_blocks_queue_creation_and_never_enrolls_child ... ok
+test push_batch::guided_queue_publishes_child_then_freshly_reviewed_parent_without_managed_changes ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 104 filtered out; finished in 158.71s
+

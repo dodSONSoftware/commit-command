@@ -1,0 +1,11 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.90s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-883e37a5b39e3193)
+
+running 3 tests
+test push_batch::guided_request_rejects_approval_force_and_hook_policy_overrides ... ok
+test push_batch::revoked_selected_worktree_blocks_queue_before_any_publication_record ... ok
+test push_batch::a_saved_queue_cannot_broaden_its_frozen_source ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 112 filtered out; finished in 13.09s
+

@@ -1,0 +1,557 @@
+{
+  "plan": {
+    "id": "c83bfe54-ea1b-4f0f-9a27-5a3bb652274c",
+    "workspace": "8fbb404a-a70e-47fe-a911-3bf94a4ee709",
+    "created_at_ms": 1794178116236,
+    "selections": [
+      {
+        "selection": {
+          "worktree": "0c13b924-9371-40ac-a754-2f6705a3afcb",
+          "observation": "c8266c50-feeb-44a7-9bf2-75f54f2dc83e",
+          "source_oid": {
+            "format": "sha1",
+            "hex": "f7e28deffbceab9f11358cfba6113bede121f500"
+          },
+          "children": []
+        },
+        "hooks": "execute"
+      },
+      {
+        "selection": {
+          "worktree": "407fa849-c4fa-4e1f-8fc8-bfb8e3822cb7",
+          "observation": "f7906943-500d-4b8f-b668-febeb2dcc473",
+          "source_oid": {
+            "format": "sha1",
+            "hex": "5217e9f7802acbf1f31b72bbc868c41882e265cd"
+          },
+          "children": [
+            {
+              "parent_observation": "f7906943-500d-4b8f-b668-febeb2dcc473",
+              "source_oid": {
+                "format": "sha1",
+                "hex": "5217e9f7802acbf1f31b72bbc868c41882e265cd"
+              },
+              "path": [
+                108,
+                101,
+                97,
+                102
+              ],
+              "child_oid": {
+                "format": "sha1",
+                "hex": "4b6e1ea1dbeabd9350368a24ad83206366dc7608"
+              },
+              "gitmodules_blob": {
+                "format": "sha1",
+                "hex": "2d15f5844cf28349dc415cb08d9c2c94d5701cf8"
+              },
+              "child_worktree": "0c13b924-9371-40ac-a754-2f6705a3afcb",
+              "child_observation": "c8266c50-feeb-44a7-9bf2-75f54f2dc83e"
+            },
+            {
+              "parent_observation": "f7906943-500d-4b8f-b668-febeb2dcc473",
+              "source_oid": {
+                "format": "sha1",
+                "hex": "5217e9f7802acbf1f31b72bbc868c41882e265cd"
+              },
+              "path": [
+                108,
+                101,
+                97,
+                102
+              ],
+              "child_oid": {
+                "format": "sha1",
+                "hex": "f7e28deffbceab9f11358cfba6113bede121f500"
+              },
+              "gitmodules_blob": {
+                "format": "sha1",
+                "hex": "2d15f5844cf28349dc415cb08d9c2c94d5701cf8"
+              },
+              "child_worktree": "0c13b924-9371-40ac-a754-2f6705a3afcb",
+              "child_observation": "c8266c50-feeb-44a7-9bf2-75f54f2dc83e"
+            }
+          ]
+        },
+        "hooks": "execute"
+      }
+    ],
+    "dependency_plan": {
+      "generated_at_ms": 1794178115215,
+      "items": [
+        {
+          "worktree": "0c13b924-9371-40ac-a754-2f6705a3afcb",
+          "preview": {
+            "source_ref": "refs/heads/main",
+            "source_oid": {
+              "format": "sha1",
+              "hex": "f7e28deffbceab9f11358cfba6113bede121f500"
+            },
+            "remote": "origin",
+            "destination": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/leaf-source",
+            "destination_ref": "refs/heads/main",
+            "observed_oid": {
+              "format": "sha1",
+              "hex": "4b6e1ea1dbeabd9350368a24ad83206366dc7608"
+            },
+            "observation_id": "c8266c50-feeb-44a7-9bf2-75f54f2dc83e",
+            "observed_at_ms": 1794177989434,
+            "generated_at_ms": 1794178106997,
+            "generation": "a5546cda6fcb214fbabe1871c404e3beffb1a865ee5d32caeaf9da891df2bf37",
+            "config_digest": "7fd62f3b11dcb9384854170983c1a3c7ebac50dfb1678d134e4426a086f7fb91",
+            "relation": "fast_forward",
+            "outgoing_count": 1,
+            "incoming_count": 0,
+            "outgoing": [
+              {
+                "oid": {
+                  "format": "sha1",
+                  "hex": "f7e28deffbceab9f11358cfba6113bede121f500"
+                },
+                "subject": [
+                  80,
+                  114,
+                  101,
+                  112,
+                  97,
+                  114,
+                  101,
+                  32,
+                  105,
+                  115,
+                  111,
+                  108,
+                  97,
+                  116,
+                  101,
+                  100,
+                  32,
+                  103,
+                  117,
+                  105,
+                  100,
+                  101,
+                  100,
+                  32,
+                  112,
+                  117,
+                  115,
+                  104,
+                  32,
+                  99,
+                  104,
+                  105,
+                  108,
+                  100,
+                  32,
+                  115,
+                  111,
+                  117,
+                  114,
+                  99,
+                  101
+                ],
+                "subject_truncated": false
+              }
+            ],
+            "outgoing_truncated": false,
+            "source_gitlinks": [],
+            "outgoing_gitlinks": [],
+            "upstream_matches": true
+          }
+        },
+        {
+          "worktree": "407fa849-c4fa-4e1f-8fc8-bfb8e3822cb7",
+          "preview": {
+            "source_ref": "refs/heads/main",
+            "source_oid": {
+              "format": "sha1",
+              "hex": "5217e9f7802acbf1f31b72bbc868c41882e265cd"
+            },
+            "remote": "origin",
+            "destination": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/middle-source",
+            "destination_ref": "refs/heads/main",
+            "observed_oid": {
+              "format": "sha1",
+              "hex": "2dbf7c743f1cf3e9b9120683d40dfedbb9301eed"
+            },
+            "observation_id": "f7906943-500d-4b8f-b668-febeb2dcc473",
+            "observed_at_ms": 1794178009902,
+            "generated_at_ms": 1794178108229,
+            "generation": "c69f80bc898b216d767bdf0287b1d85569d4ba151e46df1eb85631f5c2cdd24b",
+            "config_digest": "09937613167c8037e35494c6fba80bba71f7663bac1f463dae264e4337659aee",
+            "relation": "fast_forward",
+            "outgoing_count": 4,
+            "incoming_count": 0,
+            "outgoing": [
+              {
+                "oid": {
+                  "format": "sha1",
+                  "hex": "5217e9f7802acbf1f31b72bbc868c41882e265cd"
+                },
+                "subject": [
+                  80,
+                  114,
+                  101,
+                  112,
+                  97,
+                  114,
+                  101,
+                  32,
+                  105,
+                  115,
+                  111,
+                  108,
+                  97,
+                  116,
+                  101,
+                  100,
+                  32,
+                  103,
+                  117,
+                  105,
+                  100,
+                  101,
+                  100,
+                  32,
+                  112,
+                  117,
+                  115,
+                  104,
+                  32,
+                  112,
+                  97,
+                  114,
+                  101,
+                  110,
+                  116,
+                  32,
+                  115,
+                  111,
+                  117,
+                  114,
+                  99,
+                  101
+                ],
+                "subject_truncated": false
+              },
+              {
+                "oid": {
+                  "format": "sha1",
+                  "hex": "662bd57b94051be630d74febfb365564b36687a3"
+                },
+                "subject": [
+                  71,
+                  48,
+                  53,
+                  32,
+                  112,
+                  114,
+                  101,
+                  115,
+                  101,
+                  114,
+                  118,
+                  101,
+                  32,
+                  100,
+                  105,
+                  114,
+                  116,
+                  121,
+                  32,
+                  117,
+                  110,
+                  115,
+                  101,
+                  108,
+                  101,
+                  99,
+                  116,
+                  101,
+                  100,
+                  32,
+                  115,
+                  117,
+                  98,
+                  109,
+                  111,
+                  100,
+                  117,
+                  108,
+                  101
+                ],
+                "subject_truncated": false
+              },
+              {
+                "oid": {
+                  "format": "sha1",
+                  "hex": "949253cc316c4811271f4eb272f1196a8027d10e"
+                },
+                "subject": [
+                  71,
+                  48,
+                  50,
+                  32,
+                  114,
+                  101,
+                  118,
+                  105,
+                  101,
+                  119,
+                  32,
+                  116,
+                  114,
+                  97,
+                  110,
+                  115,
+                  105,
+                  116,
+                  105,
+                  111,
+                  110,
+                  32,
+                  100,
+                  105,
+                  97,
+                  103,
+                  110,
+                  111,
+                  115,
+                  116,
+                  105,
+                  99,
+                  32,
+                  114,
+                  111,
+                  117,
+                  110,
+                  100,
+                  32,
+                  49
+                ],
+                "subject_truncated": false
+              },
+              {
+                "oid": {
+                  "format": "sha1",
+                  "hex": "215c2e1b5e47bbb237b1ee48ff53afd2f7c7ff9b"
+                },
+                "subject": [
+                  71,
+                  48,
+                  53,
+                  32,
+                  110,
+                  97,
+                  116,
+                  105,
+                  118,
+                  101,
+                  32,
+                  116,
+                  104,
+                  114,
+                  101,
+                  101,
+                  45,
+                  108,
+                  101,
+                  118,
+                  101,
+                  108,
+                  32,
+                  114,
+                  101,
+                  118,
+                  105,
+                  101,
+                  119,
+                  101,
+                  100,
+                  32,
+                  99,
+                  111,
+                  109,
+                  109,
+                  105,
+                  116
+                ],
+                "subject_truncated": false
+              }
+            ],
+            "outgoing_truncated": false,
+            "source_gitlinks": [
+              {
+                "path": [
+                  108,
+                  101,
+                  97,
+                  102
+                ],
+                "oid": {
+                  "format": "sha1",
+                  "hex": "f7e28deffbceab9f11358cfba6113bede121f500"
+                }
+              }
+            ],
+            "outgoing_gitlinks": [
+              {
+                "path": [
+                  108,
+                  101,
+                  97,
+                  102
+                ],
+                "oid": {
+                  "format": "sha1",
+                  "hex": "4b6e1ea1dbeabd9350368a24ad83206366dc7608"
+                },
+                "example_commit": {
+                  "format": "sha1",
+                  "hex": "662bd57b94051be630d74febfb365564b36687a3"
+                },
+                "mappings": [
+                  {
+                    "declared_url": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/leaf-source",
+                    "resolution_base": null,
+                    "gitmodules_blob": {
+                      "format": "sha1",
+                      "hex": "2d15f5844cf28349dc415cb08d9c2c94d5701cf8"
+                    },
+                    "example_commit": {
+                      "format": "sha1",
+                      "hex": "662bd57b94051be630d74febfb365564b36687a3"
+                    },
+                    "destination": {
+                      "display": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/leaf-source",
+                      "transport": "local",
+                      "credentials_hidden": false,
+                      "restrictions": []
+                    },
+                    "issue": null
+                  }
+                ]
+              },
+              {
+                "path": [
+                  108,
+                  101,
+                  97,
+                  102
+                ],
+                "oid": {
+                  "format": "sha1",
+                  "hex": "f7e28deffbceab9f11358cfba6113bede121f500"
+                },
+                "example_commit": {
+                  "format": "sha1",
+                  "hex": "5217e9f7802acbf1f31b72bbc868c41882e265cd"
+                },
+                "mappings": [
+                  {
+                    "declared_url": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/leaf-source",
+                    "resolution_base": null,
+                    "gitmodules_blob": {
+                      "format": "sha1",
+                      "hex": "2d15f5844cf28349dc415cb08d9c2c94d5701cf8"
+                    },
+                    "example_commit": {
+                      "format": "sha1",
+                      "hex": "5217e9f7802acbf1f31b72bbc868c41882e265cd"
+                    },
+                    "destination": {
+                      "display": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/leaf-source",
+                      "transport": "local",
+                      "credentials_hidden": false,
+                      "restrictions": []
+                    },
+                    "issue": null
+                  }
+                ]
+              }
+            ],
+            "upstream_matches": true
+          }
+        }
+      ],
+      "dependencies": [
+        {
+          "parent_worktree": "407fa849-c4fa-4e1f-8fc8-bfb8e3822cb7",
+          "path": [
+            108,
+            101,
+            97,
+            102
+          ],
+          "child_oid": {
+            "format": "sha1",
+            "hex": "4b6e1ea1dbeabd9350368a24ad83206366dc7608"
+          },
+          "gitmodules_blob": {
+            "format": "sha1",
+            "hex": "2d15f5844cf28349dc415cb08d9c2c94d5701cf8"
+          },
+          "child_worktree": "0c13b924-9371-40ac-a754-2f6705a3afcb",
+          "child_selected": true,
+          "child_observation": "c8266c50-feeb-44a7-9bf2-75f54f2dc83e",
+          "observed_child_oid": {
+            "format": "sha1",
+            "hex": "4b6e1ea1dbeabd9350368a24ad83206366dc7608"
+          },
+          "child_observed_at_ms": 1794177989434,
+          "state": "already_reachable",
+          "issue": null
+        },
+        {
+          "parent_worktree": "407fa849-c4fa-4e1f-8fc8-bfb8e3822cb7",
+          "path": [
+            108,
+            101,
+            97,
+            102
+          ],
+          "child_oid": {
+            "format": "sha1",
+            "hex": "f7e28deffbceab9f11358cfba6113bede121f500"
+          },
+          "gitmodules_blob": {
+            "format": "sha1",
+            "hex": "2d15f5844cf28349dc415cb08d9c2c94d5701cf8"
+          },
+          "child_worktree": "0c13b924-9371-40ac-a754-2f6705a3afcb",
+          "child_selected": true,
+          "child_observation": "c8266c50-feeb-44a7-9bf2-75f54f2dc83e",
+          "observed_child_oid": {
+            "format": "sha1",
+            "hex": "4b6e1ea1dbeabd9350368a24ad83206366dc7608"
+          },
+          "child_observed_at_ms": 1794177989434,
+          "state": "selected_child_required",
+          "issue": null
+        }
+      ],
+      "order": [
+        "0c13b924-9371-40ac-a754-2f6705a3afcb",
+        "407fa849-c4fa-4e1f-8fc8-bfb8e3822cb7"
+      ],
+      "cycle": [],
+      "issues": []
+    },
+    "digest": "d4659b33b93ad7125fc241344d541c7d64282b42f5160cefd91c97f886256cfb"
+  },
+  "phase": "ready",
+  "items": [
+    {
+      "worktree": "0c13b924-9371-40ac-a754-2f6705a3afcb",
+      "phase": "complete",
+      "publication": "b6500813-19d0-41d0-ad85-08d8aff129de"
+    },
+    {
+      "worktree": "407fa849-c4fa-4e1f-8fc8-bfb8e3822cb7",
+      "phase": "pending",
+      "publication": null
+    }
+  ],
+  "issue": null
+}

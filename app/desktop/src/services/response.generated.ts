@@ -76,6 +76,16 @@ export type Data =
       [k: string]: unknown;
     }
   | {
+      kind: "push_batch";
+      value: PushBatch;
+      [k: string]: unknown;
+    }
+  | {
+      kind: "push_batches";
+      value: PushBatchPage;
+      [k: string]: unknown;
+    }
+  | {
       kind: "fetch_imports";
       value: FetchImportPage;
       [k: string]: unknown;
@@ -241,7 +251,8 @@ export type OperationAuditKind =
   | "fetch_import"
   | "upstream_setup"
   | "push_check"
-  | "push_publication";
+  | "push_publication"
+  | "push_batch";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "OperationAuditRecord".
@@ -285,6 +296,11 @@ export type OperationAuditRecord =
   | {
       kind: "push_publication";
       value: PushPublication;
+      [k: string]: unknown;
+    }
+  | {
+      kind: "push_batch";
+      value: PushBatch;
       [k: string]: unknown;
     };
 /**
@@ -435,6 +451,26 @@ export type PushPublicationPhase =
  */
 export type PushRemoteState =
   "approved_source_present" | "expected_old_present" | "different" | "missing";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "PushBatchItemPhase".
+ */
+export type PushBatchItemPhase =
+  | "pending"
+  | "skipped_observed_current"
+  | "review_pending"
+  | "executing"
+  | "complete"
+  | "blocked"
+  | "cancelled"
+  | "unconfirmed"
+  | "interrupted";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "PushBatchPhase".
+ */
+export type PushBatchPhase =
+  "ready" | "executing" | "complete" | "stopped" | "interrupted";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "OperationAuditResult".
@@ -1181,11 +1217,89 @@ export interface PushPublication {
  * via the `definition` "PushPublicationPlan".
  */
 export interface PushPublicationPlan {
+  batch?: PushBatchBinding | null;
   check: PushCheckPlan;
   created_at_ms: number;
   digest: string;
   id: string;
   [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "PushBatchBinding".
+ */
+export interface PushBatchBinding {
+  digest: string;
+  id: string;
+  worktree: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "PushBatch".
+ */
+export interface PushBatch {
+  issue?: Issue | null;
+  items: PushBatchProgress[];
+  phase: PushBatchPhase;
+  plan: PushBatchPlan;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "PushBatchProgress".
+ */
+export interface PushBatchProgress {
+  phase: PushBatchItemPhase;
+  publication?: string | null;
+  worktree: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "PushBatchPlan".
+ */
+export interface PushBatchPlan {
+  created_at_ms: number;
+  dependency_plan: PushDependencyPlan;
+  digest: string;
+  id: string;
+  selections: PushBatchSelection[];
+  workspace: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "PushDependencyPlan".
+ */
+export interface PushDependencyPlan {
+  /**
+   * Closed cycle witness, not merely the set of transitively blocked nodes.
+   */
+  cycle: string[];
+  dependencies: PushDependency[];
+  generated_at_ms: number;
+  issues: string[];
+  items: PlannedPush[];
+  order: string[];
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "PlannedPush".
+ */
+export interface PlannedPush {
+  preview: PushPreview;
+  worktree: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "PushBatchSelection".
+ */
+export interface PushBatchSelection {
+  hooks: HookPolicy;
+  selection: PushPlanningSelection;
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
@@ -1308,27 +1422,11 @@ export interface ChildReachability {
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "PushDependencyPlan".
+ * via the `definition` "PushBatchPage".
  */
-export interface PushDependencyPlan {
-  /**
-   * Closed cycle witness, not merely the set of transitively blocked nodes.
-   */
-  cycle: string[];
-  dependencies: PushDependency[];
-  generated_at_ms: number;
-  issues: string[];
-  items: PlannedPush[];
-  order: string[];
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "PlannedPush".
- */
-export interface PlannedPush {
-  preview: PushPreview;
-  worktree: string;
+export interface PushBatchPage {
+  items: PushBatch[];
+  next?: number | null;
   [k: string]: unknown;
 }
 /**
@@ -1347,6 +1445,7 @@ export interface FetchImportPage {
 export interface WorkspaceList {
   active?: string | null;
   fetch_import_recovery: RemoteRecoveryNotice[];
+  push_batch_recovery?: RemoteRecoveryNotice[];
   push_publication_recovery?: RemoteRecoveryNotice[];
   recovery: RecoveryNotice[];
   upstream_recovery: RemoteRecoveryNotice[];

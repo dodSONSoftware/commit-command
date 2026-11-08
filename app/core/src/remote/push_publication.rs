@@ -10,6 +10,8 @@ pub struct PushPublicationPlan {
     pub created_at_ms: u64,
     pub check: PushCheckPlan,
     pub digest: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub batch: Option<super::push_batch::PushBatchBinding>,
 }
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "snake_case")]

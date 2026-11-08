@@ -7,6 +7,25 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G08 guided push queue — implemented, selected acceptance passed
+
+[Guided queue checkpoint](reports/G08_GUIDED_PUSH_QUEUE_2026-11-08.md): durable
+explicit child-first order now composes independently approved exact publications.
+Plans freeze sources/destinations/hooks/child mappings; selected published children
+require fresh post-success observations before parent review. Failure/cancellation/
+uncertainty stops the queue, successes persist, fresh retries use new plans, and
+restart restores no execution authority. Saved paging/history is read-only.
+Focused Core SHA-1/SHA-256, skip, trust/scope, partial rejection/recovery/retry and
+actual between-item SIGKILL passed. Native child publication, expired-parent safe
+stop, fresh parent-only queue completion and ordinary restart/history passed in the
+already trusted fixture. Exact bytes/modes/old journals/trust/server preservation,
+clean exits/integrity/lock reopen and source/artifact hashes passed. Full desktop
+99 renderer / 14 ordinary-host / 17 all-feature-host and checks passed. Full Core
+62/97/87/256/302 and lab 24/24 passed, with format/builds/strict Clippy in each
+configuration. Full runners exited 0; ignored subprocess/opt-in cases remain explicit.
+This is guided per-item authority; broader native uninterrupted/topology/authenticated/
+interruption/accessibility coverage remains open. G09 is next functional work.
+
 ### November 8 G07 authenticated loopback publication — passed in Core
 
 [Authenticated publication](reports/G07_AUTHENTICATED_PUBLICATION_2026-11-08.md):
@@ -17,7 +36,7 @@ legacy read-only mode still refuses them. SSH fixture service ignores inherited 
 configuration; rejecting global-hook sentinel stayed untouched. Complete remote suite
 99 passed / 5 explicitly ignored; final focused 4, strict Clippy/format/AST/diff passed.
 Production code unchanged; no real user credentials/agent/server or new native trust.
-Native authenticated/topology/interruption coverage remains open; G08 follows next.
+Native authenticated/topology/interruption coverage remains open; the later G08 checkpoint above adds guided coordination.
 
 ### November 8 G02/G07 native host loss during publication — passed
 
@@ -635,7 +654,7 @@ authority. No default change, commit, push or release is authorized by this reco
 | M5C push preview/child evidence/planning | Implemented; selected native acceptance passed | [Relative child evidence](reports/M5C_RELATIVE_CHILD_ACCEPTANCE_2026-11-02.md), [multi-level planning](reports/M5C_DEPENDENCY_PLANNING_2026-11-03.md), [native planner](reports/M5C_PLANNER_NATIVE_ACCEPTANCE_2026-11-03.md); G03, G06–G08 remain; no publication |
 | M5C independently reviewed pre-push hook check | Implemented; selected automated/native acceptance passed | [Check report](reports/M5C_REVIEWED_PUSH_CHECKS_2026-11-03.md); hook approval only, unpublished history/no replay; selected native interruption/manager-refusal/bypass cases passed; broader G06 compatibility remains |
 | M5C individual push publication | Implemented; selected acceptance passed | Separate exact native publication, isolated ancestry/expected-old transport and observation recovery; broader G07 acceptance remains |
-| M5C bulk push publication | Not implemented | Build selected-child coordination on verified individual outcomes: G08 |
+| M5C bulk push publication | Guided per-item queue implemented; selected automated/native acceptance passed | Durable child-first scheduling, fresh post-child evidence, partial stop/retry and no-replay restart; [G08 report](reports/G08_GUIDED_PUSH_QUEUE_2026-11-08.md); broader acceptance remains |
 | M6 AI foundation | Not implemented | `app/core/src/ai/` contains only `.gitkeep`; profiles, providers, templates and exact context pipeline: G09 |
 | M7 AI commits / SemVer Actions | Not implemented | `app/core/src/actions/` contains only `.gitkeep`; deterministic recovery and separate bounded automatic authority: G09 |
 | M8 backup/retention/usability/release | Partial foundations only | Atomic storage, migrations and development bundles exist; general backup/restore, retention and release acceptance do not: G03, G10–G11 |
@@ -1004,8 +1023,9 @@ AI, SemVer Actions and backups remain in the approved product scope, not deferre
    acceptance to supported authenticated loopback transports, topology and native
    interruption cases. The implementation and selected fixture evidence are above;
    never use a user repository or private server as an implicit acceptance target.
-3. **G08:** build bulk push on verified individual outcomes and fresh child-success
-   evidence. Exit only with partial-failure/retry and dependency acceptance.
+3. **G08 remaining acceptance:** guided per-item coordination now has selected
+   dependency/partial-stop/fresh-retry evidence. Expand native uninterrupted multi-level,
+   authenticated topology, phase-specific interruption and usability coverage.
 4. **G09:** AI foundation, deterministic Actions, then assisted/bounded automatic
    commits, following the completion plan's separate authorization contracts.
 5. **G10–G11 and remaining G03:** complete state portability, measured usability and

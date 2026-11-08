@@ -22,6 +22,7 @@ import type {
   RecoveryNotice,
   ScanSummary,
   RemoteRecoveryNotice,
+  PushBatch,
 } from "../services/response.generated";
 import type { WriteRequest } from "../services/request.generated";
 import {
@@ -80,11 +81,18 @@ export function App({ bridge }: { bridge: Bridge }) {
   const [publicationRecovery, setPublicationRecovery] = useState<
     RemoteRecoveryNotice[]
   >([]);
+  const [batchRecovery, setBatchRecovery] = useState<RemoteRecoveryNotice[]>(
+    [],
+  );
+  const [guidedPushBatch, setGuidedPushBatch] = useState<PushBatch | null>(
+    null,
+  );
   const recoveryNotices = [
     ...recovery,
     ...importRecovery,
     ...upstreamRecovery,
     ...publicationRecovery,
+    ...batchRecovery,
   ];
   const context = useRef<string | null>(null);
   const loaded = useRef(false);
@@ -180,6 +188,7 @@ export function App({ bridge }: { bridge: Bridge }) {
     setImportRecovery(data.fetch_import_recovery);
     setUpstreamRecovery(data.upstream_recovery ?? []);
     setPublicationRecovery(data.push_publication_recovery ?? []);
+    setBatchRecovery(data.push_batch_recovery ?? []);
     const ws = data.active ?? null;
     if (context.current !== ws) {
       loaded.current = false;
@@ -788,6 +797,13 @@ export function App({ bridge }: { bridge: Bridge }) {
               {workspace && (
                 <PushDependencyPlanner
                   enabled={writesEnabled}
+                  activeBatch={
+                    guidedPushBatch?.plan.workspace === workspace
+                      ? guidedPushBatch
+                      : null
+                  }
+                  onBatch={setGuidedPushBatch}
+                  revision={resultsRevision}
                   key={`${workspace}:${resultsRevision}`}
                   bridge={bridge}
                   workspace={workspace}

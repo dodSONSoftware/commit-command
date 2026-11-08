@@ -18,6 +18,7 @@ pub enum OperationAuditKind {
     UpstreamSetup,
     PushCheck,
     PushPublication,
+    PushBatch,
 }
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "snake_case")]
@@ -50,6 +51,7 @@ pub enum OperationAuditRecord {
     UpstreamSetup(Box<UpstreamOperation>),
     PushCheck(Box<crate::remote::push_check::PushCheck>),
     PushPublication(Box<crate::remote::push_publication::PushPublication>),
+    PushBatch(Box<crate::remote::push_batch::PushBatch>),
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct OperationAuditEntry {
@@ -107,8 +109,14 @@ WITH sources AS (
          'push_publication', json_extract(value,'$.value.phase'), value,
          json_extract(value,'$.value.plan.check.worktree')
     FROM state WHERE key LIKE 'push-publication:%' AND json_extract(value,'$.value.plan.check.workspace')=?1
+  UNION ALL
+  SELECT 'push_batch', substr(key,12), json_extract(value,'$.value.plan.created_at_ms'),
+         'push_batch', json_extract(value,'$.value.phase'), value, NULL
+    FROM state WHERE key LIKE 'push-batch:%' AND json_extract(value,'$.value.plan.workspace')=?1
 ), classified AS (
   SELECT *, CASE
+    WHEN source='push_batch' AND (phase='executing' OR (phase='ready' AND json_extract(payload,'$.session')<>?16)) THEN 'interrupted'
+    WHEN source='push_batch' AND phase='ready' THEN 'pending'
     WHEN source='local' AND phase IN ('proposed','approved') AND id IS NOT ?8 THEN 'interrupted'
     WHEN source='batch' AND (phase='executing' OR (phase='proposed' AND id IS NOT ?9)) THEN 'interrupted'
     WHEN source='remote' AND (phase='running' OR (phase='proposed' AND id IS NOT ?10)) THEN 'interrupted'
@@ -131,7 +139,7 @@ SELECT source,id,created,kind,result,
        CASE WHEN length(CAST(payload AS BLOB))<=4194304 THEN payload ELSE NULL END
 FROM classified
 WHERE (?2 IS NULL OR worktree=?2 OR (source='batch' AND EXISTS (
-  SELECT 1 FROM json_each(payload,'$.items') WHERE json_extract(value,'$.worktree')=?2)))
+  SELECT 1 FROM json_each(payload,'$.items') WHERE json_extract(value,'$.worktree')=?2)) OR (source='push_batch' AND EXISTS (SELECT 1 FROM json_each(payload,'$.value.plan.selections') WHERE json_extract(value,'$.selection.worktree')=?2)))
   AND (?3 IS NULL OR kind=?3) AND (?4 IS NULL OR result=?4)
   AND (?5 IS NULL OR created>=?5) AND (?6 IS NULL OR created<=?6)
 ORDER BY created DESC,source,id LIMIT 51 OFFSET ?7
@@ -200,6 +208,7 @@ impl Application {
         }
         let kind = name(query.operation_kind)?;
         let result = name(query.result)?;
+        let batch_session = self.writes.push_batch_session().to_owned();
         let mut rows = Vec::new();
         let mut more = false;
         {
@@ -220,7 +229,8 @@ impl Application {
                     import,
                     upstream,
                     push_check,
-                    publication
+                    publication,
+                    batch_session
                 ],
                 |r| {
                     Ok((
@@ -332,6 +342,16 @@ impl Application {
                         item.phase = FetchImportPhase::Interrupted;
                     }
                     OperationAuditRecord::FetchImport(Box::new(item))
+                }
+                "push_batch" => {
+                    let item = self.writes.push_batch_audit_detail(&payload)?;
+                    if item.plan.id != id
+                        || item.plan.workspace.0 != workspace
+                        || item.plan.created_at_ms != created
+                    {
+                        return Err(invalid("Inconsistent guided push queue audit record"));
+                    }
+                    OperationAuditRecord::PushBatch(Box::new(item))
                 }
                 "push_publication" => {
                     let mut item = self.writes.publication_audit_detail(&payload)?;

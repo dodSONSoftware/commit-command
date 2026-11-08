@@ -2751,3 +2751,6 @@ mod push_publication;
 
 #[path = "support/push_publication_auth.rs"]
 mod push_publication_auth;
+
+#[path = "support/push_batch.rs"]
+mod push_batch;

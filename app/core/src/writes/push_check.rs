@@ -20,7 +20,7 @@ fn plan_digest(plan: &PushCheckPlan) -> Result<String> {
     value.digest.clear();
     Ok(digest(&serde_json::to_vec(&value)?))
 }
-fn hook(meta: &Metadata, options: &Options) -> Result<Option<Hook>> {
+pub(super) fn hook(meta: &Metadata, options: &Options) -> Result<Option<Hook>> {
     let (_, values, _) = adapter::config_snapshot(
         &meta.root.to_path()?,
         &options.process,

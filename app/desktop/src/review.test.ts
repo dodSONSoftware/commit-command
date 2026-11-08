@@ -87,7 +87,7 @@ it("does not label an executing operation expired when its review deadline passe
   fireEvent.click(document.querySelector("button.primary")!);
   await vi.advanceTimersByTimeAsync(2000);
   expect(document.querySelector('[role="status"]')).toHaveTextContent(
-    "Awaiting independent native approval",
+    "Waiting for native approval or the approved operation to finish",
   );
   expect(document.querySelector('[role="status"]')).not.toHaveTextContent(
     "Review expired",

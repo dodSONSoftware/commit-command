@@ -7,10 +7,12 @@ import type {
   Observation,
   PlannedPush,
   PushDependencyPlan,
+  PushBatch,
   StoredWorktree,
 } from "../services/response.generated";
 import { bytes, pathText } from "../stores/model";
 import { ChildReachabilityForm } from "./ChildReachabilityForm";
+import { GuidedPushQueue } from "./GuidedPushQueue";
 import { PushPreviewResult } from "./PushPreviewResult";
 const bindingKey = (b: ChildReachabilitySelection) =>
   JSON.stringify([b.path, b.child_oid, b.gitmodules_blob]);
@@ -21,14 +23,25 @@ export function PushDependencyPlanner({
   busy,
   act,
   enabled = false,
+  activeBatch,
+  onBatch,
+  revision = 0,
 }: {
   enabled?: boolean;
+  activeBatch?: PushBatch | null;
+  onBatch?: (batch: PushBatch) => void;
+  revision?: number;
   bridge: Bridge;
   workspace: string;
   entries: StoredWorktree[];
   busy: boolean;
   act: (f: () => Promise<void>) => Promise<void>;
 }) {
+  const [localBatch, setLocalBatch] = useState<PushBatch | null>(null);
+  const [savedQueues, setSavedQueues] = useState<PushBatch[]>([]);
+  const [queueNext, setQueueNext] = useState<number | null>(null);
+  const batch = activeBatch ?? localBatch;
+  const setBatch = onBatch ?? setLocalBatch;
   const [selected, setSelected] = useState<string[]>([]);
   const [history, setHistory] = useState<Record<string, Observation[]>>({});
   const [observations, setObservations] = useState<Record<string, string>>({});
@@ -134,7 +147,11 @@ export function PushDependencyPlanner({
                   </option>
                   {(history[entry.id] ?? []).map((o) => (
                     <option key={o.plan.id} value={o.plan.id}>
-                      {o.plan.destination} · {o.plan.reference} · {o.oid?.hex}
+                      {o.plan.destination} · {o.plan.reference} · {o.oid?.hex} ·
+                      observed{" "}
+                      {o.observed_at_ms != null
+                        ? new Date(o.observed_at_ms).toISOString()
+                        : "Unknown time"}
                     </option>
                   ))}
                 </select>
@@ -314,6 +331,107 @@ export function PushDependencyPlanner({
       >
         Build local dependency plan
       </button>
+      <button
+        disabled={busy || !sources.length || sources.length !== selected.length}
+        onClick={() =>
+          void act(async () => {
+            setBatch(
+              value(
+                await bridge.request({
+                  kind: "create_push_batch",
+                  workspace,
+                  selections: sources.map((source) => ({
+                    selection: {
+                      worktree: source.worktree,
+                      observation: source.preview.observation_id,
+                      source_oid: source.preview.source_oid,
+                      children: bindings[source.worktree] ?? [],
+                    },
+                    hooks: hooks[source.worktree] ?? "execute",
+                  })),
+                }),
+                "push_batch",
+              ),
+            );
+          })
+        }
+      >
+        Create guided push queue
+      </button>
+      <button
+        disabled={busy}
+        onClick={() =>
+          void act(async () => {
+            const page = value(
+              await bridge.request({
+                kind: "push_batches",
+                workspace,
+                offset: 0,
+              }),
+              "push_batches",
+            );
+            setSavedQueues(page.items);
+            setQueueNext(page.next ?? null);
+          })
+        }
+      >
+        Load guided push queues
+      </button>
+      {savedQueues.length > 0 && (
+        <ul aria-label="Saved guided push queues">
+          {savedQueues.map((saved) => (
+            <li key={saved.plan.id}>
+              <button disabled={busy} onClick={() => setBatch(saved)}>
+                Inspect queue from{" "}
+                {new Date(saved.plan.created_at_ms).toISOString()} ·{" "}
+                {saved.phase.replaceAll("_", " ")}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+      {queueNext !== null && (
+        <button
+          disabled={busy}
+          onClick={() =>
+            void act(async () => {
+              const page = value(
+                await bridge.request({
+                  kind: "push_batches",
+                  workspace,
+                  offset: queueNext,
+                }),
+                "push_batches",
+              );
+              setSavedQueues((old) => {
+                const ids = new Set(old.map((v) => v.plan.id));
+                return [
+                  ...old,
+                  ...page.items.filter((v) => !ids.has(v.plan.id)),
+                ];
+              });
+              setQueueNext(page.next ?? null);
+            })
+          }
+        >
+          Load more guided push queues
+        </button>
+      )}
+      {batch && (
+        <GuidedPushQueue
+          bridge={bridge}
+          workspace={workspace}
+          batch={batch}
+          sources={sources}
+          bindings={bindings}
+          enabled={enabled}
+          busy={busy}
+          act={act}
+          revision={revision}
+          onChange={setBatch}
+          label={label}
+        />
+      )}
       {plan && (
         <section aria-label="Push dependency planning result">
           <h3>

@@ -2,6 +2,7 @@
 pub mod fetch;
 pub mod observation;
 pub mod push;
+pub mod push_batch;
 pub mod push_check;
 pub mod push_publication;
 pub mod upstream;

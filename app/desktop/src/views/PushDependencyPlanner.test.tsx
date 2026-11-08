@@ -12,6 +12,7 @@ import type {
   Observation,
   PushDependencyPlan,
   PushPreview,
+  PushBatch,
 } from "../services/response.generated";
 import { fixtureEntry } from "../testdata";
 import { PushDependencyPlanner } from "./PushDependencyPlanner";
@@ -418,4 +419,98 @@ it("requires an independent exact publication request with ordinary-build gating
       hooks: "execute",
     }),
   );
+});
+
+it("creates a durable guided queue from explicit sources without issuing item approval", async () => {
+  const request = setup(false, true);
+  const original = request.getMockImplementation();
+  if (!original) throw new Error("Missing fixture implementation");
+  const selection = {
+    worktree: "b",
+    observation: "obs-b",
+    source_oid: oid("b"),
+    children: [],
+  };
+  const queue: PushBatch = {
+    phase: "ready",
+    items: [{ worktree: "b", phase: "pending", publication: null }],
+    plan: {
+      id: "queue",
+      workspace: "ws",
+      created_at_ms: 1,
+      digest: "fixed",
+      selections: [{ selection, hooks: "execute" }],
+      dependency_plan: {
+        generated_at_ms: 1,
+        items: [{ worktree: "b", preview: preview("b") }],
+        dependencies: [],
+        order: ["b"],
+        cycle: [],
+        issues: [],
+      },
+    },
+  };
+  request.mockImplementation(async (r) => {
+    if (r.kind === "create_push_batch" || r.kind === "push_batch")
+      return { kind: "push_batch", value: queue };
+    if (r.kind === "push_batches")
+      return { kind: "push_batches", value: { items: [queue], next: null } };
+    return original(r);
+  });
+  fireEvent.click(screen.getByText("Plan push dependencies locally"));
+  await choose("b");
+  await inspect();
+  fireEvent.click(
+    screen.getByRole("button", { name: "Create guided push queue" }),
+  );
+  await screen.findByRole("heading", { name: "Guided push queue · ready" });
+  expect(request).toHaveBeenCalledWith({
+    kind: "create_push_batch",
+    workspace: "ws",
+    selections: [{ selection, hooks: "execute" }],
+  });
+  expect(
+    request.mock.calls.some(([r]) => r.kind === "review_push_batch_item"),
+  ).toBe(false);
+});
+it("distinguishes identical branch tips by observation time without auto-selection", async () => {
+  const request = setup();
+  const original = request.getMockImplementation();
+  if (!original) throw new Error("Missing fixture implementation");
+  request.mockImplementation(async (r) => {
+    if (r.kind === "remote_observations")
+      return {
+        kind: "remote_observations",
+        value: {
+          items: [
+            observed("b"),
+            {
+              ...observed("b"),
+              plan: { ...observed("b").plan, id: "newer-b", created_at_ms: 2 },
+              observed_at_ms: 2,
+            },
+          ],
+          next: null,
+        },
+      };
+    return original(r);
+  });
+  fireEvent.click(screen.getByText("Plan push dependencies locally"));
+  fireEvent.click(
+    screen.getByRole("checkbox", { name: "Plan push for /tmp/project/b" }),
+  );
+  fireEvent.click(
+    screen.getByRole("button", {
+      name: "Load branch observations for /tmp/project/b",
+    }),
+  );
+  await screen.findByRole("option", {
+    name: /observed 1970-01-01T00:00:00.002Z/,
+  });
+  expect(
+    screen.getByRole("option", { name: /observed 1970-01-01T00:00:00.001Z/ }),
+  ).toBeInTheDocument();
+  expect(
+    screen.getByLabelText("Planned branch for /tmp/project/b"),
+  ).toHaveValue("");
 });

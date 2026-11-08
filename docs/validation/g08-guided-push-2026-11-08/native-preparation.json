@@ -1,0 +1,10 @@
+{
+  "fixture": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr",
+  "heads": {
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent": "8df29fca0127da252cf1fb2c3923670b3e37d715",
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle": "5217e9f7802acbf1f31b72bbc868c41882e265cd",
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle/leaf": "f7e28deffbceab9f11358cfba6113bede121f500",
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/unselected": "e9bfc641cb50a16e8914d1fe4b6b8be519560c37"
+  },
+  "preparation_only": true
+}

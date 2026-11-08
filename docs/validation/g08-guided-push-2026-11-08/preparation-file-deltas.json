@@ -1,0 +1,15 @@
+[
+  "parent/.git/modules/middle/modules/leaf/refs/heads/main",
+  "parent/.git/modules/middle/modules/leaf/logs/refs/heads/main",
+  "parent/.git/modules/middle/modules/leaf/index",
+  "parent/.git/modules/middle/COMMIT_EDITMSG",
+  "parent/.git/modules/middle/logs/HEAD",
+  "parent/.git/modules/middle/objects/52/17e9f7802acbf1f31b72bbc868c41882e265cd",
+  "parent/.git/modules/middle/index",
+  "parent/.git/modules/middle/modules/leaf/COMMIT_EDITMSG",
+  "parent/.git/modules/middle/objects/30/8134b5b891e3885246d7ba46d7d3092050953e",
+  "parent/.git/modules/middle/logs/refs/heads/main",
+  "parent/.git/modules/middle/refs/heads/main",
+  "parent/.git/modules/middle/modules/leaf/logs/HEAD",
+  "parent/.git/modules/middle/modules/leaf/objects/f7/e28deffbceab9f11358cfba6113bede121f500"
+]
