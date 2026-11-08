@@ -54,3 +54,22 @@ contract; this experiment alone is insufficient production safety evidence.
 [Reproducible evidence](../validation/g07-publication-primitives-2026-11-08/) contains
 probe.py, Git version, exact fixture/commit IDs and expected-old success/refusal.
 These requirements are implementation work, not completed application capabilities.
+
+
+## Approved object closure export — passed as a Git primitive
+
+A second disposable fixture has an approved main commit and a distinct unselected
+branch containing an extra blob. Initialized an isolated bare transport repository.
+With sanitized isolated configuration, GIT_OBJECT_DIRECTORY points to source objects
+for rev-list/cat-file/pack-objects reads only; no source refs/config are copied.
+Enumerated only approved OID reachability, checked object count/uncompressed budget,
+exported a full pack through stdout, removed the managed object-directory override,
+and indexed/fscked it into the isolated repository's own object store.
+
+Actual isolated object set exactly equalled the three approved reachable objects
+(265 uncompressed bytes, 246-byte pack); unselected branch blob absent. Source-only
+config key absent from isolated configuration; every managed repository file hash
+and mode unchanged. No network or trust grant. pack-probe.py / pack-result.json
+retain exact commands and independent object-set proof. Production implementation
+still needs fixed tool bindings, strict process/artifact budgets, revalidation and
+durable uncertain-publication handling. No application capability inferred.

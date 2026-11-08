@@ -1,0 +1,15 @@
+{
+  "root": "/private/tmp/gitfleet-g07-object-export-bw8yjbma",
+  "approved_oid": "77107102da91bc456d141afa4b506940a42697b2",
+  "unselected_blob": "b9dec174f2d6e43bfca42eda8b0ef510f2fd1d69",
+  "object_count": 3,
+  "uncompressed_bytes": 265,
+  "pack_bytes": 246,
+  "pack_sha256": "47f38298d3b70d1fbffbf2886379036fe390cde65282d6c9c53cbabe947a8ebc",
+  "exact_approved_reachable_closure_only": true,
+  "unselected_branch_blob_absent": true,
+  "source_config_not_loaded": true,
+  "managed_repository_exact_files_modes": true,
+  "isolated_objects_fsck_passed": true,
+  "primitive_only_not_application_acceptance": true
+}

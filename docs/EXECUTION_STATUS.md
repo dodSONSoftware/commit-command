@@ -13,6 +13,8 @@ this record. Reconciliation does not accept new gates or change product scope.
 local bare fixture proved exact source export/import into an isolated repository,
 ancestry-checked publication and expected-old refusal when the server advances even
 to another ancestor of the approved source. No user repository/remote involved.
+Approved reachable-object export also passed: exact object set in isolated store,
+unselected branch blob absent, source config not loaded, managed files/modes exact.
 This is Git primitive evidence, not application push authority or G07 closure.
 Implement a separate publication review/journal/isolated transport path next; prior
 hook checks remain non-publication actions. G03 ancestor-status fix is in validation.
