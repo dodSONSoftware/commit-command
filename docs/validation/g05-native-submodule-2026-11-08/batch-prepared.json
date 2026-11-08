@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "id": "c75528a4-5ba6-4360-b130-eadcff6835d9",
+  "workspace": "02447833-15bd-427f-b507-97d2dc4ff948",
+  "created_at_ms": 1794158033215,
+  "phase": "proposed",
+  "issue": null,
+  "items": [
+    {
+      "worktree": "8e41c396-4757-496b-931b-10c0873f2a9e",
+      "path": {
+        "encoding": "utf8",
+        "value": "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace/parent/module"
+      },
+      "dependencies": [],
+      "operation": "ceadc3b4-09a7-4a78-917a-02707abfb507",
+      "issue": null
+    },
+    {
+      "worktree": "3b02428c-0b46-4f68-b823-59b2585fa35b",
+      "path": {
+        "encoding": "utf8",
+        "value": "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace/parent"
+      },
+      "dependencies": [
+        "8e41c396-4757-496b-931b-10c0873f2a9e"
+      ],
+      "operation": "f8298e02-80f9-47a4-980f-7f06d84c6ab4",
+      "issue": null
+    }
+  ]
+}

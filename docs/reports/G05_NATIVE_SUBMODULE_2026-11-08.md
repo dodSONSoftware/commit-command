@@ -15,3 +15,17 @@ evidence, not native execution. Native child publication, stale-parent stop, fre
 parent approval, unselected preservation and restart/no replay remain pending.
 
 [Prepared evidence](../validation/g05-native-submodule-2026-11-08/fixture.json).
+
+## Native child-first execution passed
+
+User explicitly authorized only parent and parent/module. Native authoritative review
+and independent OS confirmation granted exactly those two trusts; control stayed
+unselected/untrusted. Native bulk review listed actual module first and parent with
+that dependency. Approved exact shared message and eligible file changes. Child
+published one commit with exact file blob/message and reconciled clean index. Parent
+operation cancelled_before_publication, batch needs_reauthorization with explicit
+fresh-gitlink-review reason. Parent HEAD/index unchanged. Unselected control exact
+bytes/modes/HEAD unchanged; config/bindings preserved; SQLite integrity ok. Oracle
+initially assumed phase partial rather than the actual needs_reauthorization enum;
+corrected expected phase, no implementation change. Fresh parent review/restart
+remain pending; no gate closure inferred.

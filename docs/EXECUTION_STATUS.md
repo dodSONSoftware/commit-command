@@ -17,14 +17,14 @@ shell syntax passed. Hosted CI/Linux/Brew steps and distribution acceptance unru
 no push/release. G11 is partial. This independent prerequisite work ran while native
 G05 exact fixture-trust authorization was pending; remaining gates are not skipped.
 
-### November 8 G05 child/parent native batch — ready for fixture trust
+### November 8 G05 child-first batch — passed; fresh parent review pending
 
-[Prepared package](reports/G05_NATIVE_SUBMODULE_2026-11-08.md): actual disposable
-parent/submodule plus dirty unselected control scanned; fresh acceptance artifact
-rendered exact two-worktree native trust review. No trust/write rows. Owning Core
-submodule ordering/fresh-parent regression passed. Exact fixture trust authorization
-requested; native mutation awaits reply. Independent work continues; no G05 pass
-is inferred and G04 remains disabled.
+[Native package](reports/G05_NATIVE_SUBMODULE_2026-11-08.md): user authorized exactly
+two fixture trusts. Real native batch committed child once with exact blob/message,
+then stopped parent before publication as needs_reauthorization. Parent HEAD/index
+and dirty unselected control preserved; config/binding/SQLite oracles passed. Fresh
+parent-only gitlink review and ordinary restart remain next. No product patch, push,
+new implicit selection or ordinary write enablement.
 
 ### November 8 G03 measured scale / partial scan recovery
 
