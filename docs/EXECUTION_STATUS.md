@@ -7,6 +7,20 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G05 malformed relationship refusal — Core/native passed within envelope
+
+[Invalid relationship package](reports/G05_INVALID_RELATIONSHIPS_2026-11-08.md): eight
+real malformed .gitmodules cases (self/ancestor/escape/absolute/traversal/metadata/
+empty component/syntax) refused before batch or operation creation; exact full repo
+snapshots preserved. Bulk suite 14 passed / 1 subprocess worker ignored, format and
+strict target Clippy passed. Native ancestor-edge case displayed incomplete discovery
+and invalid_path, then refused bulk preparation with no review/grant/publication.
+Restored only test declaration bytes/mode; complete discovery and ordinary read-only
+restart passed, zero new records and all prior files/payloads/trusts exact, exits 0,
+integrity/lock reopen passed. No runtime patch. Arbitrary synthetic graph-cycle
+fallback is not independently accepted; remaining bulk selection/revocation and
+accessibility criteria stay open.
+
 ### November 8 G02/G05 completed-batch review transition — traced repeat passed, finding open
 
 [Instrumented diagnostic](reports/G02_REVIEW_TRANSITION_2026-11-08.md): fixture-only
@@ -18,8 +32,8 @@ self-cancellation reproduced. Exact old records/leaf metadata/control preserved;
 rebuilt ordinary restart read-only/no replay, both exits 0/integrity/lock reopen passed.
 Full desktop validation 91 renderer / 13 default-host / 16 all-feature host, type/lint/
 contracts/format/build/strict Clippy passed. Original unexpected cancellation stays
-open; no speculative runtime fix. Next distinct G05 work: malformed/cyclic graph
-refusal coverage, then remaining native selection/revocation/accessibility criteria.
+open; no speculative runtime fix. Selected malformed/self/ancestor relationship refusal now recorded above; remaining
+native selection/revocation/accessibility and synthetic graph fallback criteria stay open.
 
 ### November 8 G05 native three-level chain — selected execution/restart passed
 

@@ -1,0 +1,8 @@
+{
+  "stage": "refusal",
+  "exact_repository_files_modes": true,
+  "zero_new_batches_or_operations": true,
+  "all_previous_operation_batch_payloads_exact": true,
+  "unchanged_three_trusts_control_untrusted": true,
+  "integrity": "ok"
+}

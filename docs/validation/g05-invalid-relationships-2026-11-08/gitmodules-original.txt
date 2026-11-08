@@ -1,0 +1,3 @@
+[submodule "middle"]
+	path = middle
+	url = /private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/middle-source

@@ -473,6 +473,59 @@ fn real_submodule_commits_before_parent_and_changed_gitlink_requires_fresh_paren
 }
 
 #[test]
+fn malformed_submodule_relationships_stop_before_batch_proposals() {
+    // Self/ancestor edges cannot form a dependency cycle through normalized child paths.
+    let modules = [
+        "[submodule \"self\"]\npath = .\n",
+        "[submodule \"ancestor\"]\npath = ..\n",
+        "[submodule \"escape\"]\npath = ../outside\n",
+        "[submodule \"absolute\"]\npath = /outside\n",
+        "[submodule \"traversal\"]\npath = child/../outside\n",
+        "[submodule \"metadata\"]\npath = .git\n",
+        "[submodule \"separator\"]\npath = child//outside\n",
+        "[submodule \"malformed\"\npath = child\n",
+    ];
+    for content in modules {
+        let mut t = setup(1);
+        fs::write(t.f.repo.join(".gitmodules"), content).unwrap();
+        let before = tree_bytes(&t.f.repo);
+        let selected = selection(&t, 0);
+        let error = t
+            .app
+            .request(
+                t.app.epoch(),
+                Request::ReviewBatch {
+                    workspace: t.ws.clone(),
+                    selections: vec![selected],
+                },
+            )
+            .unwrap_err();
+        assert_eq!(error.kind, ErrorKind::Unavailable, "{content}");
+        assert_eq!(
+            error.to_string(),
+            "Complete discovery is required for batch dependency planning"
+        );
+        for request in [
+            Request::Batches {
+                workspace: t.ws.clone(),
+                offset: 0,
+            },
+            Request::Operations {
+                workspace: t.ws.clone(),
+                offset: 0,
+            },
+        ] {
+            match t.app.request(t.app.epoch(), request).unwrap().data {
+                Data::Batches(page) => assert!(page.items.is_empty()),
+                Data::Operations(page) => assert!(page.items.is_empty()),
+                _ => panic!("Unexpected audit response"),
+            }
+        }
+        assert_eq!(tree_bytes(&t.f.repo), before, "{content}");
+    }
+}
+
+#[test]
 fn three_level_submodules_require_fresh_review_at_each_changed_parent() {
     let mut t = setup(1);
     let leaf_source = Fixture::new();

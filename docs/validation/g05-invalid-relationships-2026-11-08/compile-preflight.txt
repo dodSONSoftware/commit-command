@@ -1,0 +1,9 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+error[E0616]: field `message` of struct `gitfleet_core::Error` is private
+   --> tests/bulk_application.rs:505:19
+    |
+505 |             error.message,
+    |                   ^^^^^^^ private field
+
+For more information about this error, try `rustc --explain E0616`.
+error: could not compile `gitfleet-core` (test "bulk_application") due to 1 previous error

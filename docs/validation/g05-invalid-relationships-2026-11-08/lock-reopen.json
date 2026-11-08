@@ -1,0 +1,25 @@
+[
+  {
+    "discovery": {
+      "excluded_names": [
+        "node_modules",
+        ".venv",
+        "target",
+        "dist",
+        "build",
+        ".gitfleet-rust-lab"
+      ],
+      "excluded_patterns": []
+    },
+    "display_root": {
+      "encoding": "utf8",
+      "value": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace"
+    },
+    "id": "8fbb404a-a70e-47fe-a911-3bf94a4ee709",
+    "name": "G05 three-level submodules",
+    "root": {
+      "encoding": "utf8",
+      "value": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace"
+    }
+  }
+]

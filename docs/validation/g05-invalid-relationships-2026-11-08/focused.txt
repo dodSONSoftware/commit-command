@@ -1,0 +1,9 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.52s
+     Running tests/bulk_application.rs (app/core/target/debug/deps/bulk_application-ddcca4ea8d990b9c)
+
+running 1 test
+test malformed_submodule_relationships_stop_before_batch_proposals ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 14 filtered out; finished in 4.73s
+
