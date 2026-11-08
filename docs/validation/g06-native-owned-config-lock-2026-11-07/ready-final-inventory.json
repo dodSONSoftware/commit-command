@@ -1,0 +1,207 @@
+[
+  {
+    "availability": "available",
+    "display_path": {
+      "encoding": "utf8",
+      "value": ""
+    },
+    "id": "b9387056-863e-4350-9e13-bc9ec9045dd3",
+    "issue": null,
+    "metadata": {
+      "common_binding": "16777233:54103832:Some(SystemTime { tv_sec: 1794115566, tv_nsec: 595803304 })",
+      "common_dir": {
+        "encoding": "utf8",
+        "value": "/private/var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-m0-43926-1794115566592066000-0/repo/.git"
+      },
+      "git_binding": "16777233:54103832:Some(SystemTime { tv_sec: 1794115566, tv_nsec: 595803304 })",
+      "git_dir": {
+        "encoding": "utf8",
+        "value": "/private/var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-m0-43926-1794115566592066000-0/repo/.git"
+      },
+      "object_format": "sha1",
+      "root": {
+        "encoding": "utf8",
+        "value": "/private/var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-m0-43926-1794115566592066000-0/repo"
+      },
+      "root_binding": "16777233:54103831:Some(SystemTime { tv_sec: 1794115566, tv_nsec: 592196363 })"
+    },
+    "repository_id": "63067a68-9d50-486d-8dd2-e14907c17409",
+    "status": {
+      "branch": "main",
+      "changes": [
+        {
+          "conflict": false,
+          "head_mode": "000000",
+          "index": "?",
+          "index_mode": "000000",
+          "original_path": null,
+          "path": {
+            "encoding": "utf8",
+            "value": ".gitfleet-m2-fixture"
+          },
+          "submodule": "N...",
+          "worktree": "?",
+          "worktree_mode": "000000"
+        }
+      ],
+      "counts": {
+        "conflicted": 0,
+        "staged": 0,
+        "unstaged": 0,
+        "untracked": 1
+      },
+      "detached": false,
+      "generation": "88c6aec5bbb9a61341123ed8186dbf28b3008951ef925c1ba58876938235f74b",
+      "head": "dba36ea0a56b86e558480ccc8ac36483924b98fd",
+      "head_oid": {
+        "format": "sha1",
+        "hex": "dba36ea0a56b86e558480ccc8ac36483924b98fd"
+      },
+      "last_commit": {
+        "author": [
+          77,
+          48,
+          32,
+          70,
+          105,
+          120,
+          116,
+          117,
+          114,
+          101,
+          32,
+          60,
+          102,
+          105,
+          120,
+          116,
+          117,
+          114,
+          101,
+          64,
+          101,
+          120,
+          97,
+          109,
+          112,
+          108,
+          101,
+          46,
+          105,
+          110,
+          118,
+          97,
+          108,
+          105,
+          100,
+          62,
+          32,
+          49,
+          55,
+          57,
+          52,
+          49,
+          49,
+          53,
+          53,
+          54,
+          54,
+          32,
+          45,
+          48,
+          54,
+          48,
+          48
+        ],
+        "author_time": 1794115566,
+        "committer": [
+          77,
+          48,
+          32,
+          70,
+          105,
+          120,
+          116,
+          117,
+          114,
+          101,
+          32,
+          60,
+          102,
+          105,
+          120,
+          116,
+          117,
+          114,
+          101,
+          64,
+          101,
+          120,
+          97,
+          109,
+          112,
+          108,
+          101,
+          46,
+          105,
+          110,
+          118,
+          97,
+          108,
+          105,
+          100,
+          62,
+          32,
+          49,
+          55,
+          57,
+          52,
+          49,
+          49,
+          53,
+          53,
+          54,
+          54,
+          32,
+          45,
+          48,
+          54,
+          48,
+          48
+        ],
+        "committer_time": 1794115566,
+        "encoding": null,
+        "message": [
+          98,
+          97,
+          115,
+          101,
+          108,
+          105,
+          110,
+          101,
+          10
+        ],
+        "oid": {
+          "format": "sha1",
+          "hex": "dba36ea0a56b86e558480ccc8ac36483924b98fd"
+        },
+        "parents": [],
+        "tree": {
+          "format": "sha1",
+          "hex": "65e564f0c1c7db6515d7f7dc99ab3bf8f0f1f7a0"
+        }
+      },
+      "observed_at_ms": 1794115723972,
+      "operations": [],
+      "remotes": [
+        "origin"
+      ],
+      "status": "?? .gitfleet-m2-fixture",
+      "tracking": null,
+      "unborn": false
+    },
+    "superseded_by": null,
+    "untrusted": true
+  }
+]

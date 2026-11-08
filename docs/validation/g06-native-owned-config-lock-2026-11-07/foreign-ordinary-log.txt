@@ -1,0 +1,1 @@
+sandbox_extension_issue_file_to_process failed for /var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-m0-45968-1794115574269105000-0/Commit Command Config Recovery Ordinary.app: 1 (Operation not permitted)

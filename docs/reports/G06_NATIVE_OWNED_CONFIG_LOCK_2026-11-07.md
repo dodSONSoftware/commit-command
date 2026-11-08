@@ -1,8 +1,8 @@
 # G06 native owned-config-lock recovery — November 7, 2026
 
-## Package scope and current progress
+## Package disposition — passed within the recorded envelope
 
-Test native read-only startup, cancelled recovery, receipt-proven removal without
+Completed native read-only startup, cancelled recovery, receipt-proven removal without
 publication/replay, empty and ready/pre-publication locks, foreign replacement and
 stale recovery fingerprint, then ordinary restart/preservation. Product code remains
 validated `e9eeacd`; no new fault interface or ordinary write default is introduced.
@@ -72,3 +72,31 @@ correctly proposed manual investigation with no writes/lock removal permitted; n
 confirmation was refused with Manual upstream investigation is required. The negative
 oracle passed again. No foreign file was removed or adopted. Clean restoration of the
 actual owned inode and fresh abort/restart remain to complete the package.
+
+### Step 6 — final owned recovery, ordinary restart and preservation passed
+
+After quitting the negative-case app, the fixture operator preserved the foreign
+replacement outside the repository and restored the actual original receipt-owned
+inode. The receipt was never edited. A fresh native review recognized ownership and
+returned aborted/unchanged, removing only that owned lock. The preserved foreign file
+still matches its recorded inode and SHA256. Ordinary-build restart rendered without
+reload, retained aborted/unchanged history, exposed no pending recovery action and
+kept writes disabled. Both final native and ordinary exits were 0.
+
+Final independent oracles passed for all four fixtures: original config and every
+other repository file/mode, bare remote and transport artifacts match baseline;
+original plans/receipts persist, SQLite integrity is ok, and no new write or remote
+operation exists. CLI inventory reopened all four writer locks. No test app remains
+running. Fixture evidence is retained, including the foreign file; it was not adopted
+or deleted by recovery. These file/mode checks do not establish general xattr or
+ownership preservation. No new native trust grant or product patch was needed.
+
+The initial sandboxed ordinary launch attempts did not start (-6 on the retained
+attempt); launching the same artifact with the required host permissions succeeded.
+This is not recorded as an application recovery failure or a product fix.
+
+The selected native owned-lock package is complete. G02/G06 remain partial: this
+closes the named recovery gap, not all interruption, topology, accessibility or
+release acceptance. Earlier pending statements above describe historical checkpoints.
+
+Focused owning regression rerun passed: `upstream_sigkill_recovery_never_replays_and_removes_only_owned_config_lock` (1 passed, 88 filtered out, all features, locked dependencies). Full suites were not rerun because this package changes evidence and trackers only. `git diff --check` passed.

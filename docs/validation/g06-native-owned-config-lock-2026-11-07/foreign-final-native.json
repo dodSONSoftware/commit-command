@@ -1,0 +1,14 @@
+{
+  "stale_review_refused": true,
+  "fresh_foreign_review_manual_refused": true,
+  "foreign_replacement_preserved_by_inode_and_hash": true,
+  "original_owned_inode_restored_by_fixture_operator": true,
+  "fresh_owned_recovery": "aborted/unchanged",
+  "ordinary_restart_rendered_without_reload": true,
+  "ordinary_history_aborted_config_unchanged": true,
+  "no_pending_recovery_action": true,
+  "ordinary_writes_disabled": true,
+  "native_exit": 0,
+  "ordinary_exit": 0,
+  "all_four_writer_locks_reopened": true
+}

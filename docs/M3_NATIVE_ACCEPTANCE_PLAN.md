@@ -228,6 +228,19 @@ Selected native linked-worktree upstream success gap closed; fixture restored/se
 stopped/key removed. No product patch/full-suite rerun. G06 remains partial; prioritize
 named recovery/topology packages rather than additional already-covered guard variants.
 
+### November 7 owned-config-lock recovery package — complete
+
+[Final recovery package](reports/G06_NATIVE_OWNED_CONFIG_LOCK_2026-11-07.md): native
+Cancel preserved the ready lock; empty, ready and pre-publication owned-lock recovery
+returned aborted/unchanged without replay or config publication. Stale approval and
+same-byte foreign-inode replacement were refused; fresh review required manual
+investigation. After the fixture operator restored the original owned inode, fresh
+native recovery passed. Ordinary restarts retained resolved history with writes
+disabled. All four final file/mode/journal/remote oracles and writer-lock reopens
+passed; foreign evidence remains intact. No native trust grant or product patch.
+This selected package is closed; G02/G06 remain partial. Earlier progress entries
+below/above are historical checkpoints, not remaining work in this package.
+
 ### November 7 G06 native owned-config-lock recovery — in progress
 
 [Recovery package](reports/G06_NATIVE_OWNED_CONFIG_LOCK_2026-11-07.md): existing Core

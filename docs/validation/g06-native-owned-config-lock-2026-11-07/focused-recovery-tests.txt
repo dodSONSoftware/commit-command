@@ -1,0 +1,11 @@
+   Compiling libsqlite3-sys v0.39.1
+   Compiling rusqlite v0.41.0
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.10s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-883e37a5b39e3193)
+
+running 1 test
+test upstream_sigkill_recovery_never_replays_and_removes_only_owned_config_lock ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 88 filtered out; finished in 20.15s
+

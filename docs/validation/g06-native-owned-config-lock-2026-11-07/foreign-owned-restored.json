@@ -1,0 +1,6 @@
+{
+  "same_original_owned_inode_restored": true,
+  "foreign_file_saved_intact_outside_repository": "/var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-m0-45968-1794115574269105000-0/foreign-lock-preserved",
+  "receipt_not_modified": true,
+  "restoration_by_fixture_operator_not_application": true
+}

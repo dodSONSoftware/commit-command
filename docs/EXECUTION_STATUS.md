@@ -163,6 +163,19 @@ Selected native linked-worktree upstream success gap closed; fixture restored/se
 stopped/key removed. No product patch/full-suite rerun. G06 remains partial; prioritize
 named recovery/topology packages rather than additional already-covered guard variants.
 
+### November 7 owned-config-lock recovery package — complete
+
+[Final recovery package](reports/G06_NATIVE_OWNED_CONFIG_LOCK_2026-11-07.md): native
+Cancel preserved the ready lock; empty, ready and pre-publication owned-lock recovery
+returned aborted/unchanged without replay or config publication. Stale approval and
+same-byte foreign-inode replacement were refused; fresh review required manual
+investigation. After the fixture operator restored the original owned inode, fresh
+native recovery passed. Ordinary restarts retained resolved history with writes
+disabled. All four final file/mode/journal/remote oracles and writer-lock reopens
+passed; foreign evidence remains intact. No native trust grant or product patch.
+This selected package is closed; G02/G06 remain partial. Earlier progress entries
+below/above are historical checkpoints, not remaining work in this package.
+
 ### November 7 G06 native owned-config-lock recovery — in progress
 
 [Recovery package](reports/G06_NATIVE_OWNED_CONFIG_LOCK_2026-11-07.md): existing Core
@@ -610,7 +623,7 @@ its owning criterion and state what its completion closes before execution.
 | G02 shutdown/read interruption | Selected graceful Close, active scan Cancel/host loss, running-hook lifecycle and both missing-snapshot choices passed within reports | Do not add more equivalent scan/close variants merely to accumulate passes |
 | G02 startup | Initial React commit ordering defect fixed; bounded native restarts passed; earlier intermittent blank retained | Capture diagnostic state on an actual recurrence before reload; bounded clean launches do not prove a universal cause or guarantee |
 | G02 real OS entry points | Direct AppKit covered; actual Dock policy blocked; operator session termination distinct | Keep blocks explicit; no surrogate or destructive session termination without operator coordination |
-| G06 upstream topology | Selected missing-only setup/recovery history and now native linked-worktree success passed | **Next substantive target: native owned-config-lock recovery**, with a reproducible interrupted owned receipt and no fabricated ownership; failure/cancel/foreign-lock disposition must remain explicit |
+| G06 upstream topology | Selected missing-only setup/recovery history and now native linked-worktree success passed | Native owned-config-lock recovery package now passed (Cancel, empty/ready/pre-publication abort, stale/foreign refusal and ordinary restart); broader named topology/failure/accessibility criteria remain open |
 | G06 fetch/auth/format compatibility | Selected real HTTPS/SSH/auth chains have dated evidence; identified artifact initialization race already fixed | Native SHA-256/full topology package and current-source transport matrix remain; do not reopen the already diagnosed artifact race without new counterevidence |
 | G06 OS credentials / other transport exclusions | SecurityAgent choices and direct SCP facility limits retain prior blocks | Operator/facility-dependent work is not an unattended pass; unsupported helpers stay unsupported |
 | Planner accessibility/cycles/scale | Broader native criteria remain open; overlap with G03/G08 | Track as their own criteria, not repeated observation-guard tests; publication remains G07/G08 |
