@@ -14,11 +14,27 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest]
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    env:
+      TMPDIR: ${{ runner.os == 'macOS' && '/private/tmp' || '/tmp' }}
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@1.99.1
         with:
           components: rustfmt, clippy
+      - name: Provision Linux Git build dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libcurl4-openssl-dev libssl-dev zlib1g-dev libexpat1-dev
+      - name: Provision checksum-pinned Git 2.56
+        run: python3 app/core/scripts/provision-git.py --directory "$RUNNER_TEMP/gitfleet-git"
+      - name: Provision isolated-fixture OpenPGP signer on macOS
+        if: runner.os == 'macOS'
+        run: |
+          brew install gnupg
+          echo "$(brew --prefix gnupg)/bin" >> "$GITHUB_PATH"
+          echo "GITFLEET_TEST_GPG=$(brew --prefix gnupg)/bin/gpg" >> "$GITHUB_ENV"
       - name: Validate default inspection, experimental lab and supported M2/M3 Core gates
         run: sh app/core/scripts/validate.sh
       - uses: actions/upload-artifact@v4
@@ -29,11 +45,16 @@ jobs:
 
   desktop:
     runs-on: macos-latest
+    timeout-minutes: 30
+    env:
+      TMPDIR: /private/tmp
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@1.99.1
         with:
           components: rustfmt, clippy
+      - name: Provision checksum-pinned Git 2.56
+        run: python3 app/core/scripts/provision-git.py --directory "$RUNNER_TEMP/gitfleet-git"
       - uses: actions/setup-node@v4
         with:
           node-version: '22'

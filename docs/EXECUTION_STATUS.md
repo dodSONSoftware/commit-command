@@ -7,6 +7,16 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G11 CI prerequisites — implemented, hosted run pending
+
+[Provisioning checkpoint](reports/G11_CI_PREREQUISITES_2026-11-08.md): workflow now
+provisions checksum-pinned Git into runner-temporary prefixes and macOS GPG with
+explicit test signer/short TMPDIR. Actual isolated local Git source build, SHA256
+commit/blob smoke, helper/prerequisite checks, four archive-layout tests, YAML and
+shell syntax passed. Hosted CI/Linux/Brew steps and distribution acceptance unrun;
+no push/release. G11 is partial. This independent prerequisite work ran while native
+G05 exact fixture-trust authorization was pending; remaining gates are not skipped.
+
 ### November 8 G05 child/parent native batch — ready for fixture trust
 
 [Prepared package](reports/G05_NATIVE_SUBMODULE_2026-11-08.md): actual disposable

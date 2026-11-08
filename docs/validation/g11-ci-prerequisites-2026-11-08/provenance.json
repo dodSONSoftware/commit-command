@@ -1,0 +1,7 @@
+{
+  "url": "https://www.kernel.org/pub/software/scm/git/git-2.56.0.tar.xz",
+  "source_sha256": "26c56c296b38c0695b26fa95f475f1d01704d2d38e73465ca30b0b2f5dc789d3",
+  "version": "git version 2.56.0",
+  "prefix": "/private/tmp/gitfleet-g11-git-verified-20261108/install",
+  "binary_sha256": "b431ec896d50c09fa4c619f648aa505bd3b18c1d61e05da96e6481fc8ad87fe1"
+}
