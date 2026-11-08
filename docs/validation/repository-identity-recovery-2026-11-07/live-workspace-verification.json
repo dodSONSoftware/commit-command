@@ -1,0 +1,33 @@
+{
+  "stored_memberships": 21,
+  "current_identities": 11,
+  "historical_identities": 10,
+  "current_paths_unique": true,
+  "all_current_available": true,
+  "historical_links_target_distinct_current_identity_at_same_path": true,
+  "last_scan_complete": false,
+  "scan_issues": [
+    {
+      "path_suffix": "coding/labs/npc-personality/app/.tools/cache/sdists-v10",
+      "error": {
+        "kind": "inspection_failed",
+        "message": "Cannot inspect repository metadata"
+      }
+    },
+    {
+      "path_suffix": "coding/labs/npc-voice/.tools/cache/sdists-v10",
+      "error": {
+        "kind": "inspection_failed",
+        "message": "Cannot inspect repository metadata"
+      }
+    }
+  ],
+  "native_table_current_rows": 11,
+  "native_tree_current_repositories": 11,
+  "native_historical_disclosure_count": 10,
+  "native_attention_count": 0,
+  "manual_rescan_completed": true,
+  "initial_observation_already_separated": true,
+  "git_preservation_before_after_snapshot_taken": false,
+  "authority_preservation_relies_on_previous_regression_tests": true
+}

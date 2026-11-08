@@ -14,3 +14,7 @@
 Native UI: successful local rescan; one active identity and a historical disclosure;
 explicit replacement open; empty composer and disabled ordinary writes; normal exit 0.
 See [report](../../reports/REPOSITORY_IDENTITY_RECOVERY_2026-11-07.md) for limits.
+
+`live-workspace-verification.json`: read-only normal-state oracle after explicit native
+Rescan and review. 11 current / 10 historical, unique active paths and valid links.
+Discovery remains incomplete due to two recorded generated-cache inspection errors.

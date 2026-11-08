@@ -37,6 +37,16 @@ reviews without transferring trust. Missing/failed inspection remains unresolved
 selected ordinary native recovery presentation verified. G02/G06 remain partial;
 broader lifecycle/accessibility/default-write gates are unchanged.
 
+### November 7 live-workspace identity recovery verification
+
+[Current-workspace follow-up](reports/REPOSITORY_IDENTITY_RECOVERY_2026-11-07.md#current-workspace-follow-up):
+explicit native Rescan and review preserved separation of 11 unique available current
+repositories and 10 historical identities. Table/Tree/sidebar and read-only database
+assertions agree; no duplicate-separation code fix needed. **Discovery remains
+incomplete:** metadata inspection failed in two `.tools/cache/sdists-v10` locations.
+Zero repository-attention count does not establish scan completeness. Cache traversal
+and scan-level issue presentation remain open. No new automated suite; G02/G06 partial.
+
 ## Status meanings and availability
 
 - **Accepted within envelope:** the recorded milestone criteria passed only for
