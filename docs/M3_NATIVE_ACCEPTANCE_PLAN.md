@@ -237,6 +237,15 @@ and non-default artifact provenance retained. Preparation is automated Core evid
 not native recovery acceptance. Continue Cancel, owned recovery, foreign/stale refusal
 and ordinary restart preservation. No product patch; G02/G06 remain partial.
 
+### November 7 owned-lock recovery — ready candidate checkpoint
+
+[Recovery package step 2](reports/G06_NATIVE_OWNED_CONFIG_LOCK_2026-11-07.md): actual
+ready-candidate lock preserved on startup and Cancel. Fresh native abort_unpublished
+approval removed only owned config.lock, returned aborted/unchanged; config/repo/remote/
+transport snapshots otherwise exact. Ordinary restart retained resolved history with
+no replay/pending action; both exits 0, writer lock reopened. Empty/pre-publication
+and foreign/stale cases still in progress. No product patch; G02/G06 partial.
+
 ## Safety, execution and evidence rules
 
 - Perform interaction manually or through an organization-permitted native testing

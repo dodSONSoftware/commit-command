@@ -1,0 +1,14 @@
+{
+  "repository_files_preserved_except_owned_lock_if_aborted": true,
+  "original_config_unchanged": true,
+  "phase": "aborted",
+  "configuration": "unchanged",
+  "receipt_and_plan_preserved": true,
+  "bare_remote_unchanged": true,
+  "transport_artifacts_unchanged": true,
+  "owned_lock_absent": true,
+  "one_original_completed_observation": true,
+  "no_new_write_or_remote_operations": true,
+  "trust_rows": 1,
+  "sqlite_integrity": "ok"
+}

@@ -1,0 +1,16 @@
+{
+  "startup_attention_notice": true,
+  "startup_did_not_remove_lock": true,
+  "first_review_cancelled": true,
+  "cancel_preserved_phase_and_receipt_and_files": true,
+  "fresh_review_id_after_cancel": true,
+  "fresh_native_approval_action": "abort_unpublished",
+  "result": "aborted/unchanged",
+  "only_owned_lock_removed": true,
+  "pending_notice_cleared": true,
+  "ordinary_restart_rendered_without_reload": true,
+  "ordinary_aborted_history_visible_no_recovery_action": true,
+  "both_exit_codes": 0,
+  "writer_lock_reopened": true,
+  "no_new_native_trust_grant": true
+}

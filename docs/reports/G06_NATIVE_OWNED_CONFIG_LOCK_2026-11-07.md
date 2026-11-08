@@ -33,3 +33,14 @@ boundary recovery; foreign/stale review refusal and fresh owned recovery; ordina
 restarts, no replay, final cleanup and disposition.
 
 [Evidence](../validation/g06-native-owned-config-lock-2026-11-07/README.md).
+
+### Step 2 — ready candidate Cancel / native abort / ordinary restart passed
+
+Native startup preserved the actual 455-byte owned lock and showed needs attention.
+Recovery review proposed abort_unpublished. Cancel preserved repository/lock bytes,
+receipt and lock_ready journal. A fresh review/independent native confirmation then
+returned aborted/unchanged and removed only config.lock. Original config and every
+other repository, bare-remote and transport-artifact file/mode matched baseline.
+Ordinary restart rendered aborted history without a pending recovery action or replay;
+both exits 0 and writer lock reopened. No native trust grant or transport requested.
+Empty/pre-publication and foreign/stale cases remain in progress.
