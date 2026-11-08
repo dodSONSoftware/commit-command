@@ -1,0 +1,10 @@
+{
+  "repository_exact_original_bytes_modes": true,
+  "no_publication": true,
+  "hook_runs": 1,
+  "hook_bytes_unchanged": true,
+  "parent_stopped_before_execution": true,
+  "exact_authorized_parent_child_trust": true,
+  "control_untrusted": true,
+  "integrity": "ok"
+}

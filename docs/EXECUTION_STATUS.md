@@ -7,15 +7,14 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
-### November 8 G05 child-hook failure/running Cancel — prepared, trust pending
+### November 8 G05 child-hook rejection — passed; running Cancel next
 
-[Child-hook fixture](reports/G05_NATIVE_CHILD_HOOK_2026-11-08.md): real parent/submodule
-and untouched unselected control prepared. One fixed child pre-commit hook only
-records/rejects/waits on disposable markers, signing off. Native review names exact
-new pair; specific hook-enabled trust authorization requested. Preflight proves exact
-repository preservation, zero trusts/operations/hook runs. Actual child rejection,
-proven-running native Cancel, cleanup/restart and fresh retry remain unrun. Earlier
-hook-free grants are not broadened and no new trust was granted.
+[Child-hook checkpoint](reports/G05_NATIVE_CHILD_HOOK_2026-11-08.md): exact new pair
+explicitly authorized and granted via native review. Fresh child-first batch ran the
+fixed pre-commit hook once, rejected child and stopped parent before execution.
+No publication; every repository byte/mode preserved, hook hash unchanged, exact two
+trusts/control untrusted and integrity passed. Native proven-running cancellation,
+cleanup/restart and separately approved successful retry remain next. No product patch.
 
 ### November 8 G05 pre-publication crash/cleanup/restart — passed
 

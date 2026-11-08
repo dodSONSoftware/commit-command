@@ -37,3 +37,19 @@ This is prepared, not a native acceptance pass or G05 closure.
 
 [Evidence](../validation/g05-native-child-hook-2026-11-08/) contains preparation, scan,
 exact baseline, reviewed script/hash and no-execution preflight. No push requested.
+
+## Actual native child-hook rejection — passed
+
+User authorized this exact parent/child hook fixture. Native authoritative and OS
+confirmation granted only the pair. Fresh batch 1d172d07-2ca9-4fc0-ae55-48bb444205fb
+showed child-first order, fixed executable pre-commit manifest, one file per worktree,
+exact shared message and zero blockers. Separate native approval ran child hook once.
+Child operation 892338d5-7a92-408c-be61-1440638a17c7 blocked with HookRejected; parent
+7345051b-e229-4345-946f-18aaf56a0501 cancelled_before_publication without starting.
+Native results show partial_failure with zero published items, not successful commits.
+
+Every repository byte/mode matched preparation exactly (including refs/index/config,
+child, parent and independent control). Hook SHA unchanged; one marker run, exact two
+authorized trusts, control untrusted, SQLite integrity ok. See verify-rejection.json
+and records-rejection.json. This closes the actual native child-hook rejection/parent
+stop case only; proven-running cancellation and separately approved retry remain next.
