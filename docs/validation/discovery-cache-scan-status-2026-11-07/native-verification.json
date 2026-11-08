@@ -1,0 +1,17 @@
+{
+  "saved_incomplete_summary_displayed": true,
+  "native_error_paths_visible": 2,
+  "manual_rescan_completed": true,
+  "complete": true,
+  "scan_issues": 0,
+  "skipped_caches": 6,
+  "current_repositories": 11,
+  "retained_historical_identities": 10,
+  "app_left_open_with_details_expanded": true,
+  "final_renderer_tests": 87,
+  "final_renderer_typecheck_lint_format_passed": true,
+  "full_desktop_gate_renderer_tests_before_last_integration_test": 86,
+  "default_host_tests": 13,
+  "all_feature_host_tests": 16,
+  "before_after_live_repository_snapshot_taken": false
+}

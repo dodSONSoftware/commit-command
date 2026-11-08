@@ -2035,3 +2035,52 @@ fn recovered_historical_identities_do_not_degrade_periodic_monitoring() {
     }
     assert_eq!(before, tree_bytes(&f.repo));
 }
+
+#[test]
+fn inventory_exposes_scan_level_and_repository_inspection_failures_and_cache_skips() {
+    let (f, mut app, ws, _) = setup();
+    let broken = f.repo.join("broken");
+    fs::create_dir(&broken).unwrap();
+    fs::write(broken.join(".git"), b"broken").unwrap();
+    let cache = f.repo.join("cache");
+    fs::create_dir(&cache).unwrap();
+    fs::write(
+        cache.join("CACHEDIR.TAG"),
+        b"Signature: 8a477f597d28d172789f06886806bc55",
+    )
+    .unwrap();
+    fs::write(cache.join(".git"), b"").unwrap();
+    f.git(&["config", "filter.block.clean", "must-not-run"]);
+    let Data::Inventory(view) = app
+        .request(
+            app.epoch(),
+            Request::Scan {
+                workspace: ws.clone(),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    let scan = view.scan.unwrap();
+    assert!(!scan.complete);
+    assert_eq!(scan.issues.len(), 2);
+    assert!(scan
+        .issues
+        .iter()
+        .any(|i| i.path.to_path().unwrap() == fs::canonicalize(&broken).unwrap()));
+    assert!(scan
+        .issues
+        .iter()
+        .any(|i| i.path.to_path().unwrap() == fs::canonicalize(&f.repo).unwrap()));
+    assert_eq!(scan.skipped_caches.len(), 1);
+    let Data::Inventory(view) = app
+        .request(app.epoch(), Request::Inventory { workspace: ws })
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert_eq!(view.scan.unwrap().issues.len(), 2);
+}

@@ -4,6 +4,7 @@ use crate::inspection::{self, Metadata, ReadOptions};
 use crate::{Error, ErrorKind, Result};
 use serde::{Deserialize, Serialize};
 use std::fs;
+use std::io::Read;
 use std::path::{Path, PathBuf};
 use std::time::Instant;
 
@@ -115,6 +116,33 @@ pub struct Inventory {
     pub repositories: Vec<Discovered>,
     pub relationships: Vec<Relationship>,
     pub issues: Vec<ScanIssue>,
+    #[serde(default)]
+    pub skipped_caches: Vec<NativePath>,
+}
+
+// Match only the standard signature, without following links or reading an
+// unbounded marker. Invalid/unreadable tags do not suppress normal discovery.
+fn tagged_cache(directory: &Path) -> bool {
+    let path = directory.join("CACHEDIR.TAG");
+    if !fs::symlink_metadata(&path).is_ok_and(|m| m.is_file() && !m.is_symlink()) {
+        return false;
+    }
+    let mut options = fs::OpenOptions::new();
+    options.read(true);
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::OpenOptionsExt;
+        options.custom_flags(libc::O_NOFOLLOW | libc::O_NONBLOCK);
+    }
+    let Ok(mut file) = options.open(path) else {
+        return false;
+    };
+    if !file.metadata().is_ok_and(|m| m.is_file()) {
+        return false;
+    }
+    let mut signature = [0; 43];
+    file.read_exact(&mut signature).is_ok()
+        && signature == *b"Signature: 8a477f597d28d172789f06886806bc55"
 }
 
 pub fn scan(root: &Path, options: &DiscoveryOptions) -> Result<Inventory> {
@@ -132,6 +160,7 @@ pub fn scan_with_options(
         repositories: Vec::new(),
         relationships: Vec::new(),
         issues: Vec::new(),
+        skipped_caches: Vec::new(),
     };
     let root = match fs::canonicalize(root) {
         Ok(path) if path.is_dir() => path,
@@ -159,6 +188,11 @@ pub fn scan_with_options(
                 ErrorKind::OutputLimit,
                 "Discovery directory limit exceeded",
             ));
+        }
+        // An explicitly selected root remains inspectable even when tagged.
+        if dir != root && tagged_cache(&dir) {
+            report.skipped_caches.push(NativePath::from_path(&dir));
+            continue;
         }
         if fs::symlink_metadata(dir.join(".git")).is_ok() {
             match inspection::repository_metadata(&dir) {
@@ -211,6 +245,9 @@ pub fn scan_with_options(
     report
         .repositories
         .sort_by_key(|entry| entry.metadata.root.to_path().ok());
+    report
+        .skipped_caches
+        .sort_by_key(|path| path.to_path().ok());
     classify(&mut report, read_options)?;
     report.complete &= report.issues.is_empty();
     Ok(report)

@@ -895,3 +895,37 @@ it("keeps a historical tab and draft separate from the replacement and active in
     requests.some((r) => r.kind === "review_trust" || r.kind === "propose"),
   ).toBe(false);
 });
+
+it("shows incomplete discovery even when all known repositories are available", async () => {
+  const { bridge } = fake();
+  const request = bridge.request.bind(bridge);
+  bridge.request = async (input): Promise<Payload> => {
+    const payload = await request(input);
+    if (payload.kind === "inventory")
+      return {
+        ...payload,
+        value: {
+          ...payload.value,
+          scan: {
+            complete: false,
+            issues: [
+              {
+                path: { encoding: "utf8", value: "/tmp/project/cache/broken" },
+                error: {
+                  kind: "inspection_failed",
+                  message: "Cannot inspect repository metadata",
+                },
+              },
+            ],
+            skipped_caches: [],
+          },
+        },
+      };
+    return payload;
+  };
+  render(<App bridge={bridge} />);
+  await screen.findByRole("checkbox", { name: "Select parent" });
+  expect(screen.getByText("△ Discovery incomplete")).toBeVisible();
+  await userEvent.click(screen.getByText("Discovery details"));
+  expect(screen.getByText("/tmp/project/cache/broken")).toBeVisible();
+});

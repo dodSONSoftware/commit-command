@@ -248,9 +248,17 @@ pub struct WorkspaceList {
     pub upstream_recovery: Vec<RemoteRecoveryNotice>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+pub struct ScanSummary {
+    pub complete: bool,
+    pub issues: Vec<crate::discovery::ScanIssue>,
+    pub skipped_caches: Vec<NativePath>,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct InventoryView {
     pub entries: Vec<StoredWorktree>,
     pub monitor: MonitorStatus,
+    #[serde(default)]
+    pub scan: Option<ScanSummary>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct TrustState {
@@ -675,6 +683,7 @@ impl Application {
                 Data::Inventory(InventoryView {
                     entries: self.writes.workspace.inventory(&id)?,
                     monitor: self.monitor.status(),
+                    scan: self.scan_summary(&id)?,
                 })
             }
             Request::Scan { workspace } => {
@@ -687,6 +696,7 @@ impl Application {
                 Data::Inventory(InventoryView {
                     entries: self.writes.workspace.inventory(&id)?,
                     monitor: self.monitor.status(),
+                    scan: self.scan_summary(&id)?,
                 })
             }
             Request::Refresh {
@@ -1118,6 +1128,22 @@ impl Application {
             epoch: self.epoch,
             data,
         })
+    }
+    fn scan_summary(&self, workspace: &WorkspaceId) -> Result<Option<ScanSummary>> {
+        Ok(self.writes.workspace.last_scan(workspace)?.map(|scan| {
+            let mut issues = scan.issues;
+            issues.extend(scan.repositories.into_iter().filter_map(|entry| {
+                entry.issue.map(|error| crate::discovery::ScanIssue {
+                    path: entry.metadata.root,
+                    error,
+                })
+            }));
+            ScanSummary {
+                complete: scan.complete,
+                issues,
+                skipped_caches: scan.skipped_caches,
+            }
+        }))
     }
     /// Called by the native host timer; notifications only schedule restricted reads.
     pub fn reconcile(&mut self) -> Result<bool> {

@@ -47,6 +47,19 @@ incomplete:** metadata inspection failed in two `.tools/cache/sdists-v10` locati
 Zero repository-attention count does not establish scan completeness. Cache traversal
 and scan-level issue presentation remain open. No new automated suite; G02/G06 partial.
 
+### November 7 cache discovery / scan-status closure
+
+[Diagnosis and verification](reports/DISCOVERY_CACHE_SCAN_STATUS_2026-11-07.md):
+the two cache errors came from empty `.git` markers within valid tagged cache subtrees.
+Discovery now skips and lists verified tagged caches, preserving real malformed-marker
+errors. Native current-workspace rescan reports complete: 11 repositories, zero issues,
+six tagged caches skipped; 10 historical identities remain separated. Last-scan summary,
+error paths and exclusions are now visible independently of repository attention counts.
+18 Core workspace / 27 application tests passed; full desktop gate passed (86 renderer /
+13 / 16), followed by 87 renderer tests and static checks after final integration coverage.
+The previously recorded cache/scan-presentation findings are closed within this envelope;
+broader G02/G06/accessibility/scale remain open.
+
 ## Status meanings and availability
 
 - **Accepted within envelope:** the recorded milestone criteria passed only for

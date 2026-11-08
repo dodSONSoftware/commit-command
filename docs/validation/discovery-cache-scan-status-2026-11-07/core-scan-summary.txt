@@ -1,0 +1,22 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.23s
+     Running tests/m3_application.rs (app/core/target/debug/deps/m3_application-60da97eb5ba79141)
+
+running 1 test
+test inventory_exposes_scan_level_and_repository_inspection_failures_and_cache_skips ... FAILED
+
+failures:
+
+---- inventory_exposes_scan_level_and_repository_inspection_failures_and_cache_skips stdout ----
+
+thread 'inventory_exposes_scan_level_and_repository_inspection_failures_and_cache_skips' (3336971) panicked at tests/m3_application.rs:2069:5:
+assertion failed: scan.issues.iter().any(|i| i.path.to_path().unwrap() == broken)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    inventory_exposes_scan_level_and_repository_inspection_failures_and_cache_skips
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 26 filtered out; finished in 0.41s
+
+error: test failed, to rerun pass `--test m3_application`

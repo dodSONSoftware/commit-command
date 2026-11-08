@@ -20,6 +20,7 @@ import type {
   NativePath,
   Commit as CommitDetail,
   RecoveryNotice,
+  ScanSummary,
   RemoteRecoveryNotice,
 } from "../services/response.generated";
 import type { WriteRequest } from "../services/request.generated";
@@ -41,6 +42,7 @@ import {
 import { WorkspaceActivity } from "./WorkspaceActivity";
 import { HistoryGraph } from "./HistoryGraph";
 import { BulkCommit } from "./BulkCommit";
+import { WorkspaceScanStatus } from "./WorkspaceScanStatus";
 import { RepositoryIdentityRecovery } from "./RepositoryIdentityRecovery";
 import { RepositoryRemoteStatus } from "./RepositoryRemoteStatus";
 import { RemoteInspector } from "./RemoteInspector";
@@ -49,6 +51,7 @@ type Source = "index" | "working_tree";
 export function App({ bridge }: { bridge: Bridge }) {
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [workspace, setWorkspace] = useState<string | null>(null);
+  const [scan, setScan] = useState<ScanSummary | null>(null);
   const [allEntries, setEntries] = useState<StoredWorktree[]>([]);
   const entries = allEntries.filter((e) => !e.superseded_by);
   const [nav, setNav] = useState<DesktopState>(initialState);
@@ -150,6 +153,7 @@ export function App({ bridge }: { bridge: Bridge }) {
       );
       if (context.current !== ws) return;
       setEntries(data.entries);
+      setScan(data.scan ?? null);
       setMonitor(
         data.monitor.running
           ? (data.monitor.degraded ?? "Monitoring active workspace")
@@ -174,6 +178,7 @@ export function App({ bridge }: { bridge: Bridge }) {
       setWorkspace(ws);
       setBulkComposer(initialBulkComposer);
       setEntries([]);
+      setScan(null);
       setMonitor("Not monitoring");
       setTrust([]);
       setShowOperations(false);
@@ -691,6 +696,7 @@ export function App({ bridge }: { bridge: Bridge }) {
               </button>
             </div>
           )}
+          {workspace && <WorkspaceScanStatus scan={scan} />}
           {workspace && (
             <RepositoryIdentityRecovery
               entries={allEntries}

@@ -625,3 +625,64 @@ fn failed_replacement_inspection_does_not_retire_original_identity() {
     assert!(result.entries.iter().all(|e| e.superseded_by.is_none()));
     assert!(result.entries.iter().any(|e| e.id == original.id));
 }
+
+#[test]
+fn tagged_caches_are_explicitly_skipped_without_hiding_other_broken_git_markers() {
+    let f = Fixture::new();
+    f.commit_file();
+    let cache = f.repo.join(".tools/cache");
+    fs::create_dir_all(cache.join("sdists-v10")).unwrap();
+    fs::write(
+        cache.join("CACHEDIR.TAG"),
+        b"Signature: 8a477f597d28d172789f06886806bc55\n# cache\n",
+    )
+    .unwrap();
+    fs::write(cache.join("sdists-v10/.git"), b"").unwrap();
+    let before = tree_bytes(&f.repo);
+    let report = discovery::scan(&f.repo, &DiscoveryOptions::default()).unwrap();
+    assert!(report.complete);
+    assert!(report.issues.is_empty());
+    assert_eq!(report.repositories.len(), 1);
+    assert_eq!(
+        report.skipped_caches[0].to_path().unwrap(),
+        fs::canonicalize(&cache).unwrap()
+    );
+    assert_eq!(before, tree_bytes(&f.repo));
+    // Wrong signatures and ordinary empty Git markers remain real scan issues.
+    fs::write(cache.join("CACHEDIR.TAG"), b"unrelated marker").unwrap();
+    let report = discovery::scan(&f.repo, &DiscoveryOptions::default()).unwrap();
+    assert!(!report.complete);
+    assert!(report.skipped_caches.is_empty());
+    assert_eq!(report.issues.len(), 1);
+    // Long comments need not be loaded; only the fixed signature is read.
+    let mut tag = b"Signature: 8a477f597d28d172789f06886806bc55".to_vec();
+    tag.extend(vec![b'#'; 100_000]);
+    fs::write(cache.join("CACHEDIR.TAG"), tag).unwrap();
+    assert!(
+        discovery::scan(&f.repo, &DiscoveryOptions::default())
+            .unwrap()
+            .complete
+    );
+    // An explicitly selected tagged repository root must not be skipped.
+    fs::write(
+        f.repo.join("CACHEDIR.TAG"),
+        b"Signature: 8a477f597d28d172789f06886806bc55",
+    )
+    .unwrap();
+    assert_eq!(
+        discovery::scan(&f.repo, &DiscoveryOptions::default())
+            .unwrap()
+            .repositories
+            .len(),
+        1
+    );
+    #[cfg(unix)]
+    {
+        fs::remove_file(cache.join("CACHEDIR.TAG")).unwrap();
+        std::os::unix::fs::symlink(f.repo.join("CACHEDIR.TAG"), cache.join("CACHEDIR.TAG"))
+            .unwrap();
+        let report = discovery::scan(&f.repo, &DiscoveryOptions::default()).unwrap();
+        assert!(!report.complete);
+        assert!(report.skipped_caches.is_empty());
+    }
+}

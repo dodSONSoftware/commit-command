@@ -1,0 +1,26 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.33s
+     Running tests/m1_workspace.rs (app/core/target/debug/deps/m1_workspace-dae20fca6b7c20f3)
+
+running 18 tests
+test invalid_and_newer_configs_and_schemas_are_preserved ... ok
+test failed_atomic_config_save_preserves_previous_toml_and_memory ... ok
+test state_inside_checkout_and_invalid_workspace_definitions_are_rejected ... ok
+test saved_workspaces_restart_activate_rename_update_remove_and_lock ... ok
+test unversioned_unknown_database_is_not_migrated_and_empty_database_is_backed_up ... ok
+test cli_and_service_workspace_results_agree_and_preserve_repository_bytes ... ok
+test changing_workspace_root_invalidates_old_inventory_and_refresh_scope ... ok
+test startup_reconciles_authoritative_toml_after_database_update_was_interrupted ... ok
+test failed_replacement_inspection_does_not_retire_original_identity ... ok
+test clones_with_identical_head_have_distinct_identities ... ok
+test targeted_refresh_does_not_rediscover_and_replacement_requires_rescan ... ok
+test partial_permission_scan_and_glob_exclusions_preserve_known_identity ... ok
+test submodule_gitlinks_and_child_dirt_are_reported_without_recursive_helpers ... ok
+test tagged_caches_are_explicitly_skipped_without_hiding_other_broken_git_markers ... ok
+test exclusions_partial_scans_and_unavailable_entries_are_explicit ... ok
+test replacement_recovery_preserves_history_and_restored_identity ... ok
+test identities_survive_restart_and_verified_move_but_not_copies_or_replacement ... ok
+test mixed_inventory_classifies_nested_submodule_and_linked_worktrees ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.80s
+

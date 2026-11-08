@@ -1346,6 +1346,7 @@ export interface DiscoveryOptions {
 export interface InventoryView {
   entries: StoredWorktree[];
   monitor: MonitorStatus;
+  scan?: ScanSummary | null;
   [k: string]: unknown;
 }
 /**
@@ -1443,6 +1444,25 @@ export interface MonitorStatus {
   epoch: number;
   running: boolean;
   watched: number;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ScanSummary".
+ */
+export interface ScanSummary {
+  complete: boolean;
+  issues: ScanIssue[];
+  skipped_caches: NativePath[];
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ScanIssue".
+ */
+export interface ScanIssue {
+  error: Issue;
+  path: NativePath;
   [k: string]: unknown;
 }
 /**

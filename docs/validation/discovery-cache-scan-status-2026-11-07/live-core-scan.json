@@ -1,0 +1,14 @@
+{
+  "complete": true,
+  "repository_count": 11,
+  "scan_issues": [],
+  "repository_issue_count": 0,
+  "skipped_cache_paths": [
+    "coding/labs/npc-personality/app/.tools/cache",
+    "coding/labs/npc-personality/app/.venv-chatterbox",
+    "coding/labs/npc-personality/app/models/chatterbox/hf-cache/hub",
+    "coding/labs/npc-voice/.tools/cache",
+    "coding/labs/npc-voice/.venv-chatterbox",
+    "coding/labs/npc-voice/app/models/chatterbox/hf-cache/hub"
+  ]
+}

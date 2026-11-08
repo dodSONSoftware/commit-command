@@ -1166,3 +1166,17 @@ footer button {
   min-height: 80px;
   margin-top: 8px;
 }
+
+.workspace-scan {
+  margin-bottom: 16px;
+}
+.workspace-scan details,
+.workspace-scan p,
+.workspace-scan li {
+  margin-top: 8px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.workspace-scan summary {
+  cursor: pointer;
+}

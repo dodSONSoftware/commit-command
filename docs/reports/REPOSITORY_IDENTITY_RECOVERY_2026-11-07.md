@@ -81,3 +81,5 @@ No new automated suite was run for this documentation-only follow-up; the previo
 implementation tests remain its automated evidence. No before/after Git byte
 snapshot was taken in the live workspace, so exact preservation is not newly claimed.
 See `live-workspace-verification.json` in the evidence directory.
+
+Follow-up: the two generated-cache inspection errors and missing scan-summary presentation are [fixed and verified](DISCOVERY_CACHE_SCAN_STATUS_2026-11-07.md). Earlier incomplete-scan evidence is retained.

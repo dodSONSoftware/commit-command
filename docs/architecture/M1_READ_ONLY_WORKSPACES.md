@@ -193,3 +193,13 @@ run remotely and runners must satisfy the Git/Rust floors before tests can pass.
 M2 still needs production trust and approvals, write preflight, complete hook
 lifecycle/bypass, user signing configuration, journal/scratch durability, index
 reconciliation and shared-worktree concurrency gates. No M1 result closes those.
+
+### Tagged caches and scan-level presentation
+
+Child directories carrying a valid regular non-symlink CACHEDIR.TAG signature are
+excluded from recursive discovery and explicitly listed in `skipped_caches`.
+An explicitly selected tagged workspace root is still inspected. Invalid or unreadable
+tags do not hide malformed Git metadata or inspection errors. Completeness is always
+within name/glob/tagged-cache exclusions. Desktop inventory supplies a compact last-scan
+summary with both discovery and per-repository errors; unknown/partial states are visible
+independently of repository-attention counts. See the [cache fix report](../reports/DISCOVERY_CACHE_SCAN_STATUS_2026-11-07.md).
