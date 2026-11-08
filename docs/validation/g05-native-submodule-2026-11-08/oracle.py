@@ -10,7 +10,7 @@ child=git(f['child'],'rev-parse','HEAD');assert child!=f['heads'][f['child']];as
 for path in ['parent/.git/config','parent/.git/HEAD','parent/module/.git','parent/.gitmodules','parent/.git/modules/module/config']:
  assert after[path]==before[path]
 c=sqlite3.connect('file:'+f['state']+'/state.db?mode=ro',uri=True);assert c.execute('pragma integrity_check').fetchone()[0]=='ok';assert set(c.execute('select worktree_id,revoked from write_trust').fetchall())=={(f['entries'][f['parent']],0),(f['entries'][f['child']],0)}
-batches=[json.loads(v) for v, in c.execute("select value from state where key like 'batch:%'")];first=next(v for v in batches if v['id']=='c75528a4-5ba6-4360-b130-eadcff6835d9');assert [v['worktree'] for v in first['items']]==[f['entries'][f['child']],f['entries'][f['parent']]]
+batches=sorted([json.loads(v) for v, in c.execute("select value from state where key like 'batch:%'")],key=lambda v:v['id']);first=next(v for v in batches if v['id']=='c75528a4-5ba6-4360-b130-eadcff6835d9');assert [v['worktree'] for v in first['items']]==[f['entries'][f['child']],f['entries'][f['parent']]]
 if stage=='child':
  assert git(f['parent'],'rev-parse','HEAD')==f['heads'][f['parent']]
  assert after['parent/.git/index']==before['parent/.git/index']
@@ -19,6 +19,7 @@ else:
  assert git(f['parent'],'rev-list','--count',f['heads'][f['parent']]+'..HEAD')=='1'
  assert git(f['parent'],'rev-parse','HEAD:module')==child
  assert git(f['parent'],'show','HEAD:file.txt')=='Reviewed G05 changes'
+ assert git(f['parent'],'show','-s','--format=%B','HEAD')=='G05 record reviewed child gitlink\n\nFresh parent-only approval.'
  assert git(f['parent'],'status','--porcelain')==''
 result={'child_head':child,'parent_head':git(f['parent'],'rev-parse','HEAD'),'one_child_commit_only':True,'unselected_exact_bytes_modes_preserved':True,'trust_exactly_authorized_pair':True,'original_config_and_bindings_preserved':True,'batch_child_before_parent':True,'parent_stopped_before_publication':first['phase']=='needs_reauthorization','batches':batches,'sqlite_integrity':'ok'}
 if stage=='parent':(out/'repository-after-parent.json').write_text(json.dumps(after,indent=2)+'\n');(out/'batches-after-parent.json').write_text(json.dumps(batches,indent=2)+'\n')

@@ -17,14 +17,17 @@ shell syntax passed. Hosted CI/Linux/Brew steps and distribution acceptance unru
 no push/release. G11 is partial. This independent prerequisite work ran while native
 G05 exact fixture-trust authorization was pending; remaining gates are not skipped.
 
-### November 8 G05 child-first batch — passed; fresh parent review pending
+### November 8 G05 fresh-parent gitlink fix — native publication passed
 
-[Native package](reports/G05_NATIVE_SUBMODULE_2026-11-08.md): user authorized exactly
-two fixture trusts. Real native batch committed child once with exact blob/message,
-then stopped parent before publication as needs_reauthorization. Parent HEAD/index
-and dirty unselected control preserved; config/binding/SQLite oracles passed. Fresh
-parent-only gitlink review and ordinary restart remain next. No product patch, push,
-new implicit selection or ordinary write enablement.
+[Native package](reports/G05_NATIVE_SUBMODULE_2026-11-08.md): child-first/stale-parent
+stop passed, then fresh parent review revealed an omitted unstaged gitlink. Fixed
+ReviewAll to include separately inspected changed submodule relationships without
+relaxing restricted status. Extended regression failed before/passed after, including
+index-only/exclusion boundaries. Core bulk suites 11/11 with explicit worker ignore,
+strict Clippy and full desktop 87/13/16 passed. Fixed native review displayed the new
+child OID; independent parent-only approval completed exactly once, preserving control
+and original configs. Ordinary restart remains next. Main bulk exclusion checklist
+coverage for discovered gitlinks and broader G05 criteria remain open; G04 disabled.
 
 ### November 8 G03 measured scale / partial scan recovery
 

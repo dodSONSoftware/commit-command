@@ -1,0 +1,24 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.40s
+     Running tests/bulk_application.rs (app/core/target/debug/deps/bulk_application-ddcca4ea8d990b9c)
+
+running 1 test
+test real_submodule_commits_before_parent_and_changed_gitlink_requires_fresh_parent_review ... FAILED
+
+failures:
+
+---- real_submodule_commits_before_parent_and_changed_gitlink_requires_fresh_parent_review stdout ----
+
+thread 'real_submodule_commits_before_parent_and_changed_gitlink_requires_fresh_parent_review' (460685) panicked at tests/bulk_application.rs:457:5:
+assertion `left == right` failed
+  left: [53, 97, 54, 52, 99, 52, 53, 55, 99, 51, 100, 57, 97, 55, 98, 98, 98, 54, 49, 56, 48, 48, 99, 98, 55, 53, 98, 52, 97, 101, 56, 55, 48, 51, 98, 51, 55, 51, 53, 48, 10]
+ right: [51, 49, 56, 49, 48, 52, 97, 50, 102, 51, 49, 55, 97, 99, 48, 54, 56, 102, 97, 51, 53, 101, 53, 98, 52, 54, 56, 54, 53, 54, 101, 52, 56, 50, 49, 102, 55, 57, 101, 98, 10]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    real_submodule_commits_before_parent_and_changed_gitlink_requires_fresh_parent_review
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 11 filtered out; finished in 7.11s
+
+error: test failed, to rerun pass `--test bulk_application`

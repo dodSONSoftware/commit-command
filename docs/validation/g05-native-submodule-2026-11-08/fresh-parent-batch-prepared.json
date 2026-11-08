@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "id": "713c6c9f-db99-4b64-8657-32ff8c10fcd3",
+  "workspace": "02447833-15bd-427f-b507-97d2dc4ff948",
+  "created_at_ms": 1794158154902,
+  "phase": "proposed",
+  "issue": null,
+  "items": [
+    {
+      "worktree": "3b02428c-0b46-4f68-b823-59b2585fa35b",
+      "path": {
+        "encoding": "utf8",
+        "value": "/private/tmp/gitfleet-g05-submodule-fzz5ffky/workspace/parent"
+      },
+      "dependencies": [],
+      "operation": "c8732508-afac-4c69-8bbf-14fda1705fe2",
+      "issue": null
+    }
+  ]
+}

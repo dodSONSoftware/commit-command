@@ -67,6 +67,7 @@ fn selections(
     entry: &StoredWorktree,
     selection: &BatchSelection,
     nested: &[PathBuf],
+    relationships: &[crate::discovery::Relationship],
 ) -> Result<Vec<SelectedPath>> {
     let status = entry
         .status
@@ -111,6 +112,30 @@ fn selections(
                 SelectedPath {
                     path: original.clone(),
                     source,
+                },
+            );
+        }
+    }
+    if matches!(selection.mode, BatchMode::ReviewAll) {
+        // Restricted status deliberately avoids child worktrees. Complete discovery
+        // has inspected their identities/HEADs separately; include changed gitlinks
+        // in the parent's new exact review, never child file contents.
+        for edge in relationships.iter().filter(|edge| {
+            edge.parent == entry.metadata.root
+                && matches!(edge.kind, crate::discovery::RelationshipKind::Submodule)
+                && edge.gitlink_matches_head == Some(false)
+                && edge.child_head.is_some()
+        }) {
+            let child = edge.child.to_path()?;
+            let relative = child
+                .strip_prefix(&root)
+                .map_err(|_| invalid("Submodule relationship is outside the parent"))?;
+            let path = NativePath::from_path(relative);
+            paths.insert(
+                path_key(&path)?,
+                SelectedPath {
+                    path,
+                    source: ContentSource::WorkingTree,
                 },
             );
         }
@@ -349,7 +374,7 @@ impl Application {
                 .collect::<Vec<_>>();
             let result = (|| {
                 let current = self.entry(workspace, &id)?;
-                let selected = selections(&current, &selection, &nested)?;
+                let selected = selections(&current, &selection, &nested, &scan.scan.relationships)?;
                 self.writes.application_propose(
                     &ws,
                     &current.id,

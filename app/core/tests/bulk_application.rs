@@ -446,6 +446,30 @@ fn real_submodule_commits_before_parent_and_changed_gitlink_requires_fresh_paren
     assert_ne!(head(&t, child_index), child_head);
     assert_eq!(head(&t, parent), parent_head);
     assert_eq!(fs::read(t.f.repo.join(".git/index")).unwrap(), index);
+
+    let published_child = head(&t, child_index);
+    let mut index_only = selection(&t, parent);
+    index_only.mode = BatchMode::IndexOnly;
+    let index_review = review(&mut t, vec![index_only]);
+    assert!(index_review.summary.contains("1 blocked"));
+    let mut excluded = selection(&t, parent);
+    excluded.excluded = vec![NativePath::from_path(Path::new("modules/lib"))];
+    let excluded_review = review(&mut t, vec![excluded]);
+    assert!(excluded_review.summary.contains("0 blocked"));
+    assert!(!excluded_review
+        .content
+        .contains("diff --git a/modules/lib b/modules/lib"));
+    let parent_selection = selection(&t, parent);
+    let fresh = review(&mut t, vec![parent_selection]);
+    assert!(fresh
+        .content
+        .contains("diff --git a/modules/lib b/modules/lib"));
+    let completed = confirm(&mut t, &fresh);
+    assert_eq!(completed.record.phase, BatchPhase::Complete);
+    assert!(completed.outcomes[0].published);
+    assert_eq!(head(&t, child_index), published_child);
+    assert_eq!(t.f.git(&["rev-parse", "HEAD:modules/lib"]), published_child);
+    assert!(t.f.git(&["status", "--porcelain"]).is_empty());
 }
 
 fn slow_hook(t: &Test, index: usize, marker: &Path) {
