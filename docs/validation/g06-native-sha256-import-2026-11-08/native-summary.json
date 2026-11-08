@@ -1,0 +1,23 @@
+{
+  "existing_authorized_fixture_trust_reused": true,
+  "initial_cancel_preserved_all_repository_files": true,
+  "interrupted_confirmation_recorded_cancelled_without_publication": true,
+  "fresh_authoritative_and_native_confirmation_completed": true,
+  "import_phase": "complete",
+  "objects_imported_recorded": true,
+  "reference_result": "updated",
+  "actual_repository_delta": [
+    ".git/refs/remotes/origin/main",
+    ".git/logs/refs/remotes/origin/main"
+  ],
+  "single_reflog_entry": true,
+  "full_sha256_oid_preserved": true,
+  "ordinary_restart_rendered_without_reload": true,
+  "ordinary_writes_disabled": true,
+  "history_one_complete_two_cancelled": true,
+  "no_network_or_replay": true,
+  "both_exits": 0,
+  "missing_object_transfer_proven": false,
+  "product_patch": false,
+  "full_suite_rerun": false
+}

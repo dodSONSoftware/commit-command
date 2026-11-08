@@ -37,3 +37,21 @@ expected scratch artifacts and the actual expected_oid field; no product fix.
 Ordinary restart/no replay remains next. Earlier SHA256 observation oracle's no-import
 precondition describes its historical checkpoint; use this package's current oracle
 after this intentionally authorized tracking-ref creation.
+
+## Step 3 — ordinary restart/no replay passed; selected package complete
+
+Ordinary build rendered without reload and retained one complete and two cancelled
+import records, full SHA256 OID, objects_imported=true/ref updated on the success and
+false/not_attempted on both cancellations. Writes/trust controls stayed disabled.
+Restarted/final oracle passed exact post-import repo/network snapshots and journal
+identity: one tracking ref/reflog, no duplicated reflog or replay, unchanged prior
+capture/observation records, no new requests. Both native/ordinary Quit exits 0;
+CLI inventory reopened state writer lock. Socket probe confirms old server stopped;
+test TLS private key remains absent. Retained approved ref and evidence in disposable
+fixture. No new trust grant, commit, push, live remote contact or product patch.
+
+Selected native offline SHA256 absent-tracking-ref import is accepted within this
+macOS/existing-artifact envelope. Missing-object transfer, SHA256 upstream/check
+chains, broader topology/interruption/accessibility and full G02/G06 remain open.
+No fresh full-suite run: product source unchanged; preceding full Core matrix already
+passed. File/mode baselines do not assert general xattr/ownership guarantees.

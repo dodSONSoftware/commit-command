@@ -7,14 +7,17 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
-### November 8 native SHA-256 import — publication passed, restart pending
+### November 8 native SHA-256 offline import — complete
 
-[Offline import package](reports/G06_NATIVE_SHA256_IMPORT_2026-11-08.md): retained
-verified capture/trust and absent tracking ref validated; server remains stopped.
-Selected case tests separate import authority and exact ref creation; objects already
-exist locally. Cancel preserved files; fresh native offline import completed with
-only the exact tracking ref and one reflog entry added, no network. Ordinary restart
-remains pending. G02/G06 remain partial.
+[Final import package](reports/G06_NATIVE_SHA256_IMPORT_2026-11-08.md): retained
+capture and existing authorized fixture trust reused. Cancel preserved repository;
+fresh native exact import approval completed offline, adding only the full SHA256
+tracking ref and one reflog entry. Ordinary restart retained complete/cancelled
+chronology, writes disabled, no replay/extra request. Exact file/mode, artifact and
+journal oracles passed; both exits 0 and writer lock reopened. Server remains stopped.
+Objects already existed locally, so missing-object transfer is not accepted by this
+case. No product patch/new trust. Native SHA256 missing-object/upstream/check and
+other G02/G06 criteria remain open.
 
 ### November 8 native SHA-256 observation/download — complete
 
@@ -670,7 +673,7 @@ its owning criterion and state what its completion closes before execution.
 | G02 startup | Initial React commit ordering defect fixed; bounded native restarts passed; earlier intermittent blank retained | Capture diagnostic state on an actual recurrence before reload; bounded clean launches do not prove a universal cause or guarantee |
 | G02 real OS entry points | Direct AppKit covered; actual Dock policy blocked; operator session termination distinct | Keep blocks explicit; no surrogate or destructive session termination without operator coordination |
 | G06 upstream topology | Selected missing-only setup/recovery history and now native linked-worktree success passed | Native owned-config-lock recovery package now passed (Cancel, empty/ready/pre-publication abort, stale/foreign refusal and ordinary restart); broader named topology/failure/accessibility criteria remain open |
-| G06 fetch/auth/format compatibility | Selected real HTTPS/SSH/auth chains have dated evidence; identified artifact initialization race already fixed | Full current-source five-configuration Core signing/transport matrix passed with restored isolated GPG. Native SHA-256 HTTPS observation/download now passed; native import/upstream/check topology remains; do not reopen the already diagnosed artifact race without new counterevidence |
+| G06 fetch/auth/format compatibility | Selected real HTTPS/SSH/auth chains have dated evidence; identified artifact initialization race already fixed | Full current-source five-configuration Core signing/transport matrix passed with restored isolated GPG. Native SHA-256 HTTPS observation/download now passed; native offline import with existing objects now passed; missing-object/upstream/check topology remains; do not reopen the already diagnosed artifact race without new counterevidence |
 | G06 OS credentials / other transport exclusions | SecurityAgent choices and direct SCP facility limits retain prior blocks | Operator/facility-dependent work is not an unattended pass; unsupported helpers stay unsupported |
 | Planner accessibility/cycles/scale | Broader native criteria remain open; overlap with G03/G08 | Track as their own criteria, not repeated observation-guard tests; publication remains G07/G08 |
 

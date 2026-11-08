@@ -16,3 +16,9 @@ exit files, cleanup.json and final-inventory.json record clean exits and state r
 The server is stopped and its private TLS key removed; preparation/transport is not
 currently live. Historical prepared/pending report statements are dated checkpoints.
 No private key or binary is committed. Full automated suites were not rerun here.
+
+Follow-up: this retained fixture subsequently underwent an authorized offline native
+SHA256 import. The no-import/final repository baseline assertions here describe the
+pre-import checkpoint and no longer apply to its current state. Use the current
+[import oracle](../g06-native-sha256-import-2026-11-08/oracle.py) and its exact approved
+tracking-ref/reflog delta. Original evidence remains historical and unchanged.

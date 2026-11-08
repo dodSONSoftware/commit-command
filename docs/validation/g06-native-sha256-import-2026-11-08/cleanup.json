@@ -1,0 +1,7 @@
+{
+  "both_apps_exit": 0,
+  "writer_lock_reopened": true,
+  "test_server_still_stopped": true,
+  "test_tls_key_still_absent": true,
+  "retained_ref_and_single_reflog_as_approved": true
+}
