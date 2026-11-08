@@ -114,3 +114,22 @@ This accepts the selected native three-level publication/reauthorization/restart
 chain. It does not accept all G05 or dismiss the unexpected first middle-review
 cancellation. Next diagnose that lifecycle finding with focused reproduction before
 changing code; preserve the safely cancelled record as evidence.
+
+
+## Bounded review-window diagnosis — original finding still open
+
+After the completed chain, reopened the same isolated acceptance app and prepared
+five root-only trust reviews, cancelling each without native confirmation. Four
+close/immediate-fresh-review transitions all displayed the new authoritative review
+with enabled confirmation and No operation is approved yet. No trust grant or commit
+was requested; exact final repository files/modes and operation/batch payloads still
+matched parent-files.json / parent-records.json. Native Quit exited 0.
+
+review-repeat-proof.json records all five observed review IDs and the narrower
+coverage. This did not reproduce the original completed-batch-close → fresh-bulk
+preparation cancellation. Code inspection found review-ID guards on queued
+cancellation, asynchronous window teardown/reopen handling and Core cancellation
+journaling; inspection alone establishes no root cause. No speculative patch.
+Keep the original safely cancelled batch as an open lifecycle finding and use a
+focused completed-batch transition reproduction/instrumentation if it recurs. These
+pending-trust repetitions do not establish that original transition passed.

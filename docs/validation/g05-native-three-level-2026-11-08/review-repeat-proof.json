@@ -1,0 +1,18 @@
+{
+  "review_ids": [
+    "297c9aa7-0036-46c9-8824-2a25f36d4090",
+    "aabcdc75-823c-44da-b2d2-3518f2bb8840",
+    "e4f20cfd-198c-48a6-a9f3-dc41bca4e4df",
+    "ab3cdeee-78cc-462c-a059-3f4167290fcb",
+    "8f288ae6-62f9-4c36-adc7-0d480b75effb"
+  ],
+  "openings": 5,
+  "close_reopen_transitions": 4,
+  "fresh_review_remained_open": true,
+  "no_native_confirmation_requested": true,
+  "no_additional_trust_or_commit": true,
+  "exact_final_files_records_preserved": true,
+  "self_cancellation_reproduced": false,
+  "original_completed_batch_to_fresh_review_variant": "not reproduced by this narrower pending-trust diagnostic",
+  "finding": "open"
+}

@@ -17,7 +17,9 @@ checkout/actual Git metadata, working bytes/modes, full untrusted control and pr
 records preserved. Ordinary restart showed three clean selected-chain repos, retained
 all outcomes, disabled writes and replayed nothing. Exact files/records, exits 0,
 integrity and lock reopen passed. One middle preparation self-cancelled before any
-approval/writes; review-window lifecycle diagnosis remains open. No product patch;
+approval/writes. Five pending-trust openings/four close-reopen transitions did not
+reproduce it; exact final files/records unchanged, native exit 0. The original
+completed-batch transition remains an open lifecycle finding. No product patch;
 broader G05 remains partial for invalid/cyclic/selection/accessibility criteria.
 
 ### November 8 G05 three-level dependency chain — Core passed
