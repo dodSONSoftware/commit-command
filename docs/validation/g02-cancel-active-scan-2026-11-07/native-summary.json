@@ -1,0 +1,18 @@
+{
+  "active_rescan_busy_before_cancel": true,
+  "native_cancel_current_operation_clicked": true,
+  "native_result": "Error: cancelled: Inspection cancelled",
+  "controls_reenabled": true,
+  "host_remained_usable": true,
+  "last_completed_inventory_preserved_count": 1,
+  "live_git_child_samples": 14,
+  "fresh_rescan_completed_count": 80,
+  "fresh_rescan_issues": 0,
+  "exact_draft_visible_after_retry": true,
+  "normal_quit_returncode": 0,
+  "writer_lock_reopened_by_cli": true,
+  "final_inventory_count": 80,
+  "product_code_changed": false,
+  "new_automated_suite_run": false,
+  "signals_sent": false
+}

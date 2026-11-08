@@ -1,0 +1,12 @@
+{
+  "root": "/private/tmp/commit-command-scan-cancel-q90do1q6",
+  "workspace_root": "/private/tmp/commit-command-scan-cancel-q90do1q6/workspace",
+  "state": "/private/tmp/commit-command-scan-cancel-q90do1q6/state",
+  "workspace": "c218593e-6880-44ce-91a7-509cf8abf393",
+  "initial_worktree": "675e1b0b-d98c-4fcd-9eb4-1bc4be8244a3",
+  "repositories": 80,
+  "app": "/private/tmp/commit-command-scan-cancel-q90do1q6/Commit Command Scan Cancel Acceptance.app",
+  "binary_sha256": "aec8aa0bc52cd11b6a598686dee3583d03eb54965e4c9666a3cea21815d71570",
+  "features": "default release",
+  "source_commit": "2cc62bdd54dafbec1fb75406a31ba3f50fcd0797"
+}

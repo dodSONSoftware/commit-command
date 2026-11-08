@@ -1,0 +1,104 @@
+{
+  "host_pid": 87775,
+  "host_command": "/private/tmp/commit-command-scan-cancel-q90do1q6/Commit Command Scan Cancel Acceptance.app/Contents/MacOS/gitfleet-desktop --data-dir /private/tmp/commit-command-scan-cancel-q90do1q6/state",
+  "git_children": [
+    {
+      "time_ns": 1794112284439173000,
+      "pid": 89005,
+      "ppid": 87775,
+      "state": "R",
+      "command": "(git)"
+    },
+    {
+      "time_ns": 1794112284477303000,
+      "pid": 89018,
+      "ppid": 87775,
+      "state": "R",
+      "command": "(git)"
+    },
+    {
+      "time_ns": 1794112284519245000,
+      "pid": 89030,
+      "ppid": 87775,
+      "state": "R",
+      "command": "(git)"
+    },
+    {
+      "time_ns": 1794112291906548000,
+      "pid": 89551,
+      "ppid": 87775,
+      "state": "R",
+      "command": "(git)"
+    },
+    {
+      "time_ns": 1794112291946785000,
+      "pid": 89563,
+      "ppid": 87775,
+      "state": "R",
+      "command": "(git)"
+    },
+    {
+      "time_ns": 1794112292062675000,
+      "pid": 89605,
+      "ppid": 87775,
+      "state": "R",
+      "command": "(git)"
+    },
+    {
+      "time_ns": 1794112292101899000,
+      "pid": 89618,
+      "ppid": 87775,
+      "state": "R",
+      "command": "(git)"
+    },
+    {
+      "time_ns": 1794112292141886000,
+      "pid": 89631,
+      "ppid": 87775,
+      "state": "R",
+      "command": "(git)"
+    },
+    {
+      "time_ns": 1794112292185000000,
+      "pid": 89644,
+      "ppid": 87775,
+      "state": "R",
+      "command": "(git)"
+    },
+    {
+      "time_ns": 1794112292267044000,
+      "pid": 89674,
+      "ppid": 87775,
+      "state": "R",
+      "command": "(git)"
+    },
+    {
+      "time_ns": 1794112294602829000,
+      "pid": 89751,
+      "ppid": 87775,
+      "state": "R",
+      "command": "(git)"
+    },
+    {
+      "time_ns": 1794112294642169000,
+      "pid": 89767,
+      "ppid": 87775,
+      "state": "R",
+      "command": "(git)"
+    },
+    {
+      "time_ns": 1794112294682460000,
+      "pid": 89786,
+      "ppid": 87775,
+      "state": "R",
+      "command": "(git)"
+    },
+    {
+      "time_ns": 1794112294723245000,
+      "pid": 89804,
+      "ppid": 87775,
+      "state": "R",
+      "command": "(git)"
+    }
+  ]
+}

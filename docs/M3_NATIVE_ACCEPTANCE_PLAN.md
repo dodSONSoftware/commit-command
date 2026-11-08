@@ -147,6 +147,17 @@ records. Selected bounded G02 case passed; no code fix or new automated suite.
 G02 remains partial, including Dock/session and broader startup/phase coverage;
 G06 remote compatibility is unchanged.
 
+### November 7 G02 active-scan Cancel
+
+[Native cancellation report](reports/G02_CANCEL_ACTIVE_SCAN_2026-11-07.md): fresh
+ordinary fixture, active Rescan plus live Git child proof, then native Cancel returned
+Inspection cancelled and restored controls. Prior one-entry completed inventory retained;
+no partial discovery published. Explicit fresh Rescan completed with 80 entries/zero
+issues, exact draft retained, normal Quit 0 and writer lock reopened. File bytes/modes
+preserved, SQLite valid, zero trust/write/remote records. Selected G02 read-cancellation
+case passed within this envelope; no code fix or new automated suite. G02 remains
+partial; G06 remote compatibility is unchanged.
+
 ## Safety, execution and evidence rules
 
 - Perform interaction manually or through an organization-permitted native testing
