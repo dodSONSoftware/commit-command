@@ -1,0 +1,17 @@
+{
+  "prefix": "/private/tmp/gitfleet-m2-tools/install",
+  "gpg_version": [
+    "gpg (GnuPG) 2.5.24",
+    "libgcrypt 1.12.4",
+    "Copyright (C) 2026 g10 Code GmbH"
+  ],
+  "binaries": {
+    "gpg": "9ccd9a048a90fadd57c167767ee6f55e1f797ba0498235a6ef9e40f4866164b4",
+    "gpg-agent": "79e030202122b923ae6472ef06d9fad0771fbc52b7e3b0fe06affd09fb42928a",
+    "gpgconf": "6c822055c6055edc7bb71ec613778f644ef298eb27d4559685aecdc3d72d918e"
+  },
+  "build_exit": 0,
+  "global_install": false,
+  "official_integrity_source": "https://gnupg.org/download/integrity_check.html",
+  "source_commit": "79c4790c58a137fb8c0bd81ea07f2b735cfe1a4c"
+}

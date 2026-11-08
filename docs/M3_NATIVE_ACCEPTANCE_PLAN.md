@@ -82,6 +82,14 @@ startup presentation is reopened; prior document-readiness passes remain bounded
 Next investigate the retained post-load blank-window evidence. No source fix claimed.
 Current gate dispositions remain in EXECUTION_STATUS.
 
+### November 7 full signing matrix — signer prerequisite restored
+
+[Signing package](reports/G06_FULL_SIGNING_MATRIX_2026-11-07.md): pinned GnuPG rebuilt
+under an isolated temporary prefix; official SHA256 checks and real fixture commit
+sign/verify smoke passed. No global install or personal keys. Full five-configuration
+Core validation now proceeds; earlier missing-tool statements are historical.
+G02/G06 remain partial.
+
 ### November 7 current-source automated transport subset — complete
 
 [Final compatibility package](reports/G06_CURRENT_TRANSPORT_MATRIX_2026-11-07.md):
