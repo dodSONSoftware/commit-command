@@ -1,0 +1,25 @@
+{
+  "base_commit": "4544775bce023f7f858dce78699a8a0a0eab7d2e",
+  "source_sha256": {
+    "app/core/tests/remote_observation.rs": "5cf1620642a5df3e807af904a46526a1b4be566814e32a09b4efb48dc0987a8e",
+    "app/core/tests/support/https_observation.py": "f721d3e26a8cf6e4c4b0bd8ee876a56eff79b800c25a9d839d0c948ed40fad84",
+    "app/core/tests/support/push_publication_auth.rs": "526011b2cdb1ce6d2a0b0dd789f0bcbb46d24951506be9bcb5596d1d15531934",
+    "app/core/Cargo.lock": "39733402f5be3220d359d3db197dd7810afb24a04a406cf219d9355cd7480edc",
+    "app/desktop/src-tauri/Cargo.lock": "d70972c2de2b039055238311f5b0d749ebf21b35bad58db74a20a1ca6c359e73"
+  },
+  "git": "git version 2.56.0",
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "complete_remote_suite": {
+    "exit": 0,
+    "passed": 99,
+    "failed": 0,
+    "ignored": 5
+  },
+  "final_focused": {
+    "exit": 0,
+    "passed": 4,
+    "failed": 0
+  },
+  "strict_clippy_exit": 0,
+  "production_core_and_desktop_unchanged": true
+}

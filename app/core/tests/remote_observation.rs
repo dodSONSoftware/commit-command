@@ -2748,3 +2748,6 @@ mod push_check;
 
 #[path = "support/push_publication.rs"]
 mod push_publication;
+
+#[path = "support/push_publication_auth.rs"]
+mod push_publication_auth;

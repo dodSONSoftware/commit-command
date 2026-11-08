@@ -7,6 +7,18 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G07 authenticated loopback publication — passed in Core
+
+[Authenticated publication](reports/G07_AUTHENTICATED_PUBLICATION_2026-11-08.md):
+actual verified HTTPS SHA-1/SHA-256 publication with explicit get-only helper/account,
+wrong-credential refusal, SSH-agent/public-identity publication and independent server
+ref/mode/privacy oracles passed. Test server write routes require an explicit mode;
+legacy read-only mode still refuses them. SSH fixture service ignores inherited Git
+configuration; rejecting global-hook sentinel stayed untouched. Complete remote suite
+99 passed / 5 explicitly ignored; final focused 4, strict Clippy/format/AST/diff passed.
+Production code unchanged; no real user credentials/agent/server or new native trust.
+Native authenticated/topology/interruption coverage remains open; G08 follows next.
+
 ### November 8 G02/G07 native host loss during publication — passed
 
 [Actual publication crash](reports/G02_G07_NATIVE_PUSH_HOST_CRASH_2026-11-08.md):

@@ -1,4 +1,4 @@
-"""Disposable read-only TLS Git fixture; never accepts receive-pack or writes."""
+"""Disposable TLS Git fixture; receive-pack requires explicit publication mode."""
 import base64
 import hmac
 import json
@@ -60,7 +60,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
             self.send_header("Content-Length", "0")
             self.end_headers()
             return
-        if selected == "git":
+        if selected in ("git", "publication"):
             self.git_backend(b"")
             return
         body = packet("# service=git-upload-pack\n") + b"0000"
@@ -75,7 +75,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
         with marker.open("a") as stream:
             stream.write(f"{self.path} auth={self.headers.get('Authorization') is not None}\n")
         if not self.authenticated():return
-        if mode != "git":
+        if mode not in ("git", "publication"):
             self.send_error(403)
             return
         length = int(self.headers.get("Content-Length", "0"))
@@ -86,10 +86,16 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
     def git_backend(self, body):
         parsed = urllib.parse.urlsplit(self.path)
-        if not repositories or (self.command, parsed.path, parsed.query) not in [
+        allowed = [
             ("GET", "/repo.git/info/refs", "service=git-upload-pack"),
             ("POST", "/repo.git/git-upload-pack", ""),
-        ]:
+        ]
+        if mode == "publication":
+            allowed += [
+                ("GET", "/repo.git/info/refs", "service=git-receive-pack"),
+                ("POST", "/repo.git/git-receive-pack", ""),
+            ]
+        if not repositories or (self.command, parsed.path, parsed.query) not in allowed:
             self.send_error(403)
             return
         environment = {

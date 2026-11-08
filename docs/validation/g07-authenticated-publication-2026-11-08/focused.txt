@@ -1,0 +1,11 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.64s
+     Running tests/remote_observation.rs (app/core/target/debug/deps/remote_observation-883e37a5b39e3193)
+
+running 3 tests
+test push_publication_auth::ssh_publication_uses_only_reviewed_agent_identity_and_exact_fixed_server_command ... ok
+test push_publication_auth::https_publication_rejects_wrong_credentials_before_transport_without_secret_persistence ... ok
+test push_publication_auth::verified_https_publication_uses_only_reviewed_get_helper_and_preserves_managed_state ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 100 filtered out; finished in 85.11s
+
