@@ -1135,3 +1135,15 @@ footer button {
 .remote-status summary {
   cursor: pointer;
 }
+
+.remote-status details[open] summary {
+  margin-bottom: 10px;
+}
+.remote-status details p {
+  margin: 0 0 8px;
+  line-height: 1.6;
+}
+.remote-status details p:last-child {
+  margin-top: 12px;
+  margin-bottom: 4px;
+}
