@@ -1,0 +1,17 @@
+{
+  "root": "/private/tmp/gitfleet-m3-native-qh6wp0ke",
+  "workspace_root": "/private/tmp/gitfleet-m3-native-qh6wp0ke/workspace",
+  "state": "/private/tmp/gitfleet-m3-native-qh6wp0ke/state",
+  "workspace": "600ce337-ac24-415b-b677-c2e5374a869a",
+  "initial_worktree": "ac69ca45-5d91-43c5-99c6-62bd77b2e9d3",
+  "app": "/private/tmp/gitfleet-m3-native-qh6wp0ke/Commit Command Close Fallback Acceptance.app",
+  "features": [
+    "default custom-protocol",
+    "native-acceptance-support"
+  ],
+  "desktop_writes": false,
+  "source_commit": "286448c0dc36c1a56905719008ae43f95e4cdbce",
+  "binary_sha256": "36bd3276deca02ee0479aa6a41ffc95e3a6e8f5d3539710778b23441f0bd7eb8",
+  "ordinary_restart_app": "/private/tmp/gitfleet-m3-native-qh6wp0ke/Commit Command Close Fallback Restart.app",
+  "ordinary_binary_sha256": "aec8aa0bc52cd11b6a598686dee3583d03eb54965e4c9666a3cea21815d71570"
+}

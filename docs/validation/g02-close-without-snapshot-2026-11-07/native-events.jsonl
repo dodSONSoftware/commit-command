@@ -1,0 +1,8 @@
+{"detail":{"support":true},"event":"startup"}
+{"detail":{"allowed":true,"label":"main"},"event":"navigation"}
+{"detail":{"elapsed_ms":200,"event":"Started","visible":false},"event":"main_page_load"}
+{"detail":{"elapsed_ms":250,"event":"Finished","visible":false},"event":"main_page_load"}
+{"detail":{"visible":true},"event":"main_initial_display"}
+{"detail":{},"event":"close_ack_fault_armed"}
+{"detail":{"id":"accept-drop-ack"},"event":"menu_action"}
+{"detail":{},"event":"close_ack_suppressed"}

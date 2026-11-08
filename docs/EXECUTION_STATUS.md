@@ -93,6 +93,17 @@ preserved, SQLite valid, zero trust/write/remote records. Selected G02 read-canc
 case passed within this envelope; no code fix or new automated suite. G02 remains
 partial; G06 remote compatibility is unchanged.
 
+### November 7 G02 missing-snapshot explicit fallback exit
+
+[Native fallback-exit report](reports/G02_CLOSE_WITHOUT_SNAPSHOT_2026-11-07.md): fresh
+marked fixture and existing non-default test support (desktop writes disabled), one
+suppressed close-request delivery, then explicit native Close without saving exited 0.
+Saved presentation payload and repository file bytes/modes preserved; ordinary first
+restart rendered/recovered saved draft without reload, normal Quit 0 and lock reopened.
+Selected exit branch passed, complementing prior Keep app open evidence. Already saved
+draft used: no unsaved-edit loss/recovery claim. No product fix or new full automated
+suite. G02 remains partial; G06 remote compatibility is unchanged.
+
 ## Status meanings and availability
 
 - **Accepted within envelope:** the recorded milestone criteria passed only for

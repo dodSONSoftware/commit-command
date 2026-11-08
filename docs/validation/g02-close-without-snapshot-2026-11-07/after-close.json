@@ -1,0 +1,9 @@
+{
+  "repository_bytes_modes_preserved": true,
+  "presentation_payload_exactly_preserved": true,
+  "sqlite_integrity": "ok",
+  "write_operation_rows": 0,
+  "trust_rows": 0,
+  "exit_code": 0,
+  "no_unsaved_draft_loss_assertion": true
+}

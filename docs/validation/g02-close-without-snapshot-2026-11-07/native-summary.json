@@ -1,0 +1,18 @@
+{
+  "test_support_feature_only": true,
+  "desktop_writes_enabled": false,
+  "saved_draft_verified_before_fault": true,
+  "delivery_suppressed_once": true,
+  "native_fallback_both_choices_visible": true,
+  "explicit_choice": "Close without saving",
+  "fallback_exit_code": 0,
+  "first_ordinary_restart_rendered_without_reload": true,
+  "exact_saved_draft_recovered": true,
+  "ordinary_write_controls_disabled": true,
+  "ordinary_test_support_menu_absent": true,
+  "ordinary_quit_exit_code": 0,
+  "writer_lock_reopened_by_cli": true,
+  "product_code_changed": false,
+  "new_full_test_suite_run": false,
+  "unsaved_edit_loss_tested": false
+}
