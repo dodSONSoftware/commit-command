@@ -7,19 +7,20 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
-### November 8 G05 native three-level chain — leaf/middle passed, root next
+### November 8 G05 native three-level chain — selected execution/restart passed
 
-[Native package](reports/G05_NATIVE_THREE_LEVEL_2026-11-08.md): user authorized only
-root/middle/leaf, exact native trust confirmation granted three, control untrusted.
-Native batch reviewed correct leaf/middle/root order; preparation byte/mode exact.
-Separate approval published one exact leaf commit and stopped at needs_reauthorization;
-middle/root unstarted with original heads/index/metadata. Full control/working files
-unchanged; exact trusts/integrity passed. Fresh middle approval now published one exact commit and again stopped for root
-reauthorization; leaf checkout/actual metadata and root head/index/config preserved.
-One earlier middle preparation self-cancelled before approval, with no writes; retain
-review-window follow-up as open. Root approval and ordinary restart remain next. No product patch or push; broader G05 remains partial.
+[Native package](reports/G05_NATIVE_THREE_LEVEL_2026-11-08.md): exact authorized
+root/middle/leaf, correct child-first order and preparation without staging. Separate
+native approvals published leaf, then fresh middle gitlink, then fresh root gitlink;
+one commit each, with needs_reauthorization barriers at both ancestors. Descendant
+checkout/actual Git metadata, working bytes/modes, full untrusted control and prior
+records preserved. Ordinary restart showed three clean selected-chain repos, retained
+all outcomes, disabled writes and replayed nothing. Exact files/records, exits 0,
+integrity and lock reopen passed. One middle preparation self-cancelled before any
+approval/writes; review-window lifecycle diagnosis remains open. No product patch;
+broader G05 remains partial for invalid/cyclic/selection/accessibility criteria.
 
-### November 8 G05 three-level dependency chain — Core passed, native open
+### November 8 G05 three-level dependency chain — Core passed
 
 [Three-level package](reports/G05_THREE_LEVEL_2026-11-08.md): new real root/middle/leaf
 submodules test proves leaf-first exact dependency order, no staging in preparation,
@@ -27,9 +28,8 @@ one leaf commit followed by a fresh middle review, then one middle commit follow
 by a fresh root review. Final exact gitlinks, one commit per worktree, preserved child
 checkouts and actual Git metadata verified. Bulk suite 13 passed / 1 subprocess worker
 ignored, format and strict target Clippy passed. Test-only change; this adds Core
-evidence, not native acceptance. Native three-level execution, invalid/cyclic input
-and remaining selection/accessibility cases remain explicit work, not repeated
-previously passed two-level cases.
+evidence; actual native three-level execution/restart is now recorded above.
+Invalid/cyclic input and remaining selection/accessibility cases remain explicit work.
 
 ### November 8 G05 native partial staging — passed
 

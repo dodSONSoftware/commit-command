@@ -1,0 +1,49 @@
+{
+  "batch": {
+    "version": 1,
+    "id": "b94b213e-9087-4b2e-b776-d62dc734e6e8",
+    "workspace": "8fbb404a-a70e-47fe-a911-3bf94a4ee709",
+    "created_at_ms": 1794166668642,
+    "phase": "proposed",
+    "issue": null,
+    "items": [
+      {
+        "worktree": "17c0aec8-df8d-4c6e-9ae3-5518aa395ea5",
+        "path": {
+          "encoding": "utf8",
+          "value": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent"
+        },
+        "dependencies": [],
+        "operation": "134973e2-b8d7-4a5d-8311-9c5427dad4a8",
+        "issue": null
+      }
+    ]
+  },
+  "operations": [
+    {
+      "id": "134973e2-b8d7-4a5d-8311-9c5427dad4a8",
+      "phase": "proposed",
+      "published": false,
+      "reconciled": false,
+      "new_head": null,
+      "selected": [
+        {
+          "path": {
+            "encoding": "utf8",
+            "value": "file.txt"
+          },
+          "source": "working_tree"
+        },
+        {
+          "path": {
+            "encoding": "utf8",
+            "value": "middle"
+          },
+          "source": "working_tree"
+        }
+      ],
+      "patch": "diff --git a/file.txt b/file.txt\nindex 28570ce..eaf1595 100644\n--- a/file.txt\n+++ b/file.txt\n@@ -1 +1 @@\n-Original three-level fixture\n+Reviewed native three-level content\ndiff --git a/middle b/middle\nindex 2dbf7c7..215c2e1 160000\n--- a/middle\n+++ b/middle\n@@ -1 +1 @@\n-Subproject commit 2dbf7c743f1cf3e9b9120683d40dfedbb9301eed\n+Subproject commit 215c2e1b5e47bbb237b1ee48ff53afd2f7c7ff9b\n",
+      "message": "G05 native three-level reviewed commit\n\nRequire fresh approval at each changed parent.\n"
+    }
+  ]
+}

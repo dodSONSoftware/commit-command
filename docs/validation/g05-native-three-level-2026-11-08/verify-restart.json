@@ -1,0 +1,21 @@
+{
+  "stage": "restart",
+  "heads": {
+    "leaf": "4b6e1ea1dbeabd9350368a24ad83206366dc7608",
+    "middle": "215c2e1b5e47bbb237b1ee48ff53afd2f7c7ff9b",
+    "parent": "98712d632e0130ce37720ede6e31fc84981244b6"
+  },
+  "exact_one_commit_each_completed": true,
+  "ancestor_metadata_unchanged_until_approved": true,
+  "descendant_checkout_and_actual_metadata_preserved": true,
+  "working_files_modes_preserved": true,
+  "control_exact_untrusted": true,
+  "exact_three_trusts": true,
+  "batch_phases": [
+    "needs_reauthorization",
+    "needs_reauthorization",
+    "complete"
+  ],
+  "integrity": "ok",
+  "restart_exact_files_records_no_replay": true
+}

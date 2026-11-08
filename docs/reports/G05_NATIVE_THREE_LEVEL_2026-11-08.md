@@ -1,6 +1,8 @@
 # G05 native three-level submodule preparation — November 8, 2026
 
-Disposition: prepared; awaiting exact path-specific trust. No execution acceptance.
+Disposition at preparation: awaiting exact path-specific trust; superseded by the
+authorized native checkpoints below. Selected chain execution/restart now passed;
+review-window self-cancellation finding remains open.
 Core counterpart passed in G05_THREE_LEVEL_2026-11-08.md. This native case targets
 actual leaf-first review/publication, a fresh middle gitlink approval, a fresh root
 gitlink approval and ordinary restart with no replay. Distinct from two-level case.
@@ -81,3 +83,34 @@ in leaf/middle, original root HEAD/index/config, exact file content/message and
 committed leaf OID, unchanged leaf checkout AND actual Git metadata, working files
 and full control preserved, prior leaf records unchanged, exact trusts/integrity.
 Root-only fresh approval and final ordinary restart remain next. No product change.
+
+
+## Fresh root approval and ordinary restart — passed
+
+Select unfinished from the middle batch selected only root. Fresh native review
+b94b213e-9087-4b2e-b776-d62dc734e6e8 included file.txt and the exact middle gitlink
+2dbf7c743f1cf3e9b9120683d40dfedbb9301eed →
+215c2e1b5e47bbb237b1ee48ff53afd2f7c7ff9b. Separate OS approval published operation
+134973e2-b8d7-4a5d-8311-9c5427dad4a8 as
+98712d632e0130ce37720ede6e31fc84981244b6, complete/index reconciled.
+
+verify.py parent passed: exactly one new commit in each worktree, exact shared
+message/file content, exact committed child OIDs, clean chain. All descendant
+checkouts and actual Git metadata preserved during ancestor execution, original
+working-file bytes/modes and full unselected control preserved, prior operation/
+batch payloads unchanged, three authorized trusts only, SQLite integrity ok.
+
+Acceptance native Quit exited 0. Ordinary restart showed all three chain repos clean,
+only root selected and dirty control unselected; read-only status. Bulk retained
+complete root, two needs_reauthorization histories and the unexpected cancelled
+preparation; Prepare native bulk review disabled. Ordinary Quit exited 0. verify.py
+restart passed exact repository files/modes and all operation/batch payloads against
+pre-restart snapshot, with no replay; writer-lock reopen passed. Logs/exit codes and
+oracles retained in the evidence directory. No product change/full matrix rerun for
+this native-only step. Current-state earlier stage oracles are historical after
+later intentional approvals; final verifier owns the final state.
+
+This accepts the selected native three-level publication/reauthorization/restart
+chain. It does not accept all G05 or dismiss the unexpected first middle-review
+cancellation. Next diagnose that lifecycle finding with focused reproduction before
+changing code; preserve the safely cancelled record as evidence.
