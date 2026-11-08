@@ -345,13 +345,21 @@ confirmation Quit, workspace invalidation/dialog reuse, main close and ordered
 review replacement. A12–A17 remain partial for the remaining native renderer-reset,
 live caller, compatibility and recovery criteria; full gate closure is not inferred.
 
-Latest G02/G06 main-window Close follow-up: [Close report](reports/G02_G06_RUNNING_PUSH_CHECK_CLOSE_2026-11-07.md)
+Latest G02/G06 direct AppKit running-check follow-up: [AppKit report](reports/G02_G06_RUNNING_PUSH_CHECK_APPKIT_2026-11-07.md)
+verifies actual NSApplication termination dispatch, delegate interception and return
+while the supported hook was proven running, then normal exit and process cleanup
+before natural finish. Cancelled/unpublished/not-passed history, exact draft and
+repository preservation, lock release and first restart/no replay passed. No code
+change or fresh automated matrix run. Actual Dock/session, remaining phase-specific
+recovery and G06 bypass/manager/compatibility remain open; G02/G06 stay partial.
+
+Earlier G02/G06 main-window Close follow-up: [Close report](reports/G02_G06_RUNNING_PUSH_CHECK_CLOSE_2026-11-07.md)
 verifies native `performClose:` targeting the foreground main window during proven
 running execution, normal exit, hook/child cleanup before natural completion,
 cancelled/not-passed/unpublished history, exact draft/repository preservation and
 first restart without replay. No product code changed; prior artifact/full desktop
-checks retained. Direct AppKit running-check termination and Dock/session remain
-separate; G02/G06 are still partial.
+checks retained. Subsequent direct AppKit results are recorded above; Dock/session
+remain separate and G02/G06 are still partial.
 
 Earlier G02 startup follow-up: [readiness fix/retest](reports/G02_STARTUP_READINESS_2026-11-07.md)
 closes reproduced premature empty-window display within the native fixture envelope.

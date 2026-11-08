@@ -1,0 +1,24 @@
+{
+  "source_base": "a89ecc6f2591700611e3b374bcd24c3b47c366a2",
+  "source_sha256": {
+    "app/desktop/src-tauri/src/main.rs": "1c18752242446ce8282e607dd00921917f34299842ed8d28b125517fddfe3fba",
+    "app/desktop/index.html": "1cf539bb23934f528da7f1d31702b3f3986b4a479eedbd4b72461127bef7f8e1",
+    "app/desktop/src-tauri/Cargo.toml": "14f62acd260c1d77042ffeb17c69b847bd21ae71338207792e34c443f466e360",
+    "app/desktop/src-tauri/Cargo.lock": "d70972c2de2b039055238311f5b0d749ebf21b35bad58db74a20a1ca6c359e73"
+  },
+  "native_artifact_sha256": "f7586228af7f7bb7c937d23b84474a538ccdaa47a0cc35dc6694b6caec81c7ca",
+  "features": [
+    "custom-protocol",
+    "desktop-writes",
+    "native-acceptance-support"
+  ],
+  "ordinary_debug_binary_restored": true,
+  "source_revision": "52ad1db12914ac00118ce448ac8900fd057960c5",
+  "reused_validated_artifact": true,
+  "product_source_changed": false,
+  "prior_full_desktop_validation": "../g02-startup-readiness-2026-11-07/desktop-validation.txt",
+  "prior_support_build": "../g02-startup-readiness-2026-11-07/support-build.txt",
+  "tracked_app_tree_sha": "13aadfaf0739534a15e2b5a9e0b56d8de347c602",
+  "tracked_app_tree_matches_commit": "542017c",
+  "automated_matrix_rerun": false
+}

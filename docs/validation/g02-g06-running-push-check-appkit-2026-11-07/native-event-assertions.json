@@ -1,0 +1,11 @@
+{
+  "appkit_request_dispatch_intercept_return_order": "passed",
+  "dispatch": {
+    "attached_sheet": false,
+    "mode": "kCFRunLoopDefaultMode"
+  },
+  "native_test_actions": [
+    "accept-appkit-terminate"
+  ],
+  "startup_readiness_both_hosts": "passed"
+}

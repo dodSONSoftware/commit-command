@@ -1,0 +1,38 @@
+{
+  "base_revision": "52ad1db",
+  "product_source_changed": false,
+  "native_action": "Request direct AppKit termination from authoritative review",
+  "actual_running_hook_proven": true,
+  "appkit_dispatch_delegate_interception_return_verified": true,
+  "attached_confirmation_sheet": false,
+  "host_exit_code": 0,
+  "restart_exit_code": 0,
+  "hook_child_cleanup_before_natural_finish": true,
+  "raw_check_phase": "cancelled",
+  "hook_passed": false,
+  "published": false,
+  "saved_draft_native_and_independent_verified": true,
+  "native_cancelled_history_verified": true,
+  "automatic_replay": false,
+  "hook_invocations": 1,
+  "read_only_request_count": 1,
+  "preservation_oracles": [
+    "closed",
+    "restarted",
+    "final"
+  ],
+  "automated_matrix_rerun": false,
+  "prior_automated_counts": {
+    "renderer": 69,
+    "default_host": 13,
+    "all_feature_host": 16
+  },
+  "actual_dock_or_session_termination_tested": false,
+  "g02": "open for remaining cases",
+  "g06": "open for remaining cases",
+  "evidence_python_syntax": "passed",
+  "evidence_json_parse": "passed",
+  "source_and_artifact_hashes": "matched",
+  "report_and_provenance_links": "passed",
+  "native_event_assertions": "passed"
+}

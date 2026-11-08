@@ -1,0 +1,15 @@
+{"detail":{"support":true},"event":"startup"}
+{"detail":{"allowed":true,"label":"main"},"event":"navigation"}
+{"detail":{"elapsed_ms":126,"event":"Started","visible":false},"event":"main_page_load"}
+{"detail":{"elapsed_ms":178,"event":"Finished","visible":false},"event":"main_page_load"}
+{"detail":{"visible":true},"event":"main_initial_display"}
+{"detail":{"modes":"default,modal,event_tracking"},"event":"appkit_terminate_requested"}
+{"detail":{"id":"accept-appkit-terminate"},"event":"menu_action"}
+{"detail":{"attached_sheet":false,"mode":"kCFRunLoopDefaultMode"},"event":"appkit_terminate_dispatched"}
+{"detail":{},"event":"appkit_termination_intercepted"}
+{"detail":{},"event":"appkit_terminate_returned"}
+{"detail":{"support":true},"event":"startup"}
+{"detail":{"allowed":true,"label":"main"},"event":"navigation"}
+{"detail":{"elapsed_ms":131,"event":"Started","visible":false},"event":"main_page_load"}
+{"detail":{"elapsed_ms":183,"event":"Finished","visible":false},"event":"main_page_load"}
+{"detail":{"visible":true},"event":"main_initial_display"}

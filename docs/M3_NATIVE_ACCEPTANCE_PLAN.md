@@ -59,8 +59,13 @@ now passed using native Window > Close Window (`performClose:`) with the main wi
 foreground. Live running phase/process proof preceded Close; native shutdown removed
 hook/child before natural finish, persisted cancelled/unpublished/not-passed history,
 and preserved exact draft/repositories through first restart without replay. No code
-change or fresh automated matrix run. Direct AppKit termination during this running
-check is next; actual Dock/session and G06 bypass/manager remain separate.
+change or fresh automated matrix run. The subsequent
+[direct AppKit running-check case](reports/G02_G06_RUNNING_PUSH_CHECK_APPKIT_2026-11-07.md)
+now passed: actual termination dispatch/delegate interception/return, no attached
+sheet, normal exit, hook/child cleanup before natural finish, cancelled/unpublished
+history and exact draft/repository preservation through first restart without replay.
+No product change; prior automated evidence retained. Actual Dock/session, remaining
+phase-specific recovery and G06 bypass/manager/compatibility remain separate.
 Current gate dispositions remain in EXECUTION_STATUS.
 
 ## Safety, execution and evidence rules

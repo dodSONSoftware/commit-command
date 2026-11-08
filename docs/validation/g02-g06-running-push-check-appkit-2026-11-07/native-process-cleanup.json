@@ -1,0 +1,17 @@
+{
+  "host_exit_code": 0,
+  "checked_pids": [
+    40051,
+    47346,
+    47347
+  ],
+  "ps_returncode": 1,
+  "ps_stdout": "",
+  "observed_at_ns": 1794104363961041000,
+  "elapsed_since_hook_start_ms": 43659.54195,
+  "all_exact_processes_absent_before_natural_finish": true,
+  "external_host_hook_or_child_signal": false,
+  "appkit_dispatch_delegate_return_sequence_verified": true,
+  "attached_sheet_at_dispatch": false,
+  "native_action": "Request direct AppKit termination from active authoritative review window"
+}

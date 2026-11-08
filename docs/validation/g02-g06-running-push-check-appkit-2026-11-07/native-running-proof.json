@@ -1,0 +1,12 @@
+{
+  "phase": "running",
+  "published": false,
+  "hook_invocations": 1,
+  "hook_pid": 47346,
+  "child_pid": 47347,
+  "observed_at_ns": 1794104333124199000,
+  "hook_started_mtime_ns": 1794104320301499050,
+  "saved_draft_verified_before_termination": true,
+  "live_processes_before_termination": "40051  1161 40051 Ss+  /private/tmp/gitfleet-m3-native-bkhk89p2/Commit Command Running AppKit Acceptance.app/Contents/MacOS/gitfleet-desktop --data-dir /private/tmp/gitfleet-m3-native-bkhk89p2/state --https-ca-file /private/tmp/gitfleet-m3-native-bkhk89p2/certificate.pem\n47346 40051 47346 S    /bin/sh /private/tmp/gitfleet-m3-native-bkhk89p2/workspace/parent/child/grand/.git/hooks/pre-push origin https://127.0.0.1:56490/grand.git\n47347 47346 47346 S    sleep 45\n",
+  "host_pid": 40051
+}
