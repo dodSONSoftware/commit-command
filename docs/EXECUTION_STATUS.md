@@ -163,6 +163,15 @@ Selected native linked-worktree upstream success gap closed; fixture restored/se
 stopped/key removed. No product patch/full-suite rerun. G06 remains partial; prioritize
 named recovery/topology packages rather than additional already-covered guard variants.
 
+### November 7 G06 native owned-config-lock recovery — in progress
+
+[Recovery package](reports/G06_NATIVE_OWNED_CONFIG_LOCK_2026-11-07.md): existing Core
+subprocess worker created actual interrupted empty/ready/pre-publication locks and
+ownership receipts. SIGKILL/phase/config/receipt assertions passed; exact baselines
+and non-default artifact provenance retained. Preparation is automated Core evidence,
+not native recovery acceptance. Continue Cancel, owned recovery, foreign/stale refusal
+and ordinary restart preservation. No product patch; G02/G06 remain partial.
+
 ## Status meanings and availability
 
 - **Accepted within envelope:** the recorded milestone criteria passed only for

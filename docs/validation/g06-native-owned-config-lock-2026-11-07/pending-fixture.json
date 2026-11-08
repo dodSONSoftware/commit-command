@@ -1,0 +1,26 @@
+{
+  "name": "pending",
+  "phase": "publication_pending",
+  "root": "/var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-m0-45051-1794115570204893000-0",
+  "repository": "/var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-m0-45051-1794115570204893000-0/repo",
+  "remote": "/var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-m0-45051-1794115570204893000-0/remote.git",
+  "state": "/var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-m0-45051-1794115570204893000-0/state",
+  "workspace": "c5d452aa-6148-456b-b9a2-de998df6e8f9",
+  "worktree": "6e8a9ede-352a-4f8a-be9a-86b0d37e1d49",
+  "operation": "0a8fd0fa-f03a-406c-a10a-797ecfaa60ef",
+  "worker_returncode": -9,
+  "lock_inode": 54118728,
+  "lock_device": 16777233,
+  "lock_bytes": 455,
+  "receipt_sha256": "cb95b4237a5d3da75e6c59e92262c3280af0e3146465d17d748920916735ac33",
+  "real_receipt_generated_by_core": true,
+  "app": "/var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-m0-45051-1794115570204893000-0/Commit Command Config Recovery.app",
+  "binary_sha256": "54809b4155865cbe835eae15a5f8c76ff6d2a8528addefec2fcbe89b585b275b",
+  "ordinary_binary_sha256": "aec8aa0bc52cd11b6a598686dee3583d03eb54965e4c9666a3cea21815d71570",
+  "features": [
+    "custom-protocol",
+    "desktop-writes"
+  ],
+  "preparation": "existing automated subprocess worker, actual Core proposal/receipt then SIGKILL; no fabricated receipt/native approval claim",
+  "source_commit": "0b58d73a41f400438508a5a627687ad43c47c427"
+}
