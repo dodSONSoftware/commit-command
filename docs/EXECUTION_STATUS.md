@@ -67,6 +67,15 @@ and explicit disposition of exclusions. A facility block is not a waiver.
 | G10 — backup/portability/retention | Versioned export/import, consistent manual/rotating backups, previewed safe restore, malicious/interrupted archive tests and protection of unresolved recovery. Decide proposed 90-day history/ten-backup defaults before implementing cleanup. Migration backups alone do not meet this gate. | STATE-005–007; ACT-004; M4C/M8A |
 | G11 — reproducible release | Provision declared Git/Rust/signing prerequisites in CI and record actual results; resolve OS/architecture/tool delivery/identifier/signing/update policy; verify licenses/notices and exact packaged install/upgrade/migration/uninstall, signing/notarization and release invariants. A development bundle is not a release. | RELEASE-001–005; INV-001–015; M8C |
 
+### G02 startup reproduction in progress — November 7, 2026
+
+[Baseline reproduction](validation/g02-startup-readiness-2026-11-07/README.md)
+reproduced a transient empty native window on ordinary launch of the retained crash
+fixture; it later populated without relaunch. A controlled host SIGKILL followed by
+the first restart recovered the draft. Source shows initial visibility is requested
+before asynchronous document completion. A permanently stuck renderer has not been
+reproduced; readiness fix and native validation are next. G02 remains open.
+
 ### Latest G02/G06 running-hook host crash — November 7, 2026
 
 [Crash report](reports/G02_G06_RUNNING_PUSH_CHECK_CRASH_2026-11-07.md) and

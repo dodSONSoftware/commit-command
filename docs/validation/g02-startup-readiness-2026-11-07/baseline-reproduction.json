@@ -1,0 +1,16 @@
+{
+  "base_revision": "d671de8fa63047c818029c4e6f250e25e63e87cb",
+  "baseline_binary_sha256": "be2416339f6f32e3ce27c3565bf941be6a6ec06d5817aeaafaebde10a055a1e5",
+  "fixture_root": "/private/tmp/gitfleet-m3-native-9v_y_6o6",
+  "ordinary_launch_initial_ax": "native window controls only; no HTML content",
+  "ordinary_launch_later_ax": "workspace and exact saved crash draft restored without relaunch",
+  "controlled_crash_host_pid": 18802,
+  "signal": "SIGKILL",
+  "crash_time_ns": 1794101818862440000,
+  "only_exact_owned_fixture_host_signalled": true,
+  "first_post_crash_restart": "workspace/draft visible at first CUA inspection; no second restart needed",
+  "normal_cleanup_cmd_q": true,
+  "scope": "No new pre-push execution; retained original running journal unchanged. No private service or request needed.",
+  "diagnosis": "Host shows an empty webview immediately during setup, before asynchronous document loading. Transient startup exposure reproduced; original prolonged blank condition not reproduced as a permanent failure.",
+  "next": "Gate initial visibility on first completed document load; retain raw evidence of earlier unresolved blank restart until native fix validation."
+}
