@@ -36,3 +36,24 @@ Earlier failed fault attempt and safe index-only recovery are preserved separate
 in [the uncertainty report](G05_UNCONFIRMED_PUBLICATION_2026-11-08.md). Current
 [evidence](../validation/g05-native-batch-host-crash-2026-11-08/) records the corrected
 preparation, successful build/guard preflight, scan and baseline/binary identities.
+
+## Actual host crash and first ordinary restart — passed
+
+User authorized exactly alpha/beta in the corrected fixture. The expired initial
+trust review could not approve; a fresh exact Rust review and OS-native confirmation
+granted only the same pair. Fresh batch 348c4b6a-a8a8-4cd0-b04c-6916c7acbcdb reviewed
+both exact file.txt changes and the shared message. Fixed host menu armed
+reference_updated SIGKILL; exact batch native approval then exited the owned host
+with subprocess return -9. This is an actual host crash, unlike the earlier refused
+attempt. Alpha advanced once to 8ad25e1867b319265fb2d60cd12be0c1e3b92508; journal
+stopped at reference_updated. Beta remained proposed and beta/control repository
+bytes/modes matched preparation exactly. Native fault-arm events retained.
+
+First ordinary restart rendered Overview and Bulk without reload. Batch projected
+interrupted; alpha visibly displayed Publication unconfirmed — inspect guarded
+recovery; beta proposed/Not published. Ordinary native preparation disabled.
+After Quit (exit 0), exact repository bytes/modes and stored operation payloads
+matched the crash snapshot; no replay. See ordinary-restart-proof.json and crash
+snapshots. This also natively verifies the uncertainty-label correction.
+Guarded index reconciliation and unfinished-only fresh retry are still next steps;
+this checkpoint does not accept their results or close G05.

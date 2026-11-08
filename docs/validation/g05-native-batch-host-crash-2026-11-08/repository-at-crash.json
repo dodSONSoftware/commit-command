@@ -1,0 +1,178 @@
+{
+  "gitfleet-batch/beta/file.txt": {
+    "sha256": "433b70433e6322c903b8c2deab1311e39d77e5233eb13fc9146f844f987da04e",
+    "mode": 420
+  },
+  "gitfleet-batch/beta/.gitfleet-m2-fixture": {
+    "sha256": "f4cdc528c7e7272fcf9b3d2b9bede0af4c455b289545c3a3edee7678c1417f72",
+    "mode": 420
+  },
+  "gitfleet-batch/beta/.git/config": {
+    "sha256": "e722828c4f4689c79757e0dd40d9f7a8aa3a74ea050440be5a40519c4af2c6da",
+    "mode": 420
+  },
+  "gitfleet-batch/beta/.git/HEAD": {
+    "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+    "mode": 420
+  },
+  "gitfleet-batch/beta/.git/index": {
+    "sha256": "454f7b9da460d785d7a45b61b865fd92b4f81022ba61c505f5306ad0b9547380",
+    "mode": 420
+  },
+  "gitfleet-batch/beta/.git/COMMIT_EDITMSG": {
+    "sha256": "416b36c5238bc990d34b5f35c5543a4f79e057f7683a5d426b6133771dbfab6d",
+    "mode": 420
+  },
+  "gitfleet-batch/beta/.git/objects/3b/d8d8ef660a495ae3202bd888366f9f0a3fe6cc": {
+    "sha256": "21afcb494958302611c8cbd094f7efd52d6736dda3a9a5ae49457c3b444ec611",
+    "mode": 292
+  },
+  "gitfleet-batch/beta/.git/objects/27/18e55d8a8ad6201a43f0393e937cd570b3be05": {
+    "sha256": "4e603ce6b2422b3e5a574dc80d56c3af8934f082a39d0602d144622c35ce2fef",
+    "mode": 292
+  },
+  "gitfleet-batch/beta/.git/objects/26/106e90cd8321d8eeb13edb9e489ebd0d96de80": {
+    "sha256": "9e70052b9b947a415a0f67d01f5e2da042eb43253df4b211e30b937fb2c732cb",
+    "mode": 292
+  },
+  "gitfleet-batch/beta/.git/info/exclude": {
+    "sha256": "489440cb6303c9df5899a09375a680470fe99e0e7069bb95af6872da30fe15e3",
+    "mode": 420
+  },
+  "gitfleet-batch/beta/.git/logs/HEAD": {
+    "sha256": "9de110dbbdd9fcecff9abea718a37f444457cdfa68df00b442d4a0d149b8cab1",
+    "mode": 420
+  },
+  "gitfleet-batch/beta/.git/logs/refs/heads/main": {
+    "sha256": "9de110dbbdd9fcecff9abea718a37f444457cdfa68df00b442d4a0d149b8cab1",
+    "mode": 420
+  },
+  "gitfleet-batch/beta/.git/refs/heads/main": {
+    "sha256": "2884f4a1eb1304440834cdf032e0c19119a78de05f4ba2d964cdfbcd389f02a7",
+    "mode": 420
+  },
+  "gitfleet-batch/unselected/file.txt": {
+    "sha256": "c634aa5219bf8613c9cc73bf5c5373e8b1916e8caaa19d79ab765b7af743233d",
+    "mode": 420
+  },
+  "gitfleet-batch/unselected/.gitfleet-m2-fixture": {
+    "sha256": "f4cdc528c7e7272fcf9b3d2b9bede0af4c455b289545c3a3edee7678c1417f72",
+    "mode": 420
+  },
+  "gitfleet-batch/unselected/.git/config": {
+    "sha256": "e722828c4f4689c79757e0dd40d9f7a8aa3a74ea050440be5a40519c4af2c6da",
+    "mode": 420
+  },
+  "gitfleet-batch/unselected/.git/HEAD": {
+    "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+    "mode": 420
+  },
+  "gitfleet-batch/unselected/.git/index": {
+    "sha256": "331403ff9f585e42e18b3472f771824350c9bdb706041ae61d4457ccf83d91cb",
+    "mode": 420
+  },
+  "gitfleet-batch/unselected/.git/COMMIT_EDITMSG": {
+    "sha256": "416b36c5238bc990d34b5f35c5543a4f79e057f7683a5d426b6133771dbfab6d",
+    "mode": 420
+  },
+  "gitfleet-batch/unselected/.git/objects/56/e3c8ada2d3f8bbfab3ae47ee94e6b054b7fe94": {
+    "sha256": "4bd4a0528e88b25b0a665f5832404d7fbe9cceb63daa294a996a31de1b8cf1bd",
+    "mode": 292
+  },
+  "gitfleet-batch/unselected/.git/objects/bb/bbe23208b11199caa74b6b29d0fc1ad5761370": {
+    "sha256": "b0964bce72564687c1b18e09a5be36c8e0535b3e395625c38cc2ef49b1092bc4",
+    "mode": 292
+  },
+  "gitfleet-batch/unselected/.git/objects/46/c7f28bc26172786276e1e9418985b6dd8dc56d": {
+    "sha256": "904e7ebdbf88a3907379b4670a04002e4bae247f378ad10172e75447d05d3aa8",
+    "mode": 292
+  },
+  "gitfleet-batch/unselected/.git/info/exclude": {
+    "sha256": "489440cb6303c9df5899a09375a680470fe99e0e7069bb95af6872da30fe15e3",
+    "mode": 420
+  },
+  "gitfleet-batch/unselected/.git/logs/HEAD": {
+    "sha256": "471c0c1aa62f56ed1713bd4c397da498e4778aa83ab55bef6ddaf95c6f971993",
+    "mode": 420
+  },
+  "gitfleet-batch/unselected/.git/logs/refs/heads/main": {
+    "sha256": "471c0c1aa62f56ed1713bd4c397da498e4778aa83ab55bef6ddaf95c6f971993",
+    "mode": 420
+  },
+  "gitfleet-batch/unselected/.git/refs/heads/main": {
+    "sha256": "82a33a15afc70eb55822131fe12818ebcebd49cbe7b294a9912319079a2e80ec",
+    "mode": 420
+  },
+  "gitfleet-batch/alpha/file.txt": {
+    "sha256": "3fdf41fa66aa84b20b785b50568315f08d716b7bb0a3fb3bcc703706427c8b93",
+    "mode": 420
+  },
+  "gitfleet-batch/alpha/.gitfleet-m2-fixture": {
+    "sha256": "f4cdc528c7e7272fcf9b3d2b9bede0af4c455b289545c3a3edee7678c1417f72",
+    "mode": 420
+  },
+  "gitfleet-batch/alpha/.git/index.lock": {
+    "sha256": "42f004f3865ac6cc29d249a8c8d1363377585f0ed250875095ed4d43cc948613",
+    "mode": 384
+  },
+  "gitfleet-batch/alpha/.git/config": {
+    "sha256": "e722828c4f4689c79757e0dd40d9f7a8aa3a74ea050440be5a40519c4af2c6da",
+    "mode": 420
+  },
+  "gitfleet-batch/alpha/.git/HEAD": {
+    "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+    "mode": 420
+  },
+  "gitfleet-batch/alpha/.git/HEAD.lock": {
+    "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+    "mode": 384
+  },
+  "gitfleet-batch/alpha/.git/index": {
+    "sha256": "dd5d2ffd06c2f274baf3c16096d0b24d8979b4dca9a567a2c66aeef98ebf22bf",
+    "mode": 420
+  },
+  "gitfleet-batch/alpha/.git/COMMIT_EDITMSG": {
+    "sha256": "416b36c5238bc990d34b5f35c5543a4f79e057f7683a5d426b6133771dbfab6d",
+    "mode": 420
+  },
+  "gitfleet-batch/alpha/.git/objects/0e/c50254e358616dc1ee637e23fc661fc015f04f": {
+    "sha256": "642381c6511a4866959e08109559f5cb28e68d18cb76826e6eb971f6f5904ffd",
+    "mode": 384
+  },
+  "gitfleet-batch/alpha/.git/objects/7d/fea12a042f8212b5a2b4355dab3fd1f88f1962": {
+    "sha256": "ef8ff535d2465403b1f6a3561096283232eca972fea65073e195ead28a624a37",
+    "mode": 292
+  },
+  "gitfleet-batch/alpha/.git/objects/8a/d25e1867b319265fb2d60cd12be0c1e3b92508": {
+    "sha256": "ee7bca5455edf2ec9cf7527f882353ddc1e4090cb7553634ecae888fbf4a8ab5",
+    "mode": 384
+  },
+  "gitfleet-batch/alpha/.git/objects/6b/8e834ee80c9a4228131f8b14da08d32eaa7766": {
+    "sha256": "df2ea9f2a40d0be82ed226e8abd04560b2da2176131663bd3cf62c4dc5f66f2d",
+    "mode": 384
+  },
+  "gitfleet-batch/alpha/.git/objects/70/d6116366f0635871a307b571a9bb049d435f78": {
+    "sha256": "24997fbc88c1f32d967c200308b98e5042366d12358733bccecfc2ff7ed97f31",
+    "mode": 292
+  },
+  "gitfleet-batch/alpha/.git/objects/13/815285028bcf1ec6b78391fb26cd13e156d19d": {
+    "sha256": "f321342c92f7ca9e5eb7e75beb7a9f5200773b3d7ba3c1921e65b97622d9693f",
+    "mode": 292
+  },
+  "gitfleet-batch/alpha/.git/info/exclude": {
+    "sha256": "489440cb6303c9df5899a09375a680470fe99e0e7069bb95af6872da30fe15e3",
+    "mode": 420
+  },
+  "gitfleet-batch/alpha/.git/logs/HEAD": {
+    "sha256": "62268bbe10dc46b4f0161f6b5de961b1378f58a4b25ee8585c22e794fac63514",
+    "mode": 420
+  },
+  "gitfleet-batch/alpha/.git/logs/refs/heads/main": {
+    "sha256": "1dc9a8123fbe61b555b33f36fe3bf8fa0b7ed1afe252b9fd08170f1cfab4c654",
+    "mode": 420
+  },
+  "gitfleet-batch/alpha/.git/refs/heads/main": {
+    "sha256": "b9d7b4f906fa7ebd915c5e64930d57c0529539cc849d40446b927487123f681f",
+    "mode": 420
+  }
+}

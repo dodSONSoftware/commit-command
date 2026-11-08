@@ -1,0 +1,8 @@
+{
+  "exact_repository_bytes_modes_preserved": true,
+  "operation_records_unchanged_no_replay": true,
+  "host_crash_exit": -9,
+  "ordinary_exit": 0,
+  "native_unconfirmed_label_visible": true,
+  "ordinary_preparation_disabled": true
+}
