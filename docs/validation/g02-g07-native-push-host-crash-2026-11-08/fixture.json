@@ -1,0 +1,47 @@
+{
+  "root": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr",
+  "workspace_root": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace",
+  "parent": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent",
+  "middle": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle",
+  "leaf": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle/leaf",
+  "control": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/unselected",
+  "state": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/state",
+  "workspace": "8fbb404a-a70e-47fe-a911-3bf94a4ee709",
+  "entries": {
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/unselected": "02fee984-8794-4793-b047-7dd0b709ba09",
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle/leaf": "0c13b924-9371-40ac-a754-2f6705a3afcb",
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent": "17c0aec8-df8d-4c6e-9ae3-5518aa395ea5",
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle": "407fa849-c4fa-4e1f-8fc8-bfb8e3822cb7"
+  },
+  "heads": {
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent": "8df29fca0127da252cf1fb2c3923670b3e37d715",
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle": "662bd57b94051be630d74febfb365564b36687a3",
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle/leaf": "4b6e1ea1dbeabd9350368a24ad83206366dc7608",
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/unselected": "e9bfc641cb50a16e8914d1fe4b6b8be519560c37"
+  },
+  "app": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/Commit Command G07 Final Acceptance.app",
+  "ordinary_app": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/Commit Command G07 Final Ordinary.app",
+  "binary_sha256": "891da5c5620c48d6f50a8dd4d27d40d7addd31794fd415755dc1018019e97c87",
+  "ordinary_sha256": "a4138a6fe98af53559531d638ca410d00875020090459b17aa6448d2ed16b4bb",
+  "features": [
+    "custom-protocol",
+    "desktop-writes",
+    "native-acceptance-support"
+  ],
+  "trace_initial_lines": 1380,
+  "build_base_commit": "36d9367045ee1e45ee191f2b07da588b10164e29",
+  "server": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/leaf-source",
+  "saved_server": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/leaf-source-before-g07",
+  "server_old": "e9bfc641cb50a16e8914d1fe4b6b8be519560c37",
+  "ordinary_features": [
+    "custom-protocol"
+  ],
+  "expected_publications": 2,
+  "source_manifest": "source-files-final.json",
+  "source_commit": "984a89b35a179fcf8629a60eb88a06a17930d0a3",
+  "started": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/g07-publication-server-started",
+  "release": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/g07-publication-server-release",
+  "finished": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/g07-publication-server-finished",
+  "server_hook": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/leaf-source/hooks/pre-receive",
+  "server_hook_sha256": "741efbf5edb4047d4ddcfac70e2ae9e48e3e7ff20a095739d5f06cc16a1de033"
+}

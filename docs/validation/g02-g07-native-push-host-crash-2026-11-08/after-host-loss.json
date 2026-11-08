@@ -1,0 +1,9 @@
+{
+  "host_exit": 137,
+  "host_absent_before_release": true,
+  "journal_still_publishing": true,
+  "server_hook_completed_after_host_loss": true,
+  "server_tip_after_host_loss": "4b6e1ea1dbeabd9350368a24ad83206366dc7608",
+  "approved_source_present": true,
+  "owned_processes_still_present_at_sample": []
+}

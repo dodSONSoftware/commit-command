@@ -1,0 +1,209 @@
+{
+  "host": {
+    "pid": 92939,
+    "command": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/Commit Command G07 Final Acceptance.app/Contents/MacOS/gitfleet-desktop --data-dir /private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/state --acceptance-local-transport",
+    "birth": "Sun Nov  8 15:44:00 2026"
+  },
+  "operation": "d7132f9a-d376-4cf6-967f-c2d3c3321fd0",
+  "publication_key": "push-publication:d7132f9a-d376-4cf6-967f-c2d3c3321fd0",
+  "publication_before_crash": {
+    "version": 1,
+    "session": "59dc2787-b62a-4432-b8e2-fb77b7121932",
+    "value": {
+      "plan": {
+        "id": "d7132f9a-d376-4cf6-967f-c2d3c3321fd0",
+        "created_at_ms": 1794174384737,
+        "check": {
+          "id": "2450eae4-2f0d-4efb-b5c9-a1b4c4817d1a",
+          "workspace": "8fbb404a-a70e-47fe-a911-3bf94a4ee709",
+          "worktree": "0c13b924-9371-40ac-a754-2f6705a3afcb",
+          "created_at_ms": 1794174381955,
+          "selection": {
+            "worktree": "0c13b924-9371-40ac-a754-2f6705a3afcb",
+            "observation": "e625d0c8-6344-4869-864d-b6ffdb9c60a9",
+            "source_oid": {
+              "format": "sha1",
+              "hex": "4b6e1ea1dbeabd9350368a24ad83206366dc7608"
+            },
+            "children": []
+          },
+          "preview": {
+            "source_ref": "refs/heads/main",
+            "source_oid": {
+              "format": "sha1",
+              "hex": "4b6e1ea1dbeabd9350368a24ad83206366dc7608"
+            },
+            "remote": "origin",
+            "destination": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/leaf-source",
+            "destination_ref": "refs/heads/main",
+            "observed_oid": {
+              "format": "sha1",
+              "hex": "e9bfc641cb50a16e8914d1fe4b6b8be519560c37"
+            },
+            "observation_id": "e625d0c8-6344-4869-864d-b6ffdb9c60a9",
+            "observed_at_ms": 1794174319467,
+            "generated_at_ms": 1794174379825,
+            "generation": "becccd2079ca50b344902c2db3787e3da47dcc7029fcca9f8000c3e0883c85af",
+            "config_digest": "7fd62f3b11dcb9384854170983c1a3c7ebac50dfb1678d134e4426a086f7fb91",
+            "relation": "fast_forward",
+            "outgoing_count": 1,
+            "incoming_count": 0,
+            "outgoing": [
+              {
+                "oid": {
+                  "format": "sha1",
+                  "hex": "4b6e1ea1dbeabd9350368a24ad83206366dc7608"
+                },
+                "subject": [
+                  71,
+                  48,
+                  53,
+                  32,
+                  110,
+                  97,
+                  116,
+                  105,
+                  118,
+                  101,
+                  32,
+                  116,
+                  104,
+                  114,
+                  101,
+                  101,
+                  45,
+                  108,
+                  101,
+                  118,
+                  101,
+                  108,
+                  32,
+                  114,
+                  101,
+                  118,
+                  105,
+                  101,
+                  119,
+                  101,
+                  100,
+                  32,
+                  99,
+                  111,
+                  109,
+                  109,
+                  105,
+                  116
+                ],
+                "subject_truncated": false
+              }
+            ],
+            "outgoing_truncated": false,
+            "source_gitlinks": [],
+            "outgoing_gitlinks": [],
+            "upstream_matches": true
+          },
+          "dependencies": [],
+          "transport": {
+            "id": "af94647e-0634-4fef-a357-562c89e78c07",
+            "workspace": "8fbb404a-a70e-47fe-a911-3bf94a4ee709",
+            "worktree": "0c13b924-9371-40ac-a754-2f6705a3afcb",
+            "metadata": {
+              "root": {
+                "encoding": "utf8",
+                "value": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle/leaf"
+              },
+              "git_dir": {
+                "encoding": "utf8",
+                "value": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/.git/modules/middle/modules/leaf"
+              },
+              "common_dir": {
+                "encoding": "utf8",
+                "value": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/.git/modules/middle/modules/leaf"
+              },
+              "root_binding": "16777234:55113172:Some(SystemTime { tv_sec: 1794165903, tv_nsec: 72135997 })",
+              "git_binding": "16777234:55113206:Some(SystemTime { tv_sec: 1794165903, tv_nsec: 165100682 })",
+              "common_binding": "16777234:55113206:Some(SystemTime { tv_sec: 1794165903, tv_nsec: 165100682 })",
+              "object_format": "sha1"
+            },
+            "remote": "origin",
+            "reference": "refs/heads/main",
+            "destination": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/leaf-source",
+            "transport": "local",
+            "config_digest": "7fd62f3b11dcb9384854170983c1a3c7ebac50dfb1678d134e4426a086f7fb91",
+            "generation": "becccd2079ca50b344902c2db3787e3da47dcc7029fcca9f8000c3e0883c85af",
+            "created_at_ms": 1794174381949,
+            "tools": [
+              {
+                "role": "git",
+                "path": {
+                  "encoding": "utf8",
+                  "value": "/opt/homebrew/Cellar/git/2.56.0_1/bin/git"
+                },
+                "fingerprint": "f535e9b013ac178a18be2cb1661b90f59e0438965062c389ad79586dd3cefe34"
+              },
+              {
+                "role": "exec_directory",
+                "path": {
+                  "encoding": "utf8",
+                  "value": "/opt/homebrew/Cellar/git/2.56.0_1/libexec/git-core"
+                },
+                "fingerprint": "16777234:41047527:Some(SystemTime { tv_sec: 1790569855, tv_nsec: 0 })"
+              }
+            ],
+            "local_target": {
+              "encoding": "utf8",
+              "value": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/leaf-source"
+            },
+            "local_binding": "16777234:55346122:Some(SystemTime { tv_sec: 1794172174, tv_nsec: 58050788 })",
+            "authentication": null,
+            "authentication_profile": null
+          },
+          "hooks": "execute",
+          "hook": null,
+          "hook_args": [
+            "origin",
+            "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/leaf-source"
+          ],
+          "hook_stdin": "refs/heads/main 4b6e1ea1dbeabd9350368a24ad83206366dc7608 refs/heads/main e9bfc641cb50a16e8914d1fe4b6b8be519560c37\n",
+          "digest": "eca18b7eeeaeb135b87d5e1f32c1d7aed40e4ac3c1697b7d081954b1b55c65cf"
+        },
+        "digest": "d58b423d8f82cb3956666a6a342f26ede6be5a41c9cc9ca47b7fb73d7e6fb807"
+      },
+      "phase": "publishing",
+      "published": false,
+      "may_have_published": true,
+      "finished_at_ms": null,
+      "observed_remote_oid": null,
+      "remote_state": null,
+      "reconciled_observation": null,
+      "object_count": 6,
+      "object_bytes": 685,
+      "issue": null
+    }
+  },
+  "server_hook_pid": 6068,
+  "server_still_expected_old": true,
+  "owned_processes": {
+    "6068": {
+      "parent": 6063,
+      "command": "/bin/sh hooks/pre-receive"
+    },
+    "6069": {
+      "parent": 6068,
+      "command": "(sleep)"
+    },
+    "92939": {
+      "parent": 1195,
+      "command": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/Commit Command G07 Final Acceptance.app/Contents/MacOS/gitfleet-desktop --data-dir /private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/state --acceptance-local-transport"
+    },
+    "6062": {
+      "parent": 92939,
+      "command": "/opt/homebrew/Cellar/git/2.56.0_1/bin/git --no-pager --literal-pathspecs -c core.hooksPath= -c core.fsmonitor=false -c core.untrackedCache=false -c init.templateDir= -c maintenance.auto=false -c gc.auto=0 -c http.sslVerify=true -c http.followRedirects=false -c http.emptyAuth=false -c http.proactiveAuth=none -c http.proxy= -c credential.helper= -c core.askPass= -c http.extraHeader= -c http.cookieFile= -c http.saveCookies=false -c submodule.recurse=false push --porcelain --atomic --no-verify --force-with-lease=refs/heads/main:e9bfc641cb50a16e8914d1fe4b6b8be519560c37 -- file:///private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/leaf-source 4b6e1ea1dbeabd9350368a24ad83206366dc7608:refs/heads/main"
+    },
+    "6063": {
+      "parent": 6062,
+      "command": "git-receive-pack /private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/leaf-source"
+    }
+  },
+  "signal": "SIGKILL"
+}

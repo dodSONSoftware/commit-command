@@ -1,0 +1,9 @@
+{
+  "observation_id": "e625d0c8-6344-4869-864d-b6ffdb9c60a9",
+  "observed_at_ms": 1794174319467,
+  "publication_created_at_ms": 1794174384737,
+  "age_at_capture_ms": 221317,
+  "still_within_five_minute_freshness": true,
+  "journal_unchanged_publishing": true,
+  "ui_result": "stale_review before any recovery review/native approval"
+}

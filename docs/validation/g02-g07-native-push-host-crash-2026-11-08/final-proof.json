@@ -1,0 +1,16 @@
+{
+  "managed_files_modes_exact": true,
+  "old_operations_batches_trust_publication_records_exact": true,
+  "new_publications": 1,
+  "new_checks": 1,
+  "no_replay_on_either_restart": true,
+  "ordinary_server_files_modes_exact": true,
+  "observed_source_present_without_retrospective_publication_claim": true,
+  "recovery_value_preserved_exactly": true,
+  "parent_still_revoked_no_new_trust": true,
+  "owned_server_hook_removed": true,
+  "integrity": "ok",
+  "native_recovery_exit": 0,
+  "ordinary_restart_exit": 0,
+  "artifact_and_source_hashes_verified": true
+}
