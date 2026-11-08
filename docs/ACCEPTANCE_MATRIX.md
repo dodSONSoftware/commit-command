@@ -14,16 +14,17 @@ The original rows below retain the baseline assessment; dated follow-up ledgers 
 reports supersede their earlier test status. A later automated pass does not imply
 native or release acceptance.
 
-### November 8 native SHA-256 — observation/download passed, restart pending
+### November 8 native SHA-256 observation/download — complete
 
-[Native format package](reports/G06_NATIVE_SHA256_2026-11-08.md): real SHA-256
-repository/remote and read-only loopback HTTPS fixture prepared; native initialized
-with zero trust grants/requests. Native observation review correctly refused the
-untrusted fixture; independent preservation/no-network oracle passed. User authorized exact
-fixture trust; Cancel made no request. Native HTTPS observation and separately
-approved isolated download passed with exact SHA-256 OID and verified standalone
-bundle; repository/remote preservation passed. Ordinary restart remains pending.
-G02/G06 remain partial.
+[Final native format package](reports/G06_NATIVE_SHA256_2026-11-08.md): exact fixture
+trust explicitly authorized, untrusted refusal and Cancel/no-network passed. Fresh
+native HTTPS observation returned the real full SHA-256 OID; separately approved
+isolated download produced a verified standalone bundle (3 objects, 428 bytes).
+Repository/remote file bytes/modes remained exact. Ordinary restart retained full
+OID/history with writes disabled; no replay/additional request, both Quit exits 0,
+writer lock reopened. Test service stopped/key removed. No import/commit/push or
+product patch. Selected native SHA-256 observation/download gap closed; native
+import/upstream/check topology and other G02/G06 criteria remain partial/open.
 
 ### November 7 full Core signing matrix — complete
 

@@ -1,0 +1,7 @@
+{
+  "fixture_https_server_terminated": true,
+  "tls_private_key_removed": true,
+  "state_writer_lock_reopened": true,
+  "native_and_ordinary_exit": 0,
+  "fixture_trust_only_as_authorized": true
+}

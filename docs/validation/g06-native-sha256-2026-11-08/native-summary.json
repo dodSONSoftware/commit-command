@@ -1,0 +1,16 @@
+{
+  "exact_fixture_trust_user_authorized": true,
+  "native_authoritative_and_os_confirmations_used": true,
+  "observation_cancel_no_requests": true,
+  "observation_format": "sha256",
+  "full_oid_preserved": true,
+  "isolated_capture_completed": true,
+  "bundle_verify_and_digest_passed": true,
+  "ordinary_restart_without_reload": true,
+  "ordinary_history_full_oid_and_counts_visible": true,
+  "ordinary_writes_disabled": true,
+  "no_replay_or_new_requests_on_restart": true,
+  "both_exits": 0,
+  "no_product_patch": true,
+  "full_suite_rerun": false
+}
