@@ -1,0 +1,8 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.02s
+     Running tests/acceptance.rs (app/core/target/debug/deps/acceptance-d413b9c95e424d91)
+
+running 1 test
+test successful_gpg_signing ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 23 filtered out; finished in 0.91s
+

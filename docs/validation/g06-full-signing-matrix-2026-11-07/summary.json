@@ -1,0 +1,90 @@
+{
+  "full_script_exit": 0,
+  "configuration_results": {
+    "default": {
+      "passed": 58,
+      "failed": 0,
+      "ignored": 1,
+      "ignored_entries": [
+        "test non_utf8_filename_remains_git_quoted_without_mutation ... ignored, M0 host filesystem rejects non-UTF-8 filename creation (EPERM); requires a supporting filesystem"
+      ],
+      "openpgp_positive_pass": false,
+      "ssh_positive_pass": false,
+      "wrong_key_and_timeout_refusal_pass": false
+    },
+    "experimental-writes": {
+      "passed": 93,
+      "failed": 0,
+      "ignored": 2,
+      "ignored_entries": [
+        "test successful_gpg_signing ... ignored, optional positive GPG signing; run explicitly with a working GPG installation",
+        "test non_utf8_filename_remains_git_quoted_without_mutation ... ignored, M0 host filesystem rejects non-UTF-8 filename creation (EPERM); requires a supporting filesystem"
+      ],
+      "openpgp_positive_pass": false,
+      "ssh_positive_pass": false,
+      "wrong_key_and_timeout_refusal_pass": false
+    },
+    "controlled-writes": {
+      "passed": 83,
+      "failed": 0,
+      "ignored": 1,
+      "ignored_entries": [
+        "test non_utf8_filename_remains_git_quoted_without_mutation ... ignored, M0 host filesystem rejects non-UTF-8 filename creation (EPERM); requires a supporting filesystem"
+      ],
+      "openpgp_positive_pass": true,
+      "ssh_positive_pass": true,
+      "wrong_key_and_timeout_refusal_pass": true
+    },
+    "application-services": {
+      "passed": 227,
+      "failed": 0,
+      "ignored": 4,
+      "ignored_entries": [
+        "test batch_crash_worker ... ignored, subprocess worker invoked by the batch interruption test",
+        "test non_utf8_filename_remains_git_quoted_without_mutation ... ignored, M0 host filesystem rejects non-UTF-8 filename creation (EPERM); requires a supporting filesystem",
+        "test artifact_initialization::artifact_init_probe_worker ... ignored, subprocess-only controlled Git initialization probe",
+        "test https_credential_tests::actual_gitea_and_osxkeychain_read_download_import_and_missing_account ... ignored, opt-in loopback Gitea + exact generated macOS Keychain fixture; never uses user credentials"
+      ],
+      "openpgp_positive_pass": true,
+      "ssh_positive_pass": true,
+      "wrong_key_and_timeout_refusal_pass": true
+    },
+    "all-features": {
+      "passed": 271,
+      "failed": 0,
+      "ignored": 8,
+      "ignored_entries": [
+        "test successful_gpg_signing ... ignored, optional positive GPG signing; run explicitly with a working GPG installation",
+        "test batch_crash_worker ... ignored, subprocess worker invoked by the batch interruption test",
+        "test non_utf8_filename_remains_git_quoted_without_mutation ... ignored, M0 host filesystem rejects non-UTF-8 filename creation (EPERM); requires a supporting filesystem",
+        "test crash_worker ... ignored, child-process crash worker; invoked and asserted by crash matrix, never a skipped acceptance scenario",
+        "test artifact_initialization::artifact_init_probe_worker ... ignored, subprocess-only controlled Git initialization probe",
+        "test fetch_import_crash_worker ... ignored, subprocess-only disposable SIGKILL worker",
+        "test https_credential_tests::actual_gitea_and_osxkeychain_read_download_import_and_missing_account ... ignored, opt-in loopback Gitea + exact generated macOS Keychain fixture; never uses user credentials",
+        "test upstream_crash_worker ... ignored, subprocess-only disposable upstream SIGKILL worker"
+      ],
+      "openpgp_positive_pass": true,
+      "ssh_positive_pass": true,
+      "wrong_key_and_timeout_refusal_pass": true
+    }
+  },
+  "lab_passed": 23,
+  "lab_skipped": 1,
+  "core_source_manifest_matches": true,
+  "locked_dependencies": true,
+  "offline_cargo": true,
+  "product_patch": false,
+  "format_build_test_strict_clippy_passed_all_five": true,
+  "final_lab_passed": 24,
+  "final_lab_skipped": 0,
+  "final_lab_exit": 0,
+  "legacy_signing_explicit_experimental_exit": 0,
+  "legacy_signing_explicit_all_features_exit": 0,
+  "legacy_long_path_attempt_exit": 101,
+  "legacy_failure_diagnosed": "gpg-agent socket path too long; process-local TMPDIR=/private/tmp passed",
+  "final_legacy_environment": {
+    "TMPDIR": "/private/tmp",
+    "PATH_prefix": "/private/tmp/gitfleet-m2-tools/install/bin"
+  },
+  "signed_lab_commit_signature_verified": true
+}

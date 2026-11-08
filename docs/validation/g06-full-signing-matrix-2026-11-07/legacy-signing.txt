@@ -1,0 +1,22 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s
+     Running tests/acceptance.rs (app/core/target/debug/deps/acceptance-b36440d2335ecc60)
+
+running 1 test
+test successful_gpg_signing ... FAILED
+
+failures:
+
+---- successful_gpg_signing stdout ----
+
+thread 'successful_gpg_signing' (6708998) panicked at tests/acceptance.rs:10:5:
+successful_gpg_signing: gitfleet-lab: GPG fixture key generation failed
+
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    successful_gpg_signing
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 23 filtered out; finished in 9.46s
+
+error: test failed, to rerun pass `--test acceptance`

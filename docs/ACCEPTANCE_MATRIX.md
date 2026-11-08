@@ -14,13 +14,18 @@ The original rows below retain the baseline assessment; dated follow-up ledgers 
 reports supersede their earlier test status. A later automated pass does not imply
 native or release acceptance.
 
-### November 7 full signing matrix — signer prerequisite restored
+### November 7 full Core signing matrix — complete
 
-[Signing package](reports/G06_FULL_SIGNING_MATRIX_2026-11-07.md): pinned GnuPG rebuilt
-under an isolated temporary prefix; official SHA256 checks and real fixture commit
-sign/verify smoke passed. No global install or personal keys. Full five-configuration
-Core validation now proceeds; earlier missing-tool statements are historical.
-G02/G06 remain partial.
+[Final signing package](reports/G06_FULL_SIGNING_MATRIX_2026-11-07.md): isolated pinned
+GPG restored; unchanged full five-configuration Core format/build/test/strict-Clippy
+script passed. Tests: default 58, experimental 93, controlled 83, application 227,
+all features 271 passed, zero failures. Production OpenPGP/SSH verification and
+wrong-key/timeout refusal passed wherever controlled writes are enabled. Declared
+worker/facility exclusions remain explicit. Legacy long-TMPDIR agent failure was
+reproduced and resolved using process-local short TMPDIR; optional signing passed
+explicitly in both configurations and final lab passed 24/24, zero skips. No product
+patch or global install. This closes the missing-signer/full Core matrix gap;
+G02/G06 remain partial for native/facility/accessibility criteria.
 
 ### November 7 current-source automated transport subset — complete
 
