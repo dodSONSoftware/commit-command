@@ -82,6 +82,14 @@ startup presentation is reopened; prior document-readiness passes remain bounded
 Next investigate the retained post-load blank-window evidence. No source fix claimed.
 Current gate dispositions remain in EXECUTION_STATUS.
 
+### November 8 G02 remaining facility checks
+
+Actual Dock access rechecked through the approved CUA route; organization policy
+still blocks com.apple.dock. No fallback/identity change or surrogate is a Dock pass.
+Session termination requires coordinated operator execution, not unattended logout.
+The post-load React ordering fix and bounded retests remain valid; broad startup
+reliability remains partial. See the current G02 row in EXECUTION_STATUS.md.
+
 ### November 8 native SHA-256 offline import — complete
 
 [Final import package](reports/G06_NATIVE_SHA256_IMPORT_2026-11-08.md): retained

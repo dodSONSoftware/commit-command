@@ -1,11 +1,28 @@
 # Commit Command — current implementation and acceptance record
 
-Updated November 7, 2026. Reconciled against source at `db29ba6` and the dated
-reports below. This is the single maintained record of **current implementation,
+Updated November 8, 2026. Current disposition incorporates the dated reports and
+validated checkpoints below; the original reconciliation baseline was `db29ba6`. This is the single maintained record of **current implementation,
 acceptance gaps and next work**. The specification and decision register define
 requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
+
+### November 8 G02–G11 continuous execution
+
+User authorized proceeding through G02–G11 and local add/commit after each completed,
+validated step without advance prompts. Gate closure still requires its owning
+criteria; no blocked case becomes a pass. G04 depends on G02/G03/G05/G06, and G08
+on G07, so work follows dependencies when numeric order cannot close a gate.
+Live user services/credentials, publication/release and security-sensitive approvals
+retain their existing boundaries. AI stays optional under D-048.
+
+G02 disposition audited against later reports: deterministic initial-commit defect
+already fixed, bounded restarts/interruption evidence retained, broad reliability
+unproven. Current Dock access returned: “Computer Use is blocked from using the app
+'com.apple.dock' by your organization's policy.” No alternate route used. Operator
+session termination is separate and requires coordinated operator execution.
+Continue unblocked G03 coverage while keeping G02 partial; do not repeat accepted
+interruption variants solely to accumulate passes.
 
 ### November 8 optional AI requirement confirmed
 
@@ -308,7 +325,7 @@ and explicit disposition of exclusions. A facility block is not a waiver.
 | Gate | Remaining work and closure evidence | Requirement / plan ownership |
 |---|---|---|
 | G01 — native authority/review fidelity | **Accepted within envelope, November 7:** remaining actual-webview caller/page/origin and pending/issued-confirmation reload cases passed using non-default native test support. Combined with prior exact-content/signing/lifecycle evidence, the enumerated G01 cases are closed. [Closure report](reports/G01_NATIVE_SUPPORT_G02_RECOVERY_2026-11-07.md). Accessibility, broader compatibility and ordinary write exposure remain G03/G06/G04. | M3-A12–A15; SEC-001–012, SEC-018–020; M3A/B |
-| G02 — lifecycle and recovery | **In progress; startup finding reopened:** actual main-renderer loss during a proven running pre-push check passed with the same host surviving, hook/child cancellation, obsolete review closure and draft/history recovery. Subsequent normal restart was blank despite Finished/display audit and needed explicit reload ([latest report](reports/G02_G06_RUNNING_PUSH_CHECK_RENDERER_LOSS_2026-11-07.md)). Reliable startup presentation is open again; prior readiness/interruption passes remain bounded. Dock/session and other required recovery criteria remain open. | M3-A16–A17; SEC-013–017; WS-014; M3B |
+| G02 — lifecycle and recovery | **Partial; facility blocks retained.** Initial React commit ordering defect fixed; renderer/host-loss and bounded restart/no-replay cases passed ([post-load report](reports/G02_POST_LOAD_STARTUP_2026-11-07.md)). Earlier intermittent blank remains counterevidence; capture diagnostics on recurrence before reload, rather than treating document Finished as proof of content. Actual Dock access rechecked November 8: organization policy still denies com.apple.dock; no surrogate accepted. Operator session termination and specifically uncovered phase/recovery cases remain open. | M3-A16–A17; SEC-013–017; WS-014; M3B |
 | G03 — accessibility, layouts and scale | Full VoiceOver/focus/review/dialog coverage, long/byte paths and large content, narrow/zoom layouts, display disconnect/reconfiguration, measured inventory/history/monitoring budgets. Selected contrast/theme/1×–2× geometry passes remain valid only for their recorded cases. | UI-001–005; M3-A04/06/07/19; M4; M8B |
 | G04 — ordinary write enablement | Reconcile all applicable safety prerequisites with G01–G03/G05–G06 and support exclusions, then obtain the explicit default-change decision. Validate the exact ordinary artifact with supported writes and independent approval. No current gate completion is inferred. | D-045; M3C; RELEASE-002 |
 | G05 — native bulk commit failures/dependencies | Actual submodule child-before-parent/fresh parent review, partial publication/failure, cancellation and reviewed retry of unfinished items; per-repo overrides and linked-worktree cases as applicable. Preserve successful/unselected content and do not replay published items. | GIT-013; BULK-001–007; M5A |
