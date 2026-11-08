@@ -20,3 +20,9 @@ Complete signing/full five-configuration validation remains open: the previous
 No signer was installed, no user keyring used and no global configuration changed.
 Opt-in actual Gitea/Keychain and subprocess-only workers retain their declared ignore
 policy; all-feature parent tests execute their crash workers.
+
+Final results: application-services 10 inspection + 81 execution passed (2 ignored);
+all features 10 inspection + 85 execution passed (4 ignored). Both exits 0. Format,
+strict target Clippy and unchanged-source manifest verification passed. summary.json
+is the machine-readable disposition; report separates remaining full-matrix/native
+criteria from this completed automated subset.

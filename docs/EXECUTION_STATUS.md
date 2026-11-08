@@ -7,13 +7,17 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
-### November 7 current-source transport matrix — first configuration passed
+### November 7 current-source automated transport subset — complete
 
-[Automated compatibility package](reports/G06_CURRENT_TRANSPORT_MATRIX_2026-11-07.md):
-application-services remote inspection 10 passed; remote execution 81 passed, 2
-explicitly ignored. Format and strict target Clippy passed. All-feature fault-enabled
-run continues. Full signing matrix still lacks the former isolated GPG tool; no
-native acceptance or whole-gate closure is inferred. G02/G06 remain partial.
+[Final compatibility package](reports/G06_CURRENT_TRANSPORT_MATRIX_2026-11-07.md):
+application-services inspection/execution 10/81 passed (2 declared ignored);
+all-feature inspection/execution 10/85 passed (4 declared ignored, including parent-
+driven subprocess workers). Format, strict target Clippy and source-manifest check
+passed. Live disposable HTTPS/SSH, isolated credential state, SHA-256, crash/storage
+recovery and check-only hook/dependency coverage refreshed without a product patch.
+This closes the selected automated remote-target refresh only. Full five-configuration
+signing matrix still needs isolated GPG; native SHA-256/topology and facility-dependent
+criteria remain open. G02/G06 remain partial.
 
 ### November 7 repository remote-status indicators
 
@@ -632,7 +636,7 @@ its owning criterion and state what its completion closes before execution.
 | G02 startup | Initial React commit ordering defect fixed; bounded native restarts passed; earlier intermittent blank retained | Capture diagnostic state on an actual recurrence before reload; bounded clean launches do not prove a universal cause or guarantee |
 | G02 real OS entry points | Direct AppKit covered; actual Dock policy blocked; operator session termination distinct | Keep blocks explicit; no surrogate or destructive session termination without operator coordination |
 | G06 upstream topology | Selected missing-only setup/recovery history and now native linked-worktree success passed | Native owned-config-lock recovery package now passed (Cancel, empty/ready/pre-publication abort, stale/foreign refusal and ordinary restart); broader named topology/failure/accessibility criteria remain open |
-| G06 fetch/auth/format compatibility | Selected real HTTPS/SSH/auth chains have dated evidence; identified artifact initialization race already fixed | Native SHA-256/full topology package and current-source transport matrix remain; do not reopen the already diagnosed artifact race without new counterevidence |
+| G06 fetch/auth/format compatibility | Selected real HTTPS/SSH/auth chains have dated evidence; identified artifact initialization race already fixed | Current-source automated remote-target subset passed; full signing/five-configuration matrix needs isolated GPG. Native SHA-256/full topology remains; do not reopen the already diagnosed artifact race without new counterevidence |
 | G06 OS credentials / other transport exclusions | SecurityAgent choices and direct SCP facility limits retain prior blocks | Operator/facility-dependent work is not an unattended pass; unsupported helpers stay unsupported |
 | Planner accessibility/cycles/scale | Broader native criteria remain open; overlap with G03/G08 | Track as their own criteria, not repeated observation-guard tests; publication remains G07/G08 |
 
