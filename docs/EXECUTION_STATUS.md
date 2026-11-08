@@ -39,7 +39,7 @@ authority. No default change, commit, push or release is authorized by this reco
 | M5A bulk local commits | Implemented; acceptance partial | [Bulk implementation](reports/M5A_LOCAL_BULK_PROGRESS_2026-11-02.md), [native bulk](reports/M5A_NATIVE_BULK_2026-11-02.md); G05 |
 | M5B inspection/authentication/fetch/upstream | Implemented for supported subset; acceptance partial | [Fetch native chain](reports/M5B_NATIVE_FETCH_ACCEPTANCE_2026-11-02.md), [authentication](reports/M5B_AUTHENTICATION_COMPATIBILITY_2026-11-02.md), [SSH](reports/M5B_SSH_AGENT_TRANSPORT_2026-11-02.md), [upstream](reports/M5B_GUARDED_UPSTREAM_2026-11-02.md); G06. Artifact initialization finding [fixed](reports/M5B_ARTIFACT_INITIALIZATION_FIX_2026-11-02.md) |
 | M5C push preview/child evidence/planning | Implemented; selected native acceptance passed | [Relative child evidence](reports/M5C_RELATIVE_CHILD_ACCEPTANCE_2026-11-02.md), [multi-level planning](reports/M5C_DEPENDENCY_PLANNING_2026-11-03.md), [native planner](reports/M5C_PLANNER_NATIVE_ACCEPTANCE_2026-11-03.md); G03, G06–G08 remain; no publication |
-| M5C independently reviewed pre-push hook check | Implemented; selected automated/native acceptance passed | [Check report](reports/M5C_REVIEWED_PUSH_CHECKS_2026-11-03.md); hook approval only, unpublished history/no replay; remaining native interruption/bypass/manager cases G06 |
+| M5C independently reviewed pre-push hook check | Implemented; selected automated/native acceptance passed | [Check report](reports/M5C_REVIEWED_PUSH_CHECKS_2026-11-03.md); hook approval only, unpublished history/no replay; selected native interruption/manager-refusal/bypass cases passed; broader G06 compatibility remains |
 | M5C individual/bulk push publication | Not implemented | Exact publication authority, transport, rejection, uncertain outcome reconciliation and child-success coordination: G07–G08 |
 | M6 AI foundation | Not implemented | `app/core/src/ai/` contains only `.gitkeep`; profiles, providers, templates and exact context pipeline: G09 |
 | M7 AI commits / SemVer Actions | Not implemented | `app/core/src/actions/` contains only `.gitkeep`; deterministic recovery and separate bounded automatic authority: G09 |
@@ -60,12 +60,37 @@ and explicit disposition of exclusions. A facility block is not a waiver.
 | G03 — accessibility, layouts and scale | Full VoiceOver/focus/review/dialog coverage, long/byte paths and large content, narrow/zoom layouts, display disconnect/reconfiguration, measured inventory/history/monitoring budgets. Selected contrast/theme/1×–2× geometry passes remain valid only for their recorded cases. | UI-001–005; M3-A04/06/07/19; M4; M8B |
 | G04 — ordinary write enablement | Reconcile all applicable safety prerequisites with G01–G03/G05–G06 and support exclusions, then obtain the explicit default-change decision. Validate the exact ordinary artifact with supported writes and independent approval. No current gate completion is inferred. | D-045; M3C; RELEASE-002 |
 | G05 — native bulk commit failures/dependencies | Actual submodule child-before-parent/fresh parent review, partial publication/failure, cancellation and reviewed retry of unfinished items; per-repo overrides and linked-worktree cases as applicable. Preserve successful/unselected content and do not replay published items. | GIT-013; BULK-001–007; M5A |
-| G06 — supported remote/check compatibility | **In progress:** native supported pre-push Cancel review, Cmd+Q, main-window Close and direct AppKit termination during proven running execution passed, including process cleanup and restart without replay ([AppKit report](reports/G02_G06_RUNNING_PUSH_CHECK_APPKIT_2026-11-07.md)). Actual running-check host crash and first-restart recovery passed after the premature-display fix; original hook survival remains explicit ([startup retest](reports/G02_STARTUP_READINESS_2026-11-07.md)). Bypass/manager interaction remains; operator SecurityAgent choices, broader fetch/upstream topology/recovery, planner cycle/accessibility/scale and direct SCP facility block retain their limits. | M5B/C; PUSH-002; AUTHENTICATION.md; M8B |
+| G06 — supported remote/check compatibility | **In progress:** native supported pre-push Cancel review, Cmd+Q, main-window Close and direct AppKit termination during proven running execution passed, including process cleanup and restart without replay ([AppKit report](reports/G02_G06_RUNNING_PUSH_CHECK_APPKIT_2026-11-07.md)). Actual running-check host crash and first-restart recovery passed after the premature-display fix; original hook survival remains explicit ([startup retest](reports/G02_STARTUP_READINESS_2026-11-07.md)). Selected native detected-manager Execute refusal, OS-declined bypass and fresh approved bypass passed with zero hook execution and restart/no replay ([bypass report](reports/G06_NATIVE_MANAGER_BYPASS_2026-11-07.md)); unsupported managers remain unsupported for Execute. Operator SecurityAgent choices, broader fetch/upstream topology/recovery, planner cycle/accessibility/scale and direct SCP facility block retain their limits. | M5B/C; PUSH-002; AUTHENTICATION.md; M8B |
 | G07 — individual push | Implement independent exact non-force publication approval, isolated transport, source/destination/auth/hook revalidation, rejection/drift handling, cancellation and durable uncertain-outcome reconciliation using fresh observation. Existing hook checks never become publication tokens. | PUSH-001/003/005/006; INV-009; M5C |
 | G08 — bulk push | Compose accepted individual push with fresh per-item authority, actual child availability before parents, no implicit child selection, cycle/block handling, partial-success preservation and fresh retry. Conditional planning is not remote success. | PUSH-004–006; INV-014; M5C |
 | G09 — AI and Actions | Implement M6 profiles/providers/templates/bounded exact context; M7 assisted candidates, deterministic SemVer preview/execution/recovery and separately bounded automatic authorization. Provider/model failures and imported definitions cannot broaden authority. | AI-001–017; ACT-001–003; INV-010–013; M6/M7 |
 | G10 — backup/portability/retention | Versioned export/import, consistent manual/rotating backups, previewed safe restore, malicious/interrupted archive tests and protection of unresolved recovery. Decide proposed 90-day history/ten-backup defaults before implementing cleanup. Migration backups alone do not meet this gate. | STATE-005–007; ACT-004; M4C/M8A |
 | G11 — reproducible release | Provision declared Git/Rust/signing prerequisites in CI and record actual results; resolve OS/architecture/tool delivery/identifier/signing/update policy; verify licenses/notices and exact packaged install/upgrade/migration/uninstall, signing/notarization and release invariants. A development bundle is not a release. | RELEASE-001–005; INV-001–015; M8C |
+
+### Latest G06 native manager refusal / explicit bypass — November 7, 2026
+
+[Native bypass report](reports/G06_NATIVE_MANAGER_BYPASS_2026-11-07.md) and
+[evidence](validation/g06-native-manager-bypass-2026-11-07/README.md) close the
+selected detected-manager refusal/decline/bypass cases. A fresh fixture hook had a
+Husky signature installed before trust. Execute returned unsupported state before
+proposal/approval. Explicit BypassAll was visible in authoritative and OS reviews;
+OS Cancel left a cancelled record and consumed review. A fresh separately approved
+BypassAll check completed with hook not passed and no publication. Neither ran the
+hook. This is detector/refusal coverage, not installed-manager Execute support.
+
+Native history and first restart preserved distinct cancelled/complete bypass
+records and the exact draft without retry/publication authority or replay. All
+repository/remote bytes/modes and journal/request assertions passed at refusal,
+decline, approval, restart and final cleanup: zero hook markers and one observation
+GET. Both app exits were 0; exact owned service stopped and generated key removed.
+No product source changed; unchanged validated artifact reused. Prior automated
+matrix remains historical. One early final-phase assertion was run while pending;
+the unchanged oracle passed after native completion, with the timing note retained.
+
+G06 remains open for broader authentication, fetch/upstream topology/recovery,
+planner cycle/accessibility/scale and SCP facility limits. G02 dispositions are
+unchanged; actual Dock/session and remaining phase-specific recovery remain open.
+Ordinary writes stay disabled; no publication authority was added.
 
 ### Latest G02/G06 direct AppKit termination during running hook — November 7, 2026
 

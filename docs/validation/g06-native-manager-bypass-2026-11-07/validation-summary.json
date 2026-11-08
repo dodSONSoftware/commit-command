@@ -1,0 +1,39 @@
+{
+  "base_revision": "6b86b62",
+  "product_source_changed": false,
+  "cases": {
+    "execute_detected_manager": "refused before proposal/approval; zero execution",
+    "bypass_os_decline": "cancelled; consumed review; zero execution",
+    "fresh_bypass_os_approval": "complete; hook not passed; unpublished; zero execution",
+    "restart": "same results/draft; no replay"
+  },
+  "hook_invocations": 0,
+  "read_only_request_count": 1,
+  "preservation_oracles": [
+    "refused",
+    "declined",
+    "approved",
+    "restarted",
+    "final"
+  ],
+  "host_exit_codes": [
+    0,
+    0
+  ],
+  "premature_approved_oracle": "failed while pending; unchanged assertion passed after native completion",
+  "automated_matrix_rerun": false,
+  "prior_automated_counts": {
+    "renderer": 69,
+    "default_host": 13,
+    "all_feature_host": 16
+  },
+  "selected_native_manager_refusal_bypass": "passed within fixture envelope",
+  "actual_manager_distribution_execution_tested": false,
+  "g02": "unchanged/open",
+  "g06": "open for broader compatibility",
+  "evidence_python_syntax": "passed",
+  "evidence_json_parse": "passed",
+  "source_artifact_and_hook_hashes": "matched",
+  "report_and_provenance_links": "passed",
+  "native_audit": "two startups, no fault-menu actions"
+}

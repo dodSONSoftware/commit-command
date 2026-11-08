@@ -1,0 +1,8 @@
+#!/bin/sh
+# husky unsupported manager fixture
+printf "started\n" >> "/private/tmp/gitfleet-m3-native-hisypam6/hook-invocations"
+printf "%s\n" "$$" > "/private/tmp/gitfleet-m3-native-hisypam6/hook-pid"
+sleep 45 &
+printf "%s\n" "$!" > "/private/tmp/gitfleet-m3-native-hisypam6/child-pid"
+wait
+printf "finished\n" > "/private/tmp/gitfleet-m3-native-hisypam6/hook-finished"

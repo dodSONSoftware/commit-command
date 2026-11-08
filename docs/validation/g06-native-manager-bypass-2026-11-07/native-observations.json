@@ -1,0 +1,29 @@
+{
+  "execute": {
+    "native_error": "unsupported_repository_state: Execute mode does not support reference-transaction hooks or unvalidated hook managers; explicit reviewed bypass-all is available",
+    "approval_window_created": false,
+    "hook_invocations": 0
+  },
+  "declined_bypass": {
+    "check_id": "8620b0e3-c657-4169-a7b0-dd4459b4292a",
+    "review_id": "3a2e5591-e58a-46f4-a1dd-cb681f829927",
+    "review_and_os_policy": "BypassAll",
+    "native_action": "Cancel on OS confirmation",
+    "native_result": "Not completed: Native confirmation was declined. A consumed or stale review requires a fresh proposal.",
+    "confirmation_button_disabled_after_decline": true,
+    "hook_invocations": 0
+  },
+  "approved_bypass": {
+    "check_id": "708e6cd9-bce3-446d-bdd4-a25e87ff9d4c",
+    "review_id": "41e459a8-81b0-4c4b-b6cf-fbaeb91bda4d",
+    "review_and_os_policy": "BypassAll",
+    "native_result": "complete; hook_passed false; framework true; issue null",
+    "native_history": "complete and cancelled records; Hook policy: bypass_all; hook passed: false; no push authority"
+  },
+  "restart": {
+    "exact_draft_visible": true,
+    "both_history_records_preserved": true,
+    "no_retry_or_publication_authority": true
+  },
+  "timing_note": "First approved-stage oracle was invoked before asynchronous completion and failed its phase assertion. After native complete result, unchanged oracle passed."
+}

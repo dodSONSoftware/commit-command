@@ -1,0 +1,8 @@
+{
+  "first_host_cmd_q_exit_code": 0,
+  "restart_cmd_q_exit_code": 0,
+  "all_hook_markers_absent": true,
+  "exact_owned_tls_server_stopped": true,
+  "generated_tls_private_key_removed": true,
+  "repositories_preserved": true
+}

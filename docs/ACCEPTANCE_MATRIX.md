@@ -345,6 +345,14 @@ confirmation Quit, workspace invalidation/dialog reuse, main close and ordered
 review replacement. A12–A17 remain partial for the remaining native renderer-reset,
 live caller, compatibility and recovery criteria; full gate closure is not inferred.
 
+Latest G06 manager/bypass follow-up: [native report](reports/G06_NATIVE_MANAGER_BYPASS_2026-11-07.md)
+verifies detected-manager Execute refusal before review, explicit BypassAll in native
+reviews, OS decline with consumed review, fresh approved bypass with hook not passed,
+zero hook execution/publication and restart without replay. Selected case accepted
+within fixture envelope; installed-manager execution is not supported or claimed.
+Broader G06 compatibility and G02 Dock/session/phase criteria remain open. No source
+change or fresh automated matrix run.
+
 Latest G02/G06 direct AppKit running-check follow-up: [AppKit report](reports/G02_G06_RUNNING_PUSH_CHECK_APPKIT_2026-11-07.md)
 verifies actual NSApplication termination dispatch, delegate interception and return
 while the supported hook was proven running, then normal exit and process cleanup

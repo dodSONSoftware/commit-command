@@ -1,0 +1,31 @@
+{
+  "root": "/private/tmp/gitfleet-m3-native-hisypam6",
+  "workspace_root": "/private/tmp/gitfleet-m3-native-hisypam6/workspace",
+  "state": "/private/tmp/gitfleet-m3-native-hisypam6/state",
+  "workspace": "e520e2cd-a438-4d5f-864c-230cd289bb33",
+  "worktrees": {
+    "child": "72ffa265-47ab-44af-99e9-fc4564cce83c",
+    "parent": "bb9691b3-1cca-47ec-93a5-ac121cb73b88",
+    "grand": "f6930be3-be06-44d4-885a-0e62f2592988"
+  },
+  "parent": "/private/tmp/gitfleet-m3-native-hisypam6/workspace/parent",
+  "child": "/private/tmp/gitfleet-m3-native-hisypam6/workspace/parent/child",
+  "grand": "/private/tmp/gitfleet-m3-native-hisypam6/workspace/parent/child/grand",
+  "server_pid": 48856,
+  "base": "https://127.0.0.1:56939",
+  "ca_file": "/private/tmp/gitfleet-m3-native-hisypam6/certificate.pem",
+  "observed_oids": {
+    "parent": "f7f5fb17ce88d4d158424528a06c3580aedfaa43",
+    "child": "f7f5fb17ce88d4d158424528a06c3580aedfaa43",
+    "grand": "f7f5fb17ce88d4d158424528a06c3580aedfaa43"
+  },
+  "source_oids": {
+    "parent": "0c7fc1ad6a0bcb0d504c53aef22057816a71cc87",
+    "child": "34d5eaa55707c6e1b532156846bc87b89e6f40e0",
+    "grand": "a0fd1f8673cb15e94e8f93c961c5bb91d2a54f08"
+  },
+  "private_server_contacted": false,
+  "credentials_used": false,
+  "app_path": "/private/tmp/gitfleet-m3-native-hisypam6/Commit Command Manager Bypass Acceptance.app",
+  "binary_sha256": "f7586228af7f7bb7c937d23b84474a538ccdaa47a0cc35dc6694b6caec81c7ca"
+}

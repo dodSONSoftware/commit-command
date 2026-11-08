@@ -66,6 +66,13 @@ sheet, normal exit, hook/child cleanup before natural finish, cancelled/unpublis
 history and exact draft/repository preservation through first restart without replay.
 No product change; prior automated evidence retained. Actual Dock/session, remaining
 phase-specific recovery and G06 bypass/manager/compatibility remain separate.
+The subsequent [native detected-manager/bypass case](reports/G06_NATIVE_MANAGER_BYPASS_2026-11-07.md)
+now passed: Execute refused the detected unsupported-manager signature before review;
+explicit BypassAll was reviewed natively, declined at OS confirmation, then freshly
+proposed/approved. Cancelled and complete records remained unpublished/not passed,
+with zero hook execution and no restart replay. This closes selected native refusal/
+bypass interaction, not installed-manager Execute compatibility. Other G02/G06
+criteria retain their dispositions; no product code changed.
 Current gate dispositions remain in EXECUTION_STATUS.
 
 ## Safety, execution and evidence rules
