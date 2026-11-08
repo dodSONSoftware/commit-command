@@ -1,0 +1,17 @@
+from pathlib import Path
+import hashlib,json,os,sqlite3,stat,subprocess,sys
+out=Path(__file__).resolve().parent;f=json.loads((out/'fixture.json').read_text());workspace=Path(f['workspace_root']);root=Path(f['root'])
+def snap(path):return {str(p.relative_to(path)):{'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'mode':stat.S_IMODE(p.stat().st_mode)} for p in path.rglob('*') if p.is_file()}
+def git(repo,*args):return subprocess.check_output(['git','-c','diff.autoRefreshIndex=false','-C',repo,*args],env=dict(os.environ,GIT_OPTIONAL_LOCKS='0',GIT_CONFIG_GLOBAL='/dev/null',GIT_CONFIG_NOSYSTEM='1'),text=True).strip()
+current=snap(workspace);before=json.loads((out/'repository-before.json').read_text());prefix='gitfleet-batch/unselected/';assert {k:v for k,v in current.items() if k.startswith(prefix)}=={k:v for k,v in before.items() if k.startswith(prefix)};assert snap(Path(f['child']))==json.loads((out/'child-after-success.json').read_text());assert snap(Path(f['hook']).parent.parent)==json.loads((out/'child-metadata-after-success.json').read_text())
+assert git(f['parent'],'rev-parse','HEAD')=='317d70a1e62c0d21aaa52f2e9e7fd8cd71180b3d';assert git(f['child'],'rev-parse','HEAD')==git(f['parent'],'rev-parse','HEAD:module')=='b270f8b451d02046f7011564b96965b69478dd8d'
+for key in ['parent','child']:
+ assert git(f[key],'rev-list','--count',f['heads'][f[key]]+'..HEAD')=='1';assert git(f[key],'status','--porcelain')=='';assert git(f[key],'show','HEAD:file.txt')=='Reviewed child-hook fixture change'
+assert git(f['parent'],'log','-1','--format=%B')=='G05 record reviewed hook-tested child\n\nApprove the exact new gitlink after fresh review.';assert set(git(f['parent'],'diff-tree','--no-commit-id','--name-only','-r','HEAD').splitlines())=={'file.txt','module'};assert (root/'hook-runs').read_text().splitlines()==['run']*3;assert hashlib.sha256(Path(f['hook']).read_bytes()).hexdigest()==f['hook_sha256']
+c=sqlite3.connect('file:'+f['state']+'/state.db?mode=ro',uri=True);records={'operations':dict(c.execute('select id,payload from write_operations')),'batches':dict(c.execute("select key,value from state where key like 'batch:%'"))};previous=json.loads((out/'records-child-success.json').read_text());assert all(records['operations'][k]==v for k,v in previous['operations'].items());assert all(records['batches'][k]==v for k,v in previous['batches'].items());assert json.loads(records['batches']['batch:05000b4e-4e9a-48bf-a19f-418945a003bf'])['phase']=='complete';assert set(c.execute('select worktree_id,revoked from write_trust'))=={(f['entries'][f[k]],0) for k in ['parent','child']};assert c.execute('pragma integrity_check').fetchone()[0]=='ok';assert snap(workspace)==current
+label=sys.argv[1];proof={'one_commit_per_selected_repository':True,'parent_exact_child_gitlink_and_file':True,'parent_exact_override':True,'child_checkout_and_metadata_exact_during_parent_retry':True,'hook_runs_remain_three_no_child_replay':True,'control_exact_bytes_modes_untrusted':True,'prior_records_unchanged':True,'exact_authorized_trusts':True,'integrity':'ok'}
+if label=='before-restart':
+ (out/'repository-final.json').write_text(json.dumps(current,indent=2)+'\n');(out/'records-final.json').write_text(json.dumps(records,indent=2)+'\n')
+else:
+ assert current==json.loads((out/'repository-final.json').read_text());assert records==json.loads((out/'records-final.json').read_text());proof['restart_exact_files_records_no_replay']=True
+(out/('verify-final-'+label+'.json')).write_text(json.dumps(proof,indent=2)+'\n');print(proof)

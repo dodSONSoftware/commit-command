@@ -1,0 +1,11 @@
+{
+  "one_commit_per_selected_repository": true,
+  "parent_exact_child_gitlink_and_file": true,
+  "parent_exact_override": true,
+  "child_checkout_and_metadata_exact_during_parent_retry": true,
+  "hook_runs_remain_three_no_child_replay": true,
+  "control_exact_bytes_modes_untrusted": true,
+  "prior_records_unchanged": true,
+  "exact_authorized_trusts": true,
+  "integrity": "ok"
+}

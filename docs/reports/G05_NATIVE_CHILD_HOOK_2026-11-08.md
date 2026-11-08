@@ -95,3 +95,32 @@ content evidence. Corrected to safe status --porcelain and checked the oracle it
 preserved all files; no index refresh or baseline overwrite. This was an oracle
 false positive, not additional repository modification. See verify-child-success.json.
 Fresh exact parent-only gitlink review/approval is still required and not yet accepted.
+
+
+## Fresh parent-only approval and final ordinary restart — passed
+
+Select unfinished worktrees selected only the parent. A fresh review contained
+file.txt and the exact module gitlink from 0fb295afa2af9a6a00d8ab6d7605781b03321f4f
+to b270f8b451d02046f7011564b96965b69478dd8d, with the parent's separate message
+override. Independent native approval completed batch
+05000b4e-4e9a-48bf-a19f-418945a003bf and operation
+6702e7c9-2825-424c-8a77-3a92091ccc23, publishing parent commit
+317d70a1e62c0d21aaa52f2e9e7fd8cd71180b3d with reconciled index.
+
+The final oracle proves one commit per selected repository, exact parent message,
+file and child OID, clean parent and child, unchanged child checkout and actual Git
+metadata during parent retry, three hook runs total, unchanged hook and trusts,
+and byte/mode-exact untrusted independent control. Prior operation/batch records
+are unchanged. No child hook or completed item replayed.
+
+Ordinary restart visibly showed clean parent/child, dirty unselected control,
+parent-only selection, read-only status and disabled native preparation. Bulk results
+retained complete parent approval, needs_reauthorization child batch, cancelled
+batch and HookRejected failure. After native Quit the owned app process was absent;
+writer-lock reopen succeeded. verify-final.py passed before and after restart,
+checking exact repository bytes/modes and operation/batch payloads with SQLite
+integrity ok. See verify-final-before-restart.json, verify-final-after-restart.json,
+repository-final.json, records-final.json and lock-reopen-final.json. The final exit
+code was not retained across tool compaction; process absence and lock reopen were
+independently verified. No product change or full matrix rerun was needed for this
+native-only evidence step. This closes this hook chain, not all of G05.
