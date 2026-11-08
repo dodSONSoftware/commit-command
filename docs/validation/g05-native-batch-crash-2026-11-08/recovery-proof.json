@@ -1,0 +1,9 @@
+{
+  "host_crash": false,
+  "fault_refused": "missing Core disposable fixture layout/marker",
+  "one_alpha_commit": "cb58233b3e42eddd49f4cdd85422a6210e54a525",
+  "native_index_only_recovery_complete_no_replay": true,
+  "beta_control_exact_bytes_modes": true,
+  "exact_authorized_two_trusts": true,
+  "integrity": "ok"
+}

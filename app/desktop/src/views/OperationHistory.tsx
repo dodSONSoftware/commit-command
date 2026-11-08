@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { publicationStatus } from "../services/publication";
 import { value, type Bridge } from "../services/bridge";
 import type { OperationAuditQuery } from "../services/request.generated";
 import type {
@@ -317,8 +318,8 @@ export function OperationHistory({
                 {item.record.value.outcomes.map((outcome) => (
                   <p key={outcome.operation_id}>
                     {outcome.operation_id} ·{" "}
-                    {outcome.phase.replaceAll("_", " ")} · Published:{" "}
-                    {String(outcome.published)} · Index reconciled:{" "}
+                    {outcome.phase.replaceAll("_", " ")} ·{" "}
+                    {publicationStatus(outcome)} · Index reconciled:{" "}
                     {String(outcome.index_reconciled)}
                     {outcome.reason && ` · ${text(outcome.reason)}`}
                   </p>
@@ -378,7 +379,7 @@ function LocalRecord({
             : "No commit publication recorded."}
       </p>
       <p>
-        Published: {String(op.published)} · Index reconciled:{" "}
+        {publicationStatus(op)} · Index reconciled:{" "}
         {String(op.index_reconciled)}
       </p>
       {op.new_head && <code>{op.new_head}</code>}

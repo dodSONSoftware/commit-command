@@ -7,6 +7,16 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G05 uncertain publication display — fixed, crash case pending
+
+[Publication checkpoint](reports/G05_UNCONFIRMED_PUBLICATION_2026-11-08.md): actual
+post-ref uncertain outcome exposed false certainty in Not published/false labels.
+Shared display now distinguishes unconfirmed publication; full desktop 91/13/16 and
+all checks passed. Native fault attempt was refused by Core fixture guard (preparation
+error, no host crash); fresh native index-only recovery proved the first commit and
+preserved beta/control without replay. Actual crash/restart and new-label native
+verification remain pending a correctly marked fixture. No safety guard relaxed.
+
 ### November 8 full Core matrix — refreshed and passed
 
 [Fresh matrix](reports/G02_G11_CORE_MATRIX_2026-11-08.md): script exit 0, configurations

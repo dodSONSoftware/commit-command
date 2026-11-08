@@ -1,0 +1,13 @@
+
+> gitfleet-desktop@0.1.1 test
+> vitest run --run src/services/publication.test.ts src/views/BulkCommit.test.tsx src/views/OperationHistory.test.tsx
+
+
+ RUN  v4.1.12 /Users/randydodson/Documents/_code/git-fleet/app/desktop
+
+
+ Test Files  3 passed (3)
+      Tests  10 passed (10)
+   Start at  12:14:38
+   Duration  643ms (transform 106ms, setup 109ms, import 215ms, tests 353ms, environment 695ms)
+

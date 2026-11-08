@@ -1,0 +1,7 @@
+{"detail":{"support":true},"event":"startup"}
+{"detail":{"allowed":true,"label":"main"},"event":"navigation"}
+{"detail":{"elapsed_ms":210,"event":"Started","visible":false},"event":"main_page_load"}
+{"detail":{"elapsed_ms":261,"event":"Finished","visible":false},"event":"main_page_load"}
+{"detail":{"visible":true},"event":"main_initial_display"}
+{"detail":{"id":"accept-after-publication"},"event":"menu_action"}
+{"detail":{"phase":"reference_updated"},"event":"commit_fault_armed"}

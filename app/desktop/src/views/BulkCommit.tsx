@@ -12,6 +12,7 @@ import type {
   StoredWorktree,
   BulkComposerState,
 } from "../services/response.generated";
+import { publicationStatus } from "../services/publication";
 import { pathText, repoName } from "../stores/model";
 
 type Configuration = Pick<
@@ -374,8 +375,7 @@ export function BulkCommit({
               return (
                 <li key={item.worktree}>
                   <span className="path">{pathText(item.path)}</span> ·{" "}
-                  {outcome?.phase ?? "blocked"} ·{" "}
-                  {outcome?.published ? "Published" : "Not published"}
+                  {outcome?.phase ?? "blocked"} · {publicationStatus(outcome)}
                   {item.issue && (
                     <p>
                       {item.issue.kind}: {item.issue.message}

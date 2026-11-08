@@ -249,9 +249,7 @@ it("shows partial publication truthfully and requests only guarded recovery or f
     />,
   );
   await screen.findByText("Published fixture");
-  expect(screen.getByText(/completed-child/)).toHaveTextContent(
-    "Published: true",
-  );
+  expect(screen.getByText(/completed-child/)).toHaveTextContent("Published");
   expect(screen.getByText(/Batch phase/)).toHaveTextContent("partial failure");
   fireEvent.click(
     screen.getByRole("button", { name: "Inspect guarded recovery" }),

@@ -118,72 +118,78 @@ it("keeps write preparation disabled in ordinary builds", () => {
   ).toBeDisabled();
   expect(request).not.toHaveBeenCalled();
 });
-it("shows durable publication separately and retries only unfinished items with fresh selection", async () => {
-  const { request, setSelected } = setup();
-  request.mockResolvedValueOnce({
-    kind: "batches",
-    value: {
-      items: [
-        {
-          record: {
-            version: 1,
-            id: "batch",
-            workspace: "ws",
-            created_at_ms: 0,
-            phase: "partial_failure",
-            issue: null,
-            items: [
+it.each([
+  { phase: "blocked", label: "Not published" },
+  { phase: "uncertain_outcome", label: "Publication unconfirmed" },
+] as const)(
+  "shows durable publication honestly for $phase and retries only unfinished items",
+  async ({ phase, label }) => {
+    const { request, setSelected } = setup();
+    request.mockResolvedValueOnce({
+      kind: "batches",
+      value: {
+        items: [
+          {
+            record: {
+              version: 1,
+              id: "batch",
+              workspace: "ws",
+              created_at_ms: 0,
+              phase: "partial_failure",
+              issue: null,
+              items: [
+                {
+                  worktree: "a",
+                  path: { encoding: "utf8", value: "/alpha" },
+                  dependencies: [],
+                  operation: "one",
+                  issue: null,
+                },
+                {
+                  worktree: "b",
+                  path: { encoding: "utf8", value: "/beta" },
+                  dependencies: [],
+                  operation: "two",
+                  issue: null,
+                },
+              ],
+            },
+            outcomes: [
               {
-                worktree: "a",
-                path: { encoding: "utf8", value: "/alpha" },
-                dependencies: [],
-                operation: "one",
-                issue: null,
+                operation_id: "one",
+                phase: "complete",
+                published: true,
+                index_reconciled: true,
+                post_processing: [],
               },
               {
-                worktree: "b",
-                path: { encoding: "utf8", value: "/beta" },
-                dependencies: [],
-                operation: "two",
-                issue: null,
+                operation_id: "two",
+                phase,
+                published: false,
+                index_reconciled: false,
+                post_processing: [],
+                reason: "<script>untrusted text</script>",
               },
             ],
           },
-          outcomes: [
-            {
-              operation_id: "one",
-              phase: "complete",
-              published: true,
-              index_reconciled: true,
-              post_processing: [],
-            },
-            {
-              operation_id: "two",
-              phase: "blocked",
-              published: false,
-              index_reconciled: false,
-              post_processing: [],
-              reason: "<script>untrusted text</script>",
-            },
-          ],
-        },
-      ],
-      next: null,
-    },
-  });
-  const { container } = { container: document.body };
-  fireEvent.click(
-    screen.getByRole("button", { name: "Refresh batch results" }),
-  );
-  const retry = await screen.findByRole("button", {
-    name: "Select unfinished worktrees for fresh review",
-  });
-  expect(screen.getByText(/Not published/)).toBeInTheDocument();
-  expect(container.querySelector("script")).toBeNull();
-  fireEvent.click(retry);
-  expect(setSelected).toHaveBeenCalledWith(["b"]);
-  expect(request).toHaveBeenCalledTimes(1);
-});
+        ],
+        next: null,
+      },
+    });
+    const { container } = { container: document.body };
+    fireEvent.click(
+      screen.getByRole("button", { name: "Refresh batch results" }),
+    );
+    const retry = await screen.findByRole("button", {
+      name: "Select unfinished worktrees for fresh review",
+    });
+    expect(screen.getByText(new RegExp(label))).toBeInTheDocument();
+    expect(container.querySelector("script")).toBeNull();
+    fireEvent.click(retry);
+    expect(setSelected).toHaveBeenCalledWith(["b"]);
+    expect(request).toHaveBeenCalledTimes(1);
+  },
+);
 
 it("adds an exact gitlink exclusion absent from restricted status without preparing a review on Enter", async () => {
   const { request } = setup();
