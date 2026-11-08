@@ -1,0 +1,18 @@
+{
+  "inventory_sha256": "fcad877efe3d1f99508b3a6e86d8cdf2313ce8fbaea1fa4aef6f424c6e512a1e",
+  "counts": {
+    "cargo": 262,
+    "npm": 318
+  },
+  "repeat_byte_identical": true,
+  "third_party_missing_declarations": 0,
+  "missing_declarations": [
+    {
+      "ecosystem": "npm",
+      "first_party": true,
+      "name": "gitfleet-desktop",
+      "version": "0.1.1"
+    }
+  ],
+  "target": "aarch64-apple-darwin"
+}

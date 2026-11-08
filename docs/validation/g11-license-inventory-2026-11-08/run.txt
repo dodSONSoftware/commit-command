@@ -1,0 +1,16 @@
+error: failed to download `inotify v0.11.5`
+
+Caused by:
+  attempting to make an HTTP request, but --offline was specified
+Traceback (most recent call last):
+  File "/Users/randydodson/Documents/_code/git-fleet/app/core/scripts/collect-license-inventory.py", line 74, in <module>
+    main()
+  File "/Users/randydodson/Documents/_code/git-fleet/app/core/scripts/collect-license-inventory.py", line 68, in main
+    result = inventory(project)
+  File "/Users/randydodson/Documents/_code/git-fleet/app/core/scripts/collect-license-inventory.py", line 15, in inventory
+    metadata = json.loads(subprocess.check_output([
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 424, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 528, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['cargo', 'metadata', '--manifest-path', '/Users/randydodson/Documents/_code/git-fleet/app/core/Cargo.toml', '--format-version', '1', '--all-features', '--locked', '--offline']' returned non-zero exit status 101.
