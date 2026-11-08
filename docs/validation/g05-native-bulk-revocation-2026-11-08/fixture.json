@@ -1,0 +1,34 @@
+{
+  "root": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr",
+  "workspace_root": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace",
+  "parent": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent",
+  "middle": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle",
+  "leaf": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle/leaf",
+  "control": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/unselected",
+  "state": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/state",
+  "workspace": "8fbb404a-a70e-47fe-a911-3bf94a4ee709",
+  "entries": {
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/unselected": "02fee984-8794-4793-b047-7dd0b709ba09",
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle/leaf": "0c13b924-9371-40ac-a754-2f6705a3afcb",
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent": "17c0aec8-df8d-4c6e-9ae3-5518aa395ea5",
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle": "407fa849-c4fa-4e1f-8fc8-bfb8e3822cb7"
+  },
+  "heads": {
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent": "18f9db137c8e018c61d7095716244ae9d5fb88f4",
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle": "2dbf7c743f1cf3e9b9120683d40dfedbb9301eed",
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle/leaf": "e9bfc641cb50a16e8914d1fe4b6b8be519560c37",
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/unselected": "e9bfc641cb50a16e8914d1fe4b6b8be519560c37"
+  },
+  "app": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/Commit Command Review Transition Acceptance.app",
+  "ordinary_app": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/Commit Command Review Transition Ordinary.app",
+  "binary_sha256": "dc28e43cd64e440d77da8d34940a872de96c0da653ca91ebb991d4b2f4e362b4",
+  "ordinary_sha256": "57268775f5b70217887d4d21d3e5e76886e8e314e1fc88217eacc74af7a344f2",
+  "source_commit": "4c52595cd3745b64379790e7019333a842317fa0",
+  "features": [
+    "custom-protocol",
+    "desktop-writes",
+    "native-acceptance-support"
+  ],
+  "host_source_sha256": "91941cf555b6dcf4fce5fb8bb6e4f31e7a415083ea59a777d5ca99a7e473178d",
+  "trace_initial_lines": 296
+}

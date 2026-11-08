@@ -1,0 +1,95 @@
+[
+  {
+    "id": "a58cd244-116d-46a6-b377-10404e40d52b",
+    "phase": "cancelled",
+    "issues": [],
+    "worktrees": [
+      "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle",
+      "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent"
+    ],
+    "operations": [
+      {
+        "id": "b725f846-35ae-46ea-ad99-0a04fa0fec84",
+        "phase": "cancelled_before_publication",
+        "new_head": null,
+        "published": false,
+        "reconciled": false,
+        "message": "G05 revoked batch must not publish\n",
+        "patch": "diff --git a/file.txt b/file.txt\nindex cae590f..1f97b6c 100644\n--- a/file.txt\n+++ b/file.txt\n@@ -1 +1 @@\n-Review transition diagnostic round 1\n+G05 revoked batch must not publish\n",
+        "hooks": [],
+        "signing": null
+      },
+      {
+        "id": "7a083a58-b96c-413f-b08d-8bbca117dfe2",
+        "phase": "cancelled_before_publication",
+        "new_head": null,
+        "published": false,
+        "reconciled": false,
+        "message": "G05 revoked batch must not publish\n",
+        "patch": "diff --git a/file.txt b/file.txt\nindex cae590f..1f97b6c 100644\n--- a/file.txt\n+++ b/file.txt\n@@ -1 +1 @@\n-Review transition diagnostic round 1\n+G05 revoked batch must not publish\n",
+        "hooks": [],
+        "signing": null
+      }
+    ]
+  },
+  {
+    "id": "41af4a3c-5178-4b1a-9cb5-c3c3e24e5459",
+    "phase": "cancelled",
+    "issues": [],
+    "worktrees": [
+      "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle",
+      "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent"
+    ],
+    "operations": [
+      {
+        "id": "80df7f79-905d-44ce-a412-a7cd4b64db8d",
+        "phase": "cancelled_before_publication",
+        "new_head": null,
+        "published": false,
+        "reconciled": false,
+        "message": "G05 revoked batch must not publish\n",
+        "patch": "diff --git a/file.txt b/file.txt\nindex cae590f..1f97b6c 100644\n--- a/file.txt\n+++ b/file.txt\n@@ -1 +1 @@\n-Review transition diagnostic round 1\n+G05 revoked batch must not publish\n",
+        "hooks": [],
+        "signing": null
+      },
+      {
+        "id": "ab60a1d0-878d-443d-bd50-1a5170bd59aa",
+        "phase": "cancelled_before_publication",
+        "new_head": null,
+        "published": false,
+        "reconciled": false,
+        "message": "G05 revoked batch must not publish\n",
+        "patch": "diff --git a/file.txt b/file.txt\nindex cae590f..1f97b6c 100644\n--- a/file.txt\n+++ b/file.txt\n@@ -1 +1 @@\n-Review transition diagnostic round 1\n+G05 revoked batch must not publish\n",
+        "hooks": [],
+        "signing": null
+      }
+    ]
+  },
+  {
+    "id": "3b57e486-9ce8-4bcb-b871-60a862fac981",
+    "phase": "blocked",
+    "issues": [
+      {
+        "kind": "untrusted_repository",
+        "message": "Trust was revoked or its identity/configuration changed"
+      }
+    ],
+    "worktrees": [
+      "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle",
+      "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent"
+    ],
+    "operations": [
+      {
+        "id": "1c79614e-4f44-4ad9-aff0-c8ad22b5cc83",
+        "phase": "cancelled_before_publication",
+        "new_head": null,
+        "published": false,
+        "reconciled": false,
+        "message": "G05 revoked batch must not publish\n",
+        "patch": "diff --git a/file.txt b/file.txt\nindex cae590f..1f97b6c 100644\n--- a/file.txt\n+++ b/file.txt\n@@ -1 +1 @@\n-Review transition diagnostic round 1\n+G05 revoked batch must not publish\n",
+        "hooks": [],
+        "signing": null
+      }
+    ]
+  }
+]

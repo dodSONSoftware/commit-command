@@ -7,6 +7,20 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G05 native bulk trust revocation — passed within envelope
+
+[Revocation package](reports/G05_NATIVE_BULK_REVOCATION_2026-11-08.md): native pending
+middle/parent batch, main-window parent-only Revoke trust cancelled both proposals;
+old review refused confirmation without OS approval. Fresh two-item review showed
+one revoked parent; native approval blocked whole batch and cancelled trusted middle
+before execution. Zero publications, exact repository bytes/modes and earlier records.
+Restored test file edits only; ordinary restart retained revoked parent, cancelled/
+blocked histories, read-only gate and no replay; exits 0/integrity/lock reopen passed.
+Middle/leaf remain trusted, control untrusted. No new grant/runtime patch. First
+preparation's window disappeared before revocation; trace now confirms fresh window
+Destroyed → correct cancellation, with destruction trigger still unknown. Preserve
+that separate lifecycle finding. Broader G05 selection/accessibility remains open.
+
 ### November 8 G05 malformed relationship refusal — Core/native passed within envelope
 
 [Invalid relationship package](reports/G05_INVALID_RELATIONSHIPS_2026-11-08.md): eight
@@ -32,8 +46,8 @@ self-cancellation reproduced. Exact old records/leaf metadata/control preserved;
 rebuilt ordinary restart read-only/no replay, both exits 0/integrity/lock reopen passed.
 Full desktop validation 91 renderer / 13 default-host / 16 all-feature host, type/lint/
 contracts/format/build/strict Clippy passed. Original unexpected cancellation stays
-open; no speculative runtime fix. Selected malformed/self/ancestor relationship refusal now recorded above; remaining
-native selection/revocation/accessibility and synthetic graph fallback criteria stay open.
+open; no speculative runtime fix. Selected malformed/self/ancestor relationship refusal now recorded above; native bulk revocation now recorded above; remaining native selection/accessibility
+and synthetic graph fallback criteria stay open.
 
 ### November 8 G05 native three-level chain — selected execution/restart passed
 

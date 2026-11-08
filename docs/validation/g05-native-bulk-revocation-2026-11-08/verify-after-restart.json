@@ -1,0 +1,12 @@
+{
+  "stage": "after-restart",
+  "exact_repository_files_modes": true,
+  "zero_published_operations": true,
+  "revoked_review_and_trusted_child_cancelled_before_execution": true,
+  "fresh_whole_batch_blocked": true,
+  "only_parent_trust_revoked": true,
+  "historical_operation_batch_payloads_exact": true,
+  "control_untrusted_and_untouched": true,
+  "integrity": "ok",
+  "final_records_no_replay": true
+}
