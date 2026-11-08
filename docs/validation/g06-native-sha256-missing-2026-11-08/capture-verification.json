@@ -1,0 +1,7 @@
+{
+  "repository_exact_bytes_modes": true,
+  "remote_exact_bytes_modes": true,
+  "three_incoming_objects_still_absent": true,
+  "server_stopped_before_import": true,
+  "private_tls_key_removed": true
+}

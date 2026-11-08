@@ -1,0 +1,98 @@
+{
+  "de54b5c5-81fa-4b2f-a59f-8a0e7971a6fb/transport.git/config": {
+    "sha256": "d1373a166e7b5577956c77bc3a1425a54db7f5dad2ad1d82a37b5c95c1bb9f5a",
+    "mode": 420
+  },
+  "de54b5c5-81fa-4b2f-a59f-8a0e7971a6fb/transport.git/HEAD": {
+    "sha256": "f6f2b945f6c411b02ba3da9c7ace88dcf71b6af65ba2e0d89aa82900042b5a10",
+    "mode": 420
+  },
+  "cfa91e36-f2ef-43f7-8c72-acd08d1747d8/approved.bundle": {
+    "sha256": "de08d8d8d2de010b8b8d1d7ed5a1b77ed53e0d3bc2d69b3553c86c54b20eab29",
+    "mode": 384
+  },
+  "cfa91e36-f2ef-43f7-8c72-acd08d1747d8/transport.git/config": {
+    "sha256": "d1373a166e7b5577956c77bc3a1425a54db7f5dad2ad1d82a37b5c95c1bb9f5a",
+    "mode": 420
+  },
+  "cfa91e36-f2ef-43f7-8c72-acd08d1747d8/transport.git/commondir": {
+    "sha256": "41e5fead41ae0ccc243e0d421af53fe72b4e290ba7b78a24e77a3b6f0ad80330",
+    "mode": 384
+  },
+  "cfa91e36-f2ef-43f7-8c72-acd08d1747d8/transport.git/HEAD": {
+    "sha256": "b44984bc313661b8355433a92f911e429e136d1765f1e3d4d7fc58dc4a507a7f",
+    "mode": 420
+  },
+  "cfa91e36-f2ef-43f7-8c72-acd08d1747d8/transport.git/objects/pack/pack-7f77582d2976e0ca2ce9a7a859fdb45d1f31790d970706d5fb34a07669b2313b.rev": {
+    "sha256": "d69dbcb9026a4f5449087542b3c3e51bf96a9c76a4c335797f41d9010de5a3fe",
+    "mode": 292
+  },
+  "cfa91e36-f2ef-43f7-8c72-acd08d1747d8/transport.git/objects/pack/pack-7f77582d2976e0ca2ce9a7a859fdb45d1f31790d970706d5fb34a07669b2313b.pack": {
+    "sha256": "bdefc591b039355d43f8e4a0ec5f6d287882c5bc975440fb4f1443782f4c30af",
+    "mode": 292
+  },
+  "cfa91e36-f2ef-43f7-8c72-acd08d1747d8/transport.git/objects/pack/pack-7f77582d2976e0ca2ce9a7a859fdb45d1f31790d970706d5fb34a07669b2313b.idx": {
+    "sha256": "64a7cde9839018d0fb0a74aea749e8e555b48f901f0386801272d4de6beadb37",
+    "mode": 292
+  },
+  "cfa91e36-f2ef-43f7-8c72-acd08d1747d8/loose.git/config": {
+    "sha256": "d1373a166e7b5577956c77bc3a1425a54db7f5dad2ad1d82a37b5c95c1bb9f5a",
+    "mode": 420
+  },
+  "cfa91e36-f2ef-43f7-8c72-acd08d1747d8/loose.git/HEAD": {
+    "sha256": "f6f2b945f6c411b02ba3da9c7ace88dcf71b6af65ba2e0d89aa82900042b5a10",
+    "mode": 420
+  },
+  "cfa91e36-f2ef-43f7-8c72-acd08d1747d8/loose.git/objects/f4/c004356041f274a5a279ef08b98e27b01e6d45c17837599d929ea56ccd391d": {
+    "sha256": "f6c33eb46a546f07479ea8712d3fb3a60880a6de6d1e1194ca43b02d0e090e04",
+    "mode": 292
+  },
+  "cfa91e36-f2ef-43f7-8c72-acd08d1747d8/loose.git/objects/eb/fde3ae6973eab739c527592e0155ebe479b5242fdbec9303dded6176cd0a21": {
+    "sha256": "3ec320a0641f608269954c46d2acdc52cb34d3e72b5bd63d20bdfd8a3fcb1489",
+    "mode": 292
+  },
+  "cfa91e36-f2ef-43f7-8c72-acd08d1747d8/loose.git/objects/29/4b859eeb3d6a29d0eddacf4d9f0bad521a3da8e89b78693a593c2cbafea8e3": {
+    "sha256": "bae16ffd7e75cede3dc37b8c14b1df554ef430d7038cd7505cb154f8966a2aa6",
+    "mode": 292
+  },
+  "cfa91e36-f2ef-43f7-8c72-acd08d1747d8/loose.git/objects/28/47d0d08be7e842ec99d7675484d4d9ccdefcfd341bca94d0e4b11442e72962": {
+    "sha256": "173adbea9623bc35c7f740f130ad669263ed2752b9601ea95120296c821598d1",
+    "mode": 292
+  },
+  "cfa91e36-f2ef-43f7-8c72-acd08d1747d8/loose.git/objects/b6/80a9767140c58a3d4e2420a9aad4df7c09683e7286558022b950cdae67614c": {
+    "sha256": "5a400935f26419c28be8c3ae3269ab65ffaf257db0f5479c0d6fe66afa05f828",
+    "mode": 292
+  },
+  "cfa91e36-f2ef-43f7-8c72-acd08d1747d8/loose.git/objects/aa/5faa9f2443f306930bcb0bd9dbd696386548555181b3743e3b9759bdcf3f59": {
+    "sha256": "60ec8372c906f5f49e272f28a657ea45fa52d5a869c99af312d701901f2a5690",
+    "mode": 292
+  },
+  "88bdea26-df20-432b-9b4f-4a146ca4295d/capture.bundle": {
+    "sha256": "de08d8d8d2de010b8b8d1d7ed5a1b77ed53e0d3bc2d69b3553c86c54b20eab29",
+    "mode": 420
+  },
+  "88bdea26-df20-432b-9b4f-4a146ca4295d/transport.git/config": {
+    "sha256": "d1373a166e7b5577956c77bc3a1425a54db7f5dad2ad1d82a37b5c95c1bb9f5a",
+    "mode": 420
+  },
+  "88bdea26-df20-432b-9b4f-4a146ca4295d/transport.git/HEAD": {
+    "sha256": "f6f2b945f6c411b02ba3da9c7ace88dcf71b6af65ba2e0d89aa82900042b5a10",
+    "mode": 420
+  },
+  "88bdea26-df20-432b-9b4f-4a146ca4295d/transport.git/objects/pack/pack-7f77582d2976e0ca2ce9a7a859fdb45d1f31790d970706d5fb34a07669b2313b.rev": {
+    "sha256": "d69dbcb9026a4f5449087542b3c3e51bf96a9c76a4c335797f41d9010de5a3fe",
+    "mode": 292
+  },
+  "88bdea26-df20-432b-9b4f-4a146ca4295d/transport.git/objects/pack/pack-7f77582d2976e0ca2ce9a7a859fdb45d1f31790d970706d5fb34a07669b2313b.pack": {
+    "sha256": "bdefc591b039355d43f8e4a0ec5f6d287882c5bc975440fb4f1443782f4c30af",
+    "mode": 292
+  },
+  "88bdea26-df20-432b-9b4f-4a146ca4295d/transport.git/objects/pack/pack-7f77582d2976e0ca2ce9a7a859fdb45d1f31790d970706d5fb34a07669b2313b.idx": {
+    "sha256": "64a7cde9839018d0fb0a74aea749e8e555b48f901f0386801272d4de6beadb37",
+    "mode": 292
+  },
+  "88bdea26-df20-432b-9b4f-4a146ca4295d/transport.git/refs/heads/gitfleet-fetch": {
+    "sha256": "b44984bc313661b8355433a92f911e429e136d1765f1e3d4d7fc58dc4a507a7f",
+    "mode": 420
+  }
+}

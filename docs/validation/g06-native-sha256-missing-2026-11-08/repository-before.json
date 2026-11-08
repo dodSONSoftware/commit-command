@@ -1,0 +1,58 @@
+{
+  "file.txt": {
+    "sha256": "5a3cb0f8a53b36017ae71656325d6123bd4793956a217c2e88cd162f3692dcd3",
+    "mode": 420
+  },
+  "untracked.txt": {
+    "sha256": "903f43a7fa390f07cb342fab1cae41eb0614b3f71f1f487a4d4cbe6ca2301810",
+    "mode": 420
+  },
+  ".git/config": {
+    "sha256": "4f81a09d5b84b3aa8529c2a2c0d6ddc97d861ff3473f18c8fd668494d9d7c9d8",
+    "mode": 420
+  },
+  ".git/HEAD": {
+    "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+    "mode": 420
+  },
+  ".git/index": {
+    "sha256": "a2de9929f07e7c672846d1ae00264c7e7fd1a9a933f32ef0e7aaf13c3ed74e99",
+    "mode": 420
+  },
+  ".git/packed-refs": {
+    "sha256": "50767a8cc37f01e9254812415be6e7a5dcf2010b1c819027174ba258996d99ed",
+    "mode": 420
+  },
+  ".git/COMMIT_EDITMSG": {
+    "sha256": "f0a6aae28dd967897dd950c18d02b90595640f48acc955a414d62435af21bcc2",
+    "mode": 420
+  },
+  ".git/objects/f4/c004356041f274a5a279ef08b98e27b01e6d45c17837599d929ea56ccd391d": {
+    "sha256": "f6c33eb46a546f07479ea8712d3fb3a60880a6de6d1e1194ca43b02d0e090e04",
+    "mode": 292
+  },
+  ".git/objects/20/0ea078a5aaf5d8e1e0c3ae5292e5f977758ee8877ee2813326b80243b9cce6": {
+    "sha256": "9bd3ac2e9be001c5ab74c4c8b241a486c575e5df30d66648459538abf4790b33",
+    "mode": 292
+  },
+  ".git/objects/b6/80a9767140c58a3d4e2420a9aad4df7c09683e7286558022b950cdae67614c": {
+    "sha256": "5a400935f26419c28be8c3ae3269ab65ffaf257db0f5479c0d6fe66afa05f828",
+    "mode": 292
+  },
+  ".git/objects/aa/5faa9f2443f306930bcb0bd9dbd696386548555181b3743e3b9759bdcf3f59": {
+    "sha256": "60ec8372c906f5f49e272f28a657ea45fa52d5a869c99af312d701901f2a5690",
+    "mode": 292
+  },
+  ".git/logs/HEAD": {
+    "sha256": "4c78fe60c10271e3bf2687d19ebcc02eaf23860b73a973f8e68aea146dff17e6",
+    "mode": 420
+  },
+  ".git/logs/refs/heads/main": {
+    "sha256": "4c78fe60c10271e3bf2687d19ebcc02eaf23860b73a973f8e68aea146dff17e6",
+    "mode": 420
+  },
+  ".git/logs/refs/remotes/origin/main": {
+    "sha256": "6e7c83a625f1eb677a37f8ce4e392776f3ef1018c862a208687793b7dfabfd0b",
+    "mode": 420
+  }
+}

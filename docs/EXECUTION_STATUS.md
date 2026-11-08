@@ -7,6 +7,17 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G06 SHA-256 missing objects / packed tracking ref — native passed
+
+[Missing-object package](reports/G06_NATIVE_SHA256_MISSING_OBJECTS_2026-11-08.md):
+real native observation and separately approved six-object capture preserved the
+repository with three incoming objects still absent. Server stopped before offline
+import. Cancel preserved bytes/modes; fresh exact approval imported those objects
+and advanced the packed old tracking value via a loose ref plus one appended reflog
+line. HEAD/index/work/config/packed-refs unchanged. Ordinary restart retained exact
+records/artifacts/files with no replay/network; one scoped trust, exits 0, integrity
+and writer-lock reopen passed. No product patch. G06 remains partial for other cases.
+
 ### November 8 G05 linked-worktree batch — Core and native passed
 
 [Linked-worktree checkpoint](reports/G05_LINKED_WORKTREE_2026-11-08.md): independent

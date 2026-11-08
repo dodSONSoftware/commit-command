@@ -1,0 +1,25 @@
+[
+  {
+    "discovery": {
+      "excluded_names": [
+        "node_modules",
+        ".venv",
+        "target",
+        "dist",
+        "build",
+        ".gitfleet-rust-lab"
+      ],
+      "excluded_patterns": []
+    },
+    "display_root": {
+      "encoding": "utf8",
+      "value": "/private/tmp/gitfleet-g06-sha256-missing-rvvh2kkt/workspace"
+    },
+    "id": "bd476f70-7187-4c8c-b586-0d31e170edf2",
+    "name": "G06 SHA256 missing objects",
+    "root": {
+      "encoding": "utf8",
+      "value": "/private/tmp/gitfleet-g06-sha256-missing-rvvh2kkt/workspace"
+    }
+  }
+]

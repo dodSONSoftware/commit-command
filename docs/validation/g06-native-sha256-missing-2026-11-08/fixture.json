@@ -1,0 +1,28 @@
+{
+  "root": "/private/tmp/gitfleet-g06-sha256-missing-rvvh2kkt",
+  "repository": "/private/tmp/gitfleet-g06-sha256-missing-rvvh2kkt/workspace/repository",
+  "remote": "/private/tmp/gitfleet-g06-sha256-missing-rvvh2kkt/remote.git",
+  "state": "/private/tmp/gitfleet-g06-sha256-missing-rvvh2kkt/state",
+  "workspace": "bd476f70-7187-4c8c-b586-0d31e170edf2",
+  "worktree": "be0a9c46-0042-4793-a809-d5f5a3a6d184",
+  "old_oid": "aa5faa9f2443f306930bcb0bd9dbd696386548555181b3743e3b9759bdcf3f59",
+  "new_oid": "ebfde3ae6973eab739c527592e0155ebe479b5242fdbec9303dded6176cd0a21",
+  "missing_oids_before": [
+    "2847d0d08be7e842ec99d7675484d4d9ccdefcfd341bca94d0e4b11442e72962",
+    "294b859eeb3d6a29d0eddacf4d9f0bad521a3da8e89b78693a593c2cbafea8e3",
+    "ebfde3ae6973eab739c527592e0155ebe479b5242fdbec9303dded6176cd0a21"
+  ],
+  "packed_tracking_ref": true,
+  "url": "https://127.0.0.1:50957/repo.git",
+  "ca_file": "/private/tmp/gitfleet-g06-sha256-missing-rvvh2kkt/certificate.pem",
+  "server_pid": 161,
+  "app": "/private/tmp/gitfleet-g06-sha256-missing-rvvh2kkt/Commit Command SHA256 Missing Acceptance.app",
+  "ordinary_app": "/private/tmp/gitfleet-g06-sha256-missing-rvvh2kkt/Commit Command SHA256 Missing Ordinary.app",
+  "binary_sha256": "dd1cf97147b8ea3ecce6a662a6cab1314b90b89c614a3f231018d05bb5e04bec",
+  "ordinary_sha256": "c32c15f3b4fcfa5a9fcc0183d5076ff6c18020b06a16f541b071f8d415e8fcb8",
+  "features": [
+    "custom-protocol",
+    "desktop-writes"
+  ],
+  "source_commit": "c95378eeb47f0948d56343949853b52c6b0784a2"
+}
