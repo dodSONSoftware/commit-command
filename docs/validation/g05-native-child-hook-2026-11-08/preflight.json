@@ -1,0 +1,9 @@
+{
+  "exact_repository_bytes_modes": true,
+  "native_schema_initialized": true,
+  "trust_rows": 0,
+  "operations": 0,
+  "hook_runs": 0,
+  "fixed_hook_sha256": "1ca3a0ce3c36c49cb9baa005b2b44c8d3571f1b212e8981b53a42c2ceafa1014",
+  "control_untrusted": true
+}
