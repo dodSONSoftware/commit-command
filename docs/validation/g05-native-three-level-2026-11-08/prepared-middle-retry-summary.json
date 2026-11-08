@@ -1,0 +1,79 @@
+{
+  "batch": {
+    "version": 1,
+    "id": "f1f3975f-97e9-44bd-9590-62446ba0444f",
+    "workspace": "8fbb404a-a70e-47fe-a911-3bf94a4ee709",
+    "created_at_ms": 1794166593057,
+    "phase": "proposed",
+    "issue": null,
+    "items": [
+      {
+        "worktree": "407fa849-c4fa-4e1f-8fc8-bfb8e3822cb7",
+        "path": {
+          "encoding": "utf8",
+          "value": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle"
+        },
+        "dependencies": [],
+        "operation": "ab6c12b3-effd-4056-8ae0-d026bb4ef994",
+        "issue": null
+      },
+      {
+        "worktree": "17c0aec8-df8d-4c6e-9ae3-5518aa395ea5",
+        "path": {
+          "encoding": "utf8",
+          "value": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent"
+        },
+        "dependencies": [
+          "407fa849-c4fa-4e1f-8fc8-bfb8e3822cb7"
+        ],
+        "operation": "4a33f20e-d7a8-4af9-80de-6d8f50261f1c",
+        "issue": null
+      }
+    ]
+  },
+  "operations": [
+    {
+      "id": "ab6c12b3-effd-4056-8ae0-d026bb4ef994",
+      "phase": "proposed",
+      "published": false,
+      "reconciled": false,
+      "new_head": null,
+      "selected": [
+        {
+          "path": {
+            "encoding": "utf8",
+            "value": "file.txt"
+          },
+          "source": "working_tree"
+        },
+        {
+          "path": {
+            "encoding": "utf8",
+            "value": "leaf"
+          },
+          "source": "working_tree"
+        }
+      ],
+      "patch": "diff --git a/file.txt b/file.txt\nindex 28570ce..eaf1595 100644\n--- a/file.txt\n+++ b/file.txt\n@@ -1 +1 @@\n-Original three-level fixture\n+Reviewed native three-level content\ndiff --git a/leaf b/leaf\nindex e9bfc64..4b6e1ea 160000\n--- a/leaf\n+++ b/leaf\n@@ -1 +1 @@\n-Subproject commit e9bfc641cb50a16e8914d1fe4b6b8be519560c37\n+Subproject commit 4b6e1ea1dbeabd9350368a24ad83206366dc7608\n",
+      "message": "G05 native three-level reviewed commit\n\nRequire fresh approval at each changed parent.\n"
+    },
+    {
+      "id": "4a33f20e-d7a8-4af9-80de-6d8f50261f1c",
+      "phase": "proposed",
+      "published": false,
+      "reconciled": false,
+      "new_head": null,
+      "selected": [
+        {
+          "path": {
+            "encoding": "utf8",
+            "value": "file.txt"
+          },
+          "source": "working_tree"
+        }
+      ],
+      "patch": "diff --git a/file.txt b/file.txt\nindex 28570ce..eaf1595 100644\n--- a/file.txt\n+++ b/file.txt\n@@ -1 +1 @@\n-Original three-level fixture\n+Reviewed native three-level content\n",
+      "message": "G05 native three-level reviewed commit\n\nRequire fresh approval at each changed parent.\n"
+    }
+  ]
+}

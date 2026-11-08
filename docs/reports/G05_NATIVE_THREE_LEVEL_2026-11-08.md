@@ -60,3 +60,24 @@ heads/index/config unchanged, all working bytes/modes unchanged, full unselected
 control unchanged, exactly three trusts and SQLite integrity ok. Native durable
 results visibly match this stop. Fresh middle and root approvals remain pending;
 this section does not accept the complete chain or ordinary restart.
+
+
+## Fresh middle publication and second ancestor barrier — passed
+
+Select unfinished worktrees excluded completed leaf and selected middle/root.
+First preparation 258bbae2-f235-4b80-88ac-0085901dd931 unexpectedly became cancelled
+before any approval; both proposals cancelled_before_publication, no writes. Full
+repository exactly matched leaf-files.json after both preparations. This is retained
+as a review-window lifecycle finding, not claimed as an intentional Cancel pass.
+
+Second fresh preparation f1f3975f-97e9-44bd-9590-62446ba0444f opened normally,
+reviewing middle file.txt plus exact leaf gitlink e9bfc641cb50a16e8914d1fe4b6b8be519560c37
+→ 4b6e1ea1dbeabd9350368a24ad83206366dc7608. Separate native OS approval published
+middle operation ab6c12b3-effd-4056-8ae0-d026bb4ef994 as
+215c2e1b5e47bbb237b1ee48ff53afd2f7c7ff9b. Root operation
+4a33f20e-d7a8-4af9-80de-6d8f50261f1c cancelled_before_publication; batch again
+needs_reauthorization. Native result and verify.py middle passed: exactly one commit
+in leaf/middle, original root HEAD/index/config, exact file content/message and
+committed leaf OID, unchanged leaf checkout AND actual Git metadata, working files
+and full control preserved, prior leaf records unchanged, exact trusts/integrity.
+Root-only fresh approval and final ordinary restart remain next. No product change.

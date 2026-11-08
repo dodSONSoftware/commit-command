@@ -23,6 +23,13 @@ if stage>=2:
  assert {k:v for k,v in current.items() if k.startswith(prefix)}=={k:v for k,v in previous_files.items() if k.startswith(prefix)}
  assert git('parent','rev-parse','HEAD:middle')==git('middle','rev-parse','HEAD')
 batches=sorted((json.loads(v) for v in records['batches'].values()),key=lambda b:b['created_at_ms'])
+cancelled=[b for b in batches if b['id']=='258bbae2-f235-4b80-88ac-0085901dd931']
+if stage>=1:
+ assert len(cancelled)==1 and cancelled[0]['phase']=='cancelled'
+ for item in cancelled[0]['items']:
+  op=json.loads(records['operations'][item['operation']])
+  assert op['phase']=='cancelled_before_publication' and not op['published']
+batches=[b for b in batches if b['id']!='258bbae2-f235-4b80-88ac-0085901dd931']
 assert len(batches)==stage+1
 for i,batch in enumerate(batches):
  assert batch['phase']==('complete' if i==2 else 'needs_reauthorization')

@@ -7,15 +7,17 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
-### November 8 G05 native three-level chain — leaf passed, ancestors next
+### November 8 G05 native three-level chain — leaf/middle passed, root next
 
 [Native package](reports/G05_NATIVE_THREE_LEVEL_2026-11-08.md): user authorized only
 root/middle/leaf, exact native trust confirmation granted three, control untrusted.
 Native batch reviewed correct leaf/middle/root order; preparation byte/mode exact.
 Separate approval published one exact leaf commit and stopped at needs_reauthorization;
 middle/root unstarted with original heads/index/metadata. Full control/working files
-unchanged; exact trusts/integrity passed. Fresh middle then root approval and ordinary
-restart remain next. No product patch or push; broader G05 remains partial.
+unchanged; exact trusts/integrity passed. Fresh middle approval now published one exact commit and again stopped for root
+reauthorization; leaf checkout/actual metadata and root head/index/config preserved.
+One earlier middle preparation self-cancelled before approval, with no writes; retain
+review-window follow-up as open. Root approval and ordinary restart remain next. No product patch or push; broader G05 remains partial.
 
 ### November 8 G05 three-level dependency chain — Core passed, native open
 
