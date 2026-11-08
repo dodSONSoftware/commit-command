@@ -100,3 +100,21 @@ post-oracle-correction files. It does not silently overwrite the failed baseline
 A fresh native repeat is required before accepting exact final preservation.
 Core's read-only diff reproduced the same auto-refresh defect; its separate fix
 and validation are in progress. No guard was relaxed and no push occurred.
+
+## Corrected exact final restart — passed from explicit post-oracle baseline
+
+Corrected oracle disables diff.autoRefreshIndex and asserts its own queries leave
+all files unchanged. Original failed repository-after-retry.json remains preserved;
+repository-after-oracle-correction.json names the baseline after the reproduced
+oracle refresh. It is not relabeled as the original post-retry bytes.
+
+A separate ordinary bundle containing the read-only diff fix opened the same state.
+Overview and both durable batch histories rendered, alpha/beta clean, control dirty,
+only beta selected, native preparation disabled. Quit exit 0. Corrected oracle then
+passed exact repository bytes/modes, alpha's full post-recovery snapshot, all operation
+and batch payloads, one commit per selected repository, control preservation, exact
+two trusts and integrity. CLI writer-lock reopened. See verify-after-corrected-restart.json,
+lock-reopen-corrected.json and ../g03-readonly-diff-2026-11-08/native-artifact.json.
+This supports the corrected restart preservation claim from its stated baseline;
+the earlier false claim remains withdrawn. Core diff fix validation is separately
+recorded. This selected G05 crash/recovery/retry chain is complete; broader G05 is open.

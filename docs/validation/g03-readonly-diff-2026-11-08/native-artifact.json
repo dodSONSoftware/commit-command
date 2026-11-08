@@ -1,0 +1,13 @@
+{
+  "app": "/private/tmp/gitfleet-m3-native-g05-batch-w8awkopg/Commit Command Readonly Diff Fix.app",
+  "features": [
+    "custom-protocol"
+  ],
+  "binary_sha256": "38654141986187c60e3ffdc69cefe340ae8ecb7d5b9c36af3a0da40e4fc89339",
+  "source_commit": "aaa45d5ca996fa404364c35f0acfacca6552e7c8",
+  "dirty_source_hashes": {
+    "app/core/src/process.rs": "0b8c351fba83f9af60cd243ad4a0a33e4001330da3e827504207db7e0961531c",
+    "app/core/src/diff.rs": "20d49bcca2cfa0f23b44cbe4bf263e51bb1bc0e57cf9e1f3453e5cfc2cb43e35",
+    "app/core/tests/m1_read.rs": "cdec0b3780aa6649eb2bed4f107c0bc32c1be6eccd386c5e0e3a45e11f458115"
+  }
+}

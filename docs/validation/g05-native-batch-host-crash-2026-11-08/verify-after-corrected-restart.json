@@ -1,0 +1,10 @@
+{
+  "one_alpha_commit_no_replay": true,
+  "alpha_exact_content_clean_index": true,
+  "unselected_exact_bytes_modes": true,
+  "exact_authorized_two_trusts": true,
+  "integrity": "ok",
+  "one_beta_commit_exact_content": true,
+  "alpha_exact_bytes_modes_preserved_during_retry": true,
+  "final_restart_exact_files_records_no_replay": true
+}

@@ -7,6 +7,16 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G05 corrected final preservation — passed
+
+[Corrected final native repeat](reports/G05_NATIVE_BATCH_HOST_CRASH_2026-11-08.md):
+original failed baseline preserved; explicitly named post-oracle baseline passed
+self-preserving queries and actual ordinary restart. Exact repository bytes/modes,
+operation/batch payloads, one commit per selected repository, alpha snapshot, control,
+trusts/integrity/lock reopen all passed; Quit 0 and preparation disabled. Earlier
+1fef386 overstatement remains withdrawn. Selected actual crash/recovery/beta-only
+retry chain is complete within this recorded envelope; broader G05 remains partial.
+
 ### November 8 final index-preservation correction — validation in progress
 
 Final restart oracle failed on beta index bytes/mode; 1fef386 incorrectly proceeded
