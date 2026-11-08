@@ -36,3 +36,27 @@ state. Reuse the exact fixture.json app/state paths. No commit or publication ye
 preparation, fixture, exact initial repository snapshot, scan and preflight. This
 preparation is reviewable and validated; the pending security-sensitive trust grant
 and subsequent separately approved local commits are not recorded as passes.
+
+
+## Authorized native leaf publication — passed
+
+User granted exact root/middle/leaf trust scope. Authoritative Rust review and
+independent OS confirmation granted those three only; control remains untrusted.
+Native bulk shared message is `G05 native three-level reviewed commit` followed by
+`Require fresh approval at each changed parent.` as a separate paragraph.
+
+Batch cc497a22-f182-484a-8568-4e87c2de89c8 prepared exact leaf/middle/root order;
+each ancestor has only its direct selected-child dependency. All three proposals
+initially select only working file.txt; no future gitlink silently approved.
+Preparation preserved every repository byte/mode. Separate native batch approval
+published leaf operation 85f67967-c1ff-4fef-8e36-3502580ce513 as
+4b6e1ea1dbeabd9350368a24ad83206366dc7608, then needs_reauthorization.
+Middle operation f85efb29-aec9-439b-8be2-99077b6c3a7b and root operation
+b499c6fb-c8af-42be-bf03-a509c907e5e3 cancelled_before_publication, neither started.
+
+verify.py leaf passed: exactly one leaf commit, exact message/content, clean leaf;
+every file outside leaf's actual Git metadata remains original, proving root/middle
+heads/index/config unchanged, all working bytes/modes unchanged, full unselected
+control unchanged, exactly three trusts and SQLite integrity ok. Native durable
+results visibly match this stop. Fresh middle and root approvals remain pending;
+this section does not accept the complete chain or ordinary restart.
