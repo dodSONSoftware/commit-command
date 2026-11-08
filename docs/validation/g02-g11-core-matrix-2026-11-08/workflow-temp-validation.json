@@ -1,0 +1,9 @@
+{
+  "yaml_parsed": true,
+  "all_run_blocks_bash_syntax": true,
+  "exact_mac_temp_step_executed_locally": true,
+  "directory_mode": "0700",
+  "alias": "/private/tmp/gf-c15ef5de95f6",
+  "private_target": "/private/var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gf-ci-step-qgi7c75j/gitfleet-fixtures-c15ef5de95f6",
+  "hosted_run": "not run"
+}

@@ -15,8 +15,6 @@ jobs:
         os: [macos-latest, ubuntu-latest]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
-    env:
-      TMPDIR: ${{ runner.os == 'macOS' && '/private/tmp' || '/tmp' }}
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@1.99.1
@@ -29,6 +27,20 @@ jobs:
           sudo apt-get install -y build-essential libcurl4-openssl-dev libssl-dev zlib1g-dev libexpat1-dev
       - name: Provision checksum-pinned Git 2.56
         run: python3 app/core/scripts/provision-git.py --directory "$RUNNER_TEMP/gitfleet-git"
+      - name: Prepare private short-path macOS fixtures
+        if: runner.os == 'macOS'
+        run: |
+          python3 - <<'PYTHON'
+          import os, uuid
+          from pathlib import Path
+          identity = uuid.uuid4().hex[:12]
+          directory = Path(os.environ["RUNNER_TEMP"]) / ("gitfleet-fixtures-" + identity)
+          directory.mkdir(mode=0o700)
+          alias = Path("/private/tmp") / ("gf-" + identity)
+          alias.symlink_to(directory.resolve())
+          with open(os.environ["GITHUB_ENV"], "a") as output:
+              output.write("TMPDIR=" + str(alias) + "\n")
+          PYTHON
       - name: Provision isolated-fixture OpenPGP signer on macOS
         if: runner.os == 'macOS'
         run: |
@@ -46,8 +58,6 @@ jobs:
   desktop:
     runs-on: macos-latest
     timeout-minutes: 30
-    env:
-      TMPDIR: /private/tmp
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@1.99.1

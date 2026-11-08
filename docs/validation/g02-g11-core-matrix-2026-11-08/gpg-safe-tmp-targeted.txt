@@ -1,0 +1,8 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.02s
+     Running tests/m2_writes.rs (app/core/target/debug/deps/m2_writes-e227507effebfe7c)
+
+running 1 test
+test openpgp_signing_positive_gate_requires_isolated_tool_and_keyring ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 24 filtered out; finished in 3.79s
+

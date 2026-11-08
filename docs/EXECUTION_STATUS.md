@@ -7,6 +7,15 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G11 private fixture temp — corrected, hosted run pending
+
+[Temp checkpoint](reports/G11_PRIVATE_FIXTURE_TEMP_2026-11-08.md): real SSH rejected
+writable /private/tmp ancestry; an in-checkout trial correctly rejected app state.
+Short alias to private outside-repository storage passed real SSH and isolated GPG
+focused gates. CI now prepares mode-0700 RUNNER_TEMP storage and short macOS alias;
+YAML, all shell syntax and actual local workflow-step execution passed. No permission
+or product guard weakened. Hosted CI remains unrun; full matrix refresh still running.
+
 ### November 8 G06 SHA-256 missing objects / packed tracking ref — native passed
 
 [Missing-object package](reports/G06_NATIVE_SHA256_MISSING_OBJECTS_2026-11-08.md):
