@@ -1,0 +1,11 @@
+{
+  "ui_status": "blocked_by_organization_policy",
+  "blocked_app": "org.commitcommand.export-fixture",
+  "no_ui_actions_performed": true,
+  "fixture_pids_stopped": [
+    22657
+  ],
+  "sandbox_launch_exit": 134,
+  "escalated_launch": "started; stopped after CUA policy block",
+  "acceptance": "No native export or normal-Quit acceptance claimed"
+}

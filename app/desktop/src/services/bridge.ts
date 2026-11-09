@@ -25,7 +25,9 @@ export interface Bridge {
   capabilities(): Promise<{ writes_enabled: boolean }>;
   writeStatus(): Promise<boolean>;
   request(request: Request): Promise<Payload>;
-  pick(): Promise<{ picker: string; display: string } | null>;
+  pick(
+    purpose?: "workspace" | "backup",
+  ): Promise<{ picker: string; display: string } | null>;
   pickAuthenticationFile?(
     kind: "helper" | "known_hosts" | "public_identity" | "ca_file",
   ): Promise<string | null>;
@@ -113,8 +115,11 @@ export class NativeBridge implements Bridge {
       this.pending = this.pending.filter((id) => id !== job);
     }
   }
-  pick() {
-    return invoke<{ picker: string; display: string } | null>("pick_directory");
+  pick(purpose: "workspace" | "backup" = "workspace") {
+    return invoke<{ picker: string; display: string } | null>(
+      "pick_directory",
+      { purpose },
+    );
   }
   pickAuthenticationFile(
     kind: "helper" | "known_hosts" | "public_identity" | "ca_file",

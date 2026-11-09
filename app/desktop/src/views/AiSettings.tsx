@@ -2,6 +2,7 @@ import { AiEditorRepositoryTest } from "./AiEditorRepositoryTest";
 import { AiDiagnostics } from "./AiDiagnostics";
 import { useRef, useState } from "react";
 import { value, type Bridge } from "../services/bridge";
+import { pathText } from "../stores/model";
 import type {
   AiChange,
   AiScope,
@@ -202,6 +203,35 @@ export function AiSettings({
         <button disabled={pending} onClick={() => void load()}>
           Reload saved AI settings
         </button>
+        <button
+          disabled={pending || !snapshot}
+          onClick={() =>
+            void act(async () => {
+              if (!snapshot) return;
+              const selected = await bridge.pick("backup");
+              if (!selected) return;
+              const exported = value(
+                await bridge.request({
+                  kind: "export_ai_settings",
+                  picker: selected.picker,
+                  fingerprint: snapshot.fingerprint,
+                }),
+                "ai_export",
+              );
+              setNotice(
+                `Exported saved AI configuration to ${pathText(exported.path)}. Authentication and destination approvals were cleared. Unsaved editors were not exported.`,
+              );
+            })
+          }
+        >
+          Export saved AI configuration
+        </button>
+        <p>
+          Export creates a private Commit Command Backups folder in the selected
+          directory outside workspaces and repositories. It includes saved
+          templates, instructions, profiles and assignments; credentials and
+          destination approvals are excluded.
+        </p>
         {settings && (
           <fieldset disabled={pending}>
             <legend>Connections and profiles</legend>

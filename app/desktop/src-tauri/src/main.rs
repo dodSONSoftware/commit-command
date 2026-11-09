@@ -383,16 +383,26 @@ fn cancel_job<R: tauri::Runtime>(
     entry.cancel.cancel();
     Ok(())
 }
+#[derive(Clone, Copy, serde::Deserialize)]
+#[serde(rename_all = "snake_case")]
+enum DirectoryPickerPurpose {
+    Workspace,
+    Backup,
+}
 #[tauri::command]
 async fn pick_directory<R: tauri::Runtime>(
     window: WebviewWindow<R>,
     state: tauri::State<'_, Arc<Host>>,
+    purpose: Option<DirectoryPickerPurpose>,
 ) -> Result<Value, String> {
     check(&window, "main")?;
     let _lease = DialogLease::new(state.inner().clone())?;
     let path = tauri::async_runtime::spawn_blocking(move || {
         rfd::FileDialog::new()
-            .set_title("Choose Commit Command workspace root")
+            .set_title(match purpose.unwrap_or(DirectoryPickerPurpose::Workspace) {
+                DirectoryPickerPurpose::Workspace => "Choose Commit Command workspace root",
+                DirectoryPickerPurpose::Backup => "Choose parent folder for Commit Command backups",
+            })
             .set_parent(&window)
             .pick_folder()
     })
@@ -1231,6 +1241,10 @@ mod tests {
             operation: "o".into()
         }));
         assert!(!mutating_request(&Request::AiJobs {}));
+        assert!(!mutating_request(&Request::ExportAiSettings {
+            picker: "native-picker".into(),
+            fingerprint: "snapshot".into()
+        }));
         assert!(!mutating_request(&Request::ReviewAiEditorTest {
             workspace: "w".into(),
             worktree: "t".into(),

@@ -13,6 +13,8 @@ pub use bulk::{
     BatchItem, BatchMode, BatchPage, BatchPhase, BatchRecord, BatchSelection, BatchView,
 };
 mod monitor;
+mod portability;
+pub use portability::AiExport;
 mod review;
 mod state;
 use crate::{
@@ -49,6 +51,10 @@ fn stale() -> Error {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Request {
+    ExportAiSettings {
+        picker: String,
+        fingerprint: String,
+    },
     ReviewAiEditorTest {
         workspace: String,
         worktree: String,
@@ -400,6 +406,7 @@ pub struct OperationPage {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "kind", content = "value", rename_all = "snake_case")]
 pub enum Data {
+    AiExport(AiExport),
     AiContext(crate::ai::capture::Captured),
     AiJobs(Vec<crate::ai::jobs::Job>),
     AiSettings(crate::ai::store::Snapshot),
@@ -940,6 +947,10 @@ impl Application {
                 )?;
                 Data::Review(self.review_ai_plan(plan)?)
             }
+            Request::ExportAiSettings {
+                picker,
+                fingerprint,
+            } => Data::AiExport(portability::export(self, &picker, &fingerprint)?),
             Request::AiSettings {} => Data::AiSettings(crate::ai::store::load(
                 self.writes.workspace.data_directory(),
             )?),

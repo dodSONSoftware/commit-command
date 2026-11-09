@@ -4269,9 +4269,10 @@
       "expected": "All selected nonsecret entities present, credentials/approvals absent; schema/checksums exact",
       "status": "partial",
       "evidence": [
-        "docs/reports/COMPLETION_P13A_AI_PORTABILITY_2026-11-09.md"
+        "docs/reports/COMPLETION_P13A_AI_PORTABILITY_2026-11-09.md",
+        "docs/reports/COMPLETION_P13A_AI_EXPORT_2026-11-09.md"
       ],
-      "note": "No new execution claimed. Classify retained variants before running. November9: AI-only payload publication and bounded unactivated preview reset auth/approvals with fresh import revisions; product UI, Action definitions, mapping/apply/native variants remain open."
+      "note": "No new execution claimed. Classify retained variants before running. November9: AI-only payload publication and bounded unactivated preview reset auth/approvals with fresh import revisions; product UI, Action definitions, mapping/apply/native variants remain open. November9: saved AI export UI/native picker capability/private-child destination and saved-fingerprint safeguards automated; actual native UI blocked by organization policy. Product import/full backup/remaining variants remain open."
     },
     {
       "id": "BACKUP02",
@@ -4311,9 +4312,10 @@
       "status": "partial",
       "evidence": [
         "docs/reports/COMPLETION_P13A_PUBLICATION_2026-11-08.md",
-        "docs/reports/COMPLETION_P13A_SPACE_2026-11-09.md"
+        "docs/reports/COMPLETION_P13A_SPACE_2026-11-09.md",
+        "docs/reports/COMPLETION_P13A_AI_EXPORT_2026-11-09.md"
       ],
-      "note": "Private publication and streaming failure cleanup plus advisory descriptor free-space threshold covered. Actual disk-full/quota/fsync/native variants remain open."
+      "note": "Private publication and streaming failure cleanup plus advisory descriptor free-space threshold covered. Actual disk-full/quota/fsync/native variants remain open. November9: saved AI export UI/native picker capability/private-child destination and saved-fingerprint safeguards automated; actual native UI blocked by organization policy. Product import/full backup/remaining variants remain open."
     },
     {
       "id": "BACKUP06",

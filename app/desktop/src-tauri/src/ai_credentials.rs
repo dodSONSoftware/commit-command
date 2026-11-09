@@ -787,6 +787,9 @@ mod tests {
             let start = Instant::now();
             loop {
                 if let Ok((mut stream, _)) = listener.accept() {
+                    // Accepted sockets can inherit O_NONBLOCK on macOS; a read
+                    // timeout alone does not make request reads blocking.
+                    stream.set_nonblocking(false).unwrap();
                     stream
                         .set_read_timeout(Some(Duration::from_secs(2)))
                         .unwrap();

@@ -1,0 +1,203 @@
+RUN 1 EXIT 0
+   Compiling libsqlite3-sys v0.39.1
+   Compiling rusqlite v0.41.0
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.85s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-6d29e1afc4eab305)
+
+running 1 test
+test ai::provider::tests::reflected_credential_is_refused_before_result_reaches_renderer ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 88 filtered out; finished in 0.03s
+
+
+RUN 2 EXIT 0
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-6d29e1afc4eab305)
+
+running 1 test
+test ai::provider::tests::reflected_credential_is_refused_before_result_reaches_renderer ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 88 filtered out; finished in 0.03s
+
+
+RUN 3 EXIT 0
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-6d29e1afc4eab305)
+
+running 1 test
+test ai::provider::tests::reflected_credential_is_refused_before_result_reaches_renderer ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 88 filtered out; finished in 0.03s
+
+
+RUN 4 EXIT 0
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-6d29e1afc4eab305)
+
+running 1 test
+test ai::provider::tests::reflected_credential_is_refused_before_result_reaches_renderer ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 88 filtered out; finished in 0.03s
+
+
+RUN 5 EXIT 0
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-6d29e1afc4eab305)
+
+running 1 test
+test ai::provider::tests::reflected_credential_is_refused_before_result_reaches_renderer ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 88 filtered out; finished in 0.03s
+
+
+RUN 6 EXIT 0
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-6d29e1afc4eab305)
+
+running 1 test
+test ai::provider::tests::reflected_credential_is_refused_before_result_reaches_renderer ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 88 filtered out; finished in 0.02s
+
+
+RUN 7 EXIT 0
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-6d29e1afc4eab305)
+
+running 1 test
+test ai::provider::tests::reflected_credential_is_refused_before_result_reaches_renderer ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 88 filtered out; finished in 0.03s
+
+
+RUN 8 EXIT 0
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-6d29e1afc4eab305)
+
+running 1 test
+test ai::provider::tests::reflected_credential_is_refused_before_result_reaches_renderer ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 88 filtered out; finished in 0.03s
+
+
+RUN 9 EXIT 0
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-6d29e1afc4eab305)
+
+running 1 test
+test ai::provider::tests::reflected_credential_is_refused_before_result_reaches_renderer ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 88 filtered out; finished in 0.03s
+
+
+RUN 10 EXIT 0
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-6d29e1afc4eab305)
+
+running 1 test
+test ai::provider::tests::reflected_credential_is_refused_before_result_reaches_renderer ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 88 filtered out; finished in 0.02s
+
+
+RUN 11 EXIT 0
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-6d29e1afc4eab305)
+
+running 1 test
+test ai::provider::tests::reflected_credential_is_refused_before_result_reaches_renderer ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 88 filtered out; finished in 0.03s
+
+
+RUN 12 EXIT 0
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-6d29e1afc4eab305)
+
+running 1 test
+test ai::provider::tests::reflected_credential_is_refused_before_result_reaches_renderer ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 88 filtered out; finished in 0.03s
+
+
+RUN 13 EXIT 0
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-6d29e1afc4eab305)
+
+running 1 test
+test ai::provider::tests::reflected_credential_is_refused_before_result_reaches_renderer ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 88 filtered out; finished in 0.03s
+
+
+RUN 14 EXIT 0
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-6d29e1afc4eab305)
+
+running 1 test
+test ai::provider::tests::reflected_credential_is_refused_before_result_reaches_renderer ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 88 filtered out; finished in 0.02s
+
+
+RUN 15 EXIT 0
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-6d29e1afc4eab305)
+
+running 1 test
+test ai::provider::tests::reflected_credential_is_refused_before_result_reaches_renderer ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 88 filtered out; finished in 0.02s
+
+
+RUN 16 EXIT 0
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-6d29e1afc4eab305)
+
+running 1 test
+test ai::provider::tests::reflected_credential_is_refused_before_result_reaches_renderer ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 88 filtered out; finished in 0.03s
+
+
+RUN 17 EXIT 0
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-6d29e1afc4eab305)
+
+running 1 test
+test ai::provider::tests::reflected_credential_is_refused_before_result_reaches_renderer ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 88 filtered out; finished in 0.03s
+
+
+RUN 18 EXIT 0
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-6d29e1afc4eab305)
+
+running 1 test
+test ai::provider::tests::reflected_credential_is_refused_before_result_reaches_renderer ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 88 filtered out; finished in 0.03s
+
+
+RUN 19 EXIT 0
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-6d29e1afc4eab305)
+
+running 1 test
+test ai::provider::tests::reflected_credential_is_refused_before_result_reaches_renderer ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 88 filtered out; finished in 0.03s
+
+
+RUN 20 EXIT 0
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-6d29e1afc4eab305)
+
+running 1 test
+test ai::provider::tests::reflected_credential_is_refused_before_result_reaches_renderer ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 88 filtered out; finished in 0.03s
+
+

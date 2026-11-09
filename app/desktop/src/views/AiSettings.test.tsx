@@ -60,13 +60,14 @@ function fixture(initial = snapshot()) {
     .fn()
     .mockResolvedValue({ kind: "ai_settings", value: initial });
   const manageAiToken = vi.fn().mockResolvedValue(undefined);
+  const pick = vi.fn<Bridge["pick"]>().mockResolvedValue(null);
   const bridge: Bridge = {
     epoch: 1,
     manageAiToken,
     request,
     capabilities: async () => ({ writes_enabled: false }),
     writeStatus: async () => false,
-    pick: async () => null,
+    pick,
     cancel: async () => {},
   };
   render(
@@ -78,8 +79,59 @@ function fixture(initial = snapshot()) {
       <AiSettings bridge={bridge} workspace={null} disabled={false} />
     </>,
   );
-  return { request, manageAiToken, user: userEvent.setup() };
+  return { request, manageAiToken, pick, user: userEvent.setup() };
 }
+it("exports only the saved fingerprint after a backup picker and preserves unsaved editors", async () => {
+  const { request, pick, user } = fixture();
+  await user.click(screen.getByRole("button", { name: "AI settings…" }));
+  const exportButton = await screen.findByRole("button", {
+    name: "Export saved AI configuration",
+  });
+  await user.click(exportButton);
+  expect(pick).toHaveBeenLastCalledWith("backup");
+  expect(request.mock.calls.map((call) => call[0].kind)).toEqual([
+    "ai_settings",
+  ]);
+  await user.type(screen.getByLabelText("Connection name"), "Unsaved editor");
+  pick.mockResolvedValueOnce({
+    picker: "native-selection",
+    display: "/chosen",
+  });
+  request.mockResolvedValueOnce({
+    kind: "ai_export",
+    value: {
+      path: {
+        encoding: "utf8",
+        value: "/chosen/Commit Command Backups/fixture.backup.zip",
+      },
+      manifest_fingerprint: "1".repeat(64),
+    },
+  });
+  await user.click(exportButton);
+  expect(request).toHaveBeenLastCalledWith({
+    kind: "export_ai_settings",
+    picker: "native-selection",
+    fingerprint: "fixture-fingerprint",
+  });
+  expect(screen.getByRole("status")).toHaveTextContent(
+    "Exported saved AI configuration",
+  );
+  expect(screen.getByRole("status")).toHaveTextContent(
+    "Unsaved editors were not exported",
+  );
+  expect(screen.getByLabelText("Connection name")).toHaveValue(
+    "Unsaved editor",
+  );
+  expect(screen.getByLabelText("Manual message")).toHaveValue(
+    "Manual draft preserved",
+  );
+  pick.mockResolvedValueOnce({ picker: "fresh-selection", display: "/chosen" });
+  request.mockRejectedValueOnce(new Error("Saved settings changed; reload"));
+  await user.click(exportButton);
+  expect(screen.getByRole("alert")).toHaveTextContent(
+    "Saved settings changed; reload",
+  );
+});
 it("loads no AI configuration until explicitly opened and preserves manual drafts", async () => {
   const { request, user } = fixture();
   expect(request).not.toHaveBeenCalled();

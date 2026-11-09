@@ -6,6 +6,11 @@
  */
 export type Data =
   | {
+      kind: "ai_export";
+      value: AiExport;
+      [k: string]: unknown;
+    }
+  | {
       kind: "ai_context";
       value: AiCapturedContext;
       [k: string]: unknown;
@@ -190,6 +195,28 @@ export type Data =
       [k: string]: unknown;
     };
 /**
+ * `display` is never used to reconstruct a path. Byte/wide encodings round-trip.
+ *
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "NativePath".
+ */
+export type NativePath =
+  | {
+      encoding: "utf8";
+      value: string;
+      [k: string]: unknown;
+    }
+  | {
+      encoding: "unix_bytes";
+      value: number[];
+      [k: string]: unknown;
+    }
+  | {
+      encoding: "windows_wide";
+      value: number[];
+      [k: string]: unknown;
+    };
+/**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "AiContextKind".
  */
@@ -295,28 +322,6 @@ export type AiProvider = "ollama" | "compatible";
  * via the `definition` "AiStyle".
  */
 export type AiStyle = "plain" | "conventional";
-/**
- * `display` is never used to reconstruct a path. Byte/wide encodings round-trip.
- *
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "NativePath".
- */
-export type NativePath =
-  | {
-      encoding: "utf8";
-      value: string;
-      [k: string]: unknown;
-    }
-  | {
-      encoding: "unix_bytes";
-      value: number[];
-      [k: string]: unknown;
-    }
-  | {
-      encoding: "windows_wide";
-      value: number[];
-      [k: string]: unknown;
-    };
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "ObservedVersionState".
@@ -735,6 +740,15 @@ export interface Response {
   data: Data;
   epoch: number;
   version: number;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiExport".
+ */
+export interface AiExport {
+  manifest_fingerprint: string;
+  path: NativePath;
   [k: string]: unknown;
 }
 /**

@@ -1,0 +1,73 @@
+RUN 1 EXIT 0
+   Compiling objc2-exception-helper v0.1.1
+   Compiling libsqlite3-sys v0.39.1
+   Compiling objc2 v0.6.5
+   Compiling objc2-core-foundation v0.3.2
+   Compiling block2 v0.6.2
+   Compiling dispatch2 v0.3.1
+   Compiling objc2-foundation v0.3.2
+   Compiling objc2-core-services v0.3.2
+   Compiling notify v8.2.1
+   Compiling rusqlite v0.41.0
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+   Compiling objc2-quartz-core v0.3.2
+   Compiling objc2-app-kit v0.3.2
+   Compiling objc2-web-kit v0.3.2
+   Compiling tao v0.37.2
+   Compiling muda v0.20.0
+   Compiling window-vibrancy v0.8.1
+   Compiling rfd v0.15.4
+   Compiling wry v0.57.1
+   Compiling tauri-runtime v2.12.2
+   Compiling tauri-runtime-wry v2.12.3
+   Compiling tauri v2.12.5
+   Compiling gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.62s
+     Running unittests src/main.rs (app/desktop/src-tauri/target/debug/deps/gitfleet_desktop-2094e9fd7e6d379b)
+
+running 1 test
+test ai_credentials::tests::actual_keychain_backed_diagnostic_requires_approval_and_keeps_token_out_of_results ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 20 filtered out; finished in 7.41s
+
+
+RUN 2 EXIT 0
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.13s
+     Running unittests src/main.rs (app/desktop/src-tauri/target/debug/deps/gitfleet_desktop-2094e9fd7e6d379b)
+
+running 1 test
+test ai_credentials::tests::actual_keychain_backed_diagnostic_requires_approval_and_keeps_token_out_of_results ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 20 filtered out; finished in 5.26s
+
+
+RUN 3 EXIT 0
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.12s
+     Running unittests src/main.rs (app/desktop/src-tauri/target/debug/deps/gitfleet_desktop-2094e9fd7e6d379b)
+
+running 1 test
+test ai_credentials::tests::actual_keychain_backed_diagnostic_requires_approval_and_keeps_token_out_of_results ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 20 filtered out; finished in 3.87s
+
+
+RUN 4 EXIT 0
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.12s
+     Running unittests src/main.rs (app/desktop/src-tauri/target/debug/deps/gitfleet_desktop-2094e9fd7e6d379b)
+
+running 1 test
+test ai_credentials::tests::actual_keychain_backed_diagnostic_requires_approval_and_keeps_token_out_of_results ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 20 filtered out; finished in 4.33s
+
+
+RUN 5 EXIT 0
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.12s
+     Running unittests src/main.rs (app/desktop/src-tauri/target/debug/deps/gitfleet_desktop-2094e9fd7e6d379b)
+
+running 1 test
+test ai_credentials::tests::actual_keychain_backed_diagnostic_requires_approval_and_keeps_token_out_of_results ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 20 filtered out; finished in 4.01s
+
+

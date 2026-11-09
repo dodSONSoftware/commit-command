@@ -11,6 +11,17 @@ The [detailed completion handoff](implementation/README.md) supplies the executa
 remaining-work packages, decision worksheet, fixture/test procedures and complete
 requirement mapping. It does not accept gates or replace this live evidence ledger.
 
+### November 9 completion P13A saved AI export workflow
+
+[Export checkpoint](reports/COMPLETION_P13A_AI_EXPORT_2026-11-09.md): saved AI settings
+export through a typed native directory picker into a verified private backup child;
+stale generations, unsafe destinations and picker replay refuse. Core89/44 and full
+desktop150 renderer/20+23 host, strict Clippy/release pass. A reproduced nonblocking
+accepted-socket fixture race was fixed in both provider/Keychain tests;20 reflection
+and5 Keychain repetitions pass, with original failure/probe evidence retained.
+Native export UI is blocked by organization policy for the disposable fixture app;
+owned process stopped. Import/full backup/restore remain open.
+
 ### November 9 completion P13A AI portability payloads
 
 [AI-portability checkpoint](reports/COMPLETION_P13A_AI_PORTABILITY_2026-11-09.md):
@@ -66,7 +77,8 @@ purpose, frozen native consent, no save/apply/Action authority. Core42 applicati
 exact loopback markers/source, Quit/restart/no replay and preservation passed.
 Final82 library/42 application/145 renderer/20+23 host and complete desktop gate
 passed; request-fingerprint correlation excludes old-profile results. An intermittent existing
-reflection-fixture transport failure is retained and remains unexplained; broad
+reflection-fixture transport failure is retained; the later export checkpoint above
+reproduces and fixes a shared nonblocking accepted-socket fixture race. Broader
 provider/CI reliability, version preview/audit/accessibility remain open.
 
 ### November 8 completion P04 subject/body composer

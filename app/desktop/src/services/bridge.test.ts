@@ -8,6 +8,18 @@ vi.mock("@tauri-apps/api/webviewWindow", () => ({
 }));
 vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
 beforeEach(() => vi.mocked(invoke).mockReset());
+it("uses only fixed native directory picker purposes", async () => {
+  vi.mocked(invoke).mockResolvedValue(null);
+  const bridge = new NativeBridge();
+  await bridge.pick();
+  expect(invoke).toHaveBeenLastCalledWith("pick_directory", {
+    purpose: "workspace",
+  });
+  await bridge.pick("backup");
+  expect(invoke).toHaveBeenLastCalledWith("pick_directory", {
+    purpose: "backup",
+  });
+});
 it("sends scoped requests without approval tokens or booleans", async () => {
   vi.mocked(invoke)
     .mockResolvedValueOnce("job")

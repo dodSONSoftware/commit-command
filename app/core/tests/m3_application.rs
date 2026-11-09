@@ -55,6 +55,86 @@ fn setup() -> (Fixture, Application, String, String) {
     (f, app, ws, wt)
 }
 #[test]
+fn ai_export_requires_native_destination_and_current_saved_fingerprint() {
+    use gitfleet_core::backup::archive::ValidatedArchive;
+    use std::os::unix::fs::{MetadataExt, PermissionsExt};
+    let (f, mut app, _ws, _wt) = setup();
+    let before = tree_bytes(&f.repo);
+    let Data::AiSettings(snapshot) = app
+        .request(app.epoch(), Request::AiSettings {})
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    let bare = f.root.join("bare.git");
+    f.git(&["init", "--bare", "-q", bare.to_str().unwrap()]);
+    for blocked in [&f.repo, &f.root.join("state"), &bare, &bare.join("objects")] {
+        let picker = app.register_directory(blocked).unwrap();
+        assert!(app
+            .request(
+                app.epoch(),
+                Request::ExportAiSettings {
+                    picker,
+                    fingerprint: snapshot.fingerprint.clone()
+                }
+            )
+            .is_err());
+        assert!(!blocked.join("Commit Command Backups").exists());
+    }
+    let picker = app.register_directory(&f.root).unwrap();
+    assert!(app
+        .request(
+            app.epoch(),
+            Request::ExportAiSettings {
+                picker: picker.clone(),
+                fingerprint: "stale".into()
+            }
+        )
+        .is_err());
+    assert!(!f.root.join("Commit Command Backups").exists());
+    let mode = fs::metadata(&f.root).unwrap().mode();
+    let Data::AiExport(export) = app
+        .request(
+            app.epoch(),
+            Request::ExportAiSettings {
+                picker: picker.clone(),
+                fingerprint: snapshot.fingerprint.clone(),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert!(app
+        .request(
+            app.epoch(),
+            Request::ExportAiSettings {
+                picker,
+                fingerprint: snapshot.fingerprint
+            }
+        )
+        .is_err());
+    let path = export.path.to_path().unwrap();
+    let archive =
+        ValidatedArchive::inspect(fs::File::open(&path).unwrap(), &Cancellation::default())
+            .unwrap();
+    assert_eq!(archive.manifest_fingerprint(), export.manifest_fingerprint);
+    assert_eq!(
+        fs::metadata(&path).unwrap().permissions().mode() & 0o777,
+        0o600
+    );
+    assert_eq!(
+        fs::metadata(path.parent().unwrap()).unwrap().mode() & 0o777,
+        0o700
+    );
+    assert_eq!(fs::metadata(&f.root).unwrap().mode(), mode);
+    assert_eq!(fs::read_dir(path.parent().unwrap()).unwrap().count(), 1);
+    assert!(!f.root.join("state/ai").exists());
+    assert_eq!(before, tree_bytes(&f.repo));
+}
+#[test]
 fn migration_archive_failure_prevents_schema_change_and_success_retains_old_schema() {
     use gitfleet_core::backup::archive::{Kind, ValidatedArchive};
     let f = Fixture::new();

@@ -69,6 +69,34 @@ pub struct Destination {
     directory: File,
 }
 impl Destination {
+    /// Create/reuse a private backup child inside an explicitly selected directory.
+    /// The selected parent may be 0755, but must be owned and not writable by
+    /// other users. Traversal and child creation stay anchored to descriptors.
+    pub fn private_child(parent: &Path, name: &str) -> Result<Self> {
+        let directory = Self::open_directory(parent)?;
+        let metadata = directory.metadata()?;
+        if metadata.uid() != unsafe { libc::geteuid() } || metadata.mode() & 0o022 != 0 {
+            return Err(refused(
+                "Selected backup parent must be owned and not writable by other users",
+            ));
+        }
+        let name = component(name)?;
+        if unsafe { libc::mkdirat(directory.as_raw_fd(), name.as_ptr(), 0o700) } != 0 {
+            let error = std::io::Error::last_os_error();
+            if error.kind() != std::io::ErrorKind::AlreadyExists {
+                return Err(error.into());
+            }
+        }
+        let child = open_child(&directory, &name, libc::O_RDONLY | libc::O_DIRECTORY, 0)?;
+        let metadata = child.metadata()?;
+        if metadata.uid() != unsafe { libc::geteuid() } || metadata.mode() & 0o077 != 0 {
+            return Err(refused(
+                "Existing backup child must be private and owned by this user",
+            ));
+        }
+        directory.sync_all()?;
+        Ok(Self { directory: child })
+    }
     fn check_space(&self, manifest: &Manifest) -> Result<()> {
         manifest.validate()?;
         let content = manifest
@@ -94,6 +122,16 @@ impl Destination {
         require_space(available, content)
     }
     pub fn open(path: &Path) -> Result<Self> {
+        let directory = Self::open_directory(path)?;
+        let metadata = directory.metadata()?;
+        if metadata.uid() != unsafe { libc::geteuid() } || metadata.mode() & 0o077 != 0 {
+            return Err(refused(
+                "Backup directory must be owned by this user with mode 0700",
+            ));
+        }
+        Ok(Self { directory })
+    }
+    fn open_directory(path: &Path) -> Result<File> {
         if !path.is_absolute() {
             return Err(refused("Backup directory must be absolute"));
         }
@@ -118,13 +156,7 @@ impl Destination {
                 }
             }
         }
-        let metadata = directory.metadata()?;
-        if metadata.uid() != unsafe { libc::geteuid() } || metadata.mode() & 0o077 != 0 {
-            return Err(refused(
-                "Backup directory must be owned by this user with mode 0700",
-            ));
-        }
-        Ok(Self { directory })
+        Ok(directory)
     }
 
     /// Publishes a new name only. Existing backups are never overwritten.
@@ -260,6 +292,37 @@ impl Drop for Staged<'_> {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn private_child_accepts_owned_public_parent_but_refuses_aliases_and_bad_modes() {
+        use std::os::unix::fs::{symlink, PermissionsExt};
+        let (root, _) = fixture();
+        std::fs::set_permissions(&root, std::fs::Permissions::from_mode(0o755)).unwrap();
+        Destination::private_child(&root, "private").unwrap();
+        Destination::private_child(&root, "private").unwrap();
+        assert_eq!(
+            std::fs::metadata(root.join("private"))
+                .unwrap()
+                .permissions()
+                .mode()
+                & 0o777,
+            0o700
+        );
+        assert_eq!(
+            std::fs::metadata(&root).unwrap().permissions().mode() & 0o777,
+            0o755
+        );
+        symlink(root.join("private"), root.join("alias")).unwrap();
+        assert!(Destination::private_child(&root, "alias").is_err());
+        assert!(Destination::private_child(&root, "../escape").is_err());
+        std::fs::create_dir(root.join("open")).unwrap();
+        std::fs::set_permissions(root.join("open"), std::fs::Permissions::from_mode(0o755))
+            .unwrap();
+        assert!(Destination::private_child(&root, "open").is_err());
+        std::fs::set_permissions(&root, std::fs::Permissions::from_mode(0o777)).unwrap();
+        assert!(Destination::private_child(&root, "new").is_err());
+        assert!(!root.join("new").exists());
+        std::fs::remove_dir_all(root).unwrap();
+    }
     use super::super::archive::{Component as ArchiveComponent, ComponentType, Kind};
     use super::*;
     use std::{

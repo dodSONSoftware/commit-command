@@ -2,6 +2,11 @@
 
 export type Request =
   | {
+      fingerprint: string;
+      kind: "export_ai_settings";
+      picker: string;
+    }
+  | {
       connection: AiConnectionDraft;
       context_fingerprint: string;
       instructions: string[];
