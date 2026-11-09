@@ -7,6 +7,17 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G09 optional AI settings model — implemented, automated boundary passed
+
+[Settings model checkpoint](reports/G09_AI_SETTINGS_MODEL_2026-11-08.md): Core now
+has versioned connections/profiles/templates, additive scoped instructions,
+most-specific selection without fallback, capability-gated optional parameters,
+validated revision-guarded edits and deterministic static previews. No connection
+is configured by default; models/configuration confer no Git authority. Library
+36 passed (nine AI tests), strict all-feature/all-target Clippy, format/diff passed.
+No persistence/UI/provider/context/candidate/automatic execution is claimed yet.
+Next add lazy atomic settings persistence and editor integration.
+
 ### November 8 G09 retained version inspection — implemented, selected acceptance passed
 
 [Read-only reader checkpoint](reports/G09_RETAINED_VERSION_INSPECTION_2026-11-08.md):
@@ -696,7 +707,7 @@ authority. No default change, commit, push or release is authorized by this reco
 | M5C independently reviewed pre-push hook check | Implemented; selected automated/native acceptance passed | [Check report](reports/M5C_REVIEWED_PUSH_CHECKS_2026-11-03.md); hook approval only, unpublished history/no replay; selected native interruption/manager-refusal/bypass cases passed; broader G06 compatibility remains |
 | M5C individual push publication | Implemented; selected acceptance passed | Separate exact native publication, isolated ancestry/expected-old transport and observation recovery; broader G07 acceptance remains |
 | M5C bulk push publication | Guided per-item queue implemented; selected automated/native acceptance passed | Durable child-first scheduling, fresh post-child evidence, partial stop/retry and no-replay restart; [G08 report](reports/G08_GUIDED_PUSH_QUEUE_2026-11-08.md); broader acceptance remains |
-| M6 AI foundation | Not implemented | `app/core/src/ai/` contains only `.gitkeep`; profiles, providers, templates and exact context pipeline: G09 |
+| M6 AI foundation | Pure configuration/template model implemented; integration pending | [Settings model](reports/G09_AI_SETTINGS_MODEL_2026-11-08.md); persistence/UI, providers and exact context pipeline remain G09 |
 | M7 AI commits / SemVer Actions | Typed provider-free SemVer invocation/recovery implemented; AI commits pending | [G09 Action report](reports/G09_SEMVER_ACTION_2026-11-08.md); separate stage/commit reviews, selected exact native evidence; broader recovery usability/native coverage and bounded AI authority remain |
 | M8 backup/retention/usability/release | Partial foundations only | Atomic storage, migrations and development bundles exist; general backup/restore, retention and release acceptance do not: G03, G10–G11 |
 

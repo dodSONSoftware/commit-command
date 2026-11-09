@@ -1,0 +1,32 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.85s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-990268db74c912b4)
+
+running 8 tests
+test ai::tests::capability_parameters_are_optional_bounded_and_provider_specific ... ok
+test ai::tests::no_ai_default_is_valid_and_unavailable_only_for_ai ... ok
+test ai::tests::endpoint_policy_canonicalizes_and_rejects_ambiguous_destinations ... ok
+test ai::tests::templates_validate_structure_boundaries_and_static_examples_without_models ... FAILED
+test ai::tests::settings_reject_duplicate_names_bad_references_versions_and_controls ... ok
+test ai::tests::imports_and_connection_edits_clear_endpoint_metadata ... ok
+test ai::tests::edits_are_transactional_stale_guarded_and_preserve_reference_integrity ... ok
+test ai::tests::hierarchical_profiles_and_additive_instructions_have_no_silent_fallback ... ok
+
+failures:
+
+---- ai::tests::templates_validate_structure_boundaries_and_static_examples_without_models stdout ----
+
+thread 'ai::tests::templates_validate_structure_boundaries_and_static_examples_without_models' (17882837) panicked at src/ai/tests.rs:297:9:
+assertion failed: t.check_message(&Message {
+                subject: "fix: safe subject".into(),
+                body: body.into(),
+            }).is_err()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    ai::tests::templates_validate_structure_boundaries_and_static_examples_without_models
+
+test result: FAILED. 7 passed; 1 failed; 0 ignored; 0 measured; 27 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `--lib`

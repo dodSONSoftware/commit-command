@@ -3,6 +3,8 @@
 
 pub mod actions;
 pub mod activity;
+#[cfg(feature = "application-services")]
+pub mod ai;
 #[cfg(feature = "experimental-writes")]
 pub mod commit;
 pub mod diff;
