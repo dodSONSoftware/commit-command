@@ -7,6 +7,24 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G09 exact source transfer and assisted messages — implemented, selected acceptance passed
+
+[Assisted-message checkpoint](reports/G09_AI_ASSISTED_MESSAGES_2026-11-08.md): composer
+context viewer, raw/filtered snapshot revalidation, exact native source-transfer
+approval and one-to-three Rust-validated text suggestions now exist. Suggestions
+replace a draft only by explicit choice and grant no Git/Action/push authority.
+Final library/application 61/41, strict Core Clippy and complete desktop runner
+(123 renderer, ordinary/all-feature host 20/23 plus ignored workers) passed.
+Native fixture decline sent zero HTTP; fresh approval sent one request whose context
+hash matched the viewer. Candidate application changed only the draft, restored
+before clean Quit/restart/no replay; repository/journal/trust/original/hash/integrity
+and lock checks passed. A real native panel-remount finding was reproduced and fixed;
+failed timing runs and the corrected four-thread results remain recorded.
+Full five-configuration Core write/signing regression is running and will be recorded
+separately. Next: real-provider synthetic checks using the user-supplied Ollama
+`http://10.10.10.72:11434` / `qwen3.5:9b-q4_K_M`, then hierarchical analysis and bounded
+automatic authority. G09 and the remaining G02–G11 acceptance scopes remain open.
+
 ### November 8 G09 restricted repository context — implemented, automated selected acceptance passed
 
 [Capture checkpoint](reports/G09_AI_CONTEXT_CAPTURE_2026-11-08.md): explicit staged,
@@ -752,11 +770,13 @@ reopened. Foreign-lock/stale-fingerprint negative cases continue; package not ye
   historical passes remain historical and are not replaced by a new pass.
 
 Ordinary desktop builds allow local inspection and app-state persistence, but
-reject trust/write/network execution in Rust. `desktop-writes` remains a non-default
+reject managed Git trust grants, writes and remote execution in Rust. Optional
+AI provider requests have separate exact native approval. `desktop-writes` remains a non-default
 acceptance feature. Default Core builds expose no managed-repository writes.
 Local publication means a local ref advanced; it does not mean a server push.
-No push executor exists. Neither planning nor a completed hook check grants push
-authority. No default change, commit, push or release is authorized by this record.
+Exact individual publication and guided per-item queues are implemented within
+recorded acceptance envelopes. Neither planning nor a completed hook check grants
+push authority. No default change, commit, push or release is authorized by this record.
 
 ## Current capability and milestone disposition
 
@@ -774,8 +794,8 @@ authority. No default change, commit, push or release is authorized by this reco
 | M5C independently reviewed pre-push hook check | Implemented; selected automated/native acceptance passed | [Check report](reports/M5C_REVIEWED_PUSH_CHECKS_2026-11-03.md); hook approval only, unpublished history/no replay; selected native interruption/manager-refusal/bypass cases passed; broader G06 compatibility remains |
 | M5C individual push publication | Implemented; selected acceptance passed | Separate exact native publication, isolated ancestry/expected-old transport and observation recovery; broader G07 acceptance remains |
 | M5C bulk push publication | Guided per-item queue implemented; selected automated/native acceptance passed | Durable child-first scheduling, fresh post-child evidence, partial stop/retry and no-replay restart; [G08 report](reports/G08_GUIDED_PUSH_QUEUE_2026-11-08.md); broader acceptance remains |
-| M6 AI foundation | Configuration/storage/editor and approved synthetic diagnostics implemented; source integration pending | [Settings model](reports/G09_AI_SETTINGS_MODEL_2026-11-08.md); [storage/editor](reports/G09_AI_SETTINGS_STORAGE_2026-11-08.md); [provider diagnostics](reports/G09_AI_PROVIDER_DIAGNOSTICS_2026-11-08.md); [secure auth](reports/G09_AI_SECURE_AUTH_2026-11-08.md) implemented; exact context/candidate pipeline remains G09 |
-| M7 AI commits / SemVer Actions | Typed provider-free SemVer invocation/recovery implemented; AI commits pending | [G09 Action report](reports/G09_SEMVER_ACTION_2026-11-08.md); separate stage/commit reviews, selected exact native evidence; broader recovery usability/native coverage and bounded AI authority remain |
+| M6 AI foundation | Configuration/storage/editor, secure auth and native-reviewed source suggestions implemented; acceptance partial | [Settings model](reports/G09_AI_SETTINGS_MODEL_2026-11-08.md); [storage/editor](reports/G09_AI_SETTINGS_STORAGE_2026-11-08.md); [provider diagnostics](reports/G09_AI_PROVIDER_DIAGNOSTICS_2026-11-08.md); [secure auth](reports/G09_AI_SECURE_AUTH_2026-11-08.md) implemented; [assisted source suggestions](reports/G09_AI_ASSISTED_MESSAGES_2026-11-08.md) implemented; hierarchy/automatic and real-provider acceptance remain G09 |
+| M7 AI commits / SemVer Actions | Typed provider-free SemVer invocation/recovery implemented; assisted messages implemented; automatic commits pending | [G09 Action report](reports/G09_SEMVER_ACTION_2026-11-08.md); separate stage/commit reviews, selected exact native evidence; broader recovery usability/native coverage and bounded AI authority remain |
 | M8 backup/retention/usability/release | Partial foundations only | Atomic storage, migrations and development bundles exist; general backup/restore, retention and release acceptance do not: G03, G10–G11 |
 
 ## Open acceptance and implementation gates

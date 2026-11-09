@@ -1,3 +1,4 @@
+import { AiMessages } from "./AiMessages";
 import { AiSettings } from "./AiSettings";
 import { VersionAction } from "./VersionAction";
 import {
@@ -1623,6 +1624,20 @@ function Repository({
             <div className="section-title">
               <h2>Commit composer</h2>
             </div>
+            <AiMessages
+              key={JSON.stringify([workspace, entry.id, selectedChanges])}
+              bridge={bridge}
+              workspace={workspace}
+              worktree={entry.id}
+              selected={selectedChanges}
+              busy={busy}
+              onUse={(message) =>
+                setNav({
+                  ...nav,
+                  drafts: { ...nav.drafts, [entry.id]: message },
+                })
+              }
+            />
             <VersionAction
               enabled={writeEnabled}
               revision={resultsRevision}

@@ -929,3 +929,94 @@ it("shows incomplete discovery even when all known repositories are available", 
   await userEvent.click(screen.getByText("Discovery details"));
   expect(screen.getByText("/tmp/project/cache/broken")).toBeVisible();
 });
+
+it("preserves captured AI context across native review completion without replay or draft replacement", async () => {
+  vi.useFakeTimers({ toFake: ["setInterval", "clearInterval"] });
+  Object.defineProperty(HTMLDialogElement.prototype, "showModal", {
+    configurable: true,
+    value: function (this: HTMLDialogElement) {
+      this.setAttribute("open", "");
+    },
+  });
+  try {
+    const { bridge, requests } = fake();
+    const original = bridge.request;
+    let completed = false;
+    bridge.writeRevision = 0;
+    bridge.writeStatus = async () => {
+      bridge.writeRevision = completed ? 1 : 0;
+      return false;
+    };
+    bridge.request = async (r) => {
+      if (r.kind === "preview_ai_context") {
+        requests.push(r);
+        return {
+          kind: "ai_context",
+          value: {
+            snapshot_fingerprint: "snapshot",
+            generation: "generation",
+            bundle: {
+              payload: '{"chunks":[]}',
+              fingerprint: "context",
+              complete: true,
+              warnings: [],
+              accounting: [],
+            },
+          },
+        };
+      }
+      if (r.kind === "review_ai_messages") {
+        requests.push(r);
+        completed = true;
+        return { kind: "done" };
+      }
+      if (r.kind === "ai_jobs") return { kind: "ai_jobs", value: [] };
+      return original(r);
+    };
+    render(<App bridge={bridge} />);
+    await screen.findByRole("checkbox", { name: "Select parent" });
+    await userEvent.click(
+      screen.getAllByRole("button", { name: "parent" }).at(-1)!,
+    );
+    fireEvent.change(screen.getByRole("textbox", { name: "Message" }), {
+      target: { value: "Preserve my manual draft" },
+    });
+    await userEvent.click(
+      screen.getByRole("checkbox", { name: "Include file.txt from index" }),
+    );
+    await userEvent.click(
+      screen.getByRole("button", { name: "AI message suggestions…" }),
+    );
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: "Capture filtered AI context · no transfer",
+      }),
+    );
+    await screen.findByRole("region", { name: "Exact filtered AI context" });
+    await userEvent.click(
+      screen.getByRole("button", { name: "Review exact AI source transfer" }),
+    );
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(3000);
+    });
+    expect(
+      screen.getByRole("dialog", {
+        name: "AI context and message suggestions",
+      }),
+    ).toHaveAttribute("open");
+    expect(
+      screen.getByRole("region", { name: "Exact filtered AI context" }),
+    ).toHaveTextContent("snapshot");
+    expect(screen.getByRole("textbox", { name: "Message" })).toHaveValue(
+      "Preserve my manual draft",
+    );
+    expect(
+      requests.filter((r) => r.kind === "review_ai_messages"),
+    ).toHaveLength(1);
+    expect(
+      requests.filter((r) => r.kind === "preview_ai_context"),
+    ).toHaveLength(1);
+  } finally {
+    Reflect.deleteProperty(HTMLDialogElement.prototype, "showModal");
+  }
+});

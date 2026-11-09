@@ -1,4 +1,5 @@
 //! Optional AI services. Configuration and generated text confer no write authority.
+pub mod candidates;
 pub mod capture;
 #[cfg(unix)]
 mod capture_file;

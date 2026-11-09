@@ -1,0 +1,14 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+error[E0282]: type annotations needed
+   --> src/ai/provider.rs:493:34
+    |
+493 |             Purpose::Discover => Ok(ProviderResult::Models(models(plan.provider, &value)?)),
+    |                                  ^^ cannot infer type of the type parameter `E` declared on the enum `Result`
+    |
+help: consider specifying the generic arguments
+    |
+493 |             Purpose::Discover => Ok::<ProviderResult, E>(ProviderResult::Models(models(plan.provider, &value)?)),
+    |                                    +++++++++++++++++++++
+
+For more information about this error, try `rustc --explain E0282`.
+error: could not compile `gitfleet-core` (lib) due to 1 previous error

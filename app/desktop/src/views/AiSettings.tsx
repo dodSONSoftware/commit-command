@@ -168,8 +168,8 @@ export function AiSettings({
         </p>
         <p>
           Provider diagnostics require exact native approval and use no
-          repository content. Repository-context generation remains a separate
-          integration step.
+          repository content. For selected repository changes, open AI message
+          suggestions in the commit composer.
         </p>
         {error && <p role="alert">{error}</p>}
         {notice && <p role="status">{notice}</p>}

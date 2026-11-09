@@ -1,0 +1,11 @@
+{
+  "one_exact_filtered_source_request": true,
+  "older_ai_generations_exact": true,
+  "repositories_bytes_modes_exact": true,
+  "execution_journals_exact_no_replay": true,
+  "trust_exact_parent_revoked": true,
+  "retained_original_exact": true,
+  "source_artifact_hashes_verified": true,
+  "integrity": "ok",
+  "writer_lock_reopened": true
+}

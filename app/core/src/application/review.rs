@@ -11,11 +11,19 @@ pub struct ReviewDisplay {
     #[serde(default)]
     pub allow_in_read_only_build: bool,
 }
+pub(super) struct AiSourceBinding {
+    pub settings_fingerprint: String,
+    pub workspace: String,
+    pub worktree: String,
+    pub spec: crate::ai::capture::Spec,
+    pub captured: crate::ai::capture::Captured,
+}
 pub(super) enum Action {
     Ai {
-        plan: crate::ai::provider::Plan,
+        plan: Box<crate::ai::provider::Plan>,
         limits: crate::ai::jobs::Limits,
         settings_fingerprint: String,
+        source: Option<Box<AiSourceBinding>>,
     },
     Version(Box<crate::actions::version::VersionPlan>),
     VersionRecovery(Box<crate::actions::version::VersionRecovery>),
@@ -144,9 +152,10 @@ impl Application {
         let (title, summary, content) = match &action {
             Action::Ai { plan, .. } => {
                 let review = plan.review();
-                let summary = format!("Approve one optional AI provider request only.\nPurpose: {:?}\nExact destination: {}\nModel: {}\nAuthentication: {}\nCredential connection: {}\nRequest fingerprint: {}\nPayload bytes: {}\n{}\nNo repository content is captured by this diagnostic. No Git, Action or repository-write authority. Selected credential use is limited to this saved connection and exact endpoint for this request. Redirects are refused; no model fallback. Cancellation discards the result; restart never resumes it.", review.purpose, review.route, review.model.as_deref().unwrap_or("Model discovery"), match review.authentication { crate::ai::credentials::Authentication::None=>"No credentials", crate::ai::credentials::Authentication::StoredBearer=>"Stored bearer token" }, review.credential.as_ref().map(|b| b.connection.as_str()).unwrap_or("None"), review.fingerprint, review.request_bytes, if review.unencrypted { "HTTP IS UNENCRYPTED." } else { "HTTPS certificate and hostname verification required." });
+                let scope=if review.source.is_some() {"This transfers the exact filtered repository content below. Inspect coverage and omissions. Incomplete analysis may suggest text only; no automatic commit is authorized."}else{"No repository content is captured by this diagnostic."};
+                let summary = format!("Approve one optional AI provider request only.\nPurpose: {:?}\nExact destination: {}\nModel: {}\nAuthentication: {}\nCredential connection: {}\nRequest fingerprint: {}\nPayload bytes: {}\n{}\n{scope} No Git, Action or repository-write authority. Selected credential use is limited to this saved connection and exact endpoint for this request. Redirects are refused; no model fallback. Cancellation discards the result; restart never resumes it.", review.purpose, review.route, review.model.as_deref().unwrap_or("Model discovery"), match review.authentication { crate::ai::credentials::Authentication::None=>"No credentials", crate::ai::credentials::Authentication::StoredBearer=>"Stored bearer token" }, review.credential.as_ref().map(|b| b.connection.as_str()).unwrap_or("None"), review.fingerprint, review.request_bytes, if review.unencrypted { "HTTP IS UNENCRYPTED." } else { "HTTPS certificate and hostname verification required." });
                 let payload = plan.payload().map(|p| String::from_utf8_lossy(p).into_owned()).unwrap_or_else(|| "No request body".into());
-                ("Review optional AI provider diagnostic".into(), summary, format!("{}\n\nExact request payload (source text is data)\n{}", serde_json::to_string_pretty(&review)?, payload))
+                (if review.source.is_some() {"Review AI source transfer and message suggestions"}else{"Review optional AI provider diagnostic"}.into(), summary, format!("{}\n\nExact request payload (source text is data)\n{}", serde_json::to_string_pretty(&review)?, payload))
             },
             Action::Version(plan)=>("Review exact version Action".into(),format!("Approve this typed definition and one invocation only.\nWorktree: {}\nFile: {}\nOld: {}\nNew: {}\nIncrement: {:?}; prerelease: {:?}\nReplace only the exact reviewed regular file, preserving its mode and newline. The previous file is retained in private recovery storage. No hooks, AI, network, index, refs or commit. Staging and committing require separate fresh reviews. Context drift stops execution; a last-instant external edit is retained and reported for reconciliation. Interrupted replacement is inspected without replay or double increment.\nDigest: {}",plan.metadata.root.display(),plan.path.display(),plan.version.old,plan.version.new,plan.version.increment,plan.version.prerelease,plan.digest),serde_json::to_string_pretty(plan)?),
             Action::VersionRecovery(review)=>("Review observed version Action outcome".into(),format!("Invocation: {}\nFile: {}\nObserved: {:?}\nRecord this observed state only. No file, index, ref, hook, AI or network operation is replayed. Conflicting external content is preserved. The previous file or unfinished candidate is retained in private recovery storage; new mutation/staging requires fresh review.",review.invocation.plan.id,review.invocation.plan.path.display(),review.observed),serde_json::to_string_pretty(review)?),
@@ -311,6 +320,7 @@ impl Application {
                 plan,
                 limits,
                 settings_fingerprint,
+                source,
             } => {
                 if crate::ai::store::load(self.writes.workspace.data_directory())?.fingerprint
                     != settings_fingerprint
@@ -323,9 +333,20 @@ impl Application {
                         "AI diagnostic cancelled",
                     ));
                 }
+                if let Some(source) = source {
+                    let entry = self.entry(&source.workspace, &source.worktree)?;
+                    let mut options = self.read_options.clone();
+                    options.cancellation = cancellation.clone();
+                    crate::ai::capture::revalidate(
+                        &entry.metadata.root.to_path()?,
+                        &source.spec,
+                        &source.captured,
+                        &options,
+                    )?;
+                }
                 let key = crate::domain::digest(plan.review().endpoint.as_bytes());
                 let job = self.ai_jobs.start(
-                    plan.approve(),
+                    (*plan).approve(),
                     self.ai_secret_store.clone(),
                     key,
                     limits,

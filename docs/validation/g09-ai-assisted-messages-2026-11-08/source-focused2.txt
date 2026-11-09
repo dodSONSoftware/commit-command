@@ -1,0 +1,25 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.66s
+     Running tests/m3_application.rs (app/core/target/debug/deps/m3_application-0302a75ece9818d8)
+
+running 2 tests
+test ai_source_drift_or_missing_profile_blocks_before_transfer_and_manual_reads_continue ... FAILED
+test ai_source_transfer_requires_exact_native_approval_and_returns_only_validated_text ... ok
+
+failures:
+
+---- ai_source_drift_or_missing_profile_blocks_before_transfer_and_manual_reads_continue stdout ----
+
+thread 'ai_source_drift_or_missing_profile_blocks_before_transfer_and_manual_reads_continue' (18484407) panicked at tests/m3_application.rs:3039:5:
+assertion `left == right` failed
+  left: InvalidRequest
+ right: Unavailable
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    ai_source_drift_or_missing_profile_blocks_before_transfer_and_manual_reads_continue
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 39 filtered out; finished in 3.97s
+
+error: test failed, to rerun pass `--test m3_application`

@@ -195,6 +195,12 @@ fn filter_lines(text: &str) -> (Vec<String>, usize) {
         .collect();
     (lines, redacted)
 }
+pub(crate) fn screen_configuration(text: &str) -> Result<()> {
+    if filter_lines(text).1 > 0 {
+        return Err(invalid("AI configuration contains a possible credential or unsafe control text; edit it before transfer"));
+    }
+    Ok(())
+}
 /// Deterministic selection priority follows reader order: changes, source/docs, then history.
 /// Whole line chunks preserve provenance. No silent partial-line truncation occurs.
 pub fn prepare(fragments: Vec<Fragment>, policy: &Policy) -> Result<Bundle> {

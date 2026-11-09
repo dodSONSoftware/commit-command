@@ -46,6 +46,15 @@ fn stale() -> Error {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Request {
+    ReviewAiMessages {
+        workspace: String,
+        worktree: String,
+        spec: crate::ai::capture::Spec,
+        snapshot_fingerprint: String,
+        context_fingerprint: String,
+        one_off_profile: Option<String>,
+        instructions: String,
+    },
     PreviewAiContext {
         workspace: String,
         worktree: String,
@@ -578,7 +587,20 @@ impl Application {
         Ok(entries)
     }
     fn review_ai_plan(&mut self, plan: crate::ai::provider::Plan) -> Result<review::ReviewDisplay> {
+        self.review_ai_source_plan(plan, None)
+    }
+    fn review_ai_source_plan(
+        &mut self,
+        plan: crate::ai::provider::Plan,
+        source: Option<Box<review::AiSourceBinding>>,
+    ) -> Result<review::ReviewDisplay> {
         let settings = crate::ai::store::load(self.writes.workspace.data_directory())?;
+        if source
+            .as_ref()
+            .is_some_and(|source| source.settings_fingerprint != settings.fingerprint)
+        {
+            return Err(stale());
+        }
         if let Some(binding) = plan.credential_binding() {
             if !settings
                 .settings
@@ -594,9 +616,10 @@ impl Application {
             connection: settings.settings.connection_concurrency,
         };
         self.set_review(review::Action::Ai {
-            plan,
+            plan: Box::new(plan),
             limits,
             settings_fingerprint: settings.fingerprint,
+            source,
         })
     }
     fn abandon_review(&mut self) -> Result<()> {
@@ -746,6 +769,72 @@ impl Application {
             _ => {}
         }
         let data = match request {
+            Request::ReviewAiMessages {
+                workspace,
+                worktree,
+                spec,
+                snapshot_fingerprint,
+                context_fingerprint,
+                one_off_profile,
+                instructions,
+            } => {
+                self.abandon_review()?;
+                if instructions.len() > 16384 || instructions.contains('\0') {
+                    return Err(invalid("AI one-off instructions exceed bounds"));
+                }
+                let entry = self.entry(&workspace, &worktree)?;
+                let captured = crate::ai::capture::capture(
+                    &entry.metadata.root.to_path()?,
+                    &spec,
+                    &self.read_options,
+                )?;
+                if captured.snapshot_fingerprint != snapshot_fingerprint
+                    || captured.bundle.fingerprint != context_fingerprint
+                {
+                    return Err(stale());
+                }
+                let settings = crate::ai::store::load(self.writes.workspace.data_directory())?;
+                let effective = settings.settings.effective(
+                    &WorkspaceId(workspace.clone()),
+                    &WorktreeId(worktree.clone()),
+                    one_off_profile.as_deref(),
+                )?;
+                if spec.policy.max_bytes > effective.profile.context_bytes {
+                    return Err(invalid(
+                        "Context budget exceeds the selected profile; capture a smaller context",
+                    ));
+                }
+                let connection = crate::ai::config::ConnectionDraft {
+                    id: Some(effective.connection.id),
+                    name: effective.connection.name,
+                    provider: effective.connection.provider,
+                    endpoint: effective.connection.endpoint,
+                    timeout_ms: effective.connection.timeout_ms,
+                    authentication: effective.connection.authentication,
+                };
+                let mut additive = effective.instructions;
+                if !instructions.is_empty() {
+                    additive.push(instructions);
+                }
+                let plan = crate::ai::provider::Plan::messages(
+                    &connection,
+                    &effective.profile,
+                    captured.bundle.clone(),
+                    captured.snapshot_fingerprint.clone(),
+                    effective.template,
+                    additive,
+                )?;
+                Data::Review(self.review_ai_source_plan(
+                    plan,
+                    Some(Box::new(review::AiSourceBinding {
+                        settings_fingerprint: settings.fingerprint,
+                        workspace,
+                        worktree,
+                        spec,
+                        captured,
+                    })),
+                )?)
+            }
             Request::PreviewAiContext {
                 workspace,
                 worktree,

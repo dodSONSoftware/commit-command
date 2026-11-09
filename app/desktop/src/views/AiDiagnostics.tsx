@@ -129,57 +129,62 @@ export function AiDiagnostics({
         {watch ? "Pause AI result updates" : "Show AI diagnostic results"}
       </button>
       {error && <p role="alert">{error}</p>}
-      {jobs.map((job) => (
-        <article key={job.id} aria-label={`AI diagnostic ${job.id}`}>
-          <h4>
-            {job.review.purpose === "discover"
-              ? "Model discovery"
-              : "Synthetic inference"}{" "}
-            · {job.phase}
-          </h4>
-          <p>{job.review.route}</p>
-          <p>
-            Model: {job.review.model ?? "Discovery"} · Request:{" "}
-            {job.review.fingerprint}
-          </p>
-          {(job.phase === "queued" || job.phase === "running") && (
-            <button
-              onClick={() =>
-                void bridge
-                  .request({ kind: "cancel_ai_job", id: job.id })
-                  .catch((e) =>
-                    setError(
-                      e instanceof Error ? e.message : "AI cancellation failed",
-                    ),
-                  )
-              }
-            >
-              Cancel this AI request
-            </button>
-          )}
-          {job.error && <p role="alert">{job.error}</p>}
-          {job.result?.kind === "models" && (
+      {jobs
+        .filter((job) => job.review.purpose !== "assisted_messages")
+        .map((job) => (
+          <article key={job.id} aria-label={`AI diagnostic ${job.id}`}>
+            <h4>
+              {job.review.purpose === "discover"
+                ? "Model discovery"
+                : "Synthetic inference"}{" "}
+              · {job.phase}
+            </h4>
+            <p>{job.review.route}</p>
             <p>
-              {job.result.value.length} installed models:{" "}
-              {job.result.value.map((m) => m.id).join(", ") || "none reported"}
+              Model: {job.review.model ?? "Discovery"} · Request:{" "}
+              {job.review.fingerprint}
             </p>
-          )}
-          {job.result?.kind === "completion" && (
-            <>
+            {(job.phase === "queued" || job.phase === "running") && (
+              <button
+                onClick={() =>
+                  void bridge
+                    .request({ kind: "cancel_ai_job", id: job.id })
+                    .catch((e) =>
+                      setError(
+                        e instanceof Error
+                          ? e.message
+                          : "AI cancellation failed",
+                      ),
+                    )
+                }
+              >
+                Cancel this AI request
+              </button>
+            )}
+            {job.error && <p role="alert">{job.error}</p>}
+            {job.result?.kind === "models" && (
               <p>
-                {job.result.value.elapsed_ms} ms · Input tokens:{" "}
-                {job.result.value.input_tokens ?? "not reported"} · Output
-                tokens: {job.result.value.output_tokens ?? "not reported"}
+                {job.result.value.length} installed models:{" "}
+                {job.result.value.map((m) => m.id).join(", ") ||
+                  "none reported"}
               </p>
-              <pre>{job.result.value.content}</pre>
-              <p>
-                Diagnostic response only. No commit message was selected or
-                applied.
-              </p>
-            </>
-          )}
-        </article>
-      ))}
+            )}
+            {job.result?.kind === "completion" && (
+              <>
+                <p>
+                  {job.result.value.elapsed_ms} ms · Input tokens:{" "}
+                  {job.result.value.input_tokens ?? "not reported"} · Output
+                  tokens: {job.result.value.output_tokens ?? "not reported"}
+                </p>
+                <pre>{job.result.value.content}</pre>
+                <p>
+                  Diagnostic response only. No commit message was selected or
+                  applied.
+                </p>
+              </>
+            )}
+          </article>
+        ))}
     </section>
   );
 }

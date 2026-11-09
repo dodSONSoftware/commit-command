@@ -9,11 +9,11 @@ Controlled local and bulk commits, supported authenticated observation/fetch/imp
 upstream setup, push dependency planning, separately reviewed pre-push checks
 and exact individual fast-forward publication with uncertain-outcome recovery
 are implemented within bounded acceptance envelopes. Guided push queues, guarded
-SemVer Actions, optional AI settings/templates and native-approved synthetic provider
-diagnostics with endpoint-bound macOS Keychain authentication are also implemented
+SemVer Actions, optional AI settings/templates and native-approved provider
+diagnostics/source message suggestions with endpoint-bound macOS Keychain authentication are implemented
 with selected acceptance. **Ordinary desktop builds still disable managed Git
-trust grants, writes and remote execution while acceptance remains partial. AI source
-context, commit-message candidates, bounded automatic commits, general backup/restore
+trust grants, writes and remote execution while acceptance remains partial. Hierarchical AI analysis,
+bounded automatic commits, general backup/restore
 and release readiness remain unfinished. Manual workflows require no AI setup.**
 
 Start with the [current implementation and acceptance record](docs/EXECUTION_STATUS.md)

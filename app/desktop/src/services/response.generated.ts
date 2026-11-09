@@ -251,6 +251,11 @@ export type AiProviderResult =
       kind: "completion";
       value: AiCompletion;
       [k: string]: unknown;
+    }
+  | {
+      kind: "candidates";
+      value: AiCandidateSet;
+      [k: string]: unknown;
     };
 /**
  * This interface was referenced by `Response`'s JSON-Schema
@@ -261,7 +266,7 @@ export type AiAuthentication = "none" | "stored_bearer";
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "AiPurpose".
  */
-export type AiPurpose = "discover" | "inference";
+export type AiPurpose = "discover" | "inference" | "assisted_messages";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "AiScope".
@@ -758,6 +763,55 @@ export interface AiCompletion {
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiCandidateSet".
+ */
+export interface AiCandidateSet {
+  candidates: AiValidatedCandidate[];
+  context_complete: boolean;
+  context_fingerprint: string;
+  elapsed_ms: number;
+  input_tokens?: number | null;
+  model: string;
+  output_tokens?: number | null;
+  snapshot_fingerprint: string;
+  warnings: string[];
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiValidatedCandidate".
+ */
+export interface AiValidatedCandidate {
+  candidate: AiCandidate;
+  unreported_chunks: string[];
+  valid: boolean;
+  validation_errors: string[];
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiCandidate".
+ */
+export interface AiCandidate {
+  concerns: string[];
+  /**
+   * Model-reported attribution, not independent proof of semantic analysis.
+   */
+  covered_chunks: string[];
+  message: AiMessage;
+  rationale: string;
+  summary: string;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiMessage".
+ */
+export interface AiMessage {
+  body: string;
+  subject: string;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "AiProviderReview".
  */
 export interface AiProviderReview {
@@ -769,6 +823,7 @@ export interface AiProviderReview {
   purpose: AiPurpose;
   request_bytes: number;
   route: string;
+  source?: AiSourceReview | null;
   unencrypted: boolean;
   [k: string]: unknown;
 }
@@ -779,6 +834,22 @@ export interface AiProviderReview {
 export interface AiCredentialBinding {
   connection: string;
   endpoint: string;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiSourceReview".
+ */
+export interface AiSourceReview {
+  accounting: AiContextAccounting[];
+  complete: boolean;
+  context_fingerprint: string;
+  profile: string;
+  profile_revision: string;
+  snapshot_fingerprint: string;
+  template: string;
+  template_revision: string;
+  warnings: string[];
+  [k: string]: unknown;
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
@@ -886,14 +957,6 @@ export interface AiRules {
   instructions: string;
   style: AiStyle;
   subject_max_chars: number;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "AiMessage".
- */
-export interface AiMessage {
-  body: string;
-  subject: string;
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema

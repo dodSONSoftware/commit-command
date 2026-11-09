@@ -1,0 +1,772 @@
+
+> gitfleet-desktop@0.1.1 test
+> vitest run --run src/views/App.test.tsx
+
+
+ RUN  v4.1.12 /Users/randydodson/Documents/_code/git-fleet/app/desktop
+
+ ❯ src/views/App.test.tsx (17 tests | 1 failed) 3813ms
+   × preserves captured AI context across native review completion without replay or draft replacement 365ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/views/App.test.tsx > preserves captured AI context across native review completion without replay or draft replacement
+TestingLibraryElementError: Unable to find an accessible element with the role "dialog" and name "AI context and message suggestions"
+
+Here are the accessible roles:
+
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"topbar"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "About Commit Command":
+  [36m<button[39m
+    [33maria-label[39m=[32m"About Commit Command"[39m
+    [33mclass[39m=[32m"brand-button"[39m
+    [33mtitle[39m=[32m"About Commit Command"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Open folder…":
+  [36m<button />[39m
+
+  Name "AI settings…":
+  [36m<button />[39m
+
+  Name "▦ Overview":
+  [36m<button[39m
+    [33mclass[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "parent":
+  [36m<button />[39m
+
+  Name "Close parent tab":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Close parent tab"[39m
+  [36m/>[39m
+
+  Name "▦ Workspace Overview":
+  [36m<button[39m
+    [33mclass[39m=[32m"nav-item"[39m
+  [36m/>[39m
+
+  Name "◷ Operation results":
+  [36m<button[39m
+    [33mclass[39m=[32m"nav-item "[39m
+  [36m/>[39m
+
+  Name "Workspace Activity":
+  [36m<button[39m
+    [33mclass[39m=[32m"nav-item "[39m
+  [36m/>[39m
+
+  Name "Bulk Commit":
+  [36m<button[39m
+    [33mclass[39m=[32m"nav-item "[39m
+  [36m/>[39m
+
+  Name "parent1 staged":
+  [36m<button[39m
+    [33mclass[39m=[32m"repo-link chosen"[39m
+  [36m/>[39m
+
+  Name "child1 staged":
+  [36m<button[39m
+    [33mclass[39m=[32m"repo-link "[39m
+  [36m/>[39m
+
+  Name "Change root…":
+  [36m<button />[39m
+
+  Name "Remove saved definition":
+  [36m<button[39m
+    [33mclass[39m=[32m"danger subtle"[39m
+  [36m/>[39m
+
+  Name "↻ Local refresh":
+  [36m<button />[39m
+
+  Name "Inspect remote destinations":
+  [36m<button />[39m
+
+  Name "Authentication profiles and assignments":
+  [36m<button[39m
+    [33maria-expanded[39m=[32m"false"[39m
+  [36m/>[39m
+
+  Name "Review remote observation":
+  [36m<button[39m
+    [33mdisabled[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Refresh observation results":
+  [36m<button />[39m
+
+  Name "Refresh branch downloads":
+  [36m<button />[39m
+
+  Name "Changes 1":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mclass[39m=[32m"active"[39m
+  [36m/>[39m
+
+  Name "History":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Inspect trust & eligibility":
+  [36m<button />[39m
+
+  Name "file.txt":
+  [36m<button />[39m
+
+  Name "file.txt":
+  [36m<button />[39m
+
+  Name "Review stage":
+  [36m<button[39m
+    [33mdisabled[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Review unstage":
+  [36m<button[39m
+    [33mdisabled[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "AI message suggestions…":
+  [36m<button />[39m
+
+  Name "Read version update preview":
+  [36m<button />[39m
+
+  Name "Review exact version Action":
+  [36m<button[39m
+    [33mdisabled[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Load version Action results":
+  [36m<button />[39m
+
+  Name "Remember hook preference":
+  [36m<button[39m
+    [33mclass[39m=[32m"subtle"[39m
+    [33mdisabled[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Review commit · 1 files":
+  [36m<button[39m
+    [33mclass[39m=[32m"primary"[39m
+    [33mdisabled[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Review trust":
+  [36m<button[39m
+    [33mdisabled[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Revoke trust":
+  [36m<button[39m
+    [33mdisabled[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Cancel current operation":
+  [36m<button[39m
+    [33mdisabled[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  presentation:
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33mclass[39m=[32m"brand-banner brand-banner-dark"[39m
+    [33msrc[39m=[32m"/src/assets/brand/banner-dark.svg"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33mclass[39m=[32m"brand-banner brand-banner-light"[39m
+    [33msrc[39m=[32m"/src/assets/brand/banner-light.svg"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "Workspace":
+  [36m<select[39m
+    [33mid[39m=[32m"workspace"[39m
+  [36m/>[39m
+
+  Name "Color theme":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Color theme"[39m
+  [36m/>[39m
+
+  Name "Remote to observe":
+  [36m<select />[39m
+
+  Name "Version increment":
+  [36m<select />[39m
+
+  Name "Prerelease input policy":
+  [36m<select />[39m
+
+  Name "Hooks":
+  [36m<select />[39m
+
+  Name "Signing":
+  [36m<select />[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "Select a workspace":
+  [36m<option[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Fixture workspace":
+  [36m<option[39m
+    [33mvalue[39m=[32m"ws"[39m
+  [36m/>[39m
+
+  Name "System":
+  [36m<option[39m
+    [33mvalue[39m=[32m"system"[39m
+  [36m/>[39m
+
+  Name "Dark":
+  [36m<option[39m
+    [33mvalue[39m=[32m"dark"[39m
+  [36m/>[39m
+
+  Name "Light":
+  [36m<option[39m
+    [33mvalue[39m=[32m"light"[39m
+  [36m/>[39m
+
+  Name "Choose an inspected remote":
+  [36m<option[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Patch":
+  [36m<option[39m
+    [33mvalue[39m=[32m"patch"[39m
+  [36m/>[39m
+
+  Name "Minor":
+  [36m<option[39m
+    [33mvalue[39m=[32m"minor"[39m
+  [36m/>[39m
+
+  Name "Major":
+  [36m<option[39m
+    [33mvalue[39m=[32m"major"[39m
+  [36m/>[39m
+
+  Name "Reject prerelease input":
+  [36m<option[39m
+    [33mvalue[39m=[32m"reject"[39m
+  [36m/>[39m
+
+  Name "Discard prerelease and increment its numeric base":
+  [36m<option[39m
+    [33mvalue[39m=[32m"discard_and_increment"[39m
+  [36m/>[39m
+
+  Name "Execute supported hooks":
+  [36m<option[39m
+    [33mvalue[39m=[32m"execute"[39m
+  [36m/>[39m
+
+  Name "Bypass all — explicit review":
+  [36m<option[39m
+    [33mvalue[39m=[32m"bypass_all"[39m
+  [36m/>[39m
+
+  Name "Use configured signing":
+  [36m<option[39m
+    [33mvalue[39m=[32m"configured"[39m
+  [36m/>[39m
+
+  Name "Explicitly unsigned":
+  [36m<option[39m
+    [33mvalue[39m=[32m"unsigned"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  navigation:
+
+  Name "Open tabs":
+  [36m<nav[39m
+    [33maria-label[39m=[32m"Open tabs"[39m
+    [33mclass[39m=[32m"tabs"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  complementary:
+
+  Name "":
+  [36m<aside[39m
+    [33mclass[39m=[32m"sidebar"[39m
+    [33mstyle[39m=[32m"width: 240px;"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<aside[39m
+    [33mclass[39m=[32m"composer"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Fixture workspace":
+  [36m<h2 />[39m
+
+  Name "parent main":
+  [36m<h1 />[39m
+
+  Name "Observe one remote branch":
+  [36m<h3 />[39m
+
+  Name "Branch downloads":
+  [36m<h3 />[39m
+
+  Name "Changed files":
+  [36m<h2 />[39m
+
+  Name "Staged · HEAD ↔ index":
+  [36m<h3 />[39m
+
+  Name "Unstaged / untracked · index ↔ worktree":
+  [36m<h3 />[39m
+
+  Name "Select a file to inspect":
+  [36m<h2 />[39m
+
+  Name "Commit composer":
+  [36m<h2 />[39m
+
+  Name "Trust & execution":
+  [36m<h3 />[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"path"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p />[39m
+
+  Name "":
+  [36m<p />[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"path"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p />[39m
+
+  Name "":
+  [36m<p />[39m
+
+  Name "":
+  [36m<p />[39m
+
+  Name "":
+  [36m<p />[39m
+
+  Name "":
+  [36m<p />[39m
+
+  Name "":
+  [36m<p />[39m
+
+  Name "":
+  [36m<p />[39m
+
+  Name "":
+  [36m<p />[39m
+
+  Name "":
+  [36m<p />[39m
+
+  Name "":
+  [36m<p />[39m
+
+  Name "":
+  [36m<p />[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"review-note"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p />[39m
+
+  Name "":
+  [36m<p />[39m
+
+  --------------------------------------------------
+  group:
+
+  Name "":
+  [36m<details[39m
+    [33mclass[39m=[32m"workspace-settings"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<details[39m
+    [33mclass[39m=[32m"remote-inspector"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<details />[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "Name":
+  [36m<input[39m
+    [33mvalue[39m=[32m"Fixture workspace"[39m
+  [36m/>[39m
+
+  Name "Excluded directory names":
+  [36m<input[39m
+    [33mvalue[39m=[32m"node_modules"[39m
+  [36m/>[39m
+
+  Name "Full remote branch reference":
+  [36m<input[39m
+    [33mmaxlength[39m=[32m"1024"[39m
+    [33mplaceholder[39m=[32m"refs/heads/main"[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Version file relative to this repository":
+  [36m<input[39m
+    [33mmaxlength[39m=[32m"4096"[39m
+    [33mvalue[39m=[32m"version"[39m
+  [36m/>[39m
+
+  Name "Message":
+  [36m<textarea[39m
+    [33mmaxlength[39m=[32m"524288"[39m
+    [33mplaceholder[39m=[32m"Describe the change
+
+  Optional explanation…"[39m
+    [33mrows[39m=[32m"8"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  separator:
+
+  Name "Sidebar width":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Sidebar width"[39m
+    [33maria-orientation[39m=[32m"vertical"[39m
+    [33maria-valuemax[39m=[32m"420"[39m
+    [33maria-valuemin[39m=[32m"180"[39m
+    [33maria-valuenow[39m=[32m"240"[39m
+    [33mclass[39m=[32m"splitter"[39m
+    [33mrole[39m=[32m"separator"[39m
+    [33mtabindex[39m=[32m"0"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  main:
+
+  Name "":
+  [36m<main[39m
+    [33mclass[39m=[32m"content"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  region:
+
+  Name "Workspace discovery status":
+  [36m<section[39m
+    [33maria-label[39m=[32m"Workspace discovery status"[39m
+    [33mclass[39m=[32m"workspace-scan"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  status:
+
+  Name "":
+  [36m<p[39m
+    [33mrole[39m=[32m"status"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  checkbox:
+
+  Name "Include file.txt from index":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Include file.txt from index"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Include file.txt from working_tree":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Include file.txt from working_tree"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  slider:
+
+  Name "Inspector width":
+  [36m<input[39m
+    [33mmax[39m=[32m"800"[39m
+    [33mmin[39m=[32m"240"[39m
+    [33mstep[39m=[32m"20"[39m
+    [33mtype[39m=[32m"range"[39m
+    [33mvalue[39m=[32m"400"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  contentinfo:
+
+  Name "":
+  [36m<footer />[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"shell"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"topbar"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"About Commit Command"[39m
+          [33mclass[39m=[32m"brand-button"[39m
+          [33mtitle[39m=[32m"About Commit Command"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<img[39m
+            [33malt[39m=[32m""[39m
+            [33mclass[39m=[32m"brand-banner brand-banner-dark"[39m
+            [33msrc[39m=[32m"/src/assets/brand/banner-dark.svg"[39m
+          [36m/>[39m
+          [36m<img[39m
+            [33malt[39m=[32m""[39m
+            [33mclass[39m=[32m"brand-banner brand-banner-light"[39m
+            [33msrc[39m=[32m"/src/assets/brand/banner-light.svg"[39m
+          [36m/>[39m
+        [36m</button>[39m
+        [36m<dialog[39m
+          [33maria-labelledby[39m=[32m"about-title"[39m
+          [33mclass[39m=[32m"about-dialog"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Commit Command — Git workspace manager for macOS"[39m
+            [33mclass[39m=[32m"about-banner"[39m
+          [36m>[39m
+            [36m<img[39m
+              [33malt[39m=[32m""[39m
+              [33mclass[39m=[32m"brand-banner brand-banner-dark"[39m
+              [33msrc[39m=[32m"/src/assets/brand/banner-dark.svg"[39m
+            [36m/>[39m
+            [36m<img[39m
+              [33malt[39m=[32m""[39m
+              [33mclass[39m=[32m"brand-banner brand-banner-light"[39m
+              [33msrc[39m=[32m"/src/assets/brand/banner-light.svg"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"about-publisher"[39m
+          [36m>[39m
+            [0mA [0m
+            [36m<strong>[39m
+              [0mdodson labs[0m
+            [36m</strong>[39m
+            [0m application[0m
+          [36m</p>[39m
+          [36m<hr />[39m
+          [36m<h2[39m
+            [33mid[39m=[32m"about-title"[39m
+          [36m>[39m
+            [0mCommit Command[0m
+          [36m</h2>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"about-version"[39m
+          [36m>[39m
+            [0mversion [0m
+            [0m0.1.1[0m
+          [36m</p>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"about-description"[39m
+          [36m>[39m
+            [0mLocal-first Git workspace manager for macOS.[0m
+          [36m</p>[39m
+          [36m<dl[39m
+            [33mclass[39m=[32m"about-details"[39m
+          [36m>[39m
+            [36m<dt>[39m
+              [0mDeveloper[0m
+            [36m</dt>[39m
+            [36m<dd>[39m
+              [0mRandy Dodson[0m
+            [36m</dd>[39m
+            [36m<dt>[39m
+              [0mPublisher[0m
+            [36m</dt>[39m
+            [36m<dd>[39m
+              [0mdodson labs[0m
+            [36m</dd>[39m
+            [36m<dt>[39m
+              [0mCopyright[0m
+            [36m</dt>[39m
+            [36m<dd>[39m
+              [0m© 2026 Randy Dodson[0m
+            [36m</dd>[39m
+            [36m<dt>[39m
+              [0mLicense[0m
+            [36m</dt>[39m
+            [36m<dd>[39m
+              [0mMIT License[0m
+            [36m</dd>[39m
+          [36m</dl>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"about-actions"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mView license…[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33mdisabled[39m=[32m""[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mGitHub repository…[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"primary about-ok"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mOK[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</dialog>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"workspace-switch"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mfor[39m=[32m"workspace"[39m
+          [36m>[39m
+            [0mWorkspace[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mid[39m=[32m"workspace"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mdisabled[39m=[32m""[39m
+              [33mvalue[39m=[32m""[39m
+            [36m>[39m
+              [0mSelect a workspace[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"ws"[39m
+            [36m>[39m
+              [0mFixture workspace[0m
+            [36m</option>[39m
+          [36m</select>[39m
+          [36m<button>[39m
+            [0mOpen folder…[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<button>[39m
+          [0mAI settings…[0m
+        [36m</button>[39m
+        [36m<dialog[39m
+          [33maria-labelledby[39m=[32m"ai-settings-title"[39m
+          [33mclass[39m=[32m"ai-settings-dialog"[39m
+        [36m>[39m
+          [36m<header>[39m
+            [36m<h2[39m
+              [33mid[39m=[32m"ai-settings-title"[39m
+            [36m>[39m
+              [0mOptional AI settings[0m
+            [36m</h2>[39m
+            [36m<button>[39m
+              [0mClose AI settings[0m
+            [36m</button>[39m
+          [36m</header>[39m
+          [36m<p>[39m
+            [0mManual messages, Git operations and version increments work without AI. Saving settings and static previews send no source, contact no provider and grant no Git or Action authority.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [0mProvider diagnostics require exact native approval and use no repository content. Repository-context generation remains a separate integration step.[0m
+          [36m</p>[39m
+          [36m<button>[39m
+            [0mReload saved AI settings[0m
+          [36m</button>[39m
+        [36m</dialog>[39m
+        [36m<select[39m
+          [33maria-label[39m=[32m"Color theme"[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"system"[39m
+          [36m>[39m
+            [0mSystem[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"dark"[39m
+          [36m>[39m
+            [0mDark[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"light"[39m
+          [36m>[39m
+            [0mLight[0m
+          [36m</option>[39m
+        [36m</select>[39m
+      [36m</header>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Open ta...
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/views/App.test.tsx:954:19
+    952|     await userEvent.click(screen.getByRole("button",{name:"Review exac…
+    953|     await act(async()=>{await vi.advanceTimersByTimeAsync(3000);});
+    954|     expect(screen.getByRole("dialog",{name:"AI context and message sug…
+       |                   ^
+    955|     expect(screen.getByRole("region",{name:"Exact filtered AI context"…
+    956|     expect(screen.getByRole("textbox",{name:"Message"})).toHaveValue("…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 16 passed (17)
+   Start at  20:56:00
+   Duration  4.34s (transform 170ms, setup 28ms, import 234ms, tests 3.81s, environment 176ms)
+

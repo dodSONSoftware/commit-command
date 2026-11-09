@@ -1,0 +1,11 @@
+[
+  {
+    "method": "POST",
+    "path": "/api/chat",
+    "body_bytes": 3304,
+    "body_sha256": "dc1225bcee9232d08e72926f659db707f454b6ac1ff9d7562d7aa49f55e3ec56",
+    "context_sha256": "ea156f56007fa914d34966594b80d297def7e9df5031360ef68ed21fe490d7c8",
+    "model": "Fixture-model-unavailable",
+    "chunks": 5
+  }
+]

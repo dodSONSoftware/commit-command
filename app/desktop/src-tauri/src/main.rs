@@ -259,6 +259,7 @@ fn dispatch<R: tauri::Runtime>(
                 | Request::Propose { .. }
                 | Request::ReviewAiDiscovery { .. }
                 | Request::ReviewAiInference { .. }
+                | Request::ReviewAiMessages { .. }
                 | Request::ReviewVersionAction { .. }
                 | Request::ReviewVersionRecovery { .. }
                 | Request::ReviewVersionStage { .. }

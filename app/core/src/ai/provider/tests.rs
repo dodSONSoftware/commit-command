@@ -405,8 +405,12 @@ fn independent_jobs_enforce_global_and_connection_limits_and_shutdown_discards_r
     let mut jobs = Jobs::default();
     let mut ids = Vec::new();
     for (i, server) in servers.iter().enumerate() {
+        // Held calls must outlive the two-second overlap proof, including time
+        // waiting for the global process permit during the complete parallel suite.
+        let mut destination = connection(Provider::Ollama, &server.address);
+        destination.timeout_ms = 5000;
         let approved = Plan::inference(
-            &connection(Provider::Ollama, &server.address),
+            &destination,
             "fixture-model",
             "system",
             "synthetic",
@@ -608,4 +612,34 @@ fn absent_or_unapproved_authentication_cannot_reach_the_provider() {
         .unwrap_err();
     assert_eq!(e.kind, ErrorKind::Unavailable);
     assert!(server.request.lock().unwrap().is_none());
+}
+
+#[test]
+fn reflected_credential_is_refused_before_result_reaches_renderer() {
+    for content in [
+        "fixture-store-token",
+        "{\"subject\":\"fixture-store-token\"}",
+    ] {
+        let body=json!({"model":"fixture-model","done":true,"message":{"role":"assistant","content":content}}).to_string();
+        let server = Server::new(200, String::new(), body.into_bytes(), false);
+        let mut c = connection(Provider::Ollama, &server.address);
+        c.id = Some(uuid::Uuid::new_v4().to_string());
+        c.authentication = crate::ai::credentials::Authentication::StoredBearer;
+        let error = Plan::inference(
+            &c,
+            "fixture-model",
+            "system",
+            "synthetic",
+            &Parameters::default(),
+        )
+        .unwrap()
+        .approve()
+        .execute(
+            Some(Secret::new(b"fixture-store-token".to_vec()).unwrap()),
+            Cancellation::default(),
+        )
+        .unwrap_err();
+        assert!(!error.to_string().contains("fixture-store-token"));
+        assert!(error.to_string().contains("reflected authentication"));
+    }
 }

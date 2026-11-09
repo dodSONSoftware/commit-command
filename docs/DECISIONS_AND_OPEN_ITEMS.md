@@ -310,3 +310,18 @@ reports uncertain outcome rather than retrying. No user search-list or parent
 interaction policy is changed. See [secure-auth checkpoint](reports/G09_AI_SECURE_AUTH_2026-11-08.md)
 for actual private-Keychain tests, native cancellation/missing-token evidence,
 retained counterevidence and untested real-user credential enrollment.
+
+
+### M6/M7 implementation envelope — source suggestions (November 8, 2026)
+
+M6-I003 records an engineering boundary within authorized optional AI: explicit bounded
+read-only selection, conservative screening, exact filtered context inspection,
+current profile/template metadata and one-request native destination approval.
+Source/settings are revalidated at approval; jobs/results are ephemeral. One-to-three
+structured suggestions are Rust-template-validated, with explicit omissions and
+model-reported provenance; normalized duplicate/unknown command fields are refused.
+Only deliberate selection replaces a manual draft. No Git, Action or automatic-run
+authority is inferred. Full working-file comparisons favor explicit coverage over
+compact diffs; incomplete coverage is visible and cannot authorize automatic writes.
+This is selected fixture acceptance, not a new product-interview approval or a claim
+of verified semantic analysis. See [assisted-message checkpoint](reports/G09_AI_ASSISTED_MESSAGES_2026-11-08.md).

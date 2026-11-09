@@ -51,8 +51,9 @@ implementation, acceptance gaps G01â€“G11, supported scope and next actions. M3â
 have implemented capabilities and selected native evidence; their remaining gates
 are open. Ordinary Git writes remain disabled. Exact publication/guided queues,
 guarded SemVer Actions and optional AI settings/synthetic diagnostics/secure auth
-have selected implementation and acceptance; repository-context AI candidates,
-automatic commits, general backup/restore and release acceptance remain open.
+and native-reviewed source message suggestions have selected implementation and
+acceptance; hierarchical AI analysis, automatic commits, general backup/restore and
+release acceptance remain open.
 The crosswalk supplies requirement
 ownership, and the completion plan supplies detailed work packages.
 

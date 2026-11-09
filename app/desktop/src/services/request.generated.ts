@@ -2,6 +2,16 @@
 
 export type Request =
   | {
+      context_fingerprint: string;
+      instructions: string;
+      kind: "review_ai_messages";
+      one_off_profile?: string | null;
+      snapshot_fingerprint: string;
+      spec: AiCaptureSpec;
+      workspace: string;
+      worktree: string;
+    }
+  | {
       kind: "preview_ai_context";
       spec: AiCaptureSpec;
       workspace: string;

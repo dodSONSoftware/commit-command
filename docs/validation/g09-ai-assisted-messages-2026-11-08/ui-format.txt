@@ -1,0 +1,4 @@
+app/desktop/src/views/AiMessages.tsx 57ms
+app/desktop/src/views/AiSettings.tsx 40ms (unchanged)
+app/desktop/src/views/App.tsx 70ms
+app/desktop/src/views/App.test.tsx 30ms
