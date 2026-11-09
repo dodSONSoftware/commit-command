@@ -1,0 +1,2 @@
+cargo test --offline --locked --manifest-path app/core/Cargo.toml --features application-services --lib backup::
+cargo clippy --offline --locked --manifest-path app/core/Cargo.toml --all-features --all-targets -- -D warnings

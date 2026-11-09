@@ -4283,18 +4283,22 @@
       "package": "P13A",
       "action": "Destination disk full/permission denied/write/fsync failure",
       "expected": "Prior valid archive remains, no success/rotation on partial file",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/reports/COMPLETION_P13A_PUBLICATION_2026-11-08.md"
+      ],
+      "note": "Private publication and streaming failure/cancellation covered. Exact disk-full/fsync/process-crash/native variants remain open."
     },
     {
       "id": "BACKUP06",
       "package": "P13A",
       "action": "Crash before temp completion/before final rename/after publication",
       "expected": "New backup either absent or verified complete; incomplete never used as valid",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/reports/COMPLETION_P13A_PUBLICATION_2026-11-08.md"
+      ],
+      "note": "Private publication and streaming failure/cancellation covered. Exact disk-full/fsync/process-crash/native variants remain open."
     },
     {
       "id": "BACKUP07",
@@ -4352,9 +4356,10 @@
       "expected": "No partial success, active app responsive, previous backup kept",
       "status": "partial",
       "evidence": [
-        "docs/reports/COMPLETION_P13A_PRIMITIVES_2026-11-08.md"
+        "docs/reports/COMPLETION_P13A_PRIMITIVES_2026-11-08.md",
+        "docs/reports/COMPLETION_P13A_PUBLICATION_2026-11-08.md"
       ],
-      "note": "Codec/snapshot primitive tests only. Full application, boundary, extraction/activation and native variants remain open as detailed in report."
+      "note": "Private publication and streaming failure/cancellation covered. Exact disk-full/fsync/process-crash/native variants remain open."
     },
     {
       "id": "IMPORT01",

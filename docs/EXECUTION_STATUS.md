@@ -17,7 +17,10 @@ requirement mapping. It does not accept gates or replace this live evidence ledg
 stored-only archive codec and owner-connection WAL-consistent SQLite snapshot
 implemented. No extraction or state activation. Focused hostile-container and
 source-preservation tests pass; P13A remains partial pending staging, durable
-publication, coherent app-state capture and migration integration. Product backup,
+publication acceptance, coherent app-state capture and migration integration.
+[Publication checkpoint](reports/COMPLETION_P13A_PUBLICATION_2026-11-08.md) adds
+private descriptor-relative staging, validated/synced no-clobber publication and
+streaming cancellation/failure cleanup; 16 focused tests and strict Clippy pass. Product backup,
 restore and retention remain unfinished; no G10 acceptance claimed.
 
 ### November 8 completion P02 initial activation fix
