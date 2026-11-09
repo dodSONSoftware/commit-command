@@ -1,0 +1,7 @@
+{
+  "host_exit": 0,
+  "native_pid_gone": true,
+  "owned_curl_pid_reaped": true,
+  "settings_bytes_exact_unsaved_fields_not_persisted": true,
+  "requests": 4
+}

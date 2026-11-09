@@ -1,0 +1,13 @@
+
+> gitfleet-desktop@0.1.1 test
+> vitest run --run src/views/AiDiagnostics.test.tsx src/views/AiSettings.test.tsx
+
+
+ RUN  v4.1.12 /Users/randydodson/Documents/_code/git-fleet/app/desktop
+
+
+ Test Files  2 passed (2)
+      Tests  7 passed (7)
+   Start at  18:49:45
+   Duration  1.10s (transform 79ms, setup 62ms, import 205ms, tests 1.06s, environment 396ms)
+

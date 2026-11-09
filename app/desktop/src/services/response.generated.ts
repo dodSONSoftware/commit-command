@@ -6,6 +6,11 @@
  */
 export type Data =
   | {
+      kind: "ai_jobs";
+      value: AiJob[];
+      [k: string]: unknown;
+    }
+  | {
       kind: "ai_settings";
       value: AiSettingsSnapshot;
       [k: string]: unknown;
@@ -181,6 +186,62 @@ export type Data =
     };
 /**
  * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ErrorKind".
+ */
+export type ErrorKind =
+  | "invalid_path"
+  | "unsupported_configuration"
+  | "inspection_failed"
+  | "hook_rejected"
+  | "io"
+  | "invalid_data"
+  | "experimental"
+  | "invalid_request"
+  | "unsupported_git_version"
+  | "unavailable"
+  | "concurrent_change"
+  | "stale_cursor"
+  | "missing_object"
+  | "timeout"
+  | "cancelled"
+  | "output_limit"
+  | "busy"
+  | "storage"
+  | "newer_schema"
+  | "untrusted_repository"
+  | "unsupported_repository_state"
+  | "stale_review"
+  | "signing_failed"
+  | "needs_manual_reconciliation"
+  | "uncertain_outcome";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiJobPhase".
+ */
+export type AiJobPhase =
+  "queued" | "running" | "complete" | "failed" | "cancelled";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiProviderResult".
+ */
+export type AiProviderResult =
+  | {
+      kind: "models";
+      value: AiInstalledModel[];
+      [k: string]: unknown;
+    }
+  | {
+      kind: "completion";
+      value: AiCompletion;
+      [k: string]: unknown;
+    };
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiPurpose".
+ */
+export type AiPurpose = "discover" | "inference";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "AiScope".
  */
 export type AiScope =
@@ -228,36 +289,6 @@ export type NativePath =
       value: number[];
       [k: string]: unknown;
     };
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "ErrorKind".
- */
-export type ErrorKind =
-  | "invalid_path"
-  | "unsupported_configuration"
-  | "inspection_failed"
-  | "hook_rejected"
-  | "io"
-  | "invalid_data"
-  | "experimental"
-  | "invalid_request"
-  | "unsupported_git_version"
-  | "unavailable"
-  | "concurrent_change"
-  | "stale_cursor"
-  | "missing_object"
-  | "timeout"
-  | "cancelled"
-  | "output_limit"
-  | "busy"
-  | "storage"
-  | "newer_schema"
-  | "untrusted_repository"
-  | "unsupported_repository_state"
-  | "stale_review"
-  | "signing_failed"
-  | "needs_manual_reconciliation"
-  | "uncertain_outcome";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "ObservedVersionState".
@@ -620,6 +651,54 @@ export interface Response {
   data: Data;
   epoch: number;
   version: number;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiJob".
+ */
+export interface AiJob {
+  error?: string | null;
+  error_kind?: ErrorKind | null;
+  id: string;
+  phase: AiJobPhase;
+  result?: AiProviderResult | null;
+  review: AiProviderReview;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiInstalledModel".
+ */
+export interface AiInstalledModel {
+  id: string;
+  size?: number | null;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiCompletion".
+ */
+export interface AiCompletion {
+  content: string;
+  elapsed_ms: number;
+  input_tokens?: number | null;
+  model: string;
+  output_tokens?: number | null;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiProviderReview".
+ */
+export interface AiProviderReview {
+  endpoint: string;
+  fingerprint: string;
+  model?: string | null;
+  purpose: AiPurpose;
+  request_bytes: number;
+  route: string;
+  unencrypted: boolean;
   [k: string]: unknown;
 }
 /**
@@ -2050,6 +2129,10 @@ export interface TrustState {
  * via the `definition` "ReviewDisplay".
  */
 export interface ReviewDisplay {
+  /**
+   * Set only by Core for approved provider reads; defaults fail closed.
+   */
+  allow_in_read_only_build?: boolean;
   content: string;
   epoch: number;
   expires_at_ms: number;

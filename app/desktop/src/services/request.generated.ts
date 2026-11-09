@@ -2,6 +2,23 @@
 
 export type Request =
   | {
+      connection: AiConnectionDraft;
+      kind: "review_ai_discovery";
+    }
+  | {
+      connection: AiConnectionDraft;
+      kind: "review_ai_inference";
+      profile: AiProfileDraft;
+      template: AiTemplate;
+    }
+  | {
+      kind: "ai_jobs";
+    }
+  | {
+      id: string;
+      kind: "cancel_ai_job";
+    }
+  | {
       kind: "ai_settings";
     }
   | {
@@ -331,6 +348,8 @@ export type Request =
       operation: string;
       workspace: string;
     };
+export type AiProvider = "ollama" | "compatible";
+export type AiStyle = "plain" | "conventional";
 export type AiChange =
   | {
       endpoint: string;
@@ -385,8 +404,6 @@ export type AiChange =
       kind: "concurrency";
       per_connection: number;
     };
-export type AiProvider = "ollama" | "compatible";
-export type AiStyle = "plain" | "conventional";
 export type AiScope =
   | {
       kind: "application";
@@ -550,6 +567,23 @@ export type WriteRequest =
       [k: string]: unknown;
     };
 
+export interface AiConnectionDraft {
+  endpoint: string;
+  id?: string | null;
+  name: string;
+  provider: AiProvider;
+  timeout_ms: number;
+}
+export interface AiProfileDraft {
+  connection: string;
+  context_bytes: number;
+  id?: string | null;
+  model: string;
+  name: string;
+  parameters: AiParameters;
+  system_message: string;
+  template: string;
+}
 export interface AiParameters {
   context_size?: number | null;
   min_p?: number | null;
@@ -561,6 +595,13 @@ export interface AiParameters {
   top_k?: number | null;
   top_p?: number | null;
 }
+export interface AiTemplate {
+  examples: string[];
+  id: string;
+  name: string;
+  revision: string;
+  rules: AiRules;
+}
 export interface AiRules {
   allow_scope: boolean;
   allowed_types: string[];
@@ -568,13 +609,6 @@ export interface AiRules {
   instructions: string;
   style: AiStyle;
   subject_max_chars: number;
-}
-export interface AiTemplate {
-  examples: string[];
-  id: string;
-  name: string;
-  revision: string;
-  rules: AiRules;
 }
 export interface Cursor {
   history: Cursor2;

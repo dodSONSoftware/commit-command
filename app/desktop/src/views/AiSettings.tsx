@@ -1,3 +1,4 @@
+import { AiDiagnostics } from "./AiDiagnostics";
 import { useRef, useState } from "react";
 import { value, type Bridge } from "../services/bridge";
 import type {
@@ -28,6 +29,10 @@ export function AiSettings({
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
+  const [open, setOpen] = useState(false);
+  const [models, setModels] = useState<
+    import("../services/response.generated").AiInstalledModel[] | null
+  >(null);
   const [snapshot, setSnapshot] = useState<AiSettingsSnapshot | null>(null);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
@@ -119,6 +124,7 @@ export function AiSettings({
         ref={trigger}
         disabled={disabled}
         onClick={() => {
+          setOpen(true);
           dialog.current?.showModal();
           void load();
         }}
@@ -129,7 +135,10 @@ export function AiSettings({
         ref={dialog}
         className="ai-settings-dialog"
         aria-labelledby="ai-settings-title"
-        onClose={() => trigger.current?.focus()}
+        onClose={() => {
+          setOpen(false);
+          trigger.current?.focus();
+        }}
       >
         <header>
           <h2 id="ai-settings-title">Optional AI settings</h2>
@@ -143,8 +152,9 @@ export function AiSettings({
           provider and grant no Git or Action authority.
         </p>
         <p>
-          Provider discovery, inference and secure authentication will be
-          enabled after their separate safety checks are implemented.
+          Provider diagnostics require exact native approval and use no
+          repository content. Secure credential storage and source-context
+          generation remain separate integration steps.
         </p>
         {error && <p role="alert">{error}</p>}
         <button disabled={pending} onClick={() => void load()}>
@@ -162,6 +172,7 @@ export function AiSettings({
                   const c = settings.connections.find(
                     (c) => c.id === e.target.value,
                   );
+                  setModels(null);
                   setConnectionId(c?.id ?? null);
                   setConnectionName(c?.name ?? "");
                   setProvider(c?.provider ?? "ollama");
@@ -206,7 +217,10 @@ export function AiSettings({
                 Provider endpoint
                 <input
                   value={endpoint}
-                  onChange={(e) => setEndpoint(e.target.value)}
+                  onChange={(e) => {
+                    setModels(null);
+                    setEndpoint(e.target.value);
+                  }}
                   maxLength={2048}
                 />
               </label>
@@ -307,8 +321,24 @@ export function AiSettings({
                   value={model}
                   onChange={(e) => setModel(e.target.value)}
                   maxLength={256}
+                  autoComplete="off"
+                  autoCapitalize="off"
+                  autoCorrect="off"
+                  spellCheck={false}
+                  list="ai-installed-models"
                 />
               </label>
+              <datalist id="ai-installed-models">
+                {models?.map((m) => (
+                  <option key={m.id} value={m.id} />
+                ))}
+              </datalist>
+              {models && model && !models.some((m) => m.id === model) && (
+                <p role="status">
+                  Selected model was not reported by the last discovery. Its
+                  saved identifier is preserved; no fallback is selected.
+                </p>
+              )}
               <p>
                 Enter an explicit model identifier. Saving does not verify
                 installation or silently select another model.
@@ -443,6 +473,33 @@ export function AiSettings({
                 </>
               )}
             </section>
+            <AiDiagnostics
+              bridge={bridge}
+              active={open}
+              onModels={setModels}
+              connection={{
+                id: connectionId,
+                name: connectionName,
+                provider,
+                endpoint,
+                timeout_ms: timeout,
+              }}
+              profile={{
+                id: profileId,
+                name: profileName,
+                connection,
+                model,
+                system_message: system,
+                parameters,
+                template: templateId,
+                context_bytes: budget,
+              }}
+              template={
+                editingTemplate ??
+                settings.templates.find((t) => t.id === templateId) ??
+                null
+              }
+            />
             <section aria-label="AI templates">
               <h3>Message templates</h3>
               <select

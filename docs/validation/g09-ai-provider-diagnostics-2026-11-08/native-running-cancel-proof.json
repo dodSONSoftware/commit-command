@@ -1,0 +1,5 @@
+{
+  "request_count_before_cancel": 3,
+  "server_received_exact_chat_before_hold": true,
+  "hold_unreleased": true
+}

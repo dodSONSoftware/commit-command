@@ -2303,3 +2303,98 @@ fn optional_ai_settings_preserve_manual_work_and_use_lazy_atomic_storage() {
     );
     assert_eq!(before, tree_bytes(&f.repo));
 }
+
+#[test]
+fn reviewed_ai_diagnostic_runs_outside_storage_owner_and_cancels_without_git_authority() {
+    use gitfleet_core::ai::config::{ConnectionDraft, Provider};
+    use std::{
+        io::{Read, Write},
+        net::TcpListener,
+        sync::{
+            atomic::{AtomicBool, Ordering},
+            Arc,
+        },
+        thread,
+        time::{Duration, Instant},
+    };
+    let (f, mut app, _, _) = setup();
+    let before = tree_bytes(&f.repo);
+    let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+    listener.set_nonblocking(true).unwrap();
+    let endpoint = format!("http://{}/", listener.local_addr().unwrap());
+    let observed = Arc::new(AtomicBool::new(false));
+    let running = observed.clone();
+    let stop = Arc::new(AtomicBool::new(false));
+    let stopped = stop.clone();
+    let server = thread::spawn(move || {
+        let deadline = Instant::now() + Duration::from_secs(5);
+        while Instant::now() < deadline && !stopped.load(Ordering::Relaxed) {
+            if let Ok((mut stream, _)) = listener.accept() {
+                stream
+                    .set_read_timeout(Some(Duration::from_secs(2)))
+                    .unwrap();
+                let mut bytes = [0; 4096];
+                let n = stream.read(&mut bytes).unwrap();
+                assert!(bytes[..n].starts_with(b"GET /api/tags "));
+                running.store(true, Ordering::Relaxed);
+                while !stopped.load(Ordering::Relaxed) && Instant::now() < deadline {
+                    thread::sleep(Duration::from_millis(5));
+                }
+                let _ = stream
+                    .write_all(b"HTTP/1.1 200 OK\r\nContent-Length: 13\r\n\r\n{\"models\":[]}");
+                return;
+            }
+            thread::sleep(Duration::from_millis(5));
+        }
+    });
+    let request = || Request::ReviewAiDiscovery {
+        connection: ConnectionDraft {
+            id: None,
+            name: "fixture".into(),
+            provider: Provider::Ollama,
+            endpoint: endpoint.clone(),
+            timeout_ms: 3000,
+        },
+    };
+    let Data::Review(review) = app.request(app.epoch(), request()).unwrap().data else {
+        panic!()
+    };
+    assert!(review.allow_in_read_only_build);
+    assert!(review.summary.contains("HTTP IS UNENCRYPTED"));
+    assert!(!observed.load(Ordering::Relaxed));
+    let (cap, _) = app.begin_confirmation(&review.id).unwrap();
+    assert_eq!(
+        app.confirm(cap, false, Cancellation::default())
+            .unwrap_err()
+            .kind,
+        ErrorKind::Cancelled
+    );
+    assert!(!observed.load(Ordering::Relaxed));
+    let Data::Review(review) = app.request(app.epoch(), request()).unwrap().data else {
+        panic!()
+    };
+    let (cap, _) = app.begin_confirmation(&review.id).unwrap();
+    let start = Instant::now();
+    let receipt = app.confirm(cap, true, Cancellation::default()).unwrap();
+    assert!(start.elapsed() < Duration::from_millis(500));
+    let id = receipt["ai_job"].as_str().unwrap().to_string();
+    let start = Instant::now();
+    while !observed.load(Ordering::Relaxed) {
+        assert!(start.elapsed() < Duration::from_secs(2));
+        thread::sleep(Duration::from_millis(5));
+    }
+    let start = Instant::now();
+    app.request(app.epoch(), Request::Workspaces {}).unwrap();
+    assert!(start.elapsed() < Duration::from_millis(500));
+    app.request(app.epoch(), Request::CancelAiJob { id })
+        .unwrap();
+    app.shutdown().unwrap();
+    let Data::AiJobs(jobs) = app.request(app.epoch(), Request::AiJobs {}).unwrap().data else {
+        panic!()
+    };
+    assert!(jobs.is_empty());
+    stop.store(true, Ordering::Relaxed);
+    server.join().unwrap();
+    assert_eq!(before, tree_bytes(&f.repo));
+    assert!(!f.root.join("state/ai").exists());
+}

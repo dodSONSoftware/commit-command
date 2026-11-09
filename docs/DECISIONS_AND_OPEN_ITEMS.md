@@ -280,3 +280,17 @@ observed-state recovery; staging and committing have fresh independent reviews.
 The tested exchange primitive requires macOS and state/target on one filesystem;
 other formats/volumes fail closed. No AI is required. See the
 [G09 checkpoint](reports/G09_SEMVER_ACTION_2026-11-08.md) for evidence and open scope.
+
+
+### M6 implementation envelope — provider diagnostics (November 8, 2026)
+
+M6-I001 is an engineering implementation choice within the authorized AI feature,
+not a new product-interview approval. The current macOS adapter reuses the bounded
+owned-process transport with system `/usr/bin/curl` (observed 8.7.1), clean environment,
+fixed routes and stdin-only source/auth. Native approval grants one exact request;
+redirects and model fallback are refused. Diagnostics run outside the storage owner,
+use no repository capture, and never grant Git/Action authority. Requests/results
+are ephemeral and cancelled on reset/shutdown. Ordinary repository-write gating
+remains unchanged. HTTPS system trust, OS secure auth, actual provider and source
+context acceptance must be completed separately; see the
+[G09 diagnostic report](reports/G09_AI_PROVIDER_DIAGNOSTICS_2026-11-08.md).

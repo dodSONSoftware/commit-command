@@ -1,0 +1,9 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.26s
+     Running tests/m3_application.rs (app/core/target/debug/deps/m3_application-0302a75ece9818d8)
+
+running 1 test
+test reviewed_ai_diagnostic_runs_outside_storage_owner_and_cancels_without_git_authority ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 30 filtered out; finished in 1.39s
+

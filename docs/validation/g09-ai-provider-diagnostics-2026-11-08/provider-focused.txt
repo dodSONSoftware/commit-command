@@ -1,0 +1,24 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+warning: unused import: `TcpStream`
+   --> src/ai/provider/tests.rs:135:24
+    |
+135 |     net::{TcpListener, TcpStream},
+    |                        ^^^^^^^^^
+    |
+    = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `gitfleet-core` (lib test) generated 1 warning (run `cargo fix --lib -p gitfleet-core --tests` to apply 1 suggestion)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.08s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-990268db74c912b4)
+
+running 7 tests
+test ai::provider::tests::responses_refuse_partial_tools_fallback_and_invalid_models ... ok
+test ai::provider::tests::declined_or_expired_authority_cannot_contact_provider ... ok
+test ai::provider::tests::provider_options_remain_optional_and_adapter_specific ... ok
+test ai::provider::tests::exact_request_uses_only_fixed_routes_and_stdin_for_payload_and_secret ... ok
+test ai::provider::tests::actual_both_provider_routes_preserve_exact_json_and_auth_without_redirects ... ok
+test ai::provider::tests::actual_discovery_sorts_models_and_rejects_redirect_auth_malformed_and_size ... ok
+test ai::provider::tests::actual_running_inference_cancels_and_times_out_with_bounded_cleanup ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 39 filtered out; finished in 0.19s
+

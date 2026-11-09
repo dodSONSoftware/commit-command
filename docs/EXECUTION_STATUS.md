@@ -7,6 +7,21 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G09 native-reviewed provider diagnostics — implemented, selected acceptance passed
+
+[Provider diagnostic checkpoint](reports/G09_AI_PROVIDER_DIAGNOSTICS_2026-11-08.md):
+fixed Ollama/compatible discovery and synthetic inference use current unsaved editors,
+exact one-use native approval, bounded stdin transport, no redirects/fallback and
+independent cancellable jobs with request limits. Ordinary provider reads are
+separately classified by trusted Core; repository writes remain disabled. Final
+library 48 / application 31, renderer 116 / hosts 14 / 17 and full checks passed.
+Native decline zero traffic, approved discovery/inference, exact unsaved synthetic
+payload, running Cancel, manual refresh during held inference, Quit/owned curl reap
+and ordinary restart/no replay passed. Exact settings/repositories/journals/trust,
+hashes, integrity/lock preserved. This is synthetic loopback acceptance; secure auth,
+TLS/actual provider, exact source context/candidates and bounded automatic authority
+remain G09 work. Selected AI-read lifecycle evidence does not close G02 facility gaps.
+
 ### November 8 G09 optional AI settings storage/editor — implemented, selected acceptance passed
 
 [Storage/editor checkpoint](reports/G09_AI_SETTINGS_STORAGE_2026-11-08.md): ordinary
@@ -720,7 +735,7 @@ authority. No default change, commit, push or release is authorized by this reco
 | M5C independently reviewed pre-push hook check | Implemented; selected automated/native acceptance passed | [Check report](reports/M5C_REVIEWED_PUSH_CHECKS_2026-11-03.md); hook approval only, unpublished history/no replay; selected native interruption/manager-refusal/bypass cases passed; broader G06 compatibility remains |
 | M5C individual push publication | Implemented; selected acceptance passed | Separate exact native publication, isolated ancestry/expected-old transport and observation recovery; broader G07 acceptance remains |
 | M5C bulk push publication | Guided per-item queue implemented; selected automated/native acceptance passed | Durable child-first scheduling, fresh post-child evidence, partial stop/retry and no-replay restart; [G08 report](reports/G08_GUIDED_PUSH_QUEUE_2026-11-08.md); broader acceptance remains |
-| M6 AI foundation | Configuration/template model and lazy storage/editor implemented; provider integration pending | [Settings model](reports/G09_AI_SETTINGS_MODEL_2026-11-08.md); [storage/editor](reports/G09_AI_SETTINGS_STORAGE_2026-11-08.md); providers and exact context pipeline remain G09 |
+| M6 AI foundation | Configuration/storage/editor and approved synthetic diagnostics implemented; source integration pending | [Settings model](reports/G09_AI_SETTINGS_MODEL_2026-11-08.md); [storage/editor](reports/G09_AI_SETTINGS_STORAGE_2026-11-08.md); [provider diagnostics](reports/G09_AI_PROVIDER_DIAGNOSTICS_2026-11-08.md); secure auth and exact context/candidate pipeline remain G09 |
 | M7 AI commits / SemVer Actions | Typed provider-free SemVer invocation/recovery implemented; AI commits pending | [G09 Action report](reports/G09_SEMVER_ACTION_2026-11-08.md); separate stage/commit reviews, selected exact native evidence; broader recovery usability/native coverage and bounded AI authority remain |
 | M8 backup/retention/usability/release | Partial foundations only | Atomic storage, migrations and development bundles exist; general backup/restore, retention and release acceptance do not: G03, G10–G11 |
 
@@ -1092,7 +1107,7 @@ AI, SemVer Actions and backups remain in the approved product scope, not deferre
    dependency/partial-stop/fresh-retry evidence. Expand native uninterrupted multi-level,
    authenticated topology, phase-specific interruption and usability coverage.
 4. **G09:** retained-file inspection is implemented and selected acceptance passed;
-   continue approved AI transport/context and assisted/bounded automatic commits
+   continue AI secure auth, verified provider acceptance, exact context and assisted/bounded automatic commits
    under separate authorization contracts. Preserve provider-free manual workflows.
 5. **G10–G11 and remaining G03:** complete state portability, measured usability and
    exact macOS release acceptance. Strengthen backup primitives before later schema

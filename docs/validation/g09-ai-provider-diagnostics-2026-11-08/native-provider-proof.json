@@ -1,0 +1,15 @@
+{
+  "native_decline_zero_http": true,
+  "exact_approved_discovery": 1,
+  "exact_synthetic_inference_requests": 3,
+  "unsaved_inputs_exact": true,
+  "proven_running_cancel": true,
+  "manual_refresh_completed_during_running_inference": true,
+  "manual_message_preserved": true,
+  "quit_reaped_owned_provider_child": true,
+  "ordinary_restart_empty_ephemeral_jobs_no_http_replay": true,
+  "ai_settings_files_exact": true,
+  "repository_files_modes_journals_trust_exact": true,
+  "host_exit": 0,
+  "restart_exit": 0
+}

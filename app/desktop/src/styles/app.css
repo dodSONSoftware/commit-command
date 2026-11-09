@@ -1234,3 +1234,13 @@ footer button {
 .ai-settings-dialog button {
   margin: 6px 8px 6px 0;
 }
+
+.ai-settings-dialog pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.ai-settings-dialog article {
+  margin: 16px 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+}

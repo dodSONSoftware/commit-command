@@ -247,6 +247,8 @@ fn dispatch<R: tauri::Runtime>(
                 | Request::Update { .. }
                 | Request::Remove { .. }
                 | Request::Propose { .. }
+                | Request::ReviewAiDiscovery { .. }
+                | Request::ReviewAiInference { .. }
                 | Request::ReviewVersionAction { .. }
                 | Request::ReviewVersionRecovery { .. }
                 | Request::ReviewVersionStage { .. }
@@ -467,9 +469,10 @@ async fn review_data<R: tauri::Runtime>(
     })
     .await
     .map_err(|_| "Review unavailable".to_owned())??;
+    let can_confirm = cfg!(feature = "desktop-writes") || review.allow_in_read_only_build;
     Ok(ReviewDocument {
         review,
-        can_confirm: cfg!(feature = "desktop-writes"),
+        can_confirm,
     })
 }
 #[tauri::command]
@@ -478,9 +481,6 @@ async fn review_confirm<R: tauri::Runtime>(
     state: tauri::State<'_, Arc<Host>>,
     review: String,
 ) -> Result<Value, String> {
-    if !cfg!(feature = "desktop-writes") {
-        return Err("Desktop writes are disabled pending native acceptance".into());
-    }
     let generation = state.generation.load(std::sync::atomic::Ordering::Acquire);
     let _lease = DialogLease::new(state.inner().clone())?;
     let id = current_review(&window, &state, Some(&review))?;
@@ -500,6 +500,9 @@ async fn review_confirm<R: tauri::Runtime>(
     .map_err(|_| "Review unavailable".to_owned())??;
     if generation != state.generation.load(std::sync::atomic::Ordering::Acquire) {
         return Err("Presentation session changed".into());
+    }
+    if !cfg!(feature = "desktop-writes") && !display.allow_in_read_only_build {
+        return Err("Desktop writes are disabled pending native acceptance".into());
     }
     // A parented async sheet keeps the app event loop responsive to context
     // invalidation and Quit while native confirmation is outstanding.
@@ -1185,6 +1188,19 @@ mod tests {
         assert!(mutating_request(&Request::ReviewVersionStage {
             workspace: "w".into(),
             operation: "o".into()
+        }));
+        assert!(!mutating_request(&Request::AiJobs {}));
+        assert!(!mutating_request(&Request::CancelAiJob {
+            id: "fixture".into()
+        }));
+        assert!(!mutating_request(&Request::ReviewAiDiscovery {
+            connection: gitfleet_core::ai::config::ConnectionDraft {
+                id: None,
+                name: "fixture".into(),
+                provider: gitfleet_core::ai::config::Provider::Ollama,
+                endpoint: "http://127.0.0.1:1/".into(),
+                timeout_ms: 100
+            }
         }));
         assert!(!mutating_request(&Request::AiSettings {}));
         assert!(!mutating_request(&Request::SaveAiSettings {
