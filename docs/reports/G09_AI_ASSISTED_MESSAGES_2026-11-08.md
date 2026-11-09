@@ -67,7 +67,7 @@ assumptions while queued calls consumed the global process permit. Their logs re
 The held overlap fixture now outlives its two-second observation window; final runs
 use the repository validation script's existing four-thread setting. Production limits
 and cancellation checks were not relaxed. The complete five-configuration write/signing
-matrix is tracked separately while running; it is not claimed passed by this report.
+matrix subsequently completed; see the separately recorded [full regression](G02_G11_AI_SOURCE_REGRESSION_2026-11-08.md).
 
 Native ordinary builds used only the previously authorized disposable three-level
 workspace; no trust grants or real credentials were requested:

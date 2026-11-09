@@ -1,0 +1,39 @@
+{
+  "script_exit": 0,
+  "source_commit": "d9d6954a00eeef5eda405e868741a4dc59804eda",
+  "application_sources_match_commit": true,
+  "configurations": [
+    {
+      "passed": 66,
+      "failed": 0,
+      "ignored": 1,
+      "configuration": "default"
+    },
+    {
+      "passed": 101,
+      "failed": 0,
+      "ignored": 2,
+      "configuration": "experimental-writes"
+    },
+    {
+      "passed": 92,
+      "failed": 0,
+      "ignored": 1,
+      "configuration": "controlled-writes"
+    },
+    {
+      "passed": 318,
+      "failed": 0,
+      "ignored": 4,
+      "configuration": "application-services"
+    },
+    {
+      "passed": 367,
+      "failed": 0,
+      "ignored": 11,
+      "configuration": "all-features"
+    }
+  ],
+  "lab_passed": 24,
+  "lab_skipped": 0
+}

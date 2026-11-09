@@ -7,6 +7,16 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G02–G11 full Core regression after AI source integration — passed locally
+
+[Regression checkpoint](reports/G02_G11_AI_SOURCE_REGRESSION_2026-11-08.md): complete
+five-configuration runner exited zero against the Core source in `d9d6954`:
+66/101/92/318/367 passes, documented ignored workers/capability cases retained;
+24 disposable lab cases passed, zero skipped. Locked builds, formatting and strict
+Clippy passed with four test threads and isolated GPG. Source hashes match the
+committed tree. This is fresh automated evidence, not acceptance of remaining native,
+AI/backup or release gates. No release/default-write change or publication occurred.
+
 ### November 8 G09 exact source transfer and assisted messages — implemented, selected acceptance passed
 
 [Assisted-message checkpoint](reports/G09_AI_ASSISTED_MESSAGES_2026-11-08.md): composer
@@ -20,8 +30,8 @@ hash matched the viewer. Candidate application changed only the draft, restored
 before clean Quit/restart/no replay; repository/journal/trust/original/hash/integrity
 and lock checks passed. A real native panel-remount finding was reproduced and fixed;
 failed timing runs and the corrected four-thread results remain recorded.
-Full five-configuration Core write/signing regression is running and will be recorded
-separately. Next: real-provider synthetic checks using the user-supplied Ollama
+Full five-configuration Core write/signing regression subsequently passed; see the
+[regression checkpoint](reports/G02_G11_AI_SOURCE_REGRESSION_2026-11-08.md). Next: real-provider synthetic checks using the user-supplied Ollama
 `http://10.10.10.72:11434` / `qwen3.5:9b-q4_K_M`, then hierarchical analysis and bounded
 automatic authority. G09 and the remaining G02–G11 acceptance scopes remain open.
 
