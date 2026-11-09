@@ -11,6 +11,15 @@ The [detailed completion handoff](implementation/README.md) supplies the executa
 remaining-work packages, decision worksheet, fixture/test procedures and complete
 requirement mapping. It does not accept gates or replace this live evidence ledger.
 
+### November 9 completion P04 Activity date filters
+
+[Activity-date checkpoint](reports/COMPLETION_P04_ACTIVITY_DATES_2026-11-09.md):
+explicit inclusive UTC dates combine with author/repository/reference filters;
+all views use chosen dates and clearing restores seven-day/twelve-month defaults.
+Six real Git graph/activity tests and complete desktop147 renderer/20+23 host,
+strict Clippy and release build pass. Native date controls/VoiceOver and restart
+filter persistence remain open; GRAPH04/GRAPH05 are partial.
+
 ### November 9 completion P13A migration safety adoption
 
 [Migration checkpoint](reports/COMPLETION_P13A_MIGRATION_2026-11-09.md): the schema2→3

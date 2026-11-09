@@ -1,0 +1,15 @@
+   Compiling rusqlite v0.41.0
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.81s
+     Running tests/graph_activity.rs (app/core/target/debug/deps/graph_activity-4cb6b68e3b46af17)
+
+running 6 tests
+test activity_does_not_prune_recent_ancestors_behind_older_committer_dates ... ok
+test sha256_graph_retains_full_object_ids ... ok
+test activity_includes_both_utc_day_boundaries_by_committer_time ... ok
+test unborn_graph_and_activity_are_empty_and_malformed_graph_lanes_are_rejected ... ok
+test activity_uses_committer_time_and_deduplicates_branches_with_explicit_truncation ... ok
+test graph_uses_actual_merge_parents_and_preserves_lanes_across_pages_without_writes ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.90s
+

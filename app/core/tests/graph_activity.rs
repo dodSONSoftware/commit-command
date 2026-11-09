@@ -4,6 +4,86 @@ use std::{collections::BTreeMap, fs};
 use support::{tree_bytes, Fixture};
 
 #[test]
+fn activity_includes_both_utc_day_boundaries_by_committer_time() {
+    let f = Fixture::new();
+    let mut expected = Vec::new();
+    for (date, message, included) in [
+        ("2024-02-28T23:59:59+0000", "before", false),
+        ("2024-02-29T00:00:00+0000", "first second", true),
+        ("2024-02-29T23:59:59+0000", "last second", true),
+        ("2024-03-01T00:00:00+0000", "after", false),
+    ] {
+        let mut command = std::process::Command::new("git");
+        for (key, _) in std::env::vars_os() {
+            if key.to_string_lossy().starts_with("GIT_") {
+                command.env_remove(key);
+            }
+        }
+        let output = command
+            .current_dir(&f.repo)
+            .args([
+                "-c",
+                "core.hooksPath=",
+                "-c",
+                "maintenance.auto=false",
+                "-c",
+                "gc.auto=0",
+                "commit",
+                "--allow-empty",
+                "-qm",
+                message,
+            ])
+            .env("GIT_CONFIG_GLOBAL", "/dev/null")
+            .env("GIT_CONFIG_NOSYSTEM", "1")
+            .env("GIT_COMMITTER_DATE", date)
+            .env("GIT_AUTHOR_DATE", "2010-01-01T00:00:00+0000")
+            .output()
+            .unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        if included {
+            expected.push(
+                String::from_utf8(f.git(&["rev-parse", "HEAD"]))
+                    .unwrap()
+                    .trim()
+                    .to_owned(),
+            );
+        }
+    }
+    let before = tree_bytes(&f.repo);
+    // Independent fixed epoch oracle: the first and last seconds of leap day UTC.
+    let page = activity::query(
+        &f.repo,
+        HistoryScope::LocalBranches,
+        1_709_164_800,
+        1_709_251_199,
+        100,
+        &ReadOptions::default(),
+    )
+    .unwrap();
+    expected.reverse();
+    assert!(page.complete);
+    assert_eq!(
+        page.commits
+            .iter()
+            .map(|commit| commit.oid.hex.clone())
+            .collect::<Vec<_>>(),
+        expected
+    );
+    assert_eq!(
+        page.commits
+            .iter()
+            .map(|commit| commit.committer_time)
+            .collect::<Vec<_>>(),
+        [1_709_251_199, 1_709_164_800]
+    );
+    assert_eq!(before, tree_bytes(&f.repo));
+}
+
+#[test]
 fn graph_uses_actual_merge_parents_and_preserves_lanes_across_pages_without_writes() {
     let f = Fixture::new();
     f.commit_file();

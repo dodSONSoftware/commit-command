@@ -25,6 +25,32 @@ export function utcCalendar(now: Date): string[] {
     days.push(new Date(t).toISOString().slice(0, 10));
   return days;
 }
+export function activityDateRange(start: string, end: string) {
+  const parse = (date: string) => {
+    const time = Date.parse(`${date}T00:00:00Z`);
+    if (
+      !/^\d{4}-\d{2}-\d{2}$/.test(date) ||
+      !Number.isFinite(time) ||
+      time < 0 ||
+      new Date(time).toISOString().slice(0, 10) !== date
+    )
+      throw new Error("Choose valid UTC dates on or after 1970-01-01.");
+    return time;
+  };
+  const first = parse(start);
+  const last = parse(end);
+  if (first > last)
+    throw new Error("The start date must precede the end date.");
+  const length = (last - first) / 86400000 + 1;
+  if (length > 400) throw new Error("Choose at most 400 calendar days.");
+  return {
+    since: first / 1000,
+    until: last / 1000 + 86399,
+    days: Array.from({ length }, (_, i) =>
+      new Date(first + i * 86400000).toISOString().slice(0, 10),
+    ),
+  };
+}
 export function WorkspaceActivity({
   bridge,
   workspace,
@@ -45,18 +71,28 @@ export function WorkspaceActivity({
   const [worktree, setWorktree] = useState("");
   const [author, setAuthor] = useState("");
   const [reference, setReference] = useState("");
-  const [filter, setFilter] = useState(() => ({
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [dateError, setDateError] = useState("");
+  const [filter, setFilter] = useState<{
+    worktree: string;
+    author: string;
+    reference: string;
+    dates: ReturnType<typeof activityDateRange> | null;
+    at: number;
+  }>(() => ({
     worktree: "",
     author: "",
     reference: "",
+    dates: null,
     at: Date.now(),
   }));
   const now = useMemo(() => new Date(filter.at), [filter.at]);
-  const days = utcCalendar(now);
+  const days = filter.dates?.days ?? utcCalendar(now);
   useEffect(() => {
     let live = true;
     void act(async () => {
-      const until = Math.floor(now.getTime() / 1000);
+      const until = filter.dates?.until ?? Math.floor(now.getTime() / 1000);
       try {
         const data = value(
           await bridge.request({
@@ -65,7 +101,9 @@ export function WorkspaceActivity({
             worktree: filter.worktree || null,
             author: filter.author || null,
             reference: filter.reference || null,
-            since: Math.floor(Date.parse(utcCalendar(now)[0]) / 1000),
+            since:
+              filter.dates?.since ??
+              Math.floor(Date.parse(utcCalendar(now)[0]) / 1000),
             until,
           }),
           "activity",
@@ -85,12 +123,13 @@ export function WorkspaceActivity({
       live = false;
     };
   }, [bridge, workspace, filter, now, act]);
-  const recent =
-    report?.items.filter(
-      (i) =>
-        i.commit.committer_time >=
-        Date.parse(days[Math.max(0, days.length - 7)]) / 1000,
-    ) ?? [];
+  const recent = filter.dates
+    ? (report?.items ?? [])
+    : (report?.items.filter(
+        (i) =>
+          i.commit.committer_time >=
+          Date.parse(days[Math.max(0, days.length - 7)]) / 1000,
+      ) ?? []);
   const count = new Map<string, number>();
   for (const item of report?.items ?? []) {
     const day = new Date(item.commit.committer_time * 1000)
@@ -123,11 +162,24 @@ export function WorkspaceActivity({
         className="activity-filters"
         onSubmit={(e) => {
           e.preventDefault();
+          let dates: ReturnType<typeof activityDateRange> | null = null;
+          try {
+            if (startDate || endDate)
+              dates = activityDateRange(startDate, endDate);
+          } catch (error) {
+            setDateError(
+              error instanceof Error ? error.message : String(error),
+            );
+            return;
+          }
+          setDateError("");
           setLoading(true);
+          setReport(null);
           setFilter({
             worktree,
             author,
             reference,
+            dates,
             at: Date.now(),
           });
         }}
@@ -164,6 +216,36 @@ export function WorkspaceActivity({
             onChange={(e) => setReference(e.target.value)}
           />
         </label>
+        <label>
+          Start date · UTC
+          <input
+            aria-label="Activity start date"
+            type="date"
+            min="1970-01-01"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+            aria-invalid={!!dateError}
+            aria-describedby="activity-date-help"
+          />
+        </label>
+        <label>
+          End date · UTC
+          <input
+            aria-label="Activity end date"
+            type="date"
+            min="1970-01-01"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+            aria-invalid={!!dateError}
+            aria-describedby="activity-date-help"
+          />
+        </label>
+        <p id="activity-date-help">
+          Both dates are inclusive UTC calendar dates, up to 400 days. Leave
+          both blank for the seven-day timeline/lanes and twelve-month heatmap
+          defaults.
+        </p>
+        {dateError && <p role="alert">{dateError}</p>}
         <button disabled={loading}>Apply activity filters</button>
       </form>
       <nav aria-label="Activity view">
@@ -173,12 +255,20 @@ export function WorkspaceActivity({
             aria-pressed={mode === view}
             onClick={() => setMode(view)}
           >
-            {view === "heatmap"
-              ? "Heatmap · 12 months"
-              : `${view === "timeline" ? "Timeline" : "Lanes"} · 7 days`}
+            {filter.dates
+              ? `${view === "heatmap" ? "Heatmap" : view === "timeline" ? "Timeline" : "Lanes"} · selected dates`
+              : view === "heatmap"
+                ? "Heatmap · 12 months"
+                : `${view === "timeline" ? "Timeline" : "Lanes"} · 7 days`}
           </button>
         ))}
       </nav>
+      {filter.dates && (
+        <p role="status">
+          Applied dates: {days[0]} through {days.at(-1)} · inclusive UTC ·
+          committer time
+        </p>
+      )}
       {report && !report.complete && (
         <p role="status">
           Partial activity: query limits or unavailable repositories prevented
@@ -196,7 +286,11 @@ export function WorkspaceActivity({
         <div className="activity-timeline">
           {recent.map(commitButton)}
           {report && recent.length === 0 && (
-            <p>No commits in the last seven days.</p>
+            <p>
+              {filter.dates
+                ? "No commits in the selected dates."
+                : "No commits in the last seven days."}
+            </p>
           )}
         </div>
       )}
@@ -204,11 +298,22 @@ export function WorkspaceActivity({
         [...new Set(recent.map((item) => item.repository))].map(
           (repository) => {
             const items = recent.filter((i) => i.repository === repository);
+            const laneDays = filter.dates
+              ? [
+                  ...new Set(
+                    items.map((item) =>
+                      new Date(item.commit.committer_time * 1000)
+                        .toISOString()
+                        .slice(0, 10),
+                    ),
+                  ),
+                ].sort()
+              : days.slice(-7);
             return (
               <section className="activity-lane" key={repository}>
                 <h2>{name(items[0].worktree)}</h2>
                 <div className="activity-lane-days">
-                  {days.slice(-7).map((day) => (
+                  {laneDays.map((day) => (
                     <section key={day}>
                       <h3>{day}</h3>
                       {items

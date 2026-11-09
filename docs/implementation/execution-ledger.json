@@ -3209,18 +3209,22 @@
       "package": "P04",
       "action": "Linked worktrees, all local branches, author/branch/date filters",
       "expected": "Activity dedup by repository/common identity and exact committer time attribution",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/reports/COMPLETION_P04_ACTIVITY_DATES_2026-11-09.md"
+      ],
+      "note": "No new execution claimed. Classify retained variants before running. November9: explicit inclusive UTC dates, all views/default restoration and exact Git committer-boundary oracle validated; native/persistence/broader variants remain open."
     },
     {
       "id": "GRAPH05",
       "package": "P04",
       "action": "Timeline/lanes/heatmap selection and navigation",
       "expected": "Seven-day/twelve-month defaults and chosen dates correct; lanes no cross-repo ancestry; History opens right commit",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/reports/COMPLETION_P04_ACTIVITY_DATES_2026-11-09.md"
+      ],
+      "note": "No new execution claimed. Classify retained variants before running. November9: explicit inclusive UTC dates, all views/default restoration and exact Git committer-boundary oracle validated; native/persistence/broader variants remain open."
     },
     {
       "id": "BULK01",

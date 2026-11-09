@@ -6,10 +6,147 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { afterEach, expect, it, vi } from "vitest";
-import { WorkspaceActivity, utcCalendar } from "./WorkspaceActivity";
+import {
+  WorkspaceActivity,
+  activityDateRange,
+  utcCalendar,
+} from "./WorkspaceActivity";
 import type { Bridge } from "../services/bridge";
 import { fixtureEntry } from "../testdata";
 afterEach(cleanup);
+it("uses inclusive UTC boundaries across leap days and refuses invalid or excessive dates", () => {
+  expect(activityDateRange("2024-02-28", "2024-03-01")).toEqual({
+    since: Date.UTC(2024, 1, 28) / 1000,
+    until: Date.UTC(2024, 2, 2) / 1000 - 1,
+    days: ["2024-02-28", "2024-02-29", "2024-03-01"],
+  });
+  expect(activityDateRange("1970-01-01", "1970-01-01")).toEqual({
+    since: 0,
+    until: 86399,
+    days: ["1970-01-01"],
+  });
+  expect(activityDateRange("2024-01-01", "2025-02-03").days).toHaveLength(400);
+  for (const [start, end] of [
+    ["", "2024-01-01"],
+    ["2024-01-01", ""],
+    ["2024-02-30", "2024-03-01"],
+    ["1969-12-31", "1970-01-01"],
+    ["2024-02-01", "2024-01-01"],
+    ["2024-01-01", "2025-02-04"],
+  ]) {
+    expect(() => activityDateRange(start, end)).toThrow();
+  }
+});
+
+it("applies chosen dates to requests and every view, rejects bad ranges and restores defaults", async () => {
+  const request = vi
+    .fn<Bridge["request"]>()
+    .mockImplementation(async (query) => ({
+      kind: "activity",
+      value: {
+        items:
+          query.kind === "activity" &&
+          query.since === Date.UTC(2024, 1, 29) / 1000
+            ? [
+                {
+                  repository: "r",
+                  worktree: "parent",
+                  commit: {
+                    oid: { format: "sha1", hex: "2".repeat(40) },
+                    subject: Array.from(
+                      new TextEncoder().encode("Leap-day commit"),
+                    ),
+                    author: [],
+                    committer_time: Date.UTC(2024, 1, 29, 23, 59, 59) / 1000,
+                  },
+                },
+              ]
+            : [],
+        issues: [],
+        complete: true,
+        observed_at_ms: Date.now(),
+      },
+    }));
+  const bridge: Bridge = {
+    epoch: 1,
+    request,
+    capabilities: async () => ({ writes_enabled: false }),
+    writeStatus: async () => false,
+    pick: async () => null,
+    cancel: async () => {},
+  };
+  const openCommit = vi.fn();
+  render(
+    <WorkspaceActivity
+      bridge={bridge}
+      workspace="ws"
+      entries={[fixtureEntry("parent", "parent")]}
+      act={async (action) => action()}
+      openCommit={openCommit}
+    />,
+  );
+  const apply = screen.getByRole("button", { name: "Apply activity filters" });
+  await waitFor(() => expect(apply).toBeEnabled());
+  const start = screen.getByLabelText("Activity start date");
+  const end = screen.getByLabelText("Activity end date");
+  fireEvent.change(start, { target: { value: "2024-02-29" } });
+  fireEvent.click(apply);
+  expect(screen.getByRole("alert")).toHaveTextContent("valid UTC dates");
+  expect(request).toHaveBeenCalledTimes(1);
+  fireEvent.change(end, { target: { value: "2024-02-28" } });
+  fireEvent.click(apply);
+  expect(screen.getByRole("alert")).toHaveTextContent(
+    "start date must precede",
+  );
+  expect(request).toHaveBeenCalledTimes(1);
+  fireEvent.change(end, { target: { value: "2024-03-01" } });
+  fireEvent.change(screen.getByRole("textbox", { name: "Activity author" }), {
+    target: { value: "Fixture" },
+  });
+  fireEvent.change(
+    screen.getByRole("textbox", { name: "Activity reference" }),
+    { target: { value: "refs/heads/main" } },
+  );
+  fireEvent.click(apply);
+  const commit = await screen.findByRole("button", { name: /Leap-day commit/ });
+  expect(request).toHaveBeenLastCalledWith({
+    kind: "activity",
+    workspace: "ws",
+    worktree: null,
+    author: "Fixture",
+    reference: "refs/heads/main",
+    since: Date.UTC(2024, 1, 29) / 1000,
+    until: Date.UTC(2024, 2, 2) / 1000 - 1,
+  });
+  expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  fireEvent.click(commit);
+  expect(openCommit).toHaveBeenCalledWith("parent", "2".repeat(40));
+  fireEvent.click(
+    screen.getByRole("button", { name: "Lanes · selected dates" }),
+  );
+  expect(
+    screen.getByRole("button", { name: /Leap-day commit/ }),
+  ).toBeInTheDocument();
+  fireEvent.click(
+    screen.getByRole("button", { name: "Heatmap · selected dates" }),
+  );
+  expect(screen.getByLabelText("Contribution heatmap").children).toHaveLength(
+    2,
+  );
+  expect(screen.getByLabelText("2024-02-29: 1 commits")).toBeInTheDocument();
+  expect(screen.getByLabelText("2024-03-01: 0 commits")).toBeInTheDocument();
+  fireEvent.change(start, { target: { value: "" } });
+  fireEvent.change(end, { target: { value: "" } });
+  fireEvent.click(apply);
+  await waitFor(() => expect(apply).toBeEnabled());
+  expect(
+    screen.getByRole("button", { name: "Heatmap · 12 months" }),
+  ).toBeInTheDocument();
+  expect(
+    screen.getByLabelText("Contribution heatmap").children.length,
+  ).toBeGreaterThanOrEqual(365);
+  expect(screen.queryByText(/Applied dates:/)).not.toBeInTheDocument();
+});
 it("builds a twelve-calendar-month UTC heatmap across leap days and year boundaries", () => {
   const days = utcCalendar(new Date("2024-02-29T23:00:00Z"));
   expect(days[0]).toBe("2023-02-28");
