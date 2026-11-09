@@ -4279,9 +4279,10 @@
       "expected": "Coherent db/config generation, integrity valid, no lost/half snapshot",
       "status": "partial",
       "evidence": [
-        "docs/reports/COMPLETION_P13A_PRIMITIVES_2026-11-08.md"
+        "docs/reports/COMPLETION_P13A_PRIMITIVES_2026-11-08.md",
+        "docs/reports/COMPLETION_P13A_MIGRATION_2026-11-09.md"
       ],
-      "note": "Codec/snapshot primitive tests only. Full application, boundary, extraction/activation and native variants remain open as detailed in report."
+      "note": "Codec/snapshot primitive tests only. Full application, boundary, extraction/activation and native variants remain open as detailed in report. November9: owner-coherent migration archive/WAL/exact-config and failed-destination schema gate validated. Full backup, all supported upgrade boundaries, crash/native/installed variants remain open."
     },
     {
       "id": "BACKUP04",
@@ -4875,9 +4876,11 @@
       "package": "P16",
       "action": "Upgrade prior supported app/data, cancel/fail migration",
       "expected": "Exact old data preserved/safety backup; supported migration coherent",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/reports/COMPLETION_P13A_MIGRATION_2026-11-09.md"
+      ],
+      "note": "No new execution claimed. Classify retained variants before running. November9: owner-coherent migration archive/WAL/exact-config and failed-destination schema gate validated. Full backup, all supported upgrade boundaries, crash/native/installed variants remain open."
     },
     {
       "id": "RELEASE04",

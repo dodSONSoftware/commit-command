@@ -11,6 +11,16 @@ The [detailed completion handoff](implementation/README.md) supplies the executa
 remaining-work packages, decision worksheet, fixture/test procedures and complete
 requirement mapping. It does not accept gates or replace this live evidence ledger.
 
+### November 9 completion P13A migration safety adoption
+
+[Migration checkpoint](reports/COMPLETION_P13A_MIGRATION_2026-11-09.md): the schema2→3
+migration now requires a coherent owner-connection/config archive before its SQL
+transaction. Exact config/WAL capture, revision/schema checks, private verified
+publication and blocked-destination refusal pass;85 library/43 application tests
+and strict Clippy pass. Existing raw migration copies remain. This is migration
+safety only; full backup/restore, AI-generation capture, artifact policies and
+native/installed acceptance remain open.
+
 ### November 9 completion P13A free-space preflight
 
 [Space checkpoint](reports/COMPLETION_P13A_SPACE_2026-11-09.md): descriptor-based

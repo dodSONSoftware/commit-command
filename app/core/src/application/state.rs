@@ -125,9 +125,14 @@ impl Default for DesktopState {
 pub(super) fn migrate(writes: &mut ControlledWrites) -> Result<()> {
     use std::os::unix::fs::PermissionsExt;
     let dir = writes.workspace.data_directory().to_path_buf();
-    let db = writes.workspace.connection();
-    let version: u32 = db.pragma_query_value(None, "user_version", |r| r.get(0))?;
+    let version: u32 =
+        writes
+            .workspace
+            .connection()
+            .pragma_query_value(None, "user_version", |r| r.get(0))?;
     if version == 2 {
+        writes.workspace.migration_backup(2)?;
+        let db = writes.workspace.connection();
         let backup = dir.join(format!("state.pre-m3-{}.db", Uuid::new_v4()));
         db.backup(
             rusqlite::MAIN_DB,

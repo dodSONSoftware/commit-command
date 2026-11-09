@@ -54,6 +54,60 @@ fn setup() -> (Fixture, Application, String, String) {
     let wt = i.entries[0].id.0.clone();
     (f, app, ws, wt)
 }
+#[test]
+fn migration_archive_failure_prevents_schema_change_and_success_retains_old_schema() {
+    use gitfleet_core::backup::archive::{Kind, ValidatedArchive};
+    let f = Fixture::new();
+    let state = f.root.join("state");
+    drop(ControlledWrites::open(&state, fixture_options(&f)).unwrap());
+    fs::write(state.join("migration-backups"), b"blocked destination").unwrap();
+    assert!(Application::open(&state, fixture_options(&f)).is_err());
+    let database = rusqlite::Connection::open(state.join("state.db")).unwrap();
+    assert_eq!(
+        database
+            .pragma_query_value(None, "user_version", |r| r.get::<_, u32>(0))
+            .unwrap(),
+        2
+    );
+    assert_eq!(
+        database
+            .query_row(
+                "SELECT count(*) FROM sqlite_master WHERE name='desktop_state'",
+                [],
+                |r| r.get::<_, u32>(0)
+            )
+            .unwrap(),
+        0
+    );
+    drop(database);
+    fs::remove_file(state.join("migration-backups")).unwrap();
+    let mut app = Application::open(&state, fixture_options(&f)).unwrap();
+    app.shutdown().unwrap();
+    drop(app);
+    let paths = fs::read_dir(state.join("migration-backups"))
+        .unwrap()
+        .map(|entry| entry.unwrap().path())
+        .collect::<Vec<_>>();
+    assert_eq!(paths.len(), 1);
+    let archive =
+        ValidatedArchive::inspect(fs::File::open(&paths[0]).unwrap(), &Cancellation::default())
+            .unwrap();
+    assert_eq!(archive.manifest().kind, Kind::Migration);
+    assert_eq!(archive.manifest().database_schema, Some(2));
+    assert!(fs::read_dir(&state).unwrap().any(|entry| {
+        let name = entry.unwrap().file_name();
+        name.to_string_lossy().starts_with("state.pre-m3-")
+            && name.to_string_lossy().ends_with(".db")
+    }));
+    let database = rusqlite::Connection::open(state.join("state.db")).unwrap();
+    assert_eq!(
+        database
+            .pragma_query_value(None, "user_version", |r| r.get::<_, u32>(0))
+            .unwrap(),
+        3
+    );
+    assert!(!state.join("ai").exists());
+}
 fn trust(app: &mut Application, ws: &str, wt: &str) {
     let Data::Review(r) = app
         .request(

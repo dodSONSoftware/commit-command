@@ -11,6 +11,9 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 use uuid::Uuid;
 
+#[cfg(all(unix, feature = "application-services"))]
+mod migration_backup;
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[cfg_attr(feature = "application-services", derive(schemars::JsonSchema))]
 #[serde(deny_unknown_fields)]
