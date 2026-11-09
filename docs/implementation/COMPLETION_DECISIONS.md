@@ -1,6 +1,6 @@
 # Commit Command completion decisions
 
-These decisions are inputs to [the implementation runbook](COMPLETION_RUNBOOK.md). Every entry starts **pending**. Suggested values below make the choice concrete; they are engineering proposals, not approved requirements or claims that the current app meets them. An implementer must record the selected values, owner authorization and date before exposing dependent behavior. Independently useful code/tests can proceed against explicit injected policies while runtime defaults remain unchanged.
+These decisions are inputs to [the implementation runbook](COMPLETION_RUNBOOK.md). Entries retain their explicit approval status. Suggested values below make the choice concrete; they are engineering proposals, not approved requirements or claims that the current app meets them. An implementer must record the selected values, owner authorization and date before exposing dependent behavior. Independently useful code/tests can proceed against explicit injected policies while runtime defaults remain unchanged.
 
 Do not ask the owner to decide implementation details already specified by the runbook. Resolve only the product/support/authority choices below. Preserve approved decisions D-040–D-048 and existing accepted write support restrictions.
 
@@ -63,7 +63,7 @@ Outputs: all fields, migration/coexistence behavior if identifier changes, and a
 
 ## DCP03 Backup format defaults and restore policy
 
-**Status: Pending.** Product owner approves user behavior; engineer finalizes the bounded format and tests before accepting files.
+**Status: Approved implementation defaults, November 8, 2026.** The user explicitly selected the documented proposals for backups, hierarchy, bounded automatic commits and accessibility and requested no further questions. Implement the proposed v1 below; enforce recovery preservation and no authority import. Engineer finalizes bounded format details within these limits. This does not authorize real-user state replacement or deletion.
 
 Concrete proposed v1:
 
@@ -83,7 +83,7 @@ Outputs: selected format/limits/timing/location/history/artifact rules, precise 
 
 ## DCP04 Bounded automatic commit authority
 
-**Status: Pending.** Product owner authorizes the exact user-visible authority scope before exposure.
+**Status: Approved implementation defaults, November 8, 2026.** The user selected the documented bounded automatic-commit proposal. Implement the scope/caps below with native end-user run authorization. Ordinary-write default change and release exposure remain separate decisions.
 
 Proposed first implementation:
 
@@ -100,7 +100,7 @@ Outputs: exact caps/lifetime/coverage/ranking/endpoint consent/Action behavior a
 
 ## DCP05 Hierarchical analysis bounds
 
-**Status: Pending.** Engineer finalizes deterministic algorithm; product owner approves automatic eligibility consequences together with DCP04.
+**Status: Approved implementation defaults, November 8, 2026.** The user selected the documented hierarchical-analysis proposal and DCP04 limits. Finalize the deterministic algorithm within these bounds; do not widen authority.
 
 Proposed plan: path/source/hunk stable grouping with no more than 8 leaf groups per repository, at most 2 reduction levels and 16 requests per repository, all within global run limits where present. Every exact body fits existing provider request bounds and resolved profile context policy. Output summaries retain original chunk IDs; reductions preserve transitive IDs. Use no hidden extra retry, embedding service or model fallback.
 
@@ -110,7 +110,7 @@ Outputs: pure deterministic grouping contract, schema version, numerical caps, e
 
 ## DCP06 Action definition and verified version binding
 
-**Status: Pending for stored definitions/integration.** Existing explicit manual SemVer syntax/invocation/recovery must remain unchanged.
+**Status: Approved for the documented integration needed by the selected backup and automatic-commit proposals, November 8, 2026.** Preserve existing manual SemVer syntax/invocation/recovery; imported definitions remain disabled. No arbitrary Actions or syntax expansion.
 
 Proposed definition: version 1, stable UUID/revision, workspace+worktree identity, exact native-relative path, allowed major/minor/patch values, existing explicit prerelease policy, enabled flag and local approval metadata. Edit/import changes revision; import resets enabled/approval. No custom script or broader file format.
 
@@ -130,7 +130,7 @@ Outputs: table and operator-required cases, or owner-approved exclusions for rem
 
 ## DCP08 Accessibility and keyboard behavior
 
-**Status: Pending acceptance details.** Basic keyboard names/focus/error requirements already apply.
+**Status: Approved implementation targets, November 8, 2026.** The user selected the documented accessibility proposal. Preserve existing bindings/minimum geometry and implement the stated keyboard/VoiceOver/contrast/zoom targets; actual native acceptance remains required.
 
 Proposed baseline: all workflows keyboard-complete; native VoiceOver on supported macOS; text contrast >=4.5:1 normal and >=3:1 large; meaningful nontext/focus contrast >=3:1; minimum accepted layout at current native enforced minimum; 100%, 150% and 200% text/zoom where the runtime supports it. Confirm exact window dimensions against `window_state.rs` rather than inventing a new minimum. No required action offscreen without usable scrolling.
 

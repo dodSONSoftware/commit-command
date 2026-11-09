@@ -1,0 +1,20 @@
+test_evidence_cannot_escape_through_paths_or_links (test_completion_evidence.EvidenceTests) ... ok
+test_literal_allowed_deltas_do_not_allow_other_paths_or_modes (test_completion_evidence.EvidenceTests) ... ok
+test_native_bytes_and_new_hardlink_are_observable (test_completion_evidence.EvidenceTests) ... skipped 'Host filesystem refuses non-UTF8 creation'
+test_new_hardlink_is_observable (test_completion_evidence.EvidenceTests) ... ok
+test_nonpass_requires_reason_and_never_claims_pass (test_completion_evidence.EvidenceTests) ... ok
+test_pass_requires_complete_hash_verified_provenance (test_completion_evidence.EvidenceTests) ... ok
+test_phase_proof_cannot_shadow_an_invalid_oracle (test_completion_evidence.EvidenceTests) ... ok
+test_real_git_index_and_worktree_are_unchanged_by_the_oracle (test_completion_evidence.EvidenceTests) ... ok
+test_snapshot_is_read_only_and_covers_git_modes_and_links (test_completion_evidence.EvidenceTests) ... ok
+test_snapshot_refuses_mutation_during_streaming (test_completion_evidence.EvidenceTests) ... ok
+test_snapshot_rejects_special_files_limits_and_root_symlinks (test_completion_evidence.EvidenceTests) ... ok
+test_absolute_traversal_and_wrong_root (test_provision_git.ArchiveLayoutTests) ... ok
+test_duplicate_paths_and_entries_through_known_links (test_provision_git.ArchiveLayoutTests) ... ok
+test_regular_layout_and_exact_upstream_links (test_provision_git.ArchiveLayoutTests) ... ok
+test_unapproved_links_and_special_files (test_provision_git.ArchiveLayoutTests) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.033s
+
+OK (skipped=1)

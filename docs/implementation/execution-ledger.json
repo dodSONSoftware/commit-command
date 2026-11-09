@@ -2643,9 +2643,12 @@
       "package": "P01",
       "action": "Run O1/O2 twice on F01 without action",
       "expected": "Exact files/index/refs/modes unchanged; oracle itself causes no refresh",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "passed",
+      "evidence": [
+        "docs/validation/completion-p01-2026-11-08/result.json",
+        "docs/reports/COMPLETION_P01_2026-11-08.md"
+      ],
+      "note": "Fresh real-Git repeated snapshot; exact byte/index/mode preservation."
     },
     {
       "id": "INF03",
@@ -2661,9 +2664,11 @@
       "package": "P01",
       "action": "Run evidence validator with missing hash/phase/oracle and mismatched artifact",
       "expected": "Reject incomplete/inconsistent pass records",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "passed",
+      "evidence": [
+        "docs/validation/completion-p01-2026-11-08/python-tests.txt"
+      ],
+      "note": "Focused complete evidence schema, contained artifact and hash-mismatch refusals."
     },
     {
       "id": "INF05",
@@ -4920,23 +4925,27 @@
     },
     {
       "id": "DCP03",
-      "status": "pending",
-      "blocks": "See COMPLETION_DECISIONS.md; independent implementation continues."
+      "status": "approved_implementation_defaults",
+      "blocks": "No implementation policy block within documented proposal. Native end-user approval, applicable write-default decision and final release acceptance still required.",
+      "authorization": "Current user selected documented proposals for backups, hierarchy, automatic commits and accessibility on November 8, 2026."
     },
     {
       "id": "DCP04",
-      "status": "pending",
-      "blocks": "See COMPLETION_DECISIONS.md; independent implementation continues."
+      "status": "approved_implementation_defaults",
+      "blocks": "No implementation policy block within documented proposal. Native end-user approval, applicable write-default decision and final release acceptance still required.",
+      "authorization": "Current user selected documented proposals for backups, hierarchy, automatic commits and accessibility on November 8, 2026."
     },
     {
       "id": "DCP05",
-      "status": "pending",
-      "blocks": "See COMPLETION_DECISIONS.md; independent implementation continues."
+      "status": "approved_implementation_defaults",
+      "blocks": "No implementation policy block within documented proposal. Native end-user approval, applicable write-default decision and final release acceptance still required.",
+      "authorization": "Current user selected documented proposals for backups, hierarchy, automatic commits and accessibility on November 8, 2026."
     },
     {
       "id": "DCP06",
-      "status": "pending",
-      "blocks": "See COMPLETION_DECISIONS.md; independent implementation continues."
+      "status": "approved_implementation_defaults",
+      "blocks": "No implementation policy block within documented proposal. Native end-user approval, applicable write-default decision and final release acceptance still required.",
+      "authorization": "Current user selected documented proposals for backups, hierarchy, automatic commits and accessibility on November 8, 2026."
     },
     {
       "id": "DCP07",
@@ -4945,8 +4954,9 @@
     },
     {
       "id": "DCP08",
-      "status": "pending",
-      "blocks": "See COMPLETION_DECISIONS.md; independent implementation continues."
+      "status": "approved_implementation_defaults",
+      "blocks": "No implementation policy block within documented proposal. Native end-user approval, applicable write-default decision and final release acceptance still required.",
+      "authorization": "Current user selected documented proposals for backups, hierarchy, automatic commits and accessibility on November 8, 2026."
     },
     {
       "id": "DCP09",

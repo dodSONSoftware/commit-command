@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "case": "INF02",
+  "package": "P01",
+  "status": "passed",
+  "operator": "Codex disposable fixture",
+  "timestamp": "2026-11-08T22:26:09.408073-06:00",
+  "source": {
+    "commit": "ef7d7d5acb454879e80c93198b1c91d7b8968c0a",
+    "dirty": true,
+    "diff_sha256": "d187e47b9dd702cbfab3818d9600c09c2d79e4289b2e179fb944689d85f87850"
+  },
+  "artifact": {
+    "sha256": "698c2ffa5ea1bb8fb94be0188b3b7c1ff505b1f266227725ce767394dbcf2d01",
+    "features": [],
+    "launch": [
+      "python3",
+      "/Users/randydodson/Documents/_code/git-fleet/docs/validation/completion-p01-2026-11-08/oracle-smoke.py"
+    ]
+  },
+  "environment": {
+    "os": "darwin",
+    "architecture": "arm64",
+    "filesystem": "local temporary directory",
+    "tools": {
+      "python": "3.9.6",
+      "git": "git version 2.56.0"
+    }
+  },
+  "fixture": "/private/var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-p01-385jgl6t",
+  "action": "Snapshot real staged/working Git fixture twice without Git reads",
+  "expected": "Exact repository/index/files/modes preserved",
+  "actual": "Independent manifests identical",
+  "exit_code": 0,
+  "allowed_deltas": [],
+  "oracles": {
+    "before": {
+      "path": "before.json",
+      "sha256": "13df2629e70554df3dcf0663765300961bbf9ba3cefd8de02af17b89bd9dc064"
+    },
+    "after": {
+      "path": "after.json",
+      "sha256": "13df2629e70554df3dcf0663765300961bbf9ba3cefd8de02af17b89bd9dc064"
+    },
+    "comparison": {
+      "path": "comparison.json",
+      "sha256": "637dba3189d94de14a23a67f3fac5e8645e78978264e1bbd6bb64783f3bbbc07"
+    }
+  },
+  "phase_proof": {
+    "snapshot_complete": {
+      "path": "comparison.json",
+      "sha256": "637dba3189d94de14a23a67f3fac5e8645e78978264e1bbd6bb64783f3bbbc07"
+    }
+  },
+  "reason": ""
+}

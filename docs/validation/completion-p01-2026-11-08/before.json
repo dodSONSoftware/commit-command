@@ -1,0 +1,143 @@
+{
+  "version": 1,
+  "root": "/private/var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-p01-385jgl6t/repo",
+  "entries": {
+    "": {
+      "mode": 493,
+      "device": 16777233,
+      "inode": 56530266,
+      "links": 4,
+      "owner": 501,
+      "group": 20,
+      "kind": "directory"
+    },
+    "2e676974": {
+      "mode": 493,
+      "device": 16777233,
+      "inode": 56530267,
+      "links": 7,
+      "owner": 501,
+      "group": 20,
+      "kind": "directory"
+    },
+    "2e6769742f48454144": {
+      "mode": 420,
+      "device": 16777233,
+      "inode": 56530280,
+      "links": 1,
+      "owner": 501,
+      "group": 20,
+      "kind": "file",
+      "bytes": 21,
+      "sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80"
+    },
+    "2e6769742f636f6e666967": {
+      "mode": 420,
+      "device": 16777233,
+      "inode": 56530276,
+      "links": 1,
+      "owner": 501,
+      "group": 20,
+      "kind": "file",
+      "bytes": 137,
+      "sha256": "cae33efdb02cf774435c1ff9cb16bcc1014606908530c6e1dc727615fe3e8cda"
+    },
+    "2e6769742f696e646578": {
+      "mode": 420,
+      "device": 16777233,
+      "inode": 56530285,
+      "links": 1,
+      "owner": 501,
+      "group": 20,
+      "kind": "file",
+      "bytes": 104,
+      "sha256": "3ea640c3f3a5702e784f24c723e3c7b397883291af6d999710868ee89c071c08"
+    },
+    "2e6769742f6f626a65637473": {
+      "mode": 493,
+      "device": 16777233,
+      "inode": 56530281,
+      "links": 5,
+      "owner": 501,
+      "group": 20,
+      "kind": "directory"
+    },
+    "2e6769742f6f626a656374732f3139": {
+      "mode": 493,
+      "device": 16777233,
+      "inode": 56530286,
+      "links": 3,
+      "owner": 501,
+      "group": 20,
+      "kind": "directory"
+    },
+    "2e6769742f6f626a656374732f31392f6439636338353834616332633764636635376432363830333735653830663039396463343831": {
+      "mode": 292,
+      "device": 16777233,
+      "inode": 56530287,
+      "links": 1,
+      "owner": 501,
+      "group": 20,
+      "kind": "file",
+      "bytes": 22,
+      "sha256": "cae98968c741c8800bcdda61f1fa07fe79683038358afa4a1314ccdf5377b78e"
+    },
+    "2e6769742f6f626a656374732f696e666f": {
+      "mode": 493,
+      "device": 16777233,
+      "inode": 56530283,
+      "links": 2,
+      "owner": 501,
+      "group": 20,
+      "kind": "directory"
+    },
+    "2e6769742f6f626a656374732f7061636b": {
+      "mode": 493,
+      "device": 16777233,
+      "inode": 56530282,
+      "links": 2,
+      "owner": 501,
+      "group": 20,
+      "kind": "directory"
+    },
+    "2e6769742f72656673": {
+      "mode": 493,
+      "device": 16777233,
+      "inode": 56530277,
+      "links": 4,
+      "owner": 501,
+      "group": 20,
+      "kind": "directory"
+    },
+    "2e6769742f726566732f6865616473": {
+      "mode": 493,
+      "device": 16777233,
+      "inode": 56530278,
+      "links": 2,
+      "owner": 501,
+      "group": 20,
+      "kind": "directory"
+    },
+    "2e6769742f726566732f74616773": {
+      "mode": 493,
+      "device": 16777233,
+      "inode": 56530279,
+      "links": 2,
+      "owner": 501,
+      "group": 20,
+      "kind": "directory"
+    },
+    "73656c6563746564": {
+      "mode": 420,
+      "device": 16777233,
+      "inode": 56530284,
+      "links": 1,
+      "owner": 501,
+      "group": 20,
+      "kind": "file",
+      "bytes": 8,
+      "sha256": "0e442b07e3772e8f5622478242ddf5f9f197bbd6a0402cd71471db4081abb291"
+    }
+  },
+  "total_bytes": 292
+}

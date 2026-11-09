@@ -24,3 +24,14 @@ python3 docs/implementation/validate_handoff.py
 This checks document file links, code fences, whitespace, case references/ranges and complete requirement/invariant/M3 ID coverage. It does not execute application tests or certify acceptance.
 
 [Execution ledger](execution-ledger.json) records concrete existing source/test/report routes for all requirements and the current execution disposition of each catalog case. Historical evidence candidates do not imply a new pass.
+
+P01 provides reusable preservation and evidence tools:
+
+```sh
+python3 app/core/scripts/completion_evidence.py snapshot /absolute/canonical/fixture/root > /outside/fixture/before.json
+python3 app/core/scripts/completion_evidence.py compare /outside/fixture/before.json /outside/fixture/after.json --allow literal/approved/path
+python3 app/core/scripts/completion_evidence.py validate /absolute/evidence/result.json
+python3 -m unittest discover -s app/core/scripts -p 'test_*.py'
+```
+
+Write snapshots outside the tree being observed. Snapshot limits and no-follow/race failures are errors, not preservation passes. The validator verifies provenance/required artifacts; the case's independent assertions still determine whether behavior passed.

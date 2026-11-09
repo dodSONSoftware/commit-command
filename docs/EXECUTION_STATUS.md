@@ -11,6 +11,16 @@ The [detailed completion handoff](implementation/README.md) supplies the executa
 remaining-work packages, decision worksheet, fixture/test procedures and complete
 requirement mapping. It does not accept gates or replace this live evidence ledger.
 
+### November 8 completion P01 evidence tools
+
+[Tooling report](reports/COMPLETION_P01_2026-11-08.md): reusable bounded no-follow
+filesystem oracle, literal allowed deltas and hash-bound result validation added.
+14 Python regressions and actual disposable-Git preservation passed; one non-UTF8
+creation case remains explicitly skipped. Ordinary feature exclusions verified.
+Full Core runner currently blocked by missing installed/selected GPG; no new native
+or release acceptance. User-selected DCP03/04/05/06/08 implementation proposals are
+recorded; final default/distribution/performance decisions remain separate.
+
 ### November 8 completion P00 reconciliation
 
 [Reconciliation report](reports/COMPLETION_P00_2026-11-08.md): the detailed handoff and

@@ -8,6 +8,7 @@ export RUST_TEST_THREADS
 cd "$(dirname "$0")/.."
 evidence_dir=${1:-target/m3-evidence}
 mkdir -p "$evidence_dir"
+python3 -m unittest discover -s scripts -p 'test_*.py'
 python3 scripts/check-prerequisites.py
 python3 scripts/verify-scaffold.py
 cargo fmt --all -- --check
