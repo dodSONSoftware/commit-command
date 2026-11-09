@@ -578,6 +578,7 @@ export type DiffMode =
       parent?: ObjectId | null;
       [k: string]: unknown;
     };
+export type ActivityMode = "timeline" | "lanes" | "heatmap";
 /**
  * Additive string variants preserve version-1 path/changes navigation records.
  */
@@ -778,6 +779,7 @@ export interface DiscoveryOptions {
 }
 export interface DesktopState {
   active_tab?: string | null;
+  activity?: ActivityViewState;
   attention?:
     | "all"
     | "modified"
@@ -803,6 +805,14 @@ export interface DesktopState {
   tabs: RepositoryTab[];
   theme: string;
   version: number;
+}
+export interface ActivityViewState {
+  author: string;
+  mode: ActivityMode;
+  reference: string;
+  since?: number | null;
+  until?: number | null;
+  worktree?: string | null;
 }
 export interface RepositoryTab {
   commit?: string | null;

@@ -2,9 +2,10 @@ import { useEffect, useMemo, useState } from "react";
 import { value, type Bridge } from "../services/bridge";
 import type {
   ActivityReport,
+  ActivityViewState,
   StoredWorktree,
 } from "../services/response.generated";
-import { bytes, repoName } from "../stores/model";
+import { bytes, repoName, initialActivityState } from "../stores/model";
 export function utcCalendar(now: Date): string[] {
   const end = Date.UTC(
     now.getUTCFullYear(),
@@ -57,22 +58,28 @@ export function WorkspaceActivity({
   entries,
   act,
   openCommit,
+  state = initialActivityState,
+  onStateChange,
 }: {
   bridge: Bridge;
   workspace: string;
   entries: StoredWorktree[];
   act: (action: () => Promise<void>) => Promise<void>;
   openCommit: (worktree: string, oid: string) => void;
+  state?: ActivityViewState;
+  onStateChange?: (state: ActivityViewState) => void;
 }) {
   const [report, setReport] = useState<ActivityReport | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
-  const [mode, setMode] = useState("timeline");
-  const [worktree, setWorktree] = useState("");
-  const [author, setAuthor] = useState("");
-  const [reference, setReference] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [mode, setMode] = useState(state.mode);
+  const [worktree, setWorktree] = useState(state.worktree ?? "");
+  const [author, setAuthor] = useState(state.author);
+  const [reference, setReference] = useState(state.reference);
+  const dateText = (seconds: number | null | undefined) =>
+    seconds == null ? "" : new Date(seconds * 1000).toISOString().slice(0, 10);
+  const [startDate, setStartDate] = useState(() => dateText(state.since));
+  const [endDate, setEndDate] = useState(() => dateText(state.until));
   const [dateError, setDateError] = useState("");
   const [filter, setFilter] = useState<{
     worktree: string;
@@ -81,13 +88,25 @@ export function WorkspaceActivity({
     dates: ReturnType<typeof activityDateRange> | null;
     at: number;
   }>(() => ({
-    worktree: "",
-    author: "",
-    reference: "",
-    dates: null,
+    worktree: state.worktree ?? "",
+    author: state.author,
+    reference: state.reference,
+    dates:
+      state.since != null && state.until != null
+        ? activityDateRange(dateText(state.since), dateText(state.until))
+        : null,
     at: Date.now(),
   }));
   const now = useMemo(() => new Date(filter.at), [filter.at]);
+  const remember = (next: typeof filter, nextMode: ActivityViewState["mode"]) =>
+    onStateChange?.({
+      mode: nextMode,
+      worktree: next.worktree || null,
+      author: next.author,
+      reference: next.reference,
+      since: next.dates?.since ?? null,
+      until: next.dates?.until ?? null,
+    });
   const days = filter.dates?.days ?? utcCalendar(now);
   useEffect(() => {
     let live = true;
@@ -175,13 +194,15 @@ export function WorkspaceActivity({
           setDateError("");
           setLoading(true);
           setReport(null);
-          setFilter({
+          const next = {
             worktree,
             author,
             reference,
             dates,
             at: Date.now(),
-          });
+          };
+          setFilter(next);
+          remember(next, mode);
         }}
       >
         <label>
@@ -192,6 +213,11 @@ export function WorkspaceActivity({
             onChange={(e) => setWorktree(e.target.value)}
           >
             <option value="">Entire workspace</option>
+            {worktree && !entries.some((entry) => entry.id === worktree) && (
+              <option value={worktree}>
+                Unavailable repository · {worktree}
+              </option>
+            )}
             {entries.map((e) => (
               <option key={e.id} value={e.id}>
                 {repoName(e)}
@@ -249,11 +275,14 @@ export function WorkspaceActivity({
         <button disabled={loading}>Apply activity filters</button>
       </form>
       <nav aria-label="Activity view">
-        {["timeline", "lanes", "heatmap"].map((view) => (
+        {(["timeline", "lanes", "heatmap"] as const).map((view) => (
           <button
             key={view}
             aria-pressed={mode === view}
-            onClick={() => setMode(view)}
+            onClick={() => {
+              setMode(view);
+              remember(filter, view);
+            }}
           >
             {filter.dates
               ? `${view === "heatmap" ? "Heatmap" : view === "timeline" ? "Timeline" : "Lanes"} · selected dates`

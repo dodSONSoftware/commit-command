@@ -7,7 +7,16 @@ import type {
   OverviewSort,
   OverviewFilter,
   TrustState,
+  ActivityViewState,
 } from "../services/response.generated";
+export const initialActivityState: ActivityViewState = {
+  mode: "timeline",
+  worktree: null,
+  author: "",
+  reference: "",
+  since: null,
+  until: null,
+};
 export const initialBulkComposer: BulkComposerState = {
   version: 1,
   message: "",
@@ -26,6 +35,7 @@ export const initialState: DesktopState = {
   collapsed: [],
   density: "comfortable",
   sidebar_collapsed: false,
+  activity: initialActivityState,
   theme: "system",
   sidebar_width: 240,
   inspector_width: 400,

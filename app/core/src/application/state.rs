@@ -78,6 +78,52 @@ pub enum OverviewSort {
     StatusDesc,
     Changes,
 }
+#[derive(Debug, Clone, Default, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
+pub struct ActivityViewState {
+    pub mode: ActivityMode,
+    pub worktree: Option<String>,
+    pub author: String,
+    pub reference: String,
+    pub since: Option<u64>,
+    pub until: Option<u64>,
+}
+#[derive(Debug, Clone, Default, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum ActivityMode {
+    #[default]
+    Timeline,
+    Lanes,
+    Heatmap,
+}
+impl ActivityViewState {
+    fn validate(&self) -> Result<()> {
+        let dates_valid = match (self.since, self.until) {
+            (None, None) => true,
+            (Some(first), Some(last)) => {
+                first <= last
+                    && last <= 253_402_300_799
+                    && last - first < 400 * 86400
+                    && first % 86400 == 0
+                    && last % 86400 == 86399
+            }
+            _ => false,
+        };
+        if !dates_valid
+            || self.author.len() > 512
+            || self.reference.len() > 1024
+            || self.author.contains('\0')
+            || self.reference.contains('\0')
+            || self
+                .worktree
+                .as_ref()
+                .is_some_and(|id| id.is_empty() || id.len() > 4096 || id.contains('\0'))
+        {
+            return Err(invalid("Invalid Activity navigation filters"));
+        }
+        Ok(())
+    }
+}
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
 pub struct DesktopState {
@@ -97,6 +143,8 @@ pub struct DesktopState {
     pub density: OverviewDensity,
     #[serde(default)]
     pub sidebar_collapsed: bool,
+    #[serde(default)]
+    pub activity: ActivityViewState,
     pub theme: String,
     pub sidebar_width: u32,
     pub inspector_width: u32,
@@ -116,6 +164,7 @@ impl Default for DesktopState {
             collapsed: Vec::new(),
             density: OverviewDensity::Comfortable,
             sidebar_collapsed: false,
+            activity: ActivityViewState::default(),
             theme: "system".into(),
             sidebar_width: 240,
             inspector_width: 400,
@@ -172,6 +221,7 @@ pub(super) fn load(writes: &mut ControlledWrites, id: &WorkspaceId) -> Result<De
     Ok(state)
 }
 pub(super) fn validate(s: &DesktopState) -> Result<()> {
+    s.activity.validate()?;
     if s.version != 1 {
         return Err(Error::with_kind(
             ErrorKind::NewerSchema,
@@ -298,6 +348,7 @@ mod sort_tests {
         value.as_object_mut().unwrap().remove("collapsed");
         value.as_object_mut().unwrap().remove("density");
         value.as_object_mut().unwrap().remove("sidebar_collapsed");
+        value.as_object_mut().unwrap().remove("activity");
         for (raw, expected) in [
             ("path", OverviewSort::Path),
             ("changes", OverviewSort::Changes),
@@ -310,11 +361,41 @@ mod sort_tests {
             assert!(restored.collapsed.is_empty());
             assert_eq!(restored.density, OverviewDensity::Comfortable);
             assert!(!restored.sidebar_collapsed);
+            assert!(matches!(restored.activity.mode, ActivityMode::Timeline));
+            assert!(restored.activity.since.is_none());
             validate(&restored).unwrap();
             assert_eq!(serde_json::to_value(restored).unwrap()["sort"], raw);
         }
         value["sort"] = serde_json::json!("unsupported");
         assert!(serde_json::from_value::<DesktopState>(value).is_err());
+    }
+    #[test]
+    fn activity_navigation_requires_bounded_paired_utc_days_and_text() {
+        let mut state = DesktopState::default();
+        for (since, until) in [
+            (Some(0), None),
+            (None, Some(86399)),
+            (Some(86400), Some(86399)),
+            (Some(1), Some(86399)),
+            (Some(0), Some(86400)),
+            (Some(0), Some(400 * 86400)),
+            (Some(253_402_300_800), Some(253_402_387_199)),
+        ] {
+            state.activity.since = since;
+            state.activity.until = until;
+            assert!(validate(&state).is_err());
+        }
+        state.activity.since = Some(0);
+        state.activity.until = Some(400 * 86400 - 1);
+        validate(&state).unwrap();
+        state.activity.author = "a".repeat(513);
+        assert!(validate(&state).is_err());
+        state.activity.author.clear();
+        state.activity.reference = "bad\0reference".into();
+        assert!(validate(&state).is_err());
+        let mut raw = serde_json::to_value(DesktopState::default()).unwrap();
+        raw["activity"]["mode"] = serde_json::json!("unknown");
+        assert!(serde_json::from_value::<DesktopState>(raw).is_err());
     }
     #[test]
     fn collapse_state_is_bounded_and_cannot_duplicate_keys() {

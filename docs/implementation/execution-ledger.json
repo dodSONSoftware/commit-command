@@ -3090,9 +3090,11 @@
       "package": "P04",
       "action": "Tabs/views/commit/file/parent/filter/scroll; switch/restart/remove workspace",
       "expected": "Overview permanent, correct adaptive default only for new tab, exact saved state/drafts retained",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/reports/COMPLETION_P04_ACTIVITY_STATE_2026-11-09.md"
+      ],
+      "note": "No new execution claimed. Classify retained variants before running. November9: applied Activity filters/mode now persist per workspace; legacy/default/validation/Core reopen/renderer hydration pass. Native and broader variants remain open."
     },
     {
       "id": "UI04",
@@ -3211,9 +3213,10 @@
       "expected": "Activity dedup by repository/common identity and exact committer time attribution",
       "status": "partial",
       "evidence": [
-        "docs/reports/COMPLETION_P04_ACTIVITY_DATES_2026-11-09.md"
+        "docs/reports/COMPLETION_P04_ACTIVITY_DATES_2026-11-09.md",
+        "docs/reports/COMPLETION_P04_ACTIVITY_STATE_2026-11-09.md"
       ],
-      "note": "No new execution claimed. Classify retained variants before running. November9: explicit inclusive UTC dates, all views/default restoration and exact Git committer-boundary oracle validated; native/persistence/broader variants remain open."
+      "note": "No new execution claimed. Classify retained variants before running. November9: explicit inclusive UTC dates, all views/default restoration and exact Git committer-boundary oracle validated; native/persistence/broader variants remain open. November9: applied Activity filters/mode now persist per workspace; legacy/default/validation/Core reopen/renderer hydration pass. Native and broader variants remain open."
     },
     {
       "id": "GRAPH05",
@@ -3222,9 +3225,10 @@
       "expected": "Seven-day/twelve-month defaults and chosen dates correct; lanes no cross-repo ancestry; History opens right commit",
       "status": "partial",
       "evidence": [
-        "docs/reports/COMPLETION_P04_ACTIVITY_DATES_2026-11-09.md"
+        "docs/reports/COMPLETION_P04_ACTIVITY_DATES_2026-11-09.md",
+        "docs/reports/COMPLETION_P04_ACTIVITY_STATE_2026-11-09.md"
       ],
-      "note": "No new execution claimed. Classify retained variants before running. November9: explicit inclusive UTC dates, all views/default restoration and exact Git committer-boundary oracle validated; native/persistence/broader variants remain open."
+      "note": "No new execution claimed. Classify retained variants before running. November9: explicit inclusive UTC dates, all views/default restoration and exact Git committer-boundary oracle validated; native/persistence/broader variants remain open. November9: applied Activity filters/mode now persist per workspace; legacy/default/validation/Core reopen/renderer hydration pass. Native and broader variants remain open."
     },
     {
       "id": "BULK01",

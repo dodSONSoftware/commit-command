@@ -670,6 +670,11 @@ export type DiffMode =
       [k: string]: unknown;
     };
 /**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ActivityMode".
+ */
+export type ActivityMode = "timeline" | "lanes" | "heatmap";
+/**
  * Additive string variants preserve version-1 path/changes navigation records.
  *
  * This interface was referenced by `Response`'s JSON-Schema
@@ -2291,6 +2296,7 @@ export interface Preview {
  */
 export interface DesktopState {
   active_tab?: string | null;
+  activity?: ActivityViewState;
   attention?:
     | "all"
     | "modified"
@@ -2316,6 +2322,14 @@ export interface DesktopState {
   tabs: RepositoryTab[];
   theme: string;
   version: number;
+}
+export interface ActivityViewState {
+  author: string;
+  mode: ActivityMode;
+  reference: string;
+  since?: number | null;
+  until?: number | null;
+  worktree?: string | null;
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
@@ -2373,4 +2387,16 @@ export interface OperationPage {
   items: Outcome[];
   next?: number | null;
   [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ActivityViewState".
+ */
+export interface ActivityViewState1 {
+  author: string;
+  mode: ActivityMode;
+  reference: string;
+  since?: number | null;
+  until?: number | null;
+  worktree?: string | null;
 }

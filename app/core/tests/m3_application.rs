@@ -240,6 +240,14 @@ fn navigation_migration_restart_and_newer_data_are_preserved() {
         density: OverviewDensity::Compact,
         sidebar_collapsed: true,
         collapsed: vec!["/parent".into()],
+        activity: ActivityViewState {
+            mode: ActivityMode::Heatmap,
+            worktree: Some(wt.clone()),
+            author: "Fixture".into(),
+            reference: "refs/heads/main".into(),
+            since: Some(1_709_164_800),
+            until: Some(1_709_251_199),
+        },
         ..DesktopState::default()
     };
     state.tabs.push(RepositoryTab {
@@ -278,6 +286,10 @@ fn navigation_migration_restart_and_newer_data_are_preserved() {
     assert!(restored.sidebar_collapsed);
     assert_eq!(restored.collapsed, vec!["/parent"]);
     assert_eq!(restored.tabs[0].view, "history");
+    assert_eq!(
+        serde_json::to_value(&restored.activity).unwrap(),
+        serde_json::to_value(&state.activity).unwrap()
+    );
     state.version = 999;
     assert!(app
         .request(

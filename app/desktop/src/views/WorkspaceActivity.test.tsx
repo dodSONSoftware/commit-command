@@ -39,6 +39,7 @@ it("uses inclusive UTC boundaries across leap days and refuses invalid or excess
 });
 
 it("applies chosen dates to requests and every view, rejects bad ranges and restores defaults", async () => {
+  const onStateChange = vi.fn();
   const request = vi
     .fn<Bridge["request"]>()
     .mockImplementation(async (query) => ({
@@ -83,6 +84,7 @@ it("applies chosen dates to requests and every view, rejects bad ranges and rest
       entries={[fixtureEntry("parent", "parent")]}
       act={async (action) => action()}
       openCommit={openCommit}
+      onStateChange={onStateChange}
     />,
   );
   const apply = screen.getByRole("button", { name: "Apply activity filters" });
@@ -93,6 +95,7 @@ it("applies chosen dates to requests and every view, rejects bad ranges and rest
   fireEvent.click(apply);
   expect(screen.getByRole("alert")).toHaveTextContent("valid UTC dates");
   expect(request).toHaveBeenCalledTimes(1);
+  expect(onStateChange).not.toHaveBeenCalled();
   fireEvent.change(end, { target: { value: "2024-02-28" } });
   fireEvent.click(apply);
   expect(screen.getByRole("alert")).toHaveTextContent(
@@ -119,10 +122,22 @@ it("applies chosen dates to requests and every view, rejects bad ranges and rest
     until: Date.UTC(2024, 2, 2) / 1000 - 1,
   });
   expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  expect(onStateChange).toHaveBeenLastCalledWith(
+    expect.objectContaining({
+      mode: "timeline",
+      author: "Fixture",
+      reference: "refs/heads/main",
+      since: Date.UTC(2024, 1, 29) / 1000,
+      until: Date.UTC(2024, 2, 2) / 1000 - 1,
+    }),
+  );
   fireEvent.click(commit);
   expect(openCommit).toHaveBeenCalledWith("parent", "2".repeat(40));
   fireEvent.click(
     screen.getByRole("button", { name: "Lanes · selected dates" }),
+  );
+  expect(onStateChange).toHaveBeenLastCalledWith(
+    expect.objectContaining({ mode: "lanes", author: "Fixture" }),
   );
   expect(
     screen.getByRole("button", { name: /Leap-day commit/ }),
@@ -146,6 +161,86 @@ it("applies chosen dates to requests and every view, rejects bad ranges and rest
     screen.getByLabelText("Contribution heatmap").children.length,
   ).toBeGreaterThanOrEqual(365);
   expect(screen.queryByText(/Applied dates:/)).not.toBeInTheDocument();
+  expect(onStateChange).toHaveBeenLastCalledWith(
+    expect.objectContaining({ mode: "heatmap", since: null, until: null }),
+  );
+});
+
+it("restores applied filters and mode without rebinding an unavailable repository", async () => {
+  const request = vi.fn<Bridge["request"]>().mockResolvedValue({
+    kind: "activity",
+    value: {
+      items: [],
+      complete: true,
+      issues: [],
+      observed_at_ms: Date.now(),
+    },
+  });
+  const onStateChange = vi.fn();
+  const bridge: Bridge = {
+    epoch: 1,
+    request,
+    capabilities: async () => ({ writes_enabled: false }),
+    writeStatus: async () => false,
+    pick: async () => null,
+    cancel: async () => {},
+  };
+  render(
+    <WorkspaceActivity
+      bridge={bridge}
+      workspace="ws"
+      entries={[]}
+      act={async (action) => action()}
+      openCommit={() => {}}
+      onStateChange={onStateChange}
+      state={{
+        mode: "heatmap",
+        worktree: "old-id",
+        author: "Saved author",
+        reference: "refs/heads/main",
+        since: 1709164800,
+        until: 1709251199,
+      }}
+    />,
+  );
+  await waitFor(() =>
+    expect(
+      screen.getByRole("button", { name: "Apply activity filters" }),
+    ).toBeEnabled(),
+  );
+  expect(request).toHaveBeenCalledWith({
+    kind: "activity",
+    workspace: "ws",
+    worktree: "old-id",
+    author: "Saved author",
+    reference: "refs/heads/main",
+    since: 1709164800,
+    until: 1709251199,
+  });
+  expect(screen.getByLabelText("Activity start date")).toHaveValue(
+    "2024-02-29",
+  );
+  expect(screen.getByLabelText("Activity end date")).toHaveValue("2024-02-29");
+  expect(
+    screen.getByRole("option", { name: /Unavailable repository/ }),
+  ).toHaveValue("old-id");
+  expect(
+    screen.getByRole("button", { name: "Heatmap · selected dates" }),
+  ).toHaveAttribute("aria-pressed", "true");
+  expect(onStateChange).not.toHaveBeenCalled();
+  fireEvent.change(screen.getByRole("textbox", { name: "Activity author" }), {
+    target: { value: "Unsaved author" },
+  });
+  fireEvent.click(
+    screen.getByRole("button", { name: "Timeline · selected dates" }),
+  );
+  expect(onStateChange).toHaveBeenLastCalledWith(
+    expect.objectContaining({
+      mode: "timeline",
+      author: "Saved author",
+      worktree: "old-id",
+    }),
+  );
 });
 it("builds a twelve-calendar-month UTC heatmap across leap days and year boundaries", () => {
   const days = utcCalendar(new Date("2024-02-29T23:00:00Z"));

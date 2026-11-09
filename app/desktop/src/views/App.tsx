@@ -807,6 +807,10 @@ export function App({ bridge }: { bridge: Bridge }) {
               bridge={bridge}
               workspace={workspace}
               entries={entries}
+              state={nav.activity}
+              onStateChange={(activity) =>
+                setNav((current) => ({ ...current, activity }))
+              }
               act={act}
               openCommit={(id, commit) => {
                 const e = entries.find((e) => e.id === id);
