@@ -32,6 +32,8 @@ mod store;
 mod transaction;
 #[cfg(feature = "application-services")]
 mod upstream;
+#[cfg(feature = "application-services")]
+mod version_action;
 use crate::domain::{
     digest, now_ms, NativePath, ObjectFormat, RepositoryId, WorkspaceId, WorktreeId,
 };
@@ -292,6 +294,8 @@ pub struct ControlledWrites {
     test_fault: Option<TestFault>,
     #[cfg(all(feature = "write-test-support", feature = "application-services"))]
     publication_fault: Option<(bool, TestFaultKind)>,
+    #[cfg(all(feature = "write-test-support", feature = "application-services"))]
+    version_fault: Option<(bool, TestFaultKind)>,
     #[cfg(all(feature = "write-test-support", feature = "application-services"))]
     import_fault: Option<(crate::remote::fetch::FetchImportPhase, TestFaultKind)>,
     #[cfg(all(feature = "write-test-support", feature = "application-services"))]

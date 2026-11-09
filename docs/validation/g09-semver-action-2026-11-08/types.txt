@@ -1,0 +1,5 @@
+
+> gitfleet-desktop@0.1.1 typecheck
+> tsc --noEmit
+
+src/views/OperationHistory.tsx(253,26): error TS2304: Cannot find name 'enabled'.

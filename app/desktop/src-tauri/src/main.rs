@@ -207,7 +207,10 @@ fn decode(payload: &str) -> Result<Envelope, String> {
 fn mutating_request(request: &Request) -> bool {
     matches!(
         request,
-        Request::ReviewAuthentication { .. }
+        Request::ReviewVersionAction { .. }
+            | Request::ReviewVersionRecovery { .. }
+            | Request::ReviewVersionStage { .. }
+            | Request::ReviewAuthentication { .. }
             | Request::ReviewTrust { .. }
             | Request::ReviewBatch { .. }
             | Request::ReviewRemoteObservation { .. }
@@ -244,6 +247,9 @@ fn dispatch<R: tauri::Runtime>(
                 | Request::Update { .. }
                 | Request::Remove { .. }
                 | Request::Propose { .. }
+                | Request::ReviewVersionAction { .. }
+                | Request::ReviewVersionRecovery { .. }
+                | Request::ReviewVersionStage { .. }
                 | Request::ReviewAuthentication { .. }
                 | Request::ReviewTrust { .. }
                 | Request::ReviewBatch { .. }
@@ -1164,6 +1170,26 @@ mod tests {
             workspace: "w".into(),
             worktree: "t".into(),
             observation: "o".into()
+        }));
+        assert!(mutating_request(&Request::ReviewVersionAction {
+            workspace: "w".into(),
+            worktree: "t".into(),
+            path: gitfleet_core::domain::NativePath::Utf8("version".into()),
+            increment: gitfleet_core::actions::semver::Increment::Patch,
+            prerelease: gitfleet_core::actions::semver::PrereleasePolicy::Reject
+        }));
+        assert!(mutating_request(&Request::ReviewVersionRecovery {
+            workspace: "w".into(),
+            operation: "o".into()
+        }));
+        assert!(mutating_request(&Request::ReviewVersionStage {
+            workspace: "w".into(),
+            operation: "o".into()
+        }));
+        assert!(!mutating_request(&Request::VersionActions {
+            workspace: "w".into(),
+            worktree: None,
+            offset: 0
         }));
         assert!(!mutating_request(&Request::PreviewVersionFile {
             workspace: "w".into(),

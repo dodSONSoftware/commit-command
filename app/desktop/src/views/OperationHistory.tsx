@@ -1,3 +1,4 @@
+import { VersionActionRecord } from "./VersionActionRecord";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { publicationStatus } from "../services/publication";
 import { value, type Bridge } from "../services/bridge";
@@ -25,6 +26,7 @@ const kinds = [
   "push_check",
   "push_publication",
   "push_batch",
+  "version_action",
 ] as const;
 const operationName = (kind: string) =>
   kind === "fetch_capture"
@@ -57,7 +59,9 @@ export function OperationHistory({
   busy,
   act,
   revision,
+  enabled = false,
 }: {
+  enabled?: boolean;
   bridge: Bridge;
   workspace: string;
   entries: StoredWorktree[];
@@ -242,6 +246,16 @@ export function OperationHistory({
             )}
             {item.record.kind === "fetch_capture" && (
               <FetchCaptureRecords items={[item.record.value]} />
+            )}
+            {item.record.kind === "version_action" && (
+              <VersionActionRecord
+                item={item.record.value}
+                bridge={bridge}
+                workspace={workspace}
+                enabled={enabled}
+                busy={busy}
+                act={act}
+              />
             )}
             {item.record.kind === "push_batch" && (
               <article aria-label="Guided push queue record">

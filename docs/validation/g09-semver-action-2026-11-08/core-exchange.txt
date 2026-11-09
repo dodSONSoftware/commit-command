@@ -1,0 +1,43 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+error[E0425]: cannot find value `RENAME_NOFOLLOW_ANY` in crate `libc`
+    --> src/actions/version_file.rs:240:39
+     |
+ 240 |             libc::RENAME_SWAP | libc::RENAME_NOFOLLOW_ANY,
+     |                                       ^^^^^^^^^^^^^^^^^^^
+     |
+    ::: /Users/randydodson/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libc-0.2.191/src/unix/bsd/apple/mod.rs:4312:1
+     |
+4312 | pub const FSOPT_NOFOLLOW_ANY: u32 = 0x800;
+     | --------------------------------- similarly named constant `FSOPT_NOFOLLOW_ANY` defined here
+     |
+help: a constant with a similar name exists
+     |
+ 240 -             libc::RENAME_SWAP | libc::RENAME_NOFOLLOW_ANY,
+ 240 +             libc::RENAME_SWAP | libc::FSOPT_NOFOLLOW_ANY,
+     |
+
+error[E0425]: cannot find value `artifact` in this scope
+   --> src/writes/version_action.rs:291:29
+    |
+291 |             pinned.replace(&artifact, &candidate, &plan.file, &plan.version.before)?;
+    |                             ^^^^^^^^ not found in this scope
+
+error[E0308]: mismatched types
+   --> src/writes/version_action.rs:278:46
+    |
+278 |             let candidate = pinned.candidate(&plan.id, &plan.version.after, plan.file.mode)?;
+    |                                    --------- ^^^^^^^^ expected `&File`, found `&String`
+    |                                    |
+    |                                    arguments to this method are incorrect
+    |
+    = note: expected reference `&std::fs::File`
+               found reference `&std::string::String`
+note: method defined here
+   --> src/actions/version_file.rs:136:12
+    |
+136 |     pub fn candidate(&self, artifact: &File, bytes: &[u8], mode: u32) -> Result<FileStamp> {
+    |            ^^^^^^^^^        ---------------
+
+Some errors have detailed explanations: E0308, E0425.
+For more information about an error, try `rustc --explain E0308`.
+error: could not compile `gitfleet-core` (lib) due to 3 previous errors

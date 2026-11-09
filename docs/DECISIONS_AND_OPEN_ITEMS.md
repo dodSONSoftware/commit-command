@@ -268,3 +268,15 @@ Other reported visual/trust-refresh/review-readability defects remain unresolved
 No future milestone or enabling of ordinary desktop writes is implicitly authorized
 by passing Core/renderer/mock-runtime tests. See [the M3 ledger](ACCEPTANCE_MATRIX.md#12-m3-acceptance-gates--implementation-with-native-gates-open)
 and [manual native steps](../app/desktop/README.md#native-acceptance-workflow--still-required).
+
+## M7 implementation envelope — November 8, 2026
+
+M7-I001 records an implementation choice within the authorized SemVer Action; it
+is not a new product-interview approval. The first supported target is one plain
+SemVer value with optional LF/CRLF, explicit major/minor/patch choice and explicit
+reject/discard-and-increment prerelease handling. File replacement is a separately
+approved typed invocation, with a privately retained original and non-replaying
+observed-state recovery; staging and committing have fresh independent reviews.
+The tested exchange primitive requires macOS and state/target on one filesystem;
+other formats/volumes fail closed. No AI is required. See the
+[G09 checkpoint](reports/G09_SEMVER_ACTION_2026-11-08.md) for evidence and open scope.

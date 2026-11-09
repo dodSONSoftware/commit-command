@@ -1432,7 +1432,8 @@ fn unified_audit_filters_real_local_batch_and_remote_records_without_mutation_or
                 assert_eq!(view.outcomes.len(), 1);
                 assert_eq!(view.record.phase, BatchPhase::Cancelled);
             }
-            OperationAuditRecord::PushBatch(_)
+            OperationAuditRecord::VersionAction(_)
+            | OperationAuditRecord::PushBatch(_)
             | OperationAuditRecord::PushPublication(_)
             | OperationAuditRecord::PushCheck(_)
             | OperationAuditRecord::FetchCapture(_)

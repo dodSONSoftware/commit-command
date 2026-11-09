@@ -1,0 +1,15 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.23s
+     Running tests/version_actions.rs (app/core/target/debug/deps/version_actions-254d0f74e90d7f02)
+
+running 7 tests
+test version_action_crash_worker ... ignored, subprocess-only disposable version Action SIGKILL worker
+test recovery_drift_requires_fresh_observation_and_external_content_is_never_overwritten ... ok
+test restart_restores_results_without_authority_and_stage_refuses_external_edits ... ok
+test interrupted_intent_blocks_other_writes_and_recovery_never_repeats_increment ... ok
+test actual_sigkill_before_and_after_replace_recovers_without_replay ... ok
+test exact_version_action_then_separate_stage_and_commit_preserves_unselected_data ... ok
+test decline_precancel_file_index_and_trust_drift_never_replace_version ... ok
+
+test result: ok. 6 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 13.95s
+

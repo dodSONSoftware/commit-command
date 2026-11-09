@@ -6,6 +6,11 @@
  */
 export type Data =
   | {
+      kind: "version_actions";
+      value: VersionPage;
+      [k: string]: unknown;
+    }
+  | {
       kind: "version_preview";
       value: VersionPreview;
       [k: string]: unknown;
@@ -156,76 +161,6 @@ export type Data =
     };
 /**
  * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "Increment".
- */
-export type Increment = "major" | "minor" | "patch";
-/**
- * Prerelease handling is explicit, never inferred from a model or silently finalized.
- *
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "PrereleasePolicy".
- */
-export type PrereleasePolicy = "reject" | "discard_and_increment";
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "ProfilePolicy".
- */
-export type ProfilePolicy =
-  | {
-      account: string;
-      ca_file?: string | null;
-      helper: string;
-      kind: "https";
-    }
-  | {
-      agent_socket: string;
-      kind: "ssh";
-      known_hosts: string;
-      public_identity: string;
-    };
-/**
- * `display` is never used to reconstruct a path. Byte/wide encodings round-trip.
- *
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "NativePath".
- */
-export type NativePath =
-  | {
-      encoding: "utf8";
-      value: string;
-      [k: string]: unknown;
-    }
-  | {
-      encoding: "unix_bytes";
-      value: number[];
-      [k: string]: unknown;
-    }
-  | {
-      encoding: "windows_wide";
-      value: number[];
-      [k: string]: unknown;
-    };
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "HistoryScope".
- */
-export type HistoryScope =
-  | {
-      kind: "local_branches";
-      [k: string]: unknown;
-    }
-  | {
-      kind: "reference";
-      reference: string;
-      [k: string]: unknown;
-    };
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "ObjectFormat".
- */
-export type ObjectFormat = "sha1" | "sha256";
-/**
- * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "ErrorKind".
  */
 export type ErrorKind =
@@ -256,6 +191,95 @@ export type ErrorKind =
   | "uncertain_outcome";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ObservedVersionState".
+ */
+export type ObservedVersionState = "not_applied" | "applied" | "conflict";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "VersionPhase".
+ */
+export type VersionPhase =
+  | "proposed"
+  | "preparing"
+  | "replacing"
+  | "applied"
+  | "blocked"
+  | "cancelled"
+  | "unconfirmed"
+  | "interrupted"
+  | "reconciled";
+/**
+ * `display` is never used to reconstruct a path. Byte/wide encodings round-trip.
+ *
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "NativePath".
+ */
+export type NativePath =
+  | {
+      encoding: "utf8";
+      value: string;
+      [k: string]: unknown;
+    }
+  | {
+      encoding: "unix_bytes";
+      value: number[];
+      [k: string]: unknown;
+    }
+  | {
+      encoding: "windows_wide";
+      value: number[];
+      [k: string]: unknown;
+    };
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ObjectFormat".
+ */
+export type ObjectFormat = "sha1" | "sha256";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "Increment".
+ */
+export type Increment = "major" | "minor" | "patch";
+/**
+ * Prerelease handling is explicit, never inferred from a model or silently finalized.
+ *
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "PrereleasePolicy".
+ */
+export type PrereleasePolicy = "reject" | "discard_and_increment";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ProfilePolicy".
+ */
+export type ProfilePolicy =
+  | {
+      account: string;
+      ca_file?: string | null;
+      helper: string;
+      kind: "https";
+    }
+  | {
+      agent_socket: string;
+      kind: "ssh";
+      known_hosts: string;
+      public_identity: string;
+    };
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "HistoryScope".
+ */
+export type HistoryScope =
+  | {
+      kind: "local_branches";
+      [k: string]: unknown;
+    }
+  | {
+      kind: "reference";
+      reference: string;
+      [k: string]: unknown;
+    };
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "OperationAuditKind".
  */
 export type OperationAuditKind =
@@ -269,12 +293,18 @@ export type OperationAuditKind =
   | "upstream_setup"
   | "push_check"
   | "push_publication"
-  | "push_batch";
+  | "push_batch"
+  | "version_action";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "OperationAuditRecord".
  */
 export type OperationAuditRecord =
+  | {
+      kind: "version_action";
+      value: VersionInvocation;
+      [k: string]: unknown;
+    }
   | {
       kind: "local";
       value: AuditEntry;
@@ -547,6 +577,92 @@ export interface Response {
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "VersionPage".
+ */
+export interface VersionPage {
+  items: VersionInvocation[];
+  next?: number | null;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "VersionInvocation".
+ */
+export interface VersionInvocation {
+  applied: boolean;
+  candidate?: FileStamp | null;
+  definition_approved_at_ms?: number | null;
+  finished_at_ms?: number | null;
+  issue?: Issue | null;
+  observed?: ObservedVersionState | null;
+  phase: VersionPhase;
+  plan: VersionPlan;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "FileStamp".
+ */
+export interface FileStamp {
+  changed_nanos: number;
+  changed_seconds: number;
+  device: number;
+  inode: number;
+  length: number;
+  mode: number;
+  modified_nanos: number;
+  modified_seconds: number;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "Issue".
+ */
+export interface Issue {
+  kind: ErrorKind;
+  message: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "VersionPlan".
+ */
+export interface VersionPlan {
+  branch: string;
+  config_digest: string;
+  created_at_ms: number;
+  digest: string;
+  file: FileStamp;
+  head?: string | null;
+  id: string;
+  index_digest: string;
+  metadata: Metadata;
+  parent_device: number;
+  parent_inode: number;
+  path: NativePath;
+  root_device: number;
+  root_inode: number;
+  version: VersionPreview;
+  workspace: string;
+  worktree: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "Metadata".
+ */
+export interface Metadata {
+  common_binding: string;
+  common_dir: NativePath;
+  git_binding: string;
+  git_dir: NativePath;
+  object_format: ObjectFormat;
+  root: NativePath;
+  root_binding: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "VersionPreview".
  */
 export interface VersionPreview {
@@ -710,15 +826,6 @@ export interface ActivityReport {
   issues: Issue[];
   items: ActivityEntry[];
   observed_at_ms: number;
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "Issue".
- */
-export interface Issue {
-  kind: ErrorKind;
-  message: string;
   [k: string]: unknown;
 }
 /**
@@ -889,20 +996,6 @@ export interface ProfileBinding {
   id: string;
   name: string;
   revision: string;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "Metadata".
- */
-export interface Metadata {
-  common_binding: string;
-  common_dir: NativePath;
-  git_binding: string;
-  git_dir: NativePath;
-  object_format: ObjectFormat;
-  root: NativePath;
-  root_binding: string;
-  [k: string]: unknown;
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
@@ -1480,6 +1573,7 @@ export interface WorkspaceList {
   push_publication_recovery?: RemoteRecoveryNotice[];
   recovery: RecoveryNotice[];
   upstream_recovery: RemoteRecoveryNotice[];
+  version_action_recovery?: RemoteRecoveryNotice[];
   workspaces: Workspace[];
   [k: string]: unknown;
 }

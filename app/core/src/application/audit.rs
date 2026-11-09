@@ -19,6 +19,7 @@ pub enum OperationAuditKind {
     PushCheck,
     PushPublication,
     PushBatch,
+    VersionAction,
 }
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "snake_case")]
@@ -43,6 +44,7 @@ pub struct OperationAuditQuery {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "kind", content = "value", rename_all = "snake_case")]
 pub enum OperationAuditRecord {
+    VersionAction(Box<crate::actions::version::VersionInvocation>),
     Local(AuditEntry),
     Batch(BatchView),
     RemoteObservation(Box<Observation>),
@@ -113,8 +115,15 @@ WITH sources AS (
   SELECT 'push_batch', substr(key,12), json_extract(value,'$.value.plan.created_at_ms'),
          'push_batch', json_extract(value,'$.value.phase'), value, NULL
     FROM state WHERE key LIKE 'push-batch:%' AND json_extract(value,'$.value.plan.workspace')=?1
+  UNION ALL
+  SELECT 'version_action', substr(key,16), json_extract(value,'$.value.plan.created_at_ms'),
+         'version_action', json_extract(value,'$.value.phase'), value,
+         json_extract(value,'$.value.plan.worktree')
+    FROM state WHERE key LIKE 'version-action:%' AND json_extract(value,'$.value.plan.workspace')=?1
 ), classified AS (
   SELECT *, CASE
+    WHEN source='version_action' AND phase='proposed' AND id IS NOT ?17 THEN 'interrupted'
+    WHEN source='version_action' AND (phase='applied' OR (phase='reconciled' AND json_extract(payload,'$.value.observed')='applied')) THEN 'complete'
     WHEN source='push_batch' AND (phase='executing' OR (phase='ready' AND json_extract(payload,'$.session')<>?16)) THEN 'interrupted'
     WHEN source='push_batch' AND phase='ready' THEN 'pending'
     WHEN source='local' AND phase IN ('proposed','approved') AND id IS NOT ?8 THEN 'interrupted'
@@ -206,6 +215,17 @@ impl Application {
                 _ => {}
             }
         }
+        let version = self
+            .pending
+            .as_ref()
+            .filter(|p| self.review(&p.id).is_ok())
+            .and_then(|p| {
+                if let review::Action::Version(plan) = &p.action {
+                    Some(plan.id.clone())
+                } else {
+                    None
+                }
+            });
         let kind = name(query.operation_kind)?;
         let result = name(query.result)?;
         let batch_session = self.writes.push_batch_session().to_owned();
@@ -230,7 +250,8 @@ impl Application {
                     upstream,
                     push_check,
                     publication,
-                    batch_session
+                    batch_session,
+                    version
                 ],
                 |r| {
                     Ok((
@@ -270,6 +291,19 @@ impl Application {
             let operation_kind = decoded(&kind)?;
             let result = decoded(&result)?;
             let record = match source.as_str() {
+                "version_action" => {
+                    let mut item = self.writes.version_audit_detail(&payload)?;
+                    if item.plan.id != id
+                        || item.plan.workspace.0 != workspace
+                        || item.plan.created_at_ms != created
+                    {
+                        return Err(invalid("Inconsistent version Action audit record"));
+                    }
+                    if result == OperationAuditResult::Interrupted {
+                        item.phase = crate::actions::version::VersionPhase::Interrupted;
+                    }
+                    OperationAuditRecord::VersionAction(Box::new(item))
+                }
                 "local" => {
                     let detail = self.writes.application_audit_detail(&payload)?;
                     if detail.outcome.operation_id != id

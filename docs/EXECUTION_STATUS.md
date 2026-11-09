@@ -7,6 +7,21 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G09 guarded SemVer Action — implemented, selected acceptance passed
+
+[Action checkpoint](reports/G09_SEMVER_ACTION_2026-11-08.md): independent native
+approval now binds exact typed definition/invocation, file/index/HEAD/config/trust.
+MacOS same-filesystem atomic exchange retains the original privately and detects
+last-precheck external edits without deleting them. Intent is durable; interruption
+blocks writes/scope loss until fresh read-only recovery; no replay/double increment.
+Staging and manual commit each require separate fresh reviews. Selected Core
+SHA-1/SHA-256, real SIGKILL, refusal/recovery and external-race tests passed; native
+Action → stage → exact one-file manual commit and ordinary read-only restart/history
+passed with exact preservation, old journals/trust, hashes, exits/integrity/lock.
+Full desktop 108 renderer / 14 ordinary-host / 17 all-feature-host passed. Full
+Core 66/101/91/270/319, lab 24/24, builds/format/strict Clippy passed, runners exit 0.
+Explicit ignored cases remain recorded. Retained recovery data is not pruned. Broader G09 and ordinary write/release gates remain open.
+
 ### November 8 G09 provider-free SemVer preview — implemented, selected acceptance passed
 
 [SemVer preview checkpoint](reports/G09_SEMVER_PREVIEW_2026-11-08.md): explicit
@@ -670,7 +685,7 @@ authority. No default change, commit, push or release is authorized by this reco
 | M5C individual push publication | Implemented; selected acceptance passed | Separate exact native publication, isolated ancestry/expected-old transport and observation recovery; broader G07 acceptance remains |
 | M5C bulk push publication | Guided per-item queue implemented; selected automated/native acceptance passed | Durable child-first scheduling, fresh post-child evidence, partial stop/retry and no-replay restart; [G08 report](reports/G08_GUIDED_PUSH_QUEUE_2026-11-08.md); broader acceptance remains |
 | M6 AI foundation | Not implemented | `app/core/src/ai/` contains only `.gitkeep`; profiles, providers, templates and exact context pipeline: G09 |
-| M7 AI commits / SemVer Actions | Read-only provider-free SemVer preview implemented; execution and AI commits pending | [G09 preview report](reports/G09_SEMVER_PREVIEW_2026-11-08.md); approved invocation, file/staging recovery and separately bounded AI authority remain |
+| M7 AI commits / SemVer Actions | Typed provider-free SemVer invocation/recovery implemented; AI commits pending | [G09 Action report](reports/G09_SEMVER_ACTION_2026-11-08.md); separate stage/commit reviews, selected exact native evidence; broader recovery usability/native coverage and bounded AI authority remain |
 | M8 backup/retention/usability/release | Partial foundations only | Atomic storage, migrations and development bundles exist; general backup/restore, retention and release acceptance do not: G03, G10–G11 |
 
 ## Open acceptance and implementation gates
@@ -1040,9 +1055,9 @@ AI, SemVer Actions and backups remain in the approved product scope, not deferre
 3. **G08 remaining acceptance:** guided per-item coordination now has selected
    dependency/partial-stop/fresh-retry evidence. Expand native uninterrupted multi-level,
    authenticated topology, phase-specific interruption and usability coverage.
-4. **G09:** finish durable approved SemVer invocation/execution/staging/recovery on
-   the provider-free preview, then AI configuration/transport/context and assisted/
-   bounded automatic commits under separate authorization contracts.
+4. **G09:** add read-only retained-file inspection to the accepted SemVer boundary,
+   then AI configuration/transport/context and assisted/bounded automatic commits
+   under separate authorization contracts. Preserve provider-free manual workflows.
 5. **G10–G11 and remaining G03:** complete state portability, measured usability and
    exact macOS release acceptance. Strengthen backup primitives before later schema
    migrations; do not postpone data safety until packaging.

@@ -85,6 +85,9 @@ export function App({ bridge }: { bridge: Bridge }) {
   const [batchRecovery, setBatchRecovery] = useState<RemoteRecoveryNotice[]>(
     [],
   );
+  const [versionRecovery, setVersionRecovery] = useState<
+    RemoteRecoveryNotice[]
+  >([]);
   const [guidedPushBatch, setGuidedPushBatch] = useState<PushBatch | null>(
     null,
   );
@@ -94,6 +97,7 @@ export function App({ bridge }: { bridge: Bridge }) {
     ...upstreamRecovery,
     ...publicationRecovery,
     ...batchRecovery,
+    ...versionRecovery,
   ];
   const context = useRef<string | null>(null);
   const loaded = useRef(false);
@@ -190,6 +194,7 @@ export function App({ bridge }: { bridge: Bridge }) {
     setUpstreamRecovery(data.upstream_recovery ?? []);
     setPublicationRecovery(data.push_publication_recovery ?? []);
     setBatchRecovery(data.push_batch_recovery ?? []);
+    setVersionRecovery(data.version_action_recovery ?? []);
     const ws = data.active ?? null;
     if (context.current !== ws) {
       loaded.current = false;
@@ -784,6 +789,7 @@ export function App({ bridge }: { bridge: Bridge }) {
           ) : showOperations ? (
             workspace && (
               <OperationHistory
+                enabled={writesEnabled}
                 key={workspace}
                 bridge={bridge}
                 workspace={workspace}
@@ -1611,6 +1617,8 @@ function Repository({
               <h2>Commit composer</h2>
             </div>
             <VersionAction
+              enabled={writeEnabled}
+              revision={resultsRevision}
               key={entry.id}
               bridge={bridge}
               workspace={workspace}

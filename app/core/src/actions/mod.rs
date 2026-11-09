@@ -1,5 +1,9 @@
 //! Typed deterministic Actions. Preview functions never grant execution authority.
 pub mod semver;
+#[cfg(feature = "application-services")]
+pub mod version;
+#[cfg(feature = "application-services")]
+pub(crate) mod version_file;
 use crate::{
     domain::NativePath,
     inspection::{self, ReadOptions},

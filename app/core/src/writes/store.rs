@@ -100,6 +100,8 @@ impl ControlledWrites {
             #[cfg(all(feature = "write-test-support", feature = "application-services"))]
             publication_fault: None,
             #[cfg(all(feature = "write-test-support", feature = "application-services"))]
+            version_fault: None,
+            #[cfg(all(feature = "write-test-support", feature = "application-services"))]
             import_fault: None,
             #[cfg(all(feature = "write-test-support", feature = "application-services"))]
             upstream_fault: None,
@@ -419,6 +421,13 @@ impl ControlledWrites {
         common: &str,
         except: Option<&str>,
     ) -> Result<()> {
+        let version_pending:bool=self.workspace.connection().query_row("SELECT EXISTS(SELECT 1 FROM state WHERE key LIKE 'version-action:%' AND json_extract(value,'$.value.plan.metadata.common_binding')=?1 AND json_extract(value,'$.value.phase') IN ('preparing','replacing','unconfirmed'))",[common],|r|r.get(0))?;
+        if version_pending {
+            return Err(fail(
+                ErrorKind::Busy,
+                "Inspect interrupted version Action before another repository write",
+            ));
+        }
         let pending:bool=self.workspace.connection().query_row("SELECT EXISTS(SELECT 1 FROM state WHERE key LIKE 'fetch-import:%' AND json_extract(value,'$.value.plan.metadata.common_binding')=?1 AND (?2 IS NULL OR json_extract(value,'$.value.plan.id')<>?2) AND json_extract(value,'$.value.phase') IN ('importing_objects','publication_pending','reference_prepared','reference_updated','uncertain'))",params![common,except],|r|r.get(0))?;
         if pending {
             return Err(fail(

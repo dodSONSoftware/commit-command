@@ -1,0 +1,9 @@
+{
+  "only_version_in_new_commit": true,
+  "exact_message_tree_parent_and_blob": true,
+  "unselected_worktrees_and_dirty_file_preserved": true,
+  "all_other_managed_bytes_modes_exact": true,
+  "old_journals_trust_exact": true,
+  "new_head": "d2c9cc17aebfd710387af416e928cda891a40c22",
+  "new_native_git_operations": 2
+}

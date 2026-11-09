@@ -46,6 +46,26 @@ fn stale() -> Error {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Request {
+    ReviewVersionAction {
+        workspace: String,
+        worktree: String,
+        path: NativePath,
+        increment: crate::actions::semver::Increment,
+        prerelease: crate::actions::semver::PrereleasePolicy,
+    },
+    VersionActions {
+        workspace: String,
+        worktree: Option<String>,
+        offset: usize,
+    },
+    ReviewVersionRecovery {
+        workspace: String,
+        operation: String,
+    },
+    ReviewVersionStage {
+        workspace: String,
+        operation: String,
+    },
     PreviewVersionFile {
         workspace: String,
         worktree: String,
@@ -284,6 +304,8 @@ pub struct WorkspaceList {
     pub push_publication_recovery: Vec<RemoteRecoveryNotice>,
     #[serde(default)]
     pub push_batch_recovery: Vec<RemoteRecoveryNotice>,
+    #[serde(default)]
+    pub version_action_recovery: Vec<RemoteRecoveryNotice>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct ScanSummary {
@@ -315,6 +337,7 @@ pub struct OperationPage {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "kind", content = "value", rename_all = "snake_case")]
 pub enum Data {
+    VersionActions(crate::actions::version::VersionPage),
     VersionPreview(crate::actions::semver::VersionPreview),
     AuthenticationSettings(crate::authentication::Settings),
     AuthenticationChoices(crate::authentication::Choices),
@@ -496,6 +519,9 @@ impl Application {
                     .application_cancel_proposal(&proposal.operation_id)?,
                 review::Action::Batch(mut record) => self.cancel_batch_record(&mut record)?,
                 review::Action::PushCheck(plan) => self.writes.cancel_push_check(&plan.id)?,
+                review::Action::Version(plan) => {
+                    self.writes.cancel_version(&plan.workspace, &plan.id)?
+                }
                 review::Action::PushPublication(plan) => {
                     self.writes.cancel_publication(&plan.id)?
                 }
@@ -535,6 +561,10 @@ impl Application {
     pub fn reset_presentation(&mut self) -> Result<()> {
         self.invalidate()?;
         self.restart_monitor()
+    }
+    #[cfg(feature = "write-test-support")]
+    pub fn set_version_test_fault(&mut self, after: bool, kind: TestFaultKind) {
+        self.writes.set_version_fault(after, kind);
     }
     #[cfg(feature = "write-test-support")]
     pub fn set_write_test_fault(&mut self, fault: TestFault) {
@@ -626,6 +656,64 @@ impl Application {
             _ => {}
         }
         let data = match request {
+            Request::ReviewVersionAction {
+                workspace,
+                worktree,
+                path,
+                increment,
+                prerelease,
+            } => {
+                self.abandon_review()?;
+                let ws = self.active(&workspace)?;
+                self.entry(&workspace, &worktree)?;
+                let plan = self.writes.propose_version(
+                    &ws,
+                    &WorktreeId(worktree),
+                    path,
+                    increment,
+                    prerelease,
+                )?;
+                match self.set_review(review::Action::Version(Box::new(plan.clone()))) {
+                    Ok(r) => Data::Review(r),
+                    Err(e) => {
+                        self.writes.cancel_version(&ws, &plan.id)?;
+                        return Err(e);
+                    }
+                }
+            }
+            Request::VersionActions {
+                workspace,
+                worktree,
+                offset,
+            } => {
+                let ws = self.active(&workspace)?;
+                if let Some(wt) = &worktree {
+                    self.entry(&workspace, wt)?;
+                }
+                Data::VersionActions(self.writes.version_actions(
+                    &ws,
+                    worktree.as_deref(),
+                    offset,
+                )?)
+            }
+            Request::ReviewVersionRecovery {
+                workspace,
+                operation,
+            } => {
+                self.abandon_review()?;
+                let ws = self.active(&workspace)?;
+                let review = self.writes.review_version_recovery(&ws, &operation)?;
+                Data::Review(self.set_review(review::Action::VersionRecovery(Box::new(review)))?)
+            }
+            Request::ReviewVersionStage {
+                workspace,
+                operation,
+            } => {
+                self.abandon_review()?;
+                let ws = self.active(&workspace)?;
+                let proposal = self.writes.version_stage(&ws, &operation)?;
+                Data::Review(self.set_review(review::Action::Write(Box::new(proposal)))?)
+            }
             Request::PreviewVersionFile {
                 workspace,
                 worktree,
@@ -696,6 +784,7 @@ impl Application {
                 upstream_recovery: self.writes.upstream_notices()?,
                 push_publication_recovery: self.writes.publication_notices()?,
                 push_batch_recovery: self.writes.push_batch_notices()?,
+                version_action_recovery: self.writes.version_notices()?,
             }),
             Request::Create { name, picker } => {
                 let path = self.directory(&picker)?;

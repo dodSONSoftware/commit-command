@@ -1,0 +1,14 @@
+{
+  "only_version_changed_and_committed": true,
+  "exact_parent_tree_message_blob_mode": true,
+  "old_objects_config_HEAD_other_refs_and_unselected_bytes_modes_preserved": true,
+  "original_retained_privately": true,
+  "no_new_trust_parent_still_revoked": true,
+  "old_journals_exact": true,
+  "ordinary_restart_files_and_journals_exact_no_replay": true,
+  "source_artifact_hashes_verified": true,
+  "integrity": "ok",
+  "writer_lock_reopened": true,
+  "acceptance_exit": 0,
+  "ordinary_exit": 0
+}

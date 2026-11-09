@@ -3,6 +3,30 @@
 export type Request =
   | {
       increment: Increment;
+      kind: "review_version_action";
+      path: NativePath;
+      prerelease: PrereleasePolicy;
+      workspace: string;
+      worktree: string;
+    }
+  | {
+      kind: "version_actions";
+      offset: number;
+      workspace: string;
+      worktree?: string | null;
+    }
+  | {
+      kind: "review_version_recovery";
+      operation: string;
+      workspace: string;
+    }
+  | {
+      kind: "review_version_stage";
+      operation: string;
+      workspace: string;
+    }
+  | {
+      increment: Increment;
       kind: "preview_version_file";
       path: NativePath;
       prerelease: PrereleasePolicy;
@@ -360,7 +384,8 @@ export type OperationAuditKind =
   | "upstream_setup"
   | "push_check"
   | "push_publication"
-  | "push_batch";
+  | "push_batch"
+  | "version_action";
 export type OperationAuditResult =
   | "pending"
   | "complete"

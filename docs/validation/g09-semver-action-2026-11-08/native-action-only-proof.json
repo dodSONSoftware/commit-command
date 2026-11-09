@@ -1,0 +1,95 @@
+{
+  "only_version_bytes_changed": true,
+  "mode_0750_preserved": true,
+  "all_other_managed_bytes_modes_and_heads_exact": true,
+  "private_original_retained": true,
+  "invocation": {
+    "plan": {
+      "id": "a86e41e9-c00e-4c02-a055-e0ea745805a2",
+      "workspace": "8fbb404a-a70e-47fe-a911-3bf94a4ee709",
+      "worktree": "0c13b924-9371-40ac-a754-2f6705a3afcb",
+      "metadata": {
+        "root": {
+          "encoding": "utf8",
+          "value": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle/leaf"
+        },
+        "git_dir": {
+          "encoding": "utf8",
+          "value": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/.git/modules/middle/modules/leaf"
+        },
+        "common_dir": {
+          "encoding": "utf8",
+          "value": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/.git/modules/middle/modules/leaf"
+        },
+        "root_binding": "16777234:55113172:Some(SystemTime { tv_sec: 1794165903, tv_nsec: 72135997 })",
+        "git_binding": "16777234:55113206:Some(SystemTime { tv_sec: 1794165903, tv_nsec: 165100682 })",
+        "common_binding": "16777234:55113206:Some(SystemTime { tv_sec: 1794165903, tv_nsec: 165100682 })",
+        "object_format": "sha1"
+      },
+      "path": {
+        "encoding": "utf8",
+        "value": "version"
+      },
+      "version": {
+        "old": "2.0.0",
+        "new": "2.0.1",
+        "increment": "patch",
+        "prerelease": "reject",
+        "before_hash": "c28fcca53637bc88e124af1725df13cb98c69dedefd62fb3cdbe1cdb6b760624",
+        "after_hash": "fe840f52fb5578d3f77eb497115eb02c6036601c3a53e60df7995c7276baa77a",
+        "before": [
+          50,
+          46,
+          48,
+          46,
+          48,
+          10
+        ],
+        "after": [
+          50,
+          46,
+          48,
+          46,
+          49,
+          10
+        ]
+      },
+      "file": {
+        "device": 16777234,
+        "inode": 55951800,
+        "mode": 33256,
+        "length": 6,
+        "modified_seconds": 1794181208,
+        "modified_nanos": 876818451,
+        "changed_seconds": 1794181208,
+        "changed_nanos": 876854618
+      },
+      "root_device": 16777234,
+      "root_inode": 55113172,
+      "parent_device": 16777234,
+      "parent_inode": 55113172,
+      "config_digest": "1ed680ab1848b7768f9964a341f64ef432cc20c16ffaff25dbb9eb9675c3ea7a",
+      "index_digest": "aeaef6b829b1d4a0e814821838efe3225927df6fa739629291897e9b1de61517",
+      "branch": "refs/heads/main",
+      "head": "f7e28deffbceab9f11358cfba6113bede121f500",
+      "created_at_ms": 1794181240187,
+      "digest": "09e77b1153eae76915adc95af8b45a0899dc1f1e438adcda1bf1a5f839bc9691"
+    },
+    "phase": "applied",
+    "definition_approved_at_ms": 1794181244997,
+    "candidate": {
+      "device": 16777234,
+      "inode": 55958850,
+      "mode": 33256,
+      "length": 6,
+      "modified_seconds": 1794181245,
+      "modified_nanos": 49600074,
+      "changed_seconds": 1794181245,
+      "changed_nanos": 49611699
+    },
+    "applied": true,
+    "observed": "applied",
+    "finished_at_ms": 1794181245128,
+    "issue": null
+  }
+}

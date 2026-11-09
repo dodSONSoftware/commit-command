@@ -46,7 +46,7 @@ function setup(busy = false) {
 it("does nothing until explicitly requested and needs no AI setup", async () => {
   const request = setup();
   expect(request).not.toHaveBeenCalled();
-  fireEvent.click(screen.getByText("Preview version update"));
+  fireEvent.click(screen.getByText("Version file Action"));
   fireEvent.click(
     screen.getByRole("button", { name: "Read version update preview" }),
   );

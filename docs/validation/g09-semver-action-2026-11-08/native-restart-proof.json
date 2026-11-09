@@ -1,0 +1,9 @@
+{
+  "ordinary_restart_files_modes_exact": true,
+  "all_execution_journals_exact_no_replay": true,
+  "source_and_both_artifact_hashes_exact": true,
+  "integrity": "ok",
+  "writer_lock_reopened": true,
+  "acceptance_exit": 0,
+  "ordinary_exit": 0
+}

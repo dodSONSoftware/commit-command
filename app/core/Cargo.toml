@@ -88,3 +88,7 @@ required-features = ["application-services"]
 name = "gitfleet-credential"
 path = "src/bin/gitfleet_credential.rs"
 required-features = ["application-services"]
+
+[[test]]
+name = "version_actions"
+required-features = ["application-services"]

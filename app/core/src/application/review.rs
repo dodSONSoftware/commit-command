@@ -9,6 +9,8 @@ pub struct ReviewDisplay {
     pub content: String,
 }
 pub(super) enum Action {
+    Version(Box<crate::actions::version::VersionPlan>),
+    VersionRecovery(Box<crate::actions::version::VersionRecovery>),
     Authentication(Box<super::authentication::SettingsPlan>),
     Trust {
         workspace: WorkspaceId,
@@ -131,6 +133,8 @@ impl Application {
     pub(super) fn set_review(&mut self, action: Action) -> Result<ReviewDisplay> {
         let id = Uuid::new_v4().to_string();
         let (title, summary, content) = match &action {
+            Action::Version(plan)=>("Review exact version Action".into(),format!("Approve this typed definition and one invocation only.\nWorktree: {}\nFile: {}\nOld: {}\nNew: {}\nIncrement: {:?}; prerelease: {:?}\nReplace only the exact reviewed regular file, preserving its mode and newline. The previous file is retained in private recovery storage. No hooks, AI, network, index, refs or commit. Staging and committing require separate fresh reviews. Context drift stops execution; a last-instant external edit is retained and reported for reconciliation. Interrupted replacement is inspected without replay or double increment.\nDigest: {}",plan.metadata.root.display(),plan.path.display(),plan.version.old,plan.version.new,plan.version.increment,plan.version.prerelease,plan.digest),serde_json::to_string_pretty(plan)?),
+            Action::VersionRecovery(review)=>("Review observed version Action outcome".into(),format!("Invocation: {}\nFile: {}\nObserved: {:?}\nRecord this observed state only. No file, index, ref, hook, AI or network operation is replayed. Conflicting external content is preserved. The previous file or unfinished candidate is retained in private recovery storage; new mutation/staging requires fresh review.",review.invocation.plan.id,review.invocation.plan.path.display(),review.observed),serde_json::to_string_pretty(review)?),
             Action::Authentication(plan) => (
                 "Review authentication settings".into(),
                 format!("Requested change:\n{}\nSave the exact nonsecret profiles and remote assignments below. Selected helpers run unsandboxed as your user and may prompt during separately approved operations. Saving settings does not call a credential helper, contact a server, trust a repository or approve any network operation. Unknown or changed SSH host keys stop execution; verify and update known_hosts externally. Any settings revision invalidates outstanding authenticated network reviews.",plan.description),
@@ -267,6 +271,7 @@ impl Application {
         }
         if !accepted {
             match &p.action {
+                Action::Version(plan) => self.writes.cancel_version(&plan.workspace, &plan.id)?,
                 Action::Write(proposal) => self
                     .writes
                     .application_cancel_proposal(&proposal.operation_id)?,
@@ -286,6 +291,21 @@ impl Application {
             ));
         }
         let result = match p.action {
+            Action::Version(plan) => {
+                self.active(&plan.workspace.0)?;
+                self.entry(&plan.workspace.0, &plan.worktree.0)?;
+                serde_json::to_value(self.writes.execute_version(&plan, cancellation)?)?
+            }
+            Action::VersionRecovery(review) => {
+                self.active(&review.invocation.plan.workspace.0)?;
+                if cancellation.is_cancelled() {
+                    return Err(Error::with_kind(
+                        ErrorKind::Cancelled,
+                        "Version recovery cancelled",
+                    ));
+                }
+                serde_json::to_value(self.writes.recover_version(&review)?)?
+            }
             Action::Authentication(plan) => self.apply_authentication(*plan, cancellation)?,
             Action::PushPublication(plan) => {
                 self.active(&plan.check.workspace.0)?;

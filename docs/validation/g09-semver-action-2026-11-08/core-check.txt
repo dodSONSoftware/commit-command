@@ -1,0 +1,35 @@
+    Checking gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+error[E0034]: multiple applicable items in scope
+   --> src/actions/version_file.rs:128:14
+    |
+128 |         file.by_ref().take(1025).read_to_end(&mut bytes)?;
+    |              ^^^^^^ multiple `by_ref` found
+    |
+    = note: candidate #1 is defined in an impl of the trait `std::io::Read` for the type `std::fs::File`
+    = note: candidate #2 is defined in an impl of the trait `std::io::Write` for the type `std::fs::File`
+help: disambiguate the method for candidate #1
+    |
+128 -         file.by_ref().take(1025).read_to_end(&mut bytes)?;
+128 +         std::io::Read::by_ref(&mut file).take(1025).read_to_end(&mut bytes)?;
+    |
+help: disambiguate the method for candidate #2
+    |
+128 -         file.by_ref().take(1025).read_to_end(&mut bytes)?;
+128 +         std::io::Write::by_ref(&mut file).take(1025).read_to_end(&mut bytes)?;
+    |
+
+error[E0502]: cannot borrow `*self` as immutable because it is also borrowed as mutable
+   --> src/writes/version_action.rs:117:21
+    |
+106 |         let mut stmt=self.workspace.connection().prepare("SELECT CASE WHEN length(CAST(value AS BLOB))<=65536 THEN value ELSE NULL ...
+    |                      -------------- mutable borrow occurs here
+...
+117 |             let s = self
+    |                     ^^^^ immutable borrow occurs here
+...
+125 |     }
+    |     - mutable borrow might be used here, when `stmt` is dropped and runs the `Drop` code for type `Statement`
+
+Some errors have detailed explanations: E0034, E0502.
+For more information about an error, try `rustc --explain E0034`.
+error: could not compile `gitfleet-core` (lib) due to 2 previous errors
