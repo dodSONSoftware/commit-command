@@ -11,6 +11,16 @@ The [detailed completion handoff](implementation/README.md) supplies the executa
 remaining-work packages, decision worksheet, fixture/test procedures and complete
 requirement mapping. It does not accept gates or replace this live evidence ledger.
 
+### November 8 completion P02 initial activation fix
+
+[Activation checkpoint](reports/COMPLETION_P02_ACTIVATION_2026-11-08.md): pinned Tao
+source distinguishes show from app activation. First page-finished display now
+focuses/activates once; later reloads retain the no-focus-steal guard. Actual ordinary
+first launch and two restarts rendered without diagnostic intervention; three Quit
+exits, exact repository preservation, zero trust/writes, integrity/lock reopen passed.
+Host 20/23 plus build/format/strict Clippy passed. G02 broader crash/OS/accessibility
+criteria remain partial; no universal reliability or default-write change.
+
 ### November 8 completion P03 discovery continuation and P02 startup capture
 
 [Continuation milestone](reports/COMPLETION_P03_CONTINUATION_2026-11-08.md): bounded

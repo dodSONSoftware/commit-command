@@ -1,0 +1,19 @@
+{
+  "launches": 3,
+  "visible_without_probe_or_reload": 3,
+  "normal_quit_exits": [
+    0,
+    0,
+    0
+  ],
+  "preservation": {
+    "changed_paths_hex": [],
+    "unexpected_paths_hex": [],
+    "preserved": true
+  },
+  "integrity": "ok",
+  "write_operations": 0,
+  "trust_grants": 0,
+  "writer_lock_reopened": true,
+  "scope": "ordinary direct first launch and two normal restarts; no crash/reload/Dock/session or universal startup claim"
+}

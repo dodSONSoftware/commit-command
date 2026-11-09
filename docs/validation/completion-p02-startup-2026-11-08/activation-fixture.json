@@ -1,0 +1,9 @@
+{
+  "app": "/private/tmp/gitfleet-m3-native-cb8nbd9g/Commit Command Activation.app",
+  "binary": "/private/tmp/gitfleet-m3-native-cb8nbd9g/Commit Command Activation.app/Contents/MacOS/gitfleet-desktop",
+  "state": "/private/tmp/gitfleet-m3-native-cb8nbd9g/state-activation",
+  "sha256": "c58b73547fb212fc74cb3f19770f6eb1548b7020185ef38ac7f7603d0b0775ff",
+  "features": [
+    "custom-protocol"
+  ]
+}

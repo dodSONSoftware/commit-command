@@ -975,7 +975,11 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                         if payload.event() == tauri::webview::PageLoadEvent::Finished
                             && !initially_shown.swap(true, std::sync::atomic::Ordering::AcqRel)
                         {
-                            if let Err(error) = window.show() {
+                            // On macOS, show makes the window key but does not activate
+                            // the app. A background launch can leave WebKit's mounted
+                            // document hidden until the first native menu interaction.
+                            // Activate only this initial display, never a later reload.
+                            if let Err(error) = window.show().and_then(|()| window.set_focus()) {
                                 eprintln!("Commit Command window display failed: {error}");
                             }
                             #[cfg(feature = "native-acceptance-support")]

@@ -2720,11 +2720,12 @@
       "package": "P02",
       "action": "Actual blank recurrence or diagnostic launch sequence after host/renderer loss",
       "expected": "Capture pre-reload diagnostics; causal fix has regression; nonrecurrence alone is not \u201cfixed\u201d",
-      "status": "failed",
+      "status": "partial",
       "evidence": [
-        "docs/reports/COMPLETION_P02_STARTUP_2026-11-08.md"
+        "docs/reports/COMPLETION_P02_STARTUP_2026-11-08.md",
+        "docs/reports/COMPLETION_P02_ACTIVATION_2026-11-08.md"
       ],
-      "note": "Actual blank observed before reload; DOM mounted but hidden, then painted after fixed probe. No causal fix claimed."
+      "note": "Actual blank captured; missing initial native activation fixed and three ordinary starts passed without probe/reload. Host/renderer-loss and broader reliability still require owning criteria."
     },
     {
       "id": "LIFE03",
