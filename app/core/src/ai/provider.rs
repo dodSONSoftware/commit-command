@@ -25,6 +25,7 @@ pub enum Purpose {
     Discover,
     Inference,
     AssistedMessages,
+    EditorTest,
 }
 /// Frozen input. Constructing/inspecting this value cannot contact a provider.
 pub struct Plan {
@@ -144,11 +145,15 @@ impl Plan {
         let url = url::Url::parse(&endpoint).map_err(|_| invalid("Invalid AI endpoint"))?;
         let (prefix, leaf) = match (connection.provider, purpose) {
             (Provider::Ollama, Purpose::Discover) => ("api/", "tags"),
-            (Provider::Ollama, Purpose::Inference | Purpose::AssistedMessages) => ("api/", "chat"),
+            (
+                Provider::Ollama,
+                Purpose::Inference | Purpose::AssistedMessages | Purpose::EditorTest,
+            ) => ("api/", "chat"),
             (Provider::Compatible, Purpose::Discover) => ("v1/", "models"),
-            (Provider::Compatible, Purpose::Inference | Purpose::AssistedMessages) => {
-                ("v1/", "chat/completions")
-            }
+            (
+                Provider::Compatible,
+                Purpose::Inference | Purpose::AssistedMessages | Purpose::EditorTest,
+            ) => ("v1/", "chat/completions"),
         };
         let path = if url.path().ends_with(&format!("/{prefix}")) {
             leaf.to_owned()
@@ -204,6 +209,43 @@ impl Plan {
         template: super::template::Template,
         instructions: Vec<String>,
     ) -> Result<Self> {
+        Self::source_messages(
+            connection,
+            profile,
+            context,
+            snapshot,
+            template,
+            instructions,
+            Purpose::AssistedMessages,
+        )
+    }
+    pub(crate) fn editor_test(
+        connection: &ConnectionDraft,
+        profile: &super::config::Profile,
+        context: super::context::Bundle,
+        snapshot: String,
+        template: super::template::Template,
+        instructions: Vec<String>,
+    ) -> Result<Self> {
+        Self::source_messages(
+            connection,
+            profile,
+            context,
+            snapshot,
+            template,
+            instructions,
+            Purpose::EditorTest,
+        )
+    }
+    fn source_messages(
+        connection: &ConnectionDraft,
+        profile: &super::config::Profile,
+        context: super::context::Bundle,
+        snapshot: String,
+        template: super::template::Template,
+        instructions: Vec<String>,
+        purpose: Purpose,
+    ) -> Result<Self> {
         template.validate()?;
         for text in std::iter::once(&profile.system_message)
             .chain(std::iter::once(&template.rules.instructions))
@@ -223,7 +265,7 @@ impl Plan {
             &user,
             &profile.parameters,
         )?;
-        plan.purpose = Purpose::AssistedMessages;
+        plan.purpose = purpose;
         plan.candidates = Some(super::candidates::Rules {
             template,
             context,
@@ -234,10 +276,15 @@ impl Plan {
         plan.fingerprint = digest(&serde_json::to_vec(&(
             &plan.fingerprint,
             plan.purpose,
-            &plan
-                .candidates
-                .as_ref()
-                .map(|c| (&c.context.fingerprint, &c.snapshot, &c.template)),
+            &plan.candidates.as_ref().map(|c| {
+                (
+                    &c.context.fingerprint,
+                    &c.snapshot,
+                    &c.template,
+                    &c.profile_id,
+                    &c.profile_revision,
+                )
+            }),
         ))?);
         Ok(plan)
     }
@@ -458,7 +505,11 @@ impl Approved {
                 Some(63) => ErrorKind::OutputLimit,
                 _ => ErrorKind::Unavailable,
             };
-            return Err(Error::with_kind(kind,"AI provider connection failed; inspect endpoint, model and authentication, retry or cancel"));
+            let status = output
+                .status
+                .code()
+                .map_or_else(|| "signal".into(), |code| code.to_string());
+            return Err(Error::with_kind(kind,format!("AI provider connection failed (transport status {status}); inspect endpoint, model and authentication, retry or cancel")));
         }
         let separator = b"\nGITFLEET_HTTP:";
         let at = output
@@ -491,7 +542,7 @@ impl Approved {
             .map_err(|_| invalid("AI provider returned malformed JSON"))?;
         let result: Result<ProviderResult> = match plan.purpose {
             Purpose::Discover => Ok(ProviderResult::Models(models(plan.provider, &value)?)),
-            Purpose::Inference | Purpose::AssistedMessages => {
+            Purpose::Inference | Purpose::AssistedMessages | Purpose::EditorTest => {
                 let result = completion(
                     plan.provider,
                     &value,

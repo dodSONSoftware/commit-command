@@ -1,0 +1,51 @@
+    Blocking waiting for file lock on build directory
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.15s
+     Running tests/m3_application.rs (app/core/target/debug/deps/m3_application-6081cc4896e76fbc)
+
+running 42 tests
+test ai_context_tracked_working_selection_compares_full_content_against_head ... ok
+test ai_context_bounds_selection_documents_history_and_cancellation ... ok
+test ai_context_refuses_links_nested_repositories_and_ignored_untracked_content ... ok
+test ai_context_supports_unborn_and_staged_or_working_deletion ... ok
+test ai_context_redacted_or_excluded_changes_still_invalidate_snapshot ... ok
+test ai_context_related_source_docs_and_current_branch_history_are_explicit_and_filtered ... ok
+test deterministic_version_preview_needs_no_trust_or_provider_and_preserves_drafts_and_git ... ok
+test ai_source_drift_or_missing_profile_blocks_before_transfer_and_manual_reads_continue ... ok
+test cancelled_and_replaced_reviews_record_nonpublication_and_cancellation_is_per_operation ... ok
+test ai_context_exact_selection_is_read_only_and_needs_no_ai_or_trust ... ok
+test ai_credentials_require_current_saved_binding_and_native_approval_without_fallback ... ok
+test native_window_placement_survives_restart_and_invalid_values_preserve_saved_state ... ok
+test g01_replaced_or_closed_review_cannot_use_an_already_issued_confirmation ... ok
+test invalid_bulk_preferences_do_not_replace_the_last_valid_draft ... ok
+test g01_hostile_review_text_preserves_exact_approved_message_and_index_blob ... ok
+test interrupted_records_block_scope_loss_and_are_reported_for_guarded_recovery ... ok
+test activity_deduplicates_linked_worktrees_and_audit_filters_real_operation_phases ... ok
+test identity_recovery_keeps_drafts_and_trust_scoped_and_invalidates_pending_review ... ok
+test malformed_state_paths_duplicate_tabs_and_unknown_picker_cannot_modify_storage ... ok
+test native_capability_is_required_decline_replay_and_context_changes_fail_closed ... ok
+test inventory_exposes_scan_level_and_repository_inspection_failures_and_cache_skips ... ok
+test final_presentation_snapshot_is_atomic_durable_and_never_grants_authority ... ok
+test scoped_reads_and_contracts_preserve_every_repository_byte ... ok
+test operation_reviews_show_exact_content_and_only_applicable_commit_fields ... ok
+test notification_reconciliation_detects_external_edits_without_writes ... ok
+test reviewed_ai_diagnostic_runs_outside_storage_owner_and_cancels_without_git_authority ... ok
+test navigation_migration_restart_and_newer_data_are_preserved ... ok
+test untrusted_remote_inspection_is_scoped_and_includes_host_configuration_without_helper_execution ... ok
+test trust_currentness_is_distinct_from_supported_hook_policy_eligibility ... ok
+test unified_audit_pages_across_tied_sources_and_projects_orphans_without_rewriting_journals ... ok
+test unsaved_editor_source_review_revalidates_and_never_saves_configuration ... ok
+test automatic_discovery_retains_identity_across_rename_and_missing_entries_after_removal ... ok
+test optional_ai_settings_preserve_manual_work_and_use_lazy_atomic_storage ... ok
+test version_preview_rejects_unsafe_files_and_crossing_repository_boundaries ... ok
+test bulk_composer_state_is_durable_workspace_scoped_and_does_not_change_git ... ok
+test ai_source_transfer_requires_exact_native_approval_and_returns_only_validated_text ... ok
+test workspace_switch_invalidates_reviews_and_old_epoch_and_stops_old_watchers ... ok
+test review_text_escapes_bidi_and_reset_invalidates_picker_and_native_capability ... ok
+test recovered_historical_identities_do_not_degrade_periodic_monitoring ... ok
+test unified_audit_filters_real_local_batch_and_remote_records_without_mutation_or_authority ... ok
+test g01_g02_shutdown_or_reset_revokes_issued_commit_confirmation_without_running_hooks ... ok
+test switching_workspace_stops_refreshing_inactive_repository_state ... ok
+
+test result: ok. 42 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 35.28s
+

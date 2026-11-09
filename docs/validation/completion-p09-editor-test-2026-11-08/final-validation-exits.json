@@ -1,0 +1,13 @@
+{
+  "correlated_desktop_gate": 0,
+  "core_library_with_four_workers": 0,
+  "core_application_with_four_workers": 0,
+  "core_all_feature_all_target_clippy": 0,
+  "native_first_quit": 0,
+  "native_restart_quit": 0,
+  "provider_fixture": {
+    "requests": 1,
+    "errors": [],
+    "finished_explicitly": true
+  }
+}

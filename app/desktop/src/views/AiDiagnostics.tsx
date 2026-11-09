@@ -130,7 +130,11 @@ export function AiDiagnostics({
       </button>
       {error && <p role="alert">{error}</p>}
       {jobs
-        .filter((job) => job.review.purpose !== "assisted_messages")
+        .filter(
+          (job) =>
+            job.review.purpose === "discover" ||
+            job.review.purpose === "inference",
+        )
         .map((job) => (
           <article key={job.id} aria-label={`AI diagnostic ${job.id}`}>
             <h4>

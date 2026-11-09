@@ -2006,22 +2006,26 @@
         "app/core/src/ai/capture.rs",
         "app/core/src/ai/provider.rs",
         "app/core/src/ai/jobs.rs",
-        "app/desktop/src/views/AiSettings.tsx"
+        "app/desktop/src/views/AiSettings.tsx",
+        "app/core/src/ai/editor.rs",
+        "app/desktop/src/views/AiEditorRepositoryTest.tsx"
       ],
       "existing_tests": [
         "app/core/src/ai/tests.rs",
         "app/core/src/ai/provider/tests.rs",
         "app/desktop/src/views/AiMessages.test.tsx",
-        "app/core/tests/m3_application.rs"
+        "app/core/tests/m3_application.rs",
+        "app/desktop/src/views/AiEditorRepositoryTest.test.tsx"
       ],
       "retained_evidence_candidates": [
         "docs/reports/G09_AI_ASSISTED_MESSAGES_2026-11-08.md",
         "docs/reports/G09_AI_SECURE_AUTH_2026-11-08.md",
-        "docs/reports/G09_OLLAMA_REAL_PROVIDER_2026-11-08.md"
+        "docs/reports/G09_OLLAMA_REAL_PROVIDER_2026-11-08.md",
+        "docs/reports/COMPLETION_P09_EDITOR_TEST_2026-11-09.md"
       ],
       "baseline_disposition": "Static/synthetic/assisted foundation exists; unsaved-editor selected-repository AI test remains implementation work",
-      "execution_status": "not_run",
-      "acceptance_note": "Candidate references identify existing relevant evidence; they do not accept all variants or the current artifact."
+      "execution_status": "partial",
+      "acceptance_note": "Read-only unsaved repository test implemented and selected native evidence recorded. Simulated version preview and broader acceptance remain open."
     },
     {
       "id": "AI-010",
@@ -3684,9 +3688,11 @@
       "package": "P09",
       "action": "Read-only selected-repository Test with AI using unsaved template/profile and simulated version preview",
       "expected": "Exact filtered viewer/request match, fresh source consent, no settings/Action/index/files write",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/reports/COMPLETION_P09_EDITOR_TEST_2026-11-09.md"
+      ],
+      "note": "Unsaved repository test, exact provider/source fixtures and selected ordinary native decline/approve/no-save/Quit/restart passed. Simulated version preview, full drift/cancel/accessibility and exact release artifact variants remain open; reflection transport intermittency retained."
     },
     {
       "id": "AI08",
@@ -3720,9 +3726,11 @@
       "package": "P09",
       "action": "Exact source viewer; decline/approve transfer; raw excluded source drifts",
       "expected": "Decline zero HTTP; approved received fingerprint matches viewer; any raw snapshot drift invalidates",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/reports/COMPLETION_P09_EDITOR_TEST_2026-11-09.md"
+      ],
+      "note": "Unsaved repository test, exact provider/source fixtures and selected ordinary native decline/approve/no-save/Quit/restart passed. Simulated version preview, full drift/cancel/accessibility and exact release artifact variants remain open; reflection transport intermittency retained."
     },
     {
       "id": "AI12",

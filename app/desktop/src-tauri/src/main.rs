@@ -260,6 +260,7 @@ fn dispatch<R: tauri::Runtime>(
                 | Request::ReviewAiDiscovery { .. }
                 | Request::ReviewAiInference { .. }
                 | Request::ReviewAiMessages { .. }
+                | Request::ReviewAiEditorTest { .. }
                 | Request::ReviewVersionAction { .. }
                 | Request::ReviewVersionRecovery { .. }
                 | Request::ReviewVersionStage { .. }
@@ -1230,6 +1231,40 @@ mod tests {
             operation: "o".into()
         }));
         assert!(!mutating_request(&Request::AiJobs {}));
+        assert!(!mutating_request(&Request::ReviewAiEditorTest {
+            workspace: "w".into(),
+            worktree: "t".into(),
+            spec: gitfleet_core::ai::capture::Spec {
+                selected: vec![],
+                nearby_source: vec![],
+                documentation: vec![],
+                branch_commits: 0,
+                file_commits: 0,
+                policy: Default::default()
+            },
+            snapshot_fingerprint: "snapshot".into(),
+            context_fingerprint: "context".into(),
+            connection: gitfleet_core::ai::config::ConnectionDraft {
+                id: None,
+                name: "test".into(),
+                provider: gitfleet_core::ai::config::Provider::Ollama,
+                endpoint: "http://127.0.0.1:1/".into(),
+                timeout_ms: 100,
+                authentication: Default::default()
+            },
+            profile: Box::new(gitfleet_core::ai::config::ProfileDraft {
+                id: None,
+                name: "test".into(),
+                connection: "".into(),
+                model: "fixture".into(),
+                system_message: "".into(),
+                parameters: Default::default(),
+                template: "".into(),
+                context_bytes: 1024
+            }),
+            template: Box::default(),
+            instructions: vec![],
+        }));
         assert!(!mutating_request(&Request::CancelAiJob {
             id: "fixture".into()
         }));

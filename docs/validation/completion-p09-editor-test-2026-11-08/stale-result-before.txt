@@ -1,0 +1,257 @@
+
+> gitfleet-desktop@0.1.1 test
+> vitest run src/views/AiMessages.test.tsx
+
+
+ RUN  v4.1.12 /Users/randydodson/Documents/_code/git-fleet/app/desktop
+
+ ❯ src/views/AiMessages.test.tsx (6 tests | 2 failed) 368ms
+   × excludes a previous profile result with identical source in assisted generation 38ms
+   × excludes a previous profile result with identical source in editor tests 37ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/views/AiMessages.test.tsx > excludes a previous profile result with identical source in assisted generation
+Error: expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found <article
+  aria-label="Message generation stale"
+>
+  <h3>
+    Message generation
+     · 
+    complete
+  </h3>
+  <p>
+    http://127.0.0.1:1/api/chat
+     · 
+    previous-profile-model
+  </p>
+  <p>
+    1
+     ms · Input tokens:
+     
+    not reported
+     · Output tokens: 
+    not reported
+  </p>
+  <p>
+    Model-reported coverage
+  </p>
+  <section
+    aria-label="AI candidate 1"
+  >
+    <h4>
+      Candidate 
+      1
+       ·
+       
+      template valid
+    </h4>
+    <pre>
+      fix: selected change
+      
+
+Observed only
+    </pre>
+    <p>
+      Rationale: 
+      Explain the change
+    </p>
+    <p>
+      Summary: 
+      One selected change
+    </p>
+    <p>
+      Concern: 
+      Incomplete coverage
+    </p>
+    <p>
+      Model-reported chunks:
+       
+      f1.1
+    </p>
+    <p>
+      Unreported chunks:
+       
+      f1.2
+    </p>
+    <button>
+      Replace draft with candidate 
+      1
+    </button>
+  </section>
+  <section
+    aria-label="AI candidate 2"
+  >
+    <h4>
+      Candidate 
+      2
+       ·
+       
+      template invalid
+    </h4>
+    <pre>
+      invalid subject
+    </pre>
+    <p>
+      Rationale: 
+      Alternate wording
+    </p>
+    <p>
+      Summary: 
+      Change
+    </p>
+    <p>
+      Model-reported chunks:
+       
+      None
+    </p>
+    <p>
+      Unreported chunks:
+       
+      None
+    </p>
+    <p
+      role="alert"
+    >
+      Invalid template
+    </p>
+    <button
+      disabled=""
+    >
+      Replace draft with candidate 
+      2
+    </button>
+  </section>
+</article> instead
+ ❯ src/views/AiMessages.test.tsx:402:11
+    400|     expect(
+    401|       screen.queryByRole("article", { name: "Message generation stale"…
+    402|     ).not.toBeInTheDocument();
+       |           ^
+    403|     expect(
+    404|       screen.queryByText(/previous-profile-model/),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/views/AiMessages.test.tsx > excludes a previous profile result with identical source in editor tests
+Error: expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found <article
+  aria-label="Message generation stale"
+>
+  <h3>
+    Editor test
+     · 
+    complete
+  </h3>
+  <p>
+    http://127.0.0.1:1/api/chat
+     · 
+    previous-profile-model
+  </p>
+  <p>
+    1
+     ms · Input tokens:
+     
+    not reported
+     · Output tokens: 
+    not reported
+  </p>
+  <p>
+    Model-reported coverage
+  </p>
+  <section
+    aria-label="AI candidate 1"
+  >
+    <h4>
+      Candidate 
+      1
+       ·
+       
+      template valid
+    </h4>
+    <pre>
+      fix: selected change
+      
+
+Observed only
+    </pre>
+    <p>
+      Rationale: 
+      Explain the change
+    </p>
+    <p>
+      Summary: 
+      One selected change
+    </p>
+    <p>
+      Concern: 
+      Incomplete coverage
+    </p>
+    <p>
+      Model-reported chunks:
+       
+      f1.1
+    </p>
+    <p>
+      Unreported chunks:
+       
+      f1.2
+    </p>
+  </section>
+  <section
+    aria-label="AI candidate 2"
+  >
+    <h4>
+      Candidate 
+      2
+       ·
+       
+      template invalid
+    </h4>
+    <pre>
+      invalid subject
+    </pre>
+    <p>
+      Rationale: 
+      Alternate wording
+    </p>
+    <p>
+      Summary: 
+      Change
+    </p>
+    <p>
+      Model-reported chunks:
+       
+      None
+    </p>
+    <p>
+      Unreported chunks:
+       
+      None
+    </p>
+    <p
+      role="alert"
+    >
+      Invalid template
+    </p>
+  </section>
+</article> instead
+ ❯ src/views/AiMessages.test.tsx:402:11
+    400|     expect(
+    401|       screen.queryByRole("article", { name: "Message generation stale"…
+    402|     ).not.toBeInTheDocument();
+       |           ^
+    403|     expect(
+    404|       screen.queryByText(/previous-profile-model/),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 4 passed (6)
+   Start at  00:29:54
+   Duration  758ms (transform 40ms, setup 30ms, import 85ms, tests 368ms, environment 190ms)
+

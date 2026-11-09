@@ -1,3 +1,4 @@
+import { AiEditorRepositoryTest } from "./AiEditorRepositoryTest";
 import { AiDiagnostics } from "./AiDiagnostics";
 import { useRef, useState } from "react";
 import { value, type Bridge } from "../services/bridge";
@@ -136,6 +137,9 @@ export function AiSettings({
       setNotice("AI settings saved. No provider request was made.");
     });
   const settings = snapshot?.settings;
+  const testTemplate =
+    editingTemplate ??
+    settings?.templates.find((template) => template.id === templateId);
   const scope: AiScope | null =
     scopeKind === "application"
       ? { kind: "application" }
@@ -188,9 +192,10 @@ export function AiSettings({
           provider and grant no Git or Action authority.
         </p>
         <p>
-          Provider diagnostics require exact native approval and use no
-          repository content. For selected repository changes, open AI message
-          suggestions in the commit composer.
+          Provider diagnostics require exact native approval and use synthetic
+          content. Use Test with repository context below to test unsaved
+          editors against selected changes. Saved-profile message suggestions
+          are also available in the commit composer.
         </p>
         {error && <p role="alert">{error}</p>}
         {notice && <p role="status">{notice}</p>}
@@ -590,6 +595,37 @@ export function AiSettings({
                 null
               }
             />
+            {workspace && testTemplate && (
+              <AiEditorRepositoryTest
+                key={workspace}
+                bridge={bridge}
+                workspace={workspace}
+                worktree={worktree}
+                disabled={pending}
+                editor={{
+                  connection: {
+                    id: connectionId,
+                    name: connectionName,
+                    provider,
+                    endpoint,
+                    timeout_ms: timeout,
+                    authentication,
+                  },
+                  profile: {
+                    id: profileId,
+                    name: profileName,
+                    connection,
+                    model,
+                    system_message: system,
+                    parameters,
+                    template: templateId,
+                    context_bytes: budget,
+                  },
+                  template: testTemplate,
+                  instructions: instructions ? [instructions] : [],
+                }}
+              />
+            )}
             <section aria-label="AI templates">
               <h3>Message templates</h3>
               <select

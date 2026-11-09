@@ -48,6 +48,17 @@ fn stale() -> Error {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Request {
+    ReviewAiEditorTest {
+        workspace: String,
+        worktree: String,
+        spec: crate::ai::capture::Spec,
+        snapshot_fingerprint: String,
+        context_fingerprint: String,
+        connection: crate::ai::config::ConnectionDraft,
+        profile: Box<crate::ai::config::ProfileDraft>,
+        template: Box<crate::ai::template::Template>,
+        instructions: Vec<String>,
+    },
     ReviewAiMessages {
         workspace: String,
         worktree: String,
@@ -776,6 +787,49 @@ impl Application {
             _ => {}
         }
         let data = match request {
+            Request::ReviewAiEditorTest {
+                workspace,
+                worktree,
+                spec,
+                snapshot_fingerprint,
+                context_fingerprint,
+                connection,
+                profile,
+                template,
+                instructions,
+            } => {
+                self.abandon_review()?;
+                let entry = self.entry(&workspace, &worktree)?;
+                let captured = crate::ai::capture::capture(
+                    &entry.metadata.root.to_path()?,
+                    &spec,
+                    &self.read_options,
+                )?;
+                if captured.snapshot_fingerprint != snapshot_fingerprint
+                    || captured.bundle.fingerprint != context_fingerprint
+                {
+                    return Err(stale());
+                }
+                let settings = crate::ai::store::load(self.writes.workspace.data_directory())?;
+                let plan = crate::ai::editor::plan(
+                    connection,
+                    *profile,
+                    *template,
+                    instructions,
+                    &captured,
+                    spec.policy.max_bytes,
+                )?;
+                Data::Review(self.review_ai_source_plan(
+                    plan,
+                    Some(Box::new(review::AiSourceBinding {
+                        settings_fingerprint: settings.fingerprint,
+                        workspace,
+                        worktree,
+                        spec,
+                        captured,
+                    })),
+                )?)
+            }
             Request::ReviewAiMessages {
                 workspace,
                 worktree,

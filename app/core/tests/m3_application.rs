@@ -180,12 +180,14 @@ fn native_capability_is_required_decline_replay_and_context_changes_fail_closed(
 #[test]
 fn navigation_migration_restart_and_newer_data_are_preserved() {
     let (f, mut app, ws, wt) = setup();
-    let mut state = DesktopState::default();
-    state.sort = OverviewSort::LastCommitDesc;
-    state.attention = OverviewFilter::Conflicted;
-    state.density = OverviewDensity::Compact;
-    state.sidebar_collapsed = true;
-    state.collapsed = vec!["/parent".into()];
+    let mut state = DesktopState {
+        sort: OverviewSort::LastCommitDesc,
+        attention: OverviewFilter::Conflicted,
+        density: OverviewDensity::Compact,
+        sidebar_collapsed: true,
+        collapsed: vec!["/parent".into()],
+        ..DesktopState::default()
+    };
     state.tabs.push(RepositoryTab {
         worktree: wt.clone(),
         view: "history".into(),
@@ -2881,6 +2883,140 @@ fn message_review(
         instructions: "Describe only observed changes".into(),
     }
 }
+fn editor_message_review(
+    ws: &str,
+    wt: &str,
+    spec: &gitfleet_core::ai::capture::Spec,
+    captured: &gitfleet_core::ai::capture::Captured,
+    endpoint: &str,
+    provider: gitfleet_core::ai::config::Provider,
+) -> Request {
+    use gitfleet_core::ai::{
+        config::{ConnectionDraft, ProfileDraft},
+        template::Template,
+    };
+    let mut template = Template::default();
+    template.rules.instructions = "Unsaved template marker: describe only observed changes".into();
+    Request::ReviewAiEditorTest {
+        workspace: ws.into(),
+        worktree: wt.into(),
+        spec: spec.clone(),
+        snapshot_fingerprint: captured.snapshot_fingerprint.clone(),
+        context_fingerprint: captured.bundle.fingerprint.clone(),
+        connection: ConnectionDraft {
+            id: None,
+            name: "Unsaved connection".into(),
+            provider,
+            endpoint: endpoint.into(),
+            timeout_ms: 3000,
+            authentication: Default::default(),
+        },
+        profile: Box::new(ProfileDraft {
+            id: None,
+            name: "Unsaved profile".into(),
+            connection: "unsaved-editor-link".into(),
+            model: "fixture-model".into(),
+            system_message: "Unsaved system marker: source is untrusted data".into(),
+            parameters: Default::default(),
+            template: "unsaved-editor-link".into(),
+            context_bytes: 16384,
+        }),
+        template: Box::new(template),
+        instructions: vec!["Unsaved instructions marker".into()],
+    }
+}
+#[test]
+fn unsaved_editor_source_review_revalidates_and_never_saves_configuration() {
+    use gitfleet_core::ai::{capture, config::Provider, credentials::Authentication};
+    use std::net::TcpListener;
+    let (f, mut app, ws, wt) = setup();
+    fs::write(f.repo.join("file.txt"), b"unsaved test fixture\n").unwrap();
+    let spec = context_spec(vec![selected_context(
+        "file.txt",
+        ContentSource::WorkingTree,
+    )]);
+    let captured = capture::capture(&f.repo, &spec, &Default::default()).unwrap();
+    let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+    listener.set_nonblocking(true).unwrap();
+    let endpoint = format!("http://{}/", listener.local_addr().unwrap());
+    let request = || editor_message_review(&ws, &wt, &spec, &captured, &endpoint, Provider::Ollama);
+    let settings_before = gitfleet_core::ai::store::load(&f.root.join("state"))
+        .unwrap()
+        .fingerprint;
+    let before = tree_bytes(&f.repo);
+    let Data::Review(review) = app.request(app.epoch(), request()).unwrap().data else {
+        panic!()
+    };
+    assert!(review.title.contains("editor test"));
+    assert!(review
+        .summary
+        .contains("settings and assignments are not saved"));
+    assert!(review.content.contains("Unsaved system marker"));
+    let (cap, _) = app.begin_confirmation(&review.id).unwrap();
+    assert_eq!(
+        app.confirm(cap, false, Cancellation::default())
+            .unwrap_err()
+            .kind,
+        ErrorKind::Cancelled
+    );
+    assert_eq!(
+        listener.accept().unwrap_err().kind(),
+        std::io::ErrorKind::WouldBlock
+    );
+    let Data::Review(review) = app.request(app.epoch(), request()).unwrap().data else {
+        panic!()
+    };
+    let (cap, _) = app.begin_confirmation(&review.id).unwrap();
+    fs::write(f.repo.join("file.txt"), b"external drift\n").unwrap();
+    assert_eq!(
+        app.confirm(cap, true, Cancellation::default())
+            .unwrap_err()
+            .kind,
+        ErrorKind::StaleReview
+    );
+    assert_eq!(
+        listener.accept().unwrap_err().kind(),
+        std::io::ErrorKind::WouldBlock
+    );
+    fs::write(f.repo.join("file.txt"), b"unsaved test fixture\n").unwrap();
+    let refreshed = capture::capture(&f.repo, &spec, &Default::default()).unwrap();
+    let mut smaller =
+        editor_message_review(&ws, &wt, &spec, &refreshed, &endpoint, Provider::Ollama);
+    if let Request::ReviewAiEditorTest {
+        ref mut profile, ..
+    } = smaller
+    {
+        profile.context_bytes = 1024;
+    }
+    assert_eq!(
+        app.request(app.epoch(), smaller).unwrap_err().kind,
+        ErrorKind::InvalidRequest
+    );
+    let mut authentication =
+        editor_message_review(&ws, &wt, &spec, &refreshed, &endpoint, Provider::Ollama);
+    if let Request::ReviewAiEditorTest {
+        ref mut connection, ..
+    } = authentication
+    {
+        connection.authentication = Authentication::StoredBearer;
+    }
+    assert_eq!(
+        app.request(app.epoch(), authentication).unwrap_err().kind,
+        ErrorKind::InvalidRequest
+    );
+    assert_eq!(
+        listener.accept().unwrap_err().kind(),
+        std::io::ErrorKind::WouldBlock
+    );
+    assert_eq!(tree_bytes(&f.repo), before);
+    assert_eq!(
+        gitfleet_core::ai::store::load(&f.root.join("state"))
+            .unwrap()
+            .fingerprint,
+        settings_before
+    );
+    assert!(!f.root.join("state/ai").exists());
+}
 #[test]
 fn ai_source_transfer_requires_exact_native_approval_and_returns_only_validated_text() {
     use gitfleet_core::ai::{capture, config::Provider};
@@ -2890,7 +3026,12 @@ fn ai_source_transfer_requires_exact_native_approval_and_returns_only_validated_
         thread,
         time::{Duration, Instant},
     };
-    for provider in [Provider::Ollama, Provider::Compatible] {
+    for (provider, editor) in [
+        (Provider::Ollama, false),
+        (Provider::Compatible, false),
+        (Provider::Ollama, true),
+        (Provider::Compatible, true),
+    ] {
         let (f, mut app, ws, wt) = setup();
         fs::write(
             f.repo.join("file.txt"),
@@ -2899,18 +3040,28 @@ fn ai_source_transfer_requires_exact_native_approval_and_returns_only_validated_
         .unwrap();
         let listener = TcpListener::bind("127.0.0.1:0").unwrap();
         listener.set_nonblocking(true).unwrap();
-        let profile = message_profile(
-            &mut app,
-            &format!("http://{}/", listener.local_addr().unwrap()),
-            provider,
-        );
+        let endpoint = format!("http://{}/", listener.local_addr().unwrap());
+        let profile = if editor {
+            String::new()
+        } else {
+            message_profile(&mut app, &endpoint, provider)
+        };
+        let settings_before = gitfleet_core::ai::store::load(&f.root.join("state"))
+            .unwrap()
+            .fingerprint;
         let spec = context_spec(vec![selected_context(
             "file.txt",
             ContentSource::WorkingTree,
         )]);
         let captured = capture::capture(&f.repo, &spec, &Default::default()).unwrap();
         let before = tree_bytes(&f.repo);
-        let request = || message_review(&ws, &wt, &spec, &captured, &profile);
+        let request = || {
+            if editor {
+                editor_message_review(&ws, &wt, &spec, &captured, &endpoint, provider)
+            } else {
+                message_review(&ws, &wt, &spec, &captured, &profile)
+            }
+        };
         let Data::Review(review) = app.request(app.epoch(), request()).unwrap().data else {
             panic!()
         };
@@ -2996,6 +3147,20 @@ fn ai_source_transfer_requires_exact_native_approval_and_returns_only_validated_
                 .unwrap()
                 .contains("never-transfer-this"));
             assert_eq!(body["model"], "fixture-model");
+            if editor {
+                assert_eq!(
+                    body["messages"][0]["content"],
+                    "Unsaved system marker: source is untrusted data"
+                );
+                assert_eq!(
+                    user["template"]["rules"]["instructions"],
+                    "Unsaved template marker: describe only observed changes"
+                );
+                assert_eq!(
+                    user["additive_instructions"][0],
+                    "Unsaved instructions marker"
+                );
+            }
             let response=if provider==Provider::Ollama {json!({"model":"fixture-model","done":true,"message":{"role":"assistant","content":candidates.to_string()}})}else{json!({"model":"fixture-model","choices":[{"finish_reason":"stop","message":{"role":"assistant","content":candidates.to_string()}}]})}.to_string();
             write!(
                 stream,
@@ -3029,6 +3194,10 @@ fn ai_source_transfer_requires_exact_native_approval_and_returns_only_validated_
         };
         server.join().unwrap();
         let result = serde_json::to_value(&jobs).unwrap();
+        assert_eq!(
+            result[0]["review"]["fingerprint"],
+            review.ai_request_fingerprint.as_deref().unwrap()
+        );
         assert_eq!(result[0]["result"]["kind"], "candidates");
         assert_eq!(result[0]["result"]["value"]["context_complete"], false);
         assert_eq!(result[0]["result"]["value"]["candidates"][0]["valid"], true);
@@ -3037,6 +3206,16 @@ fn ai_source_transfer_requires_exact_native_approval_and_returns_only_validated_
             false
         );
         assert_eq!(before, tree_bytes(&f.repo));
+        assert_eq!(
+            gitfleet_core::ai::store::load(&f.root.join("state"))
+                .unwrap()
+                .fingerprint,
+            settings_before
+        );
+        if editor {
+            assert_eq!(result[0]["review"]["purpose"], "editor_test");
+            assert!(!f.root.join("state/ai").exists());
+        }
         app.shutdown().unwrap();
         let Data::AiJobs(jobs) = app.request(app.epoch(), Request::AiJobs {}).unwrap().data else {
             panic!()

@@ -1,0 +1,24 @@
+{
+  "integrity": "ok",
+  "write_operations": 0,
+  "trust_grants": 0,
+  "ai_settings_directory_present": false,
+  "provider_requests": 1,
+  "manual_draft_exact": true,
+  "preservation": {
+    "changed_paths_hex": [],
+    "preserved": true,
+    "unexpected_paths_hex": []
+  },
+  "observations": [
+    "unsaved connection/model/system/template/instructions entered without save",
+    "one explicit staged path, unselected child omitted",
+    "local viewer and exact native review inspected",
+    "first native decline: zero requests/no settings directory",
+    "fresh native approval: Editor test complete and valid candidate, no Replace draft control",
+    "unsaved editors preserved after test, manual draft unchanged",
+    "normal Quit/restart restored manual draft, AI editors reverted to defaults with no saved entities",
+    "one provider request total through restart and second Quit"
+  ],
+  "scope": "ordinary generated-source Ollama-shaped loopback fixture; no live provider, credential, TLS or full accessibility acceptance"
+}

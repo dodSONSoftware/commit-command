@@ -10,6 +10,10 @@ type Selection = Extract<
   Request,
   { kind: "preview_ai_context" }
 >["spec"]["selected"];
+export type AiEditorDraft = Pick<
+  Extract<Request, { kind: "review_ai_editor_test" }>,
+  "connection" | "profile" | "template" | "instructions"
+>;
 export function AiMessages({
   bridge,
   workspace,
@@ -17,13 +21,15 @@ export function AiMessages({
   selected,
   busy,
   onUse,
+  editor,
 }: {
   bridge: Bridge;
   workspace: string;
   worktree: string;
   selected: Selection;
   busy: boolean;
-  onUse: (message: string) => void;
+  onUse?: (message: string) => void;
+  editor?: AiEditorDraft;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
@@ -34,7 +40,9 @@ export function AiMessages({
   const [nearby, setNearby] = useState("");
   const [docs, setDocs] = useState("");
   const [exclusions, setExclusions] = useState("");
-  const [budget, setBudget] = useState(16384);
+  const [budget, setBudget] = useState(
+    Math.min(16384, editor?.profile.context_bytes ?? 16384),
+  );
   const [branchHistory, setBranchHistory] = useState(20);
   const [fileHistory, setFileHistory] = useState(10);
   const [instructions, setInstructions] = useState("");
@@ -45,15 +53,20 @@ export function AiMessages({
     result: AiCapturedContext;
   } | null>(null);
   const [watch, setWatch] = useState(false);
+  const [requestFingerprint, setRequestFingerprint] = useState<string | null>(
+    null,
+  );
   const [jobs, setJobs] = useState<AiJob[]>([]);
+  const purpose = editor ? "editor_test" : "assisted_messages";
   function invalidate() {
     sequence.current++;
     setCaptured(null);
     setJobs([]);
     setWatch(false);
+    setRequestFingerprint(null);
   }
   useEffect(() => {
-    if (!open || !watch || !captured) return;
+    if (!open || !watch || !captured || !requestFingerprint) return;
     let live = true;
     let timer: ReturnType<typeof setTimeout> | undefined;
     const poll = async () => {
@@ -66,6 +79,8 @@ export function AiMessages({
           setJobs(
             items.filter(
               (j) =>
+                j.review.purpose === purpose &&
+                j.review.fingerprint === requestFingerprint &&
                 j.review.source?.snapshot_fingerprint ===
                   captured.result.snapshot_fingerprint &&
                 j.review.source?.context_fingerprint ===
@@ -83,7 +98,7 @@ export function AiMessages({
       live = false;
       if (timer) clearTimeout(timer);
     };
-  }, [bridge, open, watch, captured]);
+  }, [bridge, open, watch, captured, purpose, requestFingerprint]);
   async function run(task: () => Promise<void>) {
     setPending(true);
     setError("");
@@ -135,19 +150,27 @@ export function AiMessages({
           dialog.current?.showModal();
         }}
       >
-        AI message suggestions…
+        {editor ? "Test with AI…" : "AI message suggestions…"}
       </button>
       <dialog
         ref={dialog}
         className="ai-settings-dialog"
-        aria-label="AI context and message suggestions"
+        aria-label={
+          editor
+            ? "Test unsaved AI settings with repository context"
+            : "AI context and message suggestions"
+        }
         onClose={() => {
           setOpen(false);
           trigger.current?.focus();
         }}
       >
         <header>
-          <h2>AI context and message suggestions</h2>
+          <h2>
+            {editor
+              ? "Test unsaved AI settings with repository context"
+              : "AI context and message suggestions"}
+          </h2>
           <button onClick={() => dialog.current?.close()}>
             Close AI suggestions
           </button>
@@ -156,9 +179,18 @@ export function AiMessages({
           AI is optional. Capture reads only the selected paths and explicit
           related context. It sends no request and requires no trust or AI
           setup. Every source transfer requires a separate exact native
-          destination review. Suggestions only replace a draft when you choose
-          one; staging, commits and Actions require their normal reviews.
+          destination review.{" "}
+          {editor
+            ? "Test results are read-only; no draft can be replaced here."
+            : "Suggestions only replace a draft when you choose one; staging, commits and Actions require their normal reviews."}
         </p>
+        {editor && (
+          <p>
+            Uses the shown unsaved connection, profile, template and instruction
+            editors. Settings and assignments are not saved. Test results cannot
+            replace a draft or run an Action.
+          </p>
+        )}
         <p>
           Suggestions describe the captured snapshot. Recapture after repository
           changes; a later commit review uses the current selected content.
@@ -287,39 +319,43 @@ export function AiMessages({
           </section>
         )}
         <section aria-label="Optional AI generation">
-          <button
-            disabled={pending}
-            onClick={() =>
-              void run(async () =>
-                setProfiles(
-                  value(
-                    await bridge.request({ kind: "ai_settings" }),
-                    "ai_settings",
-                  ).settings.profiles,
-                ),
-              )
-            }
-          >
-            Load optional AI profiles · no transfer
-          </button>
-          <label>
-            Message generation profile
-            <select
-              value={profile}
-              disabled={pending}
-              onChange={(e) => {
-                invalidate();
-                setProfile(e.target.value);
-              }}
-            >
-              <option value="">Use inherited assignment</option>
-              {profiles.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name} · {p.model}
-                </option>
-              ))}
-            </select>
-          </label>
+          {!editor && (
+            <>
+              <button
+                disabled={pending}
+                onClick={() =>
+                  void run(async () =>
+                    setProfiles(
+                      value(
+                        await bridge.request({ kind: "ai_settings" }),
+                        "ai_settings",
+                      ).settings.profiles,
+                    ),
+                  )
+                }
+              >
+                Load optional AI profiles · no transfer
+              </button>
+              <label>
+                Message generation profile
+                <select
+                  value={profile}
+                  disabled={pending}
+                  onChange={(e) => {
+                    invalidate();
+                    setProfile(e.target.value);
+                  }}
+                >
+                  <option value="">Use inherited assignment</option>
+                  {profiles.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name} · {p.model}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </>
+          )}
           <label>
             One-off message instructions
             <textarea
@@ -333,38 +369,66 @@ export function AiMessages({
             />
           </label>
           <p>
-            Missing profiles/models/providers fail this AI request without
-            fallback. Your existing draft remains unchanged. A smaller profile
-            budget requires a fresh smaller capture.
+            {editor
+              ? "The test uses only the shown editor values, with no saved-profile fallback. No settings or draft are changed."
+              : "Missing profiles/models/providers fail this AI request without fallback. Your existing draft remains unchanged."}{" "}
+            A smaller profile budget requires a fresh smaller capture.
           </p>
           <button
             disabled={pending || !captured}
             onClick={() =>
               void run(async () => {
                 if (!captured) return;
-                await bridge.request({
-                  kind: "review_ai_messages",
+                setJobs([]);
+                setWatch(false);
+                setRequestFingerprint(null);
+                const source = {
                   workspace,
                   worktree,
                   spec: captured.spec,
                   snapshot_fingerprint: captured.result.snapshot_fingerprint,
                   context_fingerprint: captured.result.bundle.fingerprint,
-                  one_off_profile: profile || null,
-                  instructions,
-                });
+                };
+                const request: Request = editor
+                  ? {
+                      kind: "review_ai_editor_test",
+                      ...editor,
+                      ...source,
+                      instructions: [
+                        ...editor.instructions,
+                        ...(instructions ? [instructions] : []),
+                      ],
+                    }
+                  : {
+                      kind: "review_ai_messages",
+                      ...source,
+                      one_off_profile: profile || null,
+                      instructions,
+                    };
+                const reviewed = value(await bridge.request(request), "review");
+                if (!reviewed.ai_request_fingerprint)
+                  throw new Error(
+                    "AI review did not provide a request fingerprint; capture and review again",
+                  );
+                setRequestFingerprint(reviewed.ai_request_fingerprint);
                 setWatch(true);
               })
             }
           >
             Review exact AI source transfer
           </button>
-          <button disabled={!captured} onClick={() => setWatch((w) => !w)}>
+          <button
+            disabled={!captured || !requestFingerprint}
+            onClick={() => setWatch((w) => !w)}
+          >
             {watch ? "Pause message result updates" : "Show message results"}
           </button>
           {error && <p role="alert">{error}</p>}
           {jobs.map((job) => (
             <article key={job.id} aria-label={`Message generation ${job.id}`}>
-              <h3>Message generation · {job.phase}</h3>
+              <h3>
+                {editor ? "Editor test" : "Message generation"} · {job.phase}
+              </h3>
               <p>
                 {job.review.route} · {job.review.model}
               </p>
@@ -426,17 +490,19 @@ export function AiMessages({
                           {e}
                         </p>
                       ))}
-                      <button
-                        disabled={!item.valid || pending || busy}
-                        onClick={() => {
-                          onUse(
-                            `${item.candidate.message.subject}${item.candidate.message.body ? `\n\n${item.candidate.message.body}` : ""}\n`,
-                          );
-                          dialog.current?.close();
-                        }}
-                      >
-                        Replace draft with candidate {index + 1}
-                      </button>
+                      {!editor && onUse && (
+                        <button
+                          disabled={!item.valid || pending || busy}
+                          onClick={() => {
+                            onUse?.(
+                              `${item.candidate.message.subject}${item.candidate.message.body ? `\n\n${item.candidate.message.body}` : ""}\n`,
+                            );
+                            dialog.current?.close();
+                          }}
+                        >
+                          Replace draft with candidate {index + 1}
+                        </button>
+                      )}
                     </section>
                   ))}
                 </>

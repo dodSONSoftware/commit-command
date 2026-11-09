@@ -5,12 +5,16 @@ review bundles have separate command permissions. The application includes
 workspace inspection/monitoring, graph/activity/audit, controlled local/bulk commits,
 supported authentication/fetch/upstream, exact individual publication and guided
 push queues. Optional AI settings, secure authentication, reviewed source message
-suggestions and guarded SemVer Actions are implemented with selected acceptance.
+suggestions, read-only repository tests with unsaved editors and guarded SemVer
+Actions are implemented with selected acceptance.
 Hierarchical analysis, bounded automatic commits, general backup/restore and release
 acceptance remain unfinished. Use the [detailed completion handoff](../../docs/implementation/README.md)
 for remaining implementation steps and test procedures.
 
-**Ordinary desktop trust/write/network execution remains disabled in Rust and UI.**
+**Ordinary desktop Git trust/write/remote execution remains disabled in Rust and UI.**
+Optional AI source transfers require their separate exact native confirmation;
+[unsaved-editor testing](../../docs/reports/COMPLETION_P09_EDITOR_TEST_2026-11-09.md)
+does not require `desktop-writes` or save AI settings.
 `desktop-writes` is non-default and does not grant repository trust or operation
 approval. Read-only recovery inspection remains available; execution is gated.
 Use [the current record](../../docs/EXECUTION_STATUS.md) for remaining gates and

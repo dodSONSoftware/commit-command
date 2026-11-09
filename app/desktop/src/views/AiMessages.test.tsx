@@ -10,7 +10,7 @@ import userEvent from "@testing-library/user-event";
 import type { Bridge, Payload } from "../services/bridge";
 import type { Request } from "../services/request.generated";
 import type { AiCapturedContext, AiJob } from "../services/response.generated";
-import { AiMessages } from "./AiMessages";
+import { AiMessages, type AiEditorDraft } from "./AiMessages";
 beforeEach(() => {
   Object.defineProperty(HTMLDialogElement.prototype, "showModal", {
     configurable: true,
@@ -126,15 +126,70 @@ function job(): AiJob {
     },
   };
 }
-function fixture(fail = false) {
+const editorDraft: AiEditorDraft = {
+  connection: {
+    id: null,
+    name: "Unsaved connection",
+    provider: "ollama",
+    endpoint: "http://127.0.0.1:1/",
+    timeout_ms: 3000,
+    authentication: "none",
+  },
+  profile: {
+    id: null,
+    name: "Unsaved profile",
+    connection: "editor-connection",
+    model: "unsaved-model",
+    system_message: "Unsaved system",
+    parameters: {},
+    template: "template",
+    context_bytes: 16384,
+  },
+  template: {
+    id: "00000000-0000-4000-8000-000000000001",
+    revision: "00000000-0000-4000-8000-000000000001",
+    name: "Unsaved template",
+    rules: {
+      style: "plain",
+      subject_max_chars: 72,
+      allowed_types: [],
+      allow_scope: false,
+      forbid_trailing_period: false,
+      instructions: "Unsaved template instructions",
+    },
+    examples: [],
+  },
+  instructions: ["Unsaved scoped instructions"],
+};
+function fixture(fail = false, editor = false, stale = false) {
   const request = vi.fn(async (r: Request): Promise<Payload> => {
     if (r.kind === "preview_ai_context")
       return { kind: "ai_context", value: captured };
-    if (r.kind === "review_ai_messages") {
+    if (r.kind === "review_ai_messages" || r.kind === "review_ai_editor_test") {
       if (fail) throw new Error("AI unavailable; no fallback");
-      return { kind: "done", value: null };
+      return {
+        kind: "review",
+        value: {
+          id: "review",
+          epoch: 1,
+          expires_at_ms: Date.now() + 60000,
+          title: "Source review",
+          summary: "Fixture",
+          content: "Fixture",
+          allow_in_read_only_build: true,
+          ai_request_fingerprint: "request",
+        },
+      };
     }
-    if (r.kind === "ai_jobs") return { kind: "ai_jobs", value: [job()] };
+    if (r.kind === "ai_jobs") {
+      const result = job();
+      if (editor) result.review.purpose = "editor_test";
+      const old = structuredClone(result);
+      old.id = "stale";
+      old.review.fingerprint = "previous-request";
+      old.review.model = "previous-profile-model";
+      return { kind: "ai_jobs", value: stale ? [old, result] : [result] };
+    }
     throw new Error(`Unexpected request ${r.kind}`);
   });
   const bridge: Bridge = {
@@ -161,6 +216,7 @@ function fixture(fail = false) {
         ]}
         busy={false}
         onUse={onUse}
+        editor={editor ? editorDraft : undefined}
       />
     </>,
   );
@@ -263,3 +319,89 @@ it("keeps the manual draft and shows failures without applying a fallback", asyn
     "Manual message preserved",
   );
 });
+
+it("reviews current unsaved editors without saving settings or offering draft replacement", async () => {
+  const { request, onUse, user } = fixture(false, true);
+  await user.click(screen.getByRole("button", { name: "Test with AI…" }));
+  expect(
+    screen.queryByRole("button", {
+      name: "Load optional AI profiles · no transfer",
+    }),
+  ).not.toBeInTheDocument();
+  await user.click(
+    screen.getByRole("button", {
+      name: "Capture filtered AI context · no transfer",
+    }),
+  );
+  fireEvent.change(
+    screen.getByRole("textbox", { name: "One-off message instructions" }),
+    { target: { value: "Extra unsaved instructions" } },
+  );
+  // Instruction edits deliberately invalidate the old preview.
+  expect(
+    screen.getByRole("button", { name: "Review exact AI source transfer" }),
+  ).toBeDisabled();
+  await user.click(
+    screen.getByRole("button", {
+      name: "Capture filtered AI context · no transfer",
+    }),
+  );
+  await user.click(
+    screen.getByRole("button", { name: "Review exact AI source transfer" }),
+  );
+  expect(request).toHaveBeenCalledWith(
+    expect.objectContaining({
+      kind: "review_ai_editor_test",
+      workspace: "ws",
+      worktree: "wt",
+      connection: editorDraft.connection,
+      profile: editorDraft.profile,
+      template: editorDraft.template,
+      instructions: [
+        "Unsaved scoped instructions",
+        "Extra unsaved instructions",
+      ],
+      snapshot_fingerprint: "snapshot",
+      context_fingerprint: "context",
+    }),
+  );
+  await screen.findByText("Editor test · complete");
+  expect(
+    screen.queryByRole("button", { name: /Replace draft with candidate/ }),
+  ).not.toBeInTheDocument();
+  expect(
+    request.mock.calls.some(
+      ([r]) => r.kind === "save_ai_settings" || r.kind === "ai_settings",
+    ),
+  ).toBe(false);
+  expect(onUse).not.toHaveBeenCalled();
+  expect(screen.getByRole("textbox", { name: "Manual draft" })).toHaveValue(
+    "Manual message preserved",
+  );
+});
+
+for (const editor of [false, true]) {
+  it(`excludes a previous profile result with identical source in ${editor ? "editor tests" : "assisted generation"}`, async () => {
+    const { user } = fixture(false, editor, true);
+    await user.click(
+      screen.getByRole("button", {
+        name: editor ? "Test with AI…" : "AI message suggestions…",
+      }),
+    );
+    await user.click(
+      screen.getByRole("button", {
+        name: "Capture filtered AI context · no transfer",
+      }),
+    );
+    await user.click(
+      screen.getByRole("button", { name: "Review exact AI source transfer" }),
+    );
+    await screen.findByRole("article", { name: "Message generation job" });
+    expect(
+      screen.queryByRole("article", { name: "Message generation stale" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/previous-profile-model/),
+    ).not.toBeInTheDocument();
+  });
+}

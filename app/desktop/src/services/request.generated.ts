@@ -2,6 +2,18 @@
 
 export type Request =
   | {
+      connection: AiConnectionDraft;
+      context_fingerprint: string;
+      instructions: string[];
+      kind: "review_ai_editor_test";
+      profile: AiProfileDraft;
+      snapshot_fingerprint: string;
+      spec: AiCaptureSpec;
+      template: AiTemplate;
+      workspace: string;
+      worktree: string;
+    }
+  | {
       context_fingerprint: string;
       instructions: string;
       kind: "review_ai_messages";
@@ -368,6 +380,7 @@ export type Request =
       operation: string;
       workspace: string;
     };
+export type AiProvider = "ollama" | "compatible";
 /**
  * `display` is never used to reconstruct a path. Byte/wide encodings round-trip.
  */
@@ -388,7 +401,6 @@ export type NativePath =
       [k: string]: unknown;
     };
 export type ContentSource = "index" | "working_tree";
-export type AiProvider = "ollama" | "compatible";
 export type AiStyle = "plain" | "conventional";
 export type AiChange =
   | {
@@ -617,29 +629,6 @@ export type WriteRequest =
       [k: string]: unknown;
     };
 
-export interface AiCaptureSpec {
-  branch_commits: number;
-  documentation: NativePath[];
-  file_commits: number;
-  /**
-   * Explicit related tracked regular source files, not a recursive source scan.
-   */
-  nearby_source: NativePath[];
-  policy: AiContextPolicy;
-  selected: SelectedPath[];
-}
-export interface AiContextPolicy {
-  excluded_patterns: string[];
-  /**
-   * Exact serialized user-payload budget; provider framing/system text is separate.
-   */
-  max_bytes: number;
-}
-export interface SelectedPath {
-  path: NativePath;
-  source: ContentSource;
-  [k: string]: unknown;
-}
 export interface AiConnectionDraft {
   authentication?: "none" | "stored_bearer";
   endpoint: string;
@@ -668,6 +657,29 @@ export interface AiParameters {
   temperature?: number | null;
   top_k?: number | null;
   top_p?: number | null;
+}
+export interface AiCaptureSpec {
+  branch_commits: number;
+  documentation: NativePath[];
+  file_commits: number;
+  /**
+   * Explicit related tracked regular source files, not a recursive source scan.
+   */
+  nearby_source: NativePath[];
+  policy: AiContextPolicy;
+  selected: SelectedPath[];
+}
+export interface AiContextPolicy {
+  excluded_patterns: string[];
+  /**
+   * Exact serialized user-payload budget; provider framing/system text is separate.
+   */
+  max_bytes: number;
+}
+export interface SelectedPath {
+  path: NativePath;
+  source: ContentSource;
+  [k: string]: unknown;
 }
 export interface AiTemplate {
   examples: string[];

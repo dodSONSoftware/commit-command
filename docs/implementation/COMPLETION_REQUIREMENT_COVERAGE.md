@@ -92,7 +92,7 @@ Package `P13` means both P13A and P13B where applicable. Case ranges are inclusi
 | AI-006 | Global/per-connection concurrency limits respected | P09/P10 | AI18, HIER09 | Implemented foundation; retain applicable evidence and close listed acceptance |
 | AI-007 | Missing model causes retry/select/cancel; no silent fallback | P09/P12 | AI09, AI10, AUTO06 | Implemented foundation; retain applicable evidence and close listed acceptance |
 | AI-008 | Structured templates and instructions inherit with effective preview | P09 | AI02–AI04, AI07 | Implemented foundation; retain applicable evidence and close listed acceptance |
-| AI-009 | Static preview deterministic; AI test is read-only | P09/P11 | AI06, AI07, ACT11 | Static/synthetic/assisted foundation exists; unsaved-editor selected-repository AI test remains implementation work |
+| AI-009 | Static preview deterministic; AI test is read-only | P09/P11 | AI06, AI07, ACT11 | Read-only unsaved-editor repository test implemented with selected native evidence; simulated version preview and complete acceptance remain |
 | AI-010 | Context includes bounded diff/source/docs/relevant Git logs | P09/P10 | AI11, AI12, HIER01–HIER06 | Implemented foundation; retain applicable evidence and close listed acceptance |
 | AI-011 | Hierarchical large-diff analysis reports omissions and provenance | P10 | HIER01–HIER14 | New hierarchical multi-request implementation required |
 | AI-012 | Exactly actual sent context inspectable after filtering/redaction | P09/P10 | AI11, HIER05, HIER07, HIER08 | Implemented foundation; retain applicable evidence and close listed acceptance |

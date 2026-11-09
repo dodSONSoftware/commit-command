@@ -10,7 +10,8 @@ upstream setup, push dependency planning, separately reviewed pre-push checks
 and exact individual fast-forward publication with uncertain-outcome recovery
 are implemented within bounded acceptance envelopes. Guided push queues, guarded
 SemVer Actions, optional AI settings/templates and native-approved provider
-diagnostics/source message suggestions with endpoint-bound macOS Keychain authentication are implemented
+diagnostics/source message suggestions, read-only unsaved-editor repository tests
+and endpoint-bound macOS Keychain authentication are implemented
 with selected acceptance. **Ordinary desktop builds still disable managed Git
 trust grants, writes and remote execution while acceptance remains partial. Hierarchical AI analysis,
 bounded automatic commits, general backup/restore

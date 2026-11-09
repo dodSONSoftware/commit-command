@@ -1,6 +1,6 @@
 # Commit Command — current implementation and acceptance record
 
-Updated November 8, 2026. Current disposition incorporates the dated reports and
+Updated November 9, 2026. Current disposition incorporates the dated reports and
 validated checkpoints below; the original reconciliation baseline was `db29ba6`. This is the single maintained record of **current implementation,
 acceptance gaps and next work**. The specification and decision register define
 requirements; the crosswalk routes requirement IDs to code/tests; dated reports
@@ -10,6 +10,18 @@ this record. Reconciliation does not accept new gates or change product scope.
 The [detailed completion handoff](implementation/README.md) supplies the executable
 remaining-work packages, decision worksheet, fixture/test procedures and complete
 requirement mapping. It does not accept gates or replace this live evidence ledger.
+
+### November 9 completion P09 unsaved repository AI tests
+
+[Editor-test checkpoint](reports/COMPLETION_P09_EDITOR_TEST_2026-11-09.md): explicit
+read-only repository/source capture with current unsaved editors, distinct test
+purpose, frozen native consent, no save/apply/Action authority. Core42 application,
+82 library and strict Clippy pass; selected actual ordinary native decline/approve,
+exact loopback markers/source, Quit/restart/no replay and preservation passed.
+Final82 library/42 application/145 renderer/20+23 host and complete desktop gate
+passed; request-fingerprint correlation excludes old-profile results. An intermittent existing
+reflection-fixture transport failure is retained and remains unexplained; broad
+provider/CI reliability, version preview/audit/accessibility remain open.
 
 ### November 8 completion P04 subject/body composer
 
@@ -81,8 +93,9 @@ without reload; no causal patch or release/default-write acceptance.
 
 [Focused fix](reports/COMPLETION_P09_IDENTITY_2026-11-08.md): saves now retain the
 exact edited/new connection/profile ID instead of selecting by a duplicate name.
-Three reproduced regressions pass; complete renderer 126 and type/lint/contracts/
-format/build passed. P09/G09 remain partial; no authority or storage change.
+Three renderer fixture regressions pass; Core already rejects duplicate names,
+so no valid persisted duplicate-name save defect was reproduced. Complete renderer
+126 and type/lint/contracts/format/build passed. P09/G09 remain partial; no authority or storage change.
 
 ### November 8 completion P01 evidence tools
 

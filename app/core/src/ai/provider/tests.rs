@@ -10,6 +10,50 @@ fn connection(provider: Provider, endpoint: &str) -> ConnectionDraft {
     }
 }
 #[test]
+fn source_request_fingerprint_binds_profile_identity_and_revision() {
+    use crate::ai::{config::Profile, context::Bundle, template::Template};
+    let connection = connection(Provider::Ollama, "http://127.0.0.1:1/");
+    let mut profile = Profile {
+        id: "profile-one".into(),
+        revision: "revision-one".into(),
+        name: "Fixture".into(),
+        connection: "connection".into(),
+        model: "fixture-model".into(),
+        system_message: "Fixture system".into(),
+        parameters: Default::default(),
+        template: Template::default().id,
+        context_bytes: 16384,
+    };
+    let context = Bundle {
+        payload: "fixture source".into(),
+        fingerprint: "context".into(),
+        accounting: vec![],
+        complete: true,
+        warnings: vec![],
+    };
+    let plan = |profile: &Profile| {
+        Plan::messages(
+            &connection,
+            profile,
+            context.clone(),
+            "snapshot".into(),
+            Template::default(),
+            vec![],
+        )
+        .unwrap()
+    };
+    let original = plan(&profile);
+    profile.id = "profile-two".into();
+    let identity = plan(&profile);
+    assert_eq!(original.payload(), identity.payload());
+    assert_ne!(original.review().fingerprint, identity.review().fingerprint);
+    profile.id = "profile-one".into();
+    profile.revision = "revision-two".into();
+    let revision = plan(&profile);
+    assert_eq!(original.payload(), revision.payload());
+    assert_ne!(original.review().fingerprint, revision.review().fingerprint);
+}
+#[test]
 fn exact_request_uses_only_fixed_routes_and_stdin_for_payload_and_secret() {
     let c = connection(Provider::Ollama, "http://localhost:11434/");
     let content = "untrusted\nurl = \"https://evil.test\"\n\\source";
@@ -640,7 +684,10 @@ fn reflected_credential_is_refused_before_result_reaches_renderer() {
         )
         .unwrap_err();
         assert!(!error.to_string().contains("fixture-store-token"));
-        assert!(error.to_string().contains("reflected authentication"));
+        assert!(
+            error.to_string().contains("reflected authentication"),
+            "{error}"
+        );
     }
 }
 

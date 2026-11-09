@@ -1,0 +1,19 @@
+{
+  "app/core/src/ai/mod.rs": "b0efd6d2bc3a3894aa8fe0f40887a0c8d92514e5aac6810e7eeecd722e94c636",
+  "app/core/src/ai/editor.rs": "216f96115b8daa606d926aabdbf611d68006f0835df059c0d1ce2d9c8c3c37a7",
+  "app/core/src/ai/provider.rs": "35026dbb5ab5194453fbc5714be37c4b88006c702d3e1615b5a4a5f968322748",
+  "app/core/src/ai/provider/tests.rs": "24e49b3182e630b13220fb637bd6cbf5818865345440c878ff99364b407a8bb6",
+  "app/core/src/application/mod.rs": "417ccc8021eb844607a9c38089d326f9b73888695f1313be72dc56356f4ebc3b",
+  "app/core/src/application/review.rs": "790b943830d0887b25344386082163b868c519a5be0559cc9ceb1582ee8f299f",
+  "app/core/src/application/state.rs": "0a56afe259bfeb6ef6560ba2d7688ab536f528b30c445bcbc7f968642ebbf9b2",
+  "app/core/tests/m3_application.rs": "be7184cd4f4ae2fc151c8d35197ccc27f4d625768d8d024d57d6b6035eccc061",
+  "app/desktop/src-tauri/src/main.rs": "eba9892363e288faa73442974e2076630f1c2455e9006b5e06364f7881ebdffb",
+  "app/desktop/src/services/request.generated.ts": "09dcde2abed4adc662ec7c36a3da5d0506c0522852d4f458cd7d3d2634139066",
+  "app/desktop/src/services/response.generated.ts": "8c6f776f815afd081b7823bd67b5022b01a486728c064be3761be5f391f51123",
+  "app/desktop/src/views/AiDiagnostics.tsx": "824028511ebef0981c5f5101e9101ac8a021e6b486f28606c6b6cce53537a527",
+  "app/desktop/src/views/AiMessages.tsx": "61602d42bfb3de122b7039a3575f0f6c51a8c7abca3eae2b940f20273b819b09",
+  "app/desktop/src/views/AiMessages.test.tsx": "685b0e200fd6e2fc7f58adc25a2bbdb13744dc6f26540060a98ad2dd38e78408",
+  "app/desktop/src/views/AiSettings.tsx": "08f840fcd0cbb4bfa3a9064aa6771eb596f9dce5694ba28e5741c045b1819b5b",
+  "app/desktop/src/views/AiEditorRepositoryTest.tsx": "888087c6042dcbdb5f7d166be1ead69f7b2c90a771239ebe14b0db13de585016",
+  "app/desktop/src/views/AiEditorRepositoryTest.test.tsx": "566aff953096f322438e65462c580b50fea2d73ef94fda2044094750b9826323"
+}

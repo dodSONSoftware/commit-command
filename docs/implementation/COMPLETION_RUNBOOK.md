@@ -318,6 +318,8 @@ Owners: `ai/*.rs`, facade Request/Data/review, `AiSettings.tsx`, `AiDiagnostics.
 5. Complete structured subject/body template rules, examples, scope/type choices, inherited effective configuration and one-off instructions. Do not infer a new template language; extend current typed rules only for specified missing behavior.
 6. Implement “Test with AI” for a selected read-only repository snapshot using current unsaved profile/template/instructions. It must have a frozen exact filtered viewer and fresh native transfer approval, use simulated Action preview values only, and perform no file/Git mutation or settings save. Extend `ReviewAiMessages`/capture planning or a typed equivalent; do not silently save editors to reuse the existing saved-profile route.
 
+Checkpoint: [November9 editor test](../reports/COMPLETION_P09_EDITOR_TEST_2026-11-09.md) implements the unsaved repository-context path with selected automated/native evidence. Simulated Action/version preview integration and full catalog acceptance remain open; this checkpoint does not close P09.
+
 ### P09.2 Provider and secure-auth acceptance
 
 - Verify fixed Ollama and compatible adapter routes against official provider documentation when implementing protocol changes; cite version/date in the implementation report. No generic arbitrary HTTP endpoint executor is added.

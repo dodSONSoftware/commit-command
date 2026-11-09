@@ -1,0 +1,28 @@
+[
+  {
+    "phase": "after local capture before review",
+    "at_utc": "2026-11-09T06:08:43.671007+00:00",
+    "provider_requests_file_present": false,
+    "ai_settings_directory_present": false
+  },
+  {
+    "phase": "after first native decline",
+    "at_utc": "2026-11-09T06:09:46.245721+00:00",
+    "provider_requests_file_present": false,
+    "ai_settings_directory_present": false
+  },
+  {
+    "phase": "first normal Quit after approved completion",
+    "at_utc": "2026-11-09T06:12:10.583033+00:00",
+    "provider_requests": 1,
+    "ai_settings_directory_present": false,
+    "manual_draft_exact": true
+  },
+  {
+    "phase": "normal restart and second Quit after completed test",
+    "at_utc": "2026-11-09T06:13:49.384529+00:00",
+    "provider_requests": 1,
+    "ai_settings_directory_present": false,
+    "native_defaults_restored_without_test_inputs": true
+  }
+]

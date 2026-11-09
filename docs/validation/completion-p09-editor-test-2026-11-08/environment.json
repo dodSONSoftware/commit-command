@@ -1,0 +1,6 @@
+{
+  "base_commit": "20dee1e09c0fc6c1df13d61cbbe355921f7a3b5b",
+  "platform": "macOS-27.2-arm64-arm-64bit",
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "scope": "P09 unsaved editor read-only source tests; generated loopback fixtures, no live providers or credentials"
+}

@@ -253,6 +253,36 @@ impl WindowPlacement {
     }
 }
 
+impl Application {
+    pub fn window_placement(&mut self) -> Result<Option<WindowPlacement>> {
+        let raw: Option<String> = self
+            .writes
+            .workspace
+            .connection()
+            .query_row(
+                "SELECT value FROM state WHERE key='native_window_placement'",
+                [],
+                |r| r.get(0),
+            )
+            .optional()?;
+        let placement = raw
+            .map(|s| serde_json::from_str::<WindowPlacement>(&s))
+            .transpose()?;
+        if let Some(p) = &placement {
+            p.validate()?;
+        }
+        Ok(placement)
+    }
+    pub fn save_window_placement(&mut self, placement: WindowPlacement) -> Result<()> {
+        placement.validate()?;
+        self.writes.workspace.connection().execute(
+            "INSERT OR REPLACE INTO state(key,value) VALUES('native_window_placement',?1)",
+            [serde_json::to_string(&placement)?],
+        )?;
+        Ok(())
+    }
+}
+
 #[cfg(test)]
 mod sort_tests {
     use super::*;
@@ -297,34 +327,5 @@ mod sort_tests {
         validate(&state).unwrap();
         state.collapsed.push("/overflow".into());
         assert!(validate(&state).is_err());
-    }
-}
-impl Application {
-    pub fn window_placement(&mut self) -> Result<Option<WindowPlacement>> {
-        let raw: Option<String> = self
-            .writes
-            .workspace
-            .connection()
-            .query_row(
-                "SELECT value FROM state WHERE key='native_window_placement'",
-                [],
-                |r| r.get(0),
-            )
-            .optional()?;
-        let placement = raw
-            .map(|s| serde_json::from_str::<WindowPlacement>(&s))
-            .transpose()?;
-        if let Some(p) = &placement {
-            p.validate()?;
-        }
-        Ok(placement)
-    }
-    pub fn save_window_placement(&mut self, placement: WindowPlacement) -> Result<()> {
-        placement.validate()?;
-        self.writes.workspace.connection().execute(
-            "INSERT OR REPLACE INTO state(key,value) VALUES('native_window_placement',?1)",
-            [serde_json::to_string(&placement)?],
-        )?;
-        Ok(())
     }
 }

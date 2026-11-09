@@ -7,6 +7,7 @@ pub mod change;
 pub mod config;
 pub mod context;
 pub mod credentials;
+pub(crate) mod editor;
 pub(crate) mod jobs;
 pub mod provider;
 pub mod store;

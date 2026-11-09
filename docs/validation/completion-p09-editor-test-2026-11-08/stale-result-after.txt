@@ -1,0 +1,13 @@
+
+> gitfleet-desktop@0.1.1 test
+> vitest run src/views/AiMessages.test.tsx src/views/AiEditorRepositoryTest.test.tsx src/views/App.test.tsx
+
+
+ RUN  v4.1.12 /Users/randydodson/Documents/_code/git-fleet/app/desktop
+
+
+ Test Files  3 passed (3)
+      Tests  29 passed (29)
+   Start at  00:31:57
+   Duration  6.91s (transform 288ms, setup 112ms, import 514ms, tests 7.52s, environment 697ms)
+

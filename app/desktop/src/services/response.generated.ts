@@ -266,7 +266,8 @@ export type AiAuthentication = "none" | "stored_bearer";
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "AiPurpose".
  */
-export type AiPurpose = "discover" | "inference" | "assisted_messages";
+export type AiPurpose =
+  "discover" | "inference" | "assisted_messages" | "editor_test";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "AiScope".
@@ -2348,6 +2349,10 @@ export interface TrustState {
  * via the `definition` "ReviewDisplay".
  */
 export interface ReviewDisplay {
+  /**
+   * Display correlation only, never a confirmation capability.
+   */
+  ai_request_fingerprint?: string | null;
   /**
    * Set only by Core for approved provider reads; defaults fail closed.
    */

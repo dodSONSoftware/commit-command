@@ -1,0 +1,12 @@
+{
+  "root": "/private/tmp/gitfleet-p09-editor-5tdu9x_n",
+  "app": "/private/tmp/gitfleet-p09-editor-5tdu9x_n/Commit Command AI Editor Test.app",
+  "binary": "/private/tmp/gitfleet-p09-editor-5tdu9x_n/Commit Command AI Editor Test.app/Contents/MacOS/gitfleet-desktop",
+  "state": "/private/tmp/gitfleet-p09-editor-5tdu9x_n/state",
+  "workspace": "/private/tmp/gitfleet-p04-filter-uhe_cyb2/workspace",
+  "endpoint": "http://127.0.0.1:53189/",
+  "features": [
+    "custom-protocol"
+  ],
+  "sha256": "55e8a5faa83e5f5288504fabae695b42f5c30a2a88118b79a26a6d4bd8726af9"
+}
