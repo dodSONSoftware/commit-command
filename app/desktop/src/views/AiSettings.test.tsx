@@ -237,3 +237,101 @@ it("requires an explicit visible bearer choice and saves only its nonsecret mode
     "save_ai_settings",
   ]);
 });
+
+it.each(["connection", "profile"] as const)(
+  "keeps the edited %s identity when another entity has the same name",
+  async (kind) => {
+    const initial = snapshot();
+    initial.settings.connections = [
+      "first-connection",
+      "second-connection",
+    ].map((id) => ({
+      id,
+      revision: "revision",
+      name: "Same connection name",
+      provider: "ollama",
+      endpoint: "http://127.0.0.1:11434/",
+      timeout_ms: 30000,
+      endpoint_approval: "",
+      authentication: "none",
+    }));
+    initial.settings.profiles = ["first-profile", "second-profile"].map(
+      (id) => ({
+        id,
+        revision: "revision",
+        name: "Same profile name",
+        connection: "first-connection",
+        model: "fixture-model",
+        system_message: "Describe selected changes",
+        parameters: {},
+        template: initial.settings.templates[0].id,
+        context_bytes: 16384,
+      }),
+    );
+    const { request, user } = fixture(initial);
+    await user.click(screen.getByRole("button", { name: "AI settings…" }));
+    const editor = await screen.findByLabelText(
+      kind === "connection" ? "Edit AI connection" : "Edit AI profile",
+    );
+    await user.selectOptions(editor, `second-${kind}`);
+    request.mockResolvedValueOnce({ kind: "ai_settings", value: initial });
+    await user.click(
+      screen.getByRole("button", {
+        name:
+          kind === "connection"
+            ? "Save connection metadata"
+            : "Save AI profile",
+      }),
+    );
+    expect(
+      await screen.findByText(
+        "AI settings saved. No provider request was made.",
+      ),
+    ).toBeVisible();
+    expect(editor).toHaveValue(`second-${kind}`);
+    await user.click(
+      screen.getByRole("button", {
+        name:
+          kind === "connection"
+            ? "Save connection metadata"
+            : "Save AI profile",
+      }),
+    );
+    expect(request).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        kind: "save_ai_settings",
+        change: expect.objectContaining({ kind, id: `second-${kind}` }),
+      }),
+    );
+  },
+);
+
+it("selects a newly created connection by identity rather than its duplicate name", async () => {
+  const initial = snapshot();
+  initial.settings.connections.push({
+    id: "existing",
+    revision: "revision",
+    name: "Duplicate",
+    provider: "ollama",
+    endpoint: "http://127.0.0.1:11434/",
+    timeout_ms: 30000,
+    endpoint_approval: "",
+    authentication: "none",
+  });
+  const { request, user } = fixture(initial);
+  await user.click(screen.getByRole("button", { name: "AI settings…" }));
+  await user.type(await screen.findByLabelText("Connection name"), "Duplicate");
+  const saved = structuredClone(initial);
+  saved.settings.connections.push({
+    ...saved.settings.connections[0],
+    id: "created",
+  });
+  request.mockResolvedValueOnce({ kind: "ai_settings", value: saved });
+  await user.click(
+    screen.getByRole("button", { name: "Save connection metadata" }),
+  );
+  expect(
+    await screen.findByText("AI settings saved. No provider request was made."),
+  ).toBeVisible();
+  expect(screen.getByLabelText("Edit AI connection")).toHaveValue("created");
+});

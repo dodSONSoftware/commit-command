@@ -11,6 +11,13 @@ The [detailed completion handoff](implementation/README.md) supplies the executa
 remaining-work packages, decision worksheet, fixture/test procedures and complete
 requirement mapping. It does not accept gates or replace this live evidence ledger.
 
+### November 8 completion P09 AI editor identity
+
+[Focused fix](reports/COMPLETION_P09_IDENTITY_2026-11-08.md): saves now retain the
+exact edited/new connection/profile ID instead of selecting by a duplicate name.
+Three reproduced regressions pass; complete renderer 126 and type/lint/contracts/
+format/build passed. P09/G09 remain partial; no authority or storage change.
+
 ### November 8 completion P01 evidence tools
 
 [Tooling report](reports/COMPLETION_P01_2026-11-08.md): reusable bounded no-follow
