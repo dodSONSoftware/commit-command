@@ -27,6 +27,20 @@ impl Default for RepositoryTab {
         }
     }
 }
+#[derive(Debug, Default, Clone, Copy, Serialize, Deserialize, JsonSchema, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum OverviewFilter {
+    #[default]
+    All,
+    Modified,
+    Staged,
+    Unstaged,
+    Untracked,
+    Conflicted,
+    Ahead,
+    Behind,
+    Issues,
+}
 /// Additive string variants preserve version-1 path/changes navigation records.
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, JsonSchema, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
@@ -68,6 +82,10 @@ pub struct DesktopState {
     pub filter: String,
     pub layout: String,
     pub sort: OverviewSort,
+    #[serde(default)]
+    pub attention: OverviewFilter,
+    #[serde(default)]
+    pub collapsed: Vec<String>,
     pub theme: String,
     pub sidebar_width: u32,
     pub inspector_width: u32,
@@ -83,6 +101,8 @@ impl Default for DesktopState {
             filter: String::new(),
             layout: "table".into(),
             sort: OverviewSort::Path,
+            attention: OverviewFilter::All,
+            collapsed: Vec::new(),
             theme: "system".into(),
             sidebar_width: 240,
             inspector_width: 400,
@@ -142,6 +162,15 @@ pub(super) fn validate(s: &DesktopState) -> Result<()> {
     }
     if !(180..=420).contains(&s.sidebar_width)
         || !(240..=800).contains(&s.inspector_width)
+        || s.collapsed.len() > 10_000
+        || s.collapsed
+            .iter()
+            .any(|key| key.is_empty() || key.len() > 4096 || key.contains('\0'))
+        || s.collapsed
+            .iter()
+            .collect::<std::collections::BTreeSet<_>>()
+            .len()
+            != s.collapsed.len()
         || s.tabs.len() > 100
         || s.selected.len() > 10000
         || s.drafts.len() > 100
@@ -217,6 +246,8 @@ mod sort_tests {
     #[test]
     fn legacy_sort_values_remain_compatible_and_unknown_values_fail_closed() {
         let mut value = serde_json::to_value(DesktopState::default()).unwrap();
+        value.as_object_mut().unwrap().remove("attention");
+        value.as_object_mut().unwrap().remove("collapsed");
         for (raw, expected) in [
             ("path", OverviewSort::Path),
             ("changes", OverviewSort::Changes),
@@ -225,11 +256,30 @@ mod sort_tests {
             value["sort"] = serde_json::json!(raw);
             let restored: DesktopState = serde_json::from_value(value.clone()).unwrap();
             assert_eq!(restored.sort, expected);
+            assert_eq!(restored.attention, OverviewFilter::All);
+            assert!(restored.collapsed.is_empty());
             validate(&restored).unwrap();
             assert_eq!(serde_json::to_value(restored).unwrap()["sort"], raw);
         }
         value["sort"] = serde_json::json!("unsupported");
         assert!(serde_json::from_value::<DesktopState>(value).is_err());
+    }
+    #[test]
+    fn collapse_state_is_bounded_and_cannot_duplicate_keys() {
+        let mut state = DesktopState::default();
+        for keys in [
+            vec![String::new()],
+            vec!["nul\0key".into()],
+            vec!["x".repeat(4097)],
+            vec!["/same".into(), "/same".into()],
+        ] {
+            state.collapsed = keys;
+            assert!(validate(&state).is_err());
+        }
+        state.collapsed = (0..10_000).map(|n| format!("/group-{n}")).collect();
+        validate(&state).unwrap();
+        state.collapsed.push("/overflow".into());
+        assert!(validate(&state).is_err());
     }
 }
 impl Application {

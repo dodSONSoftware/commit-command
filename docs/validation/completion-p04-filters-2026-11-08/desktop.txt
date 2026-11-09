@@ -1,0 +1,129 @@
+git version 2.56.0
+rustc 1.99.1 (58cf8f9c3 2026-10-13)
+cargo 1.99.1 (5f94df478 2026-08-27)
+v22.22.3
+10.9.8
+
+> gitfleet-desktop@0.1.1 typecheck
+> tsc --noEmit
+
+
+> gitfleet-desktop@0.1.1 lint
+> eslint . --max-warnings 0
+
+
+> gitfleet-desktop@0.1.1 contracts
+> node scripts/contracts.mjs --check
+
+
+> gitfleet-desktop@0.1.1 format:check
+> prettier --check src scripts *.json *.ts *.html
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> gitfleet-desktop@0.1.1 test
+> vitest run
+
+
+ RUN  v4.1.12 /Users/randydodson/Documents/_code/git-fleet/app/desktop
+
+
+ Test Files  29 passed (29)
+      Tests  134 passed (134)
+   Start at  23:29:16
+   Duration  7.50s (transform 2.10s, setup 2.35s, import 6.64s, tests 14.45s, environment 17.71s)
+
+
+> gitfleet-desktop@0.1.1 build
+> tsc --noEmit && vite build
+
+vite v7.3.7 building client environment for production...
+transforming...
+✓ 72 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                            0.58 kB │ gzip:     0.35 kB
+dist/review.html                           0.61 kB │ gzip:     0.36 kB
+dist/assets/banner-dark-CHLMoucy.svg   1,564.17 kB │ gzip: 1,184.09 kB
+dist/assets/banner-light-Cvs05R9C.svg  1,564.17 kB │ gzip: 1,184.09 kB
+dist/assets/review-DAdDXWwp.css            0.85 kB │ gzip:     0.49 kB
+dist/assets/main-C7nAAGdZ.css             18.35 kB │ gzip:     4.33 kB
+dist/assets/core-BqmcAG5b.js               1.54 kB │ gzip:     0.80 kB
+dist/assets/review-D6RfxcB1.js             2.06 kB │ gzip:     1.04 kB
+dist/assets/main-frYOU_BA.js             383.61 kB │ gzip:   112.04 kB
+✓ built in 510ms
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+   Compiling gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 10.22s
+   Compiling gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.90s
+     Running unittests src/main.rs (src-tauri/target/debug/deps/gitfleet_desktop-2bf282bc3b24c7fc)
+
+running 21 tests
+test ai_credentials::tests::credential_worker_entry ... ignored, Owned subprocess worker, explicitly invoked by the parent test
+test tests::production_configuration_has_no_remote_plugins_or_broad_permissions ... ok
+test security::tests::actual_caller_and_page_are_required ... ok
+test tests::queue_dialog_and_shutdown_boundaries_fail_closed ... ok
+test shutdown::tests::close_snapshot_requires_exact_token_generation_and_is_consumed_once ... ok
+test host_options::tests::https_helper_policy_is_explicit_complete_and_contains_no_password_option ... ok
+test host_options::tests::local_transport_requires_sealed_native_fixture_and_never_defaults_on ... ok
+test tests::renderer_reload_revokes_native_context_and_requests_core_reset ... ok
+test host_options::tests::startup_requires_complete_explicit_ssh_policy_without_changing_default ... ok
+test window_state::tests::minimum_dimensions_follow_destination_scale_and_fit_small_work_areas ... ok
+test window_state::tests::saved_geometry_fits_changed_display_and_preserves_valid_position ... ok
+test ai_credentials::tests::binding_is_canonical_endpoint_specific_and_contains_no_secret ... ok
+test tests::bulk_review_uses_the_same_write_gate_as_individual_proposals ... ok
+test shutdown::tests::malformed_unknown_oversized_and_incomplete_snapshots_are_rejected ... ok
+test tests::strict_envelope_rejects_oversize_version_unknown_fields_and_approval_json ... ok
+test tests::actual_generated_command_acl_separates_main_review_and_unprivileged_views ... ok
+test ai_credentials::tests::proven_running_credential_helper_timeout_reaps_only_the_owned_child ... ok
+test ai_credentials::tests::actual_keychain_backed_diagnostic_requires_approval_and_keeps_token_out_of_results ... ok
+test ai_credentials::tests::credential_worker_requires_the_same_live_code_image ... ok
+test ai_credentials::tests::actual_private_keychain_round_trip_and_wrong_endpoint_refusal ... ok
+test ai_credentials::tests::proven_running_credential_helper_cancellation_reaps_the_owned_child ... ok
+
+test result: ok. 20 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 15.56s
+
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+   Compiling gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.89s
+     Running unittests src/main.rs (src-tauri/target/debug/deps/gitfleet_desktop-225bfda372862e6d)
+
+running 24 tests
+test ai_credentials::tests::credential_worker_entry ... ignored, Owned subprocess worker, explicitly invoked by the parent test
+test native_acceptance::tests::renderer_pid_guard_refuses_groups_system_and_host ... ok
+test native_acceptance::tests::refuses_ordinary_or_unmarked_state ... ok
+test shutdown::tests::close_snapshot_requires_exact_token_generation_and_is_consumed_once ... ok
+test tests::production_configuration_has_no_remote_plugins_or_broad_permissions ... ok
+test native_acceptance::tests::fixture_guard_requires_exact_marker_and_canonical_state ... ok
+test host_options::tests::local_transport_requires_sealed_native_fixture_and_never_defaults_on ... ok
+test security::tests::actual_caller_and_page_are_required ... ok
+test tests::queue_dialog_and_shutdown_boundaries_fail_closed ... ok
+test host_options::tests::startup_requires_complete_explicit_ssh_policy_without_changing_default ... ok
+test window_state::tests::minimum_dimensions_follow_destination_scale_and_fit_small_work_areas ... ok
+test window_state::tests::saved_geometry_fits_changed_display_and_preserves_valid_position ... ok
+test host_options::tests::https_helper_policy_is_explicit_complete_and_contains_no_password_option ... ok
+test tests::renderer_reload_revokes_native_context_and_requests_core_reset ... ok
+test ai_credentials::tests::binding_is_canonical_endpoint_specific_and_contains_no_secret ... ok
+test shutdown::tests::malformed_unknown_oversized_and_incomplete_snapshots_are_rejected ... ok
+test tests::bulk_review_uses_the_same_write_gate_as_individual_proposals ... ok
+test tests::strict_envelope_rejects_oversize_version_unknown_fields_and_approval_json ... ok
+test tests::actual_generated_command_acl_separates_main_review_and_unprivileged_views ... ok
+test ai_credentials::tests::actual_private_keychain_round_trip_and_wrong_endpoint_refusal ... ok
+test ai_credentials::tests::proven_running_credential_helper_cancellation_reaps_the_owned_child ... ok
+test ai_credentials::tests::proven_running_credential_helper_timeout_reaps_only_the_owned_child ... ok
+test ai_credentials::tests::credential_worker_requires_the_same_live_code_image ... ok
+test ai_credentials::tests::actual_keychain_backed_diagnostic_requires_approval_and_keeps_token_out_of_results ... ok
+
+test result: ok. 23 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 22.79s
+
+    Checking gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Checking gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 4.55s
+    Checking gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Checking gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 4.64s
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+   Compiling gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri)
+    Finished `release` profile [optimized] target(s) in 32.74s

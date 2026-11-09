@@ -5,6 +5,7 @@ import type {
   RepositoryTab,
   BulkComposerState,
   OverviewSort,
+  OverviewFilter,
   TrustState,
 } from "../services/response.generated";
 export const initialBulkComposer: BulkComposerState = {
@@ -21,6 +22,8 @@ export const initialState: DesktopState = {
   filter: "",
   layout: "table",
   sort: "path",
+  attention: "all",
+  collapsed: [],
   theme: "system",
   sidebar_width: 240,
   inspector_width: 400,
@@ -297,10 +300,73 @@ export function overviewStatus(entry: StoredWorktree): string | null {
     ? "Changes"
     : "Clean";
 }
+export const attentionChoices = [
+  { value: "all", label: "All repositories" },
+  { value: "modified", label: "With changes" },
+  { value: "staged", label: "With staged changes" },
+  { value: "unstaged", label: "With unstaged changes" },
+  { value: "untracked", label: "With untracked files" },
+  { value: "conflicted", label: "With conflicts" },
+  { value: "ahead", label: "Ahead (cached upstream)" },
+  { value: "behind", label: "Behind (cached upstream)" },
+  { value: "issues", label: "Needs attention" },
+] as const satisfies readonly { value: OverviewFilter; label: string }[];
+export function matchesAttention(
+  entry: StoredWorktree,
+  attention: OverviewFilter,
+): boolean {
+  const status = entry.status;
+  switch (attention) {
+    case "all":
+      return true;
+    case "modified":
+      return (
+        !!status &&
+        status.counts.staged +
+          status.counts.unstaged +
+          status.counts.untracked +
+          status.counts.conflicted >
+          0
+      );
+    case "staged":
+      return (status?.counts.staged ?? 0) > 0;
+    case "unstaged":
+      return (status?.counts.unstaged ?? 0) > 0;
+    case "untracked":
+      return (status?.counts.untracked ?? 0) > 0;
+    case "conflicted":
+      return (status?.counts.conflicted ?? 0) > 0;
+    case "ahead":
+      return (status?.tracking?.ahead ?? 0) > 0;
+    case "behind":
+      return (status?.tracking?.behind ?? 0) > 0;
+    case "issues":
+      return (
+        entry.availability !== "available" ||
+        !!entry.issue ||
+        !status ||
+        status.counts.conflicted > 0
+      );
+  }
+}
+export function collapseTree(
+  state: DesktopState,
+  key: string,
+  collapsed: boolean,
+): DesktopState {
+  const current = state.collapsed ?? [];
+  if (current.includes(key) === collapsed) return state;
+  return {
+    ...state,
+    collapsed: collapsed
+      ? [...current, key]
+      : current.filter((value) => value !== key),
+  };
+}
 export function filtered(
   entries: StoredWorktree[],
   query: string,
-  attention: string,
+  attention: OverviewFilter,
   sort: OverviewSort,
   trustStates: readonly TrustState[] = [],
 ): StoredWorktree[] {
@@ -314,20 +380,7 @@ export function filtered(
         .toLowerCase()
         .includes(query.toLowerCase()),
     )
-    .filter(
-      (e) =>
-        attention === "all" ||
-        (attention === "modified" &&
-          !!e.status &&
-          e.status.counts.staged +
-            e.status.counts.unstaged +
-            e.status.counts.untracked >
-            0) ||
-        (attention === "issues" &&
-          (e.availability !== "available" ||
-            !!e.issue ||
-            !!e.status?.counts.conflicted)),
-    )
+    .filter((entry) => matchesAttention(entry, attention))
     .sort((a, b) => {
       const left = sortValue(a, choice.column, trust);
       const right = sortValue(b, choice.column, trust);

@@ -1,0 +1,24 @@
+{
+  "integrity": "ok",
+  "write_operations": 0,
+  "trust_grants": 0,
+  "final_layout": "tree",
+  "final_attention": "all",
+  "final_collapsed": [],
+  "final_selected": [
+    "ae939e94-f835-4d8f-b185-bfbc3d5ec1c4"
+  ],
+  "observations": [
+    "child selected explicitly, parent remains unchecked",
+    "collapsing parent hides child and preserves 1 selected",
+    "first Quit saved collapsed [/parent] and child selected",
+    "explicit restart shows Tree, collapsed parent, 1 selected",
+    "expanding restored parent shows child checked and parent unchecked",
+    "native status popup values visible, attempted choice stayed All; status-filter native execution unaccepted"
+  ],
+  "preservation": {
+    "changed_paths_hex": [],
+    "preserved": true,
+    "unexpected_paths_hex": []
+  }
+}

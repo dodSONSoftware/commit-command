@@ -11,6 +11,14 @@ The [detailed completion handoff](implementation/README.md) supplies the executa
 remaining-work packages, decision worksheet, fixture/test procedures and complete
 requirement mapping. It does not accept gates or replace this live evidence ledger.
 
+### November 8 completion P04 filters and tree state
+
+[Filter/collapse checkpoint](reports/COMPLETION_P04_FILTERS_2026-11-08.md): specified
+status categories, shared counter predicates, typed/default-compatible filter state
+and persisted tree collapse implemented. Full desktop 134/20/23 passed; selected
+native child selection/collapse/Quit/restart/expand and exact preservation passed.
+Native status-popup selection and broader accessibility remain unaccepted. P04 partial.
+
 ### November 8 completion P04 sortable overview
 
 [Sorting checkpoint](reports/COMPLETION_P04_SORTING_2026-11-08.md): all specified

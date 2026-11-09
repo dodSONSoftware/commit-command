@@ -35,6 +35,35 @@ it("announces sortable headers, persists the chosen direction and preserves sele
   await waitFor(() => expect(f.saved.at(-1)?.sort).toBe("staged_desc"));
   expect(f.saved.at(-1)?.selected).toEqual(["parent"]);
 });
+it("persists tree collapse and attention filters while keeping hidden children selected", async () => {
+  const f = fake();
+  const user = userEvent.setup();
+  render(<App bridge={f.bridge} />);
+  await screen.findByRole("checkbox", { name: "Select parent" });
+  await user.click(screen.getByRole("button", { name: "Tree" }));
+  await user.click(screen.getByRole("checkbox", { name: "Select child" }));
+  await user.click(screen.getByText("parent", { selector: "summary" }));
+  await waitFor(() => expect(f.saved.at(-1)?.collapsed).toEqual(["/parent"]));
+  expect(f.saved.at(-1)?.selected).toEqual(["child"]);
+  expect(
+    screen.getByRole("checkbox", { name: "Select child", hidden: true }),
+  ).not.toBeVisible();
+  await user.selectOptions(
+    screen.getByRole("combobox", { name: "Repository attention filter" }),
+    "conflicted",
+  );
+  await waitFor(() => expect(f.saved.at(-1)?.attention).toBe("conflicted"));
+  expect(f.saved.at(-1)?.selected).toEqual(["child"]);
+  await user.selectOptions(
+    screen.getByRole("combobox", { name: "Repository attention filter" }),
+    "all",
+  );
+  expect(
+    screen.getByRole("checkbox", { name: "Select child", hidden: true }),
+  ).not.toBeVisible();
+  await user.click(screen.getByText("parent", { selector: "summary" }));
+  expect(screen.getByRole("checkbox", { name: "Select child" })).toBeChecked();
+});
 function fake(writes = false) {
   const requests: Request[] = [];
   const saved: DesktopState[] = [];

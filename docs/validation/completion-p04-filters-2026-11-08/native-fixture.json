@@ -1,0 +1,12 @@
+{
+  "root": "/private/tmp/gitfleet-p04-filter-uhe_cyb2",
+  "workspace": "/private/tmp/gitfleet-p04-filter-uhe_cyb2/workspace",
+  "state": "/private/tmp/gitfleet-p04-filter-uhe_cyb2/state",
+  "app": "/private/tmp/gitfleet-p04-filter-uhe_cyb2/Commit Command Filters.app",
+  "binary": "/private/tmp/gitfleet-p04-filter-uhe_cyb2/Commit Command Filters.app/Contents/MacOS/gitfleet-desktop",
+  "workspace_id": "cf75c955-ad6a-4fe9-a013-cf5f71362e9d",
+  "sha256": "a05b129af798ad363867be0bc9b560b4dedf45f5267def274cd042bf661cd7ae",
+  "features": [
+    "custom-protocol"
+  ]
+}

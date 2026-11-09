@@ -705,6 +705,20 @@ export type OverviewSort =
  * via the `definition` "ContentSource".
  */
 export type ContentSource = "index" | "working_tree";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "OverviewFilter".
+ */
+export type OverviewFilter =
+  | "all"
+  | "modified"
+  | "staged"
+  | "unstaged"
+  | "untracked"
+  | "conflicted"
+  | "ahead"
+  | "behind"
+  | "issues";
 
 export interface Response {
   data: Data;
@@ -2271,6 +2285,17 @@ export interface Preview {
  */
 export interface DesktopState {
   active_tab?: string | null;
+  attention?:
+    | "all"
+    | "modified"
+    | "staged"
+    | "unstaged"
+    | "untracked"
+    | "conflicted"
+    | "ahead"
+    | "behind"
+    | "issues";
+  collapsed?: string[];
   drafts: {
     [k: string]: string;
   };

@@ -41,6 +41,9 @@ import {
   updateTab,
   filtered,
   overviewStatus,
+  attentionChoices,
+  matchesAttention,
+  collapseTree,
   sortChoices,
   sortChoice,
   toggleSort,
@@ -73,7 +76,7 @@ export function App({ bridge }: { bridge: Bridge }) {
   const [closing, setClosing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [monitor, setMonitor] = useState("Not monitoring");
-  const [attention, setAttention] = useState("all");
+  const attention = nav.attention ?? "all";
   const [showOperations, setShowOperations] = useState(false);
   const [showActivity, setShowActivity] = useState(false);
   const [showBulk, setShowBulk] = useState(false);
@@ -396,18 +399,8 @@ export function App({ bridge }: { bridge: Bridge }) {
   const visible = filtered(entries, nav.filter, attention, nav.sort, trust);
   const counts = entries.reduce(
     (s, e) => ({
-      dirty:
-        s.dirty +
-        Number(
-          !!e.status &&
-            e.status.counts.staged +
-              e.status.counts.unstaged +
-              e.status.counts.untracked >
-              0,
-        ),
-      issues:
-        s.issues +
-        Number(e.availability !== "available" || !!e.status?.counts.conflicted),
+      dirty: s.dirty + Number(matchesAttention(e, "modified")),
+      issues: s.issues + Number(matchesAttention(e, "issues")),
     }),
     { dirty: 0, issues: 0 },
   );
@@ -913,11 +906,18 @@ export function App({ bridge }: { bridge: Bridge }) {
                 <select
                   aria-label="Repository attention filter"
                   value={attention}
-                  onChange={(e) => setAttention(e.target.value)}
+                  onChange={(e) => {
+                    const choice = attentionChoices.find(
+                      (item) => item.value === e.target.value,
+                    );
+                    if (choice) setNav({ ...nav, attention: choice.value });
+                  }}
                 >
-                  <option value="all">All repositories</option>
-                  <option value="modified">With changes</option>
-                  <option value="issues">Needs attention</option>
+                  {attentionChoices.map((choice) => (
+                    <option key={choice.value} value={choice.value}>
+                      {choice.label}
+                    </option>
+                  ))}
                 </select>
                 <select
                   aria-label="Sort repositories"
@@ -1160,6 +1160,12 @@ export function App({ bridge }: { bridge: Bridge }) {
                       key={node.key}
                       node={node}
                       selected={nav.selected}
+                      collapsed={nav.collapsed ?? []}
+                      collapse={(key, collapsed) =>
+                        setNav((current) =>
+                          collapseTree(current, key, collapsed),
+                        )
+                      }
                       open={(e) => setNav(openTab(nav, e))}
                       select={(id) => setNav(toggleSelection(nav, id))}
                     />
@@ -1251,18 +1257,28 @@ function Metric({
 function Tree({
   node,
   selected,
+  collapsed,
+  collapse,
   open,
   select,
 }: {
   node: TreeNode;
   selected: string[];
+  collapsed: readonly string[];
+  collapse: (key: string, collapsed: boolean) => void;
   open: (e: StoredWorktree) => void;
   select: (id: string) => void;
 }) {
   return (
     <div className="tree-node">
       {node.children.length ? (
-        <details open>
+        <details
+          open={!collapsed.includes(node.key)}
+          onToggle={(event) => {
+            if (event.target === event.currentTarget)
+              collapse(node.key, !event.currentTarget.open);
+          }}
+        >
           <summary>{node.label}</summary>
           {node.entry && (
             <div className="tree-repo">
@@ -1282,6 +1298,8 @@ function Tree({
               key={n.key}
               node={n}
               selected={selected}
+              collapsed={collapsed}
+              collapse={collapse}
               open={open}
               select={select}
             />

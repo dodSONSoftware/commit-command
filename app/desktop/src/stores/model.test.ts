@@ -9,6 +9,8 @@ import {
   filtered,
   sortDefinitions,
   toggleSort,
+  attentionChoices,
+  collapseTree,
 } from "./model";
 import { fixtureEntry } from "../testdata";
 describe("identity and navigation", () => {
@@ -153,6 +155,58 @@ describe("overview sorting", () => {
       "b",
     ]);
   });
+});
+it("filters each attention category separately from search without treating unknown tracking as zero evidence", () => {
+  const changed = fixtureEntry("changed", "changed");
+  const clean = fixtureEntry("clean", "clean");
+  const unknown = { ...fixtureEntry("unknown", "unknown"), status: null };
+  if (!changed.status || !clean.status)
+    throw new Error("fixture status required");
+  changed.status.counts = {
+    staged: 1,
+    unstaged: 2,
+    untracked: 3,
+    conflicted: 4,
+  };
+  changed.status.tracking = {
+    reference: "refs/remotes/origin/main",
+    comparison: "cached",
+    ahead: 1,
+    behind: 2,
+  };
+  clean.status.counts = { staged: 0, unstaged: 0, untracked: 0, conflicted: 0 };
+  for (const choice of attentionChoices) {
+    const expected =
+      choice.value === "all"
+        ? ["changed", "clean", "unknown"]
+        : choice.value === "issues"
+          ? ["changed", "unknown"]
+          : ["changed"];
+    expect(
+      filtered([unknown, clean, changed], "", choice.value, "path").map(
+        (e) => e.id,
+      ),
+      choice.value,
+    ).toEqual(expected);
+    expect(
+      filtered(
+        [unknown, clean, changed],
+        "does-not-match",
+        choice.value,
+        "path",
+      ),
+    ).toEqual([]);
+  }
+});
+it("persists collapsed groups without modifying explicit descendant selection", () => {
+  const selected = toggleSelection(initialState, "child");
+  const collapsed = collapseTree(selected, "/parent", true);
+  expect(collapsed.collapsed).toEqual(["/parent"]);
+  expect(collapsed.selected).toEqual(["child"]);
+  expect(collapseTree(collapsed, "/parent", true)).toBe(collapsed);
+  const expanded = collapseTree(collapsed, "/parent", false);
+  expect(expanded.collapsed).toEqual([]);
+  expect(expanded.selected).toEqual(["child"]);
 });
 it("keeps invalid UTF-8 and bidi controls visible instead of conflating display identities", () => {
   expect(pathText({ encoding: "unix_bytes", value: [255] })).not.toBe(

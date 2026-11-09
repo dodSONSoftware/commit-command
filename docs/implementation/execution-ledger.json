@@ -3064,9 +3064,11 @@
       "package": "P04",
       "action": "Table/tree filter/search/collapse; select parent and child explicitly",
       "expected": "Shared selection, no descendant auto-select, collapse/filter never deselect silently",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/reports/COMPLETION_P04_FILTERS_2026-11-08.md"
+      ],
+      "note": "Specified filters and persisted collapse/selection automated cases pass; actual native nested child collapse/Quit/restart/expand preservation passes. Native popup selection, full keyboard/VoiceOver and exact final artifact remain open."
     },
     {
       "id": "UI02",

@@ -182,6 +182,8 @@ fn navigation_migration_restart_and_newer_data_are_preserved() {
     let (f, mut app, ws, wt) = setup();
     let mut state = DesktopState::default();
     state.sort = OverviewSort::LastCommitDesc;
+    state.attention = OverviewFilter::Conflicted;
+    state.collapsed = vec!["/parent".into()];
     state.tabs.push(RepositoryTab {
         worktree: wt.clone(),
         view: "history".into(),
@@ -213,6 +215,8 @@ fn navigation_migration_restart_and_newer_data_are_preserved() {
     };
     assert_eq!(restored.drafts, state.drafts);
     assert_eq!(restored.sort, OverviewSort::LastCommitDesc);
+    assert_eq!(restored.attention, OverviewFilter::Conflicted);
+    assert_eq!(restored.collapsed, vec!["/parent"]);
     assert_eq!(restored.tabs[0].view, "history");
     state.version = 999;
     assert!(app

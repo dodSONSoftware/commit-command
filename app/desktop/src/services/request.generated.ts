@@ -766,6 +766,17 @@ export interface DiscoveryOptions {
 }
 export interface DesktopState {
   active_tab?: string | null;
+  attention?:
+    | "all"
+    | "modified"
+    | "staged"
+    | "unstaged"
+    | "untracked"
+    | "conflicted"
+    | "ahead"
+    | "behind"
+    | "issues";
+  collapsed?: string[];
   drafts: {
     [k: string]: string;
   };
