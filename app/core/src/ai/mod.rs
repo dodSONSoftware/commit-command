@@ -9,6 +9,8 @@ pub mod context;
 pub mod credentials;
 pub(crate) mod editor;
 pub(crate) mod jobs;
+#[cfg(unix)]
+pub mod portability;
 pub mod provider;
 pub mod store;
 pub mod template;

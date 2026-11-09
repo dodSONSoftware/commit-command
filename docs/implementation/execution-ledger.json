@@ -4267,9 +4267,11 @@
       "package": "P13A",
       "action": "AI-only export of configured metadata/definitions",
       "expected": "All selected nonsecret entities present, credentials/approvals absent; schema/checksums exact",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/reports/COMPLETION_P13A_AI_PORTABILITY_2026-11-09.md"
+      ],
+      "note": "No new execution claimed. Classify retained variants before running. November9: AI-only payload publication and bounded unactivated preview reset auth/approvals with fresh import revisions; product UI, Action definitions, mapping/apply/native variants remain open."
     },
     {
       "id": "BACKUP02",
@@ -4369,9 +4371,11 @@
       "package": "P13A",
       "action": "Validate migration safety backup before new schema",
       "expected": "Backup verified/synced before mutation; failure prevents destructive migration",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/reports/COMPLETION_P13A_MIGRATION_2026-11-09.md"
+      ],
+      "note": "No new execution claimed. Classify retained variants before running. November9: schema2\u21923 adoption verifies owner-coherent archive before SQL; blocked destination leaves schema2. Other migrations/crash/native variants remain open."
     },
     {
       "id": "BACKUP12",
@@ -4443,9 +4447,11 @@
       "package": "P13B",
       "action": "Imported endpoints/auth/Action definitions/trust-shaped metadata",
       "expected": "No active endpoint/auth/Action/trust authority, fresh revisions/reauthorization required",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/reports/COMPLETION_P13A_AI_PORTABILITY_2026-11-09.md"
+      ],
+      "note": "No new execution claimed. Classify retained variants before running. November9: AI-only payload publication and bounded unactivated preview reset auth/approvals with fresh import revisions; product UI, Action definitions, mapping/apply/native variants remain open."
     },
     {
       "id": "IMPORT07",

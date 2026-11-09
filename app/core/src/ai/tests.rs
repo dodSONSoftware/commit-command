@@ -38,6 +38,217 @@ fn scope() -> (WorkspaceId, WorktreeId) {
         WorktreeId(uuid::Uuid::new_v4().to_string()),
     )
 }
+#[cfg(unix)]
+#[test]
+fn portable_ai_archive_preserves_metadata_without_exporting_or_importing_authority() {
+    use super::{credentials::Authentication, portability, store::Snapshot};
+    use crate::{
+        backup::{
+            archive::{Kind, ValidatedArchive},
+            publication::Destination,
+        },
+        inspection::Cancellation,
+    };
+    use std::{fs, os::unix::fs::DirBuilderExt};
+    let root = std::env::temp_dir().join(format!("gitfleet-portable-{}", uuid::Uuid::new_v4()));
+    fs::DirBuilder::new().mode(0o700).create(&root).unwrap();
+    let destination = Destination::open(&fs::canonicalize(&root).unwrap()).unwrap();
+    let mut settings = configured();
+    settings.connections[0].endpoint_approval =
+        crate::domain::digest(settings.connections[0].endpoint.as_bytes());
+    // Stored bearer is only supported on verified HTTPS or explicit loopback.
+    settings.connections[0].authentication = Authentication::StoredBearer;
+    let (workspace, worktree) = scope();
+    settings = change(
+        &settings,
+        Change::Assign {
+            scope: Scope::Repository {
+                workspace: workspace.clone(),
+                worktree: worktree.clone(),
+            },
+            profile: Some(settings.profiles[0].id.clone()),
+        },
+    );
+    settings = change(
+        &settings,
+        Change::Instructions {
+            scope: Scope::Repository {
+                workspace,
+                worktree,
+            },
+            text: "Exact portable instructions\n\n".into(),
+        },
+    );
+    let before = serde_json::to_vec(&settings).unwrap();
+    let mut snapshot = Snapshot {
+        fingerprint: crate::domain::digest(&before),
+        settings,
+    };
+    let cancel = Cancellation::default();
+    let fingerprint =
+        portability::publish(&snapshot, &destination, "metadata.zip", 123, &cancel).unwrap();
+    let path = root.join("metadata.zip");
+    let original = fs::read(&path).unwrap();
+    let mut archive = ValidatedArchive::inspect(fs::File::open(&path).unwrap(), &cancel).unwrap();
+    assert_eq!(archive.manifest_fingerprint(), fingerprint);
+    assert_eq!(archive.manifest().kind, Kind::AiConfiguration);
+    assert_eq!(archive.manifest().components.len(), 1);
+    assert_eq!(archive.manifest().database_schema, None);
+    assert!(!archive.manifest().includes_history);
+    let bytes = archive
+        .read_component("ai/settings.json", 2 * 1024 * 1024, &cancel)
+        .unwrap();
+    let exported: Settings = serde_json::from_slice(&bytes).unwrap();
+    assert_eq!(exported.connections[0].authentication, Authentication::None);
+    assert!(exported.connections[0].endpoint_approval.is_empty());
+    assert_eq!(exported.revision, snapshot.settings.revision);
+    let preview = portability::preview(archive, &cancel).unwrap();
+    assert_eq!(preview.manifest_fingerprint, fingerprint);
+    assert_eq!(
+        preview.settings.connections[0].id,
+        snapshot.settings.connections[0].id
+    );
+    assert_eq!(
+        preview.settings.profiles[0].id,
+        snapshot.settings.profiles[0].id
+    );
+    assert_eq!(
+        serde_json::to_vec(&preview.settings.assignments).unwrap(),
+        serde_json::to_vec(&snapshot.settings.assignments).unwrap()
+    );
+    assert_eq!(
+        serde_json::to_vec(&preview.settings.instructions).unwrap(),
+        serde_json::to_vec(&snapshot.settings.instructions).unwrap()
+    );
+    assert_eq!(
+        serde_json::to_vec(&preview.settings.templates).unwrap(),
+        serde_json::to_vec(&snapshot.settings.templates).unwrap()
+    );
+    assert_ne!(preview.settings.revision, snapshot.settings.revision);
+    assert_ne!(
+        preview.settings.connections[0].revision,
+        snapshot.settings.connections[0].revision
+    );
+    assert_ne!(
+        preview.settings.profiles[0].revision,
+        snapshot.settings.profiles[0].revision
+    );
+    assert_eq!(serde_json::to_vec(&snapshot.settings).unwrap(), before);
+    assert!(portability::publish(&snapshot, &destination, "metadata.zip", 124, &cancel).is_err());
+    assert_eq!(fs::read(&path).unwrap(), original);
+    snapshot.fingerprint = "stale".into();
+    assert!(portability::publish(&snapshot, &destination, "stale.zip", 124, &cancel).is_err());
+    assert!(!root.join("stale.zip").exists());
+    cancel.cancel();
+    assert_eq!(
+        portability::publish(&snapshot, &destination, "cancelled.zip", 124, &cancel)
+            .unwrap_err()
+            .kind,
+        ErrorKind::Cancelled
+    );
+    assert!(!root.join("cancelled.zip").exists());
+    assert_eq!(fs::read_dir(&root).unwrap().count(), 1);
+    fs::remove_dir_all(root).unwrap();
+}
+
+#[cfg(unix)]
+#[test]
+fn foreign_ai_payload_cannot_import_authentication_or_unrecognized_components() {
+    use super::{credentials::Authentication, portability};
+    use crate::{
+        backup::archive::{self, ValidatedArchive},
+        domain::digest,
+        inspection::Cancellation,
+    };
+    use std::io::Cursor;
+    let pack = |settings: &Settings, path: &str, revision: &str| {
+        let bytes = serde_json::to_vec(settings).unwrap();
+        let manifest = archive::Manifest {
+            version: 1,
+            application_version: "fixture".into(),
+            created_at_ms: 1,
+            kind: archive::Kind::AiConfiguration,
+            database_schema: None,
+            settings_revision: Some(revision.into()),
+            includes_history: false,
+            recovery_policy: "not_included".into(),
+            components: vec![archive::Component {
+                component_type: archive::ComponentType::RegularFile,
+                path: path.into(),
+                bytes: bytes.len() as u64,
+                sha256: digest(&bytes),
+            }],
+        };
+        let mut file = archive::write_archive(
+            Cursor::new(Vec::new()),
+            &manifest,
+            &mut [archive::Source {
+                path,
+                reader: &mut Cursor::new(bytes),
+            }],
+            &Cancellation::default(),
+        )
+        .unwrap();
+        file.set_position(0);
+        ValidatedArchive::inspect(file, &Cancellation::default()).unwrap()
+    };
+    let mut settings = configured();
+    settings.connections[0].endpoint_approval = digest(settings.connections[0].endpoint.as_bytes());
+    settings.connections[0].authentication = Authentication::StoredBearer;
+    let preview = portability::preview(
+        pack(&settings, "ai/settings.json", &settings.revision),
+        &Cancellation::default(),
+    )
+    .unwrap();
+    assert_eq!(
+        preview.settings.connections[0].authentication,
+        Authentication::None
+    );
+    assert!(preview.settings.connections[0].endpoint_approval.is_empty());
+    assert!(portability::preview(
+        pack(&settings, "ai/unknown.json", &settings.revision),
+        &Cancellation::default()
+    )
+    .is_err());
+    assert!(portability::preview(
+        pack(&settings, "ai/settings.json", "wrong-revision"),
+        &Cancellation::default()
+    )
+    .is_err());
+    let cancelled = Cancellation::default();
+    cancelled.cancel();
+    assert_eq!(
+        portability::preview(
+            pack(&settings, "ai/settings.json", &settings.revision),
+            &cancelled
+        )
+        .err()
+        .unwrap()
+        .kind,
+        ErrorKind::Cancelled
+    );
+    let mut oversized = settings.clone();
+    oversized.instructions = (0..140)
+        .map(|_| Instructions {
+            scope: Scope::Workspace {
+                workspace: WorkspaceId(uuid::Uuid::new_v4().to_string()),
+            },
+            text: "x".repeat(16384),
+        })
+        .collect();
+    assert!(serde_json::to_vec(&oversized).unwrap().len() > 2 * 1024 * 1024);
+    assert!(portability::preview(
+        pack(&oversized, "ai/settings.json", &oversized.revision),
+        &Cancellation::default()
+    )
+    .is_err());
+    settings.version = 999;
+    assert!(portability::preview(
+        pack(&settings, "ai/settings.json", &settings.revision),
+        &Cancellation::default()
+    )
+    .is_err());
+}
 #[test]
 fn no_ai_default_is_valid_and_unavailable_only_for_ai() {
     let s = Settings::default();

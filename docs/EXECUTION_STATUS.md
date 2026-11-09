@@ -11,6 +11,16 @@ The [detailed completion handoff](implementation/README.md) supplies the executa
 remaining-work packages, decision worksheet, fixture/test procedures and complete
 requirement mapping. It does not accept gates or replace this live evidence ledger.
 
+### November 9 completion P13A AI portability payloads
+
+[AI-portability checkpoint](reports/COMPLETION_P13A_AI_PORTABILITY_2026-11-09.md):
+verified AI-only payload publication clears authentication/endpoint approval;
+bounded unactivated preview resets foreign authority and creates fresh revisions.
+88 library/43 application tests and strict Core Clippy pass, including no-clobber,
+source preservation, revision/component/schema/cancellation/oversize refusals.
+Product UI, mapping/conflict choices and atomic apply remain open; BACKUP01 and
+IMPORT06 remain partial.
+
 ### November 9 completion P04 Activity state persistence
 
 [Activity-state checkpoint](reports/COMPLETION_P04_ACTIVITY_STATE_2026-11-09.md):

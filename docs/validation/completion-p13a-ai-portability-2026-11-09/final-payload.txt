@@ -1,0 +1,9 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.68s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-6d29e1afc4eab305)
+
+running 1 test
+test ai::tests::foreign_ai_payload_cannot_import_authentication_or_unrecognized_components ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 87 filtered out; finished in 0.35s
+
