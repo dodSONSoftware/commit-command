@@ -18,6 +18,23 @@ afterEach(() => {
   cleanup();
   vi.useRealTimers();
 });
+it("announces sortable headers, persists the chosen direction and preserves selection", async () => {
+  const f = fake();
+  const user = userEvent.setup();
+  render(<App bridge={f.bridge} />);
+  const selection = await screen.findByRole("checkbox", {
+    name: "Select parent",
+  });
+  await user.click(selection);
+  const header = screen.getByRole("columnheader", { name: "Staged" });
+  await user.click(screen.getByRole("button", { name: "Staged" }));
+  expect(header).toHaveAttribute("aria-sort", "ascending");
+  await user.click(screen.getByRole("button", { name: "Staged ↑" }));
+  expect(header).toHaveAttribute("aria-sort", "descending");
+  expect(selection).toBeChecked();
+  await waitFor(() => expect(f.saved.at(-1)?.sort).toBe("staged_desc"));
+  expect(f.saved.at(-1)?.selected).toEqual(["parent"]);
+});
 function fake(writes = false) {
   const requests: Request[] = [];
   const saved: DesktopState[] = [];

@@ -11,12 +11,20 @@ The [detailed completion handoff](implementation/README.md) supplies the executa
 remaining-work packages, decision worksheet, fixture/test procedures and complete
 requirement mapping. It does not accept gates or replace this live evidence ledger.
 
+### November 8 completion P04 sortable overview
+
+[Sorting checkpoint](reports/COMPLETION_P04_SORTING_2026-11-08.md): all specified
+sort columns/directions, stable ties/unknown placement, typed backward-compatible
+navigation and aria-sort implemented. Full desktop 131/20/23 passed; selected
+ordinary native sort/selection/Quit/restart and exact preservation passed. P04/UI02
+remain partial pending full accessibility, geometry and remaining shell work.
+
 ### November 8 completion P13A backup primitives
 
 [Primitive checkpoint](reports/COMPLETION_P13A_PRIMITIVES_2026-11-08.md): bounded
 stored-only archive codec and owner-connection WAL-consistent SQLite snapshot
 implemented. No extraction or state activation. Focused hostile-container and
-source-preservation tests pass; P13A remains partial pending staging, durable
+source-preservation tests pass; P13A remains partial pending complete durable
 publication acceptance, coherent app-state capture and migration integration.
 [Publication checkpoint](reports/COMPLETION_P13A_PUBLICATION_2026-11-08.md) adds
 private descriptor-relative staging, validated/synced no-clobber publication and

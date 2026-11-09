@@ -181,6 +181,7 @@ fn native_capability_is_required_decline_replay_and_context_changes_fail_closed(
 fn navigation_migration_restart_and_newer_data_are_preserved() {
     let (f, mut app, ws, wt) = setup();
     let mut state = DesktopState::default();
+    state.sort = OverviewSort::LastCommitDesc;
     state.tabs.push(RepositoryTab {
         worktree: wt.clone(),
         view: "history".into(),
@@ -211,6 +212,7 @@ fn navigation_migration_restart_and_newer_data_are_preserved() {
         panic!()
     };
     assert_eq!(restored.drafts, state.drafts);
+    assert_eq!(restored.sort, OverviewSort::LastCommitDesc);
     assert_eq!(restored.tabs[0].view, "history");
     state.version = 999;
     assert!(app

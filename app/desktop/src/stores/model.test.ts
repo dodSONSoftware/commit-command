@@ -6,6 +6,9 @@ import {
   closeTab,
   buildTree,
   pathText,
+  filtered,
+  sortDefinitions,
+  toggleSort,
 } from "./model";
 import { fixtureEntry } from "../testdata";
 describe("identity and navigation", () => {
@@ -42,6 +45,113 @@ describe("identity and navigation", () => {
     const value = { encoding: "utf8" as const, value: "line\nname" };
     expect(pathText(value)).toBe("line\\nname");
     expect(value.value).toContain("\n");
+  });
+});
+describe("overview sorting", () => {
+  function rows() {
+    const a = fixtureEntry("a", "alpha");
+    const b = fixtureEntry("b", "beta");
+    if (!a.status || !b.status) throw new Error("fixture requires status");
+    a.status.branch = "refs/heads/alpha";
+    b.status.branch = "refs/heads/beta";
+    a.status.counts = { staged: 1, unstaged: 2, untracked: 3, conflicted: 4 };
+    b.status.counts = { staged: 2, unstaged: 3, untracked: 4, conflicted: 5 };
+    a.status.tracking = {
+      reference: "refs/remotes/origin/main",
+      comparison: "cached",
+      ahead: 1,
+      behind: 2,
+    };
+    b.status.tracking = {
+      reference: "refs/remotes/origin/main",
+      comparison: "cached",
+      ahead: 2,
+      behind: 3,
+    };
+    const commit = {
+      author: [],
+      committer: [],
+      author_time: 1,
+      committer_time: 1,
+      message: [120],
+      oid: { hex: "1".repeat(40), format: "sha1" as const },
+      tree: { hex: "2".repeat(40), format: "sha1" as const },
+      parents: [],
+    };
+    a.status.last_commit = commit;
+    b.status.last_commit = { ...commit, committer_time: 2 };
+    return [a, b];
+  }
+  it("sorts every observed column in both directions with unknowns last", () => {
+    const [a, b] = rows();
+    const missing = { ...fixtureEntry("missing", "000-unknown"), status: null };
+    const trust = [
+      { worktree: "a", eligible: false, grant: "none", validity: "alpha" },
+      { worktree: "b", eligible: false, grant: "none", validity: "beta" },
+    ];
+    for (const definition of sortDefinitions.filter(
+      (item) => item.key !== "status",
+    )) {
+      const expectedAscending =
+        definition.key === "path" || definition.key === "name"
+          ? ["missing", "a", "b"]
+          : ["a", "b", "missing"];
+      const expectedDescending = ["b", "a", "missing"];
+      expect(
+        filtered([b, missing, a], "", "all", definition.ascending, trust).map(
+          (e) => e.id,
+        ),
+        definition.key,
+      ).toEqual(expectedAscending);
+      expect(
+        filtered([a, missing, b], "", "all", definition.descending, trust).map(
+          (e) => e.id,
+        ),
+        definition.key,
+      ).toEqual(expectedDescending);
+      expect(toggleSort(definition.ascending, definition.key)).toBe(
+        definition.descending,
+      );
+      expect(toggleSort(definition.descending, definition.key)).toBe(
+        definition.ascending,
+      );
+    }
+  });
+  it("breaks ties by path then ID independently of observation arrival order", () => {
+    const a = fixtureEntry("a", "same");
+    const b = fixtureEntry("b", "same");
+    expect(filtered([b, a], "", "all", "staged_desc").map((e) => e.id)).toEqual(
+      ["a", "b"],
+    );
+    expect(filtered([b, a], "", "all", "changes").map((e) => e.id)).toEqual([
+      "a",
+      "b",
+    ]);
+  });
+  it("preserves input and explicit selection while filtering, including status sorting", () => {
+    const [a, b] = rows();
+    const input = [b, a];
+    const selected = toggleSelection(initialState, b.id);
+    expect(
+      filtered(input, "alpha", "issues", "status").map((e) => e.id),
+    ).toEqual(["a"]);
+    expect(input.map((e) => e.id)).toEqual(["b", "a"]);
+    expect(selected.selected).toEqual(["b"]);
+    if (a.status && b.status) {
+      a.status.counts.conflicted = 0;
+      b.status.counts.conflicted = 0;
+      a.status.counts.staged = 0;
+      a.status.counts.unstaged = 0;
+      a.status.counts.untracked = 0;
+    }
+    expect(filtered(input, "", "all", "status").map((e) => e.id)).toEqual([
+      "b",
+      "a",
+    ]);
+    expect(filtered(input, "", "all", "status_desc").map((e) => e.id)).toEqual([
+      "a",
+      "b",
+    ]);
   });
 });
 it("keeps invalid UTF-8 and bidi controls visible instead of conflating display identities", () => {

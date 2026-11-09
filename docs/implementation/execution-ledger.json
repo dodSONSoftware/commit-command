@@ -3073,9 +3073,11 @@
       "package": "P04",
       "action": "Sort every specified column ascending/descending with ties/unavailable values",
       "expected": "Stable documented order and `aria-sort`; persisted old/new schema compatible",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/reports/COMPLETION_P04_SORTING_2026-11-08.md"
+      ],
+      "note": "All-column automated sort/direction/tie/unknown coverage, legacy/new serialization and restart persistence, selected native header/menu/selection/restart passed. Full VoiceOver/keyboard and exact final artifact variants remain open."
     },
     {
       "id": "UI03",

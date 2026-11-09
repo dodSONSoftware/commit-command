@@ -4,6 +4,8 @@ import type {
   NativePath,
   RepositoryTab,
   BulkComposerState,
+  OverviewSort,
+  TrustState,
 } from "../services/response.generated";
 export const initialBulkComposer: BulkComposerState = {
   version: 1,
@@ -125,12 +127,187 @@ export function updateTab(
     tabs: state.tabs.map((t) => (t.worktree === id ? { ...t, ...update } : t)),
   };
 }
+export const sortDefinitions = [
+  { key: "path", label: "Path", ascending: "path", descending: "path_desc" },
+  {
+    key: "name",
+    label: "Repository",
+    ascending: "name",
+    descending: "name_desc",
+  },
+  {
+    key: "branch",
+    label: "Branch / HEAD",
+    ascending: "branch",
+    descending: "branch_desc",
+  },
+  {
+    key: "staged",
+    label: "Staged",
+    ascending: "staged",
+    descending: "staged_desc",
+  },
+  {
+    key: "unstaged",
+    label: "Unstaged",
+    ascending: "unstaged",
+    descending: "unstaged_desc",
+  },
+  {
+    key: "untracked",
+    label: "Untracked",
+    ascending: "untracked",
+    descending: "untracked_desc",
+  },
+  {
+    key: "conflicts",
+    label: "Conflicts",
+    ascending: "conflicts",
+    descending: "conflicts_desc",
+  },
+  {
+    key: "ahead",
+    label: "Ahead (cached)",
+    ascending: "ahead",
+    descending: "ahead_desc",
+  },
+  {
+    key: "behind",
+    label: "Behind (cached)",
+    ascending: "behind",
+    descending: "behind_desc",
+  },
+  {
+    key: "last_commit",
+    label: "Last commit time",
+    ascending: "last_commit",
+    descending: "last_commit_desc",
+  },
+  {
+    key: "trust",
+    label: "Trust",
+    ascending: "trust",
+    descending: "trust_desc",
+  },
+  {
+    key: "status",
+    label: "Status",
+    ascending: "status",
+    descending: "status_desc",
+  },
+] as const satisfies readonly {
+  key: string;
+  label: string;
+  ascending: OverviewSort;
+  descending: OverviewSort;
+}[];
+export type SortColumn = (typeof sortDefinitions)[number]["key"];
+export const sortChoices: {
+  value: OverviewSort;
+  label: string;
+  column: SortColumn | "changes";
+  descending: boolean;
+}[] = [
+  ...sortDefinitions.flatMap((definition) => [
+    {
+      value: definition.ascending,
+      label: `${definition.label} ↑`,
+      column: definition.key,
+      descending: false,
+    },
+    {
+      value: definition.descending,
+      label: `${definition.label} ↓`,
+      column: definition.key,
+      descending: true,
+    },
+  ]),
+  {
+    value: "changes",
+    label: "Changes (staged + unstaged) ↓",
+    column: "changes",
+    descending: true,
+  },
+];
+export function sortChoice(sort: OverviewSort) {
+  return sortChoices.find((choice) => choice.value === sort) ?? sortChoices[0];
+}
+export function toggleSort(
+  sort: OverviewSort,
+  column: SortColumn,
+): OverviewSort {
+  const definition = sortDefinitions.find((item) => item.key === column);
+  if (!definition) return sort;
+  return sort === definition.ascending
+    ? definition.descending
+    : definition.ascending;
+}
+function compareText(a: string, b: string): number {
+  return a < b ? -1 : a > b ? 1 : 0;
+}
+function sortValue(
+  entry: StoredWorktree,
+  column: SortColumn | "changes",
+  trust: ReadonlyMap<string, string>,
+): string | number | null {
+  const snapshot = entry.status;
+  switch (column) {
+    case "path":
+      return pathText(entry.display_path);
+    case "name":
+      return repoName(entry);
+    case "branch":
+      return snapshot
+        ? (snapshot.branch ??
+            (snapshot.detached ? "Detached HEAD" : "Unborn HEAD"))
+        : null;
+    case "staged":
+      return snapshot?.counts.staged ?? null;
+    case "unstaged":
+      return snapshot?.counts.unstaged ?? null;
+    case "untracked":
+      return snapshot?.counts.untracked ?? null;
+    case "conflicts":
+      return snapshot?.counts.conflicted ?? null;
+    case "ahead":
+      return snapshot?.tracking?.ahead ?? null;
+    case "behind":
+      return snapshot?.tracking?.behind ?? null;
+    case "last_commit":
+      return snapshot?.last_commit?.committer_time ?? null;
+    case "trust":
+      return trust.get(entry.id) ?? null;
+    case "changes":
+      return snapshot
+        ? snapshot.counts.staged + snapshot.counts.unstaged
+        : null;
+    case "status":
+      return overviewStatus(entry);
+  }
+}
+export function overviewStatus(entry: StoredWorktree): string | null {
+  if (entry.availability !== "available") return entry.availability;
+  if (entry.issue) return "Issue";
+  const snapshot = entry.status;
+  if (!snapshot) return null;
+  if (snapshot.counts.conflicted) return "Conflicted";
+  return snapshot.counts.staged +
+    snapshot.counts.unstaged +
+    snapshot.counts.untracked
+    ? "Changes"
+    : "Clean";
+}
 export function filtered(
   entries: StoredWorktree[],
   query: string,
   attention: string,
-  sort: string,
+  sort: OverviewSort,
+  trustStates: readonly TrustState[] = [],
 ): StoredWorktree[] {
+  const choice = sortChoice(sort);
+  const trust = new Map(
+    trustStates.map((state) => [state.worktree, state.validity]),
+  );
   return entries
     .filter((e) =>
       `${repoName(e)} ${pathText(e.display_path)} ${e.status?.branch ?? ""}`
@@ -151,13 +328,24 @@ export function filtered(
             !!e.issue ||
             !!e.status?.counts.conflicted)),
     )
-    .sort((a, b) =>
-      sort === "changes"
-        ? (b.status?.counts.unstaged ?? 0) +
-          (b.status?.counts.staged ?? 0) -
-          ((a.status?.counts.unstaged ?? 0) + (a.status?.counts.staged ?? 0))
-        : pathText(a.display_path).localeCompare(pathText(b.display_path)),
-    );
+    .sort((a, b) => {
+      const left = sortValue(a, choice.column, trust);
+      const right = sortValue(b, choice.column, trust);
+      // Unknown observations remain last in either direction; ties never depend on arrival order.
+      if (left === null && right !== null) return 1;
+      if (right === null && left !== null) return -1;
+      const comparison =
+        left === null || right === null
+          ? 0
+          : typeof left === "number" && typeof right === "number"
+            ? left - right
+            : compareText(String(left), String(right));
+      return (
+        comparison * (choice.descending ? -1 : 1) ||
+        compareText(pathText(a.display_path), pathText(b.display_path)) ||
+        compareText(a.id, b.id)
+      );
+    });
 }
 export interface TreeNode {
   key: string;

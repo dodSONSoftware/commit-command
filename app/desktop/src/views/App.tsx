@@ -40,6 +40,11 @@ import {
   closeTab,
   updateTab,
   filtered,
+  overviewStatus,
+  sortChoices,
+  sortChoice,
+  toggleSort,
+  type SortColumn,
   buildTree,
   type TreeNode,
 } from "../stores/model";
@@ -388,7 +393,7 @@ export function App({ bridge }: { bridge: Bridge }) {
     setShowActivity(false);
     setShowBulk(false);
   }
-  const visible = filtered(entries, nav.filter, attention, nav.sort);
+  const visible = filtered(entries, nav.filter, attention, nav.sort, trust);
   const counts = entries.reduce(
     (s, e) => ({
       dirty:
@@ -917,10 +922,18 @@ export function App({ bridge }: { bridge: Bridge }) {
                 <select
                   aria-label="Sort repositories"
                   value={nav.sort}
-                  onChange={(e) => setNav({ ...nav, sort: e.target.value })}
+                  onChange={(e) => {
+                    const choice = sortChoices.find(
+                      (item) => item.value === e.target.value,
+                    );
+                    if (choice) setNav({ ...nav, sort: choice.value });
+                  }}
                 >
-                  <option value="path">Path</option>
-                  <option value="changes">Changes</option>
+                  {sortChoices.map((choice) => (
+                    <option key={choice.value} value={choice.value}>
+                      {choice.label}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="selection-bar">
@@ -950,14 +963,84 @@ export function App({ bridge }: { bridge: Bridge }) {
                     <thead>
                       <tr>
                         <th scope="col">Select</th>
-                        <th scope="col">Repository / relative path</th>
-                        <th scope="col">Branch / HEAD</th>
-                        <th scope="col">Staged</th>
-                        <th scope="col">Unstaged</th>
-                        <th scope="col">Untracked</th>
-                        <th scope="col">Last commit</th>
+                        <OverviewHeader
+                          column="path"
+                          sort={nav.sort}
+                          onSort={(sort) => setNav({ ...nav, sort })}
+                        >
+                          Repository / relative path
+                        </OverviewHeader>
+                        <OverviewHeader
+                          column="branch"
+                          sort={nav.sort}
+                          onSort={(sort) => setNav({ ...nav, sort })}
+                        >
+                          Branch / HEAD
+                        </OverviewHeader>
+                        <OverviewHeader
+                          column="staged"
+                          sort={nav.sort}
+                          onSort={(sort) => setNav({ ...nav, sort })}
+                        >
+                          Staged
+                        </OverviewHeader>
+                        <OverviewHeader
+                          column="unstaged"
+                          sort={nav.sort}
+                          onSort={(sort) => setNav({ ...nav, sort })}
+                        >
+                          Unstaged
+                        </OverviewHeader>
+                        <OverviewHeader
+                          column="untracked"
+                          sort={nav.sort}
+                          onSort={(sort) => setNav({ ...nav, sort })}
+                        >
+                          Untracked
+                        </OverviewHeader>
+                        <OverviewHeader
+                          column="conflicts"
+                          sort={nav.sort}
+                          onSort={(sort) => setNav({ ...nav, sort })}
+                        >
+                          Conflicts
+                        </OverviewHeader>
+                        <OverviewHeader
+                          column="last_commit"
+                          sort={nav.sort}
+                          onSort={(sort) => setNav({ ...nav, sort })}
+                        >
+                          Last commit
+                        </OverviewHeader>
+                        <OverviewHeader
+                          column="ahead"
+                          sort={nav.sort}
+                          onSort={(sort) => setNav({ ...nav, sort })}
+                        >
+                          Ahead (cached)
+                        </OverviewHeader>
+                        <OverviewHeader
+                          column="behind"
+                          sort={nav.sort}
+                          onSort={(sort) => setNav({ ...nav, sort })}
+                        >
+                          Behind (cached)
+                        </OverviewHeader>
                         <th scope="col">Remote status</th>
-                        <th scope="col">Trust / status</th>
+                        <OverviewHeader
+                          column="trust"
+                          sort={nav.sort}
+                          onSort={(sort) => setNav({ ...nav, sort })}
+                        >
+                          Trust
+                        </OverviewHeader>
+                        <OverviewHeader
+                          column="status"
+                          sort={nav.sort}
+                          onSort={(sort) => setNav({ ...nav, sort })}
+                        >
+                          Status
+                        </OverviewHeader>
                       </tr>
                     </thead>
                     <tbody>
@@ -996,6 +1079,7 @@ export function App({ bridge }: { bridge: Bridge }) {
                           <td>{e.status?.counts.staged ?? "—"}</td>
                           <td>{e.status?.counts.unstaged ?? "—"}</td>
                           <td>{e.status?.counts.untracked ?? "—"}</td>
+                          <td>{e.status?.counts.conflicted ?? "—"}</td>
                           <td>
                             <span>
                               {e.status?.last_commit
@@ -1004,35 +1088,40 @@ export function App({ bridge }: { bridge: Bridge }) {
                                   )[0]
                                 : "—"}
                             </span>
+                            {e.status?.last_commit && (
+                              <small className="table-path">
+                                Committed{" "}
+                                {new Date(
+                                  e.status.last_commit.committer_time * 1000,
+                                ).toLocaleString()}
+                              </small>
+                            )}
                             <small className="table-path">
                               {e.status
                                 ? `Observed ${new Date(e.status.observed_at_ms).toLocaleTimeString()}`
                                 : "Not observed"}
                             </small>
                           </td>
+                          <td title="Local comparison against cached upstream; not a live server observation">
+                            {e.status?.tracking?.ahead ?? "—"}
+                          </td>
+                          <td title="Local comparison against cached upstream; not a live server observation">
+                            {e.status?.tracking?.behind ?? "—"}
+                          </td>
                           <td>
                             <RepositoryRemoteStatus snapshot={e.status} />
                           </td>
                           <td>
+                            {trust.find((t) => t.worktree === e.id)?.validity ??
+                              "Trust not inspected"}
+                          </td>
+                          <td>
                             <span
-                              className={`badge ${e.availability !== "available" || e.status?.counts.conflicted ? "warning" : e.status && e.status.counts.staged + e.status.counts.unstaged + e.status.counts.untracked > 0 ? "modified" : "success"}`}
+                              className={`badge ${e.availability !== "available" || e.issue || !e.status || e.status.counts.conflicted ? "warning" : e.status && e.status.counts.staged + e.status.counts.unstaged + e.status.counts.untracked > 0 ? "modified" : "success"}`}
                             >
-                              {e.availability !== "available"
-                                ? e.availability
-                                : e.status?.counts.conflicted
-                                  ? "Conflicted"
-                                  : e.status &&
-                                      e.status.counts.staged +
-                                        e.status.counts.unstaged +
-                                        e.status.counts.untracked >
-                                        0
-                                    ? "Changes"
-                                    : "Clean"}
+                              {overviewStatus(e) ?? "Not observed"}
                             </span>
-                            <small className="table-path">
-                              {trust.find((t) => t.worktree === e.id)
-                                ?.validity ?? "Trust not inspected"}
-                            </small>
+
                             {e.issue && (
                               <small className="issue">{e.issue.message}</small>
                             )}
@@ -1825,5 +1914,36 @@ function Repository({
         </div>
       )}
     </section>
+  );
+}
+
+function OverviewHeader({
+  column,
+  sort,
+  onSort,
+  children,
+}: {
+  column: SortColumn;
+  sort: DesktopState["sort"];
+  onSort: (sort: DesktopState["sort"]) => void;
+  children: React.ReactNode;
+}) {
+  const choice = sortChoice(sort);
+  const active = choice.column === column;
+  return (
+    <th
+      scope="col"
+      aria-sort={
+        active ? (choice.descending ? "descending" : "ascending") : "none"
+      }
+    >
+      <button
+        className="overview-sort"
+        onClick={() => onSort(toggleSort(sort, column))}
+      >
+        {children}
+        {active ? (choice.descending ? " ↓" : " ↑") : ""}
+      </button>
+    </th>
   );
 }

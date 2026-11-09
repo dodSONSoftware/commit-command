@@ -1244,3 +1244,13 @@ footer button {
   padding: 12px;
   border: 1px solid var(--line);
 }
+
+.overview-sort {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  text-align: left;
+  padding: 4px 0;
+}

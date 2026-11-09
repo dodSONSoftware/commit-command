@@ -1,0 +1,21 @@
+{
+  "integrity": "ok",
+  "sort": "staged_desc",
+  "selected": [
+    "76633244-c934-4149-aaa7-8d8963113ccb"
+  ],
+  "write_operations": 0,
+  "trust_grants": 0,
+  "preservation": {
+    "changed_paths_hex": [],
+    "preserved": true,
+    "unexpected_paths_hex": []
+  },
+  "native_observations": [
+    "path descending reordered visible repo-085 before repo-084",
+    "Staged header clicked ascending then descending; ties path/ID ascending",
+    "one explicit selection persisted",
+    "explicit fixture restart restored Staged descending and selected repo-000"
+  ],
+  "native_scope": "Selected sorting/selection/restart presentation only, not VoiceOver/full UI02. Post-exit UI observation auto-reopened bundle without fixture arguments; that process was identified and quit without changing UI state. Restart acceptance used explicit --data-dir."
+}

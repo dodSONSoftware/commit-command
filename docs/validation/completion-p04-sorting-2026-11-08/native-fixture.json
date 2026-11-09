@@ -1,0 +1,11 @@
+{
+  "root": "/private/tmp/gitfleet-p04-native-x2ecue9g",
+  "app": "/private/tmp/gitfleet-p04-native-x2ecue9g/Commit Command Sorting.app",
+  "state": "/private/tmp/gitfleet-p04-native-x2ecue9g/state",
+  "binary": "/private/tmp/gitfleet-p04-native-x2ecue9g/Commit Command Sorting.app/Contents/MacOS/gitfleet-desktop",
+  "workspace": "/private/tmp/gitfleet-m3-native-cb8nbd9g/workspace",
+  "sha256": "3b0b5d4bf3e2a3b6a7bc0c518ff6414357801dcfbf5f5435e346fba4d4898637",
+  "features": [
+    "custom-protocol"
+  ]
+}

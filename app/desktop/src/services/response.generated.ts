@@ -669,6 +669,38 @@ export type DiffMode =
       [k: string]: unknown;
     };
 /**
+ * Additive string variants preserve version-1 path/changes navigation records.
+ *
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "OverviewSort".
+ */
+export type OverviewSort =
+  | "path"
+  | "path_desc"
+  | "name"
+  | "name_desc"
+  | "branch"
+  | "branch_desc"
+  | "staged"
+  | "staged_desc"
+  | "unstaged"
+  | "unstaged_desc"
+  | "untracked"
+  | "untracked_desc"
+  | "conflicts"
+  | "conflicts_desc"
+  | "ahead"
+  | "ahead_desc"
+  | "behind"
+  | "behind_desc"
+  | "last_commit"
+  | "last_commit_desc"
+  | "trust"
+  | "trust_desc"
+  | "status"
+  | "status_desc"
+  | "changes";
+/**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "ContentSource".
  */
@@ -2247,7 +2279,7 @@ export interface DesktopState {
   layout: string;
   selected: string[];
   sidebar_width: number;
-  sort: string;
+  sort: OverviewSort;
   tabs: RepositoryTab[];
   theme: string;
   version: number;

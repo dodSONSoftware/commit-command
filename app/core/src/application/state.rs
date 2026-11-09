@@ -27,6 +27,36 @@ impl Default for RepositoryTab {
         }
     }
 }
+/// Additive string variants preserve version-1 path/changes navigation records.
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, JsonSchema, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum OverviewSort {
+    Path,
+    PathDesc,
+    Name,
+    NameDesc,
+    Branch,
+    BranchDesc,
+    Staged,
+    StagedDesc,
+    Unstaged,
+    UnstagedDesc,
+    Untracked,
+    UntrackedDesc,
+    Conflicts,
+    ConflictsDesc,
+    Ahead,
+    AheadDesc,
+    Behind,
+    BehindDesc,
+    LastCommit,
+    LastCommitDesc,
+    Trust,
+    TrustDesc,
+    Status,
+    StatusDesc,
+    Changes,
+}
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
 pub struct DesktopState {
@@ -37,7 +67,7 @@ pub struct DesktopState {
     pub drafts: BTreeMap<String, String>,
     pub filter: String,
     pub layout: String,
-    pub sort: String,
+    pub sort: OverviewSort,
     pub theme: String,
     pub sidebar_width: u32,
     pub inspector_width: u32,
@@ -52,7 +82,7 @@ impl Default for DesktopState {
             drafts: BTreeMap::new(),
             filter: String::new(),
             layout: "table".into(),
-            sort: "path".into(),
+            sort: OverviewSort::Path,
             theme: "system".into(),
             sidebar_width: 240,
             inspector_width: 400,
@@ -112,7 +142,6 @@ pub(super) fn validate(s: &DesktopState) -> Result<()> {
     }
     if !(180..=420).contains(&s.sidebar_width)
         || !(240..=800).contains(&s.inspector_width)
-        || !["path", "changes"].contains(&s.sort.as_str())
         || s.tabs.len() > 100
         || s.selected.len() > 10000
         || s.drafts.len() > 100
@@ -179,6 +208,28 @@ impl WindowPlacement {
             return Err(invalid("Invalid native window placement"));
         }
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod sort_tests {
+    use super::*;
+    #[test]
+    fn legacy_sort_values_remain_compatible_and_unknown_values_fail_closed() {
+        let mut value = serde_json::to_value(DesktopState::default()).unwrap();
+        for (raw, expected) in [
+            ("path", OverviewSort::Path),
+            ("changes", OverviewSort::Changes),
+            ("last_commit_desc", OverviewSort::LastCommitDesc),
+        ] {
+            value["sort"] = serde_json::json!(raw);
+            let restored: DesktopState = serde_json::from_value(value.clone()).unwrap();
+            assert_eq!(restored.sort, expected);
+            validate(&restored).unwrap();
+            assert_eq!(serde_json::to_value(restored).unwrap()["sort"], raw);
+        }
+        value["sort"] = serde_json::json!("unsupported");
+        assert!(serde_json::from_value::<DesktopState>(value).is_err());
     }
 }
 impl Application {
