@@ -1,3 +1,4 @@
+import { CommitMessageEditor } from "./CommitMessageEditor";
 import {
   useCallback,
   useEffect,
@@ -151,21 +152,14 @@ export function BulkCommit({
           });
         }}
       >
-        <label>
-          Shared commit message
-          <textarea
-            rows={4}
-            maxLength={512 * 1024}
-            value={shared}
-            disabled={busy}
-            onChange={(e) =>
-              setComposer((current) => ({
-                ...current,
-                message: e.target.value,
-              }))
-            }
-          />
-        </label>
+        <CommitMessageEditor
+          label="Shared commit message"
+          value={shared}
+          disabled={busy}
+          onChange={(message) =>
+            setComposer((current) => ({ ...current, message }))
+          }
+        />
         <p>
           {selected.length} explicitly selected · maximum 20 per review. A
           nonempty repository draft overrides the shared message.
@@ -207,16 +201,13 @@ export function BulkCommit({
             <fieldset key={entry.id} disabled={busy}>
               <legend>{repoName(entry)}</legend>
               <p className="path">{pathText(entry.display_path)}</p>
-              <label>
-                Message override · {repoName(entry)}
-                <textarea
-                  rows={3}
-                  maxLength={512 * 1024}
-                  value={drafts[entry.id] ?? ""}
-                  placeholder="Use shared message"
-                  onChange={(e) => setDraft(entry.id, e.target.value)}
-                />
-              </label>
+              <CommitMessageEditor
+                label={`Message override · ${repoName(entry)}`}
+                rows={3}
+                value={drafts[entry.id] ?? ""}
+                placeholder="Use shared message"
+                onChange={(message) => setDraft(entry.id, message)}
+              />
               <div className="activity-filters">
                 <label>
                   Content · {repoName(entry)}

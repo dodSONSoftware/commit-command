@@ -1274,3 +1274,13 @@ footer button {
 .shell[data-density="compact"] .tree-node summary {
   padding-block: 3px;
 }
+.commit-message-editor {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 10px;
+  margin: 12px 0;
+}
+.commit-message-editor > button {
+  margin-block: 6px;
+}

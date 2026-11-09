@@ -3113,9 +3113,11 @@
       "package": "P04",
       "action": "Subject/body edit with blank/trailing lines, AI replace/cancel, save failure",
       "expected": "Lossless manual draft and explicit replacement; no silent trim/normalization",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/reports/COMPLETION_P04_COMPOSER_2026-11-08.md"
+      ],
+      "note": "Lossless raw/subject/body automated cases and ordinary native subject edit/raw view/Quit/restart exact draft oracle passed. Full AI/cancel/save-failure/native bulk/accessibility variants remain open."
     },
     {
       "id": "UI07",

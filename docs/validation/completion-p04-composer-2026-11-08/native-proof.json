@@ -1,0 +1,22 @@
+{
+  "integrity": "ok",
+  "write_operations": 0,
+  "trust_grants": 0,
+  "draft_oracle": {
+    "expected": "Revised subject  \n\nExisting body\n\n",
+    "actual": "Revised subject  \n\nExisting body\n\n",
+    "exact": true
+  },
+  "observations": [
+    "structured view shows original subject/body",
+    "subject-only edit preserved body and trailing blank lines",
+    "raw view shows exact composed draft",
+    "explicit restart restores same draft"
+  ],
+  "preservation": {
+    "changed_paths_hex": [],
+    "preserved": true,
+    "unexpected_paths_hex": []
+  },
+  "scope": "ordinary individual composer only; no bulk native publication, full VoiceOver or release acceptance"
+}

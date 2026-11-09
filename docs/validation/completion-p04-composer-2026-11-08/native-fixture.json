@@ -1,0 +1,13 @@
+{
+  "root": "/private/tmp/gitfleet-p04-composer-i8ihccx_",
+  "app": "/private/tmp/gitfleet-p04-composer-i8ihccx_/Commit Command Composer.app",
+  "state": "/private/tmp/gitfleet-p04-composer-i8ihccx_/state",
+  "binary": "/private/tmp/gitfleet-p04-composer-i8ihccx_/Commit Command Composer.app/Contents/MacOS/gitfleet-desktop",
+  "workspace": "/private/tmp/gitfleet-p04-filter-uhe_cyb2/workspace",
+  "sha256": "05c9b5743cb9aa44002d6b80ab2e0238d26d5f7e1a06f1efe04ad67cff55623e",
+  "features": [
+    "custom-protocol"
+  ],
+  "parent": "c5813c82-6b27-4f77-91df-5e222b5497ff",
+  "original_draft": "Original subject  \n\nExisting body\n\n"
+}

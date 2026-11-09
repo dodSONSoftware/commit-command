@@ -1,0 +1,7 @@
+{
+  "app/desktop/src/views/CommitMessageEditor.tsx": "3084084de89e170f0beaee689a00295782aa7d25509aea8c3deab299862fe838",
+  "app/desktop/src/views/CommitMessageEditor.test.tsx": "ec73fc48f4ac1a9423b1f91e3c9558d25e6f2b835ade31fef37aada68b12e085",
+  "app/desktop/src/views/App.tsx": "eb8c8eabe343c7b6c9bb6324b8148d959e5ea521e0de0979927dd23a320f0e56",
+  "app/desktop/src/views/BulkCommit.tsx": "6caa934d3c0fd579f2f41b04a141fb3e63800159f8585f9c87d2fbf45ba011ce",
+  "app/desktop/src/styles/app.css": "7cd20599355b2833f5a0bc4046325311c8ac8ef51a2e2ced800a724e77e3e928"
+}

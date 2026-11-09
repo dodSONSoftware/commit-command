@@ -1,3 +1,4 @@
+import { CommitMessageEditor } from "./CommitMessageEditor";
 import { AiMessages } from "./AiMessages";
 import { AiSettings } from "./AiSettings";
 import { VersionAction } from "./VersionAction";
@@ -1810,21 +1811,18 @@ function Repository({
                 }
               />
             </label>
-            <label>
-              Message
-              <textarea
-                rows={8}
-                value={draft}
-                maxLength={512 * 1024}
-                placeholder={"Describe the change\n\nOptional explanation…"}
-                onChange={(e) =>
-                  setNav({
-                    ...nav,
-                    drafts: { ...nav.drafts, [entry.id]: e.target.value },
-                  })
-                }
-              />
-            </label>
+            <CommitMessageEditor
+              label="Message"
+              value={draft}
+              rows={8}
+              placeholder={"Describe the change\n\nOptional explanation…"}
+              onChange={(message) =>
+                setNav({
+                  ...nav,
+                  drafts: { ...nav.drafts, [entry.id]: message },
+                })
+              }
+            />
             <label>
               Hooks
               <select

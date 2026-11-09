@@ -11,6 +11,14 @@ The [detailed completion handoff](implementation/README.md) supplies the executa
 remaining-work packages, decision worksheet, fixture/test procedures and complete
 requirement mapping. It does not accept gates or replace this live evidence ledger.
 
+### November 8 completion P04 subject/body composer
+
+[Composer checkpoint](reports/COMPLETION_P04_COMPOSER_2026-11-08.md): individual,
+shared bulk and override editors support explicit subject/body editing while keeping
+raw drafts/separators lossless. Full desktop139/20/23 passed; actual ordinary
+subject-only edit/raw view/Quit/restart matched exact draft oracle and preserved
+repository bytes. Broader UI06 native combinations/accessibility remain open.
+
 ### November 8 completion P04 density and sidebar
 
 [Density checkpoint](reports/COMPLETION_P04_DENSITY_2026-11-08.md): default-compatible
