@@ -1186,6 +1186,10 @@ mod tests {
             workspace: "w".into(),
             operation: "o".into()
         }));
+        assert!(!mutating_request(&Request::VersionRetainedFile {
+            workspace: "w".into(),
+            operation: "o".into()
+        }));
         assert!(!mutating_request(&Request::VersionActions {
             workspace: "w".into(),
             worktree: None,

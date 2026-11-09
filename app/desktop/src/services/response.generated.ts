@@ -6,6 +6,11 @@
  */
 export type Data =
   | {
+      kind: "version_retained_file";
+      value: RetainedVersionFile;
+      [k: string]: unknown;
+    }
+  | {
       kind: "version_actions";
       value: VersionPage;
       [k: string]: unknown;
@@ -160,6 +165,28 @@ export type Data =
       [k: string]: unknown;
     };
 /**
+ * `display` is never used to reconstruct a path. Byte/wide encodings round-trip.
+ *
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "NativePath".
+ */
+export type NativePath =
+  | {
+      encoding: "utf8";
+      value: string;
+      [k: string]: unknown;
+    }
+  | {
+      encoding: "unix_bytes";
+      value: number[];
+      [k: string]: unknown;
+    }
+  | {
+      encoding: "windows_wide";
+      value: number[];
+      [k: string]: unknown;
+    };
+/**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "ErrorKind".
  */
@@ -208,28 +235,6 @@ export type VersionPhase =
   | "unconfirmed"
   | "interrupted"
   | "reconciled";
-/**
- * `display` is never used to reconstruct a path. Byte/wide encodings round-trip.
- *
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "NativePath".
- */
-export type NativePath =
-  | {
-      encoding: "utf8";
-      value: string;
-      [k: string]: unknown;
-    }
-  | {
-      encoding: "unix_bytes";
-      value: number[];
-      [k: string]: unknown;
-    }
-  | {
-      encoding: "windows_wide";
-      value: number[];
-      [k: string]: unknown;
-    };
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "ObjectFormat".
@@ -573,6 +578,19 @@ export interface Response {
   data: Data;
   epoch: number;
   version: number;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "RetainedVersionFile".
+ */
+export interface RetainedVersionFile {
+  bytes: number[];
+  fingerprint: string;
+  location: NativePath;
+  matches_recorded_before: boolean;
+  operation: string;
+  read_at_ms: number;
   [k: string]: unknown;
 }
 /**

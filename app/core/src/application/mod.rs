@@ -46,6 +46,10 @@ fn stale() -> Error {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Request {
+    VersionRetainedFile {
+        workspace: String,
+        operation: String,
+    },
     ReviewVersionAction {
         workspace: String,
         worktree: String,
@@ -337,6 +341,7 @@ pub struct OperationPage {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "kind", content = "value", rename_all = "snake_case")]
 pub enum Data {
+    VersionRetainedFile(crate::actions::version::RetainedVersionFile),
     VersionActions(crate::actions::version::VersionPage),
     VersionPreview(crate::actions::semver::VersionPreview),
     AuthenticationSettings(crate::authentication::Settings),
@@ -656,6 +661,13 @@ impl Application {
             _ => {}
         }
         let data = match request {
+            Request::VersionRetainedFile {
+                workspace,
+                operation,
+            } => {
+                let id = self.active(&workspace)?;
+                Data::VersionRetainedFile(self.writes.retained_version_file(&id, &operation)?)
+            }
             Request::ReviewVersionAction {
                 workspace,
                 worktree,

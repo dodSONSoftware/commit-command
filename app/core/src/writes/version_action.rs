@@ -37,6 +37,41 @@ fn projected(mut value: VersionInvocation, same_session: bool) -> VersionInvocat
     value
 }
 impl ControlledWrites {
+    pub(crate) fn retained_version_file(
+        &mut self,
+        workspace: &WorkspaceId,
+        id: &str,
+    ) -> Result<RetainedVersionFile> {
+        let stored = self.load_version(workspace, id)?;
+        let relative = PathBuf::from("operations")
+            .join(id)
+            .join("version.candidate");
+        let location = NativePath::from_path(&self.workspace.data_directory().join(&relative));
+        // Pin every component from the app-state root too; an operation ID is
+        // never interpreted as a renderer-selected filesystem location.
+        let inspected = Target::open(
+            self.workspace.data_directory(),
+            &NativePath::from_path(&relative),
+        )
+        .and_then(|target| target.read());
+        let (file, bytes) = inspected.map_err(|error| {
+            Error::with_kind(
+                error.kind,
+                format!(
+                    "Retained file cannot be displayed inline (owned regular file, at most 1024 bytes required). Inspect {} without overwriting the current version; recovery data was preserved",
+                    location.display()
+                ),
+            )
+        })?;
+        Ok(RetainedVersionFile {
+            operation: id.into(),
+            location,
+            fingerprint: digest(&serde_json::to_vec(&(&file, &bytes))?),
+            matches_recorded_before: bytes == stored.value.plan.version.before,
+            bytes,
+            read_at_ms: now_ms(),
+        })
+    }
     fn persist_version(&mut self, stored: &Stored) -> Result<()> {
         let raw = serde_json::to_string(stored)?;
         if raw.len() > LIMIT {

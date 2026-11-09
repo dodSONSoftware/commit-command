@@ -592,3 +592,130 @@ fn an_untrusted_worktree_cannot_approve_a_version_definition() {
     assert!(records(&mut app, &ws).items.is_empty());
     assert_eq!(before, tree_bytes(&f.repo));
 }
+
+#[test]
+fn retained_inspection_is_bounded_scoped_read_only_and_available_after_revocation_or_move() {
+    let (f, mut app, ws, wt) = setup(false);
+    let r = review(&mut app, &ws, &wt);
+    let v: VersionInvocation = confirm(&mut app, &r);
+    let before = tree_bytes(&f.repo);
+    let artifact = f.root.join("state/operations").join(&v.plan.id);
+    let artifact_before = tree_bytes(&artifact);
+    let Data::VersionRetainedFile(data) = request(
+        &mut app,
+        Request::VersionRetainedFile {
+            workspace: ws.clone(),
+            operation: v.plan.id.clone(),
+        },
+    ) else {
+        panic!()
+    };
+    assert_eq!(data.bytes, b"1.4.2\r\n");
+    assert!(data.matches_recorded_before);
+    assert_eq!(data.operation, v.plan.id);
+    assert_eq!(
+        data.location.to_path().unwrap(),
+        fs::canonicalize(artifact.join("version.candidate")).unwrap()
+    );
+    assert_eq!(before, tree_bytes(&f.repo));
+    assert_eq!(artifact_before, tree_bytes(&artifact));
+    for operation in [
+        "../version",
+        "unknown",
+        "00000000-0000-0000-0000-000000000000",
+    ] {
+        assert!(app
+            .request(
+                app.epoch(),
+                Request::VersionRetainedFile {
+                    workspace: ws.clone(),
+                    operation: operation.into()
+                }
+            )
+            .is_err());
+    }
+    assert!(app
+        .request(
+            app.epoch(),
+            Request::VersionRetainedFile {
+                workspace: "different-workspace".into(),
+                operation: v.plan.id.clone()
+            }
+        )
+        .is_err());
+    request(
+        &mut app,
+        Request::Revoke {
+            workspace: ws.clone(),
+            worktree: wt,
+        },
+    );
+    fs::rename(&f.repo, f.root.join("moved-repository")).unwrap();
+    let Data::VersionRetainedFile(data) = request(
+        &mut app,
+        Request::VersionRetainedFile {
+            workspace: ws,
+            operation: v.plan.id,
+        },
+    ) else {
+        panic!()
+    };
+    assert_eq!(data.bytes, b"1.4.2\r\n");
+    assert_eq!(artifact_before, tree_bytes(&artifact));
+}
+#[test]
+fn retained_inspection_refuses_symlinks_hardlinks_parent_aliases_and_oversized_files() {
+    let (f, mut app, ws, wt) = setup(false);
+    let r = review(&mut app, &ws, &wt);
+    let v: VersionInvocation = confirm(&mut app, &r);
+    let artifact = f.root.join("state/operations").join(&v.plan.id);
+    let backup = artifact.join("version.candidate");
+    let saved = artifact.join("saved-original");
+    fs::rename(&backup, &saved).unwrap();
+    let outside = f.root.join("outside-private");
+    fs::write(&outside, b"outside private fixture bytes").unwrap();
+    let read = |app: &mut Application| {
+        app.request(
+            app.epoch(),
+            Request::VersionRetainedFile {
+                workspace: ws.clone(),
+                operation: v.plan.id.clone(),
+            },
+        )
+    };
+    std::os::unix::fs::symlink(&outside, &backup).unwrap();
+    let error = read(&mut app).unwrap_err();
+    assert!(!error.to_string().contains("outside private fixture bytes"));
+    fs::remove_file(&backup).unwrap();
+    fs::hard_link(&outside, &backup).unwrap();
+    assert!(read(&mut app).is_err());
+    fs::remove_file(&backup).unwrap();
+    fs::write(&backup, vec![b'x'; 1025]).unwrap();
+    let error = read(&mut app).unwrap_err();
+    assert!(error.to_string().contains("1024"));
+    assert_eq!(fs::read(&backup).unwrap().len(), 1025);
+    fs::remove_file(&backup).unwrap();
+    fs::rename(&saved, &backup).unwrap();
+    let ops = f.root.join("state/operations");
+    let saved_ops = f.root.join("state/saved-operations");
+    let outside_ops = f.root.join("outside-operations");
+    let outside_id = outside_ops.join(&v.plan.id);
+    fs::create_dir_all(&outside_id).unwrap();
+    fs::set_permissions(&outside_id, fs::Permissions::from_mode(0o700)).unwrap();
+    fs::write(
+        outside_id.join("version.candidate"),
+        b"outside private fixture bytes",
+    )
+    .unwrap();
+    fs::rename(&ops, &saved_ops).unwrap();
+    std::os::unix::fs::symlink(&outside_ops, &ops).unwrap();
+    assert!(read(&mut app).is_err());
+    fs::remove_file(&ops).unwrap();
+    fs::rename(&saved_ops, &ops).unwrap();
+    assert_eq!(
+        fs::read(&outside).unwrap(),
+        b"outside private fixture bytes"
+    );
+    assert_eq!(fs::read(f.repo.join("version")).unwrap(), b"1.4.3\r\n");
+    assert_eq!(fs::read(&backup).unwrap(), b"1.4.2\r\n");
+}

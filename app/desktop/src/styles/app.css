@@ -1180,3 +1180,12 @@ footer button {
 .workspace-scan summary {
   cursor: pointer;
 }
+
+.version-action-record code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.version-action-record p {
+  margin: 8px 0;
+  line-height: 1.6;
+}

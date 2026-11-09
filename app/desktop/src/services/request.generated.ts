@@ -2,6 +2,11 @@
 
 export type Request =
   | {
+      kind: "version_retained_file";
+      operation: string;
+      workspace: string;
+    }
+  | {
       increment: Increment;
       kind: "review_version_action";
       path: NativePath;

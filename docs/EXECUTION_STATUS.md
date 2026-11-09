@@ -7,6 +7,18 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G09 retained version inspection — implemented, selected acceptance passed
+
+[Read-only reader checkpoint](reports/G09_RETAINED_VERSION_INSPECTION_2026-11-08.md):
+ordinary build displays the privately retained original by validated operation ID,
+without mutation authority. Descriptor-relative path guards reject links/unsafe
+artifacts; revoked/moved repositories do not prevent recovery inspection. Focused
+11 / 1 ignored worker, path guards 2, application 29, strict Core Clippy and complete
+desktop 109 / 14 / 17 passed. Native original bytes/location/fingerprint/match,
+spacing, disabled writes and Quit passed; preservation oracle verified exact files,
+journals/trust, hashes, integrity and lock reopen. Broader G09 remains open; optional
+AI foundation is next. Earlier full write matrix remains dated evidence.
+
 ### November 8 G09 guarded SemVer Action — implemented, selected acceptance passed
 
 [Action checkpoint](reports/G09_SEMVER_ACTION_2026-11-08.md): independent native
@@ -1055,8 +1067,8 @@ AI, SemVer Actions and backups remain in the approved product scope, not deferre
 3. **G08 remaining acceptance:** guided per-item coordination now has selected
    dependency/partial-stop/fresh-retry evidence. Expand native uninterrupted multi-level,
    authenticated topology, phase-specific interruption and usability coverage.
-4. **G09:** add read-only retained-file inspection to the accepted SemVer boundary,
-   then AI configuration/transport/context and assisted/bounded automatic commits
+4. **G09:** retained-file inspection is implemented and selected acceptance passed;
+   continue AI configuration/transport/context and assisted/bounded automatic commits
    under separate authorization contracts. Preserve provider-free manual workflows.
 5. **G10–G11 and remaining G03:** complete state portability, measured usability and
    exact macOS release acceptance. Strengthen backup primitives before later schema

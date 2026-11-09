@@ -128,7 +128,64 @@ it("conflicting recovery never offers to apply, stage, or retry", () => {
   const value = item("reconciled");
   value.observed = "conflict";
   const request = setup(value);
-  expect(screen.queryByRole("button")).toBeNull();
+  expect(
+    screen.queryByRole("button", { name: /apply|stage|retry/i }),
+  ).toBeNull();
   expect(request).not.toHaveBeenCalled();
   expect(screen.getByText(/conflict/)).toBeTruthy();
+});
+
+it("inspects only the fixed retained file in an ordinary build without mutation", async () => {
+  const request = vi.fn<Bridge["request"]>().mockResolvedValue({
+    kind: "version_retained_file",
+    value: {
+      operation: "exact-invocation",
+      location: {
+        encoding: "utf8",
+        value: "/private/state/operations/exact-invocation/version.candidate",
+      },
+      bytes: Array.from(new TextEncoder().encode("1.4.2\n")),
+      fingerprint: "observed",
+      matches_recorded_before: true,
+      read_at_ms: 1,
+    },
+  });
+  const bridge: Bridge = {
+    epoch: 1,
+    request,
+    capabilities: async () => ({ writes_enabled: false }),
+    writeStatus: async () => false,
+    pick: async () => null,
+    cancel: async () => {},
+  };
+  render(
+    <VersionActionRecord
+      item={item()}
+      bridge={bridge}
+      workspace="ws"
+      enabled={false}
+      busy={false}
+      act={(f) => f()}
+    />,
+  );
+  expect(request).not.toHaveBeenCalled();
+  fireEvent.click(
+    screen.getByRole("button", { name: "Inspect retained version file" }),
+  );
+  await screen.findByRole("region", {
+    name: "Retained version file inspection",
+  });
+  expect(request).toHaveBeenCalledExactlyOnceWith({
+    kind: "version_retained_file",
+    workspace: "ws",
+    operation: "exact-invocation",
+  });
+  expect(
+    screen.getByText("Retained bytes match the recorded original."),
+  ).toBeTruthy();
+  expect(screen.getByText("1.4.2")).toBeTruthy();
+  fireEvent.click(
+    screen.getByRole("button", { name: "Review staging exact version result" }),
+  );
+  expect(request).toHaveBeenCalledOnce();
 });

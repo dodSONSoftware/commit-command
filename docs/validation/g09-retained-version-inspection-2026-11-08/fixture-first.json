@@ -1,0 +1,41 @@
+{
+  "root": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr",
+  "workspace_root": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace",
+  "parent": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent",
+  "middle": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle",
+  "leaf": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle/leaf",
+  "control": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/unselected",
+  "state": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/state",
+  "workspace": "8fbb404a-a70e-47fe-a911-3bf94a4ee709",
+  "entries": {
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/unselected": "02fee984-8794-4793-b047-7dd0b709ba09",
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle/leaf": "0c13b924-9371-40ac-a754-2f6705a3afcb",
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent": "17c0aec8-df8d-4c6e-9ae3-5518aa395ea5",
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle": "407fa849-c4fa-4e1f-8fc8-bfb8e3822cb7"
+  },
+  "heads": {
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent": "8df29fca0127da252cf1fb2c3923670b3e37d715",
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle": "5217e9f7802acbf1f31b72bbc868c41882e265cd",
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle/leaf": "f7e28deffbceab9f11358cfba6113bede121f500",
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/unselected": "e9bfc641cb50a16e8914d1fe4b6b8be519560c37"
+  },
+  "app": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/Commit Command G09 Retained Ordinary.app",
+  "ordinary_app": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/Commit Command G09 Action Ordinary.app",
+  "features": [
+    "custom-protocol"
+  ],
+  "build_base_commit": "b8f956db7afceafa7d86cbc7f8ce1e36c35ae740",
+  "ordinary_features": [
+    "custom-protocol"
+  ],
+  "server_old_by_worktree": {
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle": "2dbf7c743f1cf3e9b9120683d40dfedbb9301eed",
+    "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle/leaf": "4b6e1ea1dbeabd9350368a24ad83206366dc7608"
+  },
+  "app_sha256": "22a5afe67ec2c713027729181981aa9201e5c545fc1b1c77f239b77359830982",
+  "ordinary_app_sha256": "f950a700a7abb3f0bc97b3f5b311a61eb4011ed2ad9def9ac45786a6de781f9d",
+  "version_target": "/private/tmp/gitfleet-m3-native-g05-three-level-xadtjgtr/workspace/parent/middle/leaf/version",
+  "version_worktree": "0c13b924-9371-40ac-a754-2f6705a3afcb",
+  "local_transport_enabled": false,
+  "trace_initial_lines": 2758
+}

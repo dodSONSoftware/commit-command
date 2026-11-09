@@ -71,3 +71,13 @@ pub struct VersionRecovery {
     pub file: FileStamp,
     pub backup_fingerprint: String,
 }
+
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+pub struct RetainedVersionFile {
+    pub operation: String,
+    pub location: NativePath,
+    pub bytes: Vec<u8>,
+    pub fingerprint: String,
+    pub matches_recorded_before: bool,
+    pub read_at_ms: u64,
+}

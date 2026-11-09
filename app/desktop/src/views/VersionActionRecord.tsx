@@ -1,6 +1,10 @@
-import type { Bridge } from "../services/bridge";
-import type { VersionInvocation } from "../services/response.generated";
-import { pathText } from "../stores/model";
+import { useState } from "react";
+import { value, type Bridge } from "../services/bridge";
+import type {
+  RetainedVersionFile,
+  VersionInvocation,
+} from "../services/response.generated";
+import { bytes, pathText } from "../stores/model";
 export function VersionActionRecord({
   item,
   bridge,
@@ -16,8 +20,12 @@ export function VersionActionRecord({
   busy: boolean;
   act: (f: () => Promise<void>) => Promise<void>;
 }) {
+  const [retained, setRetained] = useState<RetainedVersionFile | null>(null);
   return (
-    <section aria-label="Version Action record">
+    <section
+      className="version-action-record"
+      aria-label="Version Action record"
+    >
       <h3>Version Action · {item.phase.replaceAll("_", " ")}</h3>
       <p>
         {pathText(item.plan.path)} · {item.plan.version.old} →{" "}
@@ -39,6 +47,51 @@ export function VersionActionRecord({
         </p>
       )}
       {item.issue && <p role="alert">{item.issue.message}</p>}
+      {item.definition_approved_at_ms != null && (
+        <button
+          disabled={busy}
+          onClick={() =>
+            void act(async () => {
+              setRetained(null);
+              setRetained(
+                value(
+                  await bridge.request({
+                    kind: "version_retained_file",
+                    workspace,
+                    operation: item.plan.id,
+                  }),
+                  "version_retained_file",
+                ),
+              );
+            })
+          }
+        >
+          Inspect retained version file
+        </button>
+      )}
+      {retained?.operation === item.plan.id && (
+        <section aria-label="Retained version file inspection">
+          <p>
+            Read-only inspection at{" "}
+            {new Date(retained.read_at_ms).toISOString()}. No file was restored,
+            staged or changed.
+          </p>
+          <p>
+            {retained.matches_recorded_before
+              ? "Retained bytes match the recorded original."
+              : "Retained bytes differ from the recorded original; inspect this candidate or external edit before manual reconciliation."}
+          </p>
+          <p>
+            Location: <code>{pathText(retained.location)}</code>
+          </p>
+          <p>
+            {retained.bytes.length} bytes · fingerprint{" "}
+            <code>{retained.fingerprint}</code>
+          </p>
+          <pre>{bytes(retained.bytes)}</pre>
+        </section>
+      )}
+
       {item.phase === "unconfirmed" && (
         <button
           disabled={busy || !enabled}

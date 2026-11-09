@@ -1,0 +1,10 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.50s
+     Running tests/version_actions.rs (app/core/target/debug/deps/version_actions-254d0f74e90d7f02)
+
+running 2 tests
+test retained_inspection_refuses_symlinks_hardlinks_parent_aliases_and_oversized_files ... ok
+test retained_inspection_is_bounded_scoped_read_only_and_available_after_revocation_or_move ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 10 filtered out; finished in 2.48s
+
