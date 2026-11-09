@@ -4442,9 +4442,10 @@
       "expected": "Preview exact resulting definitions/mappings, no name-based accidental rebind",
       "status": "partial",
       "evidence": [
-        "docs/reports/COMPLETION_P13B_MERGE_2026-11-09.md"
+        "docs/reports/COMPLETION_P13B_MERGE_2026-11-09.md",
+        "docs/reports/COMPLETION_P13B_CONTROLLER_2026-11-09.md"
       ],
-      "note": "No new execution claimed. Classify retained variants before running. November9: inert explicit ID-based merge planner, inactive scopes, fresh template revisions and exact raw-container/current-settings/identity guards pass. Product capture/UI/confirmation/apply/native variants remain open."
+      "note": "No new execution claimed. Classify retained variants before running. November9: inert explicit ID-based merge planner, inactive scopes, fresh template revisions and exact raw-container/current-settings/identity guards pass. Product capture/UI/confirmation/apply/native variants remain open. November9: Core native-file token/frozen preview/native Rust confirmation/safety export/atomic apply and stale/cancel/context/save-failure/active-job checks validated. Host picker/UI/native/installed/crash variants remain open; Keychain contention failures and successful reruns retained."
     },
     {
       "id": "IMPORT06",
@@ -4454,9 +4455,10 @@
       "status": "partial",
       "evidence": [
         "docs/reports/COMPLETION_P13A_AI_PORTABILITY_2026-11-09.md",
-        "docs/reports/COMPLETION_P13B_MERGE_2026-11-09.md"
+        "docs/reports/COMPLETION_P13B_MERGE_2026-11-09.md",
+        "docs/reports/COMPLETION_P13B_CONTROLLER_2026-11-09.md"
       ],
-      "note": "No new execution claimed. Classify retained variants before running. November9: AI-only payload publication and bounded unactivated preview reset auth/approvals with fresh import revisions; product UI, Action definitions, mapping/apply/native variants remain open. November9: inert explicit ID-based merge planner, inactive scopes, fresh template revisions and exact raw-container/current-settings/identity guards pass. Product capture/UI/confirmation/apply/native variants remain open."
+      "note": "No new execution claimed. Classify retained variants before running. November9: AI-only payload publication and bounded unactivated preview reset auth/approvals with fresh import revisions; product UI, Action definitions, mapping/apply/native variants remain open. November9: inert explicit ID-based merge planner, inactive scopes, fresh template revisions and exact raw-container/current-settings/identity guards pass. Product capture/UI/confirmation/apply/native variants remain open. November9: Core native-file token/frozen preview/native Rust confirmation/safety export/atomic apply and stale/cancel/context/save-failure/active-job checks validated. Host picker/UI/native/installed/crash variants remain open; Keychain contention failures and successful reruns retained."
     },
     {
       "id": "IMPORT07",
@@ -4465,18 +4467,21 @@
       "expected": "Preview digest stale, apply refused, no partial state",
       "status": "partial",
       "evidence": [
-        "docs/reports/COMPLETION_P13B_MERGE_2026-11-09.md"
+        "docs/reports/COMPLETION_P13B_MERGE_2026-11-09.md",
+        "docs/reports/COMPLETION_P13B_CONTROLLER_2026-11-09.md"
       ],
-      "note": "No new execution claimed. Classify retained variants before running. November9: inert explicit ID-based merge planner, inactive scopes, fresh template revisions and exact raw-container/current-settings/identity guards pass. Product capture/UI/confirmation/apply/native variants remain open."
+      "note": "No new execution claimed. Classify retained variants before running. November9: inert explicit ID-based merge planner, inactive scopes, fresh template revisions and exact raw-container/current-settings/identity guards pass. Product capture/UI/confirmation/apply/native variants remain open. November9: Core native-file token/frozen preview/native Rust confirmation/safety export/atomic apply and stale/cancel/context/save-failure/active-job checks validated. Host picker/UI/native/installed/crash variants remain open; Keychain contention failures and successful reruns retained."
     },
     {
       "id": "IMPORT08",
       "package": "P13B",
       "action": "Cancel/apply failure during new AI generation activation",
       "expected": "Old complete generation active or deterministically recoverable, never mixed settings",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/reports/COMPLETION_P13B_CONTROLLER_2026-11-09.md"
+      ],
+      "note": "No new execution claimed. Classify retained variants before running. November9: Core native-file token/frozen preview/native Rust confirmation/safety export/atomic apply and stale/cancel/context/save-failure/active-job checks validated. Host picker/UI/native/installed/crash variants remain open; Keychain contention failures and successful reruns retained."
     },
     {
       "id": "RESTORE01",

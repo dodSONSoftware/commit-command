@@ -45,6 +45,7 @@ struct Entry {
     view: Job,
     cancel: Cancellation,
     created: Instant,
+    finished: bool,
 }
 #[derive(Default)]
 struct Inner {
@@ -106,6 +107,7 @@ impl Jobs {
                     },
                     cancel: cancel.clone(),
                     created: Instant::now(),
+                    finished: false,
                 },
             );
         }
@@ -168,6 +170,7 @@ impl Jobs {
                         return;
                     }
                     if let Some(entry) = inner.jobs.get_mut(&job) {
+                        entry.finished = true;
                         match result {
                             Ok(value) if !cancel.is_cancelled() => {
                                 entry.view.phase = Phase::Complete;
@@ -209,6 +212,10 @@ impl Jobs {
         }
         self.inner.lock().map_err(|_| unavailable())?.limits = limits;
         Ok(())
+    }
+    pub(crate) fn is_idle(&self) -> Result<bool> {
+        let inner = self.inner.lock().map_err(|_| unavailable())?;
+        Ok(inner.active == 0 && inner.jobs.values().all(|entry| entry.finished))
     }
     pub(crate) fn list(&self) -> Result<Vec<Job>> {
         Ok(self
@@ -255,9 +262,60 @@ impl Jobs {
         }
     }
 }
+
 impl Drop for Jobs {
     fn drop(&mut self) {
         self.reset();
         let _ = self.wait_shutdown();
+    }
+}
+
+#[cfg(test)]
+mod idle_tests {
+    use super::*;
+    #[test]
+    fn cancelled_display_state_is_not_idle_until_the_owned_worker_finishes() {
+        let jobs = Jobs::default();
+        let review =
+            super::super::provider::Plan::discover(&super::super::config::ConnectionDraft {
+                id: None,
+                name: "Idle fixture".into(),
+                provider: super::super::config::Provider::Ollama,
+                endpoint: "http://127.0.0.1:1/".into(),
+                timeout_ms: 100,
+                authentication: Default::default(),
+            })
+            .unwrap()
+            .review();
+        let cancel = Cancellation::default();
+        cancel.cancel();
+        jobs.inner.lock().unwrap().jobs.insert(
+            "fixture".into(),
+            Entry {
+                view: Job {
+                    id: "fixture".into(),
+                    review,
+                    phase: Phase::Cancelled,
+                    result: None,
+                    error: None,
+                    error_kind: Some(ErrorKind::Cancelled),
+                },
+                cancel,
+                created: Instant::now(),
+                finished: false,
+            },
+        );
+        assert!(!jobs.is_idle().unwrap());
+        jobs.inner
+            .lock()
+            .unwrap()
+            .jobs
+            .get_mut("fixture")
+            .unwrap()
+            .finished = true;
+        assert!(jobs.is_idle().unwrap());
+        jobs.inner.lock().unwrap().active = 1;
+        assert!(!jobs.is_idle().unwrap());
+        jobs.inner.lock().unwrap().active = 0;
     }
 }

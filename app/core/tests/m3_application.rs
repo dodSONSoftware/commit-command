@@ -54,6 +54,492 @@ fn setup() -> (Fixture, Application, String, String) {
     let wt = i.entries[0].id.0.clone();
     (f, app, ws, wt)
 }
+fn ai_import_archive(f: &Fixture, name: &str) -> std::path::PathBuf {
+    use gitfleet_core::ai::{change::Change, config::*, store::Snapshot};
+    use sha2::{Digest, Sha256};
+    let settings = Settings::default();
+    let settings = settings
+        .changed(
+            &settings.revision,
+            Change::Connection(ConnectionDraft {
+                id: None,
+                name: "Source connection".into(),
+                provider: Provider::Ollama,
+                endpoint: "http://127.0.0.1:11434/".into(),
+                timeout_ms: 2000,
+                authentication: Default::default(),
+            }),
+        )
+        .unwrap();
+    let settings = settings
+        .changed(
+            &settings.revision,
+            Change::Profile(ProfileDraft {
+                id: None,
+                name: "Source profile".into(),
+                connection: settings.connections[0].id.clone(),
+                model: "fixture-model".into(),
+                system_message: "Exact source instructions\n\n".into(),
+                parameters: Default::default(),
+                template: settings.templates[0].id.clone(),
+                context_bytes: 16384,
+            }),
+        )
+        .unwrap();
+    let settings = settings
+        .changed(
+            &settings.revision,
+            Change::Assign {
+                scope: Scope::Application,
+                profile: Some(settings.profiles[0].id.clone()),
+            },
+        )
+        .unwrap();
+    let settings = settings
+        .changed(
+            &settings.revision,
+            Change::Instructions {
+                scope: Scope::Application,
+                text: "Imported application instructions\n\n".into(),
+            },
+        )
+        .unwrap();
+    let snapshot = Snapshot {
+        fingerprint: format!(
+            "{:x}",
+            Sha256::digest(serde_json::to_vec(&settings).unwrap())
+        ),
+        settings,
+    };
+    let destination = gitfleet_core::backup::publication::Destination::private_child(
+        &fs::canonicalize(&f.root).unwrap(),
+        "portable",
+    )
+    .unwrap();
+    gitfleet_core::ai::portability::publish(
+        &snapshot,
+        &destination,
+        name,
+        1,
+        &Cancellation::default(),
+    )
+    .unwrap();
+    f.root.join("portable").join(name)
+}
+fn ai_import_choices(source: &AiImportSource) -> gitfleet_core::ai::import::Choices {
+    use gitfleet_core::ai::import::{Choice, Choices};
+    Choices {
+        connections: source
+            .settings
+            .connections
+            .iter()
+            .map(|value| {
+                (
+                    value.id.clone(),
+                    Choice::Rename {
+                        name: format!("Imported {}", value.name),
+                    },
+                )
+            })
+            .collect(),
+        templates: source
+            .settings
+            .templates
+            .iter()
+            .map(|value| {
+                (
+                    value.id.clone(),
+                    Choice::Rename {
+                        name: format!("Imported {}", value.name),
+                    },
+                )
+            })
+            .collect(),
+        profiles: source
+            .settings
+            .profiles
+            .iter()
+            .map(|value| {
+                (
+                    value.id.clone(),
+                    Choice::Rename {
+                        name: format!("Imported {}", value.name),
+                    },
+                )
+            })
+            .collect(),
+        ..Choices::default()
+    }
+}
+fn ai_import_preview(app: &mut Application, source: &AiImportSource) -> AiImportPreview {
+    let Data::AiImportPreview(preview) = app
+        .request(
+            app.epoch(),
+            Request::PreviewAiImport {
+                source: source.source.clone(),
+                choices: ai_import_choices(source),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    preview
+}
+fn ai_import_review(app: &mut Application, preview: &AiImportPreview) -> ReviewDisplay {
+    let Data::Review(review) = app
+        .request(
+            app.epoch(),
+            Request::ReviewAiImport {
+                preview: preview.preview.clone(),
+                fingerprint: preview.fingerprint.clone(),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    review
+}
+#[test]
+fn ai_import_is_inert_until_native_confirmation_and_retains_verified_safety_state() {
+    let (f, mut app, ws, wt) = setup();
+    let mut navigation = DesktopState::default();
+    navigation
+        .drafts
+        .insert(wt, "Manual subject  \n\nExact body\n\n".into());
+    app.request(
+        app.epoch(),
+        Request::SaveState {
+            workspace: ws.clone(),
+            state: navigation.clone(),
+        },
+    )
+    .unwrap();
+    let before = tree_bytes(&f.repo);
+    let path = ai_import_archive(&f, "source.zip");
+    let archive_before = fs::read(&path).unwrap();
+    let source = app.register_ai_import(&path).unwrap();
+    let preview = ai_import_preview(&mut app, &source);
+    assert!(!f.root.join("state/ai").exists());
+    let review = ai_import_review(&mut app, &preview);
+    assert!(review.allow_in_read_only_build);
+    let observed_now = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_millis() as u64;
+    assert!(review.expires_at_ms <= observed_now + 300_000);
+    assert!(review
+        .summary
+        .contains("No provider request or credential-store access"));
+    assert!(review.content.contains(&preview.fingerprint));
+    let (capability, _) = app.begin_confirmation(&review.id).unwrap();
+    assert!(app.begin_confirmation(&review.id).is_err());
+    assert_eq!(
+        app.confirm(capability, false, Cancellation::default())
+            .unwrap_err()
+            .kind,
+        ErrorKind::Cancelled
+    );
+    assert!(!f.root.join("state/ai").exists());
+    assert!(!f.root.join("state/ai-import-safety").exists());
+    let preview = ai_import_preview(&mut app, &source);
+    let review = ai_import_review(&mut app, &preview);
+    assert!(app
+        .request(
+            app.epoch(),
+            Request::ReviewAiImport {
+                preview: preview.preview.clone(),
+                fingerprint: preview.fingerprint.clone()
+            }
+        )
+        .is_err());
+    let (capability, _) = app.begin_confirmation(&review.id).unwrap();
+    let result = app
+        .confirm(capability, true, Cancellation::default())
+        .unwrap();
+    let saved = gitfleet_core::ai::store::load(&f.root.join("state")).unwrap();
+    assert_eq!(
+        serde_json::to_value(&saved.settings).unwrap(),
+        serde_json::to_value(&preview.candidate).unwrap()
+    );
+    assert_ne!(saved.fingerprint, preview.current_fingerprint);
+    let safety: NativePath =
+        serde_json::from_value(result["ai_import"]["safety_backup"].clone()).unwrap();
+    let safety = gitfleet_core::backup::archive::ValidatedArchive::inspect(
+        fs::File::open(safety.to_path().unwrap()).unwrap(),
+        &Cancellation::default(),
+    )
+    .unwrap();
+    let old = gitfleet_core::ai::portability::preview(safety, &Cancellation::default()).unwrap();
+    assert!(old.settings.connections.is_empty());
+    assert_eq!(old.settings.templates.len(), 1);
+    assert!(app
+        .request(
+            app.epoch(),
+            Request::InspectAiImport {
+                source: source.source.clone()
+            }
+        )
+        .is_err());
+    app.shutdown().unwrap();
+    drop(app);
+    let mut app = Application::open(&f.root.join("state"), fixture_options(&f)).unwrap();
+    let Data::State(restored) = app
+        .request(app.epoch(), Request::LoadState { workspace: ws })
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert_eq!(restored.drafts, navigation.drafts);
+    assert_eq!(fs::read(&path).unwrap(), archive_before);
+    assert_eq!(
+        gitfleet_core::ai::store::load(&f.root.join("state"))
+            .unwrap()
+            .fingerprint,
+        saved.fingerprint
+    );
+    assert!(app
+        .request(
+            app.epoch(),
+            Request::InspectAiImport {
+                source: source.source
+            }
+        )
+        .is_err());
+    let database = rusqlite::Connection::open(f.root.join("state/state.db")).unwrap();
+    assert_eq!(
+        database
+            .query_row("SELECT count(*) FROM write_trust", [], |r| r
+                .get::<_, u32>(0))
+            .unwrap(),
+        0
+    );
+    assert_eq!(
+        database
+            .query_row("SELECT count(*) FROM write_operations", [], |r| r
+                .get::<_, u32>(0))
+            .unwrap(),
+        0
+    );
+    assert_eq!(before, tree_bytes(&f.repo));
+}
+
+#[test]
+fn ai_import_revalidates_archive_and_current_settings_before_review_and_apply() {
+    for change in [
+        "archive_before_review",
+        "archive_after_review",
+        "settings_after_review",
+    ] {
+        let (f, mut app, _ws, _wt) = setup();
+        let before = tree_bytes(&f.repo);
+        let path = ai_import_archive(&f, "source.zip");
+        let source = app.register_ai_import(&path).unwrap();
+        let preview = ai_import_preview(&mut app, &source);
+        if change == "archive_before_review" {
+            let different = ai_import_archive(&f, "different.zip");
+            fs::copy(different, &path).unwrap();
+            assert!(app
+                .request(
+                    app.epoch(),
+                    Request::ReviewAiImport {
+                        preview: preview.preview,
+                        fingerprint: preview.fingerprint
+                    }
+                )
+                .is_err());
+        } else {
+            let review = ai_import_review(&mut app, &preview);
+            let (capability, _) = app.begin_confirmation(&review.id).unwrap();
+            if change == "archive_after_review" {
+                let different = ai_import_archive(&f, "different.zip");
+                fs::copy(different, &path).unwrap();
+            } else {
+                let current = gitfleet_core::ai::store::load(&f.root.join("state")).unwrap();
+                app.request(
+                    app.epoch(),
+                    Request::SaveAiSettings {
+                        fingerprint: current.fingerprint,
+                        revision: current.settings.revision,
+                        change: gitfleet_core::ai::change::Change::Concurrency {
+                            global: 2,
+                            per_connection: 1,
+                        },
+                    },
+                )
+                .unwrap();
+            }
+            assert_eq!(
+                app.confirm(capability, true, Cancellation::default())
+                    .unwrap_err()
+                    .kind,
+                ErrorKind::StaleReview
+            );
+        }
+        assert!(!f.root.join("state/ai-import-safety").exists());
+        assert!(gitfleet_core::ai::store::load(&f.root.join("state"))
+            .unwrap()
+            .settings
+            .connections
+            .is_empty());
+        assert_eq!(before, tree_bytes(&f.repo));
+    }
+}
+
+#[test]
+fn ai_import_cancellation_safety_failure_and_context_replacement_cannot_activate() {
+    for failure in [
+        "cancel",
+        "safety",
+        "context",
+        "new_source",
+        "new_invalid_source",
+        "new_preview",
+        "new_invalid_preview",
+    ] {
+        let (f, mut app, _ws, _wt) = setup();
+        let path = ai_import_archive(&f, "source.zip");
+        let source = app.register_ai_import(&path).unwrap();
+        let preview = ai_import_preview(&mut app, &source);
+        let review = ai_import_review(&mut app, &preview);
+        let (capability, _) = app.begin_confirmation(&review.id).unwrap();
+        let cancel = Cancellation::default();
+        match failure {
+            "cancel" => cancel.cancel(),
+            "safety" => fs::write(
+                f.root.join("state/ai-import-safety"),
+                b"blocked destination",
+            )
+            .unwrap(),
+            "context" => app.reset_presentation().unwrap(),
+            "new_source" => {
+                app.register_ai_import(&path).unwrap();
+            }
+            "new_invalid_source" => {
+                let invalid = f.root.join("invalid.zip");
+                fs::write(&invalid, b"not a ZIP").unwrap();
+                assert!(app.register_ai_import(&invalid).is_err());
+                assert!(app
+                    .request(
+                        app.epoch(),
+                        Request::InspectAiImport {
+                            source: source.source.clone()
+                        }
+                    )
+                    .is_err());
+            }
+            "new_preview" => {
+                ai_import_preview(&mut app, &source);
+            }
+            "new_invalid_preview" => {
+                assert!(app
+                    .request(
+                        app.epoch(),
+                        Request::PreviewAiImport {
+                            source: source.source.clone(),
+                            choices: Default::default()
+                        }
+                    )
+                    .is_err());
+            }
+            _ => unreachable!(),
+        }
+        assert!(app.confirm(capability, true, cancel).is_err());
+        assert!(!f.root.join("state/ai").exists());
+        assert!(gitfleet_core::ai::store::load(&f.root.join("state"))
+            .unwrap()
+            .settings
+            .connections
+            .is_empty());
+    }
+}
+
+#[test]
+fn ai_import_save_failure_preserves_the_complete_old_generation() {
+    use std::os::unix::fs::PermissionsExt;
+    let (f, mut app, _ws, _wt) = setup();
+    let current = gitfleet_core::ai::store::load(&f.root.join("state")).unwrap();
+    app.request(
+        app.epoch(),
+        Request::SaveAiSettings {
+            fingerprint: current.fingerprint,
+            revision: current.settings.revision,
+            change: gitfleet_core::ai::change::Change::Concurrency {
+                global: 2,
+                per_connection: 1,
+            },
+        },
+    )
+    .unwrap();
+    let before = gitfleet_core::ai::store::load(&f.root.join("state")).unwrap();
+    let path = ai_import_archive(&f, "source.zip");
+    let source = app.register_ai_import(&path).unwrap();
+    let preview = ai_import_preview(&mut app, &source);
+    let review = ai_import_review(&mut app, &preview);
+    let (capability, _) = app.begin_confirmation(&review.id).unwrap();
+    fs::set_permissions(f.root.join("state/ai"), fs::Permissions::from_mode(0o500)).unwrap();
+    let result = app.confirm(capability, true, Cancellation::default());
+    fs::set_permissions(f.root.join("state/ai"), fs::Permissions::from_mode(0o700)).unwrap();
+    assert!(result.is_err());
+    assert_eq!(
+        gitfleet_core::ai::store::load(&f.root.join("state"))
+            .unwrap()
+            .fingerprint,
+        before.fingerprint
+    );
+    assert_eq!(
+        fs::read_dir(f.root.join("state/ai-import-safety"))
+            .unwrap()
+            .count(),
+        1
+    );
+}
+
+#[test]
+fn ai_import_mapped_repository_is_reinspected_before_apply() {
+    use gitfleet_core::ai::{config::Scope, import::ScopeMapping};
+    let (f, mut app, ws, wt) = setup();
+    let path = ai_import_archive(&f, "source.zip");
+    let source = app.register_ai_import(&path).unwrap();
+    let mut choices = ai_import_choices(&source);
+    choices.scopes.push(ScopeMapping {
+        source: Scope::Application,
+        target: Some(Scope::Repository {
+            workspace: WorkspaceId(ws),
+            worktree: WorktreeId(wt),
+        }),
+        replace_assignment: false,
+        replace_instructions: false,
+        profile: None,
+    });
+    let Data::AiImportPreview(preview) = app
+        .request(
+            app.epoch(),
+            Request::PreviewAiImport {
+                source: source.source,
+                choices,
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    let review = ai_import_review(&mut app, &preview);
+    let (capability, _) = app.begin_confirmation(&review.id).unwrap();
+    let before = tree_bytes(&f.repo);
+    fs::rename(f.repo.join(".git"), f.repo.join("saved-control")).unwrap();
+    let result = app.confirm(capability, true, Cancellation::default());
+    fs::rename(f.repo.join("saved-control"), f.repo.join(".git")).unwrap();
+    assert!(result.is_err());
+    assert!(!f.root.join("state/ai-import-safety").exists());
+    assert!(!f.root.join("state/ai").exists());
+    assert_eq!(before, tree_bytes(&f.repo));
+}
 #[test]
 fn ai_export_requires_native_destination_and_current_saved_fingerprint() {
     use gitfleet_core::backup::archive::ValidatedArchive;
@@ -2477,6 +2963,8 @@ fn reviewed_ai_diagnostic_runs_outside_storage_owner_and_cancels_without_git_aut
         time::{Duration, Instant},
     };
     let (f, mut app, _, _) = setup();
+    let import_path = ai_import_archive(&f, "busy-source.zip");
+    let import_source = app.register_ai_import(&import_path).unwrap();
     let before = tree_bytes(&f.repo);
     let listener = TcpListener::bind("127.0.0.1:0").unwrap();
     listener.set_nonblocking(true).unwrap();
@@ -2489,6 +2977,7 @@ fn reviewed_ai_diagnostic_runs_outside_storage_owner_and_cancels_without_git_aut
         let deadline = Instant::now() + Duration::from_secs(5);
         while Instant::now() < deadline && !stopped.load(Ordering::Relaxed) {
             if let Ok((mut stream, _)) = listener.accept() {
+                stream.set_nonblocking(false).unwrap();
                 stream
                     .set_read_timeout(Some(Duration::from_secs(2)))
                     .unwrap();
@@ -2543,6 +3032,16 @@ fn reviewed_ai_diagnostic_runs_outside_storage_owner_and_cancels_without_git_aut
         assert!(start.elapsed() < Duration::from_secs(2));
         thread::sleep(Duration::from_millis(5));
     }
+    let import_preview = ai_import_preview(&mut app, &import_source);
+    let import_review = ai_import_review(&mut app, &import_preview);
+    let (import_capability, _) = app.begin_confirmation(&import_review.id).unwrap();
+    assert_eq!(
+        app.confirm(import_capability, true, Cancellation::default())
+            .unwrap_err()
+            .kind,
+        ErrorKind::Busy
+    );
+    assert!(!f.root.join("state/ai-import-safety").exists());
     let start = Instant::now();
     app.request(app.epoch(), Request::Workspaces {}).unwrap();
     assert!(start.elapsed() < Duration::from_millis(500));

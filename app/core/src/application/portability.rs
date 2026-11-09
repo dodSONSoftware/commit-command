@@ -1,4 +1,9 @@
 use super::*;
+mod imports;
+pub(super) use imports::{
+    apply_import, inspect_import, prepare_import, review_import, ImportReview, Imports,
+};
+pub use imports::{AiImportPreview, AiImportSource};
 
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct AiExport {

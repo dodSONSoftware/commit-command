@@ -11,6 +11,17 @@ The [detailed completion handoff](implementation/README.md) supplies the executa
 remaining-work packages, decision worksheet, fixture/test procedures and complete
 requirement mapping. It does not accept gates or replace this live evidence ledger.
 
+### November 9 completion P13B Core AI import controller
+
+[Controller checkpoint](reports/COMPLETION_P13B_CONTROLLER_2026-11-09.md): native-only
+expiring file registration, frozen preview token, exact source/settings/identity
+revalidation, one-use native confirmation, verified safety export and atomic AI
+generation activation. Final98 library/preceding49 application/final18 AI cases,
+150 renderer/20+23 host, strict Clippy and release checks pass at the documented
+boundaries. Keychain deadline failures under concurrent validation are retained;
+isolated and full four-worker reruns passed without changing deadlines. Native
+file-picker/renderer controls are not yet wired; IMPORT05–IMPORT08 remain partial.
+
 ### November 9 completion P13B inert AI merge planner
 
 [Merge checkpoint](reports/COMPLETION_P13B_MERGE_2026-11-09.md): explicit stable-ID

@@ -76,6 +76,7 @@ pub fn publish(
 
 /// Unactivated metadata. Stable assignment IDs remain unresolved until a future
 /// import controller explicitly maps them; names never rebind identities here.
+#[derive(Clone)]
 pub struct Preview {
     pub manifest_fingerprint: String,
     pub archive_fingerprint: String,

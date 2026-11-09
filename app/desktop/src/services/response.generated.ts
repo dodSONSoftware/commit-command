@@ -6,6 +6,16 @@
  */
 export type Data =
   | {
+      kind: "ai_import_source";
+      value: AiImportSource;
+      [k: string]: unknown;
+    }
+  | {
+      kind: "ai_import_preview";
+      value: AiImportPreview;
+      [k: string]: unknown;
+    }
+  | {
       kind: "ai_export";
       value: AiExport;
       [k: string]: unknown;
@@ -195,6 +205,23 @@ export type Data =
       [k: string]: unknown;
     };
 /**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiScope".
+ */
+export type AiScope =
+  | {
+      kind: "application";
+    }
+  | {
+      kind: "workspace";
+      workspace: string;
+    }
+  | {
+      kind: "repository";
+      workspace: string;
+      worktree: string;
+    };
+/**
  * `display` is never used to reconstruct a path. Byte/wide encodings round-trip.
  *
  * This interface was referenced by `Response`'s JSON-Schema
@@ -215,6 +242,34 @@ export type NativePath =
       encoding: "windows_wide";
       value: number[];
       [k: string]: unknown;
+    };
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiProvider".
+ */
+export type AiProvider = "ollama" | "compatible";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiStyle".
+ */
+export type AiStyle = "plain" | "conventional";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiImportChoice".
+ */
+export type AiImportChoice =
+  | {
+      kind: "add";
+    }
+  | {
+      kind: "replace";
+    }
+  | {
+      kind: "rename";
+      name: string;
+    }
+  | {
+      kind: "skip";
     };
 /**
  * This interface was referenced by `Response`'s JSON-Schema
@@ -295,33 +350,6 @@ export type AiAuthentication = "none" | "stored_bearer";
  */
 export type AiPurpose =
   "discover" | "inference" | "assisted_messages" | "editor_test";
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "AiScope".
- */
-export type AiScope =
-  | {
-      kind: "application";
-    }
-  | {
-      kind: "workspace";
-      workspace: string;
-    }
-  | {
-      kind: "repository";
-      workspace: string;
-      worktree: string;
-    };
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "AiProvider".
- */
-export type AiProvider = "ollama" | "compatible";
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "AiStyle".
- */
-export type AiStyle = "plain" | "conventional";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "ObservedVersionState".
@@ -744,6 +772,142 @@ export interface Response {
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiImportSource".
+ */
+export interface AiImportSource {
+  archive_fingerprint: string;
+  available_scopes: AiScope[];
+  manifest_fingerprint: string;
+  path: NativePath;
+  settings: AiSettings;
+  source: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiSettings".
+ */
+export interface AiSettings {
+  assignments: AiAssignment[];
+  connection_concurrency: number;
+  connections: AiConnection[];
+  global_concurrency: number;
+  instructions: AiInstructions[];
+  profiles: AiProfile[];
+  revision: string;
+  templates: AiTemplate[];
+  version: number;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiAssignment".
+ */
+export interface AiAssignment {
+  profile: string;
+  scope: AiScope;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiConnection".
+ */
+export interface AiConnection {
+  authentication?: "none" | "stored_bearer";
+  endpoint: string;
+  endpoint_approval: string;
+  id: string;
+  name: string;
+  provider: AiProvider;
+  revision: string;
+  timeout_ms: number;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiInstructions".
+ */
+export interface AiInstructions {
+  scope: AiScope;
+  text: string;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiProfile".
+ */
+export interface AiProfile {
+  connection: string;
+  context_bytes: number;
+  id: string;
+  model: string;
+  name: string;
+  parameters: AiParameters;
+  revision: string;
+  system_message: string;
+  template: string;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiParameters".
+ */
+export interface AiParameters {
+  context_size?: number | null;
+  min_p?: number | null;
+  output_tokens?: number | null;
+  repetition_penalty?: number | null;
+  seed?: number | null;
+  stop?: string[] | null;
+  temperature?: number | null;
+  top_k?: number | null;
+  top_p?: number | null;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiTemplate".
+ */
+export interface AiTemplate {
+  examples: string[];
+  id: string;
+  name: string;
+  revision: string;
+  rules: AiRules;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiRules".
+ */
+export interface AiRules {
+  allow_scope: boolean;
+  allowed_types: string[];
+  forbid_trailing_period: boolean;
+  instructions: string;
+  style: AiStyle;
+  subject_max_chars: number;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiImportPreview".
+ */
+export interface AiImportPreview {
+  archive_fingerprint: string;
+  candidate: AiSettings;
+  changes: AiImportEntityChange[];
+  current_fingerprint: string;
+  fingerprint: string;
+  preview: string;
+  source: string;
+  unassigned_scopes: AiScope[];
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiImportEntityChange".
+ */
+export interface AiImportEntityChange {
+  choice: AiImportChoice;
+  entity: string;
+  source_id: string;
+  target_id?: string | null;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "AiExport".
  */
 export interface AiExport {
@@ -930,104 +1094,6 @@ export interface AiSettingsSnapshot {
   fingerprint: string;
   settings: AiSettings;
   [k: string]: unknown;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "AiSettings".
- */
-export interface AiSettings {
-  assignments: AiAssignment[];
-  connection_concurrency: number;
-  connections: AiConnection[];
-  global_concurrency: number;
-  instructions: AiInstructions[];
-  profiles: AiProfile[];
-  revision: string;
-  templates: AiTemplate[];
-  version: number;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "AiAssignment".
- */
-export interface AiAssignment {
-  profile: string;
-  scope: AiScope;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "AiConnection".
- */
-export interface AiConnection {
-  authentication?: "none" | "stored_bearer";
-  endpoint: string;
-  endpoint_approval: string;
-  id: string;
-  name: string;
-  provider: AiProvider;
-  revision: string;
-  timeout_ms: number;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "AiInstructions".
- */
-export interface AiInstructions {
-  scope: AiScope;
-  text: string;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "AiProfile".
- */
-export interface AiProfile {
-  connection: string;
-  context_bytes: number;
-  id: string;
-  model: string;
-  name: string;
-  parameters: AiParameters;
-  revision: string;
-  system_message: string;
-  template: string;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "AiParameters".
- */
-export interface AiParameters {
-  context_size?: number | null;
-  min_p?: number | null;
-  output_tokens?: number | null;
-  repetition_penalty?: number | null;
-  seed?: number | null;
-  stop?: string[] | null;
-  temperature?: number | null;
-  top_k?: number | null;
-  top_p?: number | null;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "AiTemplate".
- */
-export interface AiTemplate {
-  examples: string[];
-  id: string;
-  name: string;
-  revision: string;
-  rules: AiRules;
-}
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "AiRules".
- */
-export interface AiRules {
-  allow_scope: boolean;
-  allowed_types: string[];
-  forbid_trailing_period: boolean;
-  instructions: string;
-  style: AiStyle;
-  subject_max_chars: number;
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema

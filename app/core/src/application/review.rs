@@ -22,6 +22,7 @@ pub(super) struct AiSourceBinding {
     pub captured: crate::ai::capture::Captured,
 }
 pub(super) enum Action {
+    AiImport(Box<super::portability::ImportReview>),
     Ai {
         plan: Box<crate::ai::provider::Plan>,
         limits: crate::ai::jobs::Limits,
@@ -151,12 +152,24 @@ impl Application {
     }
     pub(super) fn set_review(&mut self, action: Action) -> Result<ReviewDisplay> {
         let id = Uuid::new_v4().to_string();
-        let allow_in_read_only_build = matches!(&action, Action::Ai { .. });
+        let lifetime = match &action {
+            Action::AiImport(plan) => plan.remaining_lifetime(),
+            _ => Duration::from_secs(600),
+        };
+        if lifetime.is_zero() {
+            return Err(stale());
+        }
+        let allow_in_read_only_build = matches!(&action, Action::Ai { .. } | Action::AiImport(_));
         let ai_request_fingerprint = match &action {
             Action::Ai { plan, .. } => Some(plan.review().fingerprint),
             _ => None,
         };
         let (title, summary, content) = match &action {
+            Action::AiImport(plan) => (
+                "Review imported AI configuration".into(),
+                format!("Apply only the complete candidate below. Authentication and destination approvals on imported entities are reset; imported assignments use only the explicitly mapped identities. Unmapped scopes remain unassigned. A verified safety export of current AI metadata and old complete generations are retained. No provider request or credential-store access; no Git write, hook, Action or automatic run is authorized. Archive/current-settings/identity drift stops apply.\nPreview digest: {}\nArchive SHA-256: {}", plan.view.fingerprint, plan.view.archive_fingerprint),
+                serde_json::to_string_pretty(&plan.view)?,
+            ),
             Action::Ai { plan, .. } => {
                 let review = plan.review();
                 let scope=if review.source.is_some() {"This transfers the exact filtered repository content below. Inspect coverage and omissions. Incomplete analysis may suggest text only; no automatic commit is authorized."}else{"No repository content is captured by this diagnostic."};
@@ -245,7 +258,7 @@ impl Application {
             allow_in_read_only_build,
             ai_request_fingerprint,
             epoch: self.epoch,
-            expires_at_ms: now_ms() + 600000,
+            expires_at_ms: now_ms().saturating_add(lifetime.as_millis() as u64),
             title,
             summary: display_text(summary),
             content: display_text(content),
@@ -263,6 +276,9 @@ impl Application {
     pub fn review(&self, id: &str) -> Result<ReviewDisplay> {
         let p = self.pending.as_ref().ok_or_else(stale)?;
         if p.id != id || p.epoch != self.epoch || p.created.elapsed() > Duration::from_secs(600) {
+            return Err(stale());
+        }
+        if matches!(&p.action, Action::AiImport(plan) if plan.remaining_lifetime().is_zero()) {
             return Err(stale());
         }
         Ok(p.display.clone())
@@ -327,6 +343,7 @@ impl Application {
             ));
         }
         let result = match p.action {
+            Action::AiImport(plan) => super::portability::apply_import(self, *plan, &cancellation)?,
             Action::Ai {
                 plan,
                 limits,

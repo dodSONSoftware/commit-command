@@ -2,6 +2,20 @@
 
 export type Request =
   | {
+      kind: "inspect_ai_import";
+      source: string;
+    }
+  | {
+      choices: AiImportChoices;
+      kind: "preview_ai_import";
+      source: string;
+    }
+  | {
+      fingerprint: string;
+      kind: "review_ai_import";
+      preview: string;
+    }
+  | {
       fingerprint: string;
       kind: "export_ai_settings";
       picker: string;
@@ -385,6 +399,33 @@ export type Request =
       operation: string;
       workspace: string;
     };
+export type AiImportChoice =
+  | {
+      kind: "add";
+    }
+  | {
+      kind: "replace";
+    }
+  | {
+      kind: "rename";
+      name: string;
+    }
+  | {
+      kind: "skip";
+    };
+export type AiScope =
+  | {
+      kind: "application";
+    }
+  | {
+      kind: "workspace";
+      workspace: string;
+    }
+  | {
+      kind: "repository";
+      workspace: string;
+      worktree: string;
+    };
 export type AiProvider = "ollama" | "compatible";
 /**
  * `display` is never used to reconstruct a path. Byte/wide encodings round-trip.
@@ -461,19 +502,6 @@ export type AiChange =
       global: number;
       kind: "concurrency";
       per_connection: number;
-    };
-export type AiScope =
-  | {
-      kind: "application";
-    }
-  | {
-      kind: "workspace";
-      workspace: string;
-    }
-  | {
-      kind: "repository";
-      workspace: string;
-      worktree: string;
     };
 export type Increment = "major" | "minor" | "patch";
 /**
@@ -635,6 +663,45 @@ export type WriteRequest =
       [k: string]: unknown;
     };
 
+export interface AiImportChoices {
+  connections: {
+    [k: string]: AiImportChoice;
+  };
+  import_concurrency: boolean;
+  profile_links: {
+    [k: string]: AiImportProfileLinks;
+  };
+  profiles: {
+    [k: string]: AiImportChoice;
+  };
+  scopes: AiImportScopeMapping[];
+  templates: {
+    [k: string]: AiImportChoice;
+  };
+}
+export interface AiImportProfileLinks {
+  /**
+   * Explicitly use this existing connection instead of the imported dependency.
+   */
+  connection?: string | null;
+  /**
+   * Explicitly use this existing template instead of the imported dependency.
+   */
+  template?: string | null;
+}
+export interface AiImportScopeMapping {
+  /**
+   * Explicit existing profile, useful when the source profile is skipped.
+   */
+  profile?: string | null;
+  replace_assignment: boolean;
+  replace_instructions: boolean;
+  source: AiScope;
+  /**
+   * None explicitly leaves this source scope unassigned.
+   */
+  target?: AiScope | null;
+}
 export interface AiConnectionDraft {
   authentication?: "none" | "stored_bearer";
   endpoint: string;

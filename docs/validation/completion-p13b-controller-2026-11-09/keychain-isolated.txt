@@ -1,0 +1,8 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.12s
+     Running unittests src/main.rs (app/desktop/src-tauri/target/debug/deps/gitfleet_desktop-14db3fb11cee0dbd)
+
+running 1 test
+test ai_credentials::tests::actual_private_keychain_round_trip_and_wrong_endpoint_refusal ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 23 filtered out; finished in 8.69s
+

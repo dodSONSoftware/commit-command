@@ -15,6 +15,7 @@ pub use bulk::{
 mod monitor;
 mod portability;
 pub use portability::AiExport;
+pub use portability::{AiImportPreview, AiImportSource};
 mod review;
 mod state;
 use crate::{
@@ -51,6 +52,17 @@ fn stale() -> Error {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Request {
+    InspectAiImport {
+        source: String,
+    },
+    PreviewAiImport {
+        source: String,
+        choices: crate::ai::import::Choices,
+    },
+    ReviewAiImport {
+        preview: String,
+        fingerprint: String,
+    },
     ExportAiSettings {
         picker: String,
         fingerprint: String,
@@ -406,6 +418,8 @@ pub struct OperationPage {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "kind", content = "value", rename_all = "snake_case")]
 pub enum Data {
+    AiImportSource(AiImportSource),
+    AiImportPreview(AiImportPreview),
     AiExport(AiExport),
     AiContext(crate::ai::capture::Captured),
     AiJobs(Vec<crate::ai::jobs::Job>),
@@ -477,6 +491,7 @@ pub struct Application {
     ai_jobs: crate::ai::jobs::Jobs,
     ai_secret_store: Option<std::sync::Arc<dyn crate::ai::credentials::SecretStore>>,
     pickers: std::collections::BTreeMap<String, (PathBuf, Instant)>,
+    ai_imports: portability::Imports,
 }
 impl Application {
     pub fn open(directory: &Path, options: Options) -> Result<Self> {
@@ -498,6 +513,7 @@ impl Application {
             ai_jobs: Default::default(),
             ai_secret_store: None,
             pickers: Default::default(),
+            ai_imports: Default::default(),
         };
         app.restart_monitor()?;
         Ok(app)
@@ -681,6 +697,7 @@ impl Application {
         Ok(())
     }
     fn invalidate(&mut self) -> Result<()> {
+        self.ai_imports = Default::default();
         self.ai_jobs.reset();
         self.epoch = self.epoch.wrapping_add(1);
         self.pickers.clear();
@@ -946,6 +963,20 @@ impl Application {
                     &profile.parameters,
                 )?;
                 Data::Review(self.review_ai_plan(plan)?)
+            }
+            Request::InspectAiImport { source } => {
+                Data::AiImportSource(portability::inspect_import(self, &source)?)
+            }
+            Request::PreviewAiImport { source, choices } => {
+                Data::AiImportPreview(portability::prepare_import(self, &source, choices)?)
+            }
+            Request::ReviewAiImport {
+                preview,
+                fingerprint,
+            } => {
+                let plan = portability::review_import(self, &preview, &fingerprint)?;
+                self.abandon_review()?;
+                Data::Review(self.set_review(review::Action::AiImport(Box::new(plan)))?)
             }
             Request::ExportAiSettings {
                 picker,

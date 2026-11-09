@@ -8,6 +8,7 @@ use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
+#[schemars(rename = "AiImportChoice")]
 pub enum Choice {
     Add,
     Replace,
@@ -16,6 +17,7 @@ pub enum Choice {
 }
 #[derive(Debug, Clone, Default, Serialize, Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
+#[schemars(rename = "AiImportProfileLinks")]
 pub struct ProfileLinks {
     /// Explicitly use this existing connection instead of the imported dependency.
     pub connection: Option<String>,
@@ -24,6 +26,7 @@ pub struct ProfileLinks {
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
+#[schemars(rename = "AiImportScopeMapping")]
 pub struct ScopeMapping {
     pub source: Scope,
     /// None explicitly leaves this source scope unassigned.
@@ -35,6 +38,7 @@ pub struct ScopeMapping {
 }
 #[derive(Debug, Clone, Default, Serialize, Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
+#[schemars(rename = "AiImportChoices")]
 pub struct Choices {
     pub connections: BTreeMap<String, Choice>,
     pub templates: BTreeMap<String, Choice>,
@@ -45,6 +49,7 @@ pub struct Choices {
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
+#[schemars(rename = "AiImportEntityChange")]
 pub struct EntityChange {
     pub entity: String,
     pub source_id: String,
@@ -126,6 +131,15 @@ impl Plan {
     }
     pub fn source_fingerprint(&self) -> &str {
         &self.archive
+    }
+    pub fn mapped_scopes(&self) -> impl Iterator<Item = &Scope> {
+        self.choices
+            .scopes
+            .iter()
+            .filter_map(|mapping| mapping.target.as_ref())
+    }
+    pub fn current_fingerprint(&self) -> &str {
+        &self.before
     }
     /// The controller must reread and reverify the archive, not echo a renderer hash.
     pub fn verify(

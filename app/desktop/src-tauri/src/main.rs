@@ -261,6 +261,8 @@ fn dispatch<R: tauri::Runtime>(
                 | Request::ReviewAiInference { .. }
                 | Request::ReviewAiMessages { .. }
                 | Request::ReviewAiEditorTest { .. }
+                | Request::ReviewAiImport { .. }
+                | Request::PreviewAiImport { .. }
                 | Request::ReviewVersionAction { .. }
                 | Request::ReviewVersionRecovery { .. }
                 | Request::ReviewVersionStage { .. }
@@ -1241,6 +1243,14 @@ mod tests {
             operation: "o".into()
         }));
         assert!(!mutating_request(&Request::AiJobs {}));
+        assert!(!mutating_request(&Request::PreviewAiImport {
+            source: "native-source".into(),
+            choices: Default::default()
+        }));
+        assert!(!mutating_request(&Request::ReviewAiImport {
+            preview: "frozen-preview".into(),
+            fingerprint: "digest".into()
+        }));
         assert!(!mutating_request(&Request::ExportAiSettings {
             picker: "native-picker".into(),
             fingerprint: "snapshot".into()

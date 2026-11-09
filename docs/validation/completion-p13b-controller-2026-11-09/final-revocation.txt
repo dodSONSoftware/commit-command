@@ -1,0 +1,9 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.40s
+     Running tests/m3_application.rs (app/core/target/debug/deps/m3_application-326b57338f7d1726)
+
+running 1 test
+test ai_import_cancellation_safety_failure_and_context_replacement_cannot_activate ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 48 filtered out; finished in 14.78s
+
