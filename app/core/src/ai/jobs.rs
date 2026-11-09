@@ -1,5 +1,5 @@
 //! Ephemeral AI jobs run independently of the serialized application/storage owner.
-use super::provider::{Approved, ProviderResult, Review, Secret};
+use super::provider::{Approved, ProviderResult, Review};
 use crate::{inspection::Cancellation, Error, ErrorKind, Result};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -65,7 +65,7 @@ impl Jobs {
     pub(crate) fn start(
         &mut self,
         approved: Approved,
-        secret: Option<Secret>,
+        store: Option<Arc<dyn super::credentials::SecretStore>>,
         key: String,
         limits: Limits,
         cancel: Cancellation,
@@ -138,7 +138,15 @@ impl Jobs {
                     std::thread::sleep(Duration::from_millis(5));
                 };
                 let result = if admitted {
-                    approved.execute(secret, cancel.clone())
+                    let secret = match approved.binding() {
+                        Some(binding) => store.as_ref().ok_or_else(|| Error::with_kind(ErrorKind::Unavailable, "Native AI secure store is unavailable; no unauthenticated fallback selected")).and_then(|store| store.get(binding, cancel.clone())).map(Some),
+                        None => Ok(None),
+                    };
+                    match secret {
+                        Ok(secret) if !cancel.is_cancelled() => approved.execute(secret, cancel.clone()),
+                        Ok(_) => Err(Error::with_kind(ErrorKind::Cancelled, "AI request cancelled before credential use")),
+                        Err(error) => Err(error),
+                    }
                 } else {
                     Err(Error::with_kind(
                         if cancel.is_cancelled() {

@@ -1,0 +1,31 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+   Compiling gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.39s
+     Running unittests src/main.rs (app/desktop/src-tauri/target/debug/deps/gitfleet_desktop-cbf2c11cbaf4a656)
+
+running 21 tests
+test ai_credentials::tests::credential_worker_entry ... ignored, Owned subprocess worker, explicitly invoked by the parent test
+test tests::production_configuration_has_no_remote_plugins_or_broad_permissions ... ok
+test shutdown::tests::close_snapshot_requires_exact_token_generation_and_is_consumed_once ... ok
+test tests::queue_dialog_and_shutdown_boundaries_fail_closed ... ok
+test security::tests::actual_caller_and_page_are_required ... ok
+test tests::renderer_reload_revokes_native_context_and_requests_core_reset ... ok
+test window_state::tests::saved_geometry_fits_changed_display_and_preserves_valid_position ... ok
+test window_state::tests::minimum_dimensions_follow_destination_scale_and_fit_small_work_areas ... ok
+test host_options::tests::local_transport_requires_sealed_native_fixture_and_never_defaults_on ... ok
+test host_options::tests::startup_requires_complete_explicit_ssh_policy_without_changing_default ... ok
+test host_options::tests::https_helper_policy_is_explicit_complete_and_contains_no_password_option ... ok
+test ai_credentials::tests::binding_is_canonical_endpoint_specific_and_contains_no_secret ... ok
+test shutdown::tests::malformed_unknown_oversized_and_incomplete_snapshots_are_rejected ... ok
+test tests::bulk_review_uses_the_same_write_gate_as_individual_proposals ... ok
+test tests::strict_envelope_rejects_oversize_version_unknown_fields_and_approval_json ... ok
+test tests::actual_generated_command_acl_separates_main_review_and_unprivileged_views ... ok
+test ai_credentials::tests::actual_keychain_backed_diagnostic_requires_approval_and_keeps_token_out_of_results ... ok
+test ai_credentials::tests::proven_running_credential_helper_timeout_reaps_only_the_owned_child ... ok
+private Keychain lock command: 6 ms; locked read: 428 ms
+test ai_credentials::tests::actual_private_keychain_round_trip_and_wrong_endpoint_refusal ... ok
+test ai_credentials::tests::credential_worker_requires_the_same_live_code_image ... ok
+test ai_credentials::tests::proven_running_credential_helper_cancellation_reaps_the_owned_child ... ok
+
+test result: ok. 20 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 13.41s
+

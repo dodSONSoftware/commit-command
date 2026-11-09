@@ -1,0 +1,31 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.06s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-990268db74c912b4)
+
+running 23 tests
+test ai::provider::tests::empty_tool_list_is_not_a_tool_invocation_and_bidi_model_ids_are_refused ... ok
+test ai::provider::tests::responses_refuse_partial_tools_fallback_and_invalid_models ... ok
+test ai::tests::capability_parameters_are_optional_bounded_and_provider_specific ... ok
+test ai::provider::tests::declined_or_expired_authority_cannot_contact_provider ... ok
+test ai::tests::endpoint_policy_canonicalizes_and_rejects_ambiguous_destinations ... ok
+test ai::tests::no_ai_default_is_valid_and_unavailable_only_for_ai ... ok
+test ai::provider::tests::provider_options_remain_optional_and_adapter_specific ... ok
+test ai::provider::tests::exact_request_uses_only_fixed_routes_and_stdin_for_payload_and_secret ... ok
+test ai::tests::templates_validate_structure_boundaries_and_static_examples_without_models ... ok
+test ai::tests::imports_and_connection_edits_clear_endpoint_metadata ... ok
+test ai::tests::settings_reject_duplicate_names_bad_references_versions_and_controls ... ok
+test ai::tests::edits_are_transactional_stale_guarded_and_preserve_reference_integrity ... ok
+test ai::tests::hierarchical_profiles_and_additive_instructions_have_no_silent_fallback ... ok
+test ai::tests::settings_round_trip_without_secrets_or_execution_authority ... ok
+test ai::provider::tests::absent_or_unapproved_authentication_cannot_reach_the_provider ... ok
+test ai::provider::tests::actual_both_provider_routes_preserve_exact_json_and_auth_without_redirects ... ok
+test ai::provider::tests::stored_authentication_is_exact_and_failure_never_contacts_an_unauthenticated_provider ... ok
+test ai::provider::tests::independent_jobs_enforce_global_and_connection_limits_and_shutdown_discards_results ... ok
+test ai::tests::external_prompt_edits_invalidate_editor_fingerprint_without_losing_text ... ok
+test ai::provider::tests::actual_discovery_sorts_models_and_rejects_redirect_auth_malformed_and_size ... ok
+test ai::tests::unsafe_and_interrupted_generation_files_are_preserved_and_refused ... ok
+test ai::tests::atomic_generations_preserve_previous_settings_and_external_text ... ok
+test ai::provider::tests::actual_running_inference_cancels_and_times_out_with_bounded_cleanup ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 27 filtered out; finished in 0.20s
+

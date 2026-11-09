@@ -1,0 +1,26 @@
+   Compiling objc2-app-kit v0.3.2
+   Compiling core-foundation-sys v0.8.7
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+   Compiling core-foundation v0.10.1
+   Compiling security-framework-sys v2.17.0
+   Compiling core-graphics-types v0.2.0
+   Compiling security-framework v3.7.0
+   Compiling core-graphics v0.25.0
+   Compiling objc2-web-kit v0.3.2
+   Compiling tao v0.37.2
+   Compiling window-vibrancy v0.8.1
+   Compiling muda v0.20.0
+   Compiling rfd v0.15.4
+   Compiling wry v0.57.1
+   Compiling tauri-runtime v2.12.2
+   Compiling tauri-runtime-wry v2.12.3
+   Compiling tauri v2.12.5
+   Compiling gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri)
+error[E0425]: cannot find value `before` in this scope
+   --> src/ai_credentials.rs:206:39
+    |
+206 |             after.status.success() && before.stdout == after.stdout,
+    |                                       ^^^^^^ not found in this scope
+
+For more information about this error, try `rustc --explain E0425`.
+error: could not compile `gitfleet-desktop` (bin "gitfleet-desktop" test) due to 1 previous error

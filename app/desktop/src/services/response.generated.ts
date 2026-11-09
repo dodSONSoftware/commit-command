@@ -237,6 +237,11 @@ export type AiProviderResult =
     };
 /**
  * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiAuthentication".
+ */
+export type AiAuthentication = "none" | "stored_bearer";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "AiPurpose".
  */
 export type AiPurpose = "discover" | "inference";
@@ -692,6 +697,8 @@ export interface AiCompletion {
  * via the `definition` "AiProviderReview".
  */
 export interface AiProviderReview {
+  authentication: AiAuthentication;
+  credential?: AiCredentialBinding | null;
   endpoint: string;
   fingerprint: string;
   model?: string | null;
@@ -700,6 +707,14 @@ export interface AiProviderReview {
   route: string;
   unencrypted: boolean;
   [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiCredentialBinding".
+ */
+export interface AiCredentialBinding {
+  connection: string;
+  endpoint: string;
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
@@ -738,6 +753,7 @@ export interface AiAssignment {
  * via the `definition` "AiConnection".
  */
 export interface AiConnection {
+  authentication?: "none" | "stored_bearer";
   endpoint: string;
   endpoint_approval: string;
   id: string;

@@ -294,3 +294,19 @@ are ephemeral and cancelled on reset/shutdown. Ordinary repository-write gating
 remains unchanged. HTTPS system trust, OS secure auth, actual provider and source
 context acceptance must be completed separately; see the
 [G09 diagnostic report](reports/G09_AI_PROVIDER_DIAGNOSTICS_2026-11-08.md).
+
+
+### M6 implementation envelope — secure credentials (November 8, 2026)
+
+M6-I002 is an engineering choice within authorized optional AI, not a new product
+interview approval. macOS bearer credentials bind to a saved connection UUID and
+canonical endpoint under a fixed application Keychain service. Native secure entry
+accepts only saved connection IDs from the webview; tokens stay outside configuration,
+renderer IPC, argv and temporary files. Credential calls use anonymous-pipe owned
+helpers with parent executable/live-code attestation, child-only noninteractive OS
+policy, a five-second total deadline, cancellation and shutdown reaping. Missing or
+locked credentials fail the affected request without fallback. An interrupted mutation
+reports uncertain outcome rather than retrying. No user search-list or parent
+interaction policy is changed. See [secure-auth checkpoint](reports/G09_AI_SECURE_AUTH_2026-11-08.md)
+for actual private-Keychain tests, native cancellation/missing-token evidence,
+retained counterevidence and untested real-user credential enrollment.

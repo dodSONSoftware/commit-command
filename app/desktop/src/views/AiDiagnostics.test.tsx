@@ -86,6 +86,7 @@ it("model discovery only populates models for the currently edited destination",
       error: null,
       error_kind: null,
       review: {
+        authentication: "none",
         endpoint: "http://other.test/",
         route: "http://other.test/api/tags",
         fingerprint: "other",
@@ -102,6 +103,7 @@ it("model discovery only populates models for the currently edited destination",
       error: null,
       error_kind: null,
       review: {
+        authentication: "none",
         endpoint: connection.endpoint,
         route: connection.endpoint + "api/tags",
         fingerprint: "current",
@@ -134,6 +136,7 @@ it("cancels only the chosen provider job", async () => {
       error: null,
       error_kind: null,
       review: {
+        authentication: "none",
         endpoint: connection.endpoint,
         route: connection.endpoint + "api/chat",
         fingerprint: "running",

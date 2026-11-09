@@ -15,6 +15,7 @@ fn configured() -> Settings {
             provider: Provider::Ollama,
             endpoint: "http://127.0.0.1:11434".into(),
             timeout_ms: 30000,
+            authentication: Default::default(),
         }),
     );
     change(
@@ -221,8 +222,13 @@ fn imports_and_connection_edits_clear_endpoint_metadata() {
     s.connections[0].endpoint_approval =
         crate::domain::digest(s.connections[0].endpoint.as_bytes());
     s.validate().unwrap();
+    s.connections[0].authentication = super::credentials::Authentication::StoredBearer;
     let imported = s.clone().imported().unwrap();
     assert!(imported.connections[0].endpoint_approval.is_empty());
+    assert_eq!(
+        imported.connections[0].authentication,
+        super::credentials::Authentication::None
+    );
     assert_ne!(imported.revision, s.revision);
     let c = &s.connections[0];
     let changed = change(
@@ -233,6 +239,7 @@ fn imports_and_connection_edits_clear_endpoint_metadata() {
             provider: c.provider,
             endpoint: c.endpoint.clone(),
             timeout_ms: c.timeout_ms,
+            authentication: c.authentication,
         }),
     );
     assert!(changed.connections[0].endpoint_approval.is_empty());

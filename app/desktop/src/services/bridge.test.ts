@@ -159,3 +159,12 @@ it("listens on the current native window and sends only the exact one-use close 
   unlisten();
   expect(dispose).toHaveBeenCalledOnce();
 });
+
+it("opens native AI token management using only a saved connection identifier", async () => {
+  vi.mocked(invoke).mockResolvedValueOnce(undefined);
+  const bridge = new NativeBridge();
+  await bridge.manageAiToken("saved-connection-id");
+  expect(invoke).toHaveBeenCalledExactlyOnceWith("manage_ai_token", {
+    connection: "saved-connection-id",
+  });
+});

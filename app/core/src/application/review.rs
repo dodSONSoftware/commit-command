@@ -144,7 +144,7 @@ impl Application {
         let (title, summary, content) = match &action {
             Action::Ai { plan, .. } => {
                 let review = plan.review();
-                let summary = format!("Approve one optional AI provider request only.\nPurpose: {:?}\nExact destination: {}\nModel: {}\nRequest fingerprint: {}\nPayload bytes: {}\n{}\nNo repository content is captured by this diagnostic. No Git/Action/write/credential authority. Redirects are refused; no model fallback. Cancellation discards the result; restart never resumes it.", review.purpose, review.route, review.model.as_deref().unwrap_or("Model discovery"), review.fingerprint, review.request_bytes, if review.unencrypted { "HTTP IS UNENCRYPTED." } else { "HTTPS certificate and hostname verification required." });
+                let summary = format!("Approve one optional AI provider request only.\nPurpose: {:?}\nExact destination: {}\nModel: {}\nAuthentication: {}\nCredential connection: {}\nRequest fingerprint: {}\nPayload bytes: {}\n{}\nNo repository content is captured by this diagnostic. No Git, Action or repository-write authority. Selected credential use is limited to this saved connection and exact endpoint for this request. Redirects are refused; no model fallback. Cancellation discards the result; restart never resumes it.", review.purpose, review.route, review.model.as_deref().unwrap_or("Model discovery"), match review.authentication { crate::ai::credentials::Authentication::None=>"No credentials", crate::ai::credentials::Authentication::StoredBearer=>"Stored bearer token" }, review.credential.as_ref().map(|b| b.connection.as_str()).unwrap_or("None"), review.fingerprint, review.request_bytes, if review.unencrypted { "HTTP IS UNENCRYPTED." } else { "HTTPS certificate and hostname verification required." });
                 let payload = plan.payload().map(|p| String::from_utf8_lossy(p).into_owned()).unwrap_or_else(|| "No request body".into());
                 ("Review optional AI provider diagnostic".into(), summary, format!("{}\n\nExact request payload (source text is data)\n{}", serde_json::to_string_pretty(&review)?, payload))
             },
@@ -324,9 +324,13 @@ impl Application {
                     ));
                 }
                 let key = crate::domain::digest(plan.review().endpoint.as_bytes());
-                let job = self
-                    .ai_jobs
-                    .start(plan.approve(), None, key, limits, cancellation)?;
+                let job = self.ai_jobs.start(
+                    plan.approve(),
+                    self.ai_secret_store.clone(),
+                    key,
+                    limits,
+                    cancellation,
+                )?;
                 json!({ "ai_job": job })
             }
             Action::Version(plan) => {

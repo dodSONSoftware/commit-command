@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-manage-ai-token"
+description = "Enables the manage_ai_token command without any pre-configured scope."
+commands.allow = ["manage_ai_token"]
+
+[[permission]]
+identifier = "deny-manage-ai-token"
+description = "Denies the manage_ai_token command without any pre-configured scope."
+commands.deny = ["manage_ai_token"]

@@ -1,4 +1,10 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+#[cfg(target_os = "macos")]
+mod ai_credentials;
+#[cfg(target_os = "macos")]
+mod ai_token_dialog;
+#[cfg(target_os = "macos")]
+use ai_token_dialog::manage_ai_token;
 mod host_options;
 #[cfg(feature = "native-acceptance-support")]
 mod native_acceptance;
@@ -61,6 +67,10 @@ struct Host {
     shutdown_complete: std::sync::atomic::AtomicBool,
 }
 enum Task {
+    AiCredentialBinding {
+        connection: String,
+        reply: mpsc::Sender<Result<gitfleet_core::ai::credentials::Binding, String>>,
+    },
     #[cfg(feature = "native-acceptance-support")]
     AcceptanceFault(gitfleet_core::writes::Phase),
     Request {
@@ -747,6 +757,12 @@ fn worker(mut core: Application, rx: mpsc::Receiver<Task>, app: tauri::AppHandle
                     }
                 }
             }
+            Ok(Task::AiCredentialBinding { connection, reply }) => {
+                let _ = reply.send(
+                    core.ai_credential_binding(&connection)
+                        .map_err(|e| e.to_string()),
+                );
+            }
             Ok(Task::GetReview { id, reply }) => {
                 let _ = reply.send(core.review(&id).map_err(|e| e.to_string()));
             }
@@ -796,6 +812,10 @@ fn worker(mut core: Application, rx: mpsc::Receiver<Task>, app: tauri::AppHandle
                         error.kind
                     );
                 }
+                #[cfg(target_os = "macos")]
+                if let Err(error) = ai_credentials::shutdown_helpers() {
+                    eprintln!("AI credential helper shutdown failed: {:?}", error.kind);
+                }
                 host.shutdown_complete
                     .store(true, std::sync::atomic::Ordering::Release);
                 app.exit(0);
@@ -811,12 +831,24 @@ fn worker(mut core: Application, rx: mpsc::Receiver<Task>, app: tauri::AppHandle
         }
     }
 }
+#[cfg(not(target_os = "macos"))]
+#[tauri::command]
+async fn manage_ai_token<R: tauri::Runtime>(
+    window: WebviewWindow<R>,
+    connection: String,
+) -> Result<(), String> {
+    check(&window, "main")?;
+    let _ = connection;
+    Err("AI secure authentication is not supported on this platform".into())
+}
 fn run() -> Result<(), Box<dyn std::error::Error>> {
     let (directory, options) =
         host_options::parse(std::env::args_os().skip(1), std::env::var_os("HOME"))?;
     #[cfg(feature = "native-acceptance-support")]
     native_acceptance::initialize(&directory)?;
     let mut core = Application::open(&directory, options)?;
+    #[cfg(target_os = "macos")]
+    core.set_ai_secret_store(Arc::new(ai_credentials::KeychainStore::default()));
     #[cfg(feature = "native-acceptance-support")]
     native_acceptance::validate_workspaces(&mut core, &directory)?;
     let saved_placement = core.window_placement()?;
@@ -839,6 +871,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         .manage(host.clone())
         .invoke_handler(tauri::generate_handler![
             desktop_capabilities,
+            manage_ai_token,
             open_project_repository,
             dispatch,
             pick_directory,
@@ -1023,6 +1056,8 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 fn main() {
+    #[cfg(target_os = "macos")]
+    ai_credentials::maybe_worker();
     if std::env::args_os().nth(1).as_deref()
         == Some(std::ffi::OsStr::new("--gitfleet-credential-bridge"))
     {
@@ -1199,7 +1234,8 @@ mod tests {
                 name: "fixture".into(),
                 provider: gitfleet_core::ai::config::Provider::Ollama,
                 endpoint: "http://127.0.0.1:1/".into(),
-                timeout_ms: 100
+                timeout_ms: 100,
+                authentication: Default::default(),
             }
         }));
         assert!(!mutating_request(&Request::AiSettings {}));
@@ -1335,6 +1371,7 @@ mod tests {
             .manage(host.clone())
             .invoke_handler(tauri::generate_handler![
                 desktop_capabilities,
+                manage_ai_token,
                 open_project_repository,
                 dispatch,
                 job_status,
@@ -1432,6 +1469,15 @@ mod tests {
                 .to_string()
                 .contains("not allowed"));
         }
+        for window in [&review, &stranger] {
+            assert!(
+                invoke(window, "manage_ai_token", json!({"connection":"fixture"}))
+                    .unwrap_err()
+                    .to_string()
+                    .contains("not allowed")
+            );
+        }
+
         assert!(invoke(&main, "run_command", json!({"command":"touch sentinel"})).is_err());
         let job=invoke(&main,"dispatch",json!({"payload":json!({"version":1,"epoch":1,"request":{"kind":"workspaces"}}).to_string()})).unwrap();
         assert!(job.is_string());

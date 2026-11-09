@@ -8,9 +8,13 @@ audit. A presentation-independent Rust Core powers a Tauri/React desktop adapter
 Controlled local and bulk commits, supported authenticated observation/fetch/import,
 upstream setup, push dependency planning, separately reviewed pre-push checks
 and exact individual fast-forward publication with uncertain-outcome recovery
-are implemented within bounded acceptance envelopes. **Ordinary desktop builds still disable trust/write/network
-execution while acceptance remains partial. Broader individual push acceptance, bulk push, AI, SemVer
-Actions, general backup/restore and release readiness remain unfinished.**
+are implemented within bounded acceptance envelopes. Guided push queues, guarded
+SemVer Actions, optional AI settings/templates and native-approved synthetic provider
+diagnostics with endpoint-bound macOS Keychain authentication are also implemented
+with selected acceptance. **Ordinary desktop builds still disable managed Git
+trust grants, writes and remote execution while acceptance remains partial. AI source
+context, commit-message candidates, bounded automatic commits, general backup/restore
+and release readiness remain unfinished. Manual workflows require no AI setup.**
 
 Start with the [current implementation and acceptance record](docs/EXECUTION_STATUS.md)
 for completed work, open gates G01–G11, scope limits, validation and next steps.

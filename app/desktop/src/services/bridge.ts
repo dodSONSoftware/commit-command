@@ -15,6 +15,7 @@ export interface Bridge {
   epoch: number;
   onAboutRequested?(show: () => void): Promise<() => void>;
   openProjectRepository?(): Promise<void>;
+  manageAiToken?(connection: string): Promise<void>;
 
   onCloseRequested?(
     snapshot: () => CloseSnapshot,
@@ -62,6 +63,9 @@ export class NativeBridge implements Bridge {
   }
   openProjectRepository() {
     return invoke<void>("open_project_repository");
+  }
+  manageAiToken(connection: string) {
+    return invoke<void>("manage_ai_token", { connection });
   }
   capabilities() {
     return invoke<{ writes_enabled: boolean }>("desktop_capabilities");

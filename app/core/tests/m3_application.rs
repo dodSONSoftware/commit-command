@@ -2229,6 +2229,7 @@ fn optional_ai_settings_preserve_manual_work_and_use_lazy_atomic_storage() {
                     provider: Provider::Ollama,
                     endpoint: "http://127.0.0.1:1/".into(),
                     timeout_ms: 100,
+                    authentication: Default::default(),
                 }),
             },
         )
@@ -2354,6 +2355,7 @@ fn reviewed_ai_diagnostic_runs_outside_storage_owner_and_cancels_without_git_aut
             provider: Provider::Ollama,
             endpoint: endpoint.clone(),
             timeout_ms: 3000,
+            authentication: Default::default(),
         },
     };
     let Data::Review(review) = app.request(app.epoch(), request()).unwrap().data else {
@@ -2397,4 +2399,161 @@ fn reviewed_ai_diagnostic_runs_outside_storage_owner_and_cancels_without_git_aut
     server.join().unwrap();
     assert_eq!(before, tree_bytes(&f.repo));
     assert!(!f.root.join("state/ai").exists());
+}
+
+#[test]
+fn ai_credentials_require_current_saved_binding_and_native_approval_without_fallback() {
+    use gitfleet_core::ai::{
+        change::Change as AiChange,
+        config::{ConnectionDraft, Provider},
+        credentials::{Authentication, Binding, SecretStore},
+        provider::Secret,
+    };
+    use std::{
+        net::TcpListener,
+        sync::{
+            atomic::{AtomicUsize, Ordering},
+            Arc,
+        },
+        thread,
+        time::{Duration, Instant},
+    };
+    struct MissingStore(AtomicUsize);
+    impl SecretStore for MissingStore {
+        fn get(&self, _: &Binding, _: Cancellation) -> gitfleet_core::Result<Secret> {
+            self.0.fetch_add(1, Ordering::SeqCst);
+            Err(gitfleet_core::Error::with_kind(
+                ErrorKind::Unavailable,
+                "Fixture secure store missing; no fallback",
+            ))
+        }
+        fn set(&self, _: &Binding, _: &Secret) -> gitfleet_core::Result<()> {
+            unreachable!()
+        }
+        fn delete(&self, _: &Binding) -> gitfleet_core::Result<()> {
+            unreachable!()
+        }
+    }
+    let (f, mut app, ws, wt) = setup();
+    let before = tree_bytes(&f.repo);
+    let store = Arc::new(MissingStore(AtomicUsize::new(0)));
+    app.set_ai_secret_store(store.clone());
+    let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+    listener.set_nonblocking(true).unwrap();
+    let endpoint = format!("http://{}/", listener.local_addr().unwrap());
+    let Data::AiSettings(initial) = app
+        .request(app.epoch(), Request::AiSettings {})
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    let Data::AiSettings(saved) = app
+        .request(
+            app.epoch(),
+            Request::SaveAiSettings {
+                fingerprint: initial.fingerprint,
+                revision: initial.settings.revision,
+                change: AiChange::Connection(ConnectionDraft {
+                    id: None,
+                    name: "Auth fixture".into(),
+                    provider: Provider::Ollama,
+                    endpoint: endpoint.clone(),
+                    timeout_ms: 1000,
+                    authentication: Authentication::StoredBearer,
+                }),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    let connection = saved.settings.connections[0].id.clone();
+    let draft = ConnectionDraft {
+        id: Some(connection.clone()),
+        name: "Auth fixture".into(),
+        provider: Provider::Ollama,
+        endpoint: endpoint.clone(),
+        timeout_ms: 1000,
+        authentication: Authentication::StoredBearer,
+    };
+    assert!(app.ai_credential_binding("../../arbitrary").is_err());
+    assert_eq!(
+        app.ai_credential_binding(&connection).unwrap().endpoint,
+        endpoint
+    );
+    let mut changed = draft.clone();
+    changed.endpoint = format!("{endpoint}different/");
+    assert!(app
+        .request(
+            app.epoch(),
+            Request::ReviewAiDiscovery {
+                connection: changed
+            }
+        )
+        .is_err());
+    assert_eq!(store.0.load(Ordering::SeqCst), 0);
+    let Data::Review(review) = app
+        .request(
+            app.epoch(),
+            Request::ReviewAiDiscovery {
+                connection: draft.clone(),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert!(review.summary.contains(&connection));
+    assert!(review.summary.contains("Stored bearer token"));
+    let (cap, _) = app.begin_confirmation(&review.id).unwrap();
+    assert_eq!(
+        app.confirm(cap, false, Cancellation::default())
+            .unwrap_err()
+            .kind,
+        ErrorKind::Cancelled
+    );
+    assert_eq!(store.0.load(Ordering::SeqCst), 0);
+    let Data::Review(review) = app
+        .request(
+            app.epoch(),
+            Request::ReviewAiDiscovery { connection: draft },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    let (cap, _) = app.begin_confirmation(&review.id).unwrap();
+    app.confirm(cap, true, Cancellation::default()).unwrap();
+    let start = Instant::now();
+    loop {
+        let Data::AiJobs(jobs) = app.request(app.epoch(), Request::AiJobs {}).unwrap().data else {
+            panic!()
+        };
+        if serde_json::to_value(&jobs).unwrap()[0]["phase"] == "failed" {
+            break;
+        }
+        assert!(start.elapsed() < Duration::from_secs(2));
+        thread::sleep(Duration::from_millis(5));
+    }
+    assert_eq!(store.0.load(Ordering::SeqCst), 1);
+    assert_eq!(
+        listener.accept().unwrap_err().kind(),
+        std::io::ErrorKind::WouldBlock
+    );
+    for request in [
+        Request::Workspaces {},
+        Request::Refresh {
+            workspace: ws.clone(),
+            worktree: wt,
+        },
+        Request::LoadState { workspace: ws },
+    ] {
+        app.request(app.epoch(), request).unwrap();
+    }
+    assert_eq!(before, tree_bytes(&f.repo));
+    app.shutdown().unwrap();
 }

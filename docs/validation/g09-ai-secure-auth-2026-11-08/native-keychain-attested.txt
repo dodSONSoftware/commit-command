@@ -1,0 +1,12 @@
+   Compiling gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.25s
+     Running unittests src/main.rs (app/desktop/src-tauri/target/debug/deps/gitfleet_desktop-cbf2c11cbaf4a656)
+
+running 3 tests
+test ai_credentials::tests::credential_worker_entry ... ignored, Owned subprocess worker, explicitly invoked by the parent test
+test ai_credentials::tests::binding_is_canonical_endpoint_specific_and_contains_no_secret ... ok
+private Keychain lock command: 8 ms; locked read: 445 ms
+test ai_credentials::tests::actual_private_keychain_round_trip_and_wrong_endpoint_refusal ... ok
+
+test result: ok. 2 passed; 0 failed; 1 ignored; 0 measured; 14 filtered out; finished in 5.52s
+

@@ -1,0 +1,26 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+   Compiling gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.80s
+     Running unittests src/main.rs (app/desktop/src-tauri/target/debug/deps/gitfleet_desktop-cbf2c11cbaf4a656)
+
+running 6 tests
+test ai_credentials::tests::credential_worker_entry ... ignored, Owned subprocess worker, explicitly invoked by the parent test
+test ai_credentials::tests::binding_is_canonical_endpoint_specific_and_contains_no_secret ... ok
+
+thread 'ai_credentials::tests::proven_running_credential_helper_timeout_reaps_only_the_owned_child' (18301559) panicked at src/ai_credentials.rs:597:14:
+called `Result::unwrap()` on an `Err` value: Os { code: 2, kind: NotFound, message: "No such file or directory" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test ai_credentials::tests::proven_running_credential_helper_timeout_reaps_only_the_owned_child ... FAILED
+test ai_credentials::tests::credential_worker_requires_the_same_live_code_image ... ok
+test ai_credentials::tests::actual_keychain_backed_diagnostic_requires_approval_and_keeps_token_out_of_results ... ok
+private Keychain lock command: 7 ms; locked read: 596 ms
+test ai_credentials::tests::actual_private_keychain_round_trip_and_wrong_endpoint_refusal ... ok
+
+failures:
+
+failures:
+    ai_credentials::tests::proven_running_credential_helper_timeout_reaps_only_the_owned_child
+
+test result: FAILED. 4 passed; 1 failed; 1 ignored; 0 measured; 14 filtered out; finished in 7.93s
+
+error: test failed, to rerun pass `--bin gitfleet-desktop`

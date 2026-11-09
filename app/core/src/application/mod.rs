@@ -434,6 +434,7 @@ pub struct Application {
     monitor: Monitor,
     pending: Option<review::Pending>,
     ai_jobs: crate::ai::jobs::Jobs,
+    ai_secret_store: Option<std::sync::Arc<dyn crate::ai::credentials::SecretStore>>,
     pickers: std::collections::BTreeMap<String, (PathBuf, Instant)>,
 }
 impl Application {
@@ -454,10 +455,32 @@ impl Application {
             monitor: Monitor::with_options(timing)?,
             pending: None,
             ai_jobs: Default::default(),
+            ai_secret_store: None,
             pickers: Default::default(),
         };
         app.restart_monitor()?;
         Ok(app)
+    }
+    /// Native initialization only. No IPC request can install a credential backend.
+    pub fn set_ai_secret_store(
+        &mut self,
+        store: std::sync::Arc<dyn crate::ai::credentials::SecretStore>,
+    ) {
+        self.ai_secret_store = Some(store);
+    }
+    /// Return only nonsecret current binding metadata to the native credential UI.
+    pub fn ai_credential_binding(
+        &self,
+        connection: &str,
+    ) -> Result<crate::ai::credentials::Binding> {
+        let settings = crate::ai::store::load(self.writes.workspace.data_directory())?;
+        let c = settings
+            .settings
+            .connections
+            .iter()
+            .find(|c| c.id == connection)
+            .ok_or_else(|| invalid("Unknown AI connection"))?;
+        crate::ai::credentials::Binding::new(&c.id, &c.endpoint)
     }
     /// Native adapters call this only with the result of a native directory picker.
     pub fn register_directory(&mut self, path: &Path) -> Result<String> {
@@ -550,6 +573,16 @@ impl Application {
     }
     fn review_ai_plan(&mut self, plan: crate::ai::provider::Plan) -> Result<review::ReviewDisplay> {
         let settings = crate::ai::store::load(self.writes.workspace.data_directory())?;
+        if let Some(binding) = plan.credential_binding() {
+            if !settings
+                .settings
+                .connections
+                .iter()
+                .any(|c| c.id == binding.connection && c.endpoint == binding.endpoint)
+            {
+                return Err(invalid("Stored AI authentication requires a saved connection with this exact endpoint; save its metadata and token explicitly before testing"));
+            }
+        }
         let limits = crate::ai::jobs::Limits {
             global: settings.settings.global_concurrency,
             connection: settings.settings.connection_concurrency,

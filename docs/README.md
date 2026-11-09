@@ -49,8 +49,11 @@ These do not prove production readiness or complete hook compatibility.
 Use [EXECUTION_STATUS.md](EXECUTION_STATUS.md) as the single current record of
 implementation, acceptance gaps G01–G11, supported scope and next actions. M3–M5
 have implemented capabilities and selected native evidence; their remaining gates
-are open. Ordinary writes remain disabled; actual push, AI, Actions and general
-backup/release workflows remain unfinished. The crosswalk supplies requirement
+are open. Ordinary Git writes remain disabled. Exact publication/guided queues,
+guarded SemVer Actions and optional AI settings/synthetic diagnostics/secure auth
+have selected implementation and acceptance; repository-context AI candidates,
+automatic commits, general backup/restore and release acceptance remain open.
+The crosswalk supplies requirement
 ownership, and the completion plan supplies detailed work packages.
 
 `IMPLEMENTATION_STATUS.md` and `IMPLEMENTATION_HANDOFF.md` preserve older checkpoints.

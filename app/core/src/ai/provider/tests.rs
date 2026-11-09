@@ -6,6 +6,7 @@ fn connection(provider: Provider, endpoint: &str) -> ConnectionDraft {
         provider,
         endpoint: endpoint.into(),
         timeout_ms: 1000,
+        authentication: Default::default(),
     }
 }
 #[test]
@@ -241,7 +242,9 @@ fn good(provider: Provider) -> Vec<u8> {
 fn actual_both_provider_routes_preserve_exact_json_and_auth_without_redirects() {
     for provider in [Provider::Ollama, Provider::Compatible] {
         let server = Server::new(200, String::new(), good(provider), false);
-        let c = connection(provider, &server.address);
+        let mut c = connection(provider, &server.address);
+        c.id = Some(uuid::Uuid::new_v4().to_string());
+        c.authentication = super::super::credentials::Authentication::StoredBearer;
         let source = "synthetic source\nheader = \"injection\"\\\t";
         let plan = Plan::inference(
             &c,
@@ -486,4 +489,123 @@ fn empty_tool_list_is_not_a_tool_invocation_and_bidi_model_ids_are_refused() {
         &json!({"models":[{"name":"model\u{202e}spoof"}]})
     )
     .is_err());
+}
+
+struct FixtureStore {
+    account: String,
+    fail: bool,
+    calls: std::sync::atomic::AtomicUsize,
+}
+impl crate::ai::credentials::SecretStore for FixtureStore {
+    fn get(&self, binding: &crate::ai::credentials::Binding, _: Cancellation) -> Result<Secret> {
+        assert_eq!(binding.account().unwrap(), self.account);
+        self.calls.fetch_add(1, Ordering::SeqCst);
+        if self.fail {
+            Err(Error::with_kind(
+                ErrorKind::Unavailable,
+                "Fixture secure store locked; no fallback",
+            ))
+        } else {
+            Secret::new(b"fixture-store-token".to_vec())
+        }
+    }
+    fn set(&self, _: &crate::ai::credentials::Binding, _: &Secret) -> Result<()> {
+        Err(invalid("Fixture does not accept writes"))
+    }
+    fn delete(&self, _: &crate::ai::credentials::Binding) -> Result<()> {
+        Err(invalid("Fixture does not accept deletion"))
+    }
+}
+#[test]
+fn stored_authentication_is_exact_and_failure_never_contacts_an_unauthenticated_provider() {
+    use crate::ai::{
+        credentials::{Authentication, Binding},
+        jobs::{Jobs, Limits, Phase},
+    };
+    for fail in [false, true] {
+        let server = Server::new(200, String::new(), good(Provider::Ollama), false);
+        let mut c = connection(Provider::Ollama, &server.address);
+        let id = uuid::Uuid::new_v4().to_string();
+        c.id = Some(id.clone());
+        c.authentication = Authentication::StoredBearer;
+        let store = Arc::new(FixtureStore {
+            account: Binding::new(&id, &server.address)
+                .unwrap()
+                .account()
+                .unwrap(),
+            fail,
+            calls: std::sync::atomic::AtomicUsize::new(0),
+        });
+        let approved = Plan::inference(
+            &c,
+            "fixture-model",
+            "system",
+            "synthetic",
+            &Parameters::default(),
+        )
+        .unwrap()
+        .approve();
+        assert_eq!(store.calls.load(Ordering::SeqCst), 0);
+        let mut jobs = Jobs::default();
+        jobs.start(
+            approved,
+            Some(store.clone()),
+            "connection".into(),
+            Limits::default(),
+            Cancellation::default(),
+        )
+        .unwrap();
+        let start = Instant::now();
+        let job = loop {
+            let j = jobs.list().unwrap().remove(0);
+            if matches!(j.phase, Phase::Complete | Phase::Failed) {
+                break j;
+            }
+            assert!(start.elapsed() < Duration::from_secs(2));
+            thread::sleep(Duration::from_millis(5));
+        };
+        assert_eq!(store.calls.load(Ordering::SeqCst), 1);
+        assert!(!serde_json::to_string(&job)
+            .unwrap()
+            .contains("fixture-store-token"));
+        if fail {
+            assert!(matches!(job.phase, Phase::Failed));
+            assert!(server.request.lock().unwrap().is_none());
+        } else {
+            assert!(matches!(job.phase, Phase::Complete));
+            assert!(server
+                .captured()
+                .0
+                .to_ascii_lowercase()
+                .contains("authorization: bearer fixture-store-token"));
+        }
+        jobs.reset();
+        jobs.wait_shutdown().unwrap();
+    }
+}
+#[test]
+fn absent_or_unapproved_authentication_cannot_reach_the_provider() {
+    use crate::ai::credentials::Authentication;
+    let server = Server::new(200, String::new(), good(Provider::Ollama), false);
+    let mut c = connection(Provider::Ollama, &server.address);
+    c.id = Some(uuid::Uuid::new_v4().to_string());
+    c.authentication = Authentication::StoredBearer;
+    let e = Plan::discover(&c)
+        .unwrap()
+        .approve()
+        .execute(None, Cancellation::default())
+        .unwrap_err();
+    assert_eq!(e.kind, ErrorKind::Unavailable);
+    assert!(server.request.lock().unwrap().is_none());
+    c.authentication = Authentication::None;
+    let e = Plan::discover(&c)
+        .unwrap()
+        .approve()
+        .execute(
+            Some(Secret::new(b"unapproved-auth".to_vec()).unwrap()),
+            Cancellation::default(),
+        )
+        .unwrap_err();
+    assert_eq!(e.kind, ErrorKind::Unavailable);
+    assert!(server.request.lock().unwrap().is_none());
 }

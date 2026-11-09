@@ -1,0 +1,19 @@
+    Checking gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Checking gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri)
+error[E0282]: type annotations needed
+   --> src/ai_credentials.rs:191:13
+    |
+191 |         let cancel = Default::default();
+    |             ^^^^^^
+192 |         helpers.running.insert(id.clone(), cancel.clone());
+    |                                            ------ type must be known at this point
+    |
+help: consider giving `cancel` an explicit type
+    |
+191 |         let cancel: /* Type */ = Default::default();
+    |                   ++++++++++++
+
+For more information about this error, try `rustc --explain E0282`.
+error: could not compile `gitfleet-desktop` (bin "gitfleet-desktop") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `gitfleet-desktop` (bin "gitfleet-desktop" test) due to 1 previous error

@@ -50,6 +50,8 @@ pub struct ConnectionDraft {
     pub provider: Provider,
     pub endpoint: String,
     pub timeout_ms: u64,
+    #[serde(default)]
+    pub authentication: super::credentials::Authentication,
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
@@ -61,6 +63,8 @@ pub struct Connection {
     pub provider: Provider,
     pub endpoint: String,
     pub timeout_ms: u64,
+    #[serde(default)]
+    pub authentication: super::credentials::Authentication,
     pub endpoint_approval: String,
 }
 #[derive(Debug, Clone, Default, Serialize, Deserialize, JsonSchema)]
@@ -296,6 +300,9 @@ impl Settings {
                 .map(|v| (v.id.as_str(), v.name.as_str())),
         )?;
         for c in &self.connections {
+            if c.authentication == super::credentials::Authentication::StoredBearer {
+                super::credentials::Binding::new(&c.id, &c.endpoint)?;
+            }
             if endpoint(&c.endpoint)? != c.endpoint || !(100..=120000).contains(&c.timeout_ms) {
                 return Err(invalid("AI connection endpoint or timeout is invalid"));
             }

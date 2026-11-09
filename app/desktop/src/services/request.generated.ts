@@ -352,6 +352,7 @@ export type AiProvider = "ollama" | "compatible";
 export type AiStyle = "plain" | "conventional";
 export type AiChange =
   | {
+      authentication?: "none" | "stored_bearer";
       endpoint: string;
       id?: string | null;
       kind: "connection";
@@ -568,6 +569,7 @@ export type WriteRequest =
     };
 
 export interface AiConnectionDraft {
+  authentication?: "none" | "stored_bearer";
   endpoint: string;
   id?: string | null;
   name: string;

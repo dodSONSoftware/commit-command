@@ -1,0 +1,63 @@
+    Checking gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+   Compiling gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri)
+error[E0050]: method `get` has 2 parameters but the declaration in trait `gitfleet_core::ai::credentials::SecretStore::get` has 3
+   --> src/ai_credentials.rs:536:12
+    |
+536 |     fn get(&self, binding: &Binding) -> Result<Secret> {
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^ expected 3 parameters, found 2
+    |
+    = note: `get` from trait: `fn(&Self, &Binding, Cancellation) -> Result<Secret, gitfleet_core::Error>`
+help: add the missing parameter from the trait
+    |
+536 |     fn get(&self, binding: &Binding, cancellation: Cancellation) -> Result<Secret> {
+    |                                    ++++++++++++++++++++++++++++
+
+error[E0061]: this method takes 2 arguments but 1 argument was supplied
+   --> src/ai_credentials.rs:419:14
+    |
+419 |             .get(&request.binding)
+    |              ^^^------------------ argument #2 of type `Cancellation` is missing
+    |
+note: method defined here
+   --> /Users/randydodson/Documents/_code/git-fleet/app/core/src/ai/credentials.rs:47:8
+    |
+ 47 |     fn get(
+    |        ^^^
+help: provide the argument
+    |
+419 |             .get(&request.binding, /* Cancellation */)
+    |                                  ++++++++++++++++++++
+
+error[E0050]: method `get` has 2 parameters but the declaration in trait `gitfleet_core::ai::credentials::SecretStore::get` has 3
+   --> src/ai_credentials.rs:536:12
+    |
+536 |     fn get(&self, binding: &Binding) -> Result<Secret> {
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^ expected 3 parameters, found 2
+    |
+    = note: `get` from trait: `fn(&Self, &gitfleet_core::ai::credentials::Binding, gitfleet_core::inspection::Cancellation) -> Result<gitfleet_core::ai::provider::Secret, gitfleet_core::Error>`
+help: add the missing parameter from the trait
+    |
+536 |     fn get(&self, binding: &Binding, cancellation: gitfleet_core::inspection::Cancellation) -> Result<Secret> {
+    |                                    +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0061]: this method takes 2 arguments but 1 argument was supplied
+   --> src/ai_credentials.rs:419:14
+    |
+419 |             .get(&request.binding)
+    |              ^^^------------------ argument #2 of type `gitfleet_core::inspection::Cancellation` is missing
+    |
+note: method defined here
+   --> /Users/randydodson/Documents/_code/git-fleet/app/core/src/ai/credentials.rs:47:8
+    |
+ 47 |     fn get(
+    |        ^^^
+help: provide the argument
+    |
+419 |             .get(&request.binding, /* Cancellation */)
+    |                                  ++++++++++++++++++++
+
+Some errors have detailed explanations: E0050, E0061.
+For more information about an error, try `rustc --explain E0050`.
+error: could not compile `gitfleet-desktop` (bin "gitfleet-desktop") due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `gitfleet-desktop` (bin "gitfleet-desktop" test) due to 2 previous errors

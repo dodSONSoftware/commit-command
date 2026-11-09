@@ -55,12 +55,14 @@ function snapshot(): AiSettingsSnapshot {
     },
   };
 }
-function fixture() {
+function fixture(initial = snapshot()) {
   const request = vi
     .fn()
-    .mockResolvedValue({ kind: "ai_settings", value: snapshot() });
+    .mockResolvedValue({ kind: "ai_settings", value: initial });
+  const manageAiToken = vi.fn().mockResolvedValue(undefined);
   const bridge: Bridge = {
     epoch: 1,
+    manageAiToken,
     request,
     capabilities: async () => ({ writes_enabled: false }),
     writeStatus: async () => false,
@@ -76,7 +78,7 @@ function fixture() {
       <AiSettings bridge={bridge} workspace={null} disabled={false} />
     </>,
   );
-  return { request, user: userEvent.setup() };
+  return { request, manageAiToken, user: userEvent.setup() };
 }
 it("loads no AI configuration until explicitly opened and preserves manual drafts", async () => {
   const { request, user } = fixture();
@@ -114,6 +116,7 @@ it("saves only explicit nonsecret connection metadata with editor fingerprints",
       provider: "ollama",
       endpoint: "http://127.0.0.1:11434/",
       timeout_ms: 30000,
+      authentication: "none",
     },
   });
   expect(request.mock.calls).toHaveLength(2);
@@ -158,4 +161,79 @@ it("failed settings load stays local and offers close without changing the manua
   expect(screen.getByLabelText("Manual message")).toHaveValue(
     "Manual draft preserved",
   );
+});
+
+it("manages only a selected saved connection through the native token command", async () => {
+  const initial = snapshot();
+  initial.settings.connections.push({
+    id: "saved-connection",
+    revision: "revision",
+    name: "Saved fixture",
+    provider: "ollama",
+    endpoint: "https://fixture.invalid/",
+    timeout_ms: 1000,
+    endpoint_approval: "",
+    authentication: "none",
+  });
+  const { request, manageAiToken, user } = fixture(initial);
+  await user.click(screen.getByRole("button", { name: "AI settings…" }));
+  expect(
+    await screen.findByRole("button", {
+      name: "Manage token in native Keychain dialog…",
+    }),
+  ).toBeDisabled();
+  await user.selectOptions(
+    screen.getByLabelText("Edit AI connection"),
+    "saved-connection",
+  );
+  await user.click(
+    screen.getByRole("button", {
+      name: "Manage token in native Keychain dialog…",
+    }),
+  );
+  expect(manageAiToken).toHaveBeenCalledExactlyOnceWith("saved-connection");
+  expect(request.mock.calls.map((c) => c[0].kind)).toEqual(["ai_settings"]);
+  expect(
+    await screen.findByText(
+      "Native token dialog closed. Stored credentials are never displayed here.",
+    ),
+  ).toBeVisible();
+});
+
+it("requires an explicit visible bearer choice and saves only its nonsecret mode", async () => {
+  const { request, user } = fixture();
+  await user.click(screen.getByRole("button", { name: "AI settings…" }));
+  expect(
+    await screen.findByRole("radio", { name: "No authentication" }),
+  ).toBeChecked();
+  await user.click(
+    screen.getByRole("radio", {
+      name: "Use stored bearer token for this exact endpoint",
+    }),
+  );
+  expect(
+    screen.getByRole("radio", {
+      name: "Use stored bearer token for this exact endpoint",
+    }),
+  ).toBeChecked();
+  await user.type(
+    screen.getByLabelText("Connection name"),
+    "Explicit bearer fixture",
+  );
+  await user.click(
+    screen.getByRole("button", { name: "Save connection metadata" }),
+  );
+  expect(request).toHaveBeenLastCalledWith(
+    expect.objectContaining({
+      kind: "save_ai_settings",
+      change: expect.objectContaining({
+        kind: "connection",
+        authentication: "stored_bearer",
+      }),
+    }),
+  );
+  expect(request.mock.calls.map((c) => c[0].kind)).toEqual([
+    "ai_settings",
+    "save_ai_settings",
+  ]);
 });

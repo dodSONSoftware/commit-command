@@ -7,6 +7,24 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G09 endpoint-bound AI secure auth — implemented, selected acceptance passed
+
+[Secure-auth checkpoint](reports/G09_AI_SECURE_AUTH_2026-11-08.md): optional saved
+connection authentication now uses native-only macOS secure entry and endpoint-bound
+Keychain storage, isolated attested helpers, bounded deadlines/cancellation and no
+fallback on missing/locked credentials. Imported definitions reset authentication.
+Final Core library/application 50/32 passed; complete desktop runner passed (119
+renderer, ordinary host 20 + one ignored worker, all-feature host 23 + one ignored
+worker). Actual private-Keychain tests cover round trip, locked/wrong endpoint,
+approval, timeout and cancellation. Native ordinary missing-token request showed the
+exact saved binding, failed clearly and sent zero HTTP. Secure-field Escape, manual
+draft/refresh, two clean quits/restart/no replay, hashes, repository/journal/trust
+preservation, integrity and lock reopen passed. Initial slow locked lookups and the
+1.5-second deadline failure remain counterevidence in the report. No real user token
+was entered or modified. Source context/candidates/automatic authority, real-provider
+interoperability and broader G02–G11 acceptance remain open; next functional work is
+bounded repository context and assisted message generation.
+
 ### November 8 G09 native-reviewed provider diagnostics — implemented, selected acceptance passed
 
 [Provider diagnostic checkpoint](reports/G09_AI_PROVIDER_DIAGNOSTICS_2026-11-08.md):
@@ -735,7 +753,7 @@ authority. No default change, commit, push or release is authorized by this reco
 | M5C independently reviewed pre-push hook check | Implemented; selected automated/native acceptance passed | [Check report](reports/M5C_REVIEWED_PUSH_CHECKS_2026-11-03.md); hook approval only, unpublished history/no replay; selected native interruption/manager-refusal/bypass cases passed; broader G06 compatibility remains |
 | M5C individual push publication | Implemented; selected acceptance passed | Separate exact native publication, isolated ancestry/expected-old transport and observation recovery; broader G07 acceptance remains |
 | M5C bulk push publication | Guided per-item queue implemented; selected automated/native acceptance passed | Durable child-first scheduling, fresh post-child evidence, partial stop/retry and no-replay restart; [G08 report](reports/G08_GUIDED_PUSH_QUEUE_2026-11-08.md); broader acceptance remains |
-| M6 AI foundation | Configuration/storage/editor and approved synthetic diagnostics implemented; source integration pending | [Settings model](reports/G09_AI_SETTINGS_MODEL_2026-11-08.md); [storage/editor](reports/G09_AI_SETTINGS_STORAGE_2026-11-08.md); [provider diagnostics](reports/G09_AI_PROVIDER_DIAGNOSTICS_2026-11-08.md); secure auth and exact context/candidate pipeline remain G09 |
+| M6 AI foundation | Configuration/storage/editor and approved synthetic diagnostics implemented; source integration pending | [Settings model](reports/G09_AI_SETTINGS_MODEL_2026-11-08.md); [storage/editor](reports/G09_AI_SETTINGS_STORAGE_2026-11-08.md); [provider diagnostics](reports/G09_AI_PROVIDER_DIAGNOSTICS_2026-11-08.md); [secure auth](reports/G09_AI_SECURE_AUTH_2026-11-08.md) implemented; exact context/candidate pipeline remains G09 |
 | M7 AI commits / SemVer Actions | Typed provider-free SemVer invocation/recovery implemented; AI commits pending | [G09 Action report](reports/G09_SEMVER_ACTION_2026-11-08.md); separate stage/commit reviews, selected exact native evidence; broader recovery usability/native coverage and bounded AI authority remain |
 | M8 backup/retention/usability/release | Partial foundations only | Atomic storage, migrations and development bundles exist; general backup/restore, retention and release acceptance do not: G03, G10–G11 |
 

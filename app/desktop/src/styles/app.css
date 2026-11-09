@@ -1221,7 +1221,7 @@ footer button {
   display: block;
   margin: 12px 0;
 }
-.ai-settings-dialog label > input:not([type="checkbox"]),
+.ai-settings-dialog label > input:not([type="checkbox"]):not([type="radio"]),
 .ai-settings-dialog label > textarea,
 .ai-settings-dialog label > select {
   display: block;

@@ -1,0 +1,1 @@
+{"records": 582, "missing_declarations": [{"ecosystem": "npm", "name": "gitfleet-desktop", "version": "0.1.1", "first_party": true}]}

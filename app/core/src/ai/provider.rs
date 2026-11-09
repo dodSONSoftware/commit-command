@@ -35,6 +35,7 @@ pub struct Plan {
     fingerprint: String,
     purpose: Purpose,
     model: Option<String>,
+    binding: Option<super::credentials::Binding>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[schemars(rename = "AiProviderReview")]
@@ -46,6 +47,8 @@ pub struct Review {
     pub request_bytes: usize,
     pub fingerprint: String,
     pub model: Option<String>,
+    pub authentication: super::credentials::Authentication,
+    pub credential: Option<super::credentials::Binding>,
 }
 /// Native-confirmed, exact, one-use request. Not serializable or cloneable.
 pub(crate) struct Approved {
@@ -55,6 +58,9 @@ pub(crate) struct Approved {
 /// Ephemeral auth material from the native secure-store adapter; never serialized.
 pub struct Secret(Vec<u8>);
 impl Secret {
+    pub fn expose(&self) -> &[u8] {
+        &self.0
+    }
     pub fn new(bytes: Vec<u8>) -> Result<Self> {
         if bytes.is_empty()
             || bytes.len() > 4096
@@ -136,6 +142,17 @@ impl Plan {
         if body.as_ref().is_some_and(|b| b.len() > MAX_REQUEST) {
             return Err(invalid("AI request exceeds 2 MiB"));
         }
+        let binding =
+            if connection.authentication == super::credentials::Authentication::StoredBearer {
+                Some(super::credentials::Binding::new(
+                    connection.id.as_deref().ok_or_else(|| {
+                        invalid("Save the connection before using stored authentication")
+                    })?,
+                    &endpoint,
+                )?)
+            } else {
+                None
+            };
         let fingerprint = digest(&serde_json::to_vec(&(
             connection.provider,
             &endpoint,
@@ -144,6 +161,7 @@ impl Plan {
             &body,
             &model,
             purpose,
+            &binding,
         ))?);
         Ok(Self {
             provider: connection.provider,
@@ -154,6 +172,7 @@ impl Plan {
             fingerprint,
             purpose,
             model,
+            binding,
         })
     }
     pub fn discover(connection: &ConnectionDraft) -> Result<Self> {
@@ -221,7 +240,16 @@ impl Plan {
             request_bytes: self.body.as_ref().map_or(0, Vec::len),
             fingerprint: self.fingerprint.clone(),
             model: self.model.clone(),
+            credential: self.binding.clone(),
+            authentication: if self.binding.is_some() {
+                super::credentials::Authentication::StoredBearer
+            } else {
+                super::credentials::Authentication::None
+            },
         }
+    }
+    pub(crate) fn credential_binding(&self) -> Option<&super::credentials::Binding> {
+        self.binding.as_ref()
     }
     pub fn payload(&self) -> Option<&[u8]> {
         self.body.as_deref()
@@ -308,6 +336,9 @@ fn command(plan: &Plan, secret: Option<&Secret>) -> Result<(Command, Vec<u8>)> {
     Ok((command, input))
 }
 impl Approved {
+    pub(crate) fn binding(&self) -> Option<&super::credentials::Binding> {
+        self.plan.binding.as_ref()
+    }
     pub(crate) fn review(&self) -> Review {
         self.plan.review()
     }
@@ -320,6 +351,12 @@ impl Approved {
             return Err(Error::with_kind(
                 ErrorKind::StaleReview,
                 "AI destination approval expired",
+            ));
+        }
+        if self.plan.binding.is_some() != secret.is_some() {
+            return Err(Error::with_kind(
+                ErrorKind::Unavailable,
+                "AI authentication does not match the approved connection; no fallback selected",
             ));
         }
         let remaining = Duration::from_secs(120).saturating_sub(self.at.elapsed());

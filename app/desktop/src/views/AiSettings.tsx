@@ -38,6 +38,10 @@ export function AiSettings({
   const [error, setError] = useState("");
   const [connectionId, setConnectionId] = useState<string | null>(null);
   const [connectionName, setConnectionName] = useState("");
+  const [authentication, setAuthentication] = useState<
+    "none" | "stored_bearer"
+  >("none");
+  const [notice, setNotice] = useState("");
   const [provider, setProvider] = useState<AiProvider>("ollama");
   const [endpoint, setEndpoint] = useState("http://127.0.0.1:11434/");
   const [timeout, setTimeoutMs] = useState(30000);
@@ -64,6 +68,7 @@ export function AiSettings({
   async function act(action: () => Promise<void>) {
     setPending(true);
     setError("");
+    setNotice("");
     try {
       await action();
     } catch (e) {
@@ -87,17 +92,27 @@ export function AiSettings({
   const save = (change: AiChange) =>
     act(async () => {
       if (!snapshot) return;
-      loaded(
-        value(
-          await bridge.request({
-            kind: "save_ai_settings",
-            fingerprint: snapshot.fingerprint,
-            revision: snapshot.settings.revision,
-            change,
-          }),
-          "ai_settings",
-        ),
+      const next = value(
+        await bridge.request({
+          kind: "save_ai_settings",
+          fingerprint: snapshot.fingerprint,
+          revision: snapshot.settings.revision,
+          change,
+        }),
+        "ai_settings",
       );
+      loaded(next);
+      if (change.kind === "connection")
+        setConnectionId(
+          next.settings.connections.find((c) => c.name === change.name)?.id ??
+            null,
+        );
+      if (change.kind === "profile")
+        setProfileId(
+          next.settings.profiles.find((p) => p.name === change.name)?.id ??
+            null,
+        );
+      setNotice("AI settings saved. No provider request was made.");
     });
   const settings = snapshot?.settings;
   const scope: AiScope | null =
@@ -153,10 +168,11 @@ export function AiSettings({
         </p>
         <p>
           Provider diagnostics require exact native approval and use no
-          repository content. Secure credential storage and source-context
-          generation remain separate integration steps.
+          repository content. Repository-context generation remains a separate
+          integration step.
         </p>
         {error && <p role="alert">{error}</p>}
+        {notice && <p role="status">{notice}</p>}
         <button disabled={pending} onClick={() => void load()}>
           Reload saved AI settings
         </button>
@@ -176,6 +192,7 @@ export function AiSettings({
                   setConnectionId(c?.id ?? null);
                   setConnectionName(c?.name ?? "");
                   setProvider(c?.provider ?? "ollama");
+                  setAuthentication(c?.authentication ?? "none");
                   setEndpoint(c?.endpoint ?? "http://127.0.0.1:11434/");
                   setTimeoutMs(c?.timeout_ms ?? 30000);
                 }}
@@ -224,6 +241,56 @@ export function AiSettings({
                   maxLength={2048}
                 />
               </label>
+              <fieldset
+                aria-label="AI authentication"
+                className="ai-authentication-choice"
+              >
+                <legend>AI authentication</legend>
+                <label>
+                  <input
+                    type="radio"
+                    name="ai-authentication"
+                    checked={authentication === "none"}
+                    onChange={() => setAuthentication("none")}
+                  />
+                  No authentication
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="ai-authentication"
+                    checked={authentication === "stored_bearer"}
+                    onChange={() => setAuthentication("stored_bearer")}
+                  />
+                  Use stored bearer token for this exact endpoint
+                </label>
+              </fieldset>
+              <p>
+                Tokens are entered only in a native macOS secure field and
+                stored in Keychain. Saving metadata never reads a token.
+                Imported connections start with authentication disabled. A
+                missing or locked credential stops the AI request without
+                fallback.
+              </p>
+              <button
+                disabled={!connectionId || !bridge.manageAiToken}
+                onClick={() =>
+                  void act(async () => {
+                    if (connectionId && bridge.manageAiToken) {
+                      await bridge.manageAiToken(connectionId);
+                      setNotice(
+                        "Native token dialog closed. Stored credentials are never displayed here.",
+                      );
+                    }
+                  })
+                }
+              >
+                Manage token in native Keychain dialog…
+              </button>
+              <p>
+                Save/select the connection first. This dialog uses its saved
+                endpoint; unsaved endpoint edits are not used for token storage.
+              </p>
               <p>
                 HTTP sends requests without encryption. A later source transfer
                 requires explicit destination approval. Use HTTPS where
@@ -249,6 +316,7 @@ export function AiSettings({
                     provider,
                     endpoint,
                     timeout_ms: timeout,
+                    authentication,
                   })
                 }
               >
@@ -483,6 +551,7 @@ export function AiSettings({
                 provider,
                 endpoint,
                 timeout_ms: timeout,
+                authentication,
               }}
               profile={{
                 id: profileId,

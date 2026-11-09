@@ -83,6 +83,7 @@ impl Settings {
                     provider: v.provider,
                     endpoint: endpoint(&v.endpoint)?,
                     timeout_ms: v.timeout_ms,
+                    authentication: v.authentication,
                     endpoint_approval: String::new(),
                 };
                 replace(&mut next.connections, value, |v| &v.id);
@@ -147,6 +148,7 @@ impl Settings {
     pub fn imported(mut self) -> Result<Self> {
         for c in &mut self.connections {
             c.endpoint_approval.clear();
+            c.authentication = super::credentials::Authentication::None;
             c.revision = Uuid::new_v4().to_string();
         }
         for p in &mut self.profiles {
