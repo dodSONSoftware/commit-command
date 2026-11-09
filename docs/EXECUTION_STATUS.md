@@ -11,6 +11,16 @@ The [detailed completion handoff](implementation/README.md) supplies the executa
 remaining-work packages, decision worksheet, fixture/test procedures and complete
 requirement mapping. It does not accept gates or replace this live evidence ledger.
 
+### November 9 completion P13B inert AI merge planner
+
+[Merge checkpoint](reports/COMPLETION_P13B_MERGE_2026-11-09.md): explicit stable-ID
+add/replace/rename/skip, dependency rewiring/overrides, inactive-by-default scopes,
+explicit occupied-scope replacement and current-identity/archive/settings guards.
+Templates now receive fresh imported revisions. Exact container SHA-256 detects
+ZIP metadata drift that a manifest hash cannot. Final96 library/preceding44
+application tests and strict Core Clippy pass. Picker/UI/confirmation/atomic apply
+remain open; IMPORT05–IMPORT07 remain partial.
+
 ### November 9 completion P13A saved AI export workflow
 
 [Export checkpoint](reports/COMPLETION_P13A_AI_EXPORT_2026-11-09.md): saved AI settings

@@ -277,6 +277,46 @@ impl<R: Read + Seek> ValidatedArchive<R> {
     pub fn manifest_fingerprint(&self) -> &str {
         &self.manifest_fingerprint
     }
+    /// Consume a verified container and bind its exact bytes, including ZIP
+    /// metadata. The owning import controller must freeze/reverify the source.
+    pub fn container_fingerprint(self, cancel: &Cancellation) -> Result<String> {
+        let limit = self
+            .manifest
+            .components
+            .iter()
+            .map(|c| c.bytes)
+            .sum::<u64>()
+            + MAX_CONTAINER_OVERHEAD;
+        let mut reader = self.archive.into_inner();
+        let length = reader.seek(SeekFrom::End(0))?;
+        if length > limit {
+            return Err(refused(
+                "Backup container overhead exceeds the supported bound",
+            ));
+        }
+        reader.rewind()?;
+        let mut hash = Sha256::new();
+        let mut total = 0_u64;
+        let mut buffer = [0_u8; 65536];
+        loop {
+            cancelled(cancel)?;
+            let size = reader.read(&mut buffer)?;
+            if size == 0 {
+                break;
+            }
+            total = total
+                .checked_add(size as u64)
+                .filter(|n| *n <= limit)
+                .ok_or_else(|| refused("Backup container grew beyond its bound"))?;
+            hash.update(&buffer[..size]);
+        }
+        if total != length {
+            return Err(refused(
+                "Backup container length changed while fingerprinting",
+            ));
+        }
+        Ok(format!("{:x}", hash.finalize()))
+    }
 
     pub fn inspect(mut reader: R, cancel: &Cancellation) -> Result<Self> {
         cancelled(cancel)?;
@@ -497,6 +537,45 @@ mod tests {
         )
         .unwrap()
         .into_inner()
+    }
+    #[test]
+    fn whole_container_binding_detects_zip_metadata_changes_with_identical_manifest() {
+        let content = b"{}";
+        let manifest = serde_json::to_vec(&manifest(content)).unwrap();
+        let mut fingerprints = Vec::new();
+        for year in [2020, 2021] {
+            let mut writer = ZipWriter::new(Cursor::new(Vec::new()));
+            let options = SimpleFileOptions::default()
+                .compression_method(CompressionMethod::Stored)
+                .unix_permissions(0o600)
+                .last_modified_time(
+                    zip::DateTime::from_date_and_time(year, 1, 1, 0, 0, 0).unwrap(),
+                );
+            writer.start_file("manifest.json", options).unwrap();
+            writer.write_all(&manifest).unwrap();
+            writer.start_file("ai/settings.json", options).unwrap();
+            writer.write_all(content).unwrap();
+            let bytes = writer.finish().unwrap().into_inner();
+            let archive =
+                ValidatedArchive::inspect(Cursor::new(bytes.clone()), &Cancellation::default())
+                    .unwrap();
+            assert_eq!(archive.manifest_fingerprint(), digest(&manifest));
+            let fingerprint = archive
+                .container_fingerprint(&Cancellation::default())
+                .unwrap();
+            assert_eq!(fingerprint, digest(&bytes));
+            fingerprints.push(fingerprint);
+        }
+        assert_ne!(fingerprints[0], fingerprints[1]);
+        let archive =
+            ValidatedArchive::inspect(Cursor::new(archive(content)), &Cancellation::default())
+                .unwrap();
+        let cancelled = Cancellation::default();
+        cancelled.cancel();
+        assert_eq!(
+            archive.container_fingerprint(&cancelled).unwrap_err().kind,
+            ErrorKind::Cancelled
+        );
     }
     fn raw(entries: &[(&str, &[u8])]) -> Vec<u8> {
         let mut zip = ZipWriter::new(Cursor::new(Vec::new()));

@@ -154,6 +154,9 @@ impl Settings {
         for p in &mut self.profiles {
             p.revision = Uuid::new_v4().to_string();
         }
+        for template in &mut self.templates {
+            template.revision = Uuid::new_v4().to_string();
+        }
         self.revision = Uuid::new_v4().to_string();
         self.validate()?;
         Ok(self)

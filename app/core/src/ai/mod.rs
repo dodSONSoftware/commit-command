@@ -8,6 +8,8 @@ pub mod config;
 pub mod context;
 pub mod credentials;
 pub(crate) mod editor;
+#[cfg(unix)]
+pub mod import;
 pub(crate) mod jobs;
 #[cfg(unix)]
 pub mod portability;

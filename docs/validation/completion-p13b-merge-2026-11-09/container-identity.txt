@@ -1,0 +1,9 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.64s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-6d29e1afc4eab305)
+
+running 1 test
+test backup::archive::tests::whole_container_binding_detects_zip_metadata_changes_with_identical_manifest ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 95 filtered out; finished in 0.01s
+

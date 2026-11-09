@@ -4440,9 +4440,11 @@
       "package": "P13B",
       "action": "Valid AI import rename/replace/skip conflicts by stable ID",
       "expected": "Preview exact resulting definitions/mappings, no name-based accidental rebind",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/reports/COMPLETION_P13B_MERGE_2026-11-09.md"
+      ],
+      "note": "No new execution claimed. Classify retained variants before running. November9: inert explicit ID-based merge planner, inactive scopes, fresh template revisions and exact raw-container/current-settings/identity guards pass. Product capture/UI/confirmation/apply/native variants remain open."
     },
     {
       "id": "IMPORT06",
@@ -4451,18 +4453,21 @@
       "expected": "No active endpoint/auth/Action/trust authority, fresh revisions/reauthorization required",
       "status": "partial",
       "evidence": [
-        "docs/reports/COMPLETION_P13A_AI_PORTABILITY_2026-11-09.md"
+        "docs/reports/COMPLETION_P13A_AI_PORTABILITY_2026-11-09.md",
+        "docs/reports/COMPLETION_P13B_MERGE_2026-11-09.md"
       ],
-      "note": "No new execution claimed. Classify retained variants before running. November9: AI-only payload publication and bounded unactivated preview reset auth/approvals with fresh import revisions; product UI, Action definitions, mapping/apply/native variants remain open."
+      "note": "No new execution claimed. Classify retained variants before running. November9: AI-only payload publication and bounded unactivated preview reset auth/approvals with fresh import revisions; product UI, Action definitions, mapping/apply/native variants remain open. November9: inert explicit ID-based merge planner, inactive scopes, fresh template revisions and exact raw-container/current-settings/identity guards pass. Product capture/UI/confirmation/apply/native variants remain open."
     },
     {
       "id": "IMPORT07",
       "package": "P13B",
       "action": "Archive/current settings change after preview; then apply",
       "expected": "Preview digest stale, apply refused, no partial state",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/reports/COMPLETION_P13B_MERGE_2026-11-09.md"
+      ],
+      "note": "No new execution claimed. Classify retained variants before running. November9: inert explicit ID-based merge planner, inactive scopes, fresh template revisions and exact raw-container/current-settings/identity guards pass. Product capture/UI/confirmation/apply/native variants remain open."
     },
     {
       "id": "IMPORT08",

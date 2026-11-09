@@ -78,6 +78,7 @@ pub fn publish(
 /// import controller explicitly maps them; names never rebind identities here.
 pub struct Preview {
     pub manifest_fingerprint: String,
+    pub archive_fingerprint: String,
     pub settings: Settings,
 }
 
@@ -108,6 +109,7 @@ pub fn preview<R: Read + Seek>(
     }
     Ok(Preview {
         manifest_fingerprint: fingerprint,
+        archive_fingerprint: archive.container_fingerprint(cancel)?,
         settings: settings.imported()?,
     })
 }

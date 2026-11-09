@@ -103,6 +103,10 @@ fn portable_ai_archive_preserves_metadata_without_exporting_or_importing_authori
     assert!(exported.connections[0].endpoint_approval.is_empty());
     assert_eq!(exported.revision, snapshot.settings.revision);
     let preview = portability::preview(archive, &cancel).unwrap();
+    assert_eq!(
+        preview.archive_fingerprint,
+        crate::domain::digest(&original)
+    );
     assert_eq!(preview.manifest_fingerprint, fingerprint);
     assert_eq!(
         preview.settings.connections[0].id,
@@ -121,7 +125,19 @@ fn portable_ai_archive_preserves_metadata_without_exporting_or_importing_authori
         serde_json::to_vec(&snapshot.settings.instructions).unwrap()
     );
     assert_eq!(
-        serde_json::to_vec(&preview.settings.templates).unwrap(),
+        serde_json::to_vec(&exported.templates).unwrap(),
+        serde_json::to_vec(&snapshot.settings.templates).unwrap()
+    );
+    let mut imported_templates = preview.settings.templates.clone();
+    for (imported, original) in imported_templates
+        .iter_mut()
+        .zip(&snapshot.settings.templates)
+    {
+        assert_ne!(imported.revision, original.revision);
+        imported.revision.clone_from(&original.revision);
+    }
+    assert_eq!(
+        serde_json::to_vec(&imported_templates).unwrap(),
         serde_json::to_vec(&snapshot.settings.templates).unwrap()
     );
     assert_ne!(preview.settings.revision, snapshot.settings.revision);
