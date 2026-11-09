@@ -12,6 +12,8 @@ GitFleet is a desktop multi-repository Git workspace manager with a replaceable 
 
 - [Completion execution status](EXECUTION_STATUS.md) — Single current implementation, acceptance, open-gate and next-action record.
 
+- [Detailed completion handoff](implementation/README.md) — Ordered implementation runbook, decision worksheet, test procedures and complete requirement coverage for the remaining macOS release work.
+
 - [Requirement execution crosswalk](REQUIREMENT_EXECUTION_CROSSWALK.md) — Current routing for all 109 original requirements.
 - [P0 baseline report](reports/P0_BASELINE_2026-11-02.md) — Historical P0 execution baseline and validation.
 

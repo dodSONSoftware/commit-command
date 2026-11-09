@@ -3,8 +3,12 @@
 Tauri is a thin adapter to the presentation-independent Rust Core. Main and
 review bundles have separate command permissions. The application includes
 workspace inspection/monitoring, graph/activity/audit, controlled local/bulk commits,
-supported authentication/fetch/upstream and push preparation. Actual push execution,
-AI, Actions and general backup/release features remain unfinished.
+supported authentication/fetch/upstream, exact individual publication and guided
+push queues. Optional AI settings, secure authentication, reviewed source message
+suggestions and guarded SemVer Actions are implemented with selected acceptance.
+Hierarchical analysis, bounded automatic commits, general backup/restore and release
+acceptance remain unfinished. Use the [detailed completion handoff](../../docs/implementation/README.md)
+for remaining implementation steps and test procedures.
 
 **Ordinary desktop trust/write/network execution remains disabled in Rust and UI.**
 `desktop-writes` is non-default and does not grant repository trust or operation
@@ -154,8 +158,11 @@ one exact remote branch. It uses an isolated transport repository, verifies TLS,
 rejects redirects and preserves managed Git state. Results are timestamped past
 observations. Default builds keep network review disabled. See the
 [observation report](../../docs/reports/M5B_REMOTE_OBSERVATION_2026-11-02.md).
-Fetch/push/authenticated transport, AI, Actions, hunk staging, discard/reset/amend, advanced hook support,
-backup/retention UI and release packaging were not implemented.
+The dated observation procedure above does not summarize current capability.
+Supported authenticated fetch/push, assisted AI and SemVer Actions now exist; their
+remaining acceptance, hierarchical/automatic AI, backup/retention and release work
+are in the completion handoff. Hunk staging, destructive mutations and expanded
+hook-manager execution remain outside the current first-release scope.
 
 See [M3 contracts](../../docs/architecture/M3_DESKTOP_AND_IPC.md),
 [current status](../../docs/IMPLEMENTATION_STATUS.md),

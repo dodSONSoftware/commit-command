@@ -24,6 +24,7 @@ Historical reports are evidence for their own checkpoints, not current status.
 - [Product specification](docs/GITFLEET_SPECIFICATION.md)
 - [Requirement-to-code/test crosswalk](docs/REQUIREMENT_EXECUTION_CROSSWALK.md)
 - [Completion work packages](docs/PROJECT_COMPLETION_PLAN.md)
+- [Detailed completion handoff and test procedures](docs/implementation/README.md)
 - [Core CLI and safety envelope](app/core/README.md)
 - [Desktop build and validation](app/desktop/README.md)
 

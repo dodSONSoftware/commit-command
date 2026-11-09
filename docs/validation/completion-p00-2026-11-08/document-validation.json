@@ -1,0 +1,10 @@
+{
+  "scope": "Documentation structure and references only; no application/native/release acceptance",
+  "markdown_files": 5,
+  "words": 22388,
+  "catalog_cases": 256,
+  "original_requirements": 109,
+  "release_invariants": 15,
+  "m3_criteria": 20,
+  "errors": []
+}

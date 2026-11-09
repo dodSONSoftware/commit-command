@@ -6,8 +6,12 @@ single current status, open-gate and next-action record.** Its G01–G11 queue m
 the packages below to remaining work. Checkpoint paragraphs and the original
 planning baseline below preserve chronology and are not a parallel current queue.
 
-Current sequence: existing-work acceptance closure → individual non-force push
-and uncertain-outcome recovery → bulk push → AI/Actions → backup/usability/release.
+Current sequence: close remaining acceptance for existing local/remote/publication
+workflows, implement remaining hierarchical/automatic AI and backup/portability,
+and complete measured usability and exact macOS distribution acceptance. Individual
+publication, guided push queues, assisted AI and SemVer Actions already exist.
+The [detailed completion handoff](implementation/README.md) supplies the updated
+execution sequence and granular remaining implementation/test instructions.
 Backup primitives precede later schema migrations. Ordinary writes remain disabled
 until applicable acceptance and an explicit default decision. First release is
 macOS; Linux and Windows are deferred. This reconciliation changes documentation
@@ -354,5 +358,7 @@ Use [the current next-work queue](EXECUTION_STATUS.md#next-work-and-exit-conditi
 P0 is a completed historical baseline; do not restart its original evidence
 preservation package or repeat passed Cancel/close cases solely because an older
 checkpoint calls them untested. Close remaining G01–G06 criteria with evidence;
-G07 individual push is the next functional implementation package. Detailed
-package contracts above continue to govern those changes.
+G07 individual push and G08 guided queues are implemented; remaining functional
+work includes hierarchical analysis, bounded automatic commits and general backup/restore.
+Use the detailed completion handoff for current ordered steps and case-level tests.
+Package contracts above continue to govern their applicable behavior.

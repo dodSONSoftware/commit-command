@@ -7,6 +7,18 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+The [detailed completion handoff](implementation/README.md) supplies the executable
+remaining-work packages, decision worksheet, fixture/test procedures and complete
+requirement mapping. It does not accept gates or replace this live evidence ledger.
+
+### November 8 completion P00 reconciliation
+
+[Reconciliation report](reports/COMPLETION_P00_2026-11-08.md): the detailed handoff and
+execution ledger route all 109 requirements and 256 catalog cases to existing source,
+tests, evidence candidates and remaining packages. Documentation/reference checks
+passed. DCP01–DCP09 remain explicit policy dependencies; P01 independent tooling is
+next. No new application/native acceptance or write-default change.
+
 ### November 8 G02–G11 full Core regression after AI source integration — passed locally
 
 [Regression checkpoint](reports/G02_G11_AI_SOURCE_REGRESSION_2026-11-08.md): complete
@@ -838,8 +850,8 @@ and explicit disposition of exclusions. A facility block is not a waiver.
 | G05 — native bulk commit failures/dependencies | **Partial:** real native child-first publication, stale-parent stop, corrected fresh gitlink review, parent-only retry/message override and ordinary restart passed ([package](reports/G05_NATIVE_SUBMODULE_2026-11-08.md)). Native linked-worktree independent trust/two-branch execution/restart also passed ([checkpoint](reports/G05_LINKED_WORKTREE_2026-11-08.md)). Selected actual host-crash/partial-publication/index recovery/unfinished-only retry also passed ([package](reports/G05_NATIVE_BATCH_HOST_CRASH_2026-11-08.md)). Native pre-publication host crash/owned-lock cleanup/restart also passed ([package](reports/G05_NATIVE_BATCH_PREPUBLICATION_2026-11-08.md)). Actual child-hook rejection/proven-running Cancel and separately approved supported-hook child retry/fresh parent gitlink approval/ordinary restart passed ([package](reports/G05_NATIVE_CHILD_HOOK_2026-11-08.md)); Native index-only partial staging and ordinary restart also passed ([package](reports/G05_NATIVE_PARTIAL_STAGING_2026-11-08.md)); other required dependency/selection and broader accessibility criteria retain their owning evidence requirements. Explicit relative-path exclusions for fresh-review-only gitlinks are implemented and natively verified ([checkpoint](reports/G05_BULK_EXCLUSIONS_2026-11-08.md)); Core eligibility remains authoritative. Preserve completed/unselected content and never replay successful items. | GIT-013; BULK-001–007; M5A |
 | G06 — supported remote/check compatibility | **In progress:** selected native executable-helper refusal after explicit fixture trust passed ([report](reports/G06_NATIVE_REMOTE_HELPER_REFUSAL_2026-11-07.md)); helpers remain unsupported.  native supported pre-push Cancel review, Cmd+Q, main-window Close and direct AppKit termination during proven running execution passed, including process cleanup and restart without replay ([AppKit report](reports/G02_G06_RUNNING_PUSH_CHECK_APPKIT_2026-11-07.md)). Actual running-check main-renderer loss now passed with host survival/cancellation/no replay; a subsequent normal restart blank reopens G02 presentation ([renderer report](reports/G02_G06_RUNNING_PUSH_CHECK_RENDERER_LOSS_2026-11-07.md)). Earlier running-check host crash and first-restart recovery passed in their fixture; original hook survival remains explicit ([startup retest](reports/G02_STARTUP_READINESS_2026-11-07.md)). Selected native detected-manager Execute refusal, OS-declined bypass and fresh approved bypass passed with zero hook execution and restart/no replay ([bypass report](reports/G06_NATIVE_MANAGER_BYPASS_2026-11-07.md)); unsupported managers remain unsupported for Execute. Operator SecurityAgent choices, broader fetch/upstream topology/recovery, planner cycle/accessibility/scale and direct SCP facility block retain their limits. | M5B/C; PUSH-002; AUTHENTICATION.md; M8B |
 | G07 — individual push | Exact separate publication approval, isolated ancestry/expected-old transport, durable uncertainty and fresh-observation recovery implemented with selected automated/native evidence. Actual native host-loss/remote-completed/observation-recovery case passed ([report](reports/G02_G07_NATIVE_PUSH_HOST_CRASH_2026-11-08.md)); finish authenticated publication, broader topology/native interruption/recovery and usability acceptance. Existing hook checks never become publication tokens. | PUSH-001/003/005/006; INV-009; M5C |
-| G08 — bulk push | Compose accepted individual push with fresh per-item authority, actual child availability before parents, no implicit child selection, cycle/block handling, partial-success preservation and fresh retry. Conditional planning is not remote success. | PUSH-004–006; INV-014; M5C |
-| G09 — AI and Actions | Implement M6 profiles/providers/templates/bounded exact context; M7 assisted candidates, deterministic SemVer preview/execution/recovery and separately bounded automatic authorization. Provider/model failures and imported definitions cannot broaden authority. | AI-001–017; ACT-001–003; INV-010–013; M6/M7 |
+| G08 — bulk push | Guided per-item queues are implemented with selected automated/native stop/retry/history evidence. Remaining acceptance includes uninterrupted native multi-level execution, authenticated topology, phase-specific interruption and accessibility. Preserve fresh per-item authority, actual child availability, no implicit selection and partial-success/fresh-retry rules. See completion packages P08 and QUEUE01–QUEUE09. | PUSH-004–006; INV-014; M5C |
+| G09 — AI and Actions | Optional settings/profiles/templates, secure provider auth, exact context/source transfer, assisted candidates and guarded SemVer preview/execution/recovery are implemented with selected acceptance. Remaining implementation includes hierarchical analysis, separately bounded automatic authorization, persistent safe AI audit, unsaved-editor repository AI testing and stored definition/import integration; broader provider/native usability acceptance remains. See completion packages P09–P12. | AI-001–017; ACT-001–003; INV-010–013; M6/M7 |
 | G10 — backup/portability/retention | Versioned export/import, consistent manual/rotating backups, previewed safe restore, malicious/interrupted archive tests and protection of unresolved recovery. Decide proposed 90-day history/ten-backup defaults before implementing cleanup. Migration backups alone do not meet this gate. | STATE-005–007; ACT-004; M4C/M8A |
 | G11 — reproducible release | Git provisioning/macOS signing-tool workflow now implemented and locally smoke-tested ([checkpoint](reports/G11_CI_PREREQUISITES_2026-11-08.md)); actual hosted/Linux/Brew results remain pending; resolve OS/architecture/tool delivery/identifier/signing/update policy; verify licenses/notices and exact packaged install/upgrade/migration/uninstall, signing/notarization and release invariants. A development bundle is not a release. | RELEASE-001–005; INV-001–015; M8C |
 
@@ -1189,8 +1201,10 @@ AI, SemVer Actions and backups remain in the approved product scope, not deferre
    dependency/partial-stop/fresh-retry evidence. Expand native uninterrupted multi-level,
    authenticated topology, phase-specific interruption and usability coverage.
 4. **G09:** retained-file inspection is implemented and selected acceptance passed;
-   continue AI secure auth, verified provider acceptance, exact context and assisted/bounded automatic commits
-   under separate authorization contracts. Preserve provider-free manual workflows.
+   finish provider/TLS/editor and assisted-workflow acceptance, then hierarchical
+   analysis and bounded automatic commits under separate authorization contracts.
+   Existing secure auth, exact context and assisted candidates are foundations, not
+   new implementation tasks. Preserve provider-free manual workflows.
 5. **G10–G11 and remaining G03:** complete state portability, measured usability and
    exact macOS release acceptance. Strengthen backup primitives before later schema
    migrations; do not postpone data safety until packaging.
