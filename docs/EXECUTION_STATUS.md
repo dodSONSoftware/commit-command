@@ -17,6 +17,19 @@ Clippy passed with four test threads and isolated GPG. Source hashes match the
 committed tree. This is fresh automated evidence, not acceptance of remaining native,
 AI/backup or release gates. No release/default-write change or publication occurred.
 
+### November 8 G09 Ollama real-provider diagnostics and completion limits — selected acceptance passed
+
+[Real-provider checkpoint](reports/G09_OLLAMA_REAL_PROVIDER_2026-11-08.md): native
+model discovery and synthetic generation were exercised against the user-supplied
+Ollama endpoint/model. The default output budget produced a safely discarded token-limit
+result; an explicitly larger profile budget completed synthetic inference. Missing-model
+refusal, client cancellation/reaping and generated disposable-fixture suggestions were
+also observed. The suggestions were structurally valid but overinterpreted fixture text,
+so semantic correctness still requires human review. No project source was sent and no
+repository writes occurred. Provider parsing now rejects partial output with actionable
+errors; focused Core and complete desktop validation passed. Native host closure after
+the final suggestion run was interrupted and is not claimed. G09 and G02–G11 remain open.
+
 ### November 8 G09 exact source transfer and assisted messages — implemented, selected acceptance passed
 
 [Assisted-message checkpoint](reports/G09_AI_ASSISTED_MESSAGES_2026-11-08.md): composer
@@ -31,9 +44,9 @@ before clean Quit/restart/no replay; repository/journal/trust/original/hash/inte
 and lock checks passed. A real native panel-remount finding was reproduced and fixed;
 failed timing runs and the corrected four-thread results remain recorded.
 Full five-configuration Core write/signing regression subsequently passed; see the
-[regression checkpoint](reports/G02_G11_AI_SOURCE_REGRESSION_2026-11-08.md). Next: real-provider synthetic checks using the user-supplied Ollama
-`http://10.10.10.72:11434` / `qwen3.5:9b-q4_K_M`, then hierarchical analysis and bounded
-automatic authority. G09 and the remaining G02–G11 acceptance scopes remain open.
+[regression checkpoint](reports/G02_G11_AI_SOURCE_REGRESSION_2026-11-08.md). Real-provider
+synthetic checks are recorded above. Next G09 work is hierarchical analysis and bounded
+automatic authority; G09 and the remaining G02–G11 acceptance scopes remain open.
 
 ### November 8 G09 restricted repository context — implemented, automated selected acceptance passed
 

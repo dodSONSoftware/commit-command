@@ -1,0 +1,15 @@
+{
+  "scope": "Separate direct synthetic-only protocol probe; not native app acceptance",
+  "request_bytes": 1160,
+  "request_sha256": "0c9289b445d4a93a1b21db9d59260057d5f4ede99d597d11f9a3943f74ec0a54",
+  "curl_exit": 0,
+  "model": "qwen3.5:9b-q4_K_M",
+  "done": true,
+  "done_reason": "stop",
+  "prompt_eval_count": 283,
+  "eval_count": 2637,
+  "total_duration": 26634415042,
+  "load_duration": 1417824,
+  "content_bytes": 230,
+  "thinking_bytes": 11948
+}

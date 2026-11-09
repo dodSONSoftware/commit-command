@@ -553,6 +553,9 @@ fn models(provider: Provider, value: &Value) -> Result<Vec<InstalledModel>> {
     models.sort_by(|a, b| a.id.cmp(&b.id));
     Ok(models)
 }
+fn incomplete_output() -> Error {
+    Error::with_kind(ErrorKind::OutputLimit,"AI generation reached a token/context limit; partial output was discarded. Increase the profile output/context budget or reduce input, then review and retry explicitly. No model fallback or message was applied.")
+}
 fn completion(
     provider: Provider,
     value: &Value,
@@ -570,10 +573,19 @@ fn completion(
         ));
     }
     let (message, input_tokens, output_tokens) = if provider == Provider::Ollama {
-        if value.get("done") != Some(&json!(true))
-            || value.get("done_reason").is_some_and(|v| v != "stop")
-        {
-            return Err(invalid("AI inference did not finish normally"));
+        if value.get("done") != Some(&json!(true)) {
+            return Err(invalid(
+                "AI provider returned an unfinished response; partial output was discarded",
+            ));
+        }
+        match value.get("done_reason") {
+            Some(reason) if reason == "length" => return Err(incomplete_output()),
+            Some(reason) if reason != "stop" => {
+                return Err(invalid(
+                    "AI provider reported an unsupported finish reason; output was discarded",
+                ))
+            }
+            _ => {}
         }
         (
             &value["message"],
@@ -585,8 +597,16 @@ fn completion(
             .get("choices")
             .and_then(Value::as_array)
             .ok_or_else(|| invalid("AI inference omitted choices"))?;
-        if choices.len() != 1 || choices[0].get("finish_reason") != Some(&json!("stop")) {
+        if choices.len() != 1 {
             return Err(invalid("AI inference was incomplete or ambiguous"));
+        }
+        if choices[0].get("finish_reason") == Some(&json!("length")) {
+            return Err(incomplete_output());
+        }
+        if choices[0].get("finish_reason") != Some(&json!("stop")) {
+            return Err(invalid(
+                "AI inference was incomplete or ambiguous; output was discarded",
+            ));
         }
         (
             &choices[0]["message"],

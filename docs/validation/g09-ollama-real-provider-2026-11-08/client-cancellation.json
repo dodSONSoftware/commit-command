@@ -1,0 +1,9 @@
+{
+  "host_pid": 36310,
+  "curl_pid": 47460,
+  "running_client_observed_before_cancel": true,
+  "native_job": "f8fcc7cc-fbe8-4304-aa1b-e8770bfd5a5b",
+  "native_phase": "cancelled",
+  "owned_curl_reaped": true,
+  "scope": "Client cancellation/result discard only; remote inference cancellation is not independently observed"
+}

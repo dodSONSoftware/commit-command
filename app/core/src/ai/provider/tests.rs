@@ -643,3 +643,32 @@ fn reflected_credential_is_refused_before_result_reaches_renderer() {
         assert!(error.to_string().contains("reflected authentication"));
     }
 }
+
+#[test]
+fn truncated_answers_are_actionable_refusals_even_when_the_partial_message_looks_valid() {
+    for (provider, value) in [
+        (
+            Provider::Ollama,
+            json!({"model":"model","done":true,"done_reason":"length","message":{"role":"assistant","content":"{\"subject\":\"fix: never-display-partial\",\"body\":\"\"}"}}),
+        ),
+        (
+            Provider::Compatible,
+            json!({"model":"model","choices":[{"finish_reason":"length","message":{"role":"assistant","content":"{\"subject\":\"fix: never-display-partial\",\"body\":\"\"}"}}]}),
+        ),
+    ] {
+        let error = completion(provider, &value, "model", Duration::ZERO).unwrap_err();
+        assert_eq!(error.kind, ErrorKind::OutputLimit);
+        assert!(error.to_string().contains("profile output/context budget"));
+        assert!(!error.to_string().contains("never-display-partial"));
+    }
+}
+#[test]
+fn unfinished_or_unrecognized_finish_metadata_never_exposes_the_provider_value() {
+    for (done, reason) in [(false, "stop"), (true, "private-provider-value")] {
+        let value = json!({"model":"model","done":done,"done_reason":reason,"message":{"role":"assistant","content":"never-display-content"}});
+        let error = completion(Provider::Ollama, &value, "model", Duration::ZERO).unwrap_err();
+        assert!(!error.to_string().contains("private-provider-value"));
+        assert!(!error.to_string().contains("never-display-content"));
+        assert!(error.to_string().contains("discarded"));
+    }
+}
