@@ -1,0 +1,12 @@
+{
+  "root": "/private/tmp/gitfleet-p04-density-9cyybwin",
+  "app": "/private/tmp/gitfleet-p04-density-9cyybwin/Commit Command Density.app",
+  "state": "/private/tmp/gitfleet-p04-density-9cyybwin/state",
+  "binary": "/private/tmp/gitfleet-p04-density-9cyybwin/Commit Command Density.app/Contents/MacOS/gitfleet-desktop",
+  "workspace": "/private/tmp/gitfleet-p04-filter-uhe_cyb2/workspace",
+  "sha256": "48ea1dc8cbb9ebfc4f7fc053df1e29e65bdd3efe89ba24f5191c39e7bc1b5ab4",
+  "features": [
+    "custom-protocol"
+  ],
+  "setup": "disposable state copy seeded compact and width260; native density menu selection is not claimed"
+}

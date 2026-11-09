@@ -183,6 +183,8 @@ fn navigation_migration_restart_and_newer_data_are_preserved() {
     let mut state = DesktopState::default();
     state.sort = OverviewSort::LastCommitDesc;
     state.attention = OverviewFilter::Conflicted;
+    state.density = OverviewDensity::Compact;
+    state.sidebar_collapsed = true;
     state.collapsed = vec!["/parent".into()];
     state.tabs.push(RepositoryTab {
         worktree: wt.clone(),
@@ -216,6 +218,8 @@ fn navigation_migration_restart_and_newer_data_are_preserved() {
     assert_eq!(restored.drafts, state.drafts);
     assert_eq!(restored.sort, OverviewSort::LastCommitDesc);
     assert_eq!(restored.attention, OverviewFilter::Conflicted);
+    assert_eq!(restored.density, OverviewDensity::Compact);
+    assert!(restored.sidebar_collapsed);
     assert_eq!(restored.collapsed, vec!["/parent"]);
     assert_eq!(restored.tabs[0].view, "history");
     state.version = 999;

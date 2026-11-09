@@ -406,7 +406,11 @@ export function App({ bridge }: { bridge: Bridge }) {
   );
   const selectedTrust = trust.find((t) => t.worktree === entry?.id);
   return (
-    <div className="shell" inert={closing || loading}>
+    <div
+      className="shell"
+      data-density={nav.density ?? "comfortable"}
+      inert={closing || loading}
+    >
       <header className="topbar">
         <ApplicationBrand bridge={bridge} />
         <div className="workspace-switch">
@@ -447,6 +451,15 @@ export function App({ bridge }: { bridge: Bridge }) {
         </select>
       </header>
       <nav className="tabs" aria-label="Open tabs">
+        <button
+          aria-expanded={!nav.sidebar_collapsed}
+          aria-controls="workspace-sidebar"
+          onClick={() =>
+            setNav({ ...nav, sidebar_collapsed: !nav.sidebar_collapsed })
+          }
+        >
+          {nav.sidebar_collapsed ? "Show sidebar" : "Hide sidebar"}
+        </button>
         <button
           className={
             !nav.active_tab && !showOperations && !showActivity && !showBulk
@@ -490,7 +503,12 @@ export function App({ bridge }: { bridge: Bridge }) {
         })}
       </nav>
       <div className="body">
-        <aside className="sidebar" style={{ width: nav.sidebar_width }}>
+        <aside
+          id="workspace-sidebar"
+          className="sidebar"
+          hidden={nav.sidebar_collapsed}
+          style={{ width: nav.sidebar_width }}
+        >
           <div className="workspace-heading">
             <span className="eyebrow">ACTIVE WORKSPACE</span>
             <h2>{activeWorkspace?.name ?? "Welcome"}</h2>
@@ -649,6 +667,7 @@ export function App({ bridge }: { bridge: Bridge }) {
         </aside>
         <div
           className="splitter"
+          hidden={nav.sidebar_collapsed}
           role="separator"
           tabIndex={0}
           aria-label="Sidebar width"
@@ -934,6 +953,18 @@ export function App({ bridge }: { bridge: Bridge }) {
                       {choice.label}
                     </option>
                   ))}
+                </select>
+                <select
+                  aria-label="Overview density"
+                  value={nav.density ?? "comfortable"}
+                  onChange={(event) => {
+                    const density = event.target.value;
+                    if (density === "comfortable" || density === "compact")
+                      setNav({ ...nav, density });
+                  }}
+                >
+                  <option value="comfortable">Comfortable</option>
+                  <option value="compact">Compact</option>
                 </select>
               </div>
               <div className="selection-bar">

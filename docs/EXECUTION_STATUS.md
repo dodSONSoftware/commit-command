@@ -11,6 +11,14 @@ The [detailed completion handoff](implementation/README.md) supplies the executa
 remaining-work packages, decision worksheet, fixture/test procedures and complete
 requirement mapping. It does not accept gates or replace this live evidence ledger.
 
+### November 8 completion P04 density and sidebar
+
+[Density checkpoint](reports/COMPLETION_P04_DENSITY_2026-11-08.md): default-compatible
+Comfortable/Compact and sidebar visibility persist per workspace, retaining widths.
+Full desktop135/20/23 and selected ordinary Compact/Hide/Quit/restart/Show260px,
+exact preservation and zero write/trust checks passed. Full geometry/accessibility
+and remaining P04 workflows remain open.
+
 ### November 8 completion P04 filters and tree state
 
 [Filter/collapse checkpoint](reports/COMPLETION_P04_FILTERS_2026-11-08.md): specified

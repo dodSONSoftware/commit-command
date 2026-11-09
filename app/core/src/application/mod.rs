@@ -26,7 +26,9 @@ pub use review::{Confirmation, ReviewDisplay};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
-pub use state::{DesktopState, OverviewFilter, OverviewSort, RepositoryTab, WindowPlacement};
+pub use state::{
+    DesktopState, OverviewDensity, OverviewFilter, OverviewSort, RepositoryTab, WindowPlacement,
+};
 use std::{
     path::{Path, PathBuf},
     time::{Duration, Instant},

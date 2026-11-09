@@ -1,0 +1,20 @@
+{
+  "integrity": "ok",
+  "write_operations": 0,
+  "trust_grants": 0,
+  "density": "compact",
+  "sidebar_collapsed": false,
+  "sidebar_width": 260,
+  "observations": [
+    "seeded Compact value restored and rendered",
+    "Hide sidebar removed sidebar/splitter and retained Show sidebar control",
+    "explicit restart restored hidden sidebar and Compact",
+    "Show sidebar restored splitter value260"
+  ],
+  "preservation": {
+    "changed_paths_hex": [],
+    "preserved": true,
+    "unexpected_paths_hex": []
+  },
+  "scope": "selected ordinary rendering/visibility/restart, not native density-menu selection or complete geometry/VoiceOver/zoom acceptance"
+}

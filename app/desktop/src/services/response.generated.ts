@@ -707,6 +707,11 @@ export type OverviewSort =
 export type ContentSource = "index" | "working_tree";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "OverviewDensity".
+ */
+export type OverviewDensity = "comfortable" | "compact";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "OverviewFilter".
  */
 export type OverviewFilter =
@@ -2296,6 +2301,7 @@ export interface DesktopState {
     | "behind"
     | "issues";
   collapsed?: string[];
+  density?: "comfortable" | "compact";
   drafts: {
     [k: string]: string;
   };
@@ -2303,6 +2309,7 @@ export interface DesktopState {
   inspector_width: number;
   layout: string;
   selected: string[];
+  sidebar_collapsed?: boolean;
   sidebar_width: number;
   sort: OverviewSort;
   tabs: RepositoryTab[];

@@ -1,0 +1,10 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.74s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-7becfed3b61d98fb)
+
+running 2 tests
+test application::state::sort_tests::legacy_sort_values_remain_compatible_and_unknown_values_fail_closed ... ok
+test application::state::sort_tests::collapse_state_is_bounded_and_cannot_duplicate_keys ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 79 filtered out; finished in 0.01s
+

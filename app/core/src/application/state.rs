@@ -41,6 +41,13 @@ pub enum OverviewFilter {
     Behind,
     Issues,
 }
+#[derive(Debug, Default, Clone, Copy, Serialize, Deserialize, JsonSchema, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum OverviewDensity {
+    #[default]
+    Comfortable,
+    Compact,
+}
 /// Additive string variants preserve version-1 path/changes navigation records.
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, JsonSchema, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
@@ -86,6 +93,10 @@ pub struct DesktopState {
     pub attention: OverviewFilter,
     #[serde(default)]
     pub collapsed: Vec<String>,
+    #[serde(default)]
+    pub density: OverviewDensity,
+    #[serde(default)]
+    pub sidebar_collapsed: bool,
     pub theme: String,
     pub sidebar_width: u32,
     pub inspector_width: u32,
@@ -103,6 +114,8 @@ impl Default for DesktopState {
             sort: OverviewSort::Path,
             attention: OverviewFilter::All,
             collapsed: Vec::new(),
+            density: OverviewDensity::Comfortable,
+            sidebar_collapsed: false,
             theme: "system".into(),
             sidebar_width: 240,
             inspector_width: 400,
@@ -248,6 +261,8 @@ mod sort_tests {
         let mut value = serde_json::to_value(DesktopState::default()).unwrap();
         value.as_object_mut().unwrap().remove("attention");
         value.as_object_mut().unwrap().remove("collapsed");
+        value.as_object_mut().unwrap().remove("density");
+        value.as_object_mut().unwrap().remove("sidebar_collapsed");
         for (raw, expected) in [
             ("path", OverviewSort::Path),
             ("changes", OverviewSort::Changes),
@@ -258,6 +273,8 @@ mod sort_tests {
             assert_eq!(restored.sort, expected);
             assert_eq!(restored.attention, OverviewFilter::All);
             assert!(restored.collapsed.is_empty());
+            assert_eq!(restored.density, OverviewDensity::Comfortable);
+            assert!(!restored.sidebar_collapsed);
             validate(&restored).unwrap();
             assert_eq!(serde_json::to_value(restored).unwrap()["sort"], raw);
         }

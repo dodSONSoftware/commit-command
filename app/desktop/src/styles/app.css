@@ -1254,3 +1254,23 @@ footer button {
   text-align: left;
   padding: 4px 0;
 }
+
+.sidebar[hidden],
+.splitter[hidden] {
+  display: none;
+}
+.shell[data-density="compact"] th {
+  padding-block: 8px;
+}
+.shell[data-density="compact"] td {
+  padding-block: 6px;
+}
+.shell[data-density="compact"] .repo-link {
+  padding-block: 6px;
+}
+.shell[data-density="compact"] .tree-node {
+  margin-block: 2px;
+}
+.shell[data-density="compact"] .tree-node summary {
+  padding-block: 3px;
+}

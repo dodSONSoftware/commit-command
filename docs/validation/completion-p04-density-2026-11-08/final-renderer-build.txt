@@ -1,0 +1,19 @@
+
+> gitfleet-desktop@0.1.1 build
+> tsc --noEmit && vite build
+
+vite v7.3.7 building client environment for production...
+transforming...
+✓ 72 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                            0.58 kB │ gzip:     0.35 kB
+dist/review.html                           0.61 kB │ gzip:     0.36 kB
+dist/assets/banner-dark-CHLMoucy.svg   1,564.17 kB │ gzip: 1,184.09 kB
+dist/assets/banner-light-Cvs05R9C.svg  1,564.17 kB │ gzip: 1,184.09 kB
+dist/assets/review-DAdDXWwp.css            0.85 kB │ gzip:     0.49 kB
+dist/assets/main-BMaRq36V.css             18.66 kB │ gzip:     4.40 kB
+dist/assets/core-BqmcAG5b.js               1.54 kB │ gzip:     0.80 kB
+dist/assets/review-D6RfxcB1.js             2.06 kB │ gzip:     1.04 kB
+dist/assets/main-Dszhwurj.js             384.29 kB │ gzip:   112.20 kB
+✓ built in 469ms

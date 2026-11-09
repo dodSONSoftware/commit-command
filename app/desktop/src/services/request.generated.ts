@@ -777,6 +777,7 @@ export interface DesktopState {
     | "behind"
     | "issues";
   collapsed?: string[];
+  density?: "comfortable" | "compact";
   drafts: {
     [k: string]: string;
   };
@@ -784,6 +785,7 @@ export interface DesktopState {
   inspector_width: number;
   layout: string;
   selected: string[];
+  sidebar_collapsed?: boolean;
   sidebar_width: number;
   sort: OverviewSort;
   tabs: RepositoryTab[];

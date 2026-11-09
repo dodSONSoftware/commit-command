@@ -64,6 +64,39 @@ it("persists tree collapse and attention filters while keeping hidden children s
   await user.click(screen.getByText("parent", { selector: "summary" }));
   expect(screen.getByRole("checkbox", { name: "Select child" })).toBeChecked();
 });
+it("persists compact density and sidebar visibility without losing the saved width", async () => {
+  const f = fake();
+  const user = userEvent.setup();
+  render(<App bridge={f.bridge} />);
+  await screen.findByRole("checkbox", { name: "Select parent" });
+  fireEvent.keyDown(screen.getByRole("separator", { name: "Sidebar width" }), {
+    key: "ArrowRight",
+  });
+  const sidebar = document.getElementById("workspace-sidebar");
+  expect(sidebar).toHaveStyle({ width: "260px" });
+  await user.click(screen.getByRole("button", { name: "Hide sidebar" }));
+  expect(sidebar).not.toBeVisible();
+  expect(screen.getByRole("button", { name: "Show sidebar" })).toHaveAttribute(
+    "aria-expanded",
+    "false",
+  );
+  expect(
+    screen.queryByRole("separator", { name: "Sidebar width" }),
+  ).not.toBeInTheDocument();
+  await user.selectOptions(
+    screen.getByRole("combobox", { name: "Overview density" }),
+    "compact",
+  );
+  await waitFor(() => expect(f.saved.at(-1)?.density).toBe("compact"));
+  expect(f.saved.at(-1)?.sidebar_collapsed).toBe(true);
+  expect(f.saved.at(-1)?.sidebar_width).toBe(260);
+  await user.click(screen.getByRole("button", { name: "Show sidebar" }));
+  expect(sidebar).toBeVisible();
+  expect(sidebar).toHaveStyle({ width: "260px" });
+  expect(
+    screen.getByRole("separator", { name: "Sidebar width" }),
+  ).toHaveAttribute("aria-valuenow", "260");
+});
 function fake(writes = false) {
   const requests: Request[] = [];
   const saved: DesktopState[] = [];

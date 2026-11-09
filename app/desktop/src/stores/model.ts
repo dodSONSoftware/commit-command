@@ -24,6 +24,8 @@ export const initialState: DesktopState = {
   sort: "path",
   attention: "all",
   collapsed: [],
+  density: "comfortable",
+  sidebar_collapsed: false,
   theme: "system",
   sidebar_width: 240,
   inspector_width: 400,

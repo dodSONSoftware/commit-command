@@ -1,0 +1,11 @@
+{
+  "app/core/src/application/state.rs": "df92a65797c99fa6314dd180a6c3c0fcbed7cefc3d5c2a122fc926df57320ef7",
+  "app/core/src/application/mod.rs": "336a6d7c1ecaa63bf868528b99057ab3cf1342ab3e978009012c8ac72e634f2a",
+  "app/core/tests/m3_application.rs": "03aefba5a2d8a49cacdaeec0c876e60981ad555676e61259334007abbd6efc2b",
+  "app/desktop/src/stores/model.ts": "76616736cd79d3fe018da43e901158bac5918540376e03fd91f170beb76473aa",
+  "app/desktop/src/views/App.tsx": "17fbc50a68c19dc1b7edee02472d8c5f0b43d23b30c26baddc01b1c8f4822169",
+  "app/desktop/src/views/App.test.tsx": "6fb76954caec3ccd65f9348a512fbee566b23da00c058f3bf0d6f3b027b4f624",
+  "app/desktop/src/styles/app.css": "07c940fb850f120e16cadb81ec166579eab19d05c9b5e9c6713e28ca37664f37",
+  "app/desktop/src/services/request.generated.ts": "0775027f76c96a694c0bb0dc2e287b1dbb2c63e99fb2e232ee24a71ae145836e",
+  "app/desktop/src/services/response.generated.ts": "053ec1d8701c3f46c632de784673a8f771d2b9a34e4b51a9d70ea7e028467f4c"
+}
