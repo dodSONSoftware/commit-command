@@ -1,0 +1,25 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.72s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-7becfed3b61d98fb)
+
+running 17 tests
+test backup::publication::tests::free_space_boundary_includes_container_overhead_and_live_state_reserve ... ok
+test backup::archive::tests::unsafe_container_paths_and_case_or_ancestor_collisions_are_rejected ... ok
+test backup::archive::adversarial_tests::total_size_and_depth_limits_do_not_allocate_declared_content ... ok
+test backup::archive::tests::recovery_policy_must_match_manifest_members ... ok
+test backup::archive::tests::schema_count_size_and_portable_scope_bounds_are_enforced ... ok
+test backup::archive::tests::symlink_and_nonstored_input_are_rejected_before_content_use ... ok
+test backup::archive::tests::truncated_members_and_header_name_mismatch_are_rejected ... ok
+test backup::archive::tests::hardlink_and_unknown_extra_metadata_are_rejected_in_each_header ... ok
+test backup::archive::tests::inconsistent_source_metadata_and_cancellation_never_finish_an_archive ... ok
+test backup::archive::tests::exact_stored_round_trip_and_consumer_limits ... ok
+test backup::archive::tests::unknown_extra_missing_manifest_and_wrong_checksum_are_rejected ... ok
+test backup::snapshot::tests::cancellation_and_nonempty_destination_preserve_previous_state ... ok
+test backup::publication::tests::cancellation_and_io_failure_after_staging_leave_no_published_backup ... ok
+test backup::publication::tests::refused_paths_links_and_failed_sources_preserve_destination ... ok
+test backup::snapshot::tests::wal_snapshot_is_consistent_and_keeps_original_database_bytes ... ok
+test backup::publication::tests::publishes_verified_private_archive_and_never_clobbers ... ok
+test backup::archive::adversarial_tests::central_duplicates_and_excessive_entry_counts_are_rejected_without_indexing ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 66 filtered out; finished in 0.05s
+

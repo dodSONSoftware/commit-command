@@ -1,5 +1,5 @@
 //! Private staging and no-clobber publication, anchored to a directory descriptor.
-use super::archive::{self, Manifest, Source, ValidatedArchive};
+use super::archive::{self, Manifest, Source, ValidatedArchive, MAX_CONTAINER_OVERHEAD};
 use crate::{inspection::Cancellation, Error, ErrorKind, Result};
 use std::{
     ffi::CString,
@@ -11,6 +11,20 @@ use std::{
     path::{Component, Path},
 };
 use uuid::Uuid;
+
+// Stored-only containers have bounded metadata overhead. Keep an additional
+// reserve for the live application's journal/cleanup; this is not a reservation
+// against other writers consuming free space after the check.
+const LIVE_STATE_RESERVE: u64 = 16 * 1024 * 1024;
+
+fn require_space(available: u128, content: u64) -> Result<()> {
+    let required =
+        u128::from(content) + u128::from(MAX_CONTAINER_OVERHEAD) + u128::from(LIVE_STATE_RESERVE);
+    if available < required {
+        return Err(refused(&format!("Insufficient backup space: free the declared content size plus {} MiB for archive overhead and live-state reserve, or choose another destination", (MAX_CONTAINER_OVERHEAD + LIVE_STATE_RESERVE) / (1024 * 1024))));
+    }
+    Ok(())
+}
 
 fn refused(message: &str) -> Error {
     Error::with_kind(ErrorKind::Storage, message)
@@ -55,6 +69,30 @@ pub struct Destination {
     directory: File,
 }
 impl Destination {
+    fn check_space(&self, manifest: &Manifest) -> Result<()> {
+        manifest.validate()?;
+        let content = manifest
+            .components
+            .iter()
+            .try_fold(0_u64, |total, component| {
+                total
+                    .checked_add(component.bytes)
+                    .ok_or_else(|| refused("Backup byte count overflow"))
+            })?;
+        let mut statistics = std::mem::MaybeUninit::<libc::statvfs>::uninit();
+        // The kernel initializes the complete structure only on a successful call.
+        if unsafe { libc::fstatvfs(self.directory.as_raw_fd(), statistics.as_mut_ptr()) } != 0 {
+            return Err(std::io::Error::last_os_error().into());
+        }
+        let statistics = unsafe { statistics.assume_init() };
+        if statistics.f_frsize == 0 {
+            return Err(refused(
+                "Backup destination reports an invalid allocation unit",
+            ));
+        }
+        let available = u128::from(statistics.f_bavail) * u128::from(statistics.f_frsize);
+        require_space(available, content)
+    }
     pub fn open(path: &Path) -> Result<Self> {
         if !path.is_absolute() {
             return Err(refused("Backup directory must be absolute"));
@@ -114,6 +152,7 @@ impl Destination {
                 "Backup cancelled before staging",
             ));
         }
+        self.check_space(manifest)?;
         let temporary = component(&format!(".backup-{}.tmp", Uuid::new_v4()))?;
         let file = open_child(
             &self.directory,
@@ -392,5 +431,14 @@ mod tests {
             b"previous bytes"
         );
         fs::remove_dir_all(root).unwrap();
+    }
+    #[test]
+    fn free_space_boundary_includes_container_overhead_and_live_state_reserve() {
+        let content = 1000;
+        let required = 1000 + 48 * 1024 * 1024;
+        assert!(require_space(required, content).is_ok());
+        assert!(require_space(required - 1, content).is_err());
+        assert!(require_space(0, 0).is_err());
+        assert!(require_space(u128::MAX, u64::MAX).is_ok());
     }
 }

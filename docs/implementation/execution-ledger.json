@@ -4299,9 +4299,10 @@
       "expected": "Prior valid archive remains, no success/rotation on partial file",
       "status": "partial",
       "evidence": [
-        "docs/reports/COMPLETION_P13A_PUBLICATION_2026-11-08.md"
+        "docs/reports/COMPLETION_P13A_PUBLICATION_2026-11-08.md",
+        "docs/reports/COMPLETION_P13A_SPACE_2026-11-09.md"
       ],
-      "note": "Private publication and streaming failure/cancellation covered. Exact disk-full/fsync/process-crash/native variants remain open."
+      "note": "Private publication and streaming failure cleanup plus advisory descriptor free-space threshold covered. Actual disk-full/quota/fsync/native variants remain open."
     },
     {
       "id": "BACKUP06",

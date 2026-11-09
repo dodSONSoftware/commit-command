@@ -13,7 +13,8 @@ pub const MAX_MANIFEST: u64 = 1024 * 1024;
 pub const MAX_COMPONENTS: usize = 9_999;
 pub const MAX_COMPONENT: u64 = super::MAX_COMPONENT_BYTES;
 pub const MAX_CONTENT: u64 = 1024 * 1024 * 1024;
-const MAX_ARCHIVE: u64 = MAX_CONTENT + 32 * 1024 * 1024;
+pub(super) const MAX_CONTAINER_OVERHEAD: u64 = 32 * 1024 * 1024;
+const MAX_ARCHIVE: u64 = MAX_CONTENT + MAX_CONTAINER_OVERHEAD;
 fn refused(message: &str) -> Error {
     Error::with_kind(ErrorKind::InvalidData, message)
 }

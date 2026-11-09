@@ -11,6 +11,14 @@ The [detailed completion handoff](implementation/README.md) supplies the executa
 remaining-work packages, decision worksheet, fixture/test procedures and complete
 requirement mapping. It does not accept gates or replace this live evidence ledger.
 
+### November 9 completion P13A free-space preflight
+
+[Space checkpoint](reports/COMPLETION_P13A_SPACE_2026-11-09.md): descriptor-based
+free-space check precedes temporary creation, with declared content plus32 MiB
+container overhead and16 MiB live-state reserve. Seventeen focused tests and
+strict Core Clippy pass. This is advisory; real disk-full/fsync/crash acceptance,
+owner capture/migration integration and full backup workflows remain open.
+
 ### November 9 completion P09 unsaved repository AI tests
 
 [Editor-test checkpoint](reports/COMPLETION_P09_EDITOR_TEST_2026-11-09.md): explicit
