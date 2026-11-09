@@ -3641,7 +3641,7 @@
       "evidence": [
         "docs/reports/COMPLETION_P09_IDENTITY_2026-11-08.md"
       ],
-      "note": "Duplicate-name edited/new entity ID regressions pass; complete configuration CRUD/native variants remain."
+      "note": "Stable-ID renderer resolution is tested with fixture responses. Core rejects duplicate names already; no valid persisted duplicate-name save defect was reproduced. Other editor/duplicate/copy/delete and native variants remain open."
     },
     {
       "id": "AI03",
