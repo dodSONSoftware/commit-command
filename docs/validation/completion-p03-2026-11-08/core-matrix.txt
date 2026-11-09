@@ -812,3 +812,1513 @@ test push_batch::later_server_rejection_preserves_child_success_and_requires_fre
 test push_check::hook_source_mutation_blocks_completion_without_rolling_back_hook_effects ... ok
 test push_check::restart_projects_orphaned_checks_as_interrupted_without_replaying_hooks ... ok
 test push_check::rejected_or_precancelled_check_keeps_no_raw_hook_output_or_authority ... ok
+test push_check::running_hook_cancellation_stops_check_and_cannot_replay ... ok
+test push_check::native_capability_runs_exact_pre_push_payload_once_without_publication ... ok
+test push_batch::guided_queue_publishes_child_then_freshly_reviewed_parent_without_managed_changes ... ok
+test push_dependencies::planning_blocks_non_fast_forward_and_expired_root_without_children ... ok
+test push_dependencies::planning_refuses_two_selected_sources_for_one_destination_branch ... ok
+test push_dependencies::planning_never_adds_unselected_children_and_requires_remote_evidence ... ok
+test push_dependencies::selected_child_without_required_commit_cannot_satisfy_parent ... ok
+test push_dependencies::multilevel_selected_chain_is_ordered_grandchild_child_parent ... ok
+test push_dependencies::selected_two_repository_cycle_returns_closed_witness_and_no_order ... ok
+test push_publication::changed_local_destination_metadata_is_refused_before_transport ... ok
+test push_publication::cancellation_during_proven_server_check_is_uncertain_and_never_retried ... ok
+test push_publication::declined_and_precancelled_publication_never_changes_destination ... ok
+test push_publication::approved_exact_fast_forward_publishes_once_without_managed_repository_changes ... ok
+test push_publication::publication_request_rejects_unreviewed_force_fields ... ok
+test push_publication::destination_movement_blocks_before_publication ... ok
+test push_publication::restart_projects_publishing_as_unconfirmed_without_replay ... ok
+test push_dependencies::selected_pending_child_is_conditional_and_unselected_pending_child_blocks has been running for over 60 seconds
+test push_dependencies::selected_pending_child_is_conditional_and_unselected_pending_child_blocks ... ok
+test push_publication::server_rejection_remains_unconfirmed_until_separately_reviewed_observation ... ok
+test push_publication::source_or_hook_drift_invalidates_native_publication_approval ... ok
+test push_publication_auth::existing_read_only_https_fixture_mode_never_accepts_receive_pack ... ok
+test restart_exposes_an_orphaned_review_but_never_restores_authority ... ok
+test running_https_observation_is_cancelled_after_the_actual_request_starts ... ok
+test ssh_transport_tests::reviewed_ssh_profile_assignment_works_without_host_ssh_flags ... ok
+test push_publication_auth::https_publication_rejects_wrong_credentials_before_transport_without_secret_persistence ... ok
+test push_publication_auth::ssh_publication_uses_only_reviewed_agent_identity_and_exact_fixed_server_command ... ok
+test ssh_transport_tests::ssh_agent_authenticates_only_selected_identity_then_downloads_and_imports_offline ... ok
+test ssh_transport_tests::ssh_server_failure_diagnostics_are_not_retained_in_results_or_journals ... ok
+test ssh_transport_tests::ssh_cancels_proven_authenticated_observation_and_download_without_repository_mutation ... ok
+test untrusted_or_ordinary_local_destinations_never_gain_network_authority ... ok
+test ssh_transport_tests::ssh_unknown_or_changed_host_and_wrong_selected_identity_fail_without_fallback ... ok
+test upstream_restart_revokes_setup_capability_without_creating_a_config_lock ... ok
+test upstream_setup_adds_only_missing_keys_preserves_bytes_and_requires_new_trust ... ok
+test ssh_transport_tests::ssh_policy_drift_decline_and_precancel_never_authenticate ... ok
+test upstream_shared_config_is_visible_to_linked_worktrees_without_touching_either_checkout ... ok
+test verified_https_observation_ignores_managed_helpers_proxies_and_unsafe_tls_settings ... ok
+test push_publication_auth::verified_https_publication_uses_only_reviewed_get_helper_and_preserves_managed_state has been running for over 60 seconds
+test upstream_decline_stale_config_head_trust_and_foreign_locks_preserve_repository ... ok
+test push_publication_auth::verified_https_publication_uses_only_reviewed_get_helper_and_preserves_managed_state ... ok
+test upstream_setup_refuses_unsupported_policy_and_preserves_attributes_without_persisting_secrets ... ok
+
+test result: ok. 103 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 490.21s
+
+     Running tests/version_actions.rs (target/debug/deps/version_actions-86d6bfd5cfcecc88)
+
+running 8 tests
+test renderer_cannot_supply_action_contents_approval_or_replay_fields ... ok
+test an_untrusted_worktree_cannot_approve_a_version_definition ... ok
+test retained_inspection_is_bounded_scoped_read_only_and_available_after_revocation_or_move ... ok
+test restart_restores_results_without_authority_and_stage_refuses_external_edits ... ok
+test retained_inspection_refuses_symlinks_hardlinks_parent_aliases_and_oversized_files ... ok
+test unfinished_definition_restores_as_interrupted_without_granting_authority ... ok
+test exact_version_action_then_separate_stage_and_commit_preserves_unselected_data ... ok
+test decline_precancel_file_index_and_trust_drift_never_replace_version ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 20.06s
+
+    Checking rusqlite v0.41.0
+    Checking gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 13.50s
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 15.44s
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s
+     Running unittests src/lib.rs (target/debug/deps/gitfleet_core-cb3d471672a29816)
+
+running 63 tests
+test actions::semver::tests::invalid_binary_multivalue_prefix_and_overflow_inputs_are_refused ... ok
+test actions::semver::tests::prerelease_handling_is_chosen_and_never_silently_inferred ... ok
+test actions::semver::tests::recovery_never_recomputes_a_second_increment_and_rejects_tampered_preview ... ok
+test actions::semver::tests::increments_preserve_terminators_and_remove_metadata_explicitly ... ok
+test ai::candidates::tests::incomplete_attribution_is_explicit_and_controls_cannot_enter_candidate_metadata ... ok
+test ai::candidates::tests::validates_message_rules_and_preserves_model_attribution_without_authority ... ok
+test ai::candidates::tests::rejects_injected_commands_unknown_provenance_duplicates_and_excess_candidates ... ok
+test ai::context::tests::excluded_and_binary_content_never_enter_the_exact_payload ... ok
+test ai::context::tests::credentials_and_private_key_blocks_are_redacted_before_serialization ... ok
+test ai::context::tests::excluded_empty_file_is_incomplete_and_escaping_obeys_the_exact_budget ... ok
+test ai::context::tests::invalid_budgets_exclusions_and_provenance_fail_without_echoing_content ... ok
+test ai::context::tests::prompt_injection_remains_data_and_has_no_capability_fields ... ok
+test ai::context::tests::independent_groups_keep_line_provenance_and_boundaries ... ok
+test ai::context::tests::byte_budget_preserves_utf8_lines_and_accounts_for_every_omission ... ok
+test ai::provider::tests::absent_or_unapproved_authentication_cannot_reach_the_provider ... ok
+test ai::provider::tests::actual_both_provider_routes_preserve_exact_json_and_auth_without_redirects ... ok
+test ai::provider::tests::declined_or_expired_authority_cannot_contact_provider ... ok
+test ai::provider::tests::empty_tool_list_is_not_a_tool_invocation_and_bidi_model_ids_are_refused ... ok
+test ai::provider::tests::exact_request_uses_only_fixed_routes_and_stdin_for_payload_and_secret ... ok
+test actions::version_file::tests::racing_external_edit_is_retained_by_exchange_instead_of_deleted ... ok
+test ai::provider::tests::provider_options_remain_optional_and_adapter_specific ... ok
+test ai::provider::tests::independent_jobs_enforce_global_and_connection_limits_and_shutdown_discards_results ... ok
+test ai::provider::tests::responses_refuse_partial_tools_fallback_and_invalid_models ... ok
+test ai::provider::tests::reflected_credential_is_refused_before_result_reaches_renderer ... ok
+test ai::provider::tests::truncated_answers_are_actionable_refusals_even_when_the_partial_message_looks_valid ... ok
+test ai::provider::tests::unfinished_or_unrecognized_finish_metadata_never_exposes_the_provider_value ... ok
+test ai::provider::tests::stored_authentication_is_exact_and_failure_never_contacts_an_unauthenticated_provider ... ok
+test ai::tests::capability_parameters_are_optional_bounded_and_provider_specific ... ok
+test ai::tests::edits_are_transactional_stale_guarded_and_preserve_reference_integrity ... ok
+test ai::tests::endpoint_policy_canonicalizes_and_rejects_ambiguous_destinations ... ok
+test ai::provider::tests::actual_discovery_sorts_models_and_rejects_redirect_auth_malformed_and_size ... ok
+test ai::tests::hierarchical_profiles_and_additive_instructions_have_no_silent_fallback ... ok
+test ai::tests::imports_and_connection_edits_clear_endpoint_metadata ... ok
+test ai::tests::no_ai_default_is_valid_and_unavailable_only_for_ai ... ok
+test ai::tests::settings_reject_duplicate_names_bad_references_versions_and_controls ... ok
+test ai::tests::settings_round_trip_without_secrets_or_execution_authority ... ok
+test ai::tests::templates_validate_structure_boundaries_and_static_examples_without_models ... ok
+test ai::provider::tests::actual_running_inference_cancels_and_times_out_with_bounded_cleanup ... ok
+test application::monitor::tests::burst_coalescing_and_periodic_fallback_are_bounded ... ok
+test ai::tests::external_prompt_edits_invalidate_editor_fingerprint_without_losing_text ... ok
+test application::monitor::tests::filtering_and_overflow_do_not_schedule_writes ... ok
+test credentials::tests::ignored_mutations_never_execute_or_validate_a_helper ... ok
+test credentials::tests::scope_and_protocol_reject_ambiguous_secret_or_cross_account_inputs ... ok
+test ai::tests::atomic_generations_preserve_previous_settings_and_external_text ... ok
+test locking::tests::explicit_release_does_not_wait_for_duplicated_descriptors ... ok
+test ai::tests::unsafe_and_interrupted_generation_files_are_preserved_and_refused ... ok
+test inspection::consistency_tests::ref_and_config_mutation_during_read_are_rejected ... ok
+test inspection::consistency_tests::multi_command_reads_for_one_worktree_are_serialized ... ok
+test process::reference::abort_deadline_test::unresponsive_abort_is_bounded_and_uncertain ... ok
+test process::tests::bounded_input_checks_writer_completion_and_descendant_timeout ... ok
+test process::reference::tests::foreign_lock_is_never_removed ... ok
+test process::reference::tests::prepared_guard_aborts_symbolic_ref_even_when_resolved_oid_matches ... ok
+test process::tests::trusted_artifact_check_prevents_spawn_and_reaps_running_process ... ok
+test remote::urls::tests::relative_repository_directory_semantics_preserve_authority_and_home_roots ... ok
+test remote::urls::tests::scp_preserves_path_spelling_and_requires_explicit_plain_login ... ok
+test writes::fetch::tests::artifact_budget_rejects_sparse_oversize_files_and_symlinks ... ok
+test writes::fetch::tests::inventory_limits_are_checked_before_bundle_creation ... ok
+test writes::push_dependencies::tests::cycle_witness_excludes_acyclic_dependents_and_independent_nodes ... ok
+test writes::push_dependencies::tests::stable_order_visits_only_selected_nodes_children_first ... ok
+test process::reference::tests::prepared_cancellation_aborts_and_reaps_without_publication ... ok
+test process::tests::global_permits_never_exceed_four ... ok
+test process::tests::bounded_process_limits_and_cancellation_reap_children ... ok
+test writes::ssh_transport::tests::actual_ssh_configuration_disables_fallback_and_preserves_shell_quoted_paths ... ok
+
+test result: ok. 63 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.95s
+
+     Running unittests src/bin/gitfleet_cli.rs (target/debug/deps/gitfleet_cli-a1476ba0e72c8ef4)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/gitfleet_contracts.rs (target/debug/deps/gitfleet_contracts-3b10b03759986dd3)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/gitfleet_credential.rs (target/debug/deps/gitfleet_credential-80212bd685638f12)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/gitfleet_lab.rs (target/debug/deps/gitfleet_lab-32bce6514c53e22d)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/gitfleet_write.rs (target/debug/deps/gitfleet_write-92b374fd230f9b34)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/acceptance.rs (target/debug/deps/acceptance-63b814809fb4a647)
+
+running 24 tests
+test hook_changes_selected_worktree ... ok
+test external_index_changed ... ok
+test crash_then_external_index_edit ... ok
+test hook_modifies_only_worktree ... ok
+test hook_rewrites_message ... ok
+test hook_stages_unapproved ... ok
+test mixed_selected_sources ... ok
+test partial_staging_commits_index_only ... ok
+test partial_staging_commits_worktree ... ok
+test post_commit_hook ... ok
+test prepare_hook_rewrites_message ... ok
+test real_sigkill_after_reconcile ... ok
+test real_sigkill_before_ref ... ok
+test real_sigkill_after_ref ... ok
+test selected_rename_pair ... ok
+test selected_worktree_changed_after_review ... ok
+test selected_staged_preserves_other_staging ... ok
+test selected_unstaged_deletion ... ok
+test signing_missing_key ... ok
+test successful_gpg_signing ... ignored, optional positive GPG signing; run explicitly with a working GPG installation
+test selected_worktree_preserves_other_staging ... ok
+test stale_head_before_cas ... ok
+test space_in_path ... ok
+test untracked_selected ... ok
+
+test result: ok. 23 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 2.68s
+
+     Running tests/bulk_application.rs (target/debug/deps/bulk_application-e568f59f8a6745ce)
+
+running 15 tests
+test batch_crash_worker ... ignored, subprocess worker invoked by the batch interruption test
+test duplicate_selection_rejected_and_restart_cannot_replay_an_old_batch_capability ... ok
+test explicit_batch_commits_only_selected_repositories_and_never_nested_children_implicitly ... ok
+test declined_batch_and_changed_selected_content_never_publish ... ok
+test known_untrusted_item_blocks_entire_batch_before_any_repository_write ... ok
+test index_only_batch_preserves_partial_staging_and_exclusions_are_exact ... ok
+test batch_stops_after_first_failure_preserves_success_and_cancels_unstarted_items ... ok
+test linked_worktree_batch_requires_independent_trust_and_preserves_unselected_checkout ... ok
+test process_interruption_between_items_is_visible_and_restart_does_not_replay ... ok
+test malformed_submodule_relationships_stop_before_batch_proposals ... ok
+test revoked_trust_revokes_the_whole_batch_capability_and_cancels_proposals ... ok
+test running_batch_cancellation_preserves_completed_item_and_never_starts_successors ... ok
+test selected_linked_worktrees_share_locks_but_commit_only_their_own_branches ... ok
+test real_submodule_commits_before_parent_and_changed_gitlink_requires_fresh_parent_review ... ok
+test three_level_submodules_require_fresh_review_at_each_changed_parent ... ok
+
+test result: ok. 14 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 41.41s
+
+     Running tests/core_behaviour.rs (target/debug/deps/core_behaviour-5dca7a3662c6756e)
+
+running 6 tests
+test discovery_does_not_follow_symlinked_directories ... ok
+test discovery_canonicalizes_symlinked_root ... ok
+test prevent_parent_path_escape ... ok
+test read_only_status_is_available ... ok
+test discover_nested_repositories_and_gitfile_marker ... ok
+test discover_linked_worktree_with_git_file ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.55s
+
+     Running tests/graph_activity.rs (target/debug/deps/graph_activity-801cf2b3eaa6a21b)
+
+running 5 tests
+test activity_does_not_prune_recent_ancestors_behind_older_committer_dates ... ok
+test sha256_graph_retains_full_object_ids ... ok
+test activity_uses_committer_time_and_deduplicates_branches_with_explicit_truncation ... ok
+test unborn_graph_and_activity_are_empty_and_malformed_graph_lanes_are_rejected ... ok
+test graph_uses_actual_merge_parents_and_preserves_lanes_across_pages_without_writes ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.75s
+
+     Running tests/inspection.rs (target/debug/deps/inspection-d1efcb83a0b32013)
+
+running 13 tests
+test included_filter_configuration_is_rejected ... ok
+test cli_does_not_inherit_git_repository_or_config_overrides ... ok
+test content_filters_are_rejected_without_mutation ... ok
+test nested_directory_is_not_accepted_as_worktree_root ... ok
+test missing_promisor_object_cannot_launch_a_remote_helper ... ok
+test non_utf8_filename_remains_git_quoted_without_mutation ... ignored, M0 host filesystem rejects non-UTF-8 filename creation (EPERM); requires a supporting filesystem
+test configured_helper_sentinels_are_not_executed ... ok
+test inspection_and_cli_preserve_dirty_repository_bytes ... ok
+test newline_filename_remains_git_quoted_without_mutation ... ok
+test worktree_filter_configuration_is_rejected ... ok
+test unmerged_index_can_be_inspected_without_write_tree ... ok
+test remote_presence_and_tracking_counts_are_local_and_backward_compatible ... ok
+test unborn_and_detached_head_can_be_inspected ... ok
+
+test result: ok. 12 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 2.52s
+
+     Running tests/m1_read.rs (target/debug/deps/m1_read-6106d79c964b311e)
+
+running 17 tests
+test byte_safe_parsers_roundtrip_non_utf8_names_and_reject_malformed_records ... ok
+test cancelled_deadline_output_and_preview_limits_are_typed_without_repo_mutation ... ok
+test conflict_stages_and_merge_state_are_structured_without_mutation ... ok
+test clean_unstaged_diff_preserves_an_index_with_unpopulated_stat_cache ... ok
+test executable_mode_and_deletion_diffs_are_explicit ... ok
+test literal_newline_and_binary_previews_preserve_scope_and_bytes ... ok
+test local_upstream_comparison_never_claims_remote_freshness ... ok
+test history_dag_merge_parents_tags_pagination_and_stale_cursors ... ok
+test cli_and_library_inspection_contracts_agree_for_all_read_modes ... ok
+test missing_upstream_and_shallow_boundary_are_explicit ... ok
+test helper_sentinels_are_suppressed_for_every_history_diff_and_failure_path ... ok
+test split_index_is_read_only_and_sparse_configuration_fails_closed ... ok
+test root_commit_diff_and_staged_unstaged_blobs_have_independent_oracles ... ok
+test sha256_repository_inspection_and_blob_ids_are_format_aware ... ok
+test structured_status_distinguishes_partial_staging_rename_binary_modes_and_conflicts ... ok
+test unborn_history_is_empty_and_history_limits_are_checked ... ok
+test symlink_leaf_is_not_dereferenced_and_parent_escape_and_fifo_are_rejected ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.67s
+
+     Running tests/m1_workspace.rs (target/debug/deps/m1_workspace-43e6924127b4ec39)
+
+running 23 tests
+test cancelled_continuation_keeps_accepted_state_and_exclusion_changes_invalidate_cursor ... ok
+test cli_and_service_workspace_results_agree_and_preserve_repository_bytes ... ok
+test cancelled_scan_still_returns_cancelled_and_preserves_saved_inventory ... ok
+test changing_workspace_root_invalidates_old_inventory_and_refresh_scope ... ok
+test expired_scan_is_reported_as_partial_without_marking_known_repositories_missing ... ok
+test failed_atomic_config_save_preserves_previous_toml_and_memory ... ok
+test clones_with_identical_head_have_distinct_identities ... ok
+test failed_replacement_inspection_does_not_retire_original_identity ... ok
+test invalid_and_newer_configs_and_schemas_are_preserved ... ok
+test exclusions_partial_scans_and_unavailable_entries_are_explicit ... ok
+test identities_survive_restart_and_verified_move_but_not_copies_or_replacement ... ok
+test bounded_scan_continuations_reach_the_suffix_without_mutating_repositories ... ok
+test partial_permission_scan_and_glob_exclusions_preserve_known_identity ... ok
+test saved_workspaces_restart_activate_rename_update_remove_and_lock ... ok
+test startup_reconciles_authoritative_toml_after_database_update_was_interrupted ... ok
+test state_inside_checkout_and_invalid_workspace_definitions_are_rejected ... ok
+test mixed_inventory_classifies_nested_submodule_and_linked_worktrees ... ok
+test replacement_recovery_preserves_history_and_restored_identity ... ok
+test submodule_gitlinks_and_child_dirt_are_reported_without_recursive_helpers ... ok
+test unversioned_unknown_database_is_not_migrated_and_empty_database_is_backed_up ... ok
+test inventory_tracks_observed_child_heads_against_current_parent_gitlinks ... ok
+test targeted_refresh_does_not_rediscover_and_replacement_requires_rescan ... ok
+test tagged_caches_are_explicitly_skipped_without_hiding_other_broken_git_markers ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.51s
+
+     Running tests/m2_writes.rs (target/debug/deps/m2_writes-77eff45d7dea063c)
+
+running 32 tests
+test crash_worker ... ignored, child-process crash worker; invoked and asserted by crash matrix, never a skipped acceptance scenario
+test effective_global_hook_path_and_prepare_message_rewrites_are_reviewed ... ok
+test approvals_reject_tampering_expiry_restart_and_same_oid_branch_switch ... ok
+test exact_worktree_commit_is_reviewed_before_any_repo_object_write_and_idempotent ... ok
+test hook_timeout_is_bounded_and_shared_repository_lock_prevents_execution ... ok
+test changed_selection_index_and_ref_invalidate_approval_and_noop_is_rejected ... ok
+test hook_bypass_is_complete_and_managers_and_reference_hooks_fail_closed ... ok
+test m2_schema_upgrade_backs_up_m1_and_default_services_can_reopen_schema_two ... ok
+test linked_worktrees_require_independent_trust_and_preserve_other_checkout ... ok
+test mixed_sources_rename_gitlinks_and_worktree_config_preserve_exact_selection ... ok
+test hooks_reject_tree_message_and_selected_content_changes_without_publishing ... ok
+test literal_binary_symlink_executable_deletion_and_initial_commit_have_exact_trees ... ok
+test moved_replaced_and_permission_changed_metadata_never_inherit_write_authority ... ok
+test openpgp_signing_positive_gate_requires_isolated_tool_and_keyring ... ok
+test post_hook_failure_preserves_published_commit_and_excluded_side_effects_are_reported ... ok
+test preparatory_hooks_can_read_selected_private_blobs_and_rejected_adds_stay_private ... ok
+test revoked_crash_can_be_explicitly_retrusted_with_only_proven_native_locks ... ok
+test recovery_review_is_session_owned_stale_and_post_attempt_uncertainty_survives_retry ... ok
+test ssh_signing_is_verified_against_approved_key_without_unsigned_fallback ... ok
+test stage_unstage_and_commit_preserve_partial_and_excluded_staging ... ok
+test storage_failure_and_corrupt_candidate_cannot_publish_unapproved_content ... ok
+test recovery_refuses_foreign_index_lock_ref_and_partial_reflog_without_writes ... ok
+test supported_sha256_unborn_stage_unstage_and_commit ... ok
+test unresolved_fetch_import_blocks_new_and_already_approved_local_writes_in_every_feature_build ... ok
+test trust_revocation_and_changed_hook_or_configuration_block_before_publication ... ok
+test untrusted_proposals_and_forged_trust_reviews_are_rejected_without_repo_writes ... ok
+test unsupported_indexes_operation_states_filters_and_foreign_locks_do_not_write ... ok
+test unsupported_sparse_conflicts_detached_and_conversions_never_mutate_git ... ok
+test upstream_recovery_barrier_blocks_controlled_only_new_and_approved_local_writes ... ok
+test version_action_recovery_barrier_blocks_new_and_approved_writes_without_application_features ... ok
+test wrong_key_and_timed_out_signers_never_publish_or_fall_back_to_unsigned ... ok
+test sigkill_matrix_recovers_from_actual_ref_index_and_owned_locks_without_replay ... ok
+
+test result: ok. 31 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 49.13s
+
+     Running tests/m3_application.rs (target/debug/deps/m3_application-851d0183cee652df)
+
+running 41 tests
+test ai_context_bounds_selection_documents_history_and_cancellation ... ok
+test ai_context_redacted_or_excluded_changes_still_invalidate_snapshot ... ok
+test ai_context_refuses_links_nested_repositories_and_ignored_untracked_content ... ok
+test ai_context_related_source_docs_and_current_branch_history_are_explicit_and_filtered ... ok
+test ai_context_tracked_working_selection_compares_full_content_against_head ... ok
+test ai_context_supports_unborn_and_staged_or_working_deletion ... ok
+test ai_credentials_require_current_saved_binding_and_native_approval_without_fallback ... ok
+test ai_context_exact_selection_is_read_only_and_needs_no_ai_or_trust ... ok
+test ai_source_drift_or_missing_profile_blocks_before_transfer_and_manual_reads_continue ... ok
+test activity_deduplicates_linked_worktrees_and_audit_filters_real_operation_phases ... ok
+test automatic_discovery_retains_identity_across_rename_and_missing_entries_after_removal ... ok
+test ai_source_transfer_requires_exact_native_approval_and_returns_only_validated_text ... ok
+test deterministic_version_preview_needs_no_trust_or_provider_and_preserves_drafts_and_git ... ok
+test bulk_composer_state_is_durable_workspace_scoped_and_does_not_change_git ... ok
+test cancelled_and_replaced_reviews_record_nonpublication_and_cancellation_is_per_operation ... ok
+test final_presentation_snapshot_is_atomic_durable_and_never_grants_authority ... ok
+test g01_replaced_or_closed_review_cannot_use_an_already_issued_confirmation ... ok
+test g01_hostile_review_text_preserves_exact_approved_message_and_index_blob ... ok
+test invalid_bulk_preferences_do_not_replace_the_last_valid_draft ... ok
+test interrupted_records_block_scope_loss_and_are_reported_for_guarded_recovery ... ok
+test identity_recovery_keeps_drafts_and_trust_scoped_and_invalidates_pending_review ... ok
+test malformed_state_paths_duplicate_tabs_and_unknown_picker_cannot_modify_storage ... ok
+test inventory_exposes_scan_level_and_repository_inspection_failures_and_cache_skips ... ok
+test g01_g02_shutdown_or_reset_revokes_issued_commit_confirmation_without_running_hooks ... ok
+test native_window_placement_survives_restart_and_invalid_values_preserve_saved_state ... ok
+test native_capability_is_required_decline_replay_and_context_changes_fail_closed ... ok
+test notification_reconciliation_detects_external_edits_without_writes ... ok
+test navigation_migration_restart_and_newer_data_are_preserved ... ok
+test operation_reviews_show_exact_content_and_only_applicable_commit_fields ... ok
+test optional_ai_settings_preserve_manual_work_and_use_lazy_atomic_storage ... ok
+test review_text_escapes_bidi_and_reset_invalidates_picker_and_native_capability ... ok
+test reviewed_ai_diagnostic_runs_outside_storage_owner_and_cancels_without_git_authority ... ok
+test scoped_reads_and_contracts_preserve_every_repository_byte ... ok
+test trust_currentness_is_distinct_from_supported_hook_policy_eligibility ... ok
+test recovered_historical_identities_do_not_degrade_periodic_monitoring ... ok
+test untrusted_remote_inspection_is_scoped_and_includes_host_configuration_without_helper_execution ... ok
+test unified_audit_filters_real_local_batch_and_remote_records_without_mutation_or_authority ... ok
+test switching_workspace_stops_refreshing_inactive_repository_state ... ok
+test unified_audit_pages_across_tied_sources_and_projects_orphans_without_rewriting_journals ... ok
+test workspace_switch_invalidates_reviews_and_old_epoch_and_stops_old_watchers ... ok
+test version_preview_rejects_unsafe_files_and_crossing_repository_boundaries ... ok
+
+test result: ok. 41 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 30.67s
+
+     Running tests/remote_inspection.rs (target/debug/deps/remote_inspection-56f5f53e74ee6773)
+
+running 10 tests
+test explicit_pushurl_suppresses_pushinsteadof_and_multiple_destinations_stay_visible ... ok
+test effective_fetch_push_rewrites_case_sensitive_names_origins_and_upstream_are_read_only ... ok
+test malformed_scp_style_userinfo_cannot_leak_a_password_in_inspection ... ok
+test helper_and_hostile_destinations_are_withheld_and_controls_fail_closed ... ok
+test inspection_never_executes_configured_helpers_and_never_returns_embedded_secrets ... ok
+test missing_upstream_detached_head_and_cancellation_are_explicit ... ok
+test explicit_ssh_login_is_visible_but_password_query_fragment_and_encoded_login_stay_withheld ... ok
+test unsupported_scp_query_and_fragment_values_are_withheld ... ok
+test scope_limits_malformed_names_and_case_insensitive_tls_overrides_fail_safely ... ok
+test push_remote_precedence_is_only_a_suggestion_and_unknown_or_local_upstream_is_reported ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.95s
+
+     Running tests/remote_observation.rs (target/debug/deps/remote_observation-4d8ded91731b232b)
+
+running 115 tests
+test artifact_initialization::artifact_init_probe_worker ... ignored, subprocess-only controlled Git initialization probe
+test authentication_failure_never_uses_a_configured_helper_or_retains_raw_server_text ... ok
+test authentication_profiles::assigned_profile_refuses_destination_drift_and_requires_unassignment_before_delete ... ok
+test artifact_initialization::persistent_initialization_symlink_is_still_refused_before_object_import ... ok
+test authentication_profiles::profile_and_remote_isolation_and_tool_drift_block_lookup ... ok
+test authentication_profiles::explicitly_assigned_profile_authenticates_capture_without_host_credential_flags ... ok
+test artifact_initialization::git_initialization_probe_is_transient_and_never_accepted_as_a_completed_artifact ... ok
+test authentication_profiles::profiles_require_native_approval_persist_and_are_not_implicitly_assigned ... ok
+test certificate_source_drift_requires_new_review_before_any_request ... ok
+test child_evidence::historical_mapping_contexts_are_bounded_without_partial_success ... ok
+test child_evidence::child_evidence_rejects_historical_destination_mismatch ... ok
+test authentication_profiles::settings_review_refuses_changed_helper_or_destination_and_cancelled_application ... ok
+test child_evidence::historical_mappings_refuse_ambiguity_unsafe_relative_urls_secrets_and_nonregular_blobs ... ok
+test child_evidence::historical_mappings_keep_url_changes_and_ignore_working_files_and_includes ... ok
+test child_evidence::child_evidence_rejects_mismatches_expiry_missing_objects_config_drift_and_cancellation ... ok
+test decline_cancellation_and_configuration_drift_never_contact_a_remote ... ok
+test fetch_capture_decline_precancel_and_configuration_drift_cannot_import_or_contact_a_server ... ok
+test child_evidence::real_agent_authenticated_child_evidence_resolves_relative_ssh_mapping_without_new_contact ... ok
+test fetch_capture_detects_remote_branch_drift_without_importing_downloaded_objects ... ok
+test fetch_capture_downloads_real_objects_over_verified_https_with_managed_helpers_isolated ... ok
+test child_evidence::relative_child_mapping_uses_selected_parent_destination_and_proves_observed_ancestry ... ok
+test fetch_capture_rejects_missing_or_absent_sources_and_loses_authority_on_restart ... ok
+test fetch_capture_requires_fresh_native_authority_and_produces_exact_verified_bundle_without_managed_mutation ... ok
+test fetch_import_crash_worker ... ignored, subprocess-only disposable SIGKILL worker
+test fetch_import_adds_exact_objects_and_one_tracking_ref_with_separate_authority ... ok
+test fetch_capture_refuses_authentication_redirects_and_cancels_a_proven_running_request ... ok
+test child_evidence::selected_child_observation_proves_only_actual_ancestry_and_preserves_all_repositories ... ok
+test fetch_import_storage_failure_requires_fresh_observation_and_preserves_foreign_lock ... ok
+test fetch_import_decline_cancel_tamper_config_and_ref_drift_fail_closed ... ok
+test https_credential_tests::actual_gitea_and_osxkeychain_read_download_import_and_missing_account ... ignored, opt-in loopback Gitea + exact generated macOS Keychain fixture; never uses user credentials
+test fetch_import_updates_packed_expected_old_for_sha1_and_sha256 ... ok
+test fetch_import_rejects_aliases_and_shared_lock_and_orphaned_authority ... ok
+test fetch_import_sigkill_before_and_after_publication_never_replays ... ok
+test https_credential_tests::completed_https_transport_reaps_helper_background_descendants ... ok
+test https_credential_tests::cancellation_after_credential_lookup_starts_reaps_the_helper_and_preserves_state ... ok
+test https_credential_tests::credential_helper_timeout_is_bounded_by_the_owning_network_operation ... ok
+test https_credential_tests::approved_https_helper_authenticates_downloads_and_imports_without_persisting_or_mutating_credentials ... ok
+test https_credential_tests::helper_credentials_never_bypass_tls_hostname_validation_or_follow_redirects ... ok
+test https_credential_tests::osxkeychain_password_only_response_and_private_state_extensions_authenticate_without_persistence ... ok
+test https_credential_tests::isolated_os_keychain_locked_missing_and_cancelled_reads_preserve_search_list_and_credentials ... ok
+test https_credential_tests::declined_stale_or_cancelled_https_reviews_never_read_a_credential ... ok
+test https_requires_a_valid_certificate_hostname_and_refuses_redirects ... ok
+test local_push_preview_bounds_outgoing_details_and_loses_no_exact_count ... ok
+test https_credential_tests::malformed_oversized_and_failing_helpers_cannot_expose_a_secret_or_authenticate ... ok
+test https_credential_tests::wrong_missing_and_changed_account_credentials_fail_without_store_or_erase ... ok
+test local_push_preview_inventories_committed_gitlinks_without_reading_children_or_index ... ok
+test local_push_preview_covers_removed_replaced_and_merged_gitlinks_beyond_display_limit ... ok
+test local_push_preview_refuses_excessive_source_gitlinks_without_partial_inventory ... ok
+test local_push_preview_refuses_excessive_history_requirements_even_when_source_fits ... ok
+test local_push_preview_refuses_excessive_distinct_history_trees ... ok
+test local_push_preview_reports_up_to_date_and_fast_forward_without_authority_or_mutation ... ok
+test missing_remote_branch_is_observed_absent_without_creating_a_destination ... ok
+test observation_needs_independent_native_authority_and_changes_neither_repository ... ok
+test push_batch::a_saved_queue_cannot_broaden_its_frozen_source ... ok
+test local_push_preview_requires_explicit_objects_then_reports_behind_and_diverged ... ok
+test push_batch::guided_queue_crash_worker ... ignored, subprocess-only disposable guided queue SIGKILL worker
+test local_push_preview_refuses_ambiguous_changed_or_unsupported_context_without_effects ... ok
+test push_batch::guided_request_rejects_approval_force_and_hook_policy_overrides ... ok
+test push_batch::decline_stops_guided_queue_and_never_implicitly_publishes_parent ... ok
+test push_batch::actual_process_loss_between_items_preserves_success_and_never_starts_parent ... ok
+test push_batch::guided_queue_publishes_child_then_freshly_reviewed_parent_without_managed_changes has been running for over 60 seconds
+test push_batch::later_server_rejection_preserves_child_success_and_requires_fresh_retry_queue has been running for over 60 seconds
+test push_batch::restart_interrupts_unfinished_queue_without_restoring_item_authority ... ok
+test push_batch::revoked_selected_worktree_blocks_queue_before_any_publication_record ... ok
+test push_batch::observed_current_child_is_skipped_without_publication_or_a_second_child_approval has been running for over 60 seconds
+test push_batch::observed_current_child_is_skipped_without_publication_or_a_second_child_approval ... ok
+test push_batch::unselected_missing_child_blocks_queue_creation_and_never_enrolls_child ... ok
+test push_check::changed_hook_or_source_invalidates_approved_check_before_hook ... ok
+test push_check::conditional_selected_child_is_not_remote_success_for_parent_check ... ok
+test push_batch::later_server_rejection_preserves_child_success_and_requires_fresh_retry_queue ... ok
+test push_check::child_gate_requires_new_observation_after_fixture_remote_advances ... ok
+test push_check::decline_bypass_and_unsupported_manager_never_run_hook ... ok
+test push_check::hook_source_mutation_blocks_completion_without_rolling_back_hook_effects ... ok
+test push_check::restart_projects_orphaned_checks_as_interrupted_without_replaying_hooks ... ok
+test push_batch::guided_queue_publishes_child_then_freshly_reviewed_parent_without_managed_changes ... ok
+test push_check::rejected_or_precancelled_check_keeps_no_raw_hook_output_or_authority ... ok
+test push_dependencies::planning_blocks_non_fast_forward_and_expired_root_without_children ... ok
+test push_check::running_hook_cancellation_stops_check_and_cannot_replay ... ok
+test push_check::native_capability_runs_exact_pre_push_payload_once_without_publication ... ok
+test push_dependencies::planning_refuses_two_selected_sources_for_one_destination_branch ... ok
+test push_dependencies::selected_child_without_required_commit_cannot_satisfy_parent ... ok
+test push_dependencies::planning_never_adds_unselected_children_and_requires_remote_evidence ... ok
+test push_dependencies::multilevel_selected_chain_is_ordered_grandchild_child_parent ... ok
+test push_dependencies::selected_two_repository_cycle_returns_closed_witness_and_no_order ... ok
+test push_publication::cancellation_during_proven_server_check_is_uncertain_and_never_retried ... ok
+test push_publication::actual_sigkill_before_and_after_transport_requires_observation_and_never_replays ... ok
+test push_publication::changed_local_destination_metadata_is_refused_before_transport ... ok
+test push_publication::approved_exact_fast_forward_publishes_once_without_managed_repository_changes ... ok
+test push_publication::publication_crash_worker ... ignored, subprocess-only disposable SIGKILL worker
+test push_dependencies::selected_pending_child_is_conditional_and_unselected_pending_child_blocks has been running for over 60 seconds
+test push_publication::publication_request_rejects_unreviewed_force_fields ... ok
+test push_publication::declined_and_precancelled_publication_never_changes_destination ... ok
+test push_publication::destination_movement_blocks_before_publication ... ok
+test push_dependencies::selected_pending_child_is_conditional_and_unselected_pending_child_blocks ... ok
+test push_publication::restart_projects_publishing_as_unconfirmed_without_replay ... ok
+test push_publication::server_rejection_remains_unconfirmed_until_separately_reviewed_observation ... ok
+test push_publication::source_or_hook_drift_invalidates_native_publication_approval ... ok
+test push_publication_auth::existing_read_only_https_fixture_mode_never_accepts_receive_pack ... ok
+test restart_exposes_an_orphaned_review_but_never_restores_authority ... ok
+test push_publication_auth::https_publication_rejects_wrong_credentials_before_transport_without_secret_persistence ... ok
+test running_https_observation_is_cancelled_after_the_actual_request_starts ... ok
+test ssh_transport_tests::reviewed_ssh_profile_assignment_works_without_host_ssh_flags ... ok
+test ssh_transport_tests::ssh_agent_authenticates_only_selected_identity_then_downloads_and_imports_offline ... ok
+test ssh_transport_tests::ssh_cancels_proven_authenticated_observation_and_download_without_repository_mutation ... ok
+test push_publication_auth::ssh_publication_uses_only_reviewed_agent_identity_and_exact_fixed_server_command ... ok
+test ssh_transport_tests::ssh_server_failure_diagnostics_are_not_retained_in_results_or_journals ... ok
+test untrusted_or_ordinary_local_destinations_never_gain_network_authority ... ok
+test upstream_crash_worker ... ignored, subprocess-only disposable upstream SIGKILL worker
+test ssh_transport_tests::ssh_unknown_or_changed_host_and_wrong_selected_identity_fail_without_fallback ... ok
+test upstream_restart_revokes_setup_capability_without_creating_a_config_lock ... ok
+test upstream_setup_adds_only_missing_keys_preserves_bytes_and_requires_new_trust ... ok
+test ssh_transport_tests::ssh_policy_drift_decline_and_precancel_never_authenticate ... ok
+test upstream_shared_config_is_visible_to_linked_worktrees_without_touching_either_checkout ... ok
+test upstream_decline_stale_config_head_trust_and_foreign_locks_preserve_repository ... ok
+test push_publication_auth::verified_https_publication_uses_only_reviewed_get_helper_and_preserves_managed_state has been running for over 60 seconds
+test upstream_storage_failure_after_rename_and_foreign_lock_recovery_stay_truthful ... ok
+test verified_https_observation_ignores_managed_helpers_proxies_and_unsafe_tls_settings ... ok
+test push_publication_auth::verified_https_publication_uses_only_reviewed_get_helper_and_preserves_managed_state ... ok
+test upstream_setup_refuses_unsupported_policy_and_preserves_attributes_without_persisting_secrets ... ok
+test upstream_sigkill_recovery_never_replays_and_removes_only_owned_config_lock ... ok
+
+test result: ok. 109 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 510.56s
+
+     Running tests/version_actions.rs (target/debug/deps/version_actions-254d0f74e90d7f02)
+
+running 12 tests
+test an_untrusted_worktree_cannot_approve_a_version_definition ... ok
+test actual_sigkill_before_and_after_replace_recovers_without_replay ... ok
+test interrupted_intent_blocks_other_writes_and_recovery_never_repeats_increment ... ok
+test renderer_cannot_supply_action_contents_approval_or_replay_fields ... ok
+test recovery_drift_requires_fresh_observation_and_external_content_is_never_overwritten ... ok
+test restart_restores_results_without_authority_and_stage_refuses_external_edits ... ok
+test retained_inspection_is_bounded_scoped_read_only_and_available_after_revocation_or_move ... ok
+test exact_version_action_then_separate_stage_and_commit_preserves_unselected_data ... ok
+test version_action_crash_worker ... ignored, subprocess-only disposable version Action SIGKILL worker
+test retained_inspection_refuses_symlinks_hardlinks_parent_aliases_and_oversized_files ... ok
+test unfinished_definition_restores_as_interrupted_without_granting_authority ... ok
+test decline_precancel_file_index_and_trust_drift_never_replace_version ... ok
+
+test result: ok. 11 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 16.36s
+
+     Running tests/write_regressions.rs (target/debug/deps/write_regressions-00e6fea766e12775)
+
+running 6 tests
+test journal_phase_serialization_preserves_legacy_spelling ... ok
+test nonzero_hook_preserves_refs_index_and_worktree ... ok
+test same_oid_branch_switch_invalidates_prepared_plan ... ok
+test unknown_journal_phase_is_rejected ... ok
+test partial_staging_and_binary_content_have_independent_oracles ... ok
+test selected_pathspec_magic_is_a_literal_filename ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.98s
+
+    Checking gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 10.92s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.08s
+     Running `target/debug/gitfleet-lab --output /Users/randydodson/Documents/_code/git-fleet/docs/validation/completion-p03-2026-11-08/core-matrix/lab-results.json`
+{
+  "git_version": "git version 2.56.0",
+  "cases": {
+    "crash_then_external_index_edit": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:23658163dc2ad8c96ad91969ab341092d06c277a",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "881b3196e5cffddbc1bfab7be2b6ea2f288bbcfe",
+        "head_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "index_tree": "4fdc2a2c1cb44d0f32e55344794f0c5a2212696b",
+        "status": "M  other.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "27a68b7f2c05043ab4545e07f5b62b7341f459ca",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "result": {
+        "reason": "Index lock missing and index differs; manual review required",
+        "status": "needs_manual_reconciliation"
+      },
+      "status": "needs_manual_reconciliation"
+    },
+    "external_index_changed": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:9100acc054ad2df2e724649e239fef43d41d1232"
+        ],
+        "head": "165e4c6c3680fd1950b153502f83102bd095b516",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "1790f99a1c1420cc638ff2cc1ee2254cb4851c27",
+        "status": "M  full.txt\nM  unrelated.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "165e4c6c3680fd1950b153502f83102bd095b516",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "result": {
+        "reason": "Git index changed after review",
+        "status": "blocked_external_index_change"
+      },
+      "status": "blocked_external_index_change"
+    },
+    "hook_changes_selected_worktree": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "c42d041a07e734f6777dfc50b8cd96fdbbb35216",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "MM full.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "c42d041a07e734f6777dfc50b8cd96fdbbb35216",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "result": {
+        "reason": "Hook changed selected working-tree content; review required",
+        "status": "blocked_before_commit"
+      },
+      "status": "blocked_before_commit"
+    },
+    "hook_modifies_only_worktree": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "5eee7cd49e1a133dfd33ef26cda53691639fb8f5",
+        "head_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": " M unrelated.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "f29ef518ed1751bab5aa184a8ce4d007b124780c",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "result": {
+        "new_head": "5eee7cd49e1a133dfd33ef26cda53691639fb8f5",
+        "status": "committed"
+      },
+      "status": "committed"
+    },
+    "hook_rewrites_message": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "d84d712eeaebd067121c97a7cbf979f7957e5d7b",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "d84d712eeaebd067121c97a7cbf979f7957e5d7b",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "result": {
+        "reason": "Hook changed approved tree or commit message; review required",
+        "status": "blocked_before_commit"
+      },
+      "status": "blocked_before_commit"
+    },
+    "hook_stages_unapproved": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "d84d712eeaebd067121c97a7cbf979f7957e5d7b",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt\n M unrelated.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "d84d712eeaebd067121c97a7cbf979f7957e5d7b",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "result": {
+        "reason": "Hook changed approved tree or commit message; review required",
+        "status": "blocked_before_commit"
+      },
+      "status": "blocked_before_commit"
+    },
+    "mixed_selected_sources": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:c8d11e919973894b77f3c9b5ee53765c1cd8679b",
+          "other.txt:100644:fa80683dc5c30e8e24d0ec22c8a62f99abad6a3b",
+          "partial.txt:100644:24b6a9aeb9cba6e3e4b009cebcd4f7aea63915d3",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "fffc7e19c5d88c8f01375b1c92468ca0ffa1da73",
+        "head_tree": "619b439491c47f40f1a9d074321c5ab866a2213a",
+        "index_tree": "a80fd09646f3fd8cfed1a21bcd6268704ab4ce63",
+        "status": "M  other.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:c8d11e919973894b77f3c9b5ee53765c1cd8679b",
+          "other.txt:100644:fa80683dc5c30e8e24d0ec22c8a62f99abad6a3b",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "5ca3809daf8abc534425e28ae7021fcf86bf8c8e",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "9e9e188b6eb090ac7365bc67b4fc4ef1bd33745a",
+        "status": "M  full.txt\nM  other.txt\n M partial.txt"
+      },
+      "result": {
+        "new_head": "fffc7e19c5d88c8f01375b1c92468ca0ffa1da73",
+        "status": "committed"
+      },
+      "status": "committed"
+    },
+    "partial_staging_commits_index_only": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:4b48deed3a433909bfd6b6ab3d4b91348b6af464",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:54936ca7b4a532dae38355cafcada5c33b6318ee",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "600d24794a1c3eb0db9737191d33b95a9d9cedf7",
+        "head_tree": "550674075eb96ed5ae877ffc122ad1808629e58b",
+        "index_tree": "550674075eb96ed5ae877ffc122ad1808629e58b",
+        "status": " M partial.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:4b48deed3a433909bfd6b6ab3d4b91348b6af464",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:54936ca7b4a532dae38355cafcada5c33b6318ee",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "4e267e8a2a39224066b5296083bc1baa9952f50b",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "550674075eb96ed5ae877ffc122ad1808629e58b",
+        "status": "MM partial.txt"
+      },
+      "result": {
+        "new_head": "600d24794a1c3eb0db9737191d33b95a9d9cedf7",
+        "status": "committed"
+      },
+      "status": "committed"
+    },
+    "partial_staging_commits_worktree": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:4b48deed3a433909bfd6b6ab3d4b91348b6af464",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:b3ddd7f87f27551600dbdeacf9c935be8e7035b4",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "9bdc88900f90d99881db2a31df3ecd7fea08a0c2",
+        "head_tree": "745be43a25672753923151f5dcc11d90f0352b4d",
+        "index_tree": "745be43a25672753923151f5dcc11d90f0352b4d",
+        "status": ""
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:4b48deed3a433909bfd6b6ab3d4b91348b6af464",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:54936ca7b4a532dae38355cafcada5c33b6318ee",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "5ca3809daf8abc534425e28ae7021fcf86bf8c8e",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "550674075eb96ed5ae877ffc122ad1808629e58b",
+        "status": "MM partial.txt"
+      },
+      "result": {
+        "new_head": "9bdc88900f90d99881db2a31df3ecd7fea08a0c2",
+        "status": "committed"
+      },
+      "status": "committed"
+    },
+    "post_commit_hook": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "dc659dfa97e103582c6a14d9fb433f8e4da5a425",
+        "head_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "?? post-commit-marker.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "d84d712eeaebd067121c97a7cbf979f7957e5d7b",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "result": {
+        "new_head": "dc659dfa97e103582c6a14d9fb433f8e4da5a425",
+        "post_hook": "exit=Some(0), stderr=",
+        "status": "committed"
+      },
+      "status": "committed"
+    },
+    "prepare_hook_rewrites_message": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "c42d041a07e734f6777dfc50b8cd96fdbbb35216",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "c42d041a07e734f6777dfc50b8cd96fdbbb35216",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "result": {
+        "reason": "Hook changed approved tree or commit message; review required",
+        "status": "blocked_before_commit"
+      },
+      "status": "blocked_before_commit"
+    },
+    "real_sigkill_after_reconcile": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "f6fec3c7e471c635aacad8c42abb128d380b1421",
+        "head_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": ""
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "27a68b7f2c05043ab4545e07f5b62b7341f459ca",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "result": {
+        "new_head": "f6fec3c7e471c635aacad8c42abb128d380b1421",
+        "status": "already_complete"
+      },
+      "status": "already_complete"
+    },
+    "real_sigkill_after_ref": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "f6fec3c7e471c635aacad8c42abb128d380b1421",
+        "head_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": ""
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "27a68b7f2c05043ab4545e07f5b62b7341f459ca",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "result": {
+        "new_head": "f6fec3c7e471c635aacad8c42abb128d380b1421",
+        "status": "committed"
+      },
+      "status": "committed"
+    },
+    "real_sigkill_before_ref": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "165e4c6c3680fd1950b153502f83102bd095b516",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "165e4c6c3680fd1950b153502f83102bd095b516",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "result": {
+        "status": "aborted_before_ref"
+      },
+      "status": "aborted_before_ref"
+    },
+    "selected_rename_pair": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:4b48deed3a433909bfd6b6ab3d4b91348b6af464",
+          "other.txt:100644:10eb79a5643ed1545fd2f37ecdcfefa47d483b3e",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "renamed.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "bfc29e3f7cc44518fc1d973dbccb30611791760d",
+        "head_tree": "58a938a6a4bb86615a99c724c10946a87452c2ca",
+        "index_tree": "24d5f1d2803a12a2d5541172147ca16c573ad85e",
+        "status": "M  other.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:4b48deed3a433909bfd6b6ab3d4b91348b6af464",
+          "other.txt:100644:10eb79a5643ed1545fd2f37ecdcfefa47d483b3e",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "2154d4d51c35626de1f56050794df408f469a2a9",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "d50d3e60ac70b7dcaab19cfcd029d4019a4bf16a",
+        "status": "M  other.txt\n D rename.txt\n?? renamed.txt"
+      },
+      "result": {
+        "new_head": "bfc29e3f7cc44518fc1d973dbccb30611791760d",
+        "status": "committed"
+      },
+      "status": "committed"
+    },
+    "selected_staged_preserves_other_staging": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:fc972c0966b49a46792ae730de0fa07eca08614f",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "0a4c533c0bfbcff817d4712817da125feea30b58",
+        "head_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "index_tree": "78922e61c74ab04b717a6a6a5b0d35cc460b9d7f",
+        "status": "M  other.txt\n M unrelated.txt\n?? new.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:fc972c0966b49a46792ae730de0fa07eca08614f",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "aff053330c6ae3d4d0f6f6f0f99605466fe42369",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "78922e61c74ab04b717a6a6a5b0d35cc460b9d7f",
+        "status": "M  full.txt\nM  other.txt\n M unrelated.txt\n?? new.txt"
+      },
+      "result": {
+        "new_head": "0a4c533c0bfbcff817d4712817da125feea30b58",
+        "status": "committed"
+      },
+      "status": "committed"
+    },
+    "selected_unstaged_deletion": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "full.txt:100644:4b48deed3a433909bfd6b6ab3d4b91348b6af464",
+          "other.txt:100644:10eb79a5643ed1545fd2f37ecdcfefa47d483b3e",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "164a6fe4093e582582ed53f696b6b9246dcfa7ac",
+        "head_tree": "d2fdb71414aea88d0d8bba627b3823eb65d0257d",
+        "index_tree": "563028b325713fb147985ef3bacc391ecc4614fe",
+        "status": "M  other.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:4b48deed3a433909bfd6b6ab3d4b91348b6af464",
+          "other.txt:100644:10eb79a5643ed1545fd2f37ecdcfefa47d483b3e",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "2154d4d51c35626de1f56050794df408f469a2a9",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "d50d3e60ac70b7dcaab19cfcd029d4019a4bf16a",
+        "status": " D delete.txt\nM  other.txt"
+      },
+      "result": {
+        "new_head": "164a6fe4093e582582ed53f696b6b9246dcfa7ac",
+        "status": "committed"
+      },
+      "status": "committed"
+    },
+    "selected_worktree_changed_after_review": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "165e4c6c3680fd1950b153502f83102bd095b516",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "MM full.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "165e4c6c3680fd1950b153502f83102bd095b516",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "result": {
+        "reason": "Selected working-tree content changed",
+        "status": "blocked_selected_worktree_change"
+      },
+      "status": "blocked_selected_worktree_change"
+    },
+    "selected_worktree_preserves_other_staging": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:fc972c0966b49a46792ae730de0fa07eca08614f",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "36a3dd7846a3608199362e1aa73d2803fc704322",
+        "head_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "index_tree": "78922e61c74ab04b717a6a6a5b0d35cc460b9d7f",
+        "status": "M  other.txt\n M unrelated.txt\n?? new.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:fc972c0966b49a46792ae730de0fa07eca08614f",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "4e267e8a2a39224066b5296083bc1baa9952f50b",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "78922e61c74ab04b717a6a6a5b0d35cc460b9d7f",
+        "status": "M  full.txt\nM  other.txt\n M unrelated.txt\n?? new.txt"
+      },
+      "result": {
+        "new_head": "36a3dd7846a3608199362e1aa73d2803fc704322",
+        "status": "committed"
+      },
+      "status": "committed"
+    },
+    "signing_missing_key": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "74bb4438a5bf963a77e59947bb276e7173c0e281",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "74bb4438a5bf963a77e59947bb276e7173c0e281",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "result": {
+        "reason": "error: cannot run gitfleet-no-gpg-executable: No such file or directory\nerror: gpg failed to sign the data:\n(no gpg output)",
+        "status": "blocked_commit_tree_failure"
+      },
+      "status": "blocked_commit_tree_failure"
+    },
+    "space_in_path": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:4b48deed3a433909bfd6b6ab3d4b91348b6af464",
+          "other.txt:100644:10eb79a5643ed1545fd2f37ecdcfefa47d483b3e",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:9502d6c3789dbabba3169bde2daf4fe1732eee03",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "d07313ac867d87bb35121b35523dd18b8c19f4fe",
+        "head_tree": "ac508527b6d8043236eee64e830f54d8da5929a1",
+        "index_tree": "a52f15696fc51f5f3ed604e5ef115c7e8e944cb0",
+        "status": "M  other.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:4b48deed3a433909bfd6b6ab3d4b91348b6af464",
+          "other.txt:100644:10eb79a5643ed1545fd2f37ecdcfefa47d483b3e",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:9502d6c3789dbabba3169bde2daf4fe1732eee03",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "f29ef518ed1751bab5aa184a8ce4d007b124780c",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "a52f15696fc51f5f3ed604e5ef115c7e8e944cb0",
+        "status": "M  other.txt\nM  \"space file.txt\""
+      },
+      "result": {
+        "new_head": "d07313ac867d87bb35121b35523dd18b8c19f4fe",
+        "status": "committed"
+      },
+      "status": "committed"
+    },
+    "stale_head_before_cas": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "d1aa791e94623d665c8fbe370815944dfac3ef56",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "165e4c6c3680fd1950b153502f83102bd095b516",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "result": {
+        "reason": "HEAD differs from reviewed state",
+        "status": "blocked_stale_head"
+      },
+      "status": "blocked_stale_head"
+    },
+    "successful_gpg_signing": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "92d9097dc3a5bd86f45d3d379c351deddcdfd02c",
+        "head_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": ""
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:8f1188e8bde9a1f689e8575eea578c4ed46e7f8e",
+          "other.txt:100644:8ff1ee31cbcee2d65d11cb9b1eb176bfd6a75174",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "74bb4438a5bf963a77e59947bb276e7173c0e281",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "019a43c4cb80161c718b9ad3dbfbce55b37fa48b",
+        "status": "M  full.txt"
+      },
+      "signature_verified": true,
+      "signed": true,
+      "status": "committed"
+    },
+    "untracked_selected": {
+      "after": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:4b48deed3a433909bfd6b6ab3d4b91348b6af464",
+          "new.txt:100644:3151666398e7951f81d58893dc687970599625ab",
+          "other.txt:100644:10eb79a5643ed1545fd2f37ecdcfefa47d483b3e",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "17d905ae18f12b03ab7d1d0106a85e46f53db681",
+        "head_tree": "705241958930386da2618303a1c490a9be1a5a8d",
+        "index_tree": "df7f508fba8b5e59674d283c458a7291b122ca0a",
+        "status": "M  other.txt"
+      },
+      "before": {
+        "entries": [
+          ".gitfleet-lab-fixture:100644:36070eea584932ae133339c7c44fc5a16cc1648a",
+          "delete.txt:100644:2d030d7bc1bbfbdee332aaf691447b30cdea375b",
+          "full.txt:100644:4b48deed3a433909bfd6b6ab3d4b91348b6af464",
+          "other.txt:100644:10eb79a5643ed1545fd2f37ecdcfefa47d483b3e",
+          "partial.txt:100644:ea3df1595e60dcb65a10f160a0b0b5bd93205c48",
+          "rename.txt:100644:f152cb07e86eeff956e2994e26199562a5b004d3",
+          "space file.txt:100644:8fbbc7f14e69f6c2bb7a5ff954ffa2c994e26620",
+          "unrelated.txt:100644:82c56b52881c98f96eaf51f6332e4b7f4a10b8c7"
+        ],
+        "head": "5ca3809daf8abc534425e28ae7021fcf86bf8c8e",
+        "head_tree": "1ceaeae1232b67c6137f3b7e28355fa8d57e62ad",
+        "index_tree": "d50d3e60ac70b7dcaab19cfcd029d4019a4bf16a",
+        "status": "M  other.txt\n?? new.txt"
+      },
+      "result": {
+        "new_head": "17d905ae18f12b03ab7d1d0106a85e46f53db681",
+        "status": "committed"
+      },
+      "status": "committed"
+    }
+  },
+  "passed": 24,
+  "skipped": 0,
+  "disclaimer": "Research-only; manual hook subset, local branches, ordinary indexes. Not production-safe."
+}
