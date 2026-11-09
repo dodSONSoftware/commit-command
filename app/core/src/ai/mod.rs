@@ -1,6 +1,7 @@
 //! Optional AI services. Configuration and generated text confer no write authority.
 pub mod change;
 pub mod config;
+pub mod context;
 pub mod credentials;
 pub(crate) mod jobs;
 pub mod provider;

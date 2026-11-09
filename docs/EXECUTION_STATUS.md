@@ -7,6 +7,16 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G09 exact context filtering — implemented, automated foundation passed
+
+[Context filter checkpoint](reports/G09_AI_CONTEXT_FILTER_2026-11-08.md): deterministic
+serialized-byte budgets, line/chunk provenance, explicit omission accounting,
+sensitive path exclusions and conservative secret/control screening now exist in
+pure Core. Seven focused tests and strict all-feature/all-target Clippy passed.
+No repository capture/transfer or native acceptance is claimed; capture, exact
+filtered context review and assisted candidates remain next. Screening is defense
+in depth, and incomplete/redacted coverage cannot authorize an automatic commit.
+
 ### November 8 G09 endpoint-bound AI secure auth — implemented, selected acceptance passed
 
 [Secure-auth checkpoint](reports/G09_AI_SECURE_AUTH_2026-11-08.md): optional saved

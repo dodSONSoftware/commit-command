@@ -1,0 +1,15 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.38s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-990268db74c912b4)
+
+running 7 tests
+test ai::context::tests::invalid_budgets_exclusions_and_provenance_fail_without_echoing_content ... ok
+test ai::context::tests::credentials_and_private_key_blocks_are_redacted_before_serialization ... ok
+test ai::context::tests::excluded_and_binary_content_never_enter_the_exact_payload ... ok
+test ai::context::tests::prompt_injection_remains_data_and_has_no_capability_fields ... ok
+test ai::context::tests::independent_groups_keep_line_provenance_and_boundaries ... ok
+test ai::context::tests::excluded_empty_file_is_incomplete_and_escaping_obeys_the_exact_budget ... ok
+test ai::context::tests::byte_budget_preserves_utf8_lines_and_accounts_for_every_omission ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 50 filtered out; finished in 0.01s
+
