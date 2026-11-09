@@ -2720,9 +2720,11 @@
       "package": "P02",
       "action": "Actual blank recurrence or diagnostic launch sequence after host/renderer loss",
       "expected": "Capture pre-reload diagnostics; causal fix has regression; nonrecurrence alone is not \u201cfixed\u201d",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "failed",
+      "evidence": [
+        "docs/reports/COMPLETION_P02_STARTUP_2026-11-08.md"
+      ],
+      "note": "Actual blank observed before reload; DOM mounted but hidden, then painted after fixed probe. No causal fix claimed."
     },
     {
       "id": "LIFE03",
@@ -2891,27 +2893,33 @@
       "package": "P03",
       "action": "F06 timeout after first bounded portion, continue repeatedly",
       "expected": "Monotonic discovery progress reaches suffix repos; no same-prefix starvation; complete count exact",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/reports/COMPLETION_P03_CONTINUATION_2026-11-08.md"
+      ],
+      "note": "Continuation/cancellation/exclusion/restart regressions and native 100-repo chain passed; remaining variants/scale budgets open."
     },
     {
       "id": "SCAN02",
       "package": "P03",
       "action": "Cancel traversal and inspection independently",
       "expected": "Prior accepted inventory retained; late partial results not activated",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/reports/COMPLETION_P03_CONTINUATION_2026-11-08.md"
+      ],
+      "note": "Continuation/cancellation/exclusion/restart regressions and native 100-repo chain passed; remaining variants/scale budgets open."
     },
     {
       "id": "SCAN03",
       "package": "P03",
       "action": "Change root/exclusion/root identity while continuation pending",
       "expected": "Old cursor invalid; no stale identities or results in new generation",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/reports/COMPLETION_P03_CONTINUATION_2026-11-08.md"
+      ],
+      "note": "Continuation/cancellation/exclusion/restart regressions and native 100-repo chain passed; remaining variants/scale budgets open."
     },
     {
       "id": "SCAN04",
@@ -2999,9 +3007,11 @@
       "package": "P03",
       "action": "Release CLI 100/1,000/10,000 F06 first-pass/warm, >=3 repetitions",
       "expected": "Exact counts/completeness, separate phase timings and medians/ranges; DCP01 budgets evaluated",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/validation/completion-p03-2026-11-08/benchmark.json"
+      ],
+      "note": "100-repo release completeness/preservation passed; 15-second target not met; larger sizes remain."
     },
     {
       "id": "PERF02",

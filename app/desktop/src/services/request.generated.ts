@@ -290,6 +290,10 @@ export type Request =
       workspace: string;
     }
   | {
+      kind: "continue_scan";
+      workspace: string;
+    }
+  | {
       kind: "refresh";
       workspace: string;
       worktree: string;

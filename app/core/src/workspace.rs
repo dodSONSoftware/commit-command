@@ -71,6 +71,7 @@ pub struct WorkspaceService {
     database: Connection,
     config: Config,
     _writer: crate::locking::ExclusiveLock,
+    scan_cursor: Option<(String, discovery::Cursor)>,
 }
 fn observed_heads(entries: &[StoredWorktree]) -> Result<BTreeMap<PathBuf, ObjectId>> {
     entries
@@ -264,6 +265,7 @@ impl WorkspaceService {
             _writer: writer,
             database,
             config,
+            scan_cursor: None,
         };
         service.reconcile()?;
         Ok(service)
@@ -469,11 +471,57 @@ impl WorkspaceService {
         options: &inspection::ReadOptions,
     ) -> Result<WorkspaceInventory> {
         let workspace = self.definition(id)?.clone();
-        let report = discovery::scan_with_options(
-            &workspace.root.to_path()?,
-            &workspace.discovery,
-            options,
-        )?;
+        let cursor = discovery::Cursor::new(&workspace.root.to_path()?, &workspace.discovery)?;
+        self.advance_scan(id, cursor, &workspace.discovery, options)
+    }
+    pub fn can_continue_scan(&self, id: &WorkspaceId) -> bool {
+        self.scan_cursor
+            .as_ref()
+            .is_some_and(|(owner, _)| owner == &id.0)
+    }
+    pub fn continue_scan_with_options(
+        &mut self,
+        id: &WorkspaceId,
+        options: &inspection::ReadOptions,
+    ) -> Result<WorkspaceInventory> {
+        let workspace = self.definition(id)?.clone();
+        let cursor = self
+            .scan_cursor
+            .as_ref()
+            .filter(|(owner, _)| owner == &id.0)
+            .map(|(_, cursor)| cursor.clone())
+            .ok_or_else(|| {
+                Error::with_kind(
+                    ErrorKind::InvalidRequest,
+                    "No active discovery continuation; run Rescan",
+                )
+            })?;
+        if !cursor.matches(&workspace.root.to_path()?, &workspace.discovery) {
+            self.scan_cursor = None;
+            return Err(Error::with_kind(
+                ErrorKind::StaleReview,
+                "Discovery root or exclusions changed; run Rescan",
+            ));
+        }
+        self.advance_scan(id, cursor, &workspace.discovery, options)
+    }
+    fn advance_scan(
+        &mut self,
+        id: &WorkspaceId,
+        mut cursor: discovery::Cursor,
+        discovery: &DiscoveryOptions,
+        options: &inspection::ReadOptions,
+    ) -> Result<WorkspaceInventory> {
+        let report = cursor.advance(discovery, options)?;
+        let result = self.store_scan(id, report)?;
+        self.scan_cursor = result
+            .scan
+            .progress
+            .as_ref()
+            .map(|_| (id.0.clone(), cursor));
+        Ok(result)
+    }
+    fn store_scan(&mut self, id: &WorkspaceId, report: Inventory) -> Result<WorkspaceInventory> {
         let previous = self.inventory(id)?;
         let transaction = self.database.transaction()?;
         transaction.execute(

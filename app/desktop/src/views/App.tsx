@@ -728,7 +728,18 @@ export function App({ bridge }: { bridge: Bridge }) {
               </button>
             </div>
           )}
-          {workspace && <WorkspaceScanStatus scan={scan} />}
+          {workspace && (
+            <WorkspaceScanStatus
+              scan={scan}
+              busy={busy}
+              onContinue={() =>
+                void act(async () => {
+                  await bridge.request({ kind: "continue_scan", workspace });
+                  await inventory(workspace);
+                })
+              }
+            />
+          )}
           {workspace && (
             <RepositoryIdentityRecovery
               entries={allEntries}

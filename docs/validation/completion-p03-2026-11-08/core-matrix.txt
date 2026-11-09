@@ -1,0 +1,814 @@
+..s............
+----------------------------------------------------------------------
+Ran 15 tests in 0.034s
+
+OK (skipped=1)
+git version 2.56.0
+rustc 1.99.1 (58cf8f9c3 2026-10-13)
+cargo 1.99.1 (5f94df478 2026-08-27)
+LibreSSL 3.3.6
+OpenSSH_10.5p1, LibreSSL 3.3.6
+gpg (GnuPG) 2.5.24
+Core layout/manifest checks passed. Runtime safety is verified separately by Cargo tests.
+   Compiling libsqlite3-sys v0.39.1
+   Compiling rusqlite v0.41.0
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 7.55s
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.02s
+     Running unittests src/lib.rs (target/debug/deps/gitfleet_core-b9fc325af23104d6)
+
+running 11 tests
+test actions::semver::tests::invalid_binary_multivalue_prefix_and_overflow_inputs_are_refused ... ok
+test actions::semver::tests::prerelease_handling_is_chosen_and_never_silently_inferred ... ok
+test actions::semver::tests::recovery_never_recomputes_a_second_increment_and_rejects_tampered_preview ... ok
+test locking::tests::explicit_release_does_not_wait_for_duplicated_descriptors ... ok
+test actions::semver::tests::increments_preserve_terminators_and_remove_metadata_explicitly ... ok
+test process::tests::bounded_process_limits_and_cancellation_reap_children ... ok
+test process::tests::bounded_input_checks_writer_completion_and_descendant_timeout ... ok
+test process::tests::trusted_artifact_check_prevents_spawn_and_reaps_running_process ... ok
+test process::tests::global_permits_never_exceed_four ... ok
+test inspection::consistency_tests::ref_and_config_mutation_during_read_are_rejected ... ok
+test inspection::consistency_tests::multi_command_reads_for_one_worktree_are_serialized ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.31s
+
+     Running unittests src/bin/gitfleet_cli.rs (target/debug/deps/gitfleet_cli-efc3b8dc67e0a6fe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/graph_activity.rs (target/debug/deps/graph_activity-4cb6b68e3b46af17)
+
+running 5 tests
+test activity_does_not_prune_recent_ancestors_behind_older_committer_dates ... ok
+test sha256_graph_retains_full_object_ids ... ok
+test activity_uses_committer_time_and_deduplicates_branches_with_explicit_truncation ... ok
+test unborn_graph_and_activity_are_empty_and_malformed_graph_lanes_are_rejected ... ok
+test graph_uses_actual_merge_parents_and_preserves_lanes_across_pages_without_writes ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.77s
+
+     Running tests/inspection.rs (target/debug/deps/inspection-7d6e286cda3d5387)
+
+running 13 tests
+test included_filter_configuration_is_rejected ... ok
+test cli_does_not_inherit_git_repository_or_config_overrides ... ok
+test content_filters_are_rejected_without_mutation ... ok
+test nested_directory_is_not_accepted_as_worktree_root ... ok
+test missing_promisor_object_cannot_launch_a_remote_helper ... ok
+test non_utf8_filename_remains_git_quoted_without_mutation ... ignored, M0 host filesystem rejects non-UTF-8 filename creation (EPERM); requires a supporting filesystem
+test configured_helper_sentinels_are_not_executed ... ok
+test inspection_and_cli_preserve_dirty_repository_bytes ... ok
+test newline_filename_remains_git_quoted_without_mutation ... ok
+test worktree_filter_configuration_is_rejected ... ok
+test unmerged_index_can_be_inspected_without_write_tree ... ok
+test remote_presence_and_tracking_counts_are_local_and_backward_compatible ... ok
+test unborn_and_detached_head_can_be_inspected ... ok
+
+test result: ok. 12 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 2.55s
+
+     Running tests/m1_read.rs (target/debug/deps/m1_read-ad0133b4b2cfa303)
+
+running 17 tests
+test byte_safe_parsers_roundtrip_non_utf8_names_and_reject_malformed_records ... ok
+test cancelled_deadline_output_and_preview_limits_are_typed_without_repo_mutation ... ok
+test conflict_stages_and_merge_state_are_structured_without_mutation ... ok
+test clean_unstaged_diff_preserves_an_index_with_unpopulated_stat_cache ... ok
+test executable_mode_and_deletion_diffs_are_explicit ... ok
+test literal_newline_and_binary_previews_preserve_scope_and_bytes ... ok
+test local_upstream_comparison_never_claims_remote_freshness ... ok
+test history_dag_merge_parents_tags_pagination_and_stale_cursors ... ok
+test cli_and_library_inspection_contracts_agree_for_all_read_modes ... ok
+test missing_upstream_and_shallow_boundary_are_explicit ... ok
+test helper_sentinels_are_suppressed_for_every_history_diff_and_failure_path ... ok
+test split_index_is_read_only_and_sparse_configuration_fails_closed ... ok
+test root_commit_diff_and_staged_unstaged_blobs_have_independent_oracles ... ok
+test sha256_repository_inspection_and_blob_ids_are_format_aware ... ok
+test structured_status_distinguishes_partial_staging_rename_binary_modes_and_conflicts ... ok
+test unborn_history_is_empty_and_history_limits_are_checked ... ok
+test symlink_leaf_is_not_dereferenced_and_parent_escape_and_fifo_are_rejected ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.74s
+
+     Running tests/m1_workspace.rs (target/debug/deps/m1_workspace-7998c403165bc478)
+
+running 23 tests
+test cancelled_continuation_keeps_accepted_state_and_exclusion_changes_invalidate_cursor ... ok
+test cli_and_service_workspace_results_agree_and_preserve_repository_bytes ... ok
+test cancelled_scan_still_returns_cancelled_and_preserves_saved_inventory ... ok
+test changing_workspace_root_invalidates_old_inventory_and_refresh_scope ... ok
+test expired_scan_is_reported_as_partial_without_marking_known_repositories_missing ... ok
+test failed_atomic_config_save_preserves_previous_toml_and_memory ... ok
+test clones_with_identical_head_have_distinct_identities ... ok
+test failed_replacement_inspection_does_not_retire_original_identity ... ok
+test invalid_and_newer_configs_and_schemas_are_preserved ... ok
+test exclusions_partial_scans_and_unavailable_entries_are_explicit ... ok
+test identities_survive_restart_and_verified_move_but_not_copies_or_replacement ... ok
+test bounded_scan_continuations_reach_the_suffix_without_mutating_repositories ... ok
+test partial_permission_scan_and_glob_exclusions_preserve_known_identity ... ok
+test saved_workspaces_restart_activate_rename_update_remove_and_lock ... ok
+test startup_reconciles_authoritative_toml_after_database_update_was_interrupted ... ok
+test state_inside_checkout_and_invalid_workspace_definitions_are_rejected ... ok
+test mixed_inventory_classifies_nested_submodule_and_linked_worktrees ... ok
+test replacement_recovery_preserves_history_and_restored_identity ... ok
+test submodule_gitlinks_and_child_dirt_are_reported_without_recursive_helpers ... ok
+test unversioned_unknown_database_is_not_migrated_and_empty_database_is_backed_up ... ok
+test inventory_tracks_observed_child_heads_against_current_parent_gitlinks ... ok
+test targeted_refresh_does_not_rediscover_and_replacement_requires_rescan ... ok
+test tagged_caches_are_explicitly_skipped_without_hiding_other_broken_git_markers ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.54s
+
+    Checking libsqlite3-sys v0.39.1
+    Checking rusqlite v0.41.0
+    Checking gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 4.53s
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 6.97s
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s
+     Running unittests src/lib.rs (target/debug/deps/gitfleet_core-980aa6de93e56336)
+
+running 11 tests
+test actions::semver::tests::invalid_binary_multivalue_prefix_and_overflow_inputs_are_refused ... ok
+test actions::semver::tests::prerelease_handling_is_chosen_and_never_silently_inferred ... ok
+test actions::semver::tests::recovery_never_recomputes_a_second_increment_and_rejects_tampered_preview ... ok
+test locking::tests::explicit_release_does_not_wait_for_duplicated_descriptors ... ok
+test actions::semver::tests::increments_preserve_terminators_and_remove_metadata_explicitly ... ok
+test process::tests::bounded_process_limits_and_cancellation_reap_children ... ok
+test process::tests::bounded_input_checks_writer_completion_and_descendant_timeout ... ok
+test process::tests::trusted_artifact_check_prevents_spawn_and_reaps_running_process ... ok
+test process::tests::global_permits_never_exceed_four ... ok
+test inspection::consistency_tests::ref_and_config_mutation_during_read_are_rejected ... ok
+test inspection::consistency_tests::multi_command_reads_for_one_worktree_are_serialized ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.33s
+
+     Running unittests src/bin/gitfleet_cli.rs (target/debug/deps/gitfleet_cli-b2b5d36ad0848767)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/gitfleet_lab.rs (target/debug/deps/gitfleet_lab-95f262bfbab86c99)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/acceptance.rs (target/debug/deps/acceptance-648806d1cfb0f830)
+
+running 24 tests
+test external_index_changed ... ok
+test hook_changes_selected_worktree ... ok
+test crash_then_external_index_edit ... ok
+test hook_modifies_only_worktree ... ok
+test hook_rewrites_message ... ok
+test hook_stages_unapproved ... ok
+test mixed_selected_sources ... ok
+test partial_staging_commits_index_only ... ok
+test partial_staging_commits_worktree ... ok
+test post_commit_hook ... ok
+test prepare_hook_rewrites_message ... ok
+test real_sigkill_after_reconcile ... ok
+test real_sigkill_before_ref ... ok
+test real_sigkill_after_ref ... ok
+test selected_rename_pair ... ok
+test selected_worktree_changed_after_review ... ok
+test selected_staged_preserves_other_staging ... ok
+test selected_unstaged_deletion ... ok
+test selected_worktree_preserves_other_staging ... ok
+test successful_gpg_signing ... ignored, optional positive GPG signing; run explicitly with a working GPG installation
+test signing_missing_key ... ok
+test stale_head_before_cas ... ok
+test space_in_path ... ok
+test untracked_selected ... ok
+
+test result: ok. 23 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 2.71s
+
+     Running tests/core_behaviour.rs (target/debug/deps/core_behaviour-a4365c14eef3ec2a)
+
+running 6 tests
+test discovery_does_not_follow_symlinked_directories ... ok
+test discovery_canonicalizes_symlinked_root ... ok
+test prevent_parent_path_escape ... ok
+test read_only_status_is_available ... ok
+test discover_nested_repositories_and_gitfile_marker ... ok
+test discover_linked_worktree_with_git_file ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.54s
+
+     Running tests/graph_activity.rs (target/debug/deps/graph_activity-18ca6e4bf5dd195e)
+
+running 5 tests
+test activity_does_not_prune_recent_ancestors_behind_older_committer_dates ... ok
+test sha256_graph_retains_full_object_ids ... ok
+test activity_uses_committer_time_and_deduplicates_branches_with_explicit_truncation ... ok
+test unborn_graph_and_activity_are_empty_and_malformed_graph_lanes_are_rejected ... ok
+test graph_uses_actual_merge_parents_and_preserves_lanes_across_pages_without_writes ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.75s
+
+     Running tests/inspection.rs (target/debug/deps/inspection-f8442a8136fdced7)
+
+running 13 tests
+test included_filter_configuration_is_rejected ... ok
+test cli_does_not_inherit_git_repository_or_config_overrides ... ok
+test content_filters_are_rejected_without_mutation ... ok
+test nested_directory_is_not_accepted_as_worktree_root ... ok
+test missing_promisor_object_cannot_launch_a_remote_helper ... ok
+test non_utf8_filename_remains_git_quoted_without_mutation ... ignored, M0 host filesystem rejects non-UTF-8 filename creation (EPERM); requires a supporting filesystem
+test configured_helper_sentinels_are_not_executed ... ok
+test inspection_and_cli_preserve_dirty_repository_bytes ... ok
+test newline_filename_remains_git_quoted_without_mutation ... ok
+test worktree_filter_configuration_is_rejected ... ok
+test unmerged_index_can_be_inspected_without_write_tree ... ok
+test remote_presence_and_tracking_counts_are_local_and_backward_compatible ... ok
+test unborn_and_detached_head_can_be_inspected ... ok
+
+test result: ok. 12 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 2.53s
+
+     Running tests/m1_read.rs (target/debug/deps/m1_read-a931c9a55d50bfc4)
+
+running 17 tests
+test byte_safe_parsers_roundtrip_non_utf8_names_and_reject_malformed_records ... ok
+test cancelled_deadline_output_and_preview_limits_are_typed_without_repo_mutation ... ok
+test conflict_stages_and_merge_state_are_structured_without_mutation ... ok
+test clean_unstaged_diff_preserves_an_index_with_unpopulated_stat_cache ... ok
+test executable_mode_and_deletion_diffs_are_explicit ... ok
+test literal_newline_and_binary_previews_preserve_scope_and_bytes ... ok
+test local_upstream_comparison_never_claims_remote_freshness ... ok
+test history_dag_merge_parents_tags_pagination_and_stale_cursors ... ok
+test cli_and_library_inspection_contracts_agree_for_all_read_modes ... ok
+test missing_upstream_and_shallow_boundary_are_explicit ... ok
+test helper_sentinels_are_suppressed_for_every_history_diff_and_failure_path ... ok
+test split_index_is_read_only_and_sparse_configuration_fails_closed ... ok
+test root_commit_diff_and_staged_unstaged_blobs_have_independent_oracles ... ok
+test sha256_repository_inspection_and_blob_ids_are_format_aware ... ok
+test structured_status_distinguishes_partial_staging_rename_binary_modes_and_conflicts ... ok
+test unborn_history_is_empty_and_history_limits_are_checked ... ok
+test symlink_leaf_is_not_dereferenced_and_parent_escape_and_fifo_are_rejected ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.69s
+
+     Running tests/m1_workspace.rs (target/debug/deps/m1_workspace-a20e92c21a62f6ad)
+
+running 23 tests
+test cancelled_continuation_keeps_accepted_state_and_exclusion_changes_invalidate_cursor ... ok
+test cli_and_service_workspace_results_agree_and_preserve_repository_bytes ... ok
+test cancelled_scan_still_returns_cancelled_and_preserves_saved_inventory ... ok
+test changing_workspace_root_invalidates_old_inventory_and_refresh_scope ... ok
+test expired_scan_is_reported_as_partial_without_marking_known_repositories_missing ... ok
+test failed_atomic_config_save_preserves_previous_toml_and_memory ... ok
+test clones_with_identical_head_have_distinct_identities ... ok
+test failed_replacement_inspection_does_not_retire_original_identity ... ok
+test invalid_and_newer_configs_and_schemas_are_preserved ... ok
+test exclusions_partial_scans_and_unavailable_entries_are_explicit ... ok
+test identities_survive_restart_and_verified_move_but_not_copies_or_replacement ... ok
+test bounded_scan_continuations_reach_the_suffix_without_mutating_repositories ... ok
+test partial_permission_scan_and_glob_exclusions_preserve_known_identity ... ok
+test saved_workspaces_restart_activate_rename_update_remove_and_lock ... ok
+test startup_reconciles_authoritative_toml_after_database_update_was_interrupted ... ok
+test state_inside_checkout_and_invalid_workspace_definitions_are_rejected ... ok
+test mixed_inventory_classifies_nested_submodule_and_linked_worktrees ... ok
+test replacement_recovery_preserves_history_and_restored_identity ... ok
+test submodule_gitlinks_and_child_dirt_are_reported_without_recursive_helpers ... ok
+test unversioned_unknown_database_is_not_migrated_and_empty_database_is_backed_up ... ok
+test inventory_tracks_observed_child_heads_against_current_parent_gitlinks ... ok
+test targeted_refresh_does_not_rediscover_and_replacement_requires_rescan ... ok
+test tagged_caches_are_explicitly_skipped_without_hiding_other_broken_git_markers ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.54s
+
+     Running tests/write_regressions.rs (target/debug/deps/write_regressions-a36b7989cb1fd1ac)
+
+running 6 tests
+test journal_phase_serialization_preserves_legacy_spelling ... ok
+test same_oid_branch_switch_invalidates_prepared_plan ... ok
+test nonzero_hook_preserves_refs_index_and_worktree ... ok
+test unknown_journal_phase_is_rejected ... ok
+test partial_staging_and_binary_content_have_independent_oracles ... ok
+test selected_pathspec_magic_is_a_literal_filename ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.04s
+
+    Checking gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.57s
+   Compiling rusqlite v0.41.0
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 8.10s
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.02s
+     Running unittests src/lib.rs (target/debug/deps/gitfleet_core-b409f409c868cd6d)
+
+running 11 tests
+test actions::semver::tests::invalid_binary_multivalue_prefix_and_overflow_inputs_are_refused ... ok
+test actions::semver::tests::prerelease_handling_is_chosen_and_never_silently_inferred ... ok
+test actions::semver::tests::recovery_never_recomputes_a_second_increment_and_rejects_tampered_preview ... ok
+test actions::semver::tests::increments_preserve_terminators_and_remove_metadata_explicitly ... ok
+test locking::tests::explicit_release_does_not_wait_for_duplicated_descriptors ... ok
+test process::tests::bounded_process_limits_and_cancellation_reap_children ... ok
+test process::tests::bounded_input_checks_writer_completion_and_descendant_timeout ... ok
+test process::tests::trusted_artifact_check_prevents_spawn_and_reaps_running_process ... ok
+test process::tests::global_permits_never_exceed_four ... ok
+test inspection::consistency_tests::ref_and_config_mutation_during_read_are_rejected ... ok
+test inspection::consistency_tests::multi_command_reads_for_one_worktree_are_serialized ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.34s
+
+     Running unittests src/bin/gitfleet_cli.rs (target/debug/deps/gitfleet_cli-63f28dfe015c5e1e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/gitfleet_write.rs (target/debug/deps/gitfleet_write-af95c3d3c3a0a6be)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/graph_activity.rs (target/debug/deps/graph_activity-f26c93f8fe8a6b8b)
+
+running 5 tests
+test activity_does_not_prune_recent_ancestors_behind_older_committer_dates ... ok
+test sha256_graph_retains_full_object_ids ... ok
+test activity_uses_committer_time_and_deduplicates_branches_with_explicit_truncation ... ok
+test unborn_graph_and_activity_are_empty_and_malformed_graph_lanes_are_rejected ... ok
+test graph_uses_actual_merge_parents_and_preserves_lanes_across_pages_without_writes ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.78s
+
+     Running tests/inspection.rs (target/debug/deps/inspection-a9d4b430f3f78141)
+
+running 13 tests
+test included_filter_configuration_is_rejected ... ok
+test cli_does_not_inherit_git_repository_or_config_overrides ... ok
+test content_filters_are_rejected_without_mutation ... ok
+test nested_directory_is_not_accepted_as_worktree_root ... ok
+test missing_promisor_object_cannot_launch_a_remote_helper ... ok
+test non_utf8_filename_remains_git_quoted_without_mutation ... ignored, M0 host filesystem rejects non-UTF-8 filename creation (EPERM); requires a supporting filesystem
+test configured_helper_sentinels_are_not_executed ... ok
+test inspection_and_cli_preserve_dirty_repository_bytes ... ok
+test newline_filename_remains_git_quoted_without_mutation ... ok
+test worktree_filter_configuration_is_rejected ... ok
+test unmerged_index_can_be_inspected_without_write_tree ... ok
+test remote_presence_and_tracking_counts_are_local_and_backward_compatible ... ok
+test unborn_and_detached_head_can_be_inspected ... ok
+
+test result: ok. 12 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 2.56s
+
+     Running tests/m1_read.rs (target/debug/deps/m1_read-aea9d72794e3f580)
+
+running 17 tests
+test byte_safe_parsers_roundtrip_non_utf8_names_and_reject_malformed_records ... ok
+test cancelled_deadline_output_and_preview_limits_are_typed_without_repo_mutation ... ok
+test conflict_stages_and_merge_state_are_structured_without_mutation ... ok
+test clean_unstaged_diff_preserves_an_index_with_unpopulated_stat_cache ... ok
+test executable_mode_and_deletion_diffs_are_explicit ... ok
+test literal_newline_and_binary_previews_preserve_scope_and_bytes ... ok
+test local_upstream_comparison_never_claims_remote_freshness ... ok
+test history_dag_merge_parents_tags_pagination_and_stale_cursors ... ok
+test cli_and_library_inspection_contracts_agree_for_all_read_modes ... ok
+test missing_upstream_and_shallow_boundary_are_explicit ... ok
+test helper_sentinels_are_suppressed_for_every_history_diff_and_failure_path ... ok
+test split_index_is_read_only_and_sparse_configuration_fails_closed ... ok
+test root_commit_diff_and_staged_unstaged_blobs_have_independent_oracles ... ok
+test sha256_repository_inspection_and_blob_ids_are_format_aware ... ok
+test structured_status_distinguishes_partial_staging_rename_binary_modes_and_conflicts ... ok
+test unborn_history_is_empty_and_history_limits_are_checked ... ok
+test symlink_leaf_is_not_dereferenced_and_parent_escape_and_fifo_are_rejected ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.71s
+
+     Running tests/m1_workspace.rs (target/debug/deps/m1_workspace-6e303a4785bcaaca)
+
+running 23 tests
+test cancelled_continuation_keeps_accepted_state_and_exclusion_changes_invalidate_cursor ... ok
+test cli_and_service_workspace_results_agree_and_preserve_repository_bytes ... ok
+test cancelled_scan_still_returns_cancelled_and_preserves_saved_inventory ... ok
+test changing_workspace_root_invalidates_old_inventory_and_refresh_scope ... ok
+test expired_scan_is_reported_as_partial_without_marking_known_repositories_missing ... ok
+test failed_atomic_config_save_preserves_previous_toml_and_memory ... ok
+test clones_with_identical_head_have_distinct_identities ... ok
+test failed_replacement_inspection_does_not_retire_original_identity ... ok
+test invalid_and_newer_configs_and_schemas_are_preserved ... ok
+test exclusions_partial_scans_and_unavailable_entries_are_explicit ... ok
+test identities_survive_restart_and_verified_move_but_not_copies_or_replacement ... ok
+test bounded_scan_continuations_reach_the_suffix_without_mutating_repositories ... ok
+test partial_permission_scan_and_glob_exclusions_preserve_known_identity ... ok
+test saved_workspaces_restart_activate_rename_update_remove_and_lock ... ok
+test startup_reconciles_authoritative_toml_after_database_update_was_interrupted ... ok
+test state_inside_checkout_and_invalid_workspace_definitions_are_rejected ... ok
+test mixed_inventory_classifies_nested_submodule_and_linked_worktrees ... ok
+test replacement_recovery_preserves_history_and_restored_identity ... ok
+test submodule_gitlinks_and_child_dirt_are_reported_without_recursive_helpers ... ok
+test unversioned_unknown_database_is_not_migrated_and_empty_database_is_backed_up ... ok
+test inventory_tracks_observed_child_heads_against_current_parent_gitlinks ... ok
+test targeted_refresh_does_not_rediscover_and_replacement_requires_rescan ... ok
+test tagged_caches_are_explicitly_skipped_without_hiding_other_broken_git_markers ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.55s
+
+     Running tests/m2_writes.rs (target/debug/deps/m2_writes-ef03be6d4dd3d1c0)
+
+running 26 tests
+test effective_global_hook_path_and_prepare_message_rewrites_are_reviewed ... ok
+test approvals_reject_tampering_expiry_restart_and_same_oid_branch_switch ... ok
+test exact_worktree_commit_is_reviewed_before_any_repo_object_write_and_idempotent ... ok
+test hook_timeout_is_bounded_and_shared_repository_lock_prevents_execution ... ok
+test hook_bypass_is_complete_and_managers_and_reference_hooks_fail_closed ... ok
+test changed_selection_index_and_ref_invalidate_approval_and_noop_is_rejected ... ok
+test m2_schema_upgrade_backs_up_m1_and_default_services_can_reopen_schema_two ... ok
+test linked_worktrees_require_independent_trust_and_preserve_other_checkout ... ok
+test mixed_sources_rename_gitlinks_and_worktree_config_preserve_exact_selection ... ok
+test hooks_reject_tree_message_and_selected_content_changes_without_publishing ... ok
+test literal_binary_symlink_executable_deletion_and_initial_commit_have_exact_trees ... ok
+test moved_replaced_and_permission_changed_metadata_never_inherit_write_authority ... ok
+test post_hook_failure_preserves_published_commit_and_excluded_side_effects_are_reported ... ok
+test openpgp_signing_positive_gate_requires_isolated_tool_and_keyring ... ok
+test preparatory_hooks_can_read_selected_private_blobs_and_rejected_adds_stay_private ... ok
+test ssh_signing_is_verified_against_approved_key_without_unsigned_fallback ... ok
+test unresolved_fetch_import_blocks_new_and_already_approved_local_writes_in_every_feature_build ... ok
+test trust_revocation_and_changed_hook_or_configuration_block_before_publication ... ok
+test stage_unstage_and_commit_preserve_partial_and_excluded_staging ... ok
+test supported_sha256_unborn_stage_unstage_and_commit ... ok
+test untrusted_proposals_and_forged_trust_reviews_are_rejected_without_repo_writes ... ok
+test unsupported_sparse_conflicts_detached_and_conversions_never_mutate_git ... ok
+test upstream_recovery_barrier_blocks_controlled_only_new_and_approved_local_writes ... ok
+test version_action_recovery_barrier_blocks_new_and_approved_writes_without_application_features ... ok
+test unsupported_indexes_operation_states_filters_and_foreign_locks_do_not_write ... ok
+test wrong_key_and_timed_out_signers_never_publish_or_fall_back_to_unsigned ... ok
+
+test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 25.02s
+
+    Checking rusqlite v0.41.0
+    Checking gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.79s
+   Compiling rusqlite v0.41.0
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 38.42s
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s
+     Running unittests src/lib.rs (target/debug/deps/gitfleet_core-990268db74c912b4)
+
+running 63 tests
+test actions::semver::tests::invalid_binary_multivalue_prefix_and_overflow_inputs_are_refused ... ok
+test actions::semver::tests::prerelease_handling_is_chosen_and_never_silently_inferred ... ok
+test actions::semver::tests::recovery_never_recomputes_a_second_increment_and_rejects_tampered_preview ... ok
+test actions::semver::tests::increments_preserve_terminators_and_remove_metadata_explicitly ... ok
+test ai::candidates::tests::incomplete_attribution_is_explicit_and_controls_cannot_enter_candidate_metadata ... ok
+test ai::candidates::tests::rejects_injected_commands_unknown_provenance_duplicates_and_excess_candidates ... ok
+test ai::candidates::tests::validates_message_rules_and_preserves_model_attribution_without_authority ... ok
+test ai::context::tests::excluded_and_binary_content_never_enter_the_exact_payload ... ok
+test ai::context::tests::credentials_and_private_key_blocks_are_redacted_before_serialization ... ok
+test ai::context::tests::excluded_empty_file_is_incomplete_and_escaping_obeys_the_exact_budget ... ok
+test ai::context::tests::invalid_budgets_exclusions_and_provenance_fail_without_echoing_content ... ok
+test ai::context::tests::prompt_injection_remains_data_and_has_no_capability_fields ... ok
+test ai::context::tests::independent_groups_keep_line_provenance_and_boundaries ... ok
+test ai::context::tests::byte_budget_preserves_utf8_lines_and_accounts_for_every_omission ... ok
+test ai::provider::tests::absent_or_unapproved_authentication_cannot_reach_the_provider ... ok
+test actions::version_file::tests::racing_external_edit_is_retained_by_exchange_instead_of_deleted ... ok
+test ai::provider::tests::declined_or_expired_authority_cannot_contact_provider ... ok
+test ai::provider::tests::empty_tool_list_is_not_a_tool_invocation_and_bidi_model_ids_are_refused ... ok
+test ai::provider::tests::exact_request_uses_only_fixed_routes_and_stdin_for_payload_and_secret ... ok
+test ai::provider::tests::actual_both_provider_routes_preserve_exact_json_and_auth_without_redirects ... ok
+test ai::provider::tests::provider_options_remain_optional_and_adapter_specific ... ok
+test ai::provider::tests::reflected_credential_is_refused_before_result_reaches_renderer ... ok
+test ai::provider::tests::responses_refuse_partial_tools_fallback_and_invalid_models ... ok
+test ai::provider::tests::actual_discovery_sorts_models_and_rejects_redirect_auth_malformed_and_size ... ok
+test ai::provider::tests::truncated_answers_are_actionable_refusals_even_when_the_partial_message_looks_valid ... ok
+test ai::provider::tests::unfinished_or_unrecognized_finish_metadata_never_exposes_the_provider_value ... ok
+test ai::provider::tests::stored_authentication_is_exact_and_failure_never_contacts_an_unauthenticated_provider ... ok
+test ai::tests::capability_parameters_are_optional_bounded_and_provider_specific ... ok
+test ai::tests::edits_are_transactional_stale_guarded_and_preserve_reference_integrity ... ok
+test ai::tests::endpoint_policy_canonicalizes_and_rejects_ambiguous_destinations ... ok
+test ai::provider::tests::independent_jobs_enforce_global_and_connection_limits_and_shutdown_discards_results ... ok
+test ai::tests::hierarchical_profiles_and_additive_instructions_have_no_silent_fallback ... ok
+test ai::tests::imports_and_connection_edits_clear_endpoint_metadata ... ok
+test ai::tests::no_ai_default_is_valid_and_unavailable_only_for_ai ... ok
+test ai::tests::settings_reject_duplicate_names_bad_references_versions_and_controls ... ok
+test ai::tests::settings_round_trip_without_secrets_or_execution_authority ... ok
+test ai::tests::templates_validate_structure_boundaries_and_static_examples_without_models ... ok
+test ai::tests::external_prompt_edits_invalidate_editor_fingerprint_without_losing_text ... ok
+test application::monitor::tests::burst_coalescing_and_periodic_fallback_are_bounded ... ok
+test application::monitor::tests::filtering_and_overflow_do_not_schedule_writes ... ok
+test credentials::tests::ignored_mutations_never_execute_or_validate_a_helper ... ok
+test credentials::tests::scope_and_protocol_reject_ambiguous_secret_or_cross_account_inputs ... ok
+test ai::provider::tests::actual_running_inference_cancels_and_times_out_with_bounded_cleanup ... ok
+test ai::tests::atomic_generations_preserve_previous_settings_and_external_text ... ok
+test locking::tests::explicit_release_does_not_wait_for_duplicated_descriptors ... ok
+test ai::tests::unsafe_and_interrupted_generation_files_are_preserved_and_refused ... ok
+test inspection::consistency_tests::ref_and_config_mutation_during_read_are_rejected ... ok
+test inspection::consistency_tests::multi_command_reads_for_one_worktree_are_serialized ... ok
+test process::reference::abort_deadline_test::unresponsive_abort_is_bounded_and_uncertain ... ok
+test process::reference::tests::prepared_guard_aborts_symbolic_ref_even_when_resolved_oid_matches ... ok
+test process::tests::bounded_input_checks_writer_completion_and_descendant_timeout ... ok
+test process::tests::bounded_process_limits_and_cancellation_reap_children ... ok
+test process::tests::trusted_artifact_check_prevents_spawn_and_reaps_running_process ... ok
+test remote::urls::tests::relative_repository_directory_semantics_preserve_authority_and_home_roots ... ok
+test remote::urls::tests::scp_preserves_path_spelling_and_requires_explicit_plain_login ... ok
+test writes::fetch::tests::artifact_budget_rejects_sparse_oversize_files_and_symlinks ... ok
+test writes::fetch::tests::inventory_limits_are_checked_before_bundle_creation ... ok
+test writes::push_dependencies::tests::cycle_witness_excludes_acyclic_dependents_and_independent_nodes ... ok
+test writes::push_dependencies::tests::stable_order_visits_only_selected_nodes_children_first ... ok
+test process::reference::tests::foreign_lock_is_never_removed ... ok
+test writes::ssh_transport::tests::actual_ssh_configuration_disables_fallback_and_preserves_shell_quoted_paths ... ok
+test process::reference::tests::prepared_cancellation_aborts_and_reaps_without_publication ... ok
+test process::tests::global_permits_never_exceed_four ... ok
+
+test result: ok. 63 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.91s
+
+     Running unittests src/bin/gitfleet_cli.rs (target/debug/deps/gitfleet_cli-57e9cdbc378e94f9)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/gitfleet_contracts.rs (target/debug/deps/gitfleet_contracts-96dd82f093763e89)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/gitfleet_credential.rs (target/debug/deps/gitfleet_credential-4ada6ae353c4eac1)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/gitfleet_write.rs (target/debug/deps/gitfleet_write-f6b0a8f331a7a02d)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/bulk_application.rs (target/debug/deps/bulk_application-69b8a7ce5e45e16d)
+
+running 15 tests
+test batch_crash_worker ... ignored, subprocess worker invoked by the batch interruption test
+test duplicate_selection_rejected_and_restart_cannot_replay_an_old_batch_capability ... ok
+test declined_batch_and_changed_selected_content_never_publish ... ok
+test explicit_batch_commits_only_selected_repositories_and_never_nested_children_implicitly ... ok
+test known_untrusted_item_blocks_entire_batch_before_any_repository_write ... ok
+test index_only_batch_preserves_partial_staging_and_exclusions_are_exact ... ok
+test batch_stops_after_first_failure_preserves_success_and_cancels_unstarted_items ... ok
+test linked_worktree_batch_requires_independent_trust_and_preserves_unselected_checkout ... ok
+test process_interruption_between_items_is_visible_and_restart_does_not_replay ... ok
+test malformed_submodule_relationships_stop_before_batch_proposals ... ok
+test revoked_trust_revokes_the_whole_batch_capability_and_cancels_proposals ... ok
+test running_batch_cancellation_preserves_completed_item_and_never_starts_successors ... ok
+test real_submodule_commits_before_parent_and_changed_gitlink_requires_fresh_parent_review ... ok
+test selected_linked_worktrees_share_locks_but_commit_only_their_own_branches ... ok
+test three_level_submodules_require_fresh_review_at_each_changed_parent ... ok
+
+test result: ok. 14 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 39.56s
+
+     Running tests/graph_activity.rs (target/debug/deps/graph_activity-f16a6fa175b03deb)
+
+running 5 tests
+test activity_does_not_prune_recent_ancestors_behind_older_committer_dates ... ok
+test sha256_graph_retains_full_object_ids ... ok
+test activity_uses_committer_time_and_deduplicates_branches_with_explicit_truncation ... ok
+test unborn_graph_and_activity_are_empty_and_malformed_graph_lanes_are_rejected ... ok
+test graph_uses_actual_merge_parents_and_preserves_lanes_across_pages_without_writes ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.75s
+
+     Running tests/inspection.rs (target/debug/deps/inspection-16a00855f5ac5ab6)
+
+running 13 tests
+test included_filter_configuration_is_rejected ... ok
+test cli_does_not_inherit_git_repository_or_config_overrides ... ok
+test content_filters_are_rejected_without_mutation ... ok
+test nested_directory_is_not_accepted_as_worktree_root ... ok
+test missing_promisor_object_cannot_launch_a_remote_helper ... ok
+test non_utf8_filename_remains_git_quoted_without_mutation ... ignored, M0 host filesystem rejects non-UTF-8 filename creation (EPERM); requires a supporting filesystem
+test configured_helper_sentinels_are_not_executed ... ok
+test inspection_and_cli_preserve_dirty_repository_bytes ... ok
+test newline_filename_remains_git_quoted_without_mutation ... ok
+test worktree_filter_configuration_is_rejected ... ok
+test unmerged_index_can_be_inspected_without_write_tree ... ok
+test remote_presence_and_tracking_counts_are_local_and_backward_compatible ... ok
+test unborn_and_detached_head_can_be_inspected ... ok
+
+test result: ok. 12 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 2.54s
+
+     Running tests/m1_read.rs (target/debug/deps/m1_read-fa110064d55bc77f)
+
+running 17 tests
+test byte_safe_parsers_roundtrip_non_utf8_names_and_reject_malformed_records ... ok
+test cancelled_deadline_output_and_preview_limits_are_typed_without_repo_mutation ... ok
+test conflict_stages_and_merge_state_are_structured_without_mutation ... ok
+test clean_unstaged_diff_preserves_an_index_with_unpopulated_stat_cache ... ok
+test executable_mode_and_deletion_diffs_are_explicit ... ok
+test literal_newline_and_binary_previews_preserve_scope_and_bytes ... ok
+test local_upstream_comparison_never_claims_remote_freshness ... ok
+test history_dag_merge_parents_tags_pagination_and_stale_cursors ... ok
+test cli_and_library_inspection_contracts_agree_for_all_read_modes ... ok
+test missing_upstream_and_shallow_boundary_are_explicit ... ok
+test helper_sentinels_are_suppressed_for_every_history_diff_and_failure_path ... ok
+test split_index_is_read_only_and_sparse_configuration_fails_closed ... ok
+test root_commit_diff_and_staged_unstaged_blobs_have_independent_oracles ... ok
+test sha256_repository_inspection_and_blob_ids_are_format_aware ... ok
+test structured_status_distinguishes_partial_staging_rename_binary_modes_and_conflicts ... ok
+test unborn_history_is_empty_and_history_limits_are_checked ... ok
+test symlink_leaf_is_not_dereferenced_and_parent_escape_and_fifo_are_rejected ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.67s
+
+     Running tests/m1_workspace.rs (target/debug/deps/m1_workspace-a913144562f51a2c)
+
+running 23 tests
+test cancelled_continuation_keeps_accepted_state_and_exclusion_changes_invalidate_cursor ... ok
+test cli_and_service_workspace_results_agree_and_preserve_repository_bytes ... ok
+test cancelled_scan_still_returns_cancelled_and_preserves_saved_inventory ... ok
+test changing_workspace_root_invalidates_old_inventory_and_refresh_scope ... ok
+test expired_scan_is_reported_as_partial_without_marking_known_repositories_missing ... ok
+test failed_atomic_config_save_preserves_previous_toml_and_memory ... ok
+test clones_with_identical_head_have_distinct_identities ... ok
+test failed_replacement_inspection_does_not_retire_original_identity ... ok
+test invalid_and_newer_configs_and_schemas_are_preserved ... ok
+test exclusions_partial_scans_and_unavailable_entries_are_explicit ... ok
+test identities_survive_restart_and_verified_move_but_not_copies_or_replacement ... ok
+test bounded_scan_continuations_reach_the_suffix_without_mutating_repositories ... ok
+test partial_permission_scan_and_glob_exclusions_preserve_known_identity ... ok
+test saved_workspaces_restart_activate_rename_update_remove_and_lock ... ok
+test startup_reconciles_authoritative_toml_after_database_update_was_interrupted ... ok
+test state_inside_checkout_and_invalid_workspace_definitions_are_rejected ... ok
+test mixed_inventory_classifies_nested_submodule_and_linked_worktrees ... ok
+test replacement_recovery_preserves_history_and_restored_identity ... ok
+test submodule_gitlinks_and_child_dirt_are_reported_without_recursive_helpers ... ok
+test unversioned_unknown_database_is_not_migrated_and_empty_database_is_backed_up ... ok
+test inventory_tracks_observed_child_heads_against_current_parent_gitlinks ... ok
+test targeted_refresh_does_not_rediscover_and_replacement_requires_rescan ... ok
+test tagged_caches_are_explicitly_skipped_without_hiding_other_broken_git_markers ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.52s
+
+     Running tests/m2_writes.rs (target/debug/deps/m2_writes-7ca6aa5e50bbe166)
+
+running 26 tests
+test effective_global_hook_path_and_prepare_message_rewrites_are_reviewed ... ok
+test approvals_reject_tampering_expiry_restart_and_same_oid_branch_switch ... ok
+test exact_worktree_commit_is_reviewed_before_any_repo_object_write_and_idempotent ... ok
+test hook_timeout_is_bounded_and_shared_repository_lock_prevents_execution ... ok
+test changed_selection_index_and_ref_invalidate_approval_and_noop_is_rejected ... ok
+test hook_bypass_is_complete_and_managers_and_reference_hooks_fail_closed ... ok
+test m2_schema_upgrade_backs_up_m1_and_default_services_can_reopen_schema_two ... ok
+test linked_worktrees_require_independent_trust_and_preserve_other_checkout ... ok
+test mixed_sources_rename_gitlinks_and_worktree_config_preserve_exact_selection ... ok
+test literal_binary_symlink_executable_deletion_and_initial_commit_have_exact_trees ... ok
+test hooks_reject_tree_message_and_selected_content_changes_without_publishing ... ok
+test moved_replaced_and_permission_changed_metadata_never_inherit_write_authority ... ok
+test post_hook_failure_preserves_published_commit_and_excluded_side_effects_are_reported ... ok
+test openpgp_signing_positive_gate_requires_isolated_tool_and_keyring ... ok
+test preparatory_hooks_can_read_selected_private_blobs_and_rejected_adds_stay_private ... ok
+test ssh_signing_is_verified_against_approved_key_without_unsigned_fallback ... ok
+test unresolved_fetch_import_blocks_new_and_already_approved_local_writes_in_every_feature_build ... ok
+test trust_revocation_and_changed_hook_or_configuration_block_before_publication ... ok
+test stage_unstage_and_commit_preserve_partial_and_excluded_staging ... ok
+test supported_sha256_unborn_stage_unstage_and_commit ... ok
+test untrusted_proposals_and_forged_trust_reviews_are_rejected_without_repo_writes ... ok
+test unsupported_sparse_conflicts_detached_and_conversions_never_mutate_git ... ok
+test upstream_recovery_barrier_blocks_controlled_only_new_and_approved_local_writes ... ok
+test version_action_recovery_barrier_blocks_new_and_approved_writes_without_application_features ... ok
+test unsupported_indexes_operation_states_filters_and_foreign_locks_do_not_write ... ok
+test wrong_key_and_timed_out_signers_never_publish_or_fall_back_to_unsigned ... ok
+
+test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 24.83s
+
+     Running tests/m3_application.rs (target/debug/deps/m3_application-0302a75ece9818d8)
+
+running 41 tests
+test ai_context_bounds_selection_documents_history_and_cancellation ... ok
+test ai_context_redacted_or_excluded_changes_still_invalidate_snapshot ... ok
+test ai_context_refuses_links_nested_repositories_and_ignored_untracked_content ... ok
+test ai_context_related_source_docs_and_current_branch_history_are_explicit_and_filtered ... ok
+test ai_context_tracked_working_selection_compares_full_content_against_head ... ok
+test ai_context_supports_unborn_and_staged_or_working_deletion ... ok
+test ai_context_exact_selection_is_read_only_and_needs_no_ai_or_trust ... ok
+test ai_credentials_require_current_saved_binding_and_native_approval_without_fallback ... ok
+test ai_source_drift_or_missing_profile_blocks_before_transfer_and_manual_reads_continue ... ok
+test activity_deduplicates_linked_worktrees_and_audit_filters_real_operation_phases ... ok
+test automatic_discovery_retains_identity_across_rename_and_missing_entries_after_removal ... ok
+test ai_source_transfer_requires_exact_native_approval_and_returns_only_validated_text ... ok
+test bulk_composer_state_is_durable_workspace_scoped_and_does_not_change_git ... ok
+test deterministic_version_preview_needs_no_trust_or_provider_and_preserves_drafts_and_git ... ok
+test cancelled_and_replaced_reviews_record_nonpublication_and_cancellation_is_per_operation ... ok
+test final_presentation_snapshot_is_atomic_durable_and_never_grants_authority ... ok
+test g01_replaced_or_closed_review_cannot_use_an_already_issued_confirmation ... ok
+test g01_hostile_review_text_preserves_exact_approved_message_and_index_blob ... ok
+test identity_recovery_keeps_drafts_and_trust_scoped_and_invalidates_pending_review ... ok
+test interrupted_records_block_scope_loss_and_are_reported_for_guarded_recovery ... ok
+test invalid_bulk_preferences_do_not_replace_the_last_valid_draft ... ok
+test inventory_exposes_scan_level_and_repository_inspection_failures_and_cache_skips ... ok
+test malformed_state_paths_duplicate_tabs_and_unknown_picker_cannot_modify_storage ... ok
+test native_window_placement_survives_restart_and_invalid_values_preserve_saved_state ... ok
+test g01_g02_shutdown_or_reset_revokes_issued_commit_confirmation_without_running_hooks ... ok
+test navigation_migration_restart_and_newer_data_are_preserved ... ok
+test notification_reconciliation_detects_external_edits_without_writes ... ok
+test native_capability_is_required_decline_replay_and_context_changes_fail_closed ... ok
+test operation_reviews_show_exact_content_and_only_applicable_commit_fields ... ok
+test optional_ai_settings_preserve_manual_work_and_use_lazy_atomic_storage ... ok
+test reviewed_ai_diagnostic_runs_outside_storage_owner_and_cancels_without_git_authority ... ok
+test scoped_reads_and_contracts_preserve_every_repository_byte ... ok
+test review_text_escapes_bidi_and_reset_invalidates_picker_and_native_capability ... ok
+test recovered_historical_identities_do_not_degrade_periodic_monitoring ... ok
+test trust_currentness_is_distinct_from_supported_hook_policy_eligibility ... ok
+test unified_audit_pages_across_tied_sources_and_projects_orphans_without_rewriting_journals ... ok
+test untrusted_remote_inspection_is_scoped_and_includes_host_configuration_without_helper_execution ... ok
+test switching_workspace_stops_refreshing_inactive_repository_state ... ok
+test unified_audit_filters_real_local_batch_and_remote_records_without_mutation_or_authority ... ok
+test workspace_switch_invalidates_reviews_and_old_epoch_and_stops_old_watchers ... ok
+test version_preview_rejects_unsafe_files_and_crossing_repository_boundaries ... ok
+
+test result: ok. 41 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 27.34s
+
+     Running tests/remote_inspection.rs (target/debug/deps/remote_inspection-6bdbf7c2e96bb2d1)
+
+running 10 tests
+test explicit_pushurl_suppresses_pushinsteadof_and_multiple_destinations_stay_visible ... ok
+test effective_fetch_push_rewrites_case_sensitive_names_origins_and_upstream_are_read_only ... ok
+test malformed_scp_style_userinfo_cannot_leak_a_password_in_inspection ... ok
+test helper_and_hostile_destinations_are_withheld_and_controls_fail_closed ... ok
+test inspection_never_executes_configured_helpers_and_never_returns_embedded_secrets ... ok
+test missing_upstream_detached_head_and_cancellation_are_explicit ... ok
+test explicit_ssh_login_is_visible_but_password_query_fragment_and_encoded_login_stay_withheld ... ok
+test unsupported_scp_query_and_fragment_values_are_withheld ... ok
+test scope_limits_malformed_names_and_case_insensitive_tls_overrides_fail_safely ... ok
+test push_remote_precedence_is_only_a_suggestion_and_unknown_or_local_upstream_is_reported ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.95s
+
+     Running tests/remote_observation.rs (target/debug/deps/remote_observation-bbc9c818a4cf37bc)
+
+running 105 tests
+test artifact_initialization::artifact_init_probe_worker ... ignored, subprocess-only controlled Git initialization probe
+test authentication_failure_never_uses_a_configured_helper_or_retains_raw_server_text ... ok
+test authentication_profiles::assigned_profile_refuses_destination_drift_and_requires_unassignment_before_delete ... ok
+test artifact_initialization::persistent_initialization_symlink_is_still_refused_before_object_import ... ok
+test authentication_profiles::profile_and_remote_isolation_and_tool_drift_block_lookup ... ok
+test authentication_profiles::explicitly_assigned_profile_authenticates_capture_without_host_credential_flags ... ok
+test artifact_initialization::git_initialization_probe_is_transient_and_never_accepted_as_a_completed_artifact ... ok
+test authentication_profiles::profiles_require_native_approval_persist_and_are_not_implicitly_assigned ... ok
+test certificate_source_drift_requires_new_review_before_any_request ... ok
+test child_evidence::historical_mapping_contexts_are_bounded_without_partial_success ... ok
+test child_evidence::child_evidence_rejects_historical_destination_mismatch ... ok
+test authentication_profiles::settings_review_refuses_changed_helper_or_destination_and_cancelled_application ... ok
+test child_evidence::historical_mappings_refuse_ambiguity_unsafe_relative_urls_secrets_and_nonregular_blobs ... ok
+test child_evidence::historical_mappings_keep_url_changes_and_ignore_working_files_and_includes ... ok
+test child_evidence::child_evidence_rejects_mismatches_expiry_missing_objects_config_drift_and_cancellation ... ok
+test decline_cancellation_and_configuration_drift_never_contact_a_remote ... ok
+test child_evidence::real_agent_authenticated_child_evidence_resolves_relative_ssh_mapping_without_new_contact ... ok
+test fetch_capture_decline_precancel_and_configuration_drift_cannot_import_or_contact_a_server ... ok
+test fetch_capture_detects_remote_branch_drift_without_importing_downloaded_objects ... ok
+test fetch_capture_downloads_real_objects_over_verified_https_with_managed_helpers_isolated ... ok
+test child_evidence::relative_child_mapping_uses_selected_parent_destination_and_proves_observed_ancestry ... ok
+test fetch_capture_rejects_missing_or_absent_sources_and_loses_authority_on_restart ... ok
+test fetch_capture_requires_fresh_native_authority_and_produces_exact_verified_bundle_without_managed_mutation ... ok
+test child_evidence::selected_child_observation_proves_only_actual_ancestry_and_preserves_all_repositories ... ok
+test fetch_capture_refuses_authentication_redirects_and_cancels_a_proven_running_request ... ok
+test fetch_import_adds_exact_objects_and_one_tracking_ref_with_separate_authority ... ok
+test https_credential_tests::actual_gitea_and_osxkeychain_read_download_import_and_missing_account ... ignored, opt-in loopback Gitea + exact generated macOS Keychain fixture; never uses user credentials
+test https_credential_tests::approved_https_helper_authenticates_downloads_and_imports_without_persisting_or_mutating_credentials ... ok
+test fetch_import_updates_packed_expected_old_for_sha1_and_sha256 ... ok
+test https_credential_tests::cancellation_after_credential_lookup_starts_reaps_the_helper_and_preserves_state ... ok
+test https_credential_tests::completed_https_transport_reaps_helper_background_descendants ... ok
+test fetch_import_rejects_aliases_and_shared_lock_and_orphaned_authority ... ok
+test fetch_import_decline_cancel_tamper_config_and_ref_drift_fail_closed ... ok
+test https_credential_tests::credential_helper_timeout_is_bounded_by_the_owning_network_operation ... ok
+test https_credential_tests::helper_credentials_never_bypass_tls_hostname_validation_or_follow_redirects ... ok
+test https_credential_tests::isolated_os_keychain_locked_missing_and_cancelled_reads_preserve_search_list_and_credentials ... ok
+test https_credential_tests::osxkeychain_password_only_response_and_private_state_extensions_authenticate_without_persistence ... ok
+test https_credential_tests::declined_stale_or_cancelled_https_reviews_never_read_a_credential ... ok
+test local_push_preview_bounds_outgoing_details_and_loses_no_exact_count ... ok
+test https_requires_a_valid_certificate_hostname_and_refuses_redirects ... ok
+test https_credential_tests::malformed_oversized_and_failing_helpers_cannot_expose_a_secret_or_authenticate ... ok
+test https_credential_tests::wrong_missing_and_changed_account_credentials_fail_without_store_or_erase ... ok
+test local_push_preview_inventories_committed_gitlinks_without_reading_children_or_index ... ok
+test local_push_preview_covers_removed_replaced_and_merged_gitlinks_beyond_display_limit ... ok
+test local_push_preview_refuses_excessive_history_requirements_even_when_source_fits ... ok
+test local_push_preview_refuses_excessive_source_gitlinks_without_partial_inventory ... ok
+test local_push_preview_refuses_excessive_distinct_history_trees ... ok
+test local_push_preview_reports_up_to_date_and_fast_forward_without_authority_or_mutation ... ok
+test missing_remote_branch_is_observed_absent_without_creating_a_destination ... ok
+test observation_needs_independent_native_authority_and_changes_neither_repository ... ok
+test local_push_preview_requires_explicit_objects_then_reports_behind_and_diverged ... ok
+test push_batch::a_saved_queue_cannot_broaden_its_frozen_source ... ok
+test push_batch::guided_request_rejects_approval_force_and_hook_policy_overrides ... ok
+test local_push_preview_refuses_ambiguous_changed_or_unsupported_context_without_effects ... ok
+test push_batch::decline_stops_guided_queue_and_never_implicitly_publishes_parent ... ok
+test push_batch::restart_interrupts_unfinished_queue_without_restoring_item_authority ... ok
+test push_batch::guided_queue_publishes_child_then_freshly_reviewed_parent_without_managed_changes has been running for over 60 seconds
+test push_batch::later_server_rejection_preserves_child_success_and_requires_fresh_retry_queue has been running for over 60 seconds
+test push_batch::revoked_selected_worktree_blocks_queue_before_any_publication_record ... ok
+test push_batch::observed_current_child_is_skipped_without_publication_or_a_second_child_approval has been running for over 60 seconds
+test push_batch::observed_current_child_is_skipped_without_publication_or_a_second_child_approval ... ok
+test push_batch::unselected_missing_child_blocks_queue_creation_and_never_enrolls_child ... ok
+test push_check::changed_hook_or_source_invalidates_approved_check_before_hook ... ok
+test push_check::conditional_selected_child_is_not_remote_success_for_parent_check ... ok
+test push_check::decline_bypass_and_unsupported_manager_never_run_hook ... ok
+test push_check::child_gate_requires_new_observation_after_fixture_remote_advances ... ok
+test push_batch::later_server_rejection_preserves_child_success_and_requires_fresh_retry_queue ... ok
+test push_check::hook_source_mutation_blocks_completion_without_rolling_back_hook_effects ... ok
+test push_check::restart_projects_orphaned_checks_as_interrupted_without_replaying_hooks ... ok
+test push_check::rejected_or_precancelled_check_keeps_no_raw_hook_output_or_authority ... ok

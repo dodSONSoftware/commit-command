@@ -146,6 +146,21 @@ fn run() -> Result<()> {
                 [verb, id] if text(verb)? == "scan" => {
                     serde_json::to_value(service.scan(&WorkspaceId(text(id)?.into()))?)?
                 }
+                [verb, id, slices] if text(verb)? == "scan-complete" => {
+                    let maximum = text(slices)?.parse::<usize>().map_err(|_| invalid())?;
+                    if !(1..=100).contains(&maximum) {
+                        return Err(invalid());
+                    }
+                    let id = WorkspaceId(text(id)?.into());
+                    let mut inventory = service.scan(&id)?;
+                    let mut slices = 1;
+                    while slices < maximum && service.can_continue_scan(&id) {
+                        inventory = service
+                            .continue_scan_with_options(&id, &inspection::ReadOptions::default())?;
+                        slices += 1;
+                    }
+                    serde_json::json!({"slices": slices, "inventory": inventory})
+                }
                 [verb, id] if text(verb)? == "last-scan" => {
                     serde_json::to_value(service.last_scan(&WorkspaceId(text(id)?.into()))?)?
                 }

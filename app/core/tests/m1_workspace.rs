@@ -898,3 +898,118 @@ fn inventory_tracks_observed_child_heads_against_current_parent_gitlinks() {
     assert_eq!(tree_bytes(&f.repo), before);
     assert!(!f.root.join("monitor-ran").exists());
 }
+
+#[test]
+fn bounded_scan_continuations_reach_the_suffix_without_mutating_repositories() {
+    use gitfleet_core::inspection::ReadOptions;
+    use std::time::Duration;
+    let f = Fixture::new();
+    let root = f.root.join("inventory");
+    fs::create_dir(&root).unwrap();
+    for index in 0..8 {
+        f.git(&[
+            "-c",
+            "init.templateDir=",
+            "init",
+            "-q",
+            "-b",
+            "main",
+            root.join(format!("repo-{index:02}")).to_str().unwrap(),
+        ]);
+    }
+    let before = tree_bytes(&root);
+    let mut service = WorkspaceService::open(&f.root.join("state")).unwrap();
+    let workspace = service.create("continuation", &root).unwrap();
+    let expired = ReadOptions {
+        timeout: Duration::ZERO,
+        ..ReadOptions::default()
+    };
+    let first = service.scan_with_options(&workspace.id, &expired).unwrap();
+    assert!(!first.scan.complete);
+    assert!(service.can_continue_scan(&workspace.id));
+    let slice = ReadOptions {
+        timeout: Duration::from_millis(600),
+        ..ReadOptions::default()
+    };
+    let mut previous = 0;
+    let mut saw_progress = false;
+    let mut complete = false;
+    for _ in 0..40 {
+        let report = service
+            .continue_scan_with_options(&workspace.id, &slice)
+            .unwrap();
+        assert!(report.scan.repositories.len() >= previous);
+        saw_progress |= report.scan.repositories.len() > previous;
+        previous = report.scan.repositories.len();
+        if report.scan.complete {
+            assert_eq!(previous, 8);
+            assert_eq!(report.entries.len(), 8);
+            complete = true;
+            break;
+        }
+        assert!(report.scan.progress.is_some());
+    }
+    assert!(complete && saw_progress);
+    assert!(!service.can_continue_scan(&workspace.id));
+    assert_eq!(before, tree_bytes(&root));
+}
+
+#[test]
+fn cancelled_continuation_keeps_accepted_state_and_exclusion_changes_invalidate_cursor() {
+    use gitfleet_core::inspection::ReadOptions;
+    use std::time::Duration;
+    let f = Fixture::new();
+    let state = f.root.join("state");
+    let mut service = WorkspaceService::open(&state).unwrap();
+    let workspace = service.create("continuation", &f.repo).unwrap();
+    let expired = ReadOptions {
+        timeout: Duration::ZERO,
+        ..ReadOptions::default()
+    };
+    service.scan_with_options(&workspace.id, &expired).unwrap();
+    let before = serde_json::to_vec(&service.last_scan(&workspace.id).unwrap()).unwrap();
+    let cancelled = ReadOptions::default();
+    cancelled.cancellation.cancel();
+    assert_eq!(
+        service
+            .continue_scan_with_options(&workspace.id, &cancelled)
+            .unwrap_err()
+            .kind,
+        ErrorKind::Cancelled
+    );
+    assert_eq!(
+        before,
+        serde_json::to_vec(&service.last_scan(&workspace.id).unwrap()).unwrap()
+    );
+    assert!(service.can_continue_scan(&workspace.id));
+    service
+        .update(
+            &workspace.id,
+            None,
+            None,
+            Some(DiscoveryOptions {
+                excluded_names: vec!["generated".into()],
+                excluded_patterns: vec![],
+            }),
+        )
+        .unwrap();
+    assert_eq!(
+        service
+            .continue_scan_with_options(&workspace.id, &ReadOptions::default())
+            .unwrap_err()
+            .kind,
+        ErrorKind::StaleReview
+    );
+    assert!(!service.can_continue_scan(&workspace.id));
+    service.scan_with_options(&workspace.id, &expired).unwrap();
+    drop(service);
+    let mut reopened = WorkspaceService::open(&state).unwrap();
+    assert!(!reopened.can_continue_scan(&workspace.id));
+    assert_eq!(
+        reopened
+            .continue_scan_with_options(&workspace.id, &ReadOptions::default())
+            .unwrap_err()
+            .kind,
+        ErrorKind::InvalidRequest
+    );
+}

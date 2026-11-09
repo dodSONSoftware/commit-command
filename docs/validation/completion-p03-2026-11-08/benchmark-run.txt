@@ -1,0 +1,3 @@
+{"repetition": 0, "seconds": 23.777867999999998, "slices": 2, "complete": true, "repositories": 100, "issues": 0}
+{"repetition": 1, "seconds": 25.620428708000002, "slices": 2, "complete": true, "repositories": 100, "issues": 0}
+{"repetition": 2, "seconds": 23.571007125, "slices": 2, "complete": true, "repositories": 100, "issues": 0}

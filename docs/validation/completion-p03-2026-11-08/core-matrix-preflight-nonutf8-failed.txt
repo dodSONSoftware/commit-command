@@ -1,0 +1,13 @@
+..E............
+======================================================================
+ERROR: test_native_bytes_and_new_hardlink_are_observable (test_completion_evidence.EvidenceTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/randydodson/Documents/_code/git-fleet/app/core/scripts/test_completion_evidence.py", line 54, in test_native_bytes_and_new_hardlink_are_observable
+    fd = os.open(name, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+OSError: [Errno 92] Illegal byte sequence: b'/private/var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-completion-fixtures-_1u87m1r/gitfleet-evidence-6qrtyxwb/repo/unusual-\xff'
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.036s
+
+FAILED (errors=1)

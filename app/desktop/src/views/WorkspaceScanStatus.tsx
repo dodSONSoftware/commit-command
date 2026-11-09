@@ -1,7 +1,15 @@
 import type { ScanSummary } from "../services/response.generated";
 import { pathText } from "../stores/model";
 
-export function WorkspaceScanStatus({ scan }: { scan?: ScanSummary | null }) {
+export function WorkspaceScanStatus({
+  scan,
+  onContinue,
+  busy = false,
+}: {
+  scan?: ScanSummary | null;
+  onContinue?: () => void;
+  busy?: boolean;
+}) {
   return (
     <section className="workspace-scan" aria-label="Workspace discovery status">
       <p role="status">
@@ -17,6 +25,18 @@ export function WorkspaceScanStatus({ scan }: { scan?: ScanSummary | null }) {
         {scan &&
           ` · ${scan.issues.length} scan issue${scan.issues.length === 1 ? "" : "s"} · ${scan.skipped_caches.length} tagged cache${scan.skipped_caches.length === 1 ? "" : "s"} skipped`}
       </p>
+      {scan?.progress && (
+        <div>
+          <p role="status">
+            {scan.progress.inspected_repositories} repositories inspected ·{" "}
+            {scan.progress.pending_directories} directories pending ·{" "}
+            {scan.progress.phase}
+          </p>
+          <button disabled={busy || !onContinue} onClick={onContinue}>
+            Continue discovery
+          </button>
+        </div>
+      )}
       {!scan ? (
         <p>Run Rescan to inspect the workspace.</p>
       ) : (

@@ -1,0 +1,3 @@
+    Blocking waiting for file lock on build directory
+    Checking gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 15.47s

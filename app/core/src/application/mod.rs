@@ -275,6 +275,9 @@ pub enum Request {
     Scan {
         workspace: String,
     },
+    ContinueScan {
+        workspace: String,
+    },
     Refresh {
         workspace: String,
         worktree: String,
@@ -353,6 +356,8 @@ pub struct WorkspaceList {
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct ScanSummary {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub progress: Option<crate::discovery::ScanProgress>,
     pub complete: bool,
     pub issues: Vec<crate::discovery::ScanIssue>,
     pub skipped_caches: Vec<NativePath>,
@@ -1137,6 +1142,19 @@ impl Application {
                     scan: self.scan_summary(&id)?,
                 })
             }
+            Request::ContinueScan { workspace } => {
+                let id = self.active(&workspace)?;
+                self.abandon_review()?;
+                self.writes
+                    .workspace
+                    .continue_scan_with_options(&id, &self.read_options)?;
+                self.restart_monitor()?;
+                Data::Inventory(InventoryView {
+                    entries: self.writes.workspace.inventory(&id)?,
+                    monitor: self.monitor.status(),
+                    scan: self.scan_summary(&id)?,
+                })
+            }
             Request::Refresh {
                 workspace,
                 worktree,
@@ -1665,6 +1683,11 @@ impl Application {
                 })
             }));
             ScanSummary {
+                progress: if self.writes.workspace.can_continue_scan(workspace) {
+                    scan.progress
+                } else {
+                    None
+                },
                 complete: scan.complete,
                 issues,
                 skipped_caches: scan.skipped_caches,
@@ -1678,9 +1701,15 @@ impl Application {
         };
         let work = self.monitor.due();
         if work.discovery {
-            self.writes
-                .workspace
-                .scan_with_options(&id, &self.read_options)?;
+            if self.writes.workspace.can_continue_scan(&id) {
+                self.writes
+                    .workspace
+                    .continue_scan_with_options(&id, &self.read_options)?;
+            } else {
+                self.writes
+                    .workspace
+                    .scan_with_options(&id, &self.read_options)?;
+            }
             self.restart_monitor()?;
             return Ok(true);
         }

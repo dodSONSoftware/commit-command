@@ -1559,3 +1559,5 @@ print('Static manifest/scaffold checks passed. Rust build/tests: NOT verified by
 6. **High:** Implement signed-commit compatibility for GPG and SSH, with noninteractive credential handling and valid signature verification.
 7. **Medium:** Extract a stable application-service API and durable SQLite operation history; add a strictly read-only monitoring layer.
 8. **Later:** Add the Tauri/React adapter, workspace table/graph, AI profiles, deterministic GitFleet Actions, and dependency-aware bulk operations.
+
+Workspace discovery now offers in-process continuation after a bounded partial scan. `workspace scan-complete WORKSPACE_ID MAX_SLICES` explicitly runs 1–100 bounded slices in one CLI process. Desktop Continue discovery resumes the same in-memory cursor; restart requires fresh Rescan. Saved incomplete inventory never restores a live cursor or authority.

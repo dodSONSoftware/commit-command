@@ -1,0 +1,70 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.45s
+     Running tests/bulk_application.rs (app/core/target/debug/deps/bulk_application-69b8a7ce5e45e16d)
+
+running 15 tests
+test batch_crash_worker ... ignored, subprocess worker invoked by the batch interruption test
+test explicit_batch_commits_only_selected_repositories_and_never_nested_children_implicitly ... ok
+test declined_batch_and_changed_selected_content_never_publish ... ok
+test duplicate_selection_rejected_and_restart_cannot_replay_an_old_batch_capability ... ok
+test known_untrusted_item_blocks_entire_batch_before_any_repository_write ... ok
+test index_only_batch_preserves_partial_staging_and_exclusions_are_exact ... ok
+test batch_stops_after_first_failure_preserves_success_and_cancels_unstarted_items ... ok
+test linked_worktree_batch_requires_independent_trust_and_preserves_unselected_checkout ... ok
+test revoked_trust_revokes_the_whole_batch_capability_and_cancels_proposals ... ok
+test process_interruption_between_items_is_visible_and_restart_does_not_replay ... ok
+test malformed_submodule_relationships_stop_before_batch_proposals ... ok
+test running_batch_cancellation_preserves_completed_item_and_never_starts_successors ... ok
+test real_submodule_commits_before_parent_and_changed_gitlink_requires_fresh_parent_review ... ok
+test selected_linked_worktrees_share_locks_but_commit_only_their_own_branches ... ok
+test three_level_submodules_require_fresh_review_at_each_changed_parent ... ok
+
+test result: ok. 14 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 62.69s
+
+     Running tests/m3_application.rs (app/core/target/debug/deps/m3_application-0302a75ece9818d8)
+
+running 41 tests
+test ai_context_bounds_selection_documents_history_and_cancellation ... ok
+test ai_context_redacted_or_excluded_changes_still_invalidate_snapshot ... ok
+test ai_context_refuses_links_nested_repositories_and_ignored_untracked_content ... ok
+test ai_context_related_source_docs_and_current_branch_history_are_explicit_and_filtered ... ok
+test ai_context_tracked_working_selection_compares_full_content_against_head ... ok
+test ai_context_supports_unborn_and_staged_or_working_deletion ... ok
+test ai_credentials_require_current_saved_binding_and_native_approval_without_fallback ... ok
+test ai_context_exact_selection_is_read_only_and_needs_no_ai_or_trust ... ok
+test ai_source_drift_or_missing_profile_blocks_before_transfer_and_manual_reads_continue ... ok
+test activity_deduplicates_linked_worktrees_and_audit_filters_real_operation_phases ... ok
+test ai_source_transfer_requires_exact_native_approval_and_returns_only_validated_text ... ok
+test cancelled_and_replaced_reviews_record_nonpublication_and_cancellation_is_per_operation ... ok
+test automatic_discovery_retains_identity_across_rename_and_missing_entries_after_removal ... ok
+test deterministic_version_preview_needs_no_trust_or_provider_and_preserves_drafts_and_git ... ok
+test bulk_composer_state_is_durable_workspace_scoped_and_does_not_change_git ... ok
+test final_presentation_snapshot_is_atomic_durable_and_never_grants_authority ... ok
+test g01_hostile_review_text_preserves_exact_approved_message_and_index_blob ... ok
+test g01_replaced_or_closed_review_cannot_use_an_already_issued_confirmation ... ok
+test interrupted_records_block_scope_loss_and_are_reported_for_guarded_recovery ... ok
+test invalid_bulk_preferences_do_not_replace_the_last_valid_draft ... ok
+test identity_recovery_keeps_drafts_and_trust_scoped_and_invalidates_pending_review ... ok
+test malformed_state_paths_duplicate_tabs_and_unknown_picker_cannot_modify_storage ... ok
+test inventory_exposes_scan_level_and_repository_inspection_failures_and_cache_skips ... ok
+test native_window_placement_survives_restart_and_invalid_values_preserve_saved_state ... ok
+test g01_g02_shutdown_or_reset_revokes_issued_commit_confirmation_without_running_hooks ... ok
+test navigation_migration_restart_and_newer_data_are_preserved ... ok
+test native_capability_is_required_decline_replay_and_context_changes_fail_closed ... ok
+test notification_reconciliation_detects_external_edits_without_writes ... ok
+test operation_reviews_show_exact_content_and_only_applicable_commit_fields ... ok
+test recovered_historical_identities_do_not_degrade_periodic_monitoring ... ok
+test reviewed_ai_diagnostic_runs_outside_storage_owner_and_cancels_without_git_authority ... ok
+test scoped_reads_and_contracts_preserve_every_repository_byte ... ok
+test optional_ai_settings_preserve_manual_work_and_use_lazy_atomic_storage ... ok
+test review_text_escapes_bidi_and_reset_invalidates_picker_and_native_capability ... ok
+test unified_audit_pages_across_tied_sources_and_projects_orphans_without_rewriting_journals ... ok
+test trust_currentness_is_distinct_from_supported_hook_policy_eligibility ... ok
+test switching_workspace_stops_refreshing_inactive_repository_state ... ok
+test unified_audit_filters_real_local_batch_and_remote_records_without_mutation_or_authority ... ok
+test untrusted_remote_inspection_is_scoped_and_includes_host_configuration_without_helper_execution ... ok
+test workspace_switch_invalidates_reviews_and_old_epoch_and_stops_old_watchers ... ok
+test version_preview_rejects_unsafe_files_and_crossing_repository_boundaries ... ok
+
+test result: ok. 41 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 45.55s
+

@@ -55,3 +55,37 @@ it("does not imply complete discovery without a saved scan", () => {
     "Discovery not yet scanned",
   );
 });
+
+it("shows resumable progress and explicitly continues without a full rescan", async () => {
+  const { vi } = await import("vitest");
+  const onContinue = vi.fn();
+  const { rerender } = render(
+    <WorkspaceScanStatus
+      onContinue={onContinue}
+      scan={{
+        complete: false,
+        issues: [],
+        skipped_caches: [],
+        progress: {
+          inspected_repositories: 93,
+          pending_directories: 7,
+          classified_repositories: 0,
+          phase: "traversal",
+        },
+      }}
+    />,
+  );
+  expect(screen.getByText(/93 repositories inspected/)).toBeVisible();
+  await userEvent.click(
+    screen.getByRole("button", { name: "Continue discovery" }),
+  );
+  expect(onContinue).toHaveBeenCalledOnce();
+  rerender(
+    <WorkspaceScanStatus
+      scan={{ complete: false, issues: [], skipped_caches: [] }}
+    />,
+  );
+  expect(
+    screen.queryByRole("button", { name: "Continue discovery" }),
+  ).not.toBeInTheDocument();
+});

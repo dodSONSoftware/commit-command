@@ -1,0 +1,35 @@
+{
+  "scope": "Release Core CLI only, 100 generated empty independent repos, first pass after creation is not OS-cache-cold; no renderer/native/watcher/1000/10000 capacity claim",
+  "cli_sha256": "f75b8b3f2ac9ea8b9817e8234dd1e3aecd4895e95d6b21fc1bea819225ba533b",
+  "results": [
+    {
+      "repetition": 0,
+      "seconds": 23.777867999999998,
+      "slices": 2,
+      "complete": true,
+      "repositories": 100,
+      "issues": 0
+    },
+    {
+      "repetition": 1,
+      "seconds": 25.620428708000002,
+      "slices": 2,
+      "complete": true,
+      "repositories": 100,
+      "issues": 0
+    },
+    {
+      "repetition": 2,
+      "seconds": 23.571007125,
+      "slices": 2,
+      "complete": true,
+      "repositories": 100,
+      "issues": 0
+    }
+  ],
+  "preservation": {
+    "changed_paths_hex": [],
+    "unexpected_paths_hex": [],
+    "preserved": true
+  }
+}

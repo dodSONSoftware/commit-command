@@ -1,0 +1,7 @@
+{
+  "fixture_directory": "/private/var/folders/hm/62pw56y524d9s6vlw61l3tmm0000gn/T/gitfleet-completion-fixtures-e08bxj_n",
+  "temp_alias": "/private/tmp/gf-20d6dc6222",
+  "signer": "/private/tmp/gitfleet-completion-tools-z_0_mtq4/install/bin/gpg",
+  "features": "default,experimental-writes,controlled-writes,application-services,all-features",
+  "replay": false
+}

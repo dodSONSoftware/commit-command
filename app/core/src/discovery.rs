@@ -7,6 +7,9 @@ use std::fs;
 use std::io::Read;
 use std::path::{Path, PathBuf};
 use std::time::Instant;
+mod cursor;
+pub(crate) use cursor::Cursor;
+pub use cursor::ScanProgress;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[cfg_attr(feature = "application-services", derive(schemars::JsonSchema))]
@@ -118,6 +121,8 @@ pub struct Inventory {
     pub issues: Vec<ScanIssue>,
     #[serde(default)]
     pub skipped_caches: Vec<NativePath>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub progress: Option<ScanProgress>,
 }
 
 // Match only the standard signature, without following links or reading an
@@ -161,6 +166,7 @@ pub fn scan_with_options(
         relationships: Vec::new(),
         issues: Vec::new(),
         skipped_caches: Vec::new(),
+        progress: None,
     };
     let root = match fs::canonicalize(root) {
         Ok(path) if path.is_dir() => path,
@@ -267,8 +273,13 @@ pub fn scan_with_options(
     report.complete &= report.issues.is_empty();
     Ok(report)
 }
-fn classify(report: &mut Inventory, options: &ReadOptions) -> Result<()> {
-    for entry in &report.repositories {
+fn classify_links(
+    report: &mut Inventory,
+    options: &ReadOptions,
+    start: usize,
+    end: usize,
+) -> Result<()> {
+    for entry in report.repositories.iter().take(end).skip(start) {
         let parent = entry.metadata.root.to_path()?;
         let links = inspection::read(&parent, options, |s| {
             let mut declared = Vec::new();
@@ -318,6 +329,9 @@ fn classify(report: &mut Inventory, options: &ReadOptions) -> Result<()> {
         let (declared, links, worktrees) = match links {
             Ok(links) => links,
             Err(error) => {
+                if matches!(error.kind, ErrorKind::Timeout | ErrorKind::Cancelled) {
+                    return Err(error);
+                }
                 report.issues.push(ScanIssue {
                     path: NativePath::from_path(&parent),
                     error: error.into(),
@@ -404,7 +418,10 @@ fn classify(report: &mut Inventory, options: &ReadOptions) -> Result<()> {
             });
         }
     }
-    for (i, entry) in report.repositories.iter().enumerate() {
+    Ok(())
+}
+fn classify_nesting(report: &mut Inventory, start: usize, end: usize) -> Result<()> {
+    for (i, entry) in report.repositories.iter().enumerate().take(end).skip(start) {
         let child = entry.metadata.root.to_path()?;
         for (j, other) in report.repositories.iter().enumerate().take(i) {
             let _ = j;
@@ -456,6 +473,12 @@ fn classify(report: &mut Inventory, options: &ReadOptions) -> Result<()> {
     }
     Ok(())
 }
+fn classify(report: &mut Inventory, options: &ReadOptions) -> Result<()> {
+    let count = report.repositories.len();
+    classify_links(report, options, 0, count)?;
+    classify_nesting(report, 0, count)
+}
+
 /// Compatibility wrapper: old callers still receive an error for incomplete scans.
 #[derive(Debug, Serialize)]
 #[cfg_attr(feature = "application-services", derive(schemars::JsonSchema))]

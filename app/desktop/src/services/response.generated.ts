@@ -2155,6 +2155,7 @@ export interface MonitorStatus {
 export interface ScanSummary {
   complete: boolean;
   issues: ScanIssue[];
+  progress?: ScanProgress | null;
   skipped_caches: NativePath[];
   [k: string]: unknown;
 }
@@ -2165,6 +2166,17 @@ export interface ScanSummary {
 export interface ScanIssue {
   error: Issue;
   path: NativePath;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ScanProgress".
+ */
+export interface ScanProgress {
+  classified_repositories: number;
+  inspected_repositories: number;
+  pending_directories: number;
+  phase: string;
   [k: string]: unknown;
 }
 /**

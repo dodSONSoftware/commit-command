@@ -11,6 +11,18 @@ The [detailed completion handoff](implementation/README.md) supplies the executa
 remaining-work packages, decision worksheet, fixture/test procedures and complete
 requirement mapping. It does not accept gates or replace this live evidence ledger.
 
+### November 8 completion P03 discovery continuation and P02 startup capture
+
+[Continuation milestone](reports/COMPLETION_P03_CONTINUATION_2026-11-08.md): bounded
+in-memory traversal/relationship continuation, progress UI and typed read request
+implemented. Workspace 23/default Core 68/application 41/bulk 14 and full desktop
+127/20/23 passed; release 100-repo runs complete in two slices (~24–26 seconds),
+with exact preservation. Native 88 partial → explicit Continue → 100 complete/Quit
+passed after fixed startup diagnostics. Full Core matrix still running at this
+checkpoint. [Actual startup blank](reports/COMPLETION_P02_STARTUP_2026-11-08.md) remains
+a G02 failure: shell mounted/non-inert but document hidden, visible after probe
+without reload; no causal patch or release/default-write acceptance.
+
 ### November 8 completion P09 AI editor identity
 
 [Focused fix](reports/COMPLETION_P09_IDENTITY_2026-11-08.md): saves now retain the

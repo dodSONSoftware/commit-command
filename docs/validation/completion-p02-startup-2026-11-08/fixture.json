@@ -1,0 +1,13 @@
+{
+  "root": "/private/tmp/gitfleet-m3-native-cb8nbd9g",
+  "workspace": "/private/tmp/gitfleet-m3-native-cb8nbd9g/workspace",
+  "state": "/private/tmp/gitfleet-m3-native-cb8nbd9g/state",
+  "app": "/private/tmp/gitfleet-m3-native-cb8nbd9g/Commit Command Diagnostics.app",
+  "binary": "/private/tmp/gitfleet-m3-native-cb8nbd9g/Commit Command Diagnostics.app/Contents/MacOS/gitfleet-desktop",
+  "sha256": "29da4336422cdd549e613a56240d8dc4d489ad700fa9ac248d01ce9054fd0cf9",
+  "workspace_id": "63454ba3-477c-4a44-9d3e-adb112447268",
+  "features": [
+    "custom-protocol",
+    "native-acceptance-support"
+  ]
+}

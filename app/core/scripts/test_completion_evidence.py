@@ -1,5 +1,6 @@
 """Observable preservation and evidence-refusal checks on disposable files only."""
 import copy
+import errno
 import hashlib
 import json
 import os
@@ -52,7 +53,9 @@ class EvidenceTests(unittest.TestCase):
         name = os.fsencode(self.repo) + b'/unusual-\xff'
         try:
             fd = os.open(name, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-        except PermissionError:
+        except OSError as error:
+            if error.errno not in (errno.EPERM, errno.EILSEQ):
+                raise
             self.skipTest('Host filesystem refuses non-UTF8 creation')
         os.close(fd)
         before = evidence.snapshot(self.repo)

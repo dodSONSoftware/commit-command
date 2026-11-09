@@ -1,0 +1,19 @@
+{
+  "integrity": "ok",
+  "write_operations": 0,
+  "complete": true,
+  "repositories": 100,
+  "tables": [
+    "repositories",
+    "worktrees",
+    "membership",
+    "state",
+    "write_trust",
+    "write_operations",
+    "write_events",
+    "sqlite_sequence",
+    "desktop_state"
+  ],
+  "ordinary_exit": 0,
+  "diagnostic_exit": 0
+}

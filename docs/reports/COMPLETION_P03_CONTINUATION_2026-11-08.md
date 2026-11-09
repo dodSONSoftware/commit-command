@@ -1,0 +1,21 @@
+# Completion P03 bounded discovery continuation
+
+Implementation baseline `ea4fcb9`. Discovery previously retained partial results but discarded traversal position, so repeating a timed-out scan could repeatedly visit the same prefix. Workspace scans now keep one bounded in-memory cursor with deterministic directory order and incremental Git/nested relationship phases. Each slice retains the existing time/output/directory safety bounds. Metadata reads use the remaining slice budget rather than fresh per-repository default deadlines.
+
+Only a fully classified generation can become complete. A partial generation retains known unvisited identities as unavailable rather than missing. Cancelled continuation preserves accepted inventory and the previous cursor. Root identity/exclusion changes refuse stale continuation. Cursors are not serialized/restored: after restart the saved incomplete inventory stays visible and a fresh Rescan is required. Queued symlink/non-directory replacements are refused without traversal. No new durable schema, trust grant or write authority was introduced.
+
+A typed `ContinueScan` read request and visible progress/Continue discovery control expose the next slice. Active-workspace periodic reconciliation continues pending work. The headless `workspace scan-complete ID MAX_SLICES` adapter provides explicitly bounded repeated slices (1–100) for testing/diagnostics; ordinary one-shot CLI scan remains available.
+
+Validation completed before this milestone:
+
+- Workspace suite 23 passed, including forward progress to all suffix repositories, exact repository preservation, cancellation, exclusion invalidation and restart without continuation.
+- Default Core 68 passed, one explicit filesystem ignore. Application integration 41 passed; bulk 14 passed/one subprocess worker ignored.
+- Strict all-target/all-feature Core Clippy passed. Complete desktop runner exited zero: 127 renderer, 20 ordinary host/one worker ignored, 23 all-feature host/one worker ignored; contracts/type/lint/format/frontend/native builds and strict Clippy/release binary checks passed.
+- Release CLI: three generated 100-repository runs completed in two slices with 100 repositories/zero issues, in 23.78/25.62/23.57 seconds. Independent exact file/index/mode comparison passed. This proves progress/completeness, not the proposed <=15-second target or 1,000/10,000 capacity.
+- Actual sealed native fixture with writes disabled: partial scan showed 88 inspected/12 pending; explicit Continue reached 100 and Discovery complete/zero issues. Native Quit exited zero; exact repository/index/modes, zero Git write operations, SQLite integrity and writer-lock reopen passed. The native run used fixed non-default diagnostic support after startup blanking, not a release artifact.
+
+The full five-configuration signing/transport/crash runner was started against the frozen Core source using freshly restored checksum-pinned isolated GPG and private short-path fixtures. It is still running at this commit; no full matrix pass is claimed yet. First preflight failed because macOS returned EILSEQ rather than sandbox EPERM for non-UTF8 filename creation; the capability-specific test now recognizes both documented host refusals, preserves all other errors and leaves that case skipped. Original failed preflight is retained.
+
+P02 startup reliability remains open: both ordinary/diagnostic fixture launches initially appeared blank. Before reload, the fixed DOM probe recorded complete document, mounted non-inert flex shell, normal dimensions/opacity and `visibility=hidden`. The UI became visible after the probe without reload. This narrows investigation but does not establish a causal fix. See the P02 startup report/evidence. No speculative startup patch or safety-default change was made.
+
+Evidence: `docs/validation/completion-p03-2026-11-08/` and `completion-p02-startup-2026-11-08/`. P03 remains partial for larger inventories, approved performance budgets, watcher/renderer/IPC/memory and full native startup/accessibility acceptance.
