@@ -46,6 +46,11 @@ fn stale() -> Error {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Request {
+    PreviewAiContext {
+        workspace: String,
+        worktree: String,
+        spec: crate::ai::capture::Spec,
+    },
     ReviewAiDiscovery {
         connection: crate::ai::config::ConnectionDraft,
     },
@@ -367,6 +372,7 @@ pub struct OperationPage {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "kind", content = "value", rename_all = "snake_case")]
 pub enum Data {
+    AiContext(crate::ai::capture::Captured),
     AiJobs(Vec<crate::ai::jobs::Job>),
     AiSettings(crate::ai::store::Snapshot),
     AiTemplatePreview(crate::ai::template::Message),
@@ -740,6 +746,18 @@ impl Application {
             _ => {}
         }
         let data = match request {
+            Request::PreviewAiContext {
+                workspace,
+                worktree,
+                spec,
+            } => {
+                let entry = self.entry(&workspace, &worktree)?;
+                Data::AiContext(crate::ai::capture::capture(
+                    &entry.metadata.root.to_path()?,
+                    &spec,
+                    &self.read_options,
+                )?)
+            }
             Request::AiJobs {} => Data::AiJobs(self.ai_jobs.list()?),
             Request::CancelAiJob { id } => {
                 self.ai_jobs.cancel(&id)?;

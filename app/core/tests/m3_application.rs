@@ -2557,3 +2557,239 @@ fn ai_credentials_require_current_saved_binding_and_native_approval_without_fall
     assert_eq!(before, tree_bytes(&f.repo));
     app.shutdown().unwrap();
 }
+
+fn context_spec(selected: Vec<SelectedPath>) -> gitfleet_core::ai::capture::Spec {
+    gitfleet_core::ai::capture::Spec {
+        selected,
+        nearby_source: vec![],
+        documentation: vec![],
+        branch_commits: 2,
+        file_commits: 1,
+        policy: Default::default(),
+    }
+}
+fn selected_context(path: &str, source: ContentSource) -> SelectedPath {
+    SelectedPath {
+        path: NativePath::Utf8(path.into()),
+        source,
+    }
+}
+#[test]
+fn ai_context_exact_selection_is_read_only_and_needs_no_ai_or_trust() {
+    use gitfleet_core::ai::{capture, context::Kind};
+    let (f, mut app, ws, wt) = setup();
+    fs::write(f.repo.join("file.txt"), b"selected index value\n").unwrap();
+    f.git(&["add", "file.txt"]);
+    fs::write(f.repo.join("file.txt"), b"unselected working value\n").unwrap();
+    fs::write(f.repo.join("new.txt"), b"new selected file\n").unwrap();
+    let before = tree_bytes(&f.repo);
+    let spec = context_spec(vec![
+        selected_context("file.txt", ContentSource::Index),
+        selected_context("new.txt", ContentSource::WorkingTree),
+    ]);
+    let Data::AiContext(captured) = app
+        .request(
+            app.epoch(),
+            Request::PreviewAiContext {
+                workspace: ws,
+                worktree: wt,
+                spec: spec.clone(),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert!(captured.bundle.payload.contains("selected index value"));
+    assert!(captured.bundle.payload.contains("new selected file"));
+    assert!(!captured.bundle.payload.contains("unselected working value"));
+    assert!(captured
+        .bundle
+        .accounting
+        .iter()
+        .any(|r| r.kind == Kind::BranchHistory));
+    assert!(captured
+        .bundle
+        .accounting
+        .iter()
+        .any(|r| r.kind == Kind::FileHistory));
+    assert_eq!(before, tree_bytes(&f.repo));
+    assert!(!f.root.join("state/ai").exists());
+    capture::revalidate(&f.repo, &spec, &captured, &Default::default()).unwrap();
+    fs::write(f.repo.join("new.txt"), b"changed after capture\n").unwrap();
+    assert_eq!(
+        capture::revalidate(&f.repo, &spec, &captured, &Default::default())
+            .unwrap_err()
+            .kind,
+        ErrorKind::StaleReview
+    );
+    app.shutdown().unwrap();
+}
+#[test]
+fn ai_context_redacted_or_excluded_changes_still_invalidate_snapshot() {
+    use gitfleet_core::ai::capture;
+    let f = Fixture::new();
+    f.commit_file();
+    fs::write(f.repo.join(".env"), b"PASSWORD=one\n").unwrap();
+    let spec = context_spec(vec![selected_context(".env", ContentSource::WorkingTree)]);
+    let first = capture::capture(&f.repo, &spec, &Default::default()).unwrap();
+    assert!(!first.bundle.complete);
+    assert!(!first.bundle.payload.contains("PASSWORD"));
+    assert!(!first.bundle.payload.contains(".env"));
+    fs::write(f.repo.join(".env"), b"PASSWORD=two\n").unwrap();
+    let second = capture::capture(&f.repo, &spec, &Default::default()).unwrap();
+    assert_eq!(first.bundle.fingerprint, second.bundle.fingerprint);
+    assert_ne!(first.snapshot_fingerprint, second.snapshot_fingerprint);
+    assert_eq!(
+        capture::revalidate(&f.repo, &spec, &first, &Default::default())
+            .unwrap_err()
+            .kind,
+        ErrorKind::StaleReview
+    );
+}
+#[test]
+fn ai_context_tracked_working_selection_compares_full_content_against_head() {
+    use gitfleet_core::ai::capture;
+    let f = Fixture::new();
+    f.commit_file();
+    fs::write(f.repo.join("file.txt"), b"staged intermediate\n").unwrap();
+    f.git(&["add", "file.txt"]);
+    fs::write(f.repo.join("file.txt"), b"chosen final\n").unwrap();
+    let before = tree_bytes(&f.repo);
+    let spec = context_spec(vec![selected_context(
+        "file.txt",
+        ContentSource::WorkingTree,
+    )]);
+    let result = capture::capture(&f.repo, &spec, &Default::default()).unwrap();
+    assert!(result.bundle.payload.contains("-original"));
+    assert!(result.bundle.payload.contains("+chosen final"));
+    assert!(!result.bundle.payload.contains("staged intermediate"));
+    assert_eq!(before, tree_bytes(&f.repo));
+}
+#[test]
+fn ai_context_supports_unborn_and_staged_or_working_deletion() {
+    use gitfleet_core::ai::capture;
+    let f = Fixture::new();
+    fs::write(f.repo.join("new.txt"), b"first content\n").unwrap();
+    let spec = context_spec(vec![selected_context(
+        "new.txt",
+        ContentSource::WorkingTree,
+    )]);
+    assert!(capture::capture(&f.repo, &spec, &Default::default())
+        .unwrap()
+        .bundle
+        .payload
+        .contains("first content"));
+    f.git(&["add", "new.txt"]);
+    f.git(&["commit", "-qm", "first"]);
+    fs::remove_file(f.repo.join("new.txt")).unwrap();
+    let working = capture::capture(&f.repo, &spec, &Default::default()).unwrap();
+    assert!(working.bundle.payload.contains("-first content"));
+    f.git(&["add", "-u"]);
+    let staged = context_spec(vec![selected_context("new.txt", ContentSource::Index)]);
+    assert!(capture::capture(&f.repo, &staged, &Default::default())
+        .unwrap()
+        .bundle
+        .payload
+        .contains("-first content"));
+}
+#[cfg(unix)]
+#[test]
+fn ai_context_refuses_links_nested_repositories_and_ignored_untracked_content() {
+    use gitfleet_core::ai::capture;
+    let f = Fixture::new();
+    f.commit_file();
+    fs::write(f.root.join("outside"), b"private outside content\n").unwrap();
+    std::os::unix::fs::symlink(f.root.join("outside"), f.repo.join("linked")).unwrap();
+    fs::hard_link(f.root.join("outside"), f.repo.join("hardlink")).unwrap();
+    fs::create_dir(f.repo.join("nested")).unwrap();
+    fs::create_dir(f.repo.join("nested/.git")).unwrap();
+    fs::write(f.repo.join("nested/content"), b"nested data").unwrap();
+    fs::write(f.repo.join(".gitignore"), b"ignored\n").unwrap();
+    fs::write(f.repo.join("ignored"), b"ignored secret").unwrap();
+    for name in [
+        "linked",
+        "hardlink",
+        "nested/content",
+        "ignored",
+        "../outside",
+        ".git/config",
+    ] {
+        let spec = context_spec(vec![selected_context(name, ContentSource::WorkingTree)]);
+        assert!(
+            capture::capture(&f.repo, &spec, &Default::default()).is_err(),
+            "{name}"
+        );
+    }
+}
+#[test]
+fn ai_context_bounds_selection_documents_history_and_cancellation() {
+    use gitfleet_core::ai::capture;
+    let f = Fixture::new();
+    f.commit_file();
+    let mut spec = context_spec(vec![selected_context("file.txt", ContentSource::Index)]);
+    spec.documentation.push(NativePath::Utf8("file.txt".into()));
+    assert!(spec.validate().is_err());
+    spec.documentation.clear();
+    spec.branch_commits = 21;
+    assert!(spec.validate().is_err());
+    spec.branch_commits = 1;
+    let options = gitfleet_core::inspection::ReadOptions::default();
+    options.cancellation.cancel();
+    assert_eq!(
+        capture::capture(&f.repo, &spec, &options).unwrap_err().kind,
+        ErrorKind::Cancelled
+    );
+    fs::write(f.repo.join("huge"), vec![b'x'; 1024 * 1024 + 1]).unwrap();
+    let spec = context_spec(vec![selected_context("huge", ContentSource::WorkingTree)]);
+    assert_eq!(
+        capture::capture(&f.repo, &spec, &Default::default())
+            .unwrap_err()
+            .kind,
+        ErrorKind::OutputLimit
+    );
+}
+
+#[test]
+fn ai_context_related_source_docs_and_current_branch_history_are_explicit_and_filtered() {
+    use gitfleet_core::ai::capture;
+    let f = Fixture::new();
+    f.commit_file();
+    fs::write(
+        f.repo.join("README.md"),
+        b"Relevant project contract\napi_key = do-not-transfer\n",
+    )
+    .unwrap();
+    fs::write(f.repo.join("nearby.rs"), b"fn helper() {}\n").unwrap();
+    f.git(&["add", "README.md", "nearby.rs"]);
+    f.git(&[
+        "commit",
+        "-qm",
+        "Document helper\n\npassword: hidden-history-value",
+    ]);
+    f.git(&["checkout", "-qb", "other"]);
+    fs::write(f.repo.join("other"), b"other branch").unwrap();
+    f.git(&["add", "other"]);
+    f.git(&["commit", "-qm", "Unrelated branch should not enter context"]);
+    f.git(&["checkout", "-q", "main"]);
+    let mut spec = context_spec(vec![selected_context("file.txt", ContentSource::Index)]);
+    spec.nearby_source
+        .push(NativePath::Utf8("nearby.rs".into()));
+    spec.documentation
+        .push(NativePath::Utf8("README.md".into()));
+    let before = tree_bytes(&f.repo);
+    let result = capture::capture(&f.repo, &spec, &Default::default()).unwrap();
+    assert!(result.bundle.payload.contains("Relevant project contract"));
+    assert!(result.bundle.payload.contains("fn helper"));
+    assert!(result.bundle.payload.contains("Document helper"));
+    for secret in [
+        "do-not-transfer",
+        "hidden-history-value",
+        "Unrelated branch should not enter context",
+    ] {
+        assert!(!result.bundle.payload.contains(secret));
+    }
+    assert!(!result.bundle.complete);
+    assert_eq!(before, tree_bytes(&f.repo));
+}

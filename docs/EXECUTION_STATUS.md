@@ -7,6 +7,17 @@ requirements; the crosswalk routes requirement IDs to code/tests; dated reports
 and validation artifacts preserve evidence. Older status statements do not override
 this record. Reconciliation does not accept new gates or change product scope.
 
+### November 8 G09 restricted repository context — implemented, automated selected acceptance passed
+
+[Capture checkpoint](reports/G09_AI_CONTEXT_CAPTURE_2026-11-08.md): explicit staged,
+full working-tree/untracked selections, bounded related tracked source/docs and
+current-branch/file history now feed the filter. Read-only descriptor traversal
+refuses links/nested repositories; raw fingerprints revalidate excluded/redacted
+changes too. No trust or AI setup required. Complete library/application suites
+57/39 passed, strict all-feature/all-target Clippy, generated contracts and desktop
+TypeScript passed. No source transfer/native context UI is claimed. Next: exact
+context viewer, native-reviewed source inference and Rust-validated candidates.
+
 ### November 8 G09 exact context filtering — implemented, automated foundation passed
 
 [Context filter checkpoint](reports/G09_AI_CONTEXT_FILTER_2026-11-08.md): deterministic

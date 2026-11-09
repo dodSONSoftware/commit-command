@@ -1,0 +1,14 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.54s
+     Running tests/m3_application.rs (app/core/target/debug/deps/m3_application-0302a75ece9818d8)
+
+running 6 tests
+test ai_context_bounds_selection_documents_history_and_cancellation ... ok
+test ai_context_tracked_working_selection_compares_full_content_against_head ... ok
+test ai_context_refuses_links_nested_repositories_and_ignored_untracked_content ... ok
+test ai_context_redacted_or_excluded_changes_still_invalidate_snapshot ... ok
+test ai_context_supports_unborn_and_staged_or_working_deletion ... ok
+test ai_context_exact_selection_is_read_only_and_needs_no_ai_or_trust ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 32 filtered out; finished in 0.91s
+

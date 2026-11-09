@@ -2,6 +2,12 @@
 
 export type Request =
   | {
+      kind: "preview_ai_context";
+      spec: AiCaptureSpec;
+      workspace: string;
+      worktree: string;
+    }
+  | {
       connection: AiConnectionDraft;
       kind: "review_ai_discovery";
     }
@@ -348,6 +354,26 @@ export type Request =
       operation: string;
       workspace: string;
     };
+/**
+ * `display` is never used to reconstruct a path. Byte/wide encodings round-trip.
+ */
+export type NativePath =
+  | {
+      encoding: "utf8";
+      value: string;
+      [k: string]: unknown;
+    }
+  | {
+      encoding: "unix_bytes";
+      value: number[];
+      [k: string]: unknown;
+    }
+  | {
+      encoding: "windows_wide";
+      value: number[];
+      [k: string]: unknown;
+    };
+export type ContentSource = "index" | "working_tree";
 export type AiProvider = "ollama" | "compatible";
 export type AiStyle = "plain" | "conventional";
 export type AiChange =
@@ -419,25 +445,6 @@ export type AiScope =
       worktree: string;
     };
 export type Increment = "major" | "minor" | "patch";
-/**
- * `display` is never used to reconstruct a path. Byte/wide encodings round-trip.
- */
-export type NativePath =
-  | {
-      encoding: "utf8";
-      value: string;
-      [k: string]: unknown;
-    }
-  | {
-      encoding: "unix_bytes";
-      value: number[];
-      [k: string]: unknown;
-    }
-  | {
-      encoding: "windows_wide";
-      value: number[];
-      [k: string]: unknown;
-    };
 /**
  * Prerelease handling is explicit, never inferred from a model or silently finalized.
  */
@@ -545,7 +552,6 @@ export type DiffMode =
       parent?: ObjectId | null;
       [k: string]: unknown;
     };
-export type ContentSource = "index" | "working_tree";
 export type WriteRequest =
   | {
       hooks: HookPolicy;
@@ -568,6 +574,29 @@ export type WriteRequest =
       [k: string]: unknown;
     };
 
+export interface AiCaptureSpec {
+  branch_commits: number;
+  documentation: NativePath[];
+  file_commits: number;
+  /**
+   * Explicit related tracked regular source files, not a recursive source scan.
+   */
+  nearby_source: NativePath[];
+  policy: AiContextPolicy;
+  selected: SelectedPath[];
+}
+export interface AiContextPolicy {
+  excluded_patterns: string[];
+  /**
+   * Exact serialized user-payload budget; provider framing/system text is separate.
+   */
+  max_bytes: number;
+}
+export interface SelectedPath {
+  path: NativePath;
+  source: ContentSource;
+  [k: string]: unknown;
+}
 export interface AiConnectionDraft {
   authentication?: "none" | "stored_bearer";
   endpoint: string;
@@ -716,9 +745,4 @@ export interface RepositoryTab {
   source: ContentSource;
   view: string;
   worktree: string;
-}
-export interface SelectedPath {
-  path: NativePath;
-  source: ContentSource;
-  [k: string]: unknown;
 }

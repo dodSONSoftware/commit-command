@@ -6,6 +6,11 @@
  */
 export type Data =
   | {
+      kind: "ai_context";
+      value: AiCapturedContext;
+      [k: string]: unknown;
+    }
+  | {
       kind: "ai_jobs";
       value: AiJob[];
       [k: string]: unknown;
@@ -184,6 +189,18 @@ export type Data =
       kind: "done";
       [k: string]: unknown;
     };
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiContextKind".
+ */
+export type AiContextKind =
+  | "selected_metadata"
+  | "selected_diff"
+  | "selected_content"
+  | "nearby_source"
+  | "documentation"
+  | "branch_history"
+  | "file_history";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "ErrorKind".
@@ -656,6 +673,53 @@ export interface Response {
   data: Data;
   epoch: number;
   version: number;
+  [k: string]: unknown;
+}
+/**
+ * Captured content is ephemeral; the hash covers even excluded/redacted source.
+ * Deserializing this display value cannot create a provider/write capability.
+ *
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiCapturedContext".
+ */
+export interface AiCapturedContext {
+  bundle: AiContextBundle;
+  generation: string;
+  snapshot_fingerprint: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiContextBundle".
+ */
+export interface AiContextBundle {
+  accounting: AiContextAccounting[];
+  complete: boolean;
+  fingerprint: string;
+  /**
+   * Exact filtered bytes intended as the provider user message. Never persist by default.
+   */
+  payload: string;
+  warnings: string[];
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiContextAccounting".
+ */
+export interface AiContextAccounting {
+  id: string;
+  included_lines: number;
+  input_bytes: number;
+  input_lines: number;
+  kind: AiContextKind;
+  omitted_lines: number;
+  /**
+   * Local-only provenance. Omitted paths/content are never added to the payload.
+   */
+  origin: string;
+  reason?: string | null;
+  redacted_lines: number;
   [k: string]: unknown;
 }
 /**

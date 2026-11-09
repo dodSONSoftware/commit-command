@@ -11,6 +11,7 @@ fn invalid(message: &str) -> Error {
 #[serde(rename_all = "snake_case")]
 #[schemars(rename = "AiContextKind")]
 pub enum Kind {
+    SelectedMetadata,
     SelectedDiff,
     SelectedContent,
     NearbySource,
