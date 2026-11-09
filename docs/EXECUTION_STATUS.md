@@ -11,6 +11,15 @@ The [detailed completion handoff](implementation/README.md) supplies the executa
 remaining-work packages, decision worksheet, fixture/test procedures and complete
 requirement mapping. It does not accept gates or replace this live evidence ledger.
 
+### November 8 completion P13A backup primitives
+
+[Primitive checkpoint](reports/COMPLETION_P13A_PRIMITIVES_2026-11-08.md): bounded
+stored-only archive codec and owner-connection WAL-consistent SQLite snapshot
+implemented. No extraction or state activation. Focused hostile-container and
+source-preservation tests pass; P13A remains partial pending staging, durable
+publication, coherent app-state capture and migration integration. Product backup,
+restore and retention remain unfinished; no G10 acceptance claimed.
+
 ### November 8 completion P02 initial activation fix
 
 [Activation checkpoint](reports/COMPLETION_P02_ACTIVATION_2026-11-08.md): pinned Tao

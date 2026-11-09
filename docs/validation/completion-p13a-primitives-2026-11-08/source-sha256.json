@@ -1,0 +1,9 @@
+{
+  "app/core/Cargo.toml": "de535e3d030aab8309d3c9a0819851fd4a0e677968aafa9df0e3e3553b03a95c",
+  "app/core/Cargo.lock": "edd96cef053f7cbdaf585441dca6b1c8241433bc33383558bb9025f2e737d407",
+  "app/desktop/src-tauri/Cargo.lock": "fffd135e542aa9bb82d92802bbb8614d0f14aca12036bed49585dffa5005f4e8",
+  "app/core/src/lib.rs": "383b4994b495b72911eac17e7f5dac6de783eed5fa4c9eacd5d77145009d0c89",
+  "app/core/src/backup/mod.rs": "7ce93cdbd82dd5a707e7eda6af4980afc6eec957005adc62d7175a94022e01cd",
+  "app/core/src/backup/snapshot.rs": "501a6e612cd079ff2f523c9df19f59ea147d50117d0a3835e74266d1ed166fd0",
+  "app/core/src/backup/archive.rs": "d59bca66ce1eae12fa6b5f3d106bd27cd32361042faa5d638947486b5eb3e005"
+}

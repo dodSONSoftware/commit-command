@@ -4263,9 +4263,11 @@
       "package": "P13A",
       "action": "SQLite WAL writes during snapshot and settings revision change",
       "expected": "Coherent db/config generation, integrity valid, no lost/half snapshot",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/reports/COMPLETION_P13A_PRIMITIVES_2026-11-08.md"
+      ],
+      "note": "Codec/snapshot primitive tests only. Full application, boundary, extraction/activation and native variants remain open as detailed in report."
     },
     {
       "id": "BACKUP04",
@@ -4299,18 +4301,22 @@
       "package": "P13A",
       "action": "Deterministic content with new timestamps/revision manifest",
       "expected": "Checksums/content correctly mapped, logical change detection not based solely on file mtime",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/reports/COMPLETION_P13A_PRIMITIVES_2026-11-08.md"
+      ],
+      "note": "Codec/snapshot primitive tests only. Full application, boundary, extraction/activation and native variants remain open as detailed in report."
     },
     {
       "id": "BACKUP08",
       "package": "P13A",
       "action": "Count/per-entry/expanded/ratio/depth limits at and above bounds",
       "expected": "Boundary accepted; overflow rejected while streaming within memory budget",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/reports/COMPLETION_P13A_PRIMITIVES_2026-11-08.md"
+      ],
+      "note": "Codec/snapshot primitive tests only. Full application, boundary, extraction/activation and native variants remain open as detailed in report."
     },
     {
       "id": "BACKUP09",
@@ -4344,45 +4350,55 @@
       "package": "P13A",
       "action": "Cancel backup before/while writing; native inspect outcome",
       "expected": "No partial success, active app responsive, previous backup kept",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/reports/COMPLETION_P13A_PRIMITIVES_2026-11-08.md"
+      ],
+      "note": "Codec/snapshot primitive tests only. Full application, boundary, extraction/activation and native variants remain open as detailed in report."
     },
     {
       "id": "IMPORT01",
       "package": "P13B",
       "action": "`../`, absolute, drive/UNC, NUL, mixed-separator traversal members",
       "expected": "Reject whole archive before activation, no file outside staging",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/reports/COMPLETION_P13A_PRIMITIVES_2026-11-08.md"
+      ],
+      "note": "Codec/snapshot primitive tests only. Full application, boundary, extraction/activation and native variants remain open as detailed in report."
     },
     {
       "id": "IMPORT02",
       "package": "P13B",
       "action": "Symlink/hardlink/device/FIFO/socket entry variants",
       "expected": "Refuse without following/opening attacker target",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/reports/COMPLETION_P13A_PRIMITIVES_2026-11-08.md"
+      ],
+      "note": "Codec/snapshot primitive tests only. Full application, boundary, extraction/activation and native variants remain open as detailed in report."
     },
     {
       "id": "IMPORT03",
       "package": "P13B",
       "action": "Duplicate/case/Unicode collision and manifest extra/missing member",
       "expected": "Refuse ambiguous layout, no last-entry-wins",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/reports/COMPLETION_P13A_PRIMITIVES_2026-11-08.md"
+      ],
+      "note": "Codec/snapshot primitive tests only. Full application, boundary, extraction/activation and native variants remain open as detailed in report."
     },
     {
       "id": "IMPORT04",
       "package": "P13B",
       "action": "Wrong checksum/truncated/compression bomb/unsupported encryption/schema",
       "expected": "Bounded clear failure, current app data untouched",
-      "status": "not_run",
-      "evidence": [],
-      "note": "No new execution claimed. Classify retained variants before running."
+      "status": "partial",
+      "evidence": [
+        "docs/reports/COMPLETION_P13A_PRIMITIVES_2026-11-08.md"
+      ],
+      "note": "Codec/snapshot primitive tests only. Full application, boundary, extraction/activation and native variants remain open as detailed in report."
     },
     {
       "id": "IMPORT05",

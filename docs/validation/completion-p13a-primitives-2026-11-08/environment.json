@@ -1,0 +1,6 @@
+{
+  "base_commit": "abf065a60d8338525174ccd52eeb2a5f08e44f5f",
+  "platform": "macOS-27.2-arm64-arm-64bit",
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "scope": "Core backup primitives only; no native or release acceptance"
+}

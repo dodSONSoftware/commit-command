@@ -1,0 +1,21 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.88s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-b409f409c868cd6d)
+
+running 13 tests
+test actions::semver::tests::recovery_never_recomputes_a_second_increment_and_rejects_tampered_preview ... ok
+test actions::semver::tests::prerelease_handling_is_chosen_and_never_silently_inferred ... ok
+test actions::semver::tests::invalid_binary_multivalue_prefix_and_overflow_inputs_are_refused ... ok
+test locking::tests::explicit_release_does_not_wait_for_duplicated_descriptors ... ok
+test actions::semver::tests::increments_preserve_terminators_and_remove_metadata_explicitly ... ok
+test backup::snapshot::tests::cancellation_and_nonempty_destination_preserve_previous_state ... ok
+test backup::snapshot::tests::wal_snapshot_is_consistent_and_keeps_original_database_bytes ... ok
+test process::tests::trusted_artifact_check_prevents_spawn_and_reaps_running_process ... ok
+test process::tests::bounded_process_limits_and_cancellation_reap_children ... ok
+test process::tests::bounded_input_checks_writer_completion_and_descendant_timeout ... ok
+test process::tests::global_permits_never_exceed_four ... ok
+test inspection::consistency_tests::ref_and_config_mutation_during_read_are_rejected ... ok
+test inspection::consistency_tests::multi_command_reads_for_one_worktree_are_serialized ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.37s
+
