@@ -1189,3 +1189,48 @@ footer button {
   margin: 8px 0;
   line-height: 1.6;
 }
+
+.ai-settings-dialog {
+  width: min(960px, calc(100vw - 48px));
+  max-height: calc(100vh - 48px);
+  overflow: auto;
+  padding: 24px;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.ai-settings-dialog header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.ai-settings-dialog section {
+  margin: 20px 0;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.ai-settings-dialog p {
+  margin: 12px 0;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.ai-settings-dialog label {
+  display: block;
+  margin: 12px 0;
+}
+.ai-settings-dialog label > input:not([type="checkbox"]),
+.ai-settings-dialog label > textarea,
+.ai-settings-dialog label > select {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+}
+.ai-settings-dialog textarea {
+  min-height: 100px;
+}
+.ai-settings-dialog button {
+  margin: 6px 8px 6px 0;
+}

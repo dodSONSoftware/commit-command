@@ -1,3 +1,4 @@
+import { AiSettings } from "./AiSettings";
 import { VersionAction } from "./VersionAction";
 import {
   useCallback,
@@ -430,6 +431,12 @@ export function App({ bridge }: { bridge: Bridge }) {
             Open folder…
           </button>
         </div>
+        <AiSettings
+          bridge={bridge}
+          workspace={workspace}
+          worktree={entry?.id}
+          disabled={busy || writeBusy}
+        />
         <select
           aria-label="Color theme"
           value={nav.theme}

@@ -2198,3 +2198,108 @@ fn version_preview_rejects_unsafe_files_and_crossing_repository_boundaries() {
     }
     assert_eq!(before, tree_bytes(&f.repo));
 }
+
+#[test]
+fn optional_ai_settings_preserve_manual_work_and_use_lazy_atomic_storage() {
+    use gitfleet_core::ai::{
+        change::Change as AiChange,
+        config::{ConnectionDraft, Provider},
+        template::Template,
+    };
+    let (f, mut app, ws, wt) = setup();
+    let before = tree_bytes(&f.repo);
+    let Data::AiSettings(initial) = app
+        .request(app.epoch(), Request::AiSettings {})
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert!(initial.settings.connections.is_empty());
+    assert!(!f.root.join("state/ai").exists());
+    let Data::AiSettings(saved) = app
+        .request(
+            app.epoch(),
+            Request::SaveAiSettings {
+                fingerprint: initial.fingerprint.clone(),
+                revision: initial.settings.revision.clone(),
+                change: AiChange::Connection(ConnectionDraft {
+                    id: None,
+                    name: "Unreachable fixture".into(),
+                    provider: Provider::Ollama,
+                    endpoint: "http://127.0.0.1:1/".into(),
+                    timeout_ms: 100,
+                }),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert_eq!(saved.settings.connections.len(), 1);
+    assert!(app
+        .request(
+            app.epoch(),
+            Request::SaveAiSettings {
+                fingerprint: initial.fingerprint,
+                revision: initial.settings.revision,
+                change: AiChange::Concurrency {
+                    global: 1,
+                    per_connection: 1
+                }
+            }
+        )
+        .is_err());
+    assert!(matches!(
+        app.request(
+            app.epoch(),
+            Request::AiTemplatePreview {
+                template: Template::default()
+            }
+        )
+        .unwrap()
+        .data,
+        Data::AiTemplatePreview(_)
+    ));
+    assert_eq!(
+        app.request(
+            app.epoch(),
+            Request::EffectiveAiSettings {
+                workspace: ws.clone(),
+                worktree: wt.clone(),
+                one_off: None
+            }
+        )
+        .unwrap_err()
+        .kind,
+        ErrorKind::Unavailable
+    );
+    let state = f.root.join("state");
+    drop(app);
+    std::fs::write(
+        state.join("ai/current.toml"),
+        "malformed AI settings sentinel",
+    )
+    .unwrap();
+    let mut app = Application::open(&state, fixture_options(&f)).unwrap();
+    assert!(app.request(app.epoch(), Request::AiSettings {}).is_err());
+    for request in [
+        Request::Workspaces {},
+        Request::Inventory {
+            workspace: ws.clone(),
+        },
+        Request::Refresh {
+            workspace: ws.clone(),
+            worktree: wt,
+        },
+        Request::LoadState { workspace: ws },
+    ] {
+        app.request(app.epoch(), request).unwrap();
+    }
+    assert_eq!(
+        std::fs::read_to_string(state.join("ai/current.toml")).unwrap(),
+        "malformed AI settings sentinel"
+    );
+    assert_eq!(before, tree_bytes(&f.repo));
+}

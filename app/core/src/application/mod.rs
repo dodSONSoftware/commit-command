@@ -46,6 +46,20 @@ fn stale() -> Error {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Request {
+    AiSettings {},
+    SaveAiSettings {
+        fingerprint: String,
+        revision: String,
+        change: crate::ai::change::Change,
+    },
+    AiTemplatePreview {
+        template: crate::ai::template::Template,
+    },
+    EffectiveAiSettings {
+        workspace: String,
+        worktree: String,
+        one_off: Option<String>,
+    },
     VersionRetainedFile {
         workspace: String,
         operation: String,
@@ -341,6 +355,9 @@ pub struct OperationPage {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "kind", content = "value", rename_all = "snake_case")]
 pub enum Data {
+    AiSettings(crate::ai::store::Snapshot),
+    AiTemplatePreview(crate::ai::template::Message),
+    EffectiveAiSettings(Box<crate::ai::config::Effective>),
     VersionRetainedFile(crate::actions::version::RetainedVersionFile),
     VersionActions(crate::actions::version::VersionPage),
     VersionPreview(crate::actions::semver::VersionPreview),
@@ -661,6 +678,55 @@ impl Application {
             _ => {}
         }
         let data = match request {
+            Request::AiSettings {} => Data::AiSettings(crate::ai::store::load(
+                self.writes.workspace.data_directory(),
+            )?),
+            Request::SaveAiSettings {
+                fingerprint,
+                revision,
+                change,
+            } => {
+                if let crate::ai::change::Change::Assign { scope, .. }
+                | crate::ai::change::Change::Instructions { scope, .. } = &change
+                {
+                    match scope {
+                        crate::ai::config::Scope::Application => {}
+                        crate::ai::config::Scope::Workspace { workspace } => {
+                            self.active(&workspace.0)?;
+                        }
+                        crate::ai::config::Scope::Repository {
+                            workspace,
+                            worktree,
+                        } => {
+                            self.entry(&workspace.0, &worktree.0)?;
+                        }
+                    }
+                }
+                let root = self.writes.workspace.data_directory();
+                let before = crate::ai::store::load(root)?;
+                if before.fingerprint != fingerprint {
+                    return Err(stale());
+                }
+                let next = before.settings.changed(&revision, change)?;
+                crate::ai::store::save(root, &fingerprint, &next)?;
+                Data::AiSettings(crate::ai::store::load(root)?)
+            }
+            Request::AiTemplatePreview { template } => {
+                Data::AiTemplatePreview(template.static_preview()?)
+            }
+            Request::EffectiveAiSettings {
+                workspace,
+                worktree,
+                one_off,
+            } => {
+                self.entry(&workspace, &worktree)?;
+                let settings = crate::ai::store::load(self.writes.workspace.data_directory())?;
+                Data::EffectiveAiSettings(Box::new(settings.settings.effective(
+                    &WorkspaceId(workspace),
+                    &WorktreeId(worktree),
+                    one_off.as_deref(),
+                )?))
+            }
             Request::VersionRetainedFile {
                 workspace,
                 operation,

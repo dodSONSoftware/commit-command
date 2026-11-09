@@ -1186,6 +1186,18 @@ mod tests {
             workspace: "w".into(),
             operation: "o".into()
         }));
+        assert!(!mutating_request(&Request::AiSettings {}));
+        assert!(!mutating_request(&Request::SaveAiSettings {
+            fingerprint: "f".into(),
+            revision: "r".into(),
+            change: gitfleet_core::ai::change::Change::Concurrency {
+                global: 1,
+                per_connection: 1
+            }
+        }));
+        assert!(!mutating_request(&Request::AiTemplatePreview {
+            template: Default::default()
+        }));
         assert!(!mutating_request(&Request::VersionRetainedFile {
             workspace: "w".into(),
             operation: "o".into()

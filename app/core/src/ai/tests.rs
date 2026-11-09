@@ -329,3 +329,138 @@ fn settings_round_trip_without_secrets_or_execution_authority() {
     let malicious = serde_json::json!({"kind":"connection", "id":null,"name":"Local","provider":"ollama","endpoint":"http://localhost:11434/","timeout_ms":30000,"endpoint_approval":"forged"});
     assert!(serde_json::from_value::<Change>(malicious).is_err());
 }
+
+#[cfg(unix)]
+struct StateFixture(std::path::PathBuf);
+#[cfg(unix)]
+impl StateFixture {
+    fn new() -> Self {
+        let root =
+            std::env::temp_dir().join(format!("gitfleet-ai-settings-{}", uuid::Uuid::new_v4()));
+        std::fs::create_dir(&root).unwrap();
+        Self(root)
+    }
+}
+#[cfg(unix)]
+impl Drop for StateFixture {
+    fn drop(&mut self) {
+        let _ = std::fs::remove_dir_all(&self.0);
+    }
+}
+#[test]
+#[cfg(unix)]
+fn atomic_generations_preserve_previous_settings_and_external_text() {
+    use super::store;
+    let f = StateFixture::new();
+    let before = store::load(&f.0).unwrap();
+    assert!(!f.0.join("ai").exists());
+    let s = configured();
+    store::save(&f.0, &before.fingerprint, &s).unwrap();
+    let loaded = store::load(&f.0).unwrap();
+    assert_eq!(
+        serde_json::to_value(&loaded.settings).unwrap(),
+        serde_json::to_value(&s).unwrap()
+    );
+    let pointer: toml::Value =
+        toml::from_str(&std::fs::read_to_string(f.0.join("ai/current.toml")).unwrap()).unwrap();
+    let generation = f.0.join("ai").join(pointer["generation"].as_str().unwrap());
+    let text = generation.join(format!("profile-{}.md", s.profiles[0].id));
+    assert_eq!(
+        std::fs::read_to_string(&text).unwrap(),
+        s.profiles[0].system_message
+    );
+    let raw = std::fs::read_to_string(generation.join("settings.toml")).unwrap();
+    assert!(!raw.contains(&s.profiles[0].system_message));
+    let next = change(
+        &s,
+        Change::Instructions {
+            scope: Scope::Application,
+            text: "Explain the purpose".into(),
+        },
+    );
+    store::save(&f.0, &loaded.fingerprint, &next).unwrap();
+    assert!(generation.exists());
+    assert_eq!(
+        store::load(&f.0).unwrap().settings.instructions[0].text,
+        "Explain the purpose"
+    );
+    assert_eq!(
+        store::save(&f.0, &loaded.fingerprint, &s).unwrap_err().kind,
+        ErrorKind::StaleReview
+    );
+}
+#[test]
+#[cfg(unix)]
+fn external_prompt_edits_invalidate_editor_fingerprint_without_losing_text() {
+    use super::store;
+    let f = StateFixture::new();
+    let before = store::load(&f.0).unwrap();
+    let s = configured();
+    store::save(&f.0, &before.fingerprint, &s).unwrap();
+    let loaded = store::load(&f.0).unwrap();
+    let pointer: toml::Value =
+        toml::from_str(&std::fs::read_to_string(f.0.join("ai/current.toml")).unwrap()).unwrap();
+    let file =
+        f.0.join("ai")
+            .join(pointer["generation"].as_str().unwrap())
+            .join(format!("profile-{}.md", s.profiles[0].id));
+    std::fs::write(&file, "External edited system text").unwrap();
+    let edited = store::load(&f.0).unwrap();
+    assert_ne!(edited.fingerprint, loaded.fingerprint);
+    assert_eq!(
+        edited.settings.profiles[0].system_message,
+        "External edited system text"
+    );
+    assert_eq!(
+        store::save(&f.0, &loaded.fingerprint, &s).unwrap_err().kind,
+        ErrorKind::StaleReview
+    );
+    assert_eq!(
+        std::fs::read_to_string(file).unwrap(),
+        "External edited system text"
+    );
+}
+#[test]
+#[cfg(unix)]
+fn unsafe_and_interrupted_generation_files_are_preserved_and_refused() {
+    use super::store;
+    use std::os::unix::fs::symlink;
+    let f = StateFixture::new();
+    let outside = StateFixture::new();
+    symlink(&outside.0, f.0.join("ai")).unwrap();
+    assert!(store::load(&f.0).is_err());
+    assert!(std::fs::read_dir(&outside.0).unwrap().next().is_none());
+    std::fs::remove_file(f.0.join("ai")).unwrap();
+    let s = configured();
+    store::save(&f.0, &store::load(&f.0).unwrap().fingerprint, &s).unwrap();
+    let before = store::load(&f.0).unwrap();
+    let orphan = f.0.join("ai").join(uuid::Uuid::new_v4().to_string());
+    std::fs::create_dir(&orphan).unwrap();
+    std::fs::write(orphan.join("settings.toml"), "partial").unwrap();
+    assert_eq!(store::load(&f.0).unwrap().fingerprint, before.fingerprint);
+    let pointer = f.0.join("ai/current.toml");
+    let bytes = std::fs::read(&pointer).unwrap();
+    std::fs::remove_file(&pointer).unwrap();
+    symlink(outside.0.join("absent"), &pointer).unwrap();
+    assert!(store::load(&f.0).is_err());
+    std::fs::remove_file(&pointer).unwrap();
+    std::fs::write(&pointer, &bytes).unwrap();
+    let parsed: toml::Value = toml::from_str(std::str::from_utf8(&bytes).unwrap()).unwrap();
+    let generation = f.0.join("ai").join(parsed["generation"].as_str().unwrap());
+    let text = generation.join(format!("profile-{}.md", s.profiles[0].id));
+    std::fs::remove_file(&text).unwrap();
+    std::fs::write(outside.0.join("secret"), "outside sentinel").unwrap();
+    symlink(outside.0.join("secret"), &text).unwrap();
+    assert!(store::load(&f.0).is_err());
+    assert_eq!(
+        std::fs::read_to_string(outside.0.join("secret")).unwrap(),
+        "outside sentinel"
+    );
+    std::fs::remove_file(&text).unwrap();
+    std::fs::hard_link(outside.0.join("secret"), &text).unwrap();
+    assert!(store::load(&f.0).is_err());
+    std::fs::remove_file(&text).unwrap();
+    std::fs::write(&text, vec![b'x'; 65537]).unwrap();
+    assert!(store::load(&f.0).is_err());
+    assert_eq!(std::fs::metadata(&text).unwrap().len(), 65537);
+}

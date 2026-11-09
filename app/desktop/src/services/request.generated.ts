@@ -2,6 +2,25 @@
 
 export type Request =
   | {
+      kind: "ai_settings";
+    }
+  | {
+      change: AiChange;
+      fingerprint: string;
+      kind: "save_ai_settings";
+      revision: string;
+    }
+  | {
+      kind: "ai_template_preview";
+      template: AiTemplate;
+    }
+  | {
+      kind: "effective_ai_settings";
+      one_off?: string | null;
+      workspace: string;
+      worktree: string;
+    }
+  | {
       kind: "version_retained_file";
       operation: string;
       workspace: string;
@@ -312,6 +331,75 @@ export type Request =
       operation: string;
       workspace: string;
     };
+export type AiChange =
+  | {
+      endpoint: string;
+      id?: string | null;
+      kind: "connection";
+      name: string;
+      provider: AiProvider;
+      timeout_ms: number;
+    }
+  | {
+      connection: string;
+      context_bytes: number;
+      id?: string | null;
+      kind: "profile";
+      model: string;
+      name: string;
+      parameters: AiParameters;
+      system_message: string;
+      template: string;
+    }
+  | {
+      examples: string[];
+      id?: string | null;
+      kind: "template";
+      name: string;
+      rules: AiRules;
+    }
+  | {
+      id: string;
+      kind: "delete_connection";
+    }
+  | {
+      id: string;
+      kind: "delete_profile";
+    }
+  | {
+      id: string;
+      kind: "delete_template";
+    }
+  | {
+      kind: "assign";
+      profile?: string | null;
+      scope: AiScope;
+    }
+  | {
+      kind: "instructions";
+      scope: AiScope;
+      text: string;
+    }
+  | {
+      global: number;
+      kind: "concurrency";
+      per_connection: number;
+    };
+export type AiProvider = "ollama" | "compatible";
+export type AiStyle = "plain" | "conventional";
+export type AiScope =
+  | {
+      kind: "application";
+    }
+  | {
+      kind: "workspace";
+      workspace: string;
+    }
+  | {
+      kind: "repository";
+      workspace: string;
+      worktree: string;
+    };
 export type Increment = "major" | "minor" | "patch";
 /**
  * `display` is never used to reconstruct a path. Byte/wide encodings round-trip.
@@ -462,6 +550,32 @@ export type WriteRequest =
       [k: string]: unknown;
     };
 
+export interface AiParameters {
+  context_size?: number | null;
+  min_p?: number | null;
+  output_tokens?: number | null;
+  repetition_penalty?: number | null;
+  seed?: number | null;
+  stop?: string[] | null;
+  temperature?: number | null;
+  top_k?: number | null;
+  top_p?: number | null;
+}
+export interface AiRules {
+  allow_scope: boolean;
+  allowed_types: string[];
+  forbid_trailing_period: boolean;
+  instructions: string;
+  style: AiStyle;
+  subject_max_chars: number;
+}
+export interface AiTemplate {
+  examples: string[];
+  id: string;
+  name: string;
+  revision: string;
+  rules: AiRules;
+}
 export interface Cursor {
   history: Cursor2;
   lanes: ObjectId[];

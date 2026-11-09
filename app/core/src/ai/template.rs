@@ -7,12 +7,14 @@ fn invalid(message: &str) -> Error {
 }
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, JsonSchema, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
+#[schemars(rename = "AiStyle")]
 pub enum Style {
     Plain,
     Conventional,
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
+#[schemars(rename = "AiRules")]
 pub struct Rules {
     pub style: Style,
     pub subject_max_chars: usize,
@@ -35,6 +37,7 @@ impl Default for Rules {
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
+#[schemars(rename = "AiTemplate")]
 pub struct Template {
     pub id: String,
     pub revision: String,
@@ -55,6 +58,7 @@ impl Default for Template {
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
+#[schemars(rename = "AiTemplateDraft")]
 pub struct TemplateDraft {
     pub id: Option<String>,
     pub name: String,
@@ -63,6 +67,7 @@ pub struct TemplateDraft {
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
+#[schemars(rename = "AiMessage")]
 pub struct Message {
     pub subject: String,
     pub body: String,

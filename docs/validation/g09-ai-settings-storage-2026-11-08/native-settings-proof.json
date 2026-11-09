@@ -1,0 +1,16 @@
+{
+  "connections": 1,
+  "profiles": 1,
+  "application_assignment": true,
+  "source_approval_empty": true,
+  "unsaved_template_max48_not_persisted_stored72": true,
+  "concurrency_defaults": [
+    1,
+    1
+  ],
+  "external_profile_text_exact": true,
+  "generations": 3,
+  "first_exit": 0,
+  "restart_exit": 0,
+  "native_restart_effective_profile_and_manual_draft_observed": true
+}

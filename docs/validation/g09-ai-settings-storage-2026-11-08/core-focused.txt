@@ -1,0 +1,20 @@
+   Compiling gitfleet-core v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.09s
+     Running unittests src/lib.rs (app/core/target/debug/deps/gitfleet_core-990268db74c912b4)
+
+running 12 tests
+test ai::tests::capability_parameters_are_optional_bounded_and_provider_specific ... ok
+test ai::tests::endpoint_policy_canonicalizes_and_rejects_ambiguous_destinations ... ok
+test ai::tests::templates_validate_structure_boundaries_and_static_examples_without_models ... ok
+test ai::tests::no_ai_default_is_valid_and_unavailable_only_for_ai ... ok
+test ai::tests::settings_reject_duplicate_names_bad_references_versions_and_controls ... ok
+test ai::tests::imports_and_connection_edits_clear_endpoint_metadata ... ok
+test ai::tests::edits_are_transactional_stale_guarded_and_preserve_reference_integrity ... ok
+test ai::tests::hierarchical_profiles_and_additive_instructions_have_no_silent_fallback ... ok
+test ai::tests::settings_round_trip_without_secrets_or_execution_authority ... ok
+test ai::tests::external_prompt_edits_invalidate_editor_fingerprint_without_losing_text ... ok
+test ai::tests::unsafe_and_interrupted_generation_files_are_preserved_and_refused ... ok
+test ai::tests::atomic_generations_preserve_previous_settings_and_external_text ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 27 filtered out; finished in 0.13s
+

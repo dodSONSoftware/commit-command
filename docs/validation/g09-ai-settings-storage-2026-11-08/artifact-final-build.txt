@@ -1,0 +1,2 @@
+   Compiling gitfleet-desktop v0.1.1 (/Users/randydodson/Documents/_code/git-fleet/app/desktop/src-tauri)
+    Finished `release` profile [optimized] target(s) in 13.69s

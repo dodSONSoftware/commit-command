@@ -6,6 +6,21 @@
  */
 export type Data =
   | {
+      kind: "ai_settings";
+      value: AiSettingsSnapshot;
+      [k: string]: unknown;
+    }
+  | {
+      kind: "ai_template_preview";
+      value: AiMessage;
+      [k: string]: unknown;
+    }
+  | {
+      kind: "effective_ai_settings";
+      value: AiEffective;
+      [k: string]: unknown;
+    }
+  | {
       kind: "version_retained_file";
       value: RetainedVersionFile;
       [k: string]: unknown;
@@ -164,6 +179,33 @@ export type Data =
       kind: "done";
       [k: string]: unknown;
     };
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiScope".
+ */
+export type AiScope =
+  | {
+      kind: "application";
+    }
+  | {
+      kind: "workspace";
+      workspace: string;
+    }
+  | {
+      kind: "repository";
+      workspace: string;
+      worktree: string;
+    };
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiProvider".
+ */
+export type AiProvider = "ollama" | "compatible";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiStyle".
+ */
+export type AiStyle = "plain" | "conventional";
 /**
  * `display` is never used to reconstruct a path. Byte/wide encodings round-trip.
  *
@@ -578,6 +620,132 @@ export interface Response {
   data: Data;
   epoch: number;
   version: number;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiSettingsSnapshot".
+ */
+export interface AiSettingsSnapshot {
+  fingerprint: string;
+  settings: AiSettings;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiSettings".
+ */
+export interface AiSettings {
+  assignments: AiAssignment[];
+  connection_concurrency: number;
+  connections: AiConnection[];
+  global_concurrency: number;
+  instructions: AiInstructions[];
+  profiles: AiProfile[];
+  revision: string;
+  templates: AiTemplate[];
+  version: number;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiAssignment".
+ */
+export interface AiAssignment {
+  profile: string;
+  scope: AiScope;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiConnection".
+ */
+export interface AiConnection {
+  endpoint: string;
+  endpoint_approval: string;
+  id: string;
+  name: string;
+  provider: AiProvider;
+  revision: string;
+  timeout_ms: number;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiInstructions".
+ */
+export interface AiInstructions {
+  scope: AiScope;
+  text: string;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiProfile".
+ */
+export interface AiProfile {
+  connection: string;
+  context_bytes: number;
+  id: string;
+  model: string;
+  name: string;
+  parameters: AiParameters;
+  revision: string;
+  system_message: string;
+  template: string;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiParameters".
+ */
+export interface AiParameters {
+  context_size?: number | null;
+  min_p?: number | null;
+  output_tokens?: number | null;
+  repetition_penalty?: number | null;
+  seed?: number | null;
+  stop?: string[] | null;
+  temperature?: number | null;
+  top_k?: number | null;
+  top_p?: number | null;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiTemplate".
+ */
+export interface AiTemplate {
+  examples: string[];
+  id: string;
+  name: string;
+  revision: string;
+  rules: AiRules;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiRules".
+ */
+export interface AiRules {
+  allow_scope: boolean;
+  allowed_types: string[];
+  forbid_trailing_period: boolean;
+  instructions: string;
+  style: AiStyle;
+  subject_max_chars: number;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiMessage".
+ */
+export interface AiMessage {
+  body: string;
+  subject: string;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiEffective".
+ */
+export interface AiEffective {
+  connection: AiConnection;
+  instructions: string[];
+  origin?: AiScope | null;
+  profile: AiProfile;
+  template: AiTemplate;
   [k: string]: unknown;
 }
 /**

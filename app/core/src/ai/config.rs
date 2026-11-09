@@ -36,12 +36,14 @@ fn name(value: &str) -> Result<()> {
 }
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, JsonSchema, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
+#[schemars(rename = "AiProvider")]
 pub enum Provider {
     Ollama,
     Compatible,
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
+#[schemars(rename = "AiConnectionDraft")]
 pub struct ConnectionDraft {
     pub id: Option<String>,
     pub name: String,
@@ -51,6 +53,7 @@ pub struct ConnectionDraft {
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
+#[schemars(rename = "AiConnection")]
 pub struct Connection {
     pub id: String,
     pub revision: String,
@@ -62,6 +65,7 @@ pub struct Connection {
 }
 #[derive(Debug, Clone, Default, Serialize, Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
+#[schemars(rename = "AiParameters")]
 pub struct Parameters {
     pub temperature: Option<f64>,
     pub top_p: Option<f64>,
@@ -120,6 +124,7 @@ impl Parameters {
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
+#[schemars(rename = "AiProfileDraft")]
 pub struct ProfileDraft {
     pub id: Option<String>,
     pub name: String,
@@ -132,6 +137,7 @@ pub struct ProfileDraft {
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
+#[schemars(rename = "AiProfile")]
 pub struct Profile {
     pub id: String,
     pub revision: String,
@@ -145,6 +151,7 @@ pub struct Profile {
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema, PartialEq, Eq, PartialOrd, Ord)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
+#[schemars(rename = "AiScope")]
 pub enum Scope {
     Application,
     Workspace {
@@ -172,18 +179,21 @@ impl Scope {
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
+#[schemars(rename = "AiAssignment")]
 pub struct Assignment {
     pub scope: Scope,
     pub profile: String,
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
+#[schemars(rename = "AiInstructions")]
 pub struct Instructions {
     pub scope: Scope,
     pub text: String,
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
+#[schemars(rename = "AiSettings")]
 pub struct Settings {
     pub version: u32,
     pub revision: String,
@@ -414,6 +424,7 @@ impl Settings {
     }
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+#[schemars(rename = "AiEffective")]
 pub struct Effective {
     pub profile: Profile,
     pub connection: Connection,
