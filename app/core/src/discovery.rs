@@ -6,7 +6,6 @@ use serde::{Deserialize, Serialize};
 use std::fs;
 use std::io::Read;
 use std::path::{Path, PathBuf};
-use std::time::Instant;
 mod cursor;
 pub(crate) use cursor::Cursor;
 pub use cursor::ScanProgress;
@@ -158,121 +157,14 @@ pub fn scan_with_options(
     options: &DiscoveryOptions,
     read_options: &ReadOptions,
 ) -> Result<Inventory> {
-    options.validate()?;
-    let mut report = Inventory {
-        root: NativePath::from_path(root),
-        complete: true,
-        repositories: Vec::new(),
-        relationships: Vec::new(),
-        issues: Vec::new(),
-        skipped_caches: Vec::new(),
-        progress: None,
-    };
-    let root = match fs::canonicalize(root) {
-        Ok(path) if path.is_dir() => path,
-        _ => {
-            report.complete = false;
-            report.issues.push(ScanIssue {
-                path: NativePath::from_path(root),
-                error: Issue::from(Error::with_kind(
-                    ErrorKind::Unavailable,
-                    "Workspace root is unavailable",
-                )),
-            });
-            return Ok(report);
-        }
-    };
-    report.root = NativePath::from_path(&root);
-    let mut pending = vec![root.clone()];
-    let start = Instant::now();
-    let mut visited = 0;
-    let mut deadline_reached = false;
-    while let Some(dir) = pending.pop() {
-        if let Err(error) = read_options.check(start) {
-            if error.kind != ErrorKind::Timeout {
-                return Err(error);
-            }
-            report.issues.push(ScanIssue {
-                path: NativePath::from_path(&dir),
-                error: error.into(),
-            });
-            deadline_reached = true;
-            break;
-        }
-        visited += 1;
-        if visited > 100_000 {
-            return Err(Error::with_kind(
-                ErrorKind::OutputLimit,
-                "Discovery directory limit exceeded",
-            ));
-        }
-        // An explicitly selected root remains inspectable even when tagged.
-        if dir != root && tagged_cache(&dir) {
-            report.skipped_caches.push(NativePath::from_path(&dir));
-            continue;
-        }
-        if fs::symlink_metadata(dir.join(".git")).is_ok() {
-            match inspection::repository_metadata(&dir) {
-                Ok(metadata) => {
-                    let (status, issue) =
-                        match inspection::snapshot_with_options(&dir, read_options) {
-                            Ok(status) => (Some(status), None),
-                            Err(error) => (None, Some(Issue::from(error))),
-                        };
-                    if issue.is_some() {
-                        report.complete = false;
-                    }
-                    report.repositories.push(Discovered {
-                        metadata,
-                        status,
-                        issue,
-                    });
-                }
-                Err(error) => report.issues.push(ScanIssue {
-                    path: NativePath::from_path(&dir),
-                    error: error.into(),
-                }),
-            }
-        }
-        match fs::read_dir(&dir) {
-            Err(error) => report.issues.push(ScanIssue {
-                path: NativePath::from_path(&dir),
-                error: Error::from(error).into(),
-            }),
-            Ok(entries) => {
-                for entry in entries {
-                    match entry.and_then(|entry| Ok((entry.path(), entry.file_type()?))) {
-                        Ok((path, kind))
-                            if kind.is_dir()
-                                && !kind.is_symlink()
-                                && !options.excluded(&root, &path) =>
-                        {
-                            pending.push(path)
-                        }
-                        Ok(_) => {}
-                        Err(error) => report.issues.push(ScanIssue {
-                            path: NativePath::from_path(&dir),
-                            error: Error::from(error).into(),
-                        }),
-                    }
-                }
-            }
-        }
-    }
-    report
-        .repositories
-        .sort_by_key(|entry| entry.metadata.root.to_path().ok());
-    report
-        .skipped_caches
-        .sort_by_key(|path| path.to_path().ok());
-    // Keep inspected entries visible when the traversal budget expires. Do not
-    // start relationship reads after that deadline or imply complete topology.
-    if !deadline_reached {
-        classify(&mut report, read_options)?;
-    }
-    report.complete &= report.issues.is_empty();
+    // One bounded traversal implementation serves both adapters. A one-shot
+    // caller receives a partial report on timeout, without resumable authority.
+    let mut cursor = Cursor::new(root, options)?;
+    let mut report = cursor.advance(options, read_options)?;
+    report.progress = None;
     Ok(report)
 }
+
 fn classify_links(
     report: &mut Inventory,
     options: &ReadOptions,
@@ -473,12 +365,6 @@ fn classify_nesting(report: &mut Inventory, start: usize, end: usize) -> Result<
     }
     Ok(())
 }
-fn classify(report: &mut Inventory, options: &ReadOptions) -> Result<()> {
-    let count = report.repositories.len();
-    classify_links(report, options, 0, count)?;
-    classify_nesting(report, 0, count)
-}
-
 /// Compatibility wrapper: old callers still receive an error for incomplete scans.
 #[derive(Debug, Serialize)]
 #[cfg_attr(feature = "application-services", derive(schemars::JsonSchema))]

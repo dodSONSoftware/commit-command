@@ -53,6 +53,11 @@ Additional verbs: `active`, `rename ID NAME`, `root ID ROOT`, `remove ID`, and
 `excluded_patterns`. Pattern matching is case-sensitive, workspace-relative, with
 literal separators; `.git` traversal is always forbidden. `discover` retains the
 M0 compatibility result/error behavior; `scan` exposes partial inventories.
+Standalone scans and workspace scans share the same traversal and remaining-time
+budget, including metadata inspection and directory enumeration. Timeout returns
+an incomplete inventory with a timeout issue; cancellation returns `cancelled`.
+Only workspace scans retain in-memory continuation. Standalone results omit
+continuation progress, and `discover` keeps its error for incomplete inventories.
 
 Status includes structured changes/counts, HEAD/branch, local-only upstream
 comparison, operation markers, last commit, generation and observation time.

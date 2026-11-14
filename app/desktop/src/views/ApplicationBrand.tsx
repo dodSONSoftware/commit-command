@@ -83,7 +83,7 @@ export function ApplicationBrand({ bridge }: { bridge: Bridge }) {
         </p>
         <dl className="about-details">
           <dt>Developer</dt>
-          <dd>Randy Dodson</dd>
+          <dd>Randel Dodson</dd>
           <dt>Copyright</dt>
           <dd>© 2026 Randel Dodson</dd>
           <dt>License</dt>

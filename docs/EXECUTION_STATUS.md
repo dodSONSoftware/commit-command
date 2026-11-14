@@ -11,6 +11,44 @@ The [detailed completion handoff](implementation/README.md) supplies the executa
 remaining-work packages, decision worksheet, fixture/test procedures and complete
 requirement mapping. It does not accept gates or replace this live evidence ledger.
 
+### November 14 · F26 shared discovery traversal and budgets
+
+A disposable slow-Git regression reproduced a 15.002-second standalone metadata
+read with a 100 ms caller budget. Standalone `scan_with_options` now advances the
+same cursor used by workspace scans, carrying the remaining deadline, cancellation
+and output limits through metadata inspection and directory enumeration. The
+one-shot adapter discards continuation progress; it returns a partial inventory
+with a timeout issue, while cancellation remains an error. Workspace scans retain
+in-memory continuation and `discover` retains its incomplete-inventory error.
+
+Five new integration tests passed: complete/excluded and unavailable scans agree;
+unreadable children produce matching partial issues; a 12,000-directory scan
+respects a short budget; blocked metadata reads honor deadline and in-flight
+cancellation; actual CLI scan/workspace scan/discover preserve their contracts.
+Workspace continuation resumes after the blocked Git fixture is repaired. Slow
+reads returned within the 800 ms guard with the 100 ms budget, instead of 15 seconds.
+The 24 existing workspace tests also passed. The test fixtures preserve managed
+Git bytes. Default/read-only host Stage gates and the all-feature generated ACL
+regression were rerun successfully after these Core changes.
+
+The broader application-services/all-targets Core run passed all 127 library tests,
+all 29 controlled-write tests and the other completed inspection/bulk/workspace
+suites. The application suite finished 61 passed, one failed, one ignored. Its
+unchanged `ai_source_transfer_requires_exact_native_approval_and_returns_only_validated_text`
+asserts a second candidate is invalid but receives null at `m3_application.rs:3965`;
+this unrelated AI test failure stops Cargo before later integration targets.
+The separate existing all-targets Clippy lint at `m3_application.rs:4594` remains.
+Focused discovery/workspace/library Clippy, Rust formatting and diff checks passed;
+the broader checks are not represented as all green. Live native menu acceptance
+was not repeated in these milestones.
+
+### November 14 · About developer name matches the license
+
+Updated the Developer value from Randy Dodson to Randel Dodson, matching the
+existing copyright value and the authoritative MIT license. The three About UI
+tests, frontend production build and format check passed. This correction changes
+text only; live About controls were not selected during this work.
+
 ### November 14 · F23 monitoring debounce and status ticks
 
 Two regressions failed before the change: a periodic status-only tick erased a

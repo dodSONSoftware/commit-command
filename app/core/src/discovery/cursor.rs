@@ -1,7 +1,7 @@
 //! In-memory continuation only: persisted inventories never restore execution/cursor authority.
 use super::*;
 use crate::domain::digest;
-use std::path::PathBuf;
+use std::{path::PathBuf, time::Instant};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[cfg_attr(feature = "application-services", derive(schemars::JsonSchema))]

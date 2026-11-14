@@ -59,7 +59,7 @@ it("opens the branded About dialog, shows the local license and restores focus",
     within(dialog).getByRole("button", { name: "View License" }),
   ).toHaveFocus();
   expect(within(dialog).getByText("version 0.1.1")).toBeVisible();
-  expect(within(dialog).getByText("Randy Dodson")).toBeVisible();
+  expect(within(dialog).getByText("Randel Dodson")).toBeVisible();
   expect(within(dialog).getByText("© 2026 Randel Dodson")).toBeVisible();
   await user.click(
     within(dialog).getByRole("button", { name: "View License" }),
