@@ -103,8 +103,9 @@ fn probe(command: &str, args: &str, name: &str) -> String {
     format!(
         r#"(async () => {{
       let result;
-      try {{ await window.__TAURI_INTERNALS__.invoke({command:?}, {args}); result='FAIL unexpected success'; }}
-      catch (error) {{ result = /not allowed|Unauthorized webview, page or origin/.test(String(error)) ? 'PASS denied' : 'FAIL unexpected error: '+String(error); }}
+      let positive = {name:?} === 'unprivileged-main';
+      try {{ if ({name:?} !== 'unprivileged-main') {{ const caps = await window.__TAURI_INTERNALS__.invoke('desktop_capabilities', {{}}); if (caps.protocol !== 1) throw new Error('Capabilities positive control failed'); positive = true; }} await window.__TAURI_INTERNALS__.invoke({command:?}, {args}); result='FAIL unexpected success'; }}
+      catch (error) {{ result = positive && /not allowed|Unauthorized webview, page or origin|Request is not available in Settings/.test(String(error)) ? 'PASS denied' : 'FAIL unexpected error: '+String(error); }}
       const node=document.createElement('pre'); node.textContent='NATIVE ACCEPTANCE {name}: '+result;
       document.body.append(node); document.title='Native acceptance:{name}:'+result;
     }})()"#
@@ -183,8 +184,8 @@ pub(super) fn install(app: &tauri::AppHandle, host: Arc<Host>) -> tauri::Result<
             "accept-kill-renderer",
             "Terminate actual main renderer process",
         ),
-        ("accept-main-probe", "Probe main to review confirmation"),
-        ("accept-review-probe", "Probe review to main dispatch"),
+        ("accept-main-probe", "Probe main settings-only command"),
+        ("accept-review-probe", "Probe Settings request boundary"),
         ("accept-unprivileged", "Open unprivileged caller probe"),
         ("accept-wrong-page", "Attempt wrong main page"),
         ("accept-wrong-origin", "Attempt wrong main origin"),
@@ -230,17 +231,17 @@ pub(super) fn install(app: &tauri::AppHandle, host: Arc<Host>) -> tauri::Result<
                 }
                 "accept-appkit-terminate" => request_appkit_termination(app)?,
                 "accept-kill-renderer" => terminate_main_renderer(&main.ok_or("Main missing")?)?,
-                "accept-main-probe" => main.ok_or("Main missing")?.eval(probe("review_confirm", r#"{review:'native-acceptance-no-authority'}"#, "main-review")).map_err(|e| e.to_string())?,
-                "accept-review-probe" => app.get_webview_window("review").ok_or("Review missing")?.eval(probe("dispatch", r#"{payload:JSON.stringify({version:1,epoch:0,request:{kind:'workspaces'}})}"#, "review-main")).map_err(|e| e.to_string())?,
+                "accept-main-probe" => main.ok_or("Main missing")?.eval(probe("settings_flush_done", r#"{token:'native-acceptance-no-authority',saved:true}"#, "main-settings")).map_err(|e| e.to_string())?,
+                "accept-review-probe" => app.get_webview_window("settings").ok_or("Settings missing")?.eval(probe("dispatch", r#"{payload:JSON.stringify({version:1,epoch:0,request:{kind:'activate',workspace:'native-acceptance-no-authority'}})}"#, "settings-main")).map_err(|e| e.to_string())?,
                 "accept-unprivileged" => {
                     if let Some(old)=app.get_webview_window("native-probe") { old.close().map_err(|e|e.to_string())?; return Ok(()); }
-                    WebviewWindowBuilder::new(app,"native-probe",WebviewUrl::App("review.html".into()))
+                    WebviewWindowBuilder::new(app,"native-probe",WebviewUrl::App("settings.html".into()))
                         .title("Native acceptance — unprivileged caller")
                         .on_page_load(|window,payload| { if payload.event()==tauri::webview::PageLoadEvent::Finished { let _=window.eval(probe("dispatch", r#"{payload:JSON.stringify({version:1,epoch:0,request:{kind:'workspaces'}})}"#, "unprivileged-main")); } })
                         .on_document_title_changed(|window,title| record_probe_title(window.label(),&title))
                         .build().map_err(|e|e.to_string())?;
                 }
-                "accept-wrong-page" => main.ok_or("Main missing")?.navigate("tauri://localhost/review.html".parse().map_err(|_|"Fixed URL invalid")?).map_err(|e|e.to_string())?,
+                "accept-wrong-page" => main.ok_or("Main missing")?.navigate("tauri://localhost/settings.html".parse().map_err(|_|"Fixed URL invalid")?).map_err(|e|e.to_string())?,
                 "accept-wrong-origin" => main.ok_or("Main missing")?.navigate("tauri://native-acceptance.invalid/index.html".parse().map_err(|_|"Fixed URL invalid")?).map_err(|e|e.to_string())?,
                 "accept-drop-ack" => { DROP_CLOSE_ACK.store(true,Ordering::Release); record("close_ack_fault_armed",json!({})); }
                 "accept-before-publication" => queue(&host,Task::AcceptanceFault(gitfleet_core::writes::Phase::PublicationPending))?,

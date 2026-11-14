@@ -34,6 +34,9 @@ pub(crate) fn commit_in(s: &Session<'_>, oid: &ObjectId) -> Result<Commit> {
             error
         }
     })?;
+    parse_commit(s, oid, &bytes)
+}
+fn parse_commit(s: &Session<'_>, oid: &ObjectId, bytes: &[u8]) -> Result<Commit> {
     let separator = bytes
         .windows(2)
         .position(|pair| pair == b"\n\n")
@@ -92,6 +95,65 @@ pub(crate) fn commit_in(s: &Session<'_>, oid: &ObjectId) -> Result<Commit> {
         message: bytes[separator + 2..].to_vec(),
     })
 }
+pub(crate) const COMMIT_BATCH_SIZE: usize = 64;
+pub(crate) fn commits_in(s: &Session<'_>, ids: &[ObjectId]) -> Result<Vec<Commit>> {
+    if ids.len() > COMMIT_BATCH_SIZE {
+        return Err(data_error("Commit batch exceeds bounds"));
+    }
+    if ids.is_empty() {
+        return Ok(Vec::new());
+    }
+    let mut input = Vec::new();
+    for oid in ids {
+        oid.validate()?;
+        if oid.format != s.format {
+            return Err(data_error("Object format mismatch"));
+        }
+        input.extend_from_slice(oid.hex.as_bytes());
+        input.push(b'\n');
+    }
+    let bytes = s.git_input(&["cat-file", "--batch"], input)?;
+    let mut remaining = bytes.as_slice();
+    let mut commits = Vec::new();
+    for oid in ids {
+        s.check()?;
+        let end = remaining
+            .iter()
+            .position(|b| *b == b'\n')
+            .ok_or_else(|| data_error("Missing batch header"))?;
+        let header = std::str::from_utf8(&remaining[..end])
+            .map_err(|_| data_error("Invalid batch header"))?;
+        let parts = header.split(' ').collect::<Vec<_>>();
+        if parts.first().copied() != Some(oid.hex.as_str()) {
+            return Err(data_error("Unexpected batch object ID"));
+        }
+        if parts.as_slice() == [oid.hex.as_str(), "missing"]
+            || parts.get(1).copied() != Some("commit")
+        {
+            return Err(Error::with_kind(
+                ErrorKind::MissingObject,
+                "Required commit is unavailable; fetching is disabled",
+            ));
+        }
+        if parts.len() != 3 {
+            return Err(data_error("Invalid batch object header"));
+        }
+        let size = parts[2]
+            .parse::<usize>()
+            .map_err(|_| data_error("Invalid batch object size"))?;
+        remaining = &remaining[end + 1..];
+        if size >= remaining.len() || remaining[size] != b'\n' {
+            return Err(data_error("Truncated batch object"));
+        }
+        commits.push(parse_commit(s, oid, &remaining[..size])?);
+        remaining = &remaining[size + 1..];
+    }
+    if !remaining.is_empty() {
+        return Err(data_error("Unexpected trailing batch data"));
+    }
+    Ok(commits)
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "application-services", derive(schemars::JsonSchema))]
 #[serde(tag = "kind", content = "reference", rename_all = "snake_case")]
@@ -216,22 +278,23 @@ pub fn page_with_options(
         };
         let mut commits = Vec::new();
         let mut page_bytes = 0usize;
-        for id in ids.iter().take(limit) {
-            let commit = commit_in(s, id)?;
-            page_bytes = page_bytes.saturating_add(
-                commit.message.len()
-                    + commit.author.len()
-                    + commit.committer.len()
-                    + commit.parents.len() * 64
-                    + 256,
-            );
-            if page_bytes > options.max_output {
-                return Err(Error::with_kind(
-                    ErrorKind::OutputLimit,
-                    "History page exceeds response budget",
-                ));
+        for batch in ids[..ids.len().min(limit)].chunks(COMMIT_BATCH_SIZE) {
+            for commit in commits_in(s, batch)? {
+                page_bytes = page_bytes.saturating_add(
+                    commit.message.len()
+                        + commit.author.len()
+                        + commit.committer.len()
+                        + commit.parents.len() * 64
+                        + 256,
+                );
+                if page_bytes > options.max_output {
+                    return Err(Error::with_kind(
+                        ErrorKind::OutputLimit,
+                        "History page exceeds response budget",
+                    ));
+                }
+                commits.push(commit);
             }
-            commits.push(commit);
         }
         let shallow_path = s.common_dir.join("shallow");
         let shallow_boundaries = if shallow_path.exists() {
@@ -264,4 +327,65 @@ pub fn commit(repo: &Path, oid: &ObjectId) -> Result<Commit> {
 }
 pub fn commit_with_options(repo: &Path, oid: &ObjectId, options: &ReadOptions) -> Result<Commit> {
     inspection::read(repo, options, |s| commit_in(s, oid))
+}
+
+#[cfg(test)]
+#[path = "../tests/support/mod.rs"]
+mod test_support;
+#[cfg(test)]
+mod batch_tests {
+    use super::*;
+    #[test]
+    fn batch_matches_single_commit_and_bounds_missing_objects() {
+        let f = test_support::Fixture::new();
+        f.commit_file();
+        f.git(&[
+            "commit",
+            "--allow-empty",
+            "-qm",
+            &"large message".repeat(500),
+        ]);
+        let oid = inspection::repository_metadata(&f.repo).unwrap();
+        let format = oid.object_format;
+        let head = ObjectId::parse(
+            std::str::from_utf8(&f.git(&["rev-parse", "HEAD"]))
+                .unwrap()
+                .trim(),
+            &format,
+        )
+        .unwrap();
+        let before = test_support::tree_bytes(&f.repo);
+        inspection::read(&f.repo, &Default::default(), |s| {
+            let single = commit_in(s, &head)?;
+            let batch = commits_in(s, &[head.clone(), head.clone()])?;
+            for value in batch {
+                assert_eq!(serde_json::to_value(value)?, serde_json::to_value(&single)?);
+            }
+            let missing = ObjectId::parse(&"0".repeat(head.hex.len()), &format)?;
+            assert_eq!(
+                commits_in(s, &[missing]).unwrap_err().kind,
+                ErrorKind::MissingObject
+            );
+            assert_eq!(
+                commits_in(s, &[single.tree]).unwrap_err().kind,
+                ErrorKind::MissingObject
+            );
+            Ok(())
+        })
+        .unwrap();
+        let small = ReadOptions {
+            max_output: 1024,
+            ..Default::default()
+        };
+        assert_eq!(
+            inspection::read(&f.repo, &small, |s| commits_in(
+                s,
+                std::slice::from_ref(&head)
+            ))
+            .unwrap_err()
+            .kind,
+            ErrorKind::OutputLimit
+        );
+        assert_eq!(before, test_support::tree_bytes(&f.repo));
+    }
 }

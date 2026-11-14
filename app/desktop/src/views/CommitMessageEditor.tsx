@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { RememberedTextarea } from "./AppPreferences";
+import { useState, type ReactNode } from "react";
 
 /** Keep the separator verbatim; viewing a draft must never rewrite its bytes. */
 export function splitMessage(message: string) {
@@ -27,6 +28,8 @@ export function CommitMessageEditor({
   rows = 4,
   disabled = false,
   placeholder,
+  actions,
+  layoutKey = "commit",
 }: {
   label: string;
   value: string;
@@ -34,6 +37,8 @@ export function CommitMessageEditor({
   rows?: number;
   disabled?: boolean;
   placeholder?: string;
+  actions?: ReactNode;
+  layoutKey?: "commit" | "bulk";
 }) {
   const [structured, setStructured] = useState(false);
   const parts = splitMessage(value);
@@ -41,6 +46,7 @@ export function CommitMessageEditor({
   return (
     <fieldset className="commit-message-editor" disabled={disabled}>
       <legend>{label}</legend>
+      {actions}
       <button type="button" onClick={() => setStructured(!structured)}>
         {structured ? "Edit raw message" : "Edit subject and body"}
       </button>
@@ -48,7 +54,9 @@ export function CommitMessageEditor({
         <>
           <label>
             Subject
-            <textarea
+            <RememberedTextarea
+              field={`${layoutKey}_subject`}
+              wrap="soft"
               aria-label={`${label} subject`}
               rows={2}
               value={parts.subject}
@@ -63,7 +71,9 @@ export function CommitMessageEditor({
           </label>
           <label>
             Body (optional)
-            <textarea
+            <RememberedTextarea
+              field={`${layoutKey}_body`}
+              wrap="soft"
               aria-label={`${label} body`}
               rows={Math.max(3, rows - 2)}
               value={parts.body}
@@ -80,7 +90,9 @@ export function CommitMessageEditor({
       ) : (
         <label>
           {label}
-          <textarea
+          <RememberedTextarea
+            field={`${layoutKey}_message`}
+            wrap="soft"
             rows={rows}
             value={value}
             maxLength={MAX_MESSAGE}

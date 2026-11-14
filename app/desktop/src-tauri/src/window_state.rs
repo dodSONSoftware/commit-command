@@ -4,8 +4,18 @@ use tauri::{LogicalSize, PhysicalPosition, PhysicalSize, Runtime, WebviewWindow}
 pub const MIN_WIDTH: f64 = 960.;
 pub const MIN_HEIGHT: f64 = 640.;
 
+#[cfg(test)]
 fn fit(saved: WindowPlacement, area: WindowPlacement, scale: f64) -> WindowPlacement {
-    let minimum: PhysicalSize<u32> = LogicalSize::new(MIN_WIDTH, MIN_HEIGHT).to_physical(scale);
+    fit_minimum(saved, area, scale, MIN_WIDTH, MIN_HEIGHT)
+}
+fn fit_minimum(
+    saved: WindowPlacement,
+    area: WindowPlacement,
+    scale: f64,
+    min_width: f64,
+    min_height: f64,
+) -> WindowPlacement {
+    let minimum: PhysicalSize<u32> = LogicalSize::new(min_width, min_height).to_physical(scale);
     let width = saved.width.max(minimum.width).min(area.width);
     let height = saved.height.max(minimum.height).min(area.height);
     WindowPlacement {
@@ -18,6 +28,20 @@ fn fit(saved: WindowPlacement, area: WindowPlacement, scale: f64) -> WindowPlace
     }
 }
 pub fn restore<R: Runtime>(window: &WebviewWindow<R>, saved: WindowPlacement) -> tauri::Result<()> {
+    restore_minimum(window, saved, MIN_WIDTH, MIN_HEIGHT)
+}
+pub fn restore_settings<R: Runtime>(
+    window: &WebviewWindow<R>,
+    saved: WindowPlacement,
+) -> tauri::Result<()> {
+    restore_minimum(window, saved, 620., 420.)
+}
+fn restore_minimum<R: Runtime>(
+    window: &WebviewWindow<R>,
+    saved: WindowPlacement,
+    min_width: f64,
+    min_height: f64,
+) -> tauri::Result<()> {
     let monitors = window.available_monitors()?;
     let areas: Vec<_> = monitors
         .iter()
@@ -44,7 +68,7 @@ pub fn restore<R: Runtime>(window: &WebviewWindow<R>, saved: WindowPlacement) ->
         })
         .or_else(|| areas.first());
     if let Some((area, scale)) = area {
-        let p = fit(saved, *area, *scale);
+        let p = fit_minimum(saved, *area, *scale, min_width, min_height);
         // The hidden window can start on a different-DPI display. Physical
         // setters convert using that window's current scale before it moves.
         window.set_position(PhysicalPosition::new(p.x, p.y).to_logical::<f64>(*scale))?;

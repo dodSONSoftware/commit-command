@@ -1,3 +1,5 @@
+#[path = "scope_recovery.rs"]
+mod scope_recovery;
 use super::*;
 use gitfleet_core::{
     remote::{push::*, push_batch::*, push_publication::*},
@@ -308,6 +310,23 @@ fn restart_interrupts_unfinished_queue_without_restoring_item_authority() {
         panic!()
     };
     assert_eq!(list.push_batch_recovery.len(), 1);
+    scope_recovery::verify(&mut t.app, &t.f.root, &t.workspace, t.options.clone(), true);
+    t.app
+        .request(
+            t.app.epoch(),
+            Request::CloseInterruptedPushBatch {
+                workspace: t.workspace.clone(),
+                id: batch.plan.id.clone(),
+            },
+        )
+        .unwrap();
+    scope_recovery::verify(
+        &mut t.app,
+        &t.f.root,
+        &t.workspace,
+        t.options.clone(),
+        false,
+    );
     assert_eq!(tree_bytes(&t.f.repo), before);
     assert_eq!(tree_bytes(&t.remote), remote);
     assert_eq!(tree_bytes(&t.f.root.join("child-remote.git")), child_remote);
@@ -398,6 +417,7 @@ fn later_server_rejection_preserves_child_success_and_requires_fresh_retry_queue
         parent_tip
     );
     fs::remove_file(hook).unwrap();
+    scope_recovery::verify(&mut t.app, &t.f.root, &t.workspace, t.options.clone(), true);
     let fresh = observed(&mut t);
     let Data::Review(r) = t
         .app
@@ -430,6 +450,13 @@ fn later_server_rejection_preserves_child_success_and_requires_fresh_retry_queue
     assert!(finish(&mut t, &r, true).unwrap().published);
     assert_eq!(get(&mut t, &retry.plan.id).phase, PushBatchPhase::Complete);
     assert_eq!(get(&mut t, &batch.plan.id).phase, PushBatchPhase::Stopped);
+    scope_recovery::verify(
+        &mut t.app,
+        &t.f.root,
+        &t.workspace,
+        t.options.clone(),
+        false,
+    );
     assert_eq!(tree_bytes(&t.f.repo), managed);
     assert_eq!(tree_bytes(&t.f.root.join("child-remote.git")), child_before);
 }
@@ -549,27 +576,31 @@ fn actual_process_loss_between_items_preserves_success_and_never_starts_parent()
 }
 
 #[test]
-fn revoked_selected_worktree_blocks_queue_before_any_publication_record() {
+fn revocation_invalidates_a_prepared_guided_push_before_publication() {
     let (mut t, _parent, child) = fixture(false);
+    let batch = create(&mut t, vec![child.clone()]).unwrap();
+    let remote = t.f.root.join("child-remote.git");
+    let before = tree_bytes(&t.f.repo);
+    let destination = tree_bytes(&remote);
+    let review = review_item(&mut t, &batch.plan.id, child.clone()).unwrap();
     t.app
         .request(
             t.app.epoch(),
             Request::Revoke {
                 workspace: t.workspace.clone(),
-                worktree: child.worktree.clone(),
+                worktree: child.worktree,
             },
         )
         .unwrap();
-    let before = tree_bytes(&t.f.repo);
-    let remote = tree_bytes(&t.f.root.join("child-remote.git"));
     assert_eq!(
-        create(&mut t, vec![child]).unwrap_err().kind,
-        ErrorKind::UntrustedRepository
+        finish(&mut t, &review, true).unwrap_err().kind,
+        ErrorKind::StaleReview
     );
+    let stopped = get(&mut t, &batch.plan.id);
+    assert_eq!(stopped.phase, PushBatchPhase::Stopped);
+    assert_eq!(stopped.items[0].phase, PushBatchItemPhase::Cancelled);
     assert_eq!(tree_bytes(&t.f.repo), before);
-    assert_eq!(tree_bytes(&t.f.root.join("child-remote.git")), remote);
-    let c = rusqlite::Connection::open(t.f.root.join("state/state.db")).unwrap();
-    assert_eq!(c.query_row("select count(*) from state where key like 'push-batch:%' or key like 'push-publication:%'",[],|r|r.get::<_,i64>(0)).unwrap(),0);
+    assert_eq!(tree_bytes(&remote), destination);
 }
 #[test]
 fn a_saved_queue_cannot_broaden_its_frozen_source() {

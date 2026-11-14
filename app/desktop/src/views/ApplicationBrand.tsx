@@ -20,6 +20,7 @@ function Banner() {
 
 export function ApplicationBrand({ bridge }: { bridge: Bridge }) {
   const dialog = useRef<HTMLDialogElement>(null);
+  const initialFocus = useRef<HTMLHeadingElement>(null);
   const previousFocus = useRef<HTMLElement | null>(null);
   const [showLicense, setShowLicense] = useState(false);
   const [error, setError] = useState("");
@@ -33,6 +34,7 @@ export function ApplicationBrand({ bridge }: { bridge: Bridge }) {
     setShowLicense(false);
     setError("");
     dialog.current?.showModal();
+    initialFocus.current?.focus();
   }, []);
   useEffect(() => {
     let disposed = false;
@@ -71,41 +73,31 @@ export function ApplicationBrand({ bridge }: { bridge: Bridge }) {
         >
           <Banner />
         </div>
-        <p className="about-publisher">
-          A <strong>dodson labs</strong> application
-        </p>
         <hr />
-        <h2 id="about-title">Commit Command</h2>
-        {showLicense ? (
-          <section aria-label="MIT License">
-            <h3>MIT License</h3>
-            <pre className="about-license">{license}</pre>
-          </section>
-        ) : (
-          <>
-            <p className="about-version">version {version}</p>
-            <p className="about-description">
-              Local-first Git workspace manager for macOS.
-            </p>
-            <dl className="about-details">
-              <dt>Developer</dt>
-              <dd>Randy Dodson</dd>
-              <dt>Publisher</dt>
-              <dd>dodson labs</dd>
-              <dt>Copyright</dt>
-              <dd>© 2026 Randy Dodson</dd>
-              <dt>License</dt>
-              <dd>MIT License</dd>
-            </dl>
-          </>
-        )}
+        <h2 id="about-title" ref={initialFocus} tabIndex={-1}>
+          Commit Command
+        </h2>
+        <p className="about-version">version {version}</p>
+        <p className="about-description">
+          Local-first Git workspace manager for macOS.
+        </p>
+        <dl className="about-details">
+          <dt>Developer</dt>
+          <dd>Randy Dodson</dd>
+          <dt>Copyright</dt>
+          <dd>© 2026 Randel Dodson</dd>
+          <dt>License</dt>
+          <dd>MIT License</dd>
+        </dl>
         {error && <p role="alert">{error}</p>}
         <div className="about-actions">
           <button
             type="button"
             onClick={() => setShowLicense((value) => !value)}
+            aria-expanded={showLicense}
+            aria-controls="about-license-text"
           >
-            {showLicense ? "Back" : "View license…"}
+            {showLicense ? "Close license" : "View License"}
           </button>
           <button
             type="button"
@@ -131,6 +123,16 @@ export function ApplicationBrand({ bridge }: { bridge: Bridge }) {
             OK
           </button>
         </div>
+        {showLicense && (
+          <textarea
+            id="about-license-text"
+            aria-label="MIT License"
+            className="about-license"
+            readOnly
+            value={license}
+            rows={12}
+          />
+        )}
       </dialog>
     </>
   );

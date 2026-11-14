@@ -698,3 +698,226 @@ fn unsafe_and_interrupted_generation_files_are_preserved_and_refused() {
     assert!(store::load(&f.0).is_err());
     assert_eq!(std::fs::metadata(&text).unwrap().len(), 65537);
 }
+
+#[test]
+fn profile_wizard_saves_the_complete_graph_and_default_atomically() {
+    let original = Settings::default();
+    let profile = ProfileDraft {
+        id: None,
+        name: "My profile".into(),
+        connection: String::new(),
+        model: "model:exact-tag".into(),
+        system_message: "Only observed changes".into(),
+        parameters: Parameters::default(),
+        template: original.templates[0].id.clone(),
+        context_bytes: 16384,
+    };
+    let provider = ConnectionDraft {
+        id: None,
+        name: "Local AI".into(),
+        provider: Provider::Ollama,
+        endpoint: "http://127.0.0.1:11434".into(),
+        timeout_ms: 30000,
+        authentication: Default::default(),
+    };
+    let before = serde_json::to_vec(&original).unwrap();
+    let mut invalid = profile.clone();
+    invalid.model.clear();
+    assert!(original
+        .changed(
+            &original.revision,
+            Change::ProfileSetup {
+                connection: Some(provider.clone()),
+                profile: invalid,
+                make_default: true
+            }
+        )
+        .is_err());
+    assert_eq!(serde_json::to_vec(&original).unwrap(), before);
+    let saved = change(
+        &original,
+        Change::ProfileSetup {
+            connection: Some(provider),
+            profile,
+            make_default: true,
+        },
+    );
+    assert_eq!(saved.connections.len(), 1);
+    assert_eq!(saved.profiles.len(), 1);
+    assert_eq!(saved.profiles[0].connection, saved.connections[0].id);
+    assert_eq!(saved.assignments[0].profile, saved.profiles[0].id);
+    assert_eq!(saved.assignments[0].scope, Scope::Application);
+    assert_eq!(saved.profiles[0].model, "model:exact-tag");
+    assert_eq!(serde_json::to_vec(&original).unwrap(), before);
+    let provider_before = serde_json::to_vec(&saved.connections).unwrap();
+    let p = &saved.profiles[0];
+    let edited = change(
+        &saved,
+        Change::ProfileSetup {
+            connection: None,
+            profile: ProfileDraft {
+                id: Some(p.id.clone()),
+                name: "Renamed".into(),
+                connection: p.connection.clone(),
+                model: p.model.clone(),
+                system_message: p.system_message.clone(),
+                parameters: p.parameters.clone(),
+                template: p.template.clone(),
+                context_bytes: p.context_bytes,
+            },
+            make_default: false,
+        },
+    );
+    assert_eq!(edited.profiles[0].id, p.id);
+    assert!(edited.assignments.is_empty());
+    assert_eq!(
+        serde_json::to_vec(&edited.connections).unwrap(),
+        provider_before
+    );
+}
+#[test]
+fn profile_wizard_deletion_removes_bindings_but_keeps_provider_metadata() {
+    let mut s = configured();
+    let profile_id = s.profiles[0].id.clone();
+    let (workspace, worktree) = scope();
+    for scope in [
+        Scope::Application,
+        Scope::Workspace {
+            workspace: workspace.clone(),
+        },
+        Scope::Repository {
+            workspace,
+            worktree,
+        },
+    ] {
+        s = change(
+            &s,
+            Change::Assign {
+                scope,
+                profile: Some(profile_id.clone()),
+            },
+        );
+    }
+    let providers = serde_json::to_vec(&s.connections).unwrap();
+    let deleted = change(
+        &s,
+        Change::DeleteProfileWithAssignments {
+            id: profile_id.clone(),
+        },
+    );
+    assert!(deleted.profiles.is_empty());
+    assert!(deleted.assignments.is_empty());
+    assert_eq!(serde_json::to_vec(&deleted.connections).unwrap(), providers);
+    assert_eq!(s.profiles[0].id, profile_id);
+    assert_eq!(s.assignments.len(), 3);
+}
+
+#[test]
+fn single_ai_setup_replaces_old_overrides_and_preserves_identity_atomically() {
+    let mut original = configured();
+    let (workspace, worktree) = scope();
+    original.assignments.push(Assignment {
+        scope: Scope::Repository {
+            workspace: workspace.clone(),
+            worktree: worktree.clone(),
+        },
+        profile: original.profiles[0].id.clone(),
+    });
+    original.instructions.push(Instructions {
+        scope: Scope::Workspace { workspace },
+        text: "Old override".into(),
+    });
+    let mut extra_server = original.connections[0].clone();
+    extra_server.id = uuid::Uuid::new_v4().to_string();
+    extra_server.name = "Extra server".into();
+    let mut extra_model = original.profiles[0].clone();
+    extra_model.id = uuid::Uuid::new_v4().to_string();
+    extra_model.name = "Extra model".into();
+    extra_model.connection = extra_server.id.clone();
+    original.connections.push(extra_server);
+    original.profiles.push(extra_model);
+    original.assignments.push(Assignment {
+        scope: Scope::Application,
+        profile: original.profiles[0].id.clone(),
+    });
+    let old_id = original.profiles[0].id.clone();
+    let server_id = original.connections[0].id.clone();
+    let setup = |model: &str| Change::SingleSetup {
+        connection: ConnectionDraft {
+            id: Some(server_id.clone()),
+            name: "AI".into(),
+            provider: Provider::Ollama,
+            endpoint: "http://10.10.10.72:11434".into(),
+            timeout_ms: 30000,
+            authentication: Default::default(),
+        },
+        model: model.into(),
+        system_message: "Only describe observed changes".into(),
+        parameters: Parameters {
+            temperature: Some(0.3),
+            top_p: Some(0.8),
+            ..Default::default()
+        },
+    };
+    let before = serde_json::to_vec(&original).unwrap();
+    assert!(original.changed(&original.revision, setup("")).is_err());
+    assert_eq!(serde_json::to_vec(&original).unwrap(), before);
+    assert!(original
+        .changed("stale-revision", setup("exact:tag"))
+        .is_err());
+    let saved = change(&original, setup("exact:tag"));
+    assert_eq!(saved.connections.len(), 1);
+    assert_eq!(saved.connections[0].id, server_id);
+    assert_eq!(saved.connections[0].endpoint, "http://10.10.10.72:11434/");
+    assert_eq!(saved.profiles.len(), 1);
+    assert_eq!(saved.profiles[0].id, old_id);
+    assert_eq!(saved.profiles[0].model, "exact:tag");
+    assert_eq!(saved.profiles[0].parameters.temperature, Some(0.3));
+    assert_eq!(saved.assignments.len(), 1);
+    assert_eq!(saved.assignments[0].scope, Scope::Application);
+    assert!(saved.instructions.is_empty());
+    assert_eq!(saved.templates.len(), 1);
+    let effective = saved.effective(&scope().0, &worktree, None).unwrap();
+    assert_eq!(effective.profile.model, "exact:tag");
+}
+
+#[test]
+fn single_ai_setup_creates_a_working_configuration_from_empty_settings() {
+    let original = Settings::default();
+    let saved = change(
+        &original,
+        Change::SingleSetup {
+            connection: ConnectionDraft {
+                id: None,
+                name: "AI".into(),
+                provider: Provider::Ollama,
+                endpoint: "http://localhost:11434".into(),
+                timeout_ms: 30000,
+                authentication: Default::default(),
+            },
+            model: "installed:tag".into(),
+            system_message: "Explain changes".into(),
+            parameters: Parameters::default(),
+        },
+    );
+    let (workspace, worktree) = scope();
+    assert_eq!(
+        saved
+            .effective(&workspace, &worktree, None)
+            .unwrap()
+            .profile
+            .model,
+        "installed:tag"
+    );
+}
+
+#[test]
+fn context_size_accepts_256k_and_rejects_larger_overrides() {
+    let mut parameters = Parameters {
+        context_size: Some(262144),
+        ..Default::default()
+    };
+    assert!(parameters.validate(Provider::Ollama).is_ok());
+    parameters.context_size = Some(262145);
+    assert!(parameters.validate(Provider::Ollama).is_err());
+}

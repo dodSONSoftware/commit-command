@@ -70,10 +70,15 @@ fn permit(options: &ReadOptions, start: Instant) -> Result<Permit> {
         std::thread::sleep(Duration::from_millis(5));
     }
 }
-fn reader(
+fn reader(input: impl Read, limit: usize, exceeded: Arc<AtomicBool>) -> std::io::Result<Vec<u8>> {
+    reader_stream(input, limit, exceeded, None)
+}
+type OutputObserver = Box<dyn FnMut(&[u8]) + Send>;
+fn reader_stream(
     mut input: impl Read,
     limit: usize,
     exceeded: Arc<AtomicBool>,
+    mut observer: Option<OutputObserver>,
 ) -> std::io::Result<Vec<u8>> {
     let mut result = Vec::new();
     let mut buffer = [0; 8192];
@@ -84,6 +89,11 @@ fn reader(
         }
         let available = limit.saturating_sub(result.len());
         result.extend_from_slice(&buffer[..count.min(available)]);
+        if count <= available {
+            if let Some(observer) = observer.as_mut() {
+                observer(&buffer[..count]);
+            }
+        }
         if count > available {
             exceeded.store(true, Ordering::Relaxed);
         }
@@ -124,7 +134,30 @@ pub(crate) fn bounded_input_checked(
     input: Option<Vec<u8>>,
     check: impl Fn() -> Result<()>,
 ) -> Result<Output> {
-    bounded_group(command, options, input, check, Group::Owned)
+    bounded_group(
+        command,
+        options,
+        input.map(ProcessInput::Bytes),
+        check,
+        Group::Owned,
+        None,
+    )
+}
+#[cfg(feature = "application-services")]
+pub(crate) fn bounded_input_stream(
+    command: Command,
+    options: &ReadOptions,
+    input: Vec<u8>,
+    observer: OutputObserver,
+) -> Result<Output> {
+    bounded_group(
+        command,
+        options,
+        Some(ProcessInput::Bytes(input)),
+        || Ok(()),
+        Group::Owned,
+        Some(observer),
+    )
 }
 /// Transport helpers must remain inside the outer Git process group.
 #[cfg(feature = "application-services")]
@@ -133,7 +166,14 @@ pub(crate) fn credential_helper(
     options: &ReadOptions,
     input: Vec<u8>,
 ) -> Result<Output> {
-    bounded_group(command, options, Some(input), || Ok(()), Group::Inherited)
+    bounded_group(
+        command,
+        options,
+        Some(ProcessInput::Bytes(input)),
+        || Ok(()),
+        Group::Inherited,
+        None,
+    )
 }
 /// A completed network operation cannot leave background helper descendants.
 #[cfg(feature = "application-services")]
@@ -142,14 +182,35 @@ pub(crate) fn transport(
     options: &ReadOptions,
     check: impl Fn() -> Result<()>,
 ) -> Result<Output> {
-    bounded_group(command, options, None, check, Group::Transport)
+    bounded_group(command, options, None, check, Group::Transport, None)
+}
+enum ProcessInput {
+    Bytes(Vec<u8>),
+    #[cfg(feature = "controlled-writes")]
+    File(std::fs::File),
+}
+#[cfg(feature = "controlled-writes")]
+pub(crate) fn bounded_file_input(
+    command: Command,
+    options: &ReadOptions,
+    file: std::fs::File,
+) -> Result<Output> {
+    bounded_group(
+        command,
+        options,
+        Some(ProcessInput::File(file)),
+        || Ok(()),
+        Group::Owned,
+        None,
+    )
 }
 fn bounded_group(
     mut command: Command,
     options: &ReadOptions,
-    input: Option<Vec<u8>>,
+    input: Option<ProcessInput>,
     check: impl Fn() -> Result<()>,
     group: Group,
+    observer: Option<OutputObserver>,
 ) -> Result<Output> {
     check()?;
     let start = Instant::now();
@@ -167,16 +228,18 @@ fn bounded_group(
             command.process_group(0);
         }
     }
+    let (stdin, bytes) = match input {
+        Some(ProcessInput::Bytes(bytes)) => (Stdio::piped(), Some(bytes)),
+        #[cfg(feature = "controlled-writes")]
+        Some(ProcessInput::File(file)) => (Stdio::from(file), None),
+        None => (Stdio::null(), None),
+    };
     let mut child = command
-        .stdin(if input.is_some() {
-            Stdio::piped()
-        } else {
-            Stdio::null()
-        })
+        .stdin(stdin)
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .spawn()?;
-    let input_thread = input.map(|bytes| {
+    let input_thread = bytes.map(|bytes| {
         let mut stdin = child.stdin.take().expect("piped input");
         std::thread::spawn(move || stdin.write_all(&bytes))
     });
@@ -186,7 +249,7 @@ fn bounded_group(
     let out_limit = options.max_output;
     let out_exceeded = exceeded.clone();
     let err_exceeded = exceeded.clone();
-    let out = std::thread::spawn(move || reader(stdout, out_limit, out_exceeded));
+    let out = std::thread::spawn(move || reader_stream(stdout, out_limit, out_exceeded, observer));
     let err = std::thread::spawn(move || reader(stderr, 64 * 1024, err_exceeded));
     let mut failure = None;
     let status = loop {
@@ -315,6 +378,14 @@ fn base() -> Command {
     command
 }
 pub(crate) fn git(repo: &Path, args: &[OsString], options: &ReadOptions) -> Result<Output> {
+    git_input(repo, args, options, None)
+}
+pub(crate) fn git_input(
+    repo: &Path,
+    args: &[OsString],
+    options: &ReadOptions,
+    input: Option<Vec<u8>>,
+) -> Result<Output> {
     static VERSION: OnceLock<bool> = OnceLock::new();
     if VERSION.get().is_none() {
         let output = bounded(
@@ -345,7 +416,7 @@ pub(crate) fn git(repo: &Path, args: &[OsString], options: &ReadOptions) -> Resu
     }
     let mut command = base();
     command.current_dir(repo).args(args);
-    bounded(command, options)
+    bounded_input(command, options, input)
 }
 
 #[cfg(test)]

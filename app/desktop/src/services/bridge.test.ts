@@ -1,13 +1,28 @@
 import { beforeEach, expect, it, vi } from "vitest";
 import { invoke } from "@tauri-apps/api/core";
-import { NativeBridge } from "./bridge";
+import { NativeBridge, SettingsBridge } from "./bridge";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
+import type { Request } from "./request.generated";
 import { initialState, initialBulkComposer } from "../stores/model";
 vi.mock("@tauri-apps/api/webviewWindow", () => ({
   getCurrentWebviewWindow: vi.fn(),
 }));
 vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
-beforeEach(() => vi.mocked(invoke).mockReset());
+beforeEach(() => {
+  vi.mocked(invoke).mockReset();
+});
+it("changes UI scale through the bounded native settings command", async () => {
+  vi.mocked(invoke).mockResolvedValue(125);
+  expect(await new NativeBridge().setUiScale(125)).toBe(125);
+  expect(invoke).toHaveBeenCalledExactlyOnceWith("set_ui_scale", {
+    percent: 125,
+  });
+});
+it("selects AI archives through the fixed native picker without accepting paths", async () => {
+  vi.mocked(invoke).mockResolvedValue(null);
+  await new NativeBridge().pickAiImport();
+  expect(invoke).toHaveBeenCalledExactlyOnceWith("pick_ai_import");
+});
 it("uses only fixed native directory picker purposes", async () => {
   vi.mocked(invoke).mockResolvedValue(null);
   const bridge = new NativeBridge();
@@ -77,7 +92,7 @@ it("surfaces uncertain backend errors without retrying an operation", async () =
   expect(invoke).toHaveBeenCalledTimes(2);
 });
 
-it("cancels the earliest outstanding Core job instead of a later queued background request", async () => {
+it("cancels only the owned Stage job while an earlier read is pending", async () => {
   let count = 0;
   const pending = new Map<string, (value: unknown) => void>();
   vi.mocked(invoke).mockImplementation(async (command, args) => {
@@ -94,11 +109,25 @@ it("cancels the earliest outstanding Core job instead of a later queued backgrou
   });
   const bridge = new NativeBridge();
   const first = bridge.request({ kind: "workspaces" });
-  const second = bridge.request({ kind: "workspaces" });
+  const owner = Symbol("stage");
+  const second = bridge.request(
+    {
+      kind: "propose",
+      workspace: "ws",
+      worktree: "wt",
+      request: {
+        kind: "stage",
+        paths: [{ encoding: "utf8", value: "file.txt" }],
+        hooks: "execute",
+      },
+    },
+    owner,
+  );
   await Promise.resolve();
   await Promise.resolve();
-  await bridge.cancel();
-  expect(invoke).toHaveBeenCalledWith("cancel_job", { job: "job-1" });
+  await bridge.cancel(owner);
+  expect(invoke).toHaveBeenCalledWith("cancel_job", { job: "job-2" });
+  expect(invoke).not.toHaveBeenCalledWith("cancel_job", { job: "job-1" });
   const result = {
     state: "complete",
     response: {
@@ -113,6 +142,9 @@ it("cancels the earliest outstanding Core job instead of a later queued backgrou
   pending.get("job-1")!(result);
   pending.get("job-2")!(result);
   await Promise.all([first, second]);
+  vi.mocked(invoke).mockClear();
+  await bridge.cancel(owner);
+  expect(invoke).not.toHaveBeenCalled();
 });
 
 it("observes native completion revisions even when a fast operation is already idle", async () => {
@@ -180,3 +212,151 @@ it("opens native AI token management using only a saved connection identifier", 
     connection: "saved-connection-id",
   });
 });
+
+it("opens the native Settings window with the current workspace context", async () => {
+  vi.mocked(invoke).mockResolvedValue(undefined);
+  await new NativeBridge().openSettings({
+    workspace: "ws",
+    worktree: "wt",
+    theme: "dark",
+  });
+  expect(invoke).toHaveBeenCalledExactlyOnceWith("open_settings", {
+    workspace: "ws",
+    worktree: "wt",
+    theme: "dark",
+  });
+});
+
+it("bootstraps and resynchronizes the separate Settings connection before loading its forms", async () => {
+  const requests: Array<{ epoch: number; request: Request }> = [];
+  let currentEpoch = 8;
+  let last: Request = { kind: "app_preferences" };
+  vi.mocked(invoke).mockImplementation(async (command, args) => {
+    if (command === "dispatch") {
+      const envelope = JSON.parse(
+        String((args as { payload: string }).payload),
+      );
+      requests.push(envelope);
+      last = envelope.request;
+      if (last.kind !== "app_preferences" && envelope.epoch !== currentEpoch)
+        throw new Error("stale_review");
+      return "settings-job";
+    }
+    if (command === "job_status")
+      return {
+        state: "complete",
+        response: {
+          version: 1,
+          epoch: currentEpoch,
+          data:
+            last.kind === "app_preferences"
+              ? {
+                  kind: "app_preferences",
+                  value: {
+                    textarea_heights: {},
+                    generation_timeout_seconds: 60,
+                  },
+                }
+              : {
+                  kind: "ai_settings",
+                  value: {
+                    fingerprint: "f",
+                    settings: {
+                      version: 1,
+                      revision: "r",
+                      connections: [],
+                      profiles: [],
+                      templates: [],
+                      assignments: [],
+                      instructions: [],
+                      global_concurrency: 1,
+                      connection_concurrency: 1,
+                    },
+                  },
+                },
+        },
+      };
+    throw new Error(`Unexpected command ${command}`);
+  });
+  const bridge = new SettingsBridge();
+  expect((await bridge.request({ kind: "ai_settings" })).kind).toBe(
+    "ai_settings",
+  );
+  currentEpoch = 9;
+  await bridge.request({ kind: "ai_settings" });
+  expect(requests.map((r) => [r.epoch, r.request.kind])).toEqual([
+    [0, "app_preferences"],
+    [8, "ai_settings"],
+    [8, "app_preferences"],
+    [9, "ai_settings"],
+  ]);
+  expect(bridge.epoch).toBe(9);
+});
+it("does not silently refresh or replay a stale Settings save", async () => {
+  vi.mocked(invoke)
+    .mockResolvedValueOnce("save-job")
+    .mockResolvedValueOnce({
+      state: "complete",
+      error: { kind: "stale_review", message: "Application context changed" },
+    });
+  const bridge = new SettingsBridge();
+  await expect(
+    bridge.request({
+      kind: "save_ai_settings",
+      fingerprint: "old",
+      revision: "old",
+      change: { kind: "concurrency", global: 1, per_connection: 1 },
+    }),
+  ).rejects.toThrow("stale_review");
+  expect(
+    vi.mocked(invoke).mock.calls.filter(([cmd]) => cmd === "dispatch"),
+  ).toHaveLength(1);
+});
+
+it.each([true, false])(
+  "waits for the Settings flush before acknowledging quit, saved=%s",
+  async (saved) => {
+    const handlers = new Map<
+      string,
+      (event: { payload: string }) => Promise<void> | void
+    >();
+    const dispose = vi.fn();
+    const listen = vi.fn(
+      async (
+        event: string,
+        handler: (event: { payload: string }) => Promise<void> | void,
+      ) => {
+        handlers.set(event, handler);
+        return dispose;
+      },
+    );
+    vi.mocked(getCurrentWebviewWindow).mockReturnValue({
+      listen,
+    } as unknown as ReturnType<typeof getCurrentWebviewWindow>);
+    vi.mocked(invoke).mockResolvedValue(undefined);
+    let finish!: (saved: boolean) => void;
+    const changed = vi.fn();
+    const stop = await new SettingsBridge().onSettingsCloseRequested(
+      () =>
+        new Promise((resolve) => {
+          finish = resolve;
+        }),
+      changed,
+    );
+    const pending = handlers.get("gitfleet-settings-close-request")!({
+      payload: "native-settings-token",
+    });
+    expect(changed).toHaveBeenLastCalledWith(true);
+    expect(invoke).not.toHaveBeenCalled();
+    finish(saved);
+    await pending;
+    expect(invoke).toHaveBeenCalledExactlyOnceWith("settings_flush_done", {
+      token: "native-settings-token",
+      saved,
+    });
+    handlers.get("gitfleet-close-cancelled")!({ payload: "" });
+    expect(changed).toHaveBeenLastCalledWith(false);
+    stop();
+    expect(dispose).toHaveBeenCalledTimes(2);
+  },
+);

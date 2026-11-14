@@ -44,6 +44,25 @@ fn binding_identity(b: &ChildReachabilitySelection) -> Result<String> {
         &b.child_worktree,
     ))?)
 }
+fn mark_interrupted(stored: &mut Stored, session: &str) -> bool {
+    let value = &mut stored.value;
+    if value.phase == PushBatchPhase::Executing
+        || (value.phase == PushBatchPhase::Ready && stored.session != session)
+    {
+        value.phase = PushBatchPhase::Interrupted;
+        for item in &mut value.items {
+            if !matches!(
+                item.phase,
+                PushBatchItemPhase::Complete | PushBatchItemPhase::SkippedObservedCurrent
+            ) {
+                item.phase = PushBatchItemPhase::Interrupted;
+            }
+        }
+        return true;
+    }
+    false
+}
+
 impl ControlledWrites {
     fn persist_push_batch(&mut self, value: &Stored) -> Result<()> {
         let raw = serde_json::to_string(value)?;
@@ -103,13 +122,26 @@ impl ControlledWrites {
         }
         Ok(value)
     }
+    pub(crate) fn close_interrupted_push_batch(
+        &mut self,
+        workspace: &WorkspaceId,
+        id: &str,
+    ) -> Result<()> {
+        let mut stored = self.load_push_batch(id)?;
+        if stored.value.plan.workspace != *workspace
+            || !mark_interrupted(&mut stored, &self.session)
+        {
+            return Err(stale());
+        }
+        self.persist_push_batch(&stored)
+    }
     pub(crate) fn push_batch_session(&self) -> &str {
         &self.session
     }
     pub(crate) fn push_batch_notices(
         &mut self,
     ) -> Result<Vec<crate::application::RemoteRecoveryNotice>> {
-        let mut statement=self.workspace.connection().prepare("SELECT json_extract(value,'$.value.plan.id'),json_extract(value,'$.value.plan.workspace'),(SELECT json_extract(i.value,'$.worktree') FROM json_each(state.value,'$.value.items') i WHERE json_extract(i.value,'$.phase') NOT IN ('complete','skipped_observed_current') LIMIT 1) FROM state WHERE key LIKE 'push-batch:%' AND (json_extract(value,'$.value.phase')='executing' OR (json_extract(value,'$.value.phase')='ready' AND json_extract(value,'$.session')<>?1)) ORDER BY key LIMIT 100")?;
+        let mut statement=self.workspace.connection().prepare(&format!("SELECT json_extract(value,'$.value.plan.id'),json_extract(value,'$.value.plan.workspace'),(SELECT json_extract(i.value,'$.worktree') FROM json_each(state.value,'$.value.items') i WHERE json_extract(i.value,'$.phase') NOT IN ('complete','skipped_observed_current') LIMIT 1) FROM state WHERE {} ORDER BY key LIMIT 100", crate::workspace::recovery::BATCH))?;
         let rows = statement.query_map([&self.session], |r| {
             Ok(crate::application::RemoteRecoveryNotice {
                 operation_id: r.get(0)?,
@@ -121,22 +153,9 @@ impl ControlledWrites {
             .map_err(Error::from)
     }
     pub(crate) fn push_batch_audit_detail(&self, raw: &str) -> Result<PushBatch> {
-        let stored = self.decode_push_batch(raw)?;
-        let mut value = stored.value;
-        if value.phase == PushBatchPhase::Executing
-            || (value.phase == PushBatchPhase::Ready && stored.session != self.session)
-        {
-            value.phase = PushBatchPhase::Interrupted;
-            for item in &mut value.items {
-                if !matches!(
-                    item.phase,
-                    PushBatchItemPhase::Complete | PushBatchItemPhase::SkippedObservedCurrent
-                ) {
-                    item.phase = PushBatchItemPhase::Interrupted;
-                }
-            }
-        }
-        Ok(value)
+        let mut stored = self.decode_push_batch(raw)?;
+        mark_interrupted(&mut stored, &self.session);
+        Ok(stored.value)
     }
     pub(crate) fn push_batch(&mut self, workspace: &WorkspaceId, id: &str) -> Result<PushBatch> {
         let stored = self.load_push_batch(id)?;

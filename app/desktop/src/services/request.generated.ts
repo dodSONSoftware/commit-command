@@ -2,6 +2,22 @@
 
 export type Request =
   | {
+      id: string;
+      kind: "execute_reviewed_operation";
+      operation: ReviewedOperation;
+    }
+  | {
+      id: string;
+      kind: "cancel_reviewed_operation";
+      operation: ReviewedOperation;
+    }
+  | {
+      filter: string;
+      kind: "ai_import_targets";
+      offset: number;
+      source: string;
+    }
+  | {
       kind: "inspect_ai_import";
       source: string;
     }
@@ -53,6 +69,11 @@ export type Request =
       kind: "review_ai_discovery";
     }
   | {
+      kind: "review_ai_model_load";
+      workspace: string;
+      worktree: string;
+    }
+  | {
       connection: AiConnectionDraft;
       kind: "review_ai_inference";
       profile: AiProfileDraft;
@@ -64,6 +85,13 @@ export type Request =
   | {
       id: string;
       kind: "cancel_ai_job";
+    }
+  | {
+      kind: "app_preferences";
+    }
+  | {
+      change: PreferenceChange;
+      kind: "save_app_preference";
     }
   | {
       kind: "ai_settings";
@@ -226,6 +254,11 @@ export type Request =
   | {
       kind: "create_push_batch";
       selections: PushBatchSelection[];
+      workspace: string;
+    }
+  | {
+      id: string;
+      kind: "close_interrupted_push_batch";
       workspace: string;
     }
   | {
@@ -399,6 +432,17 @@ export type Request =
       operation: string;
       workspace: string;
     };
+/**
+ * Only these main-window operations offer a separate execution step.
+ */
+export type ReviewedOperation =
+  | "bulk_commit"
+  | "push"
+  | "pre_push_check"
+  | "observe_branch"
+  | "download_branch"
+  | "import_branch"
+  | "set_upstream";
 export type AiImportChoice =
   | {
       kind: "add";
@@ -448,7 +492,33 @@ export type NativePath =
     };
 export type ContentSource = "index" | "working_tree";
 export type AiStyle = "plain" | "conventional";
+export type PreferenceChange =
+  | {
+      field: TextareaField;
+      height: number;
+      kind: "textarea_height";
+    }
+  | {
+      kind: "generation_timeout";
+      seconds: number;
+    };
+export type TextareaField =
+  | "commit_message"
+  | "commit_subject"
+  | "commit_body"
+  | "bulk_message"
+  | "bulk_subject"
+  | "bulk_body"
+  | "ai_system"
+  | "ai_stop";
 export type AiChange =
+  | {
+      connection: AiConnectionDraft;
+      kind: "single_setup";
+      model: string;
+      parameters: AiParameters;
+      system_message: string;
+    }
   | {
       authentication?: "none" | "stored_bearer";
       endpoint: string;
@@ -468,6 +538,16 @@ export type AiChange =
       parameters: AiParameters;
       system_message: string;
       template: string;
+    }
+  | {
+      connection?: AiConnectionDraft | null;
+      kind: "profile_setup";
+      make_default: boolean;
+      profile: AiProfileDraft;
+    }
+  | {
+      id: string;
+      kind: "delete_profile_with_assignments";
     }
   | {
       examples: string[];
@@ -728,6 +808,7 @@ export interface AiParameters {
   seed?: number | null;
   stop?: string[] | null;
   temperature?: number | null;
+  thinking?: boolean;
   top_k?: number | null;
   top_p?: number | null;
 }
@@ -891,6 +972,7 @@ export interface RepositoryTab {
   filter: string;
   parent?: string | null;
   path?: NativePath | null;
+  pinned?: boolean;
   scroll: number;
   source: ContentSource;
   view: string;

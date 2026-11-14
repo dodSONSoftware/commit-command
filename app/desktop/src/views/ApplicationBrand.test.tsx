@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import {
   act,
@@ -48,15 +49,34 @@ it("opens the branded About dialog, shows the local license and restores focus",
   const brand = screen.getByRole("button", { name: "About Commit Command" });
   await user.click(brand);
   const dialog = screen.getByRole("dialog", { name: "Commit Command" });
+  expect(
+    within(dialog).getByRole("heading", { name: "Commit Command" }),
+  ).toHaveFocus();
+  for (const button of within(dialog).getAllByRole("button"))
+    expect(button).not.toHaveFocus();
+  await user.tab();
+  expect(
+    within(dialog).getByRole("button", { name: "View License" }),
+  ).toHaveFocus();
   expect(within(dialog).getByText("version 0.1.1")).toBeVisible();
   expect(within(dialog).getByText("Randy Dodson")).toBeVisible();
+  expect(within(dialog).getByText("© 2026 Randel Dodson")).toBeVisible();
   await user.click(
-    within(dialog).getByRole("button", { name: "View license…" }),
+    within(dialog).getByRole("button", { name: "View License" }),
+  );
+  const license = within(dialog).getByRole("textbox", { name: "MIT License" });
+  expect(license).toHaveAttribute("readonly");
+  expect(license).toHaveValue(readFileSync("../../LICENSE", "utf8"));
+  expect(license.previousElementSibling).toHaveClass("about-actions");
+  expect(within(dialog).getByText("version 0.1.1")).toBeVisible();
+  expect(within(dialog).queryByText("Publisher")).toBeNull();
+  expect(within(dialog).queryByText(/publishing under/)).toBeNull();
+  await user.click(
+    within(dialog).getByRole("button", { name: "Close license" }),
   );
   expect(
-    within(dialog).getByText(/Permission is hereby granted, free of charge/),
-  ).toBeVisible();
-  await user.click(within(dialog).getByRole("button", { name: "Back" }));
+    within(dialog).queryByRole("textbox", { name: "MIT License" }),
+  ).toBeNull();
   expect(
     within(dialog).getByText("Local-first Git workspace manager for macOS."),
   ).toBeVisible();
@@ -75,6 +95,7 @@ it("uses the same dialog for the application menu and unsubscribes on unmount", 
   const { unmount } = render(<ApplicationBrand bridge={host} />);
   await waitFor(() => expect(host.onAboutRequested).toHaveBeenCalledOnce());
   act(() => show());
+  expect(screen.getByRole("heading", { name: "Commit Command" })).toHaveFocus();
   expect(screen.getByRole("dialog", { name: "Commit Command" })).toBeVisible();
   unmount();
   expect(stop).toHaveBeenCalledOnce();

@@ -1,0 +1,21 @@
+{
+  "identifier": "ai-suggestions",
+  "description": "Host-created AI suggestions window for saved profiles.",
+  "webviews": [
+    "ai-suggestions"
+  ],
+  "local": true,
+  "permissions": [
+    "allow-dispatch",
+    "allow-job-status",
+    "allow-cancel-job",
+    "core:window:allow-close",
+    "core:window:allow-inner-size",
+    "core:window:allow-scale-factor",
+    "core:window:allow-set-size",
+    "core:event:allow-listen",
+    "core:event:allow-unlisten",
+    "core:window:allow-destroy",
+    "allow-use-ai-suggestion"
+  ]
+}

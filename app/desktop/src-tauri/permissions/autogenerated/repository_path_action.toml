@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-repository-path-action"
+description = "Enables the repository_path_action command without any pre-configured scope."
+commands.allow = ["repository_path_action"]
+
+[[permission]]
+identifier = "deny-repository-path-action"
+description = "Denies the repository_path_action command without any pre-configured scope."
+commands.deny = ["repository_path_action"]

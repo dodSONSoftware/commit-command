@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useState, useRef } from "react";
+import { useOperationReview } from "./OperationReview";
+import {
+  useCallback,
+  useEffect,
+  useState,
+  useRef,
+  type ReactNode,
+} from "react";
 import { value, type Bridge } from "../services/bridge";
 import type {
   Inspection,
@@ -22,8 +29,10 @@ export function RemoteInspector({
   act,
   enabled = false,
   revision,
+  pushPlanning,
 }: {
   revision?: number;
+  pushPlanning?: ReactNode;
   bridge: Bridge;
   workspace: string;
   worktree: string;
@@ -31,6 +40,10 @@ export function RemoteInspector({
   act: (action: () => Promise<void>) => Promise<void>;
   enabled?: boolean;
 }) {
+  const { review, reviewDialog } = useOperationReview(
+    bridge,
+    `${workspace}:${worktree}`,
+  );
   const [preview, setPreview] = useState<{
     context: string;
     value: PushPreview;
@@ -104,10 +117,10 @@ export function RemoteInspector({
   return (
     <details className="remote-inspector">
       <summary>Remotes and upstream</summary>
+      {reviewDialog}
       <p>
-        Local configuration inspection only. No server is contacted and no
-        credential helper or transport command is executed. Cached tracking
-        references do not establish the current server state.
+        Inspect remote destinations reads local Git configuration. Cached
+        tracking references do not establish the current server state.
       </p>
       <button
         disabled={busy}
@@ -236,12 +249,11 @@ export function RemoteInspector({
       )}
       <h3>Observe one remote branch</h3>
       <p>
-        A separate native review authorizes a network read. Observation does not
-        fetch objects or update local tracking refs. HTTPS uses the assigned
-        profile or explicit startup policy; without either it is
-        credential-free. SSH requires a selected public identity and agent. The
-        independent review shows effective authentication and certificate or
-        host-key verification.
+        A separate review authorizes a network read. Observation does not fetch
+        objects or update local tracking refs. HTTPS uses the assigned profile
+        or explicit startup policy; without either it is credential-free. SSH
+        requires a selected public identity and agent. The review shows
+        effective authentication and certificate or host-key verification.
       </p>
       <form
         className="activity-filters"
@@ -255,7 +267,7 @@ export function RemoteInspector({
           )
             return;
           void act(async () => {
-            await bridge.request({
+            await review({
               kind: "review_remote_observation",
               workspace,
               worktree,
@@ -308,7 +320,7 @@ export function RemoteInspector({
       )}
       <p>
         A completed observation of an existing branch can be downloaded after a
-        separate native review. The branch must still match its observed commit.
+        separate review. The branch must still match its observed commit.
         Downloading does not update this repository.
       </p>
       <ObservationRecords
@@ -317,7 +329,7 @@ export function RemoteInspector({
         onUpstream={(observation) => {
           if (!enabled || busy) return;
           void act(async () => {
-            await bridge.request({
+            await review({
               kind: "review_upstream_setup",
               workspace,
               worktree,
@@ -348,7 +360,7 @@ export function RemoteInspector({
         onFetch={(observation) => {
           if (!enabled || busy) return;
           void act(async () => {
-            await bridge.request({
+            await review({
               kind: "review_fetch_capture",
               workspace,
               worktree,
@@ -397,7 +409,7 @@ export function RemoteInspector({
         onImport={(capture) => {
           if (!enabled || busy) return;
           void act(async () => {
-            await bridge.request({
+            await review({
               kind: "review_fetch_import",
               workspace,
               worktree,
@@ -418,6 +430,7 @@ export function RemoteInspector({
           Load older branch downloads
         </button>
       )}
+      {pushPlanning}
     </details>
   );
 }

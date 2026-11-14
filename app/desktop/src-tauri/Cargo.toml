@@ -5,9 +5,8 @@ edition = "2021"
 rust-version = "1.99"
 license = "MIT"
 [features]
-default = ["custom-protocol"]
+default = ["custom-protocol", "desktop-writes"]
 custom-protocol = ["tauri/custom-protocol"]
-# Remains non-default until native approval/accessibility acceptance is completed.
 desktop-writes = []
 # Fixed native acceptance actions; startup refuses non-fixture state. Never default.
 native-acceptance-support = ["gitfleet-core/write-test-support"]
@@ -26,9 +25,9 @@ block2 = "=0.6.2"
 # Native delegate interception and opt-in WebKit test support use the pinned runtime.
 objc2 = "=0.6.5"
 # Native secure-field strings/geometry and test-only run-loop scheduling; already locked transitively.
-objc2-foundation = { version = "=0.3.2", default-features = false, features = ["std", "NSArray", "NSString", "NSRunLoop", "NSObjCRuntime", "NSGeometry"] }
+objc2-foundation = { version = "=0.3.2", default-features = false, features = ["std", "NSArray", "NSString", "NSURL", "NSRunLoop", "NSObjCRuntime", "NSGeometry"] }
 # Already used transitively by Tauri/rfd; explicit access is needed to cancel a sheet.
-objc2-app-kit = { version = "=0.3.2", default-features = false, features = ["std", "NSWindow", "NSApplication", "NSResponder", "NSAlert", "NSSecureTextField", "NSTextField", "NSControl", "NSView"] }
+objc2-app-kit = { version = "=0.3.2", default-features = false, features = ["std", "NSWindow", "NSWorkspace", "NSApplication", "NSResponder", "NSAlert", "NSSecureTextField", "NSTextField", "NSControl", "NSView"] }
 [build-dependencies]
 tauri-build = "=2.7.4"
 [profile.release]

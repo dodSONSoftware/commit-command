@@ -2,7 +2,11 @@
 use crate::{domain::digest, Error, ErrorKind, Result};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
+
+// Local capture bounds are independent of the much smaller provider payload budget.
+pub(super) const MAX_CAPTURE_BYTES: usize = 128 * 1024 * 1024;
+pub(super) const MAX_FRAGMENTS: usize = 40_032;
 
 fn invalid(message: &str) -> Error {
     Error::with_kind(ErrorKind::InvalidRequest, message)
@@ -166,25 +170,30 @@ fn secret_line(line: &str) -> bool {
                     && !word.bytes().all(|c| c.is_ascii_hexdigit())
             })
 }
-fn filter_lines(text: &str) -> (Vec<String>, usize) {
+/// Classify a line while walking one complete source version in order.
+pub(super) fn private_key_line(line: &str, inside: &mut bool) -> bool {
+    let lower = line.to_ascii_lowercase();
+    let begins = lower.contains("-----begin ") && lower.contains("private key");
+    let ends = lower.contains("-----end ") && lower.contains("private key");
+    let protected = *inside || begins || ends;
+    *inside = (*inside || begins) && !ends;
+    protected
+}
+
+fn filter_lines(text: &str, classified: Option<&[bool]>) -> (Vec<String>, usize) {
     let mut private = false;
     let mut redacted = 0;
     let lines = text
         .split_inclusive('\n')
-        .map(|line| {
-            let lower = line.to_ascii_lowercase();
-            let begins = lower.contains("-----begin ") && lower.contains("private key");
-            let ends = lower.contains("-----end ") && lower.contains("private key");
-            private |= begins;
-            let sensitive = private
+        .enumerate()
+        .map(|(i, line)| {
+            let sensitive = classified
+                .map_or_else(|| private_key_line(line, &mut private), |lines| lines[i])
                 || secret_line(line)
                 || line.chars().any(bidi)
                 || line
                     .chars()
                     .any(|c| c.is_control() && c != '\n' && c != '\r' && c != '\t');
-            if ends {
-                private = false;
-            }
             if sensitive {
                 redacted += 1;
                 "[REDACTED: possible credential or unsafe control text]\n".into()
@@ -196,7 +205,7 @@ fn filter_lines(text: &str) -> (Vec<String>, usize) {
     (lines, redacted)
 }
 pub(crate) fn screen_configuration(text: &str) -> Result<()> {
-    if filter_lines(text).1 > 0 {
+    if filter_lines(text, None).1 > 0 {
         return Err(invalid("AI configuration contains a possible credential or unsafe control text; edit it before transfer"));
     }
     Ok(())
@@ -204,9 +213,17 @@ pub(crate) fn screen_configuration(text: &str) -> Result<()> {
 /// Deterministic selection priority follows reader order: changes, source/docs, then history.
 /// Whole line chunks preserve provenance. No silent partial-line truncation occurs.
 pub fn prepare(fragments: Vec<Fragment>, policy: &Policy) -> Result<Bundle> {
+    prepare_with_private_lines(fragments, policy, &BTreeMap::new())
+}
+
+pub(super) fn prepare_with_private_lines(
+    fragments: Vec<Fragment>,
+    policy: &Policy,
+    private_lines: &BTreeMap<usize, Vec<bool>>,
+) -> Result<Bundle> {
     policy.validate()?;
-    if fragments.len() > 1024
-        || fragments.iter().map(|f| f.bytes.len()).sum::<usize>() > 16 * 1024 * 1024
+    if fragments.len() > MAX_FRAGMENTS
+        || fragments.iter().map(|f| f.bytes.len()).sum::<usize>() > MAX_CAPTURE_BYTES
     {
         return Err(invalid("AI source capture exceeds aggregate bounds"));
     }
@@ -218,7 +235,12 @@ pub fn prepare(fragments: Vec<Fragment>, policy: &Policy) -> Result<Bundle> {
     let mut chunks = Vec::new();
     let mut accounting = Vec::new();
     let mut used = payload(&[])?.len();
+    let fragment_count = fragments.len();
     for (number, f) in fragments.into_iter().enumerate() {
+        // Reserve space for the remaining files so one large file cannot consume
+        // the entire request before later selected changes are represented.
+        let fragment_limit =
+            used + policy.max_bytes.saturating_sub(used) / (fragment_count - number);
         if unsafe_name(&f.origin) {
             return Err(invalid("AI provenance label is invalid"));
         }
@@ -249,7 +271,14 @@ pub fn prepare(fragments: Vec<Fragment>, policy: &Policy) -> Result<Bundle> {
             accounting.push(row);
             continue;
         }
-        let (lines, redacted) = filter_lines(text.map_err(|_| invalid("Invalid source text"))?);
+        let classified = private_lines.get(&number).map(Vec::as_slice);
+        if classified.is_some_and(|lines| lines.len() != input_lines) {
+            return Err(invalid("AI source line classification is inconsistent"));
+        }
+        let (lines, redacted) = filter_lines(
+            text.map_err(|_| invalid("Invalid source text"))?,
+            classified,
+        );
         row.redacted_lines = redacted;
         // At most 128 lines per independently attributable chunk.
         for (group, lines) in lines.chunks(128).enumerate() {
@@ -267,14 +296,14 @@ pub fn prepare(fragments: Vec<Fragment>, policy: &Policy) -> Result<Bundle> {
             for line in lines {
                 // Account for JSON escaping and numeric provenance without repeatedly
                 // serializing all previously accepted context (linear input work).
-                if line.len() > policy.max_bytes.saturating_sub(used) {
+                if line.len() > fragment_limit.saturating_sub(used) {
                     break;
                 }
                 let line_size = serde_json::to_string(line)?.len() - 2;
                 chunk.last_line += 1;
                 let candidate_size =
                     serde_json::to_string(&chunk)?.len() + encoded_text + line_size;
-                if used + comma + candidate_size > policy.max_bytes {
+                if used + comma + candidate_size > fragment_limit {
                     chunk.last_line -= 1;
                     break;
                 }
@@ -443,5 +472,32 @@ mod tests {
         assert!(prepare(vec![], &p).is_err());
         let error = prepare(vec![f("unsafe\nsecret", "secret")], &Policy::default()).unwrap_err();
         assert!(!error.to_string().contains("secret"));
+    }
+}
+
+#[cfg(test)]
+mod selected_file_budget_tests {
+    use super::*;
+    #[test]
+    fn a_large_first_file_does_not_starve_later_selected_files() {
+        let fragments = (0..7)
+            .map(|i| Fragment {
+                kind: Kind::SelectedDiff,
+                origin: format!("file-{i}.rs"),
+                bytes: (0..500)
+                    .map(|line| format!("+file {i} change {line}\n"))
+                    .collect::<String>()
+                    .into_bytes(),
+            })
+            .collect();
+        let bundle = prepare(fragments, &Policy::default()).unwrap();
+        let payload: serde_json::Value = serde_json::from_str(&bundle.payload).unwrap();
+        let chunks = payload["chunks"].as_array().unwrap();
+        for i in 0..7 {
+            assert!(chunks
+                .iter()
+                .any(|chunk| chunk["origin"] == format!("file-{i}.rs")));
+        }
+        assert!(bundle.payload.len() <= Policy::default().max_bytes);
     }
 }

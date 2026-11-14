@@ -70,7 +70,7 @@ function setup(enabled = true, initial = batch()) {
   const request = vi.fn<Bridge["request"]>().mockImplementation(async (r) => {
     if (r.kind === "push_batch")
       return { kind: "push_batch", value: structuredClone(stored) };
-    if (r.kind === "review_push_batch_item") {
+    if (r.kind === "execute_reviewed_operation") {
       stored = {
         ...stored,
         items: [
@@ -82,12 +82,16 @@ function setup(enabled = true, initial = batch()) {
           { worktree: "parent", phase: "pending", publication: null },
         ],
       };
+      return { kind: "executed", value: { result: { phase: "complete" } } };
+    }
+    if (r.kind === "review_push_batch_item") {
       return {
         kind: "review",
         value: {
           id: "native-review",
           epoch: 1,
-          expires_at_ms: 99,
+          expires_at_ms: Date.now() + 60_000,
+          operation: "push",
           title: "Exact item",
           summary: "Only this item",
           content: "{}",
@@ -140,6 +144,9 @@ it("requests only the next explicit item and never automatically approves the pa
   fireEvent.click(
     screen.getByRole("button", { name: "Review next guided push for child" }),
   );
+  fireEvent.click(
+    await screen.findByRole("button", { name: "Push reviewed commit" }),
+  );
   await screen.findByRole("button", {
     name: "Review next guided push for parent",
   });
@@ -159,7 +166,11 @@ it("requests only the next explicit item and never automatically approves the pa
   ).toHaveLength(1);
   expect(
     request.mock.calls.every(([r]) =>
-      ["push_batch", "review_push_batch_item"].includes(r.kind),
+      [
+        "push_batch",
+        "review_push_batch_item",
+        "execute_reviewed_operation",
+      ].includes(r.kind),
     ),
   ).toBe(true);
 });

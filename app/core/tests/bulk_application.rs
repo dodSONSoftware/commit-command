@@ -219,10 +219,12 @@ fn batch_stops_after_first_failure_preserves_success_and_cancels_unstarted_items
     assert_eq!(head(&t, 0), completed_first);
 }
 #[test]
-fn known_untrusted_item_blocks_entire_batch_before_any_repository_write() {
+fn stale_exclusion_blocks_entire_batch_before_any_repository_write() {
     let mut t = setup(2);
-    trust(&mut t, 0);
-    let selections = (0..2).map(|i| selection(&t, i)).collect();
+    let mut selections: Vec<_> = (0..2).map(|i| selection(&t, i)).collect();
+    selections[1]
+        .excluded
+        .push(NativePath::from_path(Path::new("no-longer-changed")));
     let before = tree_bytes(&t.f.repo);
     let r = review(&mut t, selections);
     assert!(r.summary.contains("1 blocked"));
@@ -1066,7 +1068,7 @@ fn revoked_trust_revokes_the_whole_batch_capability_and_cancels_proposals() {
 }
 
 #[test]
-fn linked_worktree_batch_requires_independent_trust_and_preserves_unselected_checkout() {
+fn linked_worktree_batch_reviews_both_branches_and_preserves_unselected_checkout() {
     let mut t = setup(2);
     let linked = t.f.repo.join("linked");
     t.f.git(&[
@@ -1108,14 +1110,14 @@ fn linked_worktree_batch_requires_independent_trust_and_preserves_unselected_che
         t.entries[child].repository_id
     );
     assert_ne!(t.entries[parent].id, t.entries[child].id);
-    trust(&mut t, parent);
     let before = tree_bytes(&t.f.repo);
     let requested = vec![selection(&t, parent), selection(&t, child)];
-    let blocked = review(&mut t, requested);
-    assert!(blocked.summary.contains("1 blocked"));
-    assert_eq!(confirm(&mut t, &blocked).record.phase, BatchPhase::Blocked);
+    let first = review(&mut t, requested);
+    assert!(first.content.contains("refs/heads/main"));
+    assert!(first.content.contains("refs/heads/bulk-linked"));
     assert_eq!(before, tree_bytes(&t.f.repo));
-    trust(&mut t, child);
+    t.app.cancel_review(&first.id).unwrap();
+    assert_eq!(before, tree_bytes(&t.f.repo));
     let control = tree_bytes(&t.f.repo.join("child-1"));
     let requested = vec![selection(&t, parent), selection(&t, child)];
     let approved = review(&mut t, requested);

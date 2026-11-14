@@ -1,13 +1,27 @@
+import { AppPreferencesProvider } from "./AppPreferences";
+import {
+  changeRows,
+  actionSelection,
+  pathKey,
+} from "../stores/changeSelection";
+import { writeFeedback } from "../services/writeFeedback";
+import { WorkingStatus } from "./WorkingStatus";
+import { FileStatus } from "./FileStatus";
+import { WorkspaceTabs } from "./WorkspaceTabs";
+import { SettingsLauncher } from "./SettingsLauncher";
+import { RepositoryIcon } from "./RepositoryIcon";
+import { ThemeToggle } from "./ThemeToggle";
 import { CommitMessageEditor } from "./CommitMessageEditor";
-import { AiMessages } from "./AiMessages";
+import { AiCommitFill } from "./AiCommitFill";
 import { AiSettings } from "./AiSettings";
-import { VersionAction } from "./VersionAction";
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
+  useMemo,
   useRef,
   useState,
-  type CSSProperties,
+  type ReactNode,
 } from "react";
 import type { Bridge } from "../services/bridge";
 import { ApplicationBrand } from "./ApplicationBrand";
@@ -18,9 +32,7 @@ import type {
   StoredWorktree,
   DesktopState,
   BulkComposerState,
-  TrustState,
   Diff,
-  Change,
   NativePath,
   Commit as CommitDetail,
   RecoveryNotice,
@@ -28,7 +40,10 @@ import type {
   RemoteRecoveryNotice,
   PushBatch,
 } from "../services/response.generated";
-import type { WriteRequest } from "../services/request.generated";
+import type {
+  ContentSource,
+  WriteRequest,
+} from "../services/request.generated";
 import {
   initialState,
   initialBulkComposer,
@@ -38,7 +53,6 @@ import {
   repoName,
   toggleSelection,
   openTab,
-  closeTab,
   updateTab,
   filtered,
   overviewStatus,
@@ -55,25 +69,36 @@ import {
 import { WorkspaceActivity } from "./WorkspaceActivity";
 import { HistoryGraph } from "./HistoryGraph";
 import { BulkCommit } from "./BulkCommit";
-import { WorkspaceScanStatus } from "./WorkspaceScanStatus";
+import { scanIsContinuing, WorkspaceScanStatus } from "./WorkspaceScanStatus";
 import { RepositoryIdentityRecovery } from "./RepositoryIdentityRecovery";
 import { RepositoryRemoteStatus } from "./RepositoryRemoteStatus";
 import { RemoteInspector } from "./RemoteInspector";
 import { OperationHistory } from "./OperationHistory";
-type Source = "index" | "working_tree";
 export function App({ bridge }: { bridge: Bridge }) {
+  return (
+    <AppPreferencesProvider bridge={bridge}>
+      <AppContent bridge={bridge} />
+    </AppPreferencesProvider>
+  );
+}
+function AppContent({ bridge }: { bridge: Bridge }) {
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [workspace, setWorkspace] = useState<string | null>(null);
   const [scan, setScan] = useState<ScanSummary | null>(null);
   const [allEntries, setEntries] = useState<StoredWorktree[]>([]);
   const entries = allEntries.filter((e) => !e.superseded_by);
   const [nav, setNav] = useState<DesktopState>(initialState);
+  const [uiScale, setUiScale] = useState(100);
   const [bulkComposer, setBulkComposer] =
     useState<BulkComposerState>(initialBulkComposer);
-  const [trust, setTrust] = useState<TrustState[]>([]);
   const [pendingActions, setPendingActions] = useState(0);
   const busy = pendingActions > 0;
   const [error, setError] = useState("");
+  const [writeNotice, setWriteNotice] = useState<{
+    message: string;
+    workspace: string;
+    worktree: string;
+  } | null>(null);
   const [closing, setClosing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [monitor, setMonitor] = useState("Not monitoring");
@@ -99,6 +124,7 @@ export function App({ bridge }: { bridge: Bridge }) {
   const [versionRecovery, setVersionRecovery] = useState<
     RemoteRecoveryNotice[]
   >([]);
+  const troubleshooting = useRef<HTMLDetailsElement>(null);
   const [guidedPushBatch, setGuidedPushBatch] = useState<PushBatch | null>(
     null,
   );
@@ -111,6 +137,34 @@ export function App({ bridge }: { bridge: Bridge }) {
     ...versionRecovery,
   ];
   const context = useRef<string | null>(null);
+  const contextRevision = useRef(0);
+  const draftRevisions = useRef(new Map<string, number>());
+  const updateDraft = useCallback(
+    (id: string, message: string, scope: string | null) => {
+      if (context.current !== scope) return;
+      draftRevisions.current.set(id, (draftRevisions.current.get(id) ?? 0) + 1);
+      setNav((current) => ({
+        ...current,
+        drafts: { ...current.drafts, [id]: message },
+      }));
+    },
+    [],
+  );
+  function beginDraftUpdate(id: string, scope: string | null) {
+    let revision = draftRevisions.current.get(id) ?? 0;
+    const generation = contextRevision.current;
+    return (message: string) => {
+      if (
+        context.current !== scope ||
+        contextRevision.current !== generation ||
+        (draftRevisions.current.get(id) ?? 0) !== revision
+      )
+        return false;
+      updateDraft(id, message, scope);
+      revision = draftRevisions.current.get(id) ?? 0;
+      return true;
+    };
+  }
   const loaded = useRef(false);
   const polling = useRef(false);
   const seenWriteRevision = useRef(0);
@@ -185,6 +239,17 @@ export function App({ bridge }: { bridge: Bridge }) {
       );
       if (context.current !== ws) return;
       setEntries(data.entries);
+      const currentIds = new Set(
+        data.entries
+          .filter((entry) => !entry.superseded_by)
+          .map((entry) => entry.id),
+      );
+      setNav((current) => {
+        const selected = current.selected.filter((id) => currentIds.has(id));
+        return selected.length === current.selected.length
+          ? current
+          : { ...current, selected };
+      });
       setScan(data.scan ?? null);
       setMonitor(
         data.monitor.running
@@ -210,12 +275,12 @@ export function App({ bridge }: { bridge: Bridge }) {
     if (context.current !== ws) {
       loaded.current = false;
       context.current = ws;
+      contextRevision.current++;
       setWorkspace(ws);
       setBulkComposer(initialBulkComposer);
       setEntries([]);
       setScan(null);
       setMonitor("Not monitoring");
-      setTrust([]);
       setShowOperations(false);
       setShowActivity(false);
       setShowBulk(false);
@@ -240,9 +305,29 @@ export function App({ bridge }: { bridge: Bridge }) {
     if (ws) await inventory(ws);
   }, [bridge, inventory]);
   useEffect(() => {
+    let live = true;
+    let unlisten: (() => void) | undefined;
+    void bridge
+      .onThemeChanged?.((theme) => {
+        if (live) setNav((current) => ({ ...current, theme }));
+      })
+      .then((stop) => {
+        if (live) unlisten = stop;
+        else stop();
+      })
+      .catch((e) => setError(String(e)));
+    return () => {
+      live = false;
+      unlisten?.();
+    };
+  }, [bridge]);
+  useEffect(() => {
     bridge
       .capabilities()
-      .then((c) => setWritesEnabled(c.writes_enabled))
+      .then((c) => {
+        setWritesEnabled(c.writes_enabled);
+        setUiScale(c.ui_scale_percent ?? 100);
+      })
       .catch((e) => setError(String(e)));
   }, [bridge]);
   useEffect(() => {
@@ -285,14 +370,6 @@ export function App({ bridge }: { bridge: Bridge }) {
             await inventory(workspace);
           }
           if (!live || context.current !== workspace) return;
-          if (writesEnabled) {
-            const data = await bridge.request({
-              kind: "trust_status",
-              workspace,
-            });
-            if (live && context.current === workspace)
-              setTrust(value(data, "trust"));
-          }
         } catch (e) {
           if (live && context.current === workspace)
             setMonitor(`Refresh unavailable: ${String(e)}`);
@@ -311,7 +388,20 @@ export function App({ bridge }: { bridge: Bridge }) {
     const id = setTimeout(() => {
       bridge
         .request({ kind: "save_state", workspace, state: nav })
-        .catch((e) => setError(`Navigation was not saved: ${String(e)}`));
+        .then(() => {
+          if (context.current === workspace)
+            setError((current) =>
+              current.startsWith("Layout and drafts were not saved:")
+                ? ""
+                : current,
+            );
+        })
+        .catch((e) => {
+          if (context.current === workspace)
+            setError(
+              `Layout and drafts were not saved: ${e instanceof Error ? e.message : String(e)}`,
+            );
+        });
     }, 500);
     return () => clearTimeout(id);
   }, [nav, workspace, bridge, closing]);
@@ -350,6 +440,7 @@ export function App({ bridge }: { bridge: Bridge }) {
       await savePresentation();
       await bridge.request({ kind: "activate", workspace: id });
       context.current = null;
+      contextRevision.current++;
       await load();
       setShowOperations(false);
       setShowActivity(false);
@@ -368,36 +459,53 @@ export function App({ bridge }: { bridge: Bridge }) {
         selection.display.split("/").filter(Boolean).at(-1) ?? "Workspace";
       await bridge.request({ kind: "create", name, picker: selection.picker });
       context.current = null;
+      contextRevision.current++;
       await load();
     } finally {
       setLoading(false);
     }
   }
-  async function refreshTrust() {
-    if (!workspace) return;
-    setTrust(
-      value(await bridge.request({ kind: "trust_status", workspace }), "trust"),
+  async function propose(
+    request: WriteRequest,
+    fileCount: number,
+    owner?: symbol,
+  ) {
+    if (!workspace || !entry) return false;
+    const revision = draftRevisions.current.get(entry.id) ?? 0;
+    const generation = contextRevision.current;
+    setWriteNotice(null);
+    const response = await bridge.request(
+      {
+        kind: "propose",
+        workspace,
+        worktree: entry.id,
+        request,
+      },
+      owner,
     );
-  }
-  async function propose(request: WriteRequest) {
-    if (!workspace || !entry) return;
-    await bridge.request({
-      kind: "propose",
+    const feedback = writeFeedback(response, request, fileCount);
+    if (feedback.error) throw new Error(feedback.message);
+    if (
+      request.kind === "commit" &&
+      feedback.completed &&
+      context.current === workspace &&
+      contextRevision.current === generation &&
+      (draftRevisions.current.get(entry.id) ?? 0) === revision
+    )
+      updateDraft(entry.id, "", workspace);
+    setWriteNotice({
+      message: feedback.message,
       workspace,
       worktree: entry.id,
-      request,
     });
-  }
-  async function trustSelected(ids: string[]) {
-    if (!workspace) return;
-    await bridge.request({ kind: "review_trust", workspace, worktrees: ids });
+    return feedback.completed === true;
   }
   async function historyList() {
     setShowOperations(true);
     setShowActivity(false);
     setShowBulk(false);
   }
-  const visible = filtered(entries, nav.filter, attention, nav.sort, trust);
+  const visible = filtered(entries, nav.filter, attention, nav.sort);
   const counts = entries.reduce(
     (s, e) => ({
       dirty: s.dirty + Number(matchesAttention(e, "modified")),
@@ -405,7 +513,6 @@ export function App({ bridge }: { bridge: Bridge }) {
     }),
     { dirty: 0, issues: 0 },
   );
-  const selectedTrust = trust.find((t) => t.worktree === entry?.id);
   return (
     <div
       className="shell"
@@ -435,74 +542,71 @@ export function App({ bridge }: { bridge: Bridge }) {
             Open folder…
           </button>
         </div>
-        <AiSettings
-          bridge={bridge}
-          workspace={workspace}
-          worktree={entry?.id}
-          disabled={busy || writeBusy}
+        {bridge.openSettings ? (
+          <SettingsLauncher
+            disabled={busy || writeBusy}
+            open={() =>
+              bridge.openSettings!({
+                workspace,
+                worktree: entry?.id,
+                theme: nav.theme,
+              })
+            }
+          />
+        ) : (
+          <AiSettings
+            bridge={bridge}
+            workspace={workspace}
+            worktree={entry?.id}
+            disabled={busy || writeBusy}
+            uiScale={uiScale}
+            onUiScaleChange={
+              bridge.setUiScale
+                ? async (percent) => {
+                    const applied = await bridge.setUiScale!(percent);
+                    setUiScale(applied);
+                  }
+                : undefined
+            }
+            theme={nav.theme}
+            onThemeChange={(theme) =>
+              setNav((current) => ({ ...current, theme }))
+            }
+          />
+        )}
+        <ThemeToggle
+          theme={nav.theme}
+          onChange={(theme) => setNav((current) => ({ ...current, theme }))}
         />
-        <select
-          aria-label="Color theme"
-          value={nav.theme}
-          onChange={(e) => setNav({ ...nav, theme: e.target.value })}
-        >
-          <option value="system">System</option>
-          <option value="dark">Dark</option>
-          <option value="light">Light</option>
-        </select>
       </header>
-      <nav className="tabs" aria-label="Open tabs">
-        <button
-          aria-expanded={!nav.sidebar_collapsed}
-          aria-controls="workspace-sidebar"
-          onClick={() =>
-            setNav({ ...nav, sidebar_collapsed: !nav.sidebar_collapsed })
-          }
-        >
-          {nav.sidebar_collapsed ? "Show sidebar" : "Hide sidebar"}
-        </button>
-        <button
-          className={
-            !nav.active_tab && !showOperations && !showActivity && !showBulk
-              ? "active"
-              : ""
-          }
-          onClick={() => {
-            setNav({ ...nav, active_tab: null });
-            setShowOperations(false);
-            setShowActivity(false);
-            setShowBulk(false);
-          }}
-        >
-          ▦ Overview
-        </button>
-        {nav.tabs.map((t) => {
-          const e = allEntries.find((e) => e.id === t.worktree);
-          return (
-            <div
-              className={`tab ${nav.active_tab === t.worktree && !showOperations && !showActivity && !showBulk ? "active" : ""}`}
-              key={t.worktree}
-            >
-              <button
-                onClick={() => {
-                  setNav({ ...nav, active_tab: t.worktree });
-                  setShowOperations(false);
-                  setShowActivity(false);
-                  setShowBulk(false);
-                }}
-              >
-                {e ? repoName(e) : "Unavailable repository"}
-              </button>
-              <button
-                aria-label={`Close ${e ? repoName(e) : "unavailable repository"} tab`}
-                onClick={() => setNav(closeTab(nav, t.worktree))}
-              >
-                ×
-              </button>
-            </div>
-          );
-        })}
-      </nav>
+      <WorkspaceTabs
+        nav={nav}
+        entries={allEntries}
+        onChange={setNav}
+        overviewActive={
+          !nav.active_tab && !showOperations && !showActivity && !showBulk
+        }
+        repositoryActive={!showOperations && !showActivity && !showBulk}
+        onPathAction={(repository, action) =>
+          void act(async () => {
+            if (!bridge.repositoryPathAction)
+              throw new Error(
+                "Repository path actions are unavailable in this build",
+              );
+            if (!workspace) throw new Error("Workspace is unavailable");
+            await bridge.repositoryPathAction(
+              { workspace, worktree: repository.id },
+              action,
+            );
+          })
+        }
+        onSelect={(id) => {
+          setNav((current) => ({ ...current, active_tab: id }));
+          setShowOperations(false);
+          setShowActivity(false);
+          setShowBulk(false);
+        }}
+      />
       <div className="body">
         <aside
           id="workspace-sidebar"
@@ -513,7 +617,26 @@ export function App({ bridge }: { bridge: Bridge }) {
           <div className="workspace-heading">
             <span className="eyebrow">ACTIVE WORKSPACE</span>
             <h2>{activeWorkspace?.name ?? "Welcome"}</h2>
-            <p className="path">{root || "Choose a local project folder"}</p>
+            {activeWorkspace ? (
+              <button
+                className="path repository-folder-link"
+                title="Open folder in Finder"
+                onClick={() =>
+                  void act(async () => {
+                    if (!bridge.repositoryPathAction)
+                      throw new Error("Finder is unavailable");
+                    await bridge.repositoryPathAction(
+                      { workspace: activeWorkspace.id },
+                      "open",
+                    );
+                  })
+                }
+              >
+                {root}
+              </button>
+            ) : (
+              <p className="path">Choose a local project folder</p>
+            )}
           </div>
           <button
             className={
@@ -587,7 +710,7 @@ export function App({ bridge }: { bridge: Bridge }) {
             ))}
           </div>
           {workspace && (
-            <details className="workspace-settings">
+            <details className="workspace-settings" key={workspace}>
               <summary>Workspace settings</summary>
               <label>
                 Name
@@ -665,6 +788,24 @@ export function App({ bridge }: { bridge: Bridge }) {
               <p>Repository files are never deleted.</p>
             </details>
           )}
+          {workspace && (
+            <details
+              ref={troubleshooting}
+              className="workspace-troubleshooting"
+            >
+              <summary>Workspace troubleshooting</summary>
+              <WorkspaceScanStatus
+                scan={scan}
+                busy={busy}
+                onContinue={() =>
+                  void act(async () => {
+                    await bridge.request({ kind: "continue_scan", workspace });
+                    await inventory(workspace);
+                  })
+                }
+              />
+            </details>
+          )}
         </aside>
         <div
           className="splitter"
@@ -683,7 +824,9 @@ export function App({ bridge }: { bridge: Bridge }) {
             if (e.currentTarget.hasPointerCapture(e.pointerId))
               setNav({
                 ...nav,
-                sidebar_width: Math.max(180, Math.min(420, e.clientX)),
+                sidebar_width: Math.round(
+                  Math.max(180, Math.min(420, e.clientX)),
+                ),
               });
           }}
           onPointerUp={(e) => {
@@ -721,6 +864,26 @@ export function App({ bridge }: { bridge: Bridge }) {
               >
                 Inspect operation results
               </button>
+              {batchRecovery
+                .filter((notice) => notice.workspace_id === workspace)
+                .map((notice) => (
+                  <button
+                    key={notice.operation_id}
+                    disabled={busy || writeBusy}
+                    onClick={() =>
+                      void act(async () => {
+                        await bridge.request({
+                          kind: "close_interrupted_push_batch",
+                          workspace: notice.workspace_id,
+                          id: notice.operation_id,
+                        });
+                        await load();
+                      })
+                    }
+                  >
+                    Close interrupted push queue · {notice.operation_id}
+                  </button>
+                ))}
               {recoveryNotices
                 .filter((n) => n.workspace_id !== workspace)
                 .map((n) => (
@@ -738,6 +901,19 @@ export function App({ bridge }: { bridge: Bridge }) {
                 ))}
             </div>
           )}
+          {writeNotice &&
+            writeNotice.workspace === workspace &&
+            writeNotice.worktree === entry?.id && (
+              <div role="status" className="operation-feedback">
+                <span>{writeNotice.message}</span>
+                <button
+                  aria-label="Dismiss result"
+                  onClick={() => setWriteNotice(null)}
+                >
+                  ×
+                </button>
+              </div>
+            )}
           {error && (
             <div role="alert" className="error">
               <span>{error}</span>
@@ -746,17 +922,25 @@ export function App({ bridge }: { bridge: Bridge }) {
               </button>
             </div>
           )}
-          {workspace && (
-            <WorkspaceScanStatus
-              scan={scan}
-              busy={busy}
-              onContinue={() =>
-                void act(async () => {
-                  await bridge.request({ kind: "continue_scan", workspace });
-                  await inventory(workspace);
-                })
-              }
-            />
+          {workspace && scan && !scan.complete && !scanIsContinuing(scan) && (
+            <div role="alert" className="error">
+              <span>
+                <strong>△ Discovery incomplete</strong>
+                {scan.issues.length > 0 && ` — ${scan.issues[0].error.message}`}
+              </span>
+              <button
+                onClick={() => {
+                  setNav((current) => ({
+                    ...current,
+                    sidebar_collapsed: false,
+                  }));
+                  if (troubleshooting.current)
+                    troubleshooting.current.open = true;
+                }}
+              >
+                Show scan details
+              </button>
+            </div>
           )}
           {workspace && (
             <RepositoryIdentityRecovery
@@ -788,12 +972,7 @@ export function App({ bridge }: { bridge: Bridge }) {
               drafts={nav.drafts}
               composer={bulkComposer}
               setComposer={setBulkComposer}
-              setDraft={(id, text) =>
-                setNav((current) => ({
-                  ...current,
-                  drafts: { ...current.drafts, [id]: text },
-                }))
-              }
+              setDraft={(id, text) => updateDraft(id, text, workspace)}
               setSelected={(ids) =>
                 setNav((current) => ({ ...current, selected: ids }))
               }
@@ -842,24 +1021,6 @@ export function App({ bridge }: { bridge: Bridge }) {
             )
           ) : !nav.active_tab ? (
             <>
-              {workspace && (
-                <PushDependencyPlanner
-                  enabled={writesEnabled}
-                  activeBatch={
-                    guidedPushBatch?.plan.workspace === workspace
-                      ? guidedPushBatch
-                      : null
-                  }
-                  onBatch={setGuidedPushBatch}
-                  revision={resultsRevision}
-                  key={`${workspace}:${resultsRevision}`}
-                  bridge={bridge}
-                  workspace={workspace}
-                  entries={entries}
-                  busy={busy}
-                  act={act}
-                />
-              )}
               <div className="page-title">
                 <div>
                   <span className="eyebrow">YOUR PROJECT, IN VIEW</span>
@@ -888,7 +1049,7 @@ export function App({ bridge }: { bridge: Bridge }) {
                 <Metric
                   label="Repositories"
                   count={entries.length}
-                  symbol="▣"
+                  symbol={<RepositoryIcon />}
                 />
                 <Metric label="With changes" count={counts.dirty} symbol="◫" />
                 <Metric
@@ -897,7 +1058,7 @@ export function App({ bridge }: { bridge: Bridge }) {
                   symbol="✓"
                 />
                 <Metric
-                  label="Need attention"
+                  label="Needs attention"
                   count={counts.issues}
                   symbol="△"
                   warning
@@ -953,11 +1114,13 @@ export function App({ bridge }: { bridge: Bridge }) {
                     if (choice) setNav({ ...nav, sort: choice.value });
                   }}
                 >
-                  {sortChoices.map((choice) => (
-                    <option key={choice.value} value={choice.value}>
-                      {choice.label}
-                    </option>
-                  ))}
+                  {sortChoices
+                    .filter((choice) => !choice.value.startsWith("trust"))
+                    .map((choice) => (
+                      <option key={choice.value} value={choice.value}>
+                        {choice.label}
+                      </option>
+                    ))}
                 </select>
                 <select
                   aria-label="Overview density"
@@ -974,24 +1137,6 @@ export function App({ bridge }: { bridge: Bridge }) {
               </div>
               <div className="selection-bar">
                 <span>{nav.selected.length} explicitly selected</span>
-                <button
-                  disabled={
-                    !writesEnabled ||
-                    !nav.selected.length ||
-                    nav.selected.length > 20 ||
-                    busy ||
-                    writeBusy
-                  }
-                  onClick={() => void act(() => trustSelected(nav.selected))}
-                >
-                  Review trust for selected
-                </button>
-                <button
-                  onClick={() => void act(refreshTrust)}
-                  disabled={!workspace || busy}
-                >
-                  Inspect trust status
-                </button>
               </div>
               {nav.layout === "table" ? (
                 <div className="table-wrap">
@@ -1063,13 +1208,6 @@ export function App({ bridge }: { bridge: Bridge }) {
                           Behind (cached)
                         </OverviewHeader>
                         <th scope="col">Remote status</th>
-                        <OverviewHeader
-                          column="trust"
-                          sort={nav.sort}
-                          onSort={(sort) => setNav({ ...nav, sort })}
-                        >
-                          Trust
-                        </OverviewHeader>
                         <OverviewHeader
                           column="status"
                           sort={nav.sort}
@@ -1148,10 +1286,6 @@ export function App({ bridge }: { bridge: Bridge }) {
                             <RepositoryRemoteStatus snapshot={e.status} />
                           </td>
                           <td>
-                            {trust.find((t) => t.worktree === e.id)?.validity ??
-                              "Trust not inspected"}
-                          </td>
-                          <td>
                             <span
                               className={`badge ${e.availability !== "available" || e.issue || !e.status || e.status.counts.conflicted ? "warning" : e.status && e.status.counts.staged + e.status.counts.unstaged + e.status.counts.untracked > 0 ? "modified" : "success"}`}
                             >
@@ -1217,14 +1351,33 @@ export function App({ bridge }: { bridge: Bridge }) {
               entry={entry}
               nav={nav}
               setNav={setNav}
+              setDraft={(message) => updateDraft(entry.id, message, workspace)}
+              beginDraftUpdate={() => beginDraftUpdate(entry.id, workspace)}
               act={act}
               busy={busy || writeBusy}
               propose={propose}
-              trust={selectedTrust}
-              inspectTrust={refreshTrust}
-              trustRepo={() => trustSelected([entry.id])}
               resultsRevision={resultsRevision}
               writeEnabled={writesEnabled}
+              pushPlanning={
+                workspace ? (
+                  <PushDependencyPlanner
+                    enabled={writesEnabled}
+                    activeBatch={
+                      guidedPushBatch?.plan.workspace === workspace
+                        ? guidedPushBatch
+                        : null
+                    }
+                    onBatch={setGuidedPushBatch}
+                    revision={resultsRevision}
+                    key={`${workspace}:${resultsRevision}`}
+                    bridge={bridge}
+                    workspace={workspace}
+                    entries={entries}
+                    busy={busy}
+                    act={act}
+                  />
+                ) : null
+              }
             />
           ) : (
             <div className="empty">
@@ -1248,9 +1401,9 @@ export function App({ bridge }: { bridge: Bridge }) {
             : busy
               ? "Core request in progress"
               : writeBusy
-                ? "Controlled write in progress"
+                ? "Git operation in progress"
                 : !writesEnabled
-                  ? "Read-only desktop · native write acceptance pending"
+                  ? "Git operations unavailable in this build"
                   : "Local inspection · no automatic remote operations"}
         </span>
         <button
@@ -1277,7 +1430,7 @@ function Metric({
 }: {
   label: string;
   count: number;
-  symbol: string;
+  symbol: ReactNode;
   warning?: boolean;
 }) {
   return (
@@ -1325,7 +1478,7 @@ function Tree({
                 onChange={() => select(node.entry!.id)}
               />
               <button onClick={() => open(node.entry!)}>
-                {repoName(node.entry)}
+                <RepositoryIcon /> {repoName(node.entry)}
               </button>
             </div>
           )}
@@ -1349,7 +1502,9 @@ function Tree({
             checked={selected.includes(node.entry.id)}
             onChange={() => select(node.entry!.id)}
           />
-          <button onClick={() => open(node.entry!)}>▣ {node.label}</button>
+          <button onClick={() => open(node.entry!)}>
+            <RepositoryIcon /> {node.label}
+          </button>
           <span className="muted">
             {node.entry.status?.branch ?? node.entry.availability}
           </span>
@@ -1366,45 +1521,79 @@ function Repository({
   entry,
   nav,
   setNav,
+  setDraft,
+  beginDraftUpdate,
   act,
   busy,
   propose,
-  trust,
-  inspectTrust,
-  trustRepo,
   writeEnabled,
   resultsRevision,
+  pushPlanning,
 }: {
   bridge: Bridge;
   workspace: string;
   entry: StoredWorktree;
   nav: DesktopState;
   setNav: (n: DesktopState) => void;
+  setDraft: (message: string) => void;
+  beginDraftUpdate: () => (message: string) => boolean;
   act: (f: () => Promise<void>) => Promise<void>;
   busy: boolean;
-  propose: (r: WriteRequest) => Promise<void>;
-  trust?: TrustState;
-  inspectTrust: () => Promise<void>;
-  trustRepo: () => Promise<void>;
+  propose: (
+    r: WriteRequest,
+    fileCount: number,
+    owner?: symbol,
+  ) => Promise<boolean>;
   writeEnabled: boolean;
   resultsRevision: number;
+  pushPlanning?: ReactNode;
 }) {
   const tab = nav.tabs.find((t) => t.worktree === entry.id)!;
   const [historyRefresh, setHistoryRefresh] = useState(0);
+  const [staging, setStaging] = useState<{
+    kind: "stage" | "unstage";
+    owner: symbol;
+    count: number;
+  } | null>(null);
+  const [selection, setSelection] = useState(new Set<string>());
+  const [selectionTransfer, setSelectionTransfer] = useState<{
+    before: string;
+    target: ContentSource;
+    paths: Set<string>;
+  } | null>(null);
+  const [cancellingStage, setCancellingStage] = useState(false);
   const [patch, setPatch] = useState<Diff | null>(null);
   const [preview, setPreview] = useState("");
-  const [selection, setSelection] = useState<
-    Map<string, { path: NativePath; source: Source }>
-  >(new Map());
   const [policyOverride, setPolicy] = useState<"execute" | "bypass_all" | null>(
     null,
   );
-  const policy = policyOverride ?? trust?.policy ?? "execute";
+  const policy = policyOverride ?? "execute";
   const [commitDetail, setCommitDetail] = useState<CommitDetail | null>(null);
   const [signing, setSigning] = useState<"configured" | "unsigned">(
     "configured",
   );
   const area = useRef<HTMLDivElement>(null);
+  const changesArea = useRef<HTMLDivElement>(null);
+  const [changesHeight, setChangesHeight] = useState<number>();
+  const fitChanges = useCallback(() => {
+    const grid = changesArea.current;
+    if (!grid) return;
+    const bottom =
+      document.querySelector("footer")?.getBoundingClientRect().top ??
+      window.innerHeight;
+    setChangesHeight(
+      Math.max(300, Math.floor(bottom - grid.getBoundingClientRect().top - 24)),
+    );
+  }, []);
+  useLayoutEffect(fitChanges);
+  useEffect(() => {
+    window.addEventListener("resize", fitChanges);
+    document.addEventListener("toggle", fitChanges, true);
+    return () => {
+      window.removeEventListener("resize", fitChanges);
+      document.removeEventListener("toggle", fitChanges, true);
+    };
+  }, [fitChanges]);
   useEffect(() => {
     if (area.current) area.current.scrollTop = tab.scroll;
   }, [entry.id, tab.scroll]);
@@ -1526,56 +1715,77 @@ function Repository({
       live = false;
     };
   }, [bridge, workspace, entry.id, tab.view, tab.commit, tab.parent, act]);
-  async function diff(path: NativePath, source: Source) {
+  async function diff(path: NativePath, source: ContentSource) {
     setNav(updateTab(nav, entry.id, { path, source, scroll: 0 }));
   }
-  function select(change: Change, source: Source) {
-    const key = `${JSON.stringify(change.path)}:${source}`;
-    const next = new Map(selection);
-    if (next.has(key)) next.delete(key);
-    else {
-      for (const [k, v] of next)
-        if (JSON.stringify(v.path) === JSON.stringify(change.path))
-          next.delete(k);
-      next.set(key, { path: change.path, source });
-    }
+  function select(next: Set<string>) {
+    setSelectionTransfer(null);
     setSelection(next);
   }
-  function request(kind: "stage" | "unstage" | "commit"): WriteRequest {
-    const selected = selectedChanges;
-    return kind === "commit"
-      ? {
-          kind: "commit",
-          selected,
-          message: nav.drafts[entry.id] ?? "",
-          hooks: policy,
-          signing,
-        }
-      : { kind, paths: selected.map((s) => s.path), hooks: policy };
-  }
   const writeBlocked = busy || !writeEnabled;
-  const changes = entry.status?.changes ?? [];
-  const selectedChanges = [...selection.values()].filter((selected) =>
-    changes.some(
-      (change) =>
-        JSON.stringify(change.path) === JSON.stringify(selected.path) &&
-        (selected.source === "index"
-          ? ![".", "?", "!"].includes(change.index)
-          : change.worktree !== "." || change.index === "?"),
-    ),
+  const changes = entry.status?.changes;
+  const rows = useMemo(() => changeRows(changes ?? []), [changes]);
+  const selectableRows = rows.filter((row) => !row.change.conflict);
+  const checkedRows = selectableRows.filter((row) => selection.has(row.key));
+  const stageSelection = actionSelection(checkedRows, "stage");
+  const unstageSelection = actionSelection(checkedRows, "unstage");
+  const commitSelection = actionSelection(checkedRows, "commit");
+  const firstFileSource = rows.some((row) => row.source === "index")
+    ? "index"
+    : "working_tree";
+  const someFilesSelected = checkedRows.length > 0;
+  const allFilesSelected =
+    someFilesSelected && checkedRows.length === selectableRows.length;
+
+  const observedAt = entry.status?.observed_at_ms;
+  const changeContext = useMemo(
+    () => JSON.stringify([observedAt, changes]),
+    [observedAt, changes],
   );
-  const changeContext = JSON.stringify(changes);
   const [selectedChangeContext, setSelectedChangeContext] =
     useState(changeContext);
-  if (selectedChangeContext !== changeContext) {
+  const transfer =
+    selectionTransfer?.before !== changeContext ? selectionTransfer : null;
+  if (selectedChangeContext !== changeContext || transfer) {
     setSelectedChangeContext(changeContext);
-    if (selectedChanges.length !== selection.size) {
-      const keys = new Set(
-        selectedChanges.map((s) => `${JSON.stringify(s.path)}:${s.source}`),
-      );
-      setSelection(new Map([...selection].filter(([key]) => keys.has(key))));
+    const next = new Set<string>();
+    for (const row of selectableRows) {
+      // A rename can split into two rows or form from two rows after staging.
+      if (
+        transfer &&
+        row.paths.every((path) => transfer.paths.has(pathKey(path)))
+      ) {
+        if (row.source === transfer.target) next.add(row.key);
+      } else if (selection.has(row.key)) {
+        next.add(row.key);
+      }
+    }
+    setSelection(next);
+    if (transfer) setSelectionTransfer(null);
+  }
+  async function changeStaging(kind: "stage" | "unstage") {
+    const { count, selected } =
+      kind === "stage" ? stageSelection : unstageSelection;
+    if (!count) return;
+    const paths = selected.map((item) => item.path);
+    const owner = Symbol(kind);
+    setStaging({ kind, count, owner });
+    try {
+      await act(async () => {
+        if (await propose({ kind, paths, hooks: policy }, count, owner)) {
+          setSelectionTransfer({
+            before: changeContext,
+            target: kind === "stage" ? "index" : "working_tree",
+            paths: new Set(paths.map(pathKey)),
+          });
+        }
+      });
+    } finally {
+      setStaging(null);
+      setCancellingStage(false);
     }
   }
+
   const draft = nav.drafts[entry.id] ?? "";
   return (
     <section className="repository">
@@ -1589,7 +1799,22 @@ function Repository({
                 "Detached / unavailable"}
             </span>
           </h1>
-          <p className="path">{pathText(entry.display_path)}</p>
+          <button
+            className="path repository-folder-link"
+            title="Open folder in Finder"
+            onClick={() =>
+              void act(async () => {
+                if (!bridge.repositoryPathAction)
+                  throw new Error("Finder is unavailable");
+                await bridge.repositoryPathAction(
+                  { workspace, worktree: entry.id },
+                  "open",
+                );
+              })
+            }
+          >
+            {pathText(entry.display_path)}
+          </button>
         </div>
         <button
           disabled={busy}
@@ -1615,6 +1840,7 @@ function Repository({
         busy={busy}
         act={act}
         enabled={writeEnabled}
+        pushPlanning={pushPlanning}
       />
       <div className="repository-tabs">
         <button
@@ -1622,7 +1848,7 @@ function Repository({
           className={tab.view === "changes" ? "active" : ""}
           onClick={() => setNav(updateTab(nav, entry.id, { view: "changes" }))}
         >
-          Changes <span>{changes.length}</span>
+          Changes <span>{changes?.length ?? 0}</span>
         </button>
         <button
           aria-pressed={tab.view === "history"}
@@ -1632,14 +1858,6 @@ function Repository({
           History
         </button>
       </div>
-      <div className="trust-inspection">
-        <button onClick={() => void act(inspectTrust)}>
-          Inspect trust & eligibility
-        </button>
-        <span className="muted">
-          {trust ? `${trust.grant} · ${trust.validity}` : "Trust not inspected"}
-        </span>
-      </div>
       {entry.issue && (
         <p role="alert" className="error">
           {entry.issue.message}
@@ -1648,73 +1866,128 @@ function Repository({
       {tab.view === "changes" ? (
         <div
           className="changes-grid"
-          style={
-            { "--inspector-width": `${nav.inspector_width}px` } as CSSProperties
-          }
+          ref={changesArea}
+          style={{ height: changesHeight }}
         >
           <div className="files">
             <div className="section-title">
               <h2>Changed files</h2>
-              <span>{selectedChanges.length} selected</span>
+              <span>{commitSelection.count} selected</span>
             </div>
-            {(["index", "working_tree"] as const).map((source) => (
-              <div className="file-group" key={source}>
-                <h3>
-                  {source === "index"
-                    ? "Staged · HEAD ↔ index"
-                    : "Unstaged / untracked · index ↔ worktree"}
-                </h3>
-                {changes
-                  .filter((c) =>
-                    source === "index"
-                      ? c.index !== "." && c.index !== "?" && c.index !== "!"
-                      : c.worktree !== "." || c.index === "?",
-                  )
-                  .map((c, i) => (
-                    <div className="file-row" key={`${source}/${i}`}>
-                      <input
-                        type="checkbox"
-                        aria-label={`Include ${pathText(c.path)} from ${source}`}
-                        disabled={c.conflict || busy}
-                        checked={selection.has(
-                          `${JSON.stringify(c.path)}:${source}`,
-                        )}
-                        onChange={() => select(c, source)}
-                      />
-                      <button
-                        onClick={() => void act(() => diff(c.path, source))}
-                      >
-                        {pathText(c.path)}
-                      </button>
-                      <span
-                        className={`file-status ${c.conflict ? "bad" : ""}`}
-                      >
-                        {c.conflict
-                          ? "!"
-                          : source === "index"
-                            ? c.index
-                            : c.worktree === "."
-                              ? "?"
-                              : c.worktree}
-                      </span>
-                    </div>
-                  ))}
-              </div>
-            ))}
-            {!changes.length && <p className="muted">No observed changes.</p>}
             <div className="file-actions">
               <button
-                disabled={writeBlocked || !selectedChanges.length}
-                onClick={() => void act(() => propose(request("stage")))}
+                disabled={writeBlocked || !stageSelection.count}
+                aria-busy={staging?.kind === "stage"}
+                onClick={() => void changeStaging("stage")}
               >
-                Review stage
+                {staging?.kind === "stage" ? "Staging…" : "Stage"}
               </button>
               <button
-                disabled={writeBlocked || !selectedChanges.length}
-                onClick={() => void act(() => propose(request("unstage")))}
+                disabled={writeBlocked || !unstageSelection.count}
+                aria-busy={staging?.kind === "unstage"}
+                onClick={() => void changeStaging("unstage")}
               >
-                Review unstage
+                {staging?.kind === "unstage" ? "Unstaging…" : "Unstage"}
               </button>
+              {staging && (
+                <div className="operation-progress">
+                  <WorkingStatus
+                    label={
+                      cancellingStage
+                        ? "Cancelling…"
+                        : `${staging.kind === "stage" ? "Staging" : "Unstaging"} ${staging.count} ${staging.count === 1 ? "file" : "files"}…`
+                    }
+                  />
+                  <button
+                    disabled={cancellingStage}
+                    onClick={() => {
+                      setCancellingStage(true);
+                      void act(async () => {
+                        try {
+                          await bridge.cancel(staging.owner);
+                        } catch (error) {
+                          setCancellingStage(false);
+                          throw error;
+                        }
+                      });
+                    }}
+                  >
+                    {cancellingStage ? "Cancelling…" : "Cancel"}
+                  </button>
+                </div>
+              )}
+            </div>
+            <div
+              className="file-list"
+              tabIndex={0}
+              aria-label="Changed file list"
+            >
+              {(["index", "working_tree"] as const).map((source) => (
+                <div className="file-group" key={source}>
+                  <h3>
+                    {source === "index"
+                      ? "Staged · HEAD ↔ index"
+                      : "Unstaged / untracked · index ↔ worktree"}
+                  </h3>
+                  {source === firstFileSource && (
+                    <div className="file-row file-selection-toggle">
+                      <input
+                        type="checkbox"
+                        aria-label="Select all changed files"
+                        title={
+                          allFilesSelected
+                            ? "Clear file selection"
+                            : "Select all files"
+                        }
+                        disabled={busy || !selectableRows.length}
+                        checked={allFilesSelected}
+                        ref={(input) => {
+                          if (input)
+                            input.indeterminate =
+                              someFilesSelected && !allFilesSelected;
+                        }}
+                        onChange={() =>
+                          select(
+                            new Set(
+                              allFilesSelected
+                                ? []
+                                : selectableRows.map((row) => row.key),
+                            ),
+                          )
+                        }
+                      />
+                    </div>
+                  )}
+                  {rows
+                    .filter((row) => row.source === source)
+                    .map(({ change: c, key, original }) => (
+                      <div className="file-row" key={key}>
+                        <input
+                          type="checkbox"
+                          aria-label={`Include ${pathText(c.path)} from ${source}`}
+                          disabled={c.conflict || busy}
+                          checked={!c.conflict && selection.has(key)}
+                          onChange={() => {
+                            const next = new Set(selection);
+                            if (next.has(key)) next.delete(key);
+                            else next.add(key);
+                            select(next);
+                          }}
+                        />
+                        <button
+                          onClick={() => void act(() => diff(c.path, source))}
+                        >
+                          {original && `${pathText(original)} → `}
+                          {pathText(c.path)}
+                        </button>
+                        <FileStatus change={c} source={source} />
+                      </div>
+                    ))}
+                </div>
+              ))}
+              {!changes?.length && (
+                <p className="muted">No observed changes.</p>
+              )}
             </div>
           </div>
           <div className="diff-panel">
@@ -1778,136 +2051,75 @@ function Repository({
             <div className="section-title">
               <h2>Commit composer</h2>
             </div>
-            <AiMessages
-              key={JSON.stringify([workspace, entry.id, selectedChanges])}
-              bridge={bridge}
-              workspace={workspace}
-              worktree={entry.id}
-              selected={selectedChanges}
-              busy={busy}
-              onUse={(message) =>
-                setNav({
-                  ...nav,
-                  drafts: { ...nav.drafts, [entry.id]: message },
-                })
-              }
-            />
-            <VersionAction
-              enabled={writeEnabled}
-              revision={resultsRevision}
-              key={entry.id}
-              bridge={bridge}
-              workspace={workspace}
-              worktree={entry.id}
-              busy={busy}
-              act={act}
-            />
-            <label>
-              Inspector width
-              <input
-                type="range"
-                min={240}
-                max={800}
-                step={20}
-                value={nav.inspector_width}
-                onChange={(e) =>
-                  setNav({ ...nav, inspector_width: Number(e.target.value) })
+            <div className="composer-content">
+              <CommitMessageEditor
+                actions={
+                  <AiCommitFill
+                    key={JSON.stringify([
+                      workspace,
+                      entry.id,
+                      commitSelection.selected,
+                    ])}
+                    bridge={bridge}
+                    workspace={workspace}
+                    worktree={entry.id}
+                    selected={commitSelection.selected}
+                    busy={busy}
+                    onUse={setDraft}
+                    beginUpdate={beginDraftUpdate}
+                  />
                 }
+                label="Message"
+                value={draft}
+                rows={8}
+                placeholder={"Describe the change\n\nOptional explanation…"}
+                onChange={setDraft}
               />
-            </label>
-            <CommitMessageEditor
-              label="Message"
-              value={draft}
-              rows={8}
-              placeholder={"Describe the change\n\nOptional explanation…"}
-              onChange={(message) =>
-                setNav({
-                  ...nav,
-                  drafts: { ...nav.drafts, [entry.id]: message },
-                })
-              }
-            />
-            <label>
-              Hooks
-              <select
-                value={policy}
-                onChange={(e) => setPolicy(e.target.value as typeof policy)}
-              >
-                <option value="execute">Execute supported hooks</option>
-                <option value="bypass_all">Bypass all — explicit review</option>
-              </select>
-            </label>
-            <button
-              className="subtle"
-              disabled={writeBlocked}
-              onClick={() =>
-                void act(async () => {
-                  await bridge.request({
-                    kind: "hook_policy",
-                    workspace,
-                    worktree: entry.id,
-                    policy,
-                  });
-                  await inspectTrust();
-                })
-              }
-            >
-              Remember hook preference
-            </button>
-            <label>
-              Signing
-              <select
-                value={signing}
-                onChange={(e) => setSigning(e.target.value as typeof signing)}
-              >
-                <option value="configured">Use configured signing</option>
-                <option value="unsigned">Explicitly unsigned</option>
-              </select>
-            </label>
-            <p className="review-note">
-              The next step opens an authoritative Rust review. A separate
-              native approval is required.
-            </p>
-            <button
-              className="primary"
-              disabled={
-                writeBlocked || !selectedChanges.length || !draft.trim()
-              }
-              onClick={() => void act(() => propose(request("commit")))}
-            >
-              Review commit · {selectedChanges.length} files
-            </button>
-            <div className="trust-card">
-              <h3>Trust & execution</h3>
-              <p>
-                {trust?.reason ??
-                  "Trust is checked again by Core for every operation."}
-              </p>
+              <label>
+                Hooks
+                <select
+                  value={policy}
+                  onChange={(e) => setPolicy(e.target.value as typeof policy)}
+                >
+                  <option value="execute">Execute supported hooks</option>
+                  <option value="bypass_all">Skip hooks</option>
+                </select>
+              </label>
+              <label>
+                Signing
+                <select
+                  value={signing}
+                  onChange={(e) => setSigning(e.target.value as typeof signing)}
+                >
+                  <option value="configured">Use configured signing</option>
+                  <option value="unsigned">Explicitly unsigned</option>
+                </select>
+              </label>
+            </div>
+            <div className="commit-actions">
               <button
-                disabled={writeBlocked}
-                onClick={() => void act(trustRepo)}
-              >
-                Review trust
-              </button>
-              <button
-                disabled={writeBlocked}
+                className="primary"
+                disabled={
+                  writeBlocked || !commitSelection.count || !draft.trim()
+                }
                 onClick={() =>
                   void act(async () => {
-                    await bridge.request({
-                      kind: "revoke",
-                      workspace,
-                      worktree: entry.id,
-                    });
-                    await inspectTrust();
+                    await propose(
+                      {
+                        kind: "commit",
+                        selected: commitSelection.selected,
+                        message: draft,
+                        hooks: policy,
+                        signing,
+                      },
+                      commitSelection.count,
+                    );
                   })
                 }
               >
-                Revoke trust
+                Commit · {commitSelection.count}{" "}
+                {commitSelection.count === 1 ? "file" : "files"}
               </button>
-              <p>
-                Trusted hooks and signers run as your user. They are not
-                sandboxed.
-              </p>
             </div>
           </aside>
         </div>

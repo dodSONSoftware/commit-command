@@ -9,13 +9,18 @@
     "allow-dispatch",
     "allow-manage-ai-token",
     "allow-pick-directory",
+    "allow-pick-ai-import",
     "allow-pick-authentication-file",
     "allow-job-status",
     "allow-cancel-job",
     "allow-desktop-capabilities",
+    "allow-set-ui-scale",
     "allow-open-project-repository",
     "allow-close-snapshot",
     "core:event:allow-listen",
-    "core:event:allow-unlisten"
+    "core:event:allow-unlisten",
+    "allow-open-settings",
+    "allow-repository-path-action",
+    "allow-open-ai-suggestions"
   ]
 }

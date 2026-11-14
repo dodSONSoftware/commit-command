@@ -1,5 +1,5 @@
 //! Native-only secret input. The webview supplies a saved connection ID, never a token.
-use super::{check, lock, queue, DialogLease, Host, Task};
+use super::{lock, queue, DialogLease, Host, Task};
 use gitfleet_core::ai::{
     credentials::{Binding, SecretStore},
     provider::Secret,
@@ -105,7 +105,7 @@ pub(super) async fn manage_ai_token<R: Runtime>(
     state: tauri::State<'_, Arc<Host>>,
     connection: String,
 ) -> Result<(), String> {
-    check(&window, "main")?;
+    super::check_settings_or_main(&window)?;
     if connection.len() > 80 || lock(&state.active)?.is_some() {
         return Err("Finish the active operation before managing an AI token".into());
     }

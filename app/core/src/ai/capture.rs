@@ -8,7 +8,10 @@ use crate::{
 };
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use std::{collections::BTreeSet, path::Path};
+use std::{
+    collections::{BTreeMap, BTreeSet},
+    path::Path,
+};
 fn invalid() -> Error {
     Error::with_kind(
         ErrorKind::InvalidRequest,
@@ -31,7 +34,7 @@ impl Spec {
     pub fn validate(&self) -> Result<()> {
         self.policy.validate()?;
         if self.selected.is_empty()
-            || self.selected.len() > 128
+            || self.selected.len() > 10_000
             || self.nearby_source.len() > 8
             || self.documentation.len() > 8
             || self.branch_commits > 20
@@ -111,7 +114,9 @@ fn push(
     path: &NativePath,
     bytes: Vec<u8>,
 ) -> Result<()> {
-    if fragments.iter().map(|f| f.bytes.len()).sum::<usize>() + bytes.len() > 16 * 1024 * 1024 {
+    if fragments.iter().map(|f| f.bytes.len()).sum::<usize>() + bytes.len()
+        > context::MAX_CAPTURE_BYTES
+    {
         return Err(Error::with_kind(
             ErrorKind::OutputLimit,
             "AI capture exceeds aggregate source budget",
@@ -188,39 +193,118 @@ fn head_blob(
     }
     s.blob(&ObjectId::parse(fields[2], &s.format)?).map(Some)
 }
-fn whole_file_diff(old: &[u8], new: &[u8]) -> Vec<u8> {
+#[derive(Default)]
+struct Comparison {
+    patch: Vec<u8>,
+    private_patch_lines: Vec<bool>,
+    private_content_lines: Vec<bool>,
+}
+
+fn whole_file_diff(old: &[u8], new: &[u8]) -> Comparison {
     if old == new {
-        return vec![];
+        return Comparison::default();
     }
+    let binary = || Comparison {
+        patch: b"Binary comparison omitted\0".to_vec(),
+        ..Default::default()
+    };
     let (Ok(old), Ok(new)) = (std::str::from_utf8(old), std::str::from_utf8(new)) else {
-        return b"Binary comparison omitted\0".to_vec();
+        return binary();
     };
     if old.contains('\0') || new.contains('\0') {
-        return b"Binary comparison omitted\0".to_vec();
+        return binary();
     }
+    let old = old.split_inclusive('\n').collect::<Vec<_>>();
+    let new = new.split_inclusive('\n').collect::<Vec<_>>();
+    let classify = |lines: &[&str]| {
+        let mut inside = false;
+        lines
+            .iter()
+            .map(|line| context::private_key_line(line, &mut inside))
+            .collect::<Vec<_>>()
+    };
+    let mut old_private = classify(&old);
+    let mut new_private = classify(&new);
+    let prefix = old.iter().zip(&new).take_while(|(a, b)| a == b).count();
+    let suffix = old[prefix..]
+        .iter()
+        .rev()
+        .zip(new[prefix..].iter().rev())
+        .take_while(|(a, b)| a == b)
+        .count();
+    // A delimiter edit can expose a previously protected line in the opposite
+    // version, even when that line has moved outside the common context.
+    let protected: std::collections::HashSet<_> = old
+        .iter()
+        .zip(&old_private)
+        .chain(new.iter().zip(&new_private))
+        .filter(|(_, private)| **private)
+        .map(|(line, _)| line.trim())
+        .filter(|line| !line.is_empty())
+        .collect();
+    if !protected.is_empty() {
+        for (line, flag) in old
+            .iter()
+            .zip(&mut old_private)
+            .chain(new.iter().zip(&mut new_private))
+        {
+            *flag |= protected.contains(line.trim());
+        }
+    }
+    let start = prefix.saturating_sub(3);
+    let old_end = (old.len() - suffix + 3).min(old.len());
+    let new_end = (new.len() - suffix + 3).min(new.len());
     let mut result = format!(
-        "Whole-file comparison: HEAD -> chosen content\n@@ -1,{} +1,{} @@\n",
-        old.lines().count(),
-        new.lines().count()
+        "Comparison: HEAD -> chosen content\n@@ -{},{} +{},{} @@\n",
+        start + 1,
+        old_end - start,
+        start + 1,
+        new_end - start
     );
-    for (prefix, text) in [("-", old), ("+", new)] {
-        for line in text.split_inclusive('\n') {
+    let mut private_patch_lines = vec![false; 2]; // comparison and hunk headers
+    for (prefix, lines, private) in [
+        (" ", &new[start..prefix], &new_private[start..prefix]),
+        (
+            "-",
+            &old[prefix..old.len() - suffix],
+            &old_private[prefix..old.len() - suffix],
+        ),
+        (
+            "+",
+            &new[prefix..new.len() - suffix],
+            &new_private[prefix..new.len() - suffix],
+        ),
+        (
+            " ",
+            &new[new.len() - suffix..new_end],
+            &new_private[new.len() - suffix..new_end],
+        ),
+    ] {
+        for (line, &protected) in lines.iter().zip(private) {
+            private_patch_lines.push(protected);
             result.push_str(prefix);
             result.push_str(line);
             if !line.ends_with('\n') {
                 result.push_str("\n\\ No newline at end of file\n");
+                private_patch_lines.push(false);
             }
         }
     }
-    result.into_bytes()
+    Comparison {
+        patch: result.into_bytes(),
+        private_patch_lines,
+        private_content_lines: new_private,
+    }
 }
+
 pub fn capture(repo: &Path, spec: &Spec, options: &ReadOptions) -> Result<Captured> {
     spec.validate()?;
     let start = std::time::Instant::now();
     let mut bounded = options.clone();
-    bounded.max_output = bounded.max_output.min(1024 * 1024);
+    bounded.max_output = bounded.max_output.min(4 * 1024 * 1024);
     inspection::read(repo, &bounded, |s| {
         let mut fragments = Vec::new();
+        let mut private_lines = BTreeMap::new();
         let mut bindings = Vec::new();
         let mut watched = Vec::new();
         let head = s.head()?;
@@ -250,7 +334,7 @@ pub fn capture(repo: &Path, spec: &Spec, options: &ReadOptions) -> Result<Captur
                             return Err(invalid());
                         }
                     }
-                    let value = super::capture_file::read(&s.root, path, 1024 * 1024, true)?;
+                    let value = super::capture_file::read(&s.root, path, 4 * 1024 * 1024, true)?;
                     watched.push((path.clone(), value.1.clone()));
                     value
                 }
@@ -266,9 +350,15 @@ pub fn capture(repo: &Path, spec: &Spec, options: &ReadOptions) -> Result<Captur
             bindings.push(binding);
             // Build comparisons from the already captured bytes and immutable HEAD
             // blobs. A second Git worktree read could race a swapped ancestor.
-            let patch = whole_file_diff(old.as_deref().unwrap_or_default(), &bytes);
-            if !patch.is_empty() {
-                push(&mut fragments, Kind::SelectedDiff, path, patch)?;
+            let comparison = whole_file_diff(old.as_deref().unwrap_or_default(), &bytes);
+            if !comparison.patch.is_empty() {
+                if comparison.private_patch_lines.contains(&true) {
+                    private_lines.insert(fragments.len(), comparison.private_patch_lines);
+                }
+                push(&mut fragments, Kind::SelectedDiff, path, comparison.patch)?;
+            }
+            if comparison.private_content_lines.contains(&true) {
+                private_lines.insert(fragments.len(), comparison.private_content_lines);
             }
             push(&mut fragments, Kind::SelectedContent, path, bytes)?;
         }
@@ -279,7 +369,7 @@ pub fn capture(repo: &Path, spec: &Spec, options: &ReadOptions) -> Result<Captur
             for path in paths {
                 index_blob(s, path)?.ok_or_else(invalid)?;
                 let (bytes, binding) =
-                    super::capture_file::read(&s.root, path, 1024 * 1024, false)?;
+                    super::capture_file::read(&s.root, path, 4 * 1024 * 1024, false)?;
                 bindings.push(binding.clone());
                 watched.push((path.clone(), binding));
                 push(&mut fragments, kind, path, bytes)?;
@@ -306,7 +396,7 @@ pub fn capture(repo: &Path, spec: &Spec, options: &ReadOptions) -> Result<Captur
             }
         }
         for (path, binding) in watched {
-            if super::capture_file::read(&s.root, &path, 1024 * 1024, true)?.1 != binding {
+            if super::capture_file::read(&s.root, &path, 4 * 1024 * 1024, true)?.1 != binding {
                 return Err(Error::with_kind(
                     ErrorKind::ConcurrentChange,
                     "AI context file changed during capture",
@@ -314,7 +404,7 @@ pub fn capture(repo: &Path, spec: &Spec, options: &ReadOptions) -> Result<Captur
             }
         }
         let snapshot_fingerprint = digest(&serde_json::to_vec(&(&s.generation, spec, bindings))?);
-        let bundle = context::prepare(fragments, &spec.policy)?;
+        let bundle = context::prepare_with_private_lines(fragments, &spec.policy, &private_lines)?;
         options.check(start)?;
         Ok(Captured {
             bundle,
@@ -341,4 +431,47 @@ pub fn revalidate(
         ));
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod comparison_tests {
+    use super::*;
+    #[test]
+    fn removing_delimiters_keeps_known_key_material_protected() {
+        let comparison = whole_file_diff(
+            b"-----BEGIN PRIVATE KEY-----\nSyntheticBody\n-----END PRIVATE KEY-----\n",
+            b"ordinary change\nSyntheticBody",
+        );
+        assert_eq!(comparison.private_content_lines, [false, true]);
+        let patch = std::str::from_utf8(&comparison.patch).unwrap();
+        assert_eq!(patch.lines().count(), comparison.private_patch_lines.len());
+        for (line, protected) in patch.lines().zip(comparison.private_patch_lines) {
+            assert_eq!(
+                protected,
+                line.contains("SyntheticBody") || line.contains("PRIVATE KEY")
+            );
+        }
+    }
+    #[test]
+    fn omits_unchanged_prefix_and_suffix_from_selected_comparison() {
+        let prefix = (0..100)
+            .map(|i| format!("unchanged before {i}\n"))
+            .collect::<String>();
+        let suffix = (0..100)
+            .map(|i| format!("unchanged after {i}\n"))
+            .collect::<String>();
+        let patch = String::from_utf8(
+            whole_file_diff(
+                format!("{prefix}old value\n{suffix}").as_bytes(),
+                format!("{prefix}new value\n{suffix}").as_bytes(),
+            )
+            .patch,
+        )
+        .unwrap();
+        assert!(patch.contains("-old value\n+new value\n"));
+        assert!(!patch.contains("unchanged before 0\n"));
+        assert!(!patch.contains("unchanged after 99\n"));
+        assert!(patch.contains(" unchanged before 99\n"));
+        assert!(patch.len() < 512);
+    }
 }

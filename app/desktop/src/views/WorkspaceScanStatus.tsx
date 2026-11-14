@@ -1,6 +1,13 @@
 import type { ScanSummary } from "../services/response.generated";
 import { pathText } from "../stores/model";
 
+export function scanIsContinuing(scan?: ScanSummary | null): boolean {
+  return (
+    !!scan?.progress &&
+    scan.issues.every((issue) => issue.error.kind === "timeout")
+  );
+}
+
 export function WorkspaceScanStatus({
   scan,
   onContinue,
@@ -10,6 +17,7 @@ export function WorkspaceScanStatus({
   onContinue?: () => void;
   busy?: boolean;
 }) {
+  const continuing = scanIsContinuing(scan);
   return (
     <section className="workspace-scan" aria-label="Workspace discovery status">
       <p role="status">
@@ -20,10 +28,12 @@ export function WorkspaceScanStatus({
             ? "? Discovery not yet scanned"
             : scan.complete
               ? "✓ Discovery complete"
-              : "△ Discovery incomplete"}
+              : continuing
+                ? "Scanning repositories…"
+                : "△ Discovery incomplete"}
         </span>
         {scan &&
-          ` · ${scan.issues.length} scan issue${scan.issues.length === 1 ? "" : "s"} · ${scan.skipped_caches.length} tagged cache${scan.skipped_caches.length === 1 ? "" : "s"} skipped`}
+          ` · ${continuing ? 0 : scan.issues.length} scan issue${(continuing ? 0 : scan.issues.length) === 1 ? "" : "s"} · ${scan.skipped_caches.length} tagged cache${scan.skipped_caches.length === 1 ? "" : "s"} skipped`}
       </p>
       {scan?.progress && (
         <div>
@@ -47,13 +57,13 @@ export function WorkspaceScanStatus({
             Repository attention counts do not include scan-level issues. Use
             Rescan to retry; no Git files are changed.
           </p>
-          {!scan.complete && (
+          {!scan.complete && !continuing && (
             <p>
               Some locations could not be inspected. Known repositories can
               remain available while discovery is incomplete.
             </p>
           )}
-          {scan.issues.length > 0 && (
+          {scan.issues.length > 0 && !continuing && (
             <ul>
               {scan.issues.map((issue, index) => (
                 <li key={index}>
@@ -62,6 +72,12 @@ export function WorkspaceScanStatus({
                 </li>
               ))}
             </ul>
+          )}
+          {continuing && (
+            <p>
+              The scan will continue in the background. Previously inspected
+              repositories keep their last known status.
+            </p>
           )}
           {scan.skipped_caches.length > 0 && (
             <>

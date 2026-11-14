@@ -104,6 +104,8 @@ it("requires an explicit remote and full branch before preparing a native networ
       };
     if (r.kind === "remote_observations")
       return { kind: "remote_observations", value: { items: [], next: null } };
+    if (r.kind === "execute_reviewed_operation")
+      return { kind: "executed", value: { result: {} } };
     return {
       kind: "review",
       value: {
@@ -111,6 +113,7 @@ it("requires an explicit remote and full branch before preparing a native networ
         epoch: 1,
         expires_at_ms: Date.now() + 600000,
         title: "Review observation",
+        operation: "observe_branch",
         summary: "",
         content: "",
       },
@@ -151,6 +154,9 @@ it("requires an explicit remote and full branch before preparing a native networ
     target: { value: "refs/heads/release" },
   });
   fireEvent.click(prepare);
+  fireEvent.click(
+    await screen.findByRole("button", { name: "Observe branch" }),
+  );
   await screen.findByText("No recorded observations for this repository.");
   expect(request).toHaveBeenCalledWith({
     kind: "review_remote_observation",
@@ -167,9 +173,12 @@ it("requires an explicit remote and full branch before preparing a native networ
   });
   expect(
     request.mock.calls.every(([r]) =>
-      ["remotes", "review_remote_observation", "remote_observations"].includes(
-        r.kind,
-      ),
+      [
+        "remotes",
+        "review_remote_observation",
+        "remote_observations",
+        "execute_reviewed_operation",
+      ].includes(r.kind),
     ),
   ).toBe(true);
 });
@@ -262,6 +271,31 @@ it("prepares a branch download only from a completed observation with an OID and
           next: null,
         },
       };
+    if (r.kind === "execute_reviewed_operation")
+      return { kind: "executed", value: { result: {} } };
+    if (
+      r.kind === "review_fetch_capture" ||
+      r.kind === "review_fetch_import" ||
+      r.kind === "review_upstream_setup"
+    )
+      return {
+        kind: "review",
+        value: {
+          id: "exact",
+          epoch: 1,
+          title: "Review",
+          summary: "",
+          content: "",
+          expires_at_ms: Date.now() + 60_000,
+          operation: (
+            {
+              review_fetch_capture: "download_branch",
+              review_fetch_import: "import_branch",
+              review_upstream_setup: "set_upstream",
+            } as const
+          )[r.kind],
+        },
+      };
     return { kind: "done" };
   });
   const bridge: Bridge = {
@@ -291,6 +325,9 @@ it("prepares a branch download only from a completed observation with an OID and
     screen.getAllByRole("button", { name: "Review branch download" }),
   ).toHaveLength(1);
   fireEvent.click(button);
+  fireEvent.click(
+    await screen.findByRole("button", { name: "Download branch" }),
+  );
   await screen.findByText("capture");
   expect(request).toHaveBeenCalledWith({
     kind: "review_fetch_capture",
@@ -305,6 +342,7 @@ it("prepares a branch download only from a completed observation with an OID and
     name: "Review upstream setup",
   });
   fireEvent.click(upstreamButton);
+  fireEvent.click(await screen.findByRole("button", { name: "Set upstream" }));
   await vi.waitFor(() =>
     expect(request).toHaveBeenCalledWith({
       kind: "review_upstream_setup",
@@ -317,6 +355,9 @@ it("prepares a branch download only from a completed observation with an OID and
     name: "Review captured branch import",
   });
   fireEvent.click(importButton);
+  fireEvent.click(
+    await screen.findByRole("button", { name: "Import captured branch" }),
+  );
   await vi.waitFor(() =>
     expect(request).toHaveBeenCalledWith({
       kind: "review_fetch_import",
@@ -353,6 +394,7 @@ it("prepares a branch download only from a completed observation with an OID and
       [
         "remote_observations",
         "review_fetch_capture",
+        "execute_reviewed_operation",
         "review_fetch_import",
         "review_upstream_setup",
         "push_preview",

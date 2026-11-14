@@ -1,35 +1,62 @@
-//! End a native confirmation before destroying its parent, so rfd releases its lease.
 use tauri::{Runtime, WebviewWindow};
 
-pub(super) fn close_review<R: Runtime>(window: &WebviewWindow<R>) -> tauri::Result<()> {
-    #[cfg(feature = "native-acceptance-support")]
-    super::native_acceptance::record(
-        "review_host_close_requested",
-        serde_json::json!({"label":window.label()}),
-    );
-    let window = window.clone();
-    let runner = window.clone();
-    runner.run_on_main_thread(move || {
-        #[cfg(target_os = "macos")]
-        match window.ns_window() {
-            Ok(pointer) => {
-                // SAFETY: Tauri provides this live NSWindow handle. The owned window
-                // stays alive through this closure, which runs on the AppKit main thread.
-                if let Some(parent) = unsafe { pointer.cast::<objc2_app_kit::NSWindow>().as_ref() }
-                {
-                    if let Some(sheet) = parent.attachedSheet() {
-                        // Closing the parent alone does not resolve rfd's async future.
-                        parent.endSheet_returnCode(&sheet, objc2_app_kit::NSModalResponseCancel);
-                        sheet.orderOut(None);
-                    }
-                }
-            }
-            Err(error) => {
-                eprintln!("Review confirmation sheet could not be inspected: {error}");
-            }
+/// The main renderer's modal guard blocks workspace input until this owned window closes.
+pub(super) async fn present_settings<R: Runtime>(
+    parent: &WebviewWindow<R>,
+    settings: &WebviewWindow<R>,
+) -> Result<(), String> {
+    let (closed, receive) = std::sync::mpsc::channel();
+    settings.on_window_event(move |event| {
+        if matches!(event, tauri::WindowEvent::Destroyed) {
+            let _ = closed.send(());
         }
-        if let Err(error) = window.close() {
-            eprintln!("Review window could not be closed: {error}");
-        }
+    });
+    settings
+        .show()
+        .and_then(|()| settings.set_focus())
+        .map_err(|e| e.to_string())?;
+    tauri::async_runtime::spawn_blocking(move || {
+        receive
+            .recv()
+            .map_err(|_| "Settings close was interrupted".to_owned())
     })
+    .await
+    .map_err(|e| e.to_string())??;
+    parent.set_focus().map_err(|e| e.to_string())
+}
+
+pub(super) fn approve_ai_source<R: Runtime>(
+    parent: &WebviewWindow<R>,
+    review: &gitfleet_core::ai::provider::Review,
+) -> bool {
+    let Some(source) = &review.source else {
+        return false;
+    };
+    let origins = source
+        .accounting
+        .iter()
+        .filter(|row| row.included_lines > 0)
+        .map(|row| row.origin.as_str())
+        .collect::<std::collections::BTreeSet<_>>();
+    let mut files = origins
+        .iter()
+        .take(6)
+        .copied()
+        .collect::<Vec<_>>()
+        .join(", ");
+    if origins.len() > 6 {
+        files.push_str(&format!(" (+{} more)", origins.len() - 6));
+    }
+    let message = format!("Send the reviewed repository context to {}?\n\nModel: {}\nIncluded sources: {}\nRequest size: {} bytes",
+        review.route, review.model.as_deref().unwrap_or("unknown"), files, review.request_bytes);
+    rfd::MessageDialog::new()
+        .set_parent(parent)
+        .set_title("Send repository source?")
+        .set_description(message)
+        .set_buttons(rfd::MessageButtons::OkCancelCustom(
+            "Send source".into(),
+            "Cancel".into(),
+        ))
+        .show()
+        == rfd::MessageDialogResult::Custom("Send source".into())
 }

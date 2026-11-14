@@ -86,17 +86,21 @@ pub fn query(
             .filter(|s| !s.is_empty())
             .collect();
         let complete = ids.len() <= limit;
-        let commits = ids
+        let ids = ids
             .into_iter()
             .take(limit)
             .map(|id| {
-                let id = ObjectId::parse(
+                ObjectId::parse(
                     std::str::from_utf8(id)
                         .map_err(|_| inspection::data_error("Invalid activity OID"))?,
                     &s.format,
-                )?;
-                let c = history::commit_in(s, &id)?;
-                Ok(Commit {
+                )
+            })
+            .collect::<Result<Vec<_>>>()?;
+        let mut commits = Vec::new();
+        for batch in ids.chunks(history::COMMIT_BATCH_SIZE) {
+            commits.extend(history::commits_in(s, batch)?.into_iter().map(|c| {
+                Commit {
                     oid: c.oid,
                     subject: c
                         .message
@@ -109,9 +113,9 @@ pub fn query(
                         .collect(),
                     author: c.author.into_iter().take(1024).collect(),
                     committer_time: c.committer_time,
-                })
-            })
-            .collect::<Result<Vec<_>>>()?;
+                }
+            }));
+        }
         Ok(Page {
             commits,
             complete,

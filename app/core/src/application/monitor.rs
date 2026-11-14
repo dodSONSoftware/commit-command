@@ -54,6 +54,7 @@ pub struct Monitor {
     discovery_pending: bool,
     last_status: Instant,
     last_scan: Instant,
+    discovery_retry_at: Option<Instant>,
 }
 impl Default for Monitor {
     fn default() -> Self {
@@ -73,6 +74,7 @@ impl Default for Monitor {
             discovery_pending: false,
             last_status: Instant::now(),
             last_scan: Instant::now(),
+            discovery_retry_at: None,
         }
     }
 }
@@ -120,10 +122,14 @@ impl Monitor {
         ));
     }
 
+    pub(super) fn retry_discovery(&mut self) {
+        self.discovery_retry_at = Some(Instant::now() + Duration::from_secs(5));
+    }
     pub fn stop(&mut self) {
         self.watcher = None;
         self.events = None;
         self.status.running = false;
+        self.discovery_retry_at = None;
         self.first = None;
         self.last_event = None;
         self.discovery_pending = false;
@@ -246,6 +252,9 @@ impl Monitor {
                 .last_event
                 .is_some_and(|at| at.elapsed() >= self.timing.debounce);
         let discovery = self.last_scan.elapsed() >= self.timing.discovery_interval
+            || self
+                .discovery_retry_at
+                .is_some_and(|at| Instant::now() >= at)
             || (ready && self.discovery_pending);
         let status = self.last_status.elapsed() >= self.timing.status_interval || ready;
         if discovery || status {
@@ -255,6 +264,7 @@ impl Monitor {
             self.last_status = Instant::now();
         }
         if discovery {
+            self.discovery_retry_at = None;
             self.last_scan = Instant::now();
         }
         Due { discovery, status }
@@ -263,6 +273,109 @@ impl Monitor {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn inventory_work_is_linear_across_monitor_passes() {
+        use crate::{
+            application::{Application, Data, Request},
+            workspace::INVENTORY_WORK,
+        };
+        use std::{fs, process::Command};
+        for count in [20, 40] {
+            let root = std::env::temp_dir().join(format!("monitor-scale-{}", uuid::Uuid::new_v4()));
+            let workspace = root.join("workspace");
+            fs::create_dir_all(&workspace).unwrap();
+            for i in 0..count {
+                let repo = workspace.join(format!("repo-{i}"));
+                assert!(Command::new("git")
+                    .args(["init", "-q"])
+                    .arg(&repo)
+                    .status()
+                    .unwrap()
+                    .success());
+                fs::write(repo.join("untracked"), b"changed").unwrap();
+            }
+            let mut app = Application::open(&root.join("state"), Default::default()).unwrap();
+            let picker = app.register_directory(&workspace).unwrap();
+            app.request(
+                app.epoch(),
+                Request::Create {
+                    name: "Scale".into(),
+                    picker,
+                },
+            )
+            .unwrap();
+            let id = app.writes.workspace.active().unwrap().unwrap();
+            while app.writes.workspace.can_continue_scan(&id) {
+                app.request(
+                    app.epoch(),
+                    Request::ContinueScan {
+                        workspace: id.0.clone(),
+                    },
+                )
+                .unwrap();
+            }
+            INVENTORY_WORK.set((0, 0));
+            for entry in app.writes.workspace.inventory(&id).unwrap() {
+                app.writes.workspace.refresh(&id, &entry.id).unwrap();
+            }
+            let baseline = INVENTORY_WORK.get();
+            eprintln!(
+                "{count} worktrees before: {} inventory loads, {} decoded rows",
+                baseline.0, baseline.1
+            );
+            assert_eq!(baseline, (count + 1, count * (count + 1)));
+            app.monitor.stop();
+            app.monitor.status.running = true;
+            app.monitor.last_status = Instant::now() - Duration::from_secs(11);
+            INVENTORY_WORK.set((0, 0));
+            assert!(app.reconcile().unwrap());
+            let counts = INVENTORY_WORK.get();
+            eprintln!(
+                "{count} worktrees: {} inventory loads, {} decoded rows",
+                counts.0, counts.1
+            );
+            assert_eq!(counts, (1, count));
+            assert!(matches!(
+                app.request(app.epoch(), Request::Workspaces {})
+                    .unwrap()
+                    .data,
+                Data::Workspaces(_)
+            ));
+            let mut ticks = 1;
+            while app.status_pass.is_some() {
+                assert!(matches!(
+                    app.request(app.epoch(), Request::Workspaces {})
+                        .unwrap()
+                        .data,
+                    Data::Workspaces(_)
+                ));
+                assert!(app.reconcile().unwrap());
+                ticks += 1;
+            }
+            assert_eq!(ticks, count);
+            assert_eq!(INVENTORY_WORK.get(), (1, count));
+            let Data::Inventory(view) = app
+                .request(
+                    app.epoch(),
+                    Request::Inventory {
+                        workspace: id.0.clone(),
+                    },
+                )
+                .unwrap()
+                .data
+            else {
+                panic!()
+            };
+            assert_eq!(view.entries.len(), count);
+            assert!(view
+                .entries
+                .iter()
+                .all(|e| e.status.as_ref().unwrap().counts.untracked == 1));
+            app.shutdown().unwrap();
+            drop(app);
+            fs::remove_dir_all(root).unwrap();
+        }
+    }
     #[test]
     fn burst_coalescing_and_periodic_fallback_are_bounded() {
         let mut m = Monitor::default();
@@ -284,6 +397,20 @@ mod tests {
         assert!(!m.due().discovery);
     }
     #[test]
+    fn unfinished_discovery_retries_before_the_periodic_scan_and_clears_on_stop() {
+        let mut m = Monitor::default();
+        m.status.running = true;
+        m.retry_discovery();
+        assert!(!m.due().discovery);
+        m.discovery_retry_at = Some(Instant::now());
+        assert!(m.due().discovery);
+        assert!(!m.due().discovery);
+        m.retry_discovery();
+        m.stop();
+        assert!(m.discovery_retry_at.is_none());
+        assert!(!m.due().discovery);
+    }
+    #[test]
     fn filtering_and_overflow_do_not_schedule_writes() {
         let mut m = Monitor::default();
         m.status.running = true;
@@ -301,5 +428,166 @@ mod tests {
         ));
         m.stop();
         assert!(!m.due().status);
+    }
+}
+
+#[cfg(all(test, unix))]
+mod slow_discovery_tests {
+    use super::*;
+    use crate::{
+        application::{Application, Data, Request},
+        ErrorKind,
+    };
+    use std::{fs, os::unix::fs::PermissionsExt, path::PathBuf, process::Command};
+
+    #[test]
+    fn slow_discovery_allows_manual_and_scheduled_sibling_progress() {
+        const CHILD: &str = "GITFLEET_SLOW_SCAN_FIXTURE";
+        let Some(root) = std::env::var_os(CHILD) else {
+            let root = std::env::temp_dir().join(format!("slow-scan-{}", uuid::Uuid::new_v4()));
+            fs::create_dir(&root).unwrap();
+            let bin = root.join("bin");
+            fs::create_dir(&bin).unwrap();
+            let wrapper = bin.join("git");
+            fs::write(&wrapper,"#!/bin/sh\ncase \"$PWD\" in */a-slow) if [ -f ../blocked ]; then sleep 5; fi;; esac\nPATH=${PATH#*:} exec git \"$@\"\n").unwrap();
+            fs::set_permissions(wrapper, fs::Permissions::from_mode(0o700)).unwrap();
+            let path = std::env::var_os("PATH").unwrap();
+            let child=Command::new(std::env::current_exe().unwrap()).args(["--exact","application::monitor::slow_discovery_tests::slow_discovery_allows_manual_and_scheduled_sibling_progress","--nocapture"])
+                .env(CHILD,&root).env("PATH",std::env::join_paths(std::iter::once(bin).chain(std::env::split_paths(&path))).unwrap()).output().unwrap();
+            fs::remove_dir_all(root).unwrap();
+            assert!(
+                child.status.success(),
+                "{}\n{}",
+                String::from_utf8_lossy(&child.stdout),
+                String::from_utf8_lossy(&child.stderr)
+            );
+            return;
+        };
+        let root = fs::canonicalize(PathBuf::from(root)).unwrap();
+        for scheduled in [false, true] {
+            let case = root.join(if scheduled { "scheduled" } else { "manual" });
+            let workspace = case.join("workspace");
+            fs::create_dir_all(&workspace).unwrap();
+            for name in ["a-slow", "z-healthy"] {
+                assert!(Command::new("git")
+                    .args(["init", "-q"])
+                    .arg(workspace.join(name))
+                    .status()
+                    .unwrap()
+                    .success());
+            }
+            fs::write(workspace.join("blocked"), b"blocked").unwrap();
+            let mut app = Application::open(&case.join("state"), Default::default()).unwrap();
+            app.read_options.timeout = Duration::from_secs(2);
+            let picker = app.register_directory(&workspace).unwrap();
+            app.request(
+                app.epoch(),
+                Request::Create {
+                    name: "Slow fixture".into(),
+                    picker,
+                },
+            )
+            .unwrap();
+            let id = app.writes.workspace.active().unwrap().unwrap();
+            for _ in 0..2 {
+                if scheduled {
+                    app.monitor.discovery_retry_at = Some(Instant::now());
+                    assert!(app.reconcile().unwrap());
+                } else {
+                    app.request(
+                        app.epoch(),
+                        Request::ContinueScan {
+                            workspace: id.0.clone(),
+                        },
+                    )
+                    .unwrap();
+                }
+            }
+            let Data::Inventory(view) = app
+                .request(
+                    app.epoch(),
+                    Request::Inventory {
+                        workspace: id.0.clone(),
+                    },
+                )
+                .unwrap()
+                .data
+            else {
+                panic!()
+            };
+            let scan = view.scan.unwrap();
+            assert!(!scan.complete && scan.progress.is_some());
+            assert!(scan
+                .issues
+                .iter()
+                .any(|i| i.path.to_path().unwrap() == workspace.join("a-slow")
+                    && i.error.kind == ErrorKind::Timeout));
+            assert!(
+                view.entries
+                    .iter()
+                    .any(|e| e.metadata.root.to_path().unwrap() == workspace.join("z-healthy")),
+                "healthy sibling was starved, scheduled={scheduled}"
+            );
+            let healthy_id = view
+                .entries
+                .iter()
+                .find(|e| e.metadata.root.to_path().unwrap() == workspace.join("z-healthy"))
+                .unwrap()
+                .id
+                .clone();
+            let options = crate::inspection::ReadOptions::default();
+            options.cancellation.cancel();
+            assert_eq!(
+                app.request_with_cancellation(
+                    app.epoch(),
+                    Request::ContinueScan {
+                        workspace: id.0.clone()
+                    },
+                    options.cancellation
+                )
+                .unwrap_err()
+                .kind,
+                ErrorKind::Cancelled
+            );
+            fs::remove_file(workspace.join("blocked")).unwrap();
+            app.request(
+                app.epoch(),
+                Request::ContinueScan {
+                    workspace: id.0.clone(),
+                },
+            )
+            .unwrap();
+            let Data::Inventory(view) = app
+                .request(
+                    app.epoch(),
+                    Request::Inventory {
+                        workspace: id.0.clone(),
+                    },
+                )
+                .unwrap()
+                .data
+            else {
+                panic!()
+            };
+            assert_eq!(view.entries.len(), 2);
+            assert!(view.entries.iter().any(|e| e.id == healthy_id));
+            let direct = crate::discovery::scan(&workspace, &Default::default()).unwrap();
+            assert!(direct.complete);
+            let mut found = view
+                .entries
+                .iter()
+                .map(|e| e.metadata.root.to_path().unwrap())
+                .collect::<Vec<_>>();
+            let mut expected = direct
+                .repositories
+                .iter()
+                .map(|e| e.metadata.root.to_path().unwrap())
+                .collect::<Vec<_>>();
+            found.sort();
+            expected.sort();
+            assert_eq!(found, expected);
+            assert!(view.scan.unwrap().complete);
+            app.shutdown().unwrap();
+        }
     }
 }

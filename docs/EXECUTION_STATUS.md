@@ -1,6 +1,6 @@
 # Commit Command — current implementation and acceptance record
 
-Updated November 9, 2026. Current disposition incorporates the dated reports and
+Updated November 14, 2026. Current disposition incorporates the dated reports and
 validated checkpoints below; the original reconciliation baseline was `db29ba6`. This is the single maintained record of **current implementation,
 acceptance gaps and next work**. The specification and decision register define
 requirements; the crosswalk routes requirement IDs to code/tests; dated reports
@@ -10,6 +10,990 @@ this record. Reconciliation does not accept new gates or change product scope.
 The [detailed completion handoff](implementation/README.md) supplies the executable
 remaining-work packages, decision worksheet, fixture/test procedures and complete
 requirement mapping. It does not accept gates or replace this live evidence ledger.
+
+### November 14 · F24/F25 desktop authority and validation matrix
+
+Reproduced the documentation mismatch against the manifest: default builds select
+`desktop-writes`; the entry READMEs and a later current-disposition paragraph still
+promised read-only operation. Current docs now describe the default and the explicit
+bundled read-only invocation. Historical dated reports retain their attribution.
+
+The host regression submits one eligible Stage through the generated IPC handler
+and real worker in a disposable repository. Default capabilities report writes enabled
+and the index receives the working bytes. A no-default-features/custom-protocol host
+reports writes disabled and rejects Stage before queuing it. Both preserve HEAD and
+the working tree. Settings and an unauthorized caller reject the same request for
+their respective role/ACL reasons; Settings capabilities provide a positive control.
+
+Validation now builds, tests and lints the bundled read-only host alongside default
+and all-feature hosts. Native acceptance menu probes use live Settings/main commands
+and the existing Settings page. Positive-control failures and unknown commands cannot
+count as denial passes. The generated probe JavaScript was exercised in a Node VM
+against expected denial, missing-command, failed-positive-control and unexpected-success
+outcomes. Live native menu interaction was not repeated in this milestone.
+
+Frontend 254 tests, typecheck, lint, contract check, format check and production build
+passed. Host suites passed: default 28, all features 31, read-only 23 (two intentional
+ignored tests per configuration). Format, Clippy in all three configurations, explicit
+read-only build and default release build passed. A duplicate fixture-module Clippy
+failure was corrected by sharing the import; affected gate/ACL tests were rerun.
+Private Keychain tests require permitted local access; the sandboxed attempt failed
+fixture creation, while the permitted runs passed. The existing F01–F21 fixes and
+product UI changes are included in this checkpoint rather than left uncommitted.
+
+### November 14 · F21 empty model option
+
+The rendered Settings regression reproduced an empty dropdown while the saved
+profile still contained the previously chosen model. The empty option is now a
+disabled placeholder. A configured model remains selected until the user chooses
+another installed model. First-time connection-only setup remains supported.
+[Model selector](../app/desktop/src/views/SingleAiSetup.tsx)
+
+The UI test selects and saves a model, attempts the placeholder, flushes and
+reopens Settings, and confirms the visible and saved models agree. Core
+verification saves a connection before its first model, prepares provider
+discovery, saves a model, reopens the application state, and verifies both the
+effective configuration and the prepared Fill payload use that saved model.
+All fourteen SingleAiSetup tests passed, together with the Core regression,
+frontend production build, typecheck and lint.
+[UI regression](../app/desktop/src/views/SingleAiSetup.test.tsx) ·
+[Persistence and Fill regression](../app/core/tests/m3_application.rs)
+
+### November 14 · F20 completed AI jobs and request admission
+
+A loopback-provider regression completed 32 fast jobs, then reproduced a Busy
+error on request 33 despite zero active provider work.
+
+Admission now evicts the oldest finished result when the bounded 32-entry
+registry is full. Unfinished workers retain their slots even when their displayed
+phase is Cancelled. Finished-result retention is measured from completion, so a
+long-running request can still expose its newly completed result.
+[Registry implementation](../app/core/src/ai/jobs.rs)
+
+Forty sequential loopback requests completed in the provider regression and
+another forty completed through the desktop provider-test request path. Each
+latest result was retrievable immediately, retained entries stayed at or below
+32, and no ten-minute wait was needed. The AI suite passed all 66 tests, including
+active global/connection concurrency and cancellation checks. Core Clippy passed.
+[Provider regression](../app/core/src/ai/provider/tests.rs) ·
+[Desktop regression](../app/desktop/src-tauri/src/ai_transfer_tests.rs)
+
+### November 14 · F19 final AI Settings edit on application Quit
+
+Native reproduction used the ordinary development bundle with isolated app data
+and a synthetic loopback model-list provider. Editing Temperature from 0.2 to 0.3
+and immediately pressing Command-Q exited with 0.2 still persisted.
+
+Quit now requests a one-use Settings flush and waits for its result alongside
+the main presentation save. Only the Settings caller's AI saves are admitted
+during that handshake. In-flight settings saves are allowed to finish, and the
+form prevents further edits while closing. Failure uses the existing save-failure
+dialog. Cancelling Quit restores interaction.
+[Shutdown handshake](../app/desktop/src-tauri/src/shutdown.rs) ·
+[Settings listener](../app/desktop/src/settings.tsx)
+
+The rebuilt bundle saved 0.4 on immediate Command-Q and displayed it after
+relaunch. Ordinary Settings close saved 0.5. An edit left past debounce saved 0.6.
+Making only the isolated AI directory unwritable and immediately quitting after
+editing 0.7 displayed the native save-failure dialog. Keep app open retained 0.7
+in the editable form while disk still contained 0.6. Restoring write access and
+retrying Quit saved 0.7 before exit.
+
+Bridge/form tests passed for flush ordering and failure reporting. Native tests
+cover caller scope, pending-close admission, token generation and one-use
+acknowledgements. Frontend build/lint and desktop Clippy passed.
+
+### November 12 · F18 composer ownership during delayed callbacks
+
+Rendered tests reproduced both failures. A delayed successful commit of A erased
+a newer draft B. An AI stream callback restored its captured navigation snapshot,
+reopening a sidebar hidden after generation began.
+
+Draft updates now use functional worktree-scoped changes and advance a revision.
+A successful commit clears its draft only if that revision and workspace context
+still match. Each AI generation receives a scoped updater. A manual edit takes
+ownership, causing subsequent chunks to be rejected and the obsolete job to be
+cancelled. Clearing a committed draft also advances its revision.
+[Composer implementation](../app/desktop/src/views/App.tsx) ·
+[AI stream implementation](../app/desktop/src/views/AiCommitFill.tsx)
+
+Tests with delayed mock responses verify untouched-draft clearing, preservation
+of B and A-to-B-to-A edits through presentation save, navigation during streaming,
+manual ownership, a newer generation, workspace replacement, cancellation and
+retention of partial text on failure. All 64 App and AI Fill tests passed, along
+with the production frontend build and lint checks.
+[Composer tests](../app/desktop/src/views/App.test.tsx) ·
+[AI Fill tests](../app/desktop/src/views/AiCommitFill.test.tsx)
+
+### November 12 · F17 batched history and activity commit reads
+
+In a disposable 500-commit repository, the original history page and activity
+interval started 1,000 object-reader Git processes combined. The requests took
+6.51 and 6.43 seconds in the fixture. Batching reduced this to sixteen processes
+combined, with measured requests around 0.30 and 0.25 seconds. Timings use debug
+builds and include the recording Git wrapper.
+
+Both readers now request groups of up to 64 objects through `cat-file --batch`.
+The existing commit parser handles each length-framed body. The reader validates
+returned IDs, object types, lengths, delimiters and trailing data. Each group uses
+the existing bounded process runner and remaining inspection deadline.
+[History implementation](../app/core/src/history.rs) ·
+[Activity implementation](../app/core/src/activity.rs)
+
+Tests cover ordered output, identity/message equivalence with individual reads,
+merge parents, paging, SHA-256 IDs, activity boundaries and completeness, missing
+objects, output limits, and cancellation of a running batch child. Repository
+bytes remained unchanged. The workspace activity regression covers linked
+worktree deduplication through the application request workflow.
+[Process-count regression](../app/core/tests/history_batch.rs)
+
+### November 12 · F16 slow discovery units and queued siblings
+
+A disposable workspace contained an always-slow repository followed by a healthy
+sibling. A Git wrapper delayed commands in the slow repository beyond the entire
+two-second scan slice. Before the fix, the initial scan and two manual
+continuations all retried the slow repository and the healthy sibling remained
+absent.
+
+A timed-out directory now moves behind the other queued directories. Cancellation
+retains the original pending position. The timeout report records the deferred
+directory's path, and progress remains incomplete while that unit is outstanding.
+[Cursor implementation](../app/core/src/discovery/cursor.rs)
+
+The regression exercises both Continue Scan requests and scheduled monitor
+reconciliation. Both discovered the healthy sibling while reporting the slow
+repository's timeout and pending progress. After releasing the delay, continuation
+completed, retained the healthy identity, and matched a fresh scan's repository
+roots. Cancellation, automatic retry scheduling and cursor invalidation tests
+passed. Core Clippy and the desktop build check passed.
+[Application regression](../app/core/src/application/monitor.rs)
+
+### November 12 · F15 workspace monitoring inventory work
+
+Disposable 20- and 40-repository fixtures compared the original per-entry refresh
+loop with a monitoring pass. Test counters measured inventory loads and decoded
+rows. The original loop performed 21 loads / 420 rows and 41 loads / 1,640 rows.
+The fixed pass performed one load / 20 rows and one load / 40 rows.
+
+Inventory now joins supersession data in its main query. Monitoring retains the
+pass's entries and observed heads, updates observations after refresh, and refreshes
+one worktree per worker turn. Workspace invalidation and monitor restart discard
+the pending pass. Targeted foreground refresh uses the same refresh implementation.
+[Workspace refresh](../app/core/src/workspace.rs) ·
+[Monitoring scheduler](../app/core/src/application/mod.rs)
+
+The scale test completed foreground requests between every refresh and observed
+the changed status in every repository after the pass. External-edit notification,
+parent/child Gitlink and historical-identity regressions passed. Core Clippy and
+the default-feature build check passed.
+[Scale regression](../app/core/src/application/monitor.rs)
+
+### November 12 · F14 repository-wide unstaged diff memory
+
+On a disposable repository of changed 2 MiB binary files, the baseline CLI's peak
+resident memory measured 47,136,768 bytes for 16 files and 283,787,264 bytes for
+128 files. Patch output was 1,744 and 13,952 bytes respectively. After retaining
+only paths and streaming fingerprints, peak resident memory measured 12,517,376
+and 12,632,064 bytes. Measurements used macOS `time -l` and debug CLI builds.
+
+The serialized mode, file metadata, patch bytes and completeness flag matched
+the baseline at both sizes. Fingerprints preserve the existing kind/content
+SHA-256 contract for regular files, symlinks and missing files. A 64 KiB buffer
+checks cancellation and the remaining request deadline during hashing. The
+existing per-file limit and request deadline bound aggregate work.
+
+Tests exercise the CLI workflow, a file changed while Git builds the patch,
+active hashing cancellation, deadline expiry, size limits and preservation of
+Git state during successful inspection.
+[Diff implementation](../app/core/src/diff.rs) ·
+[CLI consistency regression](../app/core/tests/diff_consistency.rs)
+
+### November 12 · F13 interrupted scratch and loose-object promotion
+
+A rejected no-change proposal left an unjournaled scratch directory. A transfer
+limit reached after the first 64 KiB left a partial file in the Git object
+fanout. Both failures were reproduced in disposable repositories.
+
+Preparation and promotion now persist an ownership receipt before writing
+payloads. Cleanup checks the recorded filesystem identities. The first durable
+proposal and the release of its scratch receipt share a SQLite transaction.
+Reopening the writer cleans interrupted work that still matches its receipt.
+Unreceipted artifacts from older runs are left alone, as is an empty entry if a
+process dies between creating it and recording its identity.
+[Ownership and restart cleanup](../app/core/src/writes/temporary.rs)
+
+Regression fixtures cover no-change rejection, cancellation, injected write and
+sync failures, process death during preparation and process exit after publishing
+an object's final hard link. The foreign directory, foreign fanout file, exact-name
+replacement and final object survived. A separate operation's recovery evidence
+remained byte-identical and its recovery and the subsequent Stage completed.
+[Preparation and recovery tests](../app/core/tests/m2_writes.rs) ·
+[Promotion tests](../app/core/src/writes/transaction.rs)
+
+### November 12 · F09 Open Folder in Finder
+
+The original Open Folder invocation launched a disposable application bundle
+containing a Git repository. Its executable appended a line to a launch counter.
+The desktop now sends workspace and worktree IDs. The host resolves the active
+workspace or validates the registered worktree before invoking Finder. Ordinary
+folders use Finder's directory viewer. Packages and explicit Reveal actions use
+macOS's reveal operation. Copy Path still reads the registered path of a missing
+worktree.
+
+The native regression inspected Finder itself. Its front window targeted the
+selected ordinary repository. For a workspace rooted at an applet, Finder showed
+the parent folder with the applet selected, and the applet's launch marker was
+absent. Core tests cover unknown and inactive IDs, a registered symlink alias,
+a missing worktree and a canonical root replaced by a symlink.
+[Finder action and native regression](../app/desktop/src-tauri/src/repository_folder.rs)
+
+### November 12 · F08 Settings and provider transfer approval
+
+Before the fix, the Tauri Settings dispatcher accepted a valid editor-test
+request for unsaved loopback provider B while provider A was saved. B received
+the selected file's sentinel from a disposable repository.
+
+Ordinary Settings now has a configuration and model-discovery allowlist. The
+saved-profile suggestions window has its own host-assigned role, and all desktop
+roles reject source transfers using an editor-supplied connection. Saved-profile
+Fill asks for native approval for each frozen source request. The dialog shows the
+destination, model, included sources and request size.
+
+The desktop IPC regression observed only a source-free model-list GET at B.
+Declining the decision sent nothing to A. Editing the selected file during
+approval returned `StaleReview` and also sent nothing. A fresh, accepted Fill
+sent the selected change once to A and completed. The test uses real loopback
+HTTP and supplies the decision at the native dialog boundary.
+[Dispatcher and provider regression](../app/desktop/src-tauri/src/ai_transfer_tests.rs)
+
+### November 12 · F07 private-key redaction in selected diffs
+
+A disposable repository contained a synthetic PEM block in `fixture.txt`. Editing
+one interior line left both delimiters outside the three-line diff context. Before
+the fix, a loopback Ollama recorder received key-body text in the approved request.
+Capture now identifies protected lines in both complete file versions before
+forming the diff. It carries that classification into the selected diff and
+full-content fragments, including previously protected lines retained after
+delimiter removal. [Capture implementation](../app/core/src/ai/capture.rs)
+
+The regression inspected eight HTTP request bodies across Ollama and the
+OpenAI-compatible protocol, saved-profile and editor-test requests, and 2 KiB and
+16 KiB context budgets. Every body contained the ordinary edit and excluded all
+synthetic key lines and delimiters. Accounting recorded eight redacted diff lines
+and eleven redacted full-content lines. The smaller budget omitted lines and the
+larger budget included all lines after screening.
+[Provider regression](../app/core/tests/m3_application.rs)
+
+### November 12 · F06 reviewed bytes and staged blobs
+
+In a disposable repository, a Git wrapper changed a selected file from A to B
+immediately before `hash-object` read it, then restored A before revalidation.
+Before the fix the operation recorded A's mode/content SHA-256 but staged B
+(`5663091be8ca`). With the fix, the same interleaving staged A (`c86626638e0b`).
+
+Preparation streams each selected regular file into a private, unlinked scratch
+file while hashing the same chunks. Git receives the rewound descriptor. Later
+checks still hash the live working file. The scratch copy exists only during
+materialization and uses temporary disk space proportional to one file at a time.
+[Implementation](../app/core/src/writes/transaction.rs)
+
+Stage and Commit both accepted A after a temporary edit, and both refused a
+persistent B with `StaleReview`, preserving HEAD, the index and the user's edit.
+The restored-content case also passed with a 17 MiB binary. In a separate 18 MiB
+fixture, cancellation while the object command was active preserved HEAD, the
+original index bytes and the concurrent working edit.
+[Controlled-write regression](../app/core/tests/m2_writes.rs)
+
+### November 12 · F05 desktop startup after hard discovery failure
+
+A disposable workspace with 100,001 child directories in one subtree hit the
+production discovery limit. Before the fix, Create reported an error after saving
+and activating the definition. Opening that same state failed with the same error.
+
+The desktop now records a failed scan as incomplete, exposes its cause in the
+workspace alert and keeps the saved definition available. A hard failure writes
+the scan report without updating membership. Database and schema errors still
+propagate. The opt-in regression exercises the production directory limit and
+checks a previously available worktree's identity and availability after a
+failed rescan. [Core regression](../app/core/tests/m3_application.rs)
+
+A macOS acceptance build reopened the original failed state, displayed the error,
+switched to a healthy workspace and returned to the affected one. Adding
+`generated` to its exclusions completed discovery. On a second launch the repaired
+workspace was active, its repository was visible and both original workspace IDs
+were intact.
+
+### November 12 · F04 workspace changes during recovery
+
+Before the fix, the CLI removed a disposable workspace with an unconfirmed push.
+The workspace list became empty while SQLite retained the publication under the
+deleted workspace ID. The shared workspace service now checks the recovery
+predicates before it saves a removal, root replacement or changed exclusions.
+Name-only edits and administration of other workspaces remain available.
+[Scope guard](../app/core/src/workspace/recovery.rs)
+
+Desktop request and CLI tests exercised an interrupted local write, an interrupted
+push queue after restart, and an unconfirmed push after server rejection. All
+three scope mutations were refused. Local recovery, explicit queue closure and
+publication reconciliation against a fresh observation each released the
+corresponding guard. Queue closure preserves the interrupted history and leaves
+each publication's recovery independent.
+[Cross-adapter tests](../app/core/tests/support/scope_recovery.rs)
+
+In a macOS acceptance build, **Remove saved definition** failed while the queue
+needed attention, then succeeded after **Close interrupted push queue**. The
+default-feature CLI refused all three mutations before closure and accepted all
+three on a snapshot taken after closure.
+
+### November 12 · F02 and F03 single-repository selection
+
+The macOS composer previously committed a staged rename with both names in HEAD.
+Unstaging that row left neither name in the index. With A in HEAD, B in the
+index and C on disk, Stage from the index row overwrote B with C, and Unstage
+from the working row overwrote B with A.
+
+The composer now keeps the checked side and both rename paths. Stage uses checked
+working-tree rows, Unstage uses checked index rows, and Commit uses the checked
+content source for each path. A rename counts as one displayed file. A copy
+includes only its destination unless its source is separately selected.
+[Selection logic](../app/desktop/src/stores/changeSelection.ts) · [Composer regressions](../app/desktop/src/views/App.test.tsx)
+
+The native acceptance build exercised 21 cases in fresh disposable repositories.
+The host recorded 19 write requests and zero for the two disabled actions.
+Independent reads of HEAD, index blobs and working files gave these results.
+
+| Checked row and action | HEAD | Index | Working tree |
+|---|---|---|---|
+| Index row, Stage (disabled) or working row, Unstage (disabled) | A | B | C |
+| Working row or both rows, Stage | A | C | C |
+| Index row or both rows, Unstage | A | A | C |
+| Index row, Commit | B | B | C |
+| Working row or both rows, Commit | C | C | C |
+
+Committing the staged rename left only the new name in HEAD and the index.
+Unstaging it restored the old name in the index and kept the new file on disk.
+Staging the resulting deletion and addition together restored the rename in the
+index. Mixed selections, Select all, a separately edited copy source, and a
+renamed file with further working edits also matched the expected trees and blobs.
+
+### November 12 · F01 bulk commit and push review
+
+Bulk Commit, exact push and guided push items now display the frozen Core plan. The
+executing control names the operation and submits the plan ID and operation kind.
+Ordinary single-repository commits still execute on the original click.
+
+Before the fix, the desktop worker received the push planner's review request and
+sent a receive-pack POST to a disposable HTTPS remote. Its main branch advanced
+from `ff16c88` to `78c9dc3`. After the fix, the same fixture recorded zero
+receive-pack requests through Review and Cancel, one POST on Push, and no further
+update after replay or source drift. [Host regressions](../app/desktop/src-tauri/src/publication_tests.rs)
+
+A macOS acceptance build exercised the displayed controls against a separate
+fixture. The selected worktree and bare remote both started at `e33356ce10f1`.
+Bulk Review and Cancel preserved both refs. Explicit Commit created
+`4ce8570d60a8` with only the selected README, preserving the excluded file and
+three unselected worktrees. Push Review and Cancel preserved the remote at
+`e33356ce10f1`, then explicit Push advanced it to `4ce8570d60a8`.
+
+### November 11 remove local staging/commit file-size caps
+
+Selected regular files are now fingerprinted in 64 KiB chunks and passed to Git
+hash-object through an owned, no-follow regular-file descriptor. The write path
+no longer reads complete selected files into a Rust byte vector or rejects files
+above 16 MiB. Exact mode/content fingerprints remain compatible with existing
+operation records. Local object publication copies and syncs loose objects in
+chunks without the former 32 MiB compressed-object cap. Git handles blob creation
+and fsck validation. Existing network-import bounds remain separate and unchanged.
+Cancellation, process deadlines, symlink checks and content-change revalidation
+continue to apply. Display-preview bounds are not used to gate these direct writes.
+
+Validation: a disposable application regression staged, unstaged, staged again
+and committed incompressible files of 65,929,398 and 24,754,883 bytes (matching the
+reported catalog sizes). Independent git hash-object IDs, staged/committed object
+IDs, cat-file sizes, unchanged working-file IDs, clean final status and git fsck
+--strict all passed. Runtime: 95.69 seconds. Existing partial/excluded-staging,
+binary/symlink/executable/deletion, and hook-driven content-change tests passed;
+four bounded subprocess/cleanup/cancellation cases passed. Native debug build
+passed. The user's universe repository was not staged or committed by these tests.
+
+### November 11 clear the composer after a successful commit
+
+Successful single-repository commits now clear that repository's draft in the
+maintained navigation state. The raw message and structured subject/body share
+this value, so both editor modes clear together and the cleared draft is saved.
+Failed, uncertain or cancelled commits preserve the draft. Other repositories'
+drafts and editor sizing preferences are retained.
+
+Validation: all 39 App renderer cases passed, including raw/structured clearing
+only after completion, persistence of the cleared value, and preservation on
+blocked/cancelled outcomes. Renderer production build and ESLint passed.
+
+### November 10 completed generation mislabeled invalid
+
+The user's screenshot showed 6,431 input tokens, 14 output tokens, 146.2 tokens/s,
+0.4 seconds total duration, an editable generated message and a generic invalid
+message error. The exact subject was 76 characters. Current saved settings had
+an internal Conventional template with subject_max_chars=72. The streamed answer
+was complete but the legacy template checker marked its candidate invalid,
+causing the renderer to report failure despite having already displayed the text.
+
+Fill with AI now accepts completed plain-text drafts independently of template
+style/subject-length preferences. Resource/text bounds remain enforced; structured
+editor diagnostics retain their existing template checks. This path no longer
+fabricates rationale/summary metadata solely to pass structured-response rules.
+
+Read-only live /api/ps confirmed gemma4:12b loaded with context_length=16384;
+current saved settings showed thinking=false and output_tokens=2048. No live
+repository-source request or settings modification was performed. Four candidate
+cases passed, including the exact screenshot subject. All 23 provider cases passed;
+the delayed-loopback streaming case now uses that same 76-character subject.
+Native debug build passed. The debug bundle was updated for the next launch.
+Native GUI retry on the user's repository remains unverified.
+
+### November 10 configurable Ollama thinking
+
+Model settings now has a Thinking checkbox, default off, saved automatically
+with model parameters. Missing values in older settings deserialize as false.
+Ollama receives top-level think=false/true, never options.thinking. Switching
+models or using model defaults resets it off. The compatible adapter does not
+expose this provider-specific control. The generation statistics box now takes
+its own full-width row below Fill with AI.
+
+Live read-only model inspection on 10.10.10.72 reported gemma4:12b thinking
+support with default=true. A synthetic streaming request with think=false,
+num_ctx=16384 and num_predict=512 returned 'fix: correct typo in README' in seven
+stream frames, output count 7, done_reason=stop and no thinking output. No
+repository content was sent and no server configuration was changed.
+
+Validation: 23 provider cases passed, including default-off, explicit false/true
+request mapping and TOML round trips. All 26 AI setup/composer renderer cases
+passed, including automatic toggle saves. Contract generation, renderer build,
+ESLint and native debug build passed. Native toggle interaction remains untested.
+
+### November 10 streamed commit messages and generation statistics
+
+Ollama Fill with AI now sends stream=true and requests only a plain-text commit
+subject/body. It does not request a JSON candidate schema, rationale, coverage IDs
+or concerns. Existing configured model parameters and timeout remain in effect.
+The bounded subprocess transport delivers NDJSON incrementally; AI job snapshots
+expose accumulated message text and terminal performance metrics. The renderer
+updates the composer as text arrives (400 ms polling), preserves partial text on
+failure/cancellation, and ignores late updates after cancellation or unmount.
+
+An information box directly below Fill with AI shows total duration, generation
+speed in tokens/second, input tokens and output tokens. Duration runs locally
+while waiting; completion uses Ollama total_duration. Speed is eval_count divided
+by eval_duration in seconds. Unknown metrics display a dash until the server
+reports them. Truncated generation remains an error; partial text is retained
+and no commit is performed automatically. Non-Ollama adapters retain their
+existing response transport and expose available final token counts.
+
+Validation: all 22 provider cases passed, including a delayed loopback response
+proving delivery before HTTP completion, fragmented Unicode NDJSON, metrics,
+truncation, malformed streams and model changes. All 13 AiCommitFill renderer
+cases passed, including live partial updates, final metrics, retained partial
+output after a limit and cancellation rejecting late text. Four subprocess
+cleanup/limit/cancellation tests and three existing candidate validation tests
+passed. Generated contracts, renderer build, ESLint and native debug build passed.
+The user server and native GUI streaming were not exercised for this change.
+The existing debug app bundle was updated for the next launch.
+
+### November 10 AI connection and configuration tabs
+
+The simplified AI server button is now Connect & Load Models, with explanatory
+text describing the live reachability check, model-list retrieval and unlocking
+of Model / Model settings. It explicitly distinguishes retrieving the list from
+loading an LLM into memory. Model tabs start disabled, unlock only after a
+successful response, remain locked after failure, and relock when server type,
+address or port changes. Returning to previous server values does not restore
+an old successful check. Keyboard navigation respects disabled tabs. Connection
+work displays a spinner and Connecting… while repeat clicks are disabled.
+
+Validation: 20 AI setup/provider cases passed; renderer build, ESLint and native
+debug build passed. Native interaction in the user's running app was not tested.
+
+### November 10 preference startup race
+
+App-wide preference reads and individual preference updates no longer require a
+synchronized workspace epoch. These requests have no repository or workspace
+identity, so a new main/settings webview can load them immediately. Workspace
+requests retain their existing stale-context validation. This fixes the startup
+"Layout preferences could not be loaded: stale_review" banner.
+
+Validation: the focused application regression passed for epoch-zero load/save,
+textarea height and timeout persistence after reopening, invalid-value rejection,
+continued rejection of stale inventory requests, and unchanged repository bytes.
+Native debug build passed; the existing debug bundle was updated for next launch.
+The user's running app was not restarted.
+
+### November 10 seed control
+
+Seed uses an integer spinner from 0 to 2,147,483,647 with step 1 and remains
+unset by default. A compact SVG dice button between the input and Unset assigns
+an unbiased random value over that inclusive range using browser random bytes.
+Direct entry and Unset continue to work. All 11 SingleAiSetup cases passed,
+including both random endpoints, direct entry and clearing. Renderer build and
+ESLint passed. Native visual acceptance remains unverified.
+
+### November 10 AI token controls
+
+Context size now increments by 1,024 tokens and offers Model default plus 4K,
+8K, 16K, 32K, 64K, 128K and 256K presets. Custom numeric values remain editable.
+Maximum output tokens increments by 256. Clearing either override still omits it
+from the provider request. Core accepts the 256K context preset and rejects values
+above 262,144. This does not verify that a particular installed model supports
+that context length.
+
+Validation: all 10 SingleAiSetup renderer cases passed, including preset/custom
+synchronization, blank defaults, unset and numeric step validity. The focused Core
+256K boundary test passed. Renderer production build, ESLint and native debug
+build passed. Native spinner interaction was not exercised in the running app.
+
+### November 10 explicit Ollama model loading
+
+Fill with AI now starts a source-free model-load job before capturing repository
+changes. The job sends the selected saved Ollama model to `/api/generate` with no
+prompt, a ten-minute keep-alive and the configured context size if set. Loading
+has a separate 120-second timeout and must return `done: true` for the exact model
+before the UI captures/sends changes. The existing generation timeout remains
+separate. Compatible providers bypass this Ollama-specific operation. Generation
+also uses ten-minute keep-alive so it does not immediately shorten residency.
+
+The UI shows Loading model with elapsed time and Cancel, then the existing source
+capture/generation progress. Failed/cancelled loading cannot send repository data
+or replace the draft. Transport failures now identify model loading, server check
+or generation and distinguish timeouts from cancellation and output bounds;
+the generic manual-workflows-remain-available message was removed.
+
+Live diagnosis used only model metadata and synthetic requests: the configured
+server listed `gemma4:31b`, while `/api/ps` initially had no loaded models. Ordinary
+synthetic requests timed out at 30 and 120 seconds. A documented empty preload
+subsequently returned HTTP 200 with `done_reason: load` in 35.432 seconds. `/api/ps`
+then confirmed the model resident, and a synthetic JSON chat through the app's
+curl/config/stdin transport completed in 6.36 seconds. No repository content was
+sent during these checks and no server/global configuration was changed.
+
+Validation: 19 provider tests passed, including exact empty request, load
+acknowledgment, independent load timeout and existing cancellation/authentication
+checks. The 48 focused renderer tests passed, followed by the added model-load
+cancellation regression (10 AI-fill cases passed). Generated IPC contracts,
+renderer/native builds, lint and diff checks passed. The debug app is rebuilt for
+its next launch. These live checks validate preload and synthetic generation;
+they do not claim that the user's entire 349-file generation has passed.
+
+### November 10 cancellation, selection continuity and large AI selections
+
+Stage/Unstage and AI filling now expose Cancel beside their progress indicator.
+Staging cancellation uses the existing native operation cancellation; AI cancels
+an active source-capture request or its exact model job. The UI shows Cancelling
+until the operation settles and does not apply a model response after cancellation.
+Deliberate pre-publication cancellation has a neutral completion message. Failed
+or cancelled staging never transfers the file selection to another source.
+
+After successful Stage/Unstage, checked files follow their rows into the new
+source group on inventory refresh. The same selection is available to AI and
+Commit without a second checkbox pass. Commit continues to include only selected
+paths; other staged paths remain in the index, as verified independently with Git.
+
+The 349-file AI failure was a local 128-selection limit, before provider access.
+Capture now accepts up to the same 10,000 paths as writes. Its local fragment count
+supports selected metadata/diffs/content/history, local raw capture remains bounded
+at 128 MiB, and individual source reads are bounded at 4 MiB. Provider payload
+budgets and binary/secret screening remain enforced. A 349-file staged fixture
+with 26 binary assets larger than 1 MiB passes capture within the normal timeout;
+its provider payload stays within the configured budget and its Git index/HEAD
+are unchanged. The oversized-source refusal test now exercises the 4 MiB boundary.
+
+Validation: all 46 focused renderer tests passed; seven AI capture integration
+cases, eight context unit cases, the large 349-file regression and the selected
+commit/retained-staging regression passed. Renderer/native builds, lint and diff
+checks passed. No real repository was staged/committed or sent to an AI provider;
+only a read-only Git blob-size summary was obtained from the user's design repo.
+The debug bundle is rebuilt for the next launch. Native visual/cancellation timing
+for these new controls was not separately exercised.
+
+### November 10 visible work feedback
+
+Stage and Unstage retain disabled controls during execution, change their button
+labels to Staging/Unstaging, and display a spinner with the captured file count
+in the fixed action toolbar. AI filling displays progress for settings lookup,
+selected-change capture, request startup and waiting for the model. Long-running
+operations show elapsed seconds after five seconds, without invented percentages.
+Indicators clear on completion/error; existing completion/error feedback remains.
+Reduced-motion preferences disable spinner animation while retaining the text.
+
+Validation: all 39 focused App/AI-fill/work-status tests passed, including deferred
+Stage/Unstage completion, deferred AI capture/model responses, elapsed time and
+timer cleanup. Renderer/native builds, lint and diff checks passed. The native
+debug bundle was updated for the next launch. No new native visual acceptance was
+performed for this indicator-only change, and the user's running app was not restarted.
+
+### November 10 obsolete overview selections
+
+Inventory refresh now removes saved repository selections whose IDs are absent
+from the current inventory or have been superseded. Replacement repositories
+remain unchecked; valid selections, tabs and historical drafts are preserved.
+This keeps the overview Selected metric, selection count and repository checkboxes
+consistent. The attention metric now reads "Needs attention".
+
+Validation: all 31 App tests passed, including obsolete/absent saved selections,
+retained valid selections, persisted cleanup and replacement during rescan.
+Renderer/native builds, lint and diff checks passed. The debug bundle was updated
+for its next launch; the user's running app and live database were not edited.
+
+### November 10 staging failure and direct operation feedback
+
+The live failed Stage record was traced read-only to `refs/.DS_Store` in the
+`design` repository. Its candidate index passed object validation, but the second
+validation ran against the real reference namespace and Git rejected Finder's
+metadata as an invalid reference. The corrected validator uses the isolated
+reference namespace with the real destination object directory, preserving
+object/index/commit verification without enumerating unrelated real refs. The
+exact saved candidate also passed this corrected read-only validation. No files,
+references or staging contents in the user's repository were changed during diagnosis.
+
+Direct Stage, Unstage and Commit responses now inspect the returned Git outcome;
+a successful request transport no longer disguises a blocked operation as success.
+Success and failure appear directly at the top of the repository page. Success
+feedback survives refresh and is scoped to the affected workspace/repository.
+Published or uncertain commit outcomes explicitly warn against a blind retry.
+Cleaned-up pre-publication failures remain in operation history but no longer
+appear as pending recovery or prevent workspace removal. Interrupted or uncertain
+operations still require recovery. History shows the plain failure before optional
+technical details and offers no recovery button for an already cleaned-up failure.
+
+Validation: 56 application integration tests passed with `--test-threads=2`,
+including Stage/Unstage/Commit with synthetic Finder metadata and a rejected hook
+whose failure remains in history without a pending-recovery notice. The initial
+unbounded parallel run hit inspection timeouts; the bounded run passed all cases.
+All 38 focused App/history/outcome-feedback tests passed, including preservation
+of the draft and visible feedback through refresh. Renderer/native builds, lint
+and diff checks passed. In the isolated native 349-file fixture, Stage completed
+with synthetic `.git/refs/.DS_Store` present; independent Git blob hashes matched
+all 349 source files and the metadata bytes were preserved. Native Unstage also
+showed its green result banner at the top after the refresh completed. The normal
+user app was not restarted; the debug bundle was updated for its next launch.
+
+### November 10 large staging and persistent operation controls
+
+Direct Stage, Unstage and Commit preparation no longer generates the full binary
+patch used by the retired review display. The direct path still constructs and
+binds the exact candidate trees, fingerprints selected content, revalidates state
+and uses the existing transaction/publication path. The lower-level proposal API
+retains full patch generation for callers that explicitly use its review output.
+This removes an unnecessary process-output limit from normal operations rather
+than increasing that limit or truncating content required for execution.
+
+The changed-file list scrolls independently below its header and Stage/Unstage
+toolbar. The composer content scrolls independently above a fixed Commit footer.
+The pane height is fitted to the actual remaining native viewport and recalculated
+on layout renders, window resizing and section expansion. File count does not
+stretch the panels or move actions to the end of the list.
+
+Validation: all 54 application integration tests and 28 App tests passed; renderer
+and native builds, lint and diff checks passed. A small-output-budget integration
+case stages, unstages and commits exact file content even when its complete diff
+exceeds that budget. The updated prepared-operation case verifies metadata remains
+bound without embedding an unused full patch.
+
+Native verification used
+`/private/tmp/Commit Command Large Stage Check 20261110.app`, isolated data at
+`/private/tmp/commit-command-large-stage-check-20261110` and 349 synthetic SVG files
+in `/private/tmp/commit-command-large-stage-fixture-20261110`. Verified action
+positions before and after scrolling to fixture 349; Stage/Unstage and Commit
+remained visible. Clicking Stage succeeded. Independent Git/index inspection
+verified all 349 staged object IDs match the current file bytes, zero unstaged
+changes and a full diff of 23,313,090 bytes, exceeding the old 16,777,216-byte output
+limit. No user repository was staged or changed. The debug bundle was updated;
+the running user app was left untouched and needs restart.
+
+### November 10 sidebar autosave serialization repair
+
+Sidebar pointer resizing now rounds to whole pixels before updating navigation
+state. Webview pointer coordinates can be fractional under UI scaling; passing
+that value to the unsigned-integer sidebar-width field rejected the entire
+save-state request, including drafts. The warning now says Layout and drafts
+were not saved and clears after a subsequent successful save without clearing
+unrelated errors or applying an old workspace's response to the new workspace.
+
+Validation: all 27 App tests passed, including a fractional pointer-coordinate
+regression that preserves the draft and a failed-save/successful-save warning
+recovery case. Renderer/native builds, lint and diff checks passed. The debug
+bundle was updated without closing the user's running instance. Any unsaved draft
+in that old instance should be copied before restarting.
+
+### November 10 normal Git actions and removal of the trust workflow
+
+At the user's explicit direction, the standard desktop build now enables
+`desktop-writes` by default. This supersedes older ordinary-read-only disposition
+statements below; it does not assert completion of unrelated release acceptance.
+The application no longer requires a separate stored worktree trust grant before
+executing an explicitly requested operation. The lower-level controlled-write
+API retains its existing trust contract for its other callers. Application
+operations retain identity/configuration revalidation, hooks/signing behavior,
+locking, stale-input checks, cancellation and journal/recovery handling.
+
+Removed Inspect trust & eligibility, the Trust & execution card, overview trust
+controls/column/sort options, periodic trust polling and the extra hook-preference
+save button. Stage, Unstage and Commit now name the action directly. The obsolete
+authoritative/native-review explanation is removed from the composer. Commit is
+enabled when the host supports Git writes, selected files and a nonblank message
+are present, and no conflicting operation is active.
+
+Validation: all 202 renderer tests and 53 application integration tests passed,
+including an actual commit through Application without creating any trust grant.
+Renderer/native builds, lint, generated native command ACL and diff checks passed.
+Native standard-build verification used
+`/private/tmp/Commit Command Commit Check 20261110.app` and isolated app data at
+`/private/tmp/commit-command-commit-check-20261110`. Selected the disposable
+`alpha/fixture.txt`, entered a message and clicked Commit once. No trust or review
+dialog appeared. The file list became empty; independent Git inspection verified
+commit `bb22aca` with subject `test: verify direct commit action` and a clean
+worktree. The isolated database contained zero trust grants. No user repository
+was committed or changed. The updated debug bundle needs restart; the normal user
+instance was left running.
+
+### November 10 direct AI commit-message fill
+
+Fill with AI now captures the selected file changes, generates one message using
+the saved server/model/instructions/parameters and fills the composer directly.
+The normal button no longer opens the context/candidate diagnostic window or
+requires Capture, Generate, candidate selection or another confirmation. It shows
+Generating while active and errors beside the button; failed requests preserve
+the current draft. Unmounting the component cancels its exact job and ignores late
+results. Version file Action was removed from the commit composer.
+
+Ollama source-message requests now send the explicit JSON schema in `format`,
+constrain generation to one candidate and constrain attribution to actual request
+chunk IDs. Existing response validation remains. Selected comparisons trim common
+unchanged prefixes/suffixes instead of representing every line as replaced. The
+serialized context budget reserves space across fragments so a large first file
+cannot starve all later selected files. A seven-file regression verifies each
+selected file is represented within the same byte bound.
+
+Validation: all 201 renderer tests, 53 AI unit/protocol tests and 52 application
+integration tests passed. Loopback provider tests ran outside the socket-restricted
+sandbox. Renderer build, native build, lint and diff whitespace checks passed.
+Native end-to-end verification used the isolated app
+`/private/tmp/Commit Command Direct AI Check 20261110.app`, isolated data
+`/private/tmp/commit-command-direct-ai-check-20261110` and the existing disposable
+`alpha/fixture.txt`. Against `http://10.10.10.70:11434/` with
+`qwen3.8:27b-mtp-bf16`, a single click changed Fill with AI to Generating and then
+filled the composer with a subject and body about the synthetic fixture. No
+suggestion dialog appeared. No user repository source was sent in this check,
+and no files were staged or committed. The ordinary running user instance was
+left untouched; the updated debug bundle needs restart to load the change.
+
+### November 10 fresh startup discovery and prompt continuation
+
+Application startup now performs a fresh scan of the active workspace before
+returning its current inventory. The previous process's saved scan is not used
+as the startup result. Existing repository identities and drafts are preserved.
+An unfinished current scan schedules its next slice after five seconds rather
+than waiting for the normal sixty-second discovery interval; stopping/switching
+the monitor clears that retry. Actual inspection failures remain visible.
+
+Validation: all 52 application integration tests passed, including replacement
+of a persisted timeout by a fresh startup result and immediate discovery of a
+repository created while the app was closed. Both verify repository bytes remain
+unchanged. Three monitor unit tests passed, including bounded retry scheduling
+and stop cleanup. Renderer and native builds, lint and diff whitespace checks
+passed. The first sandboxed application run passed 47 cases; five localhost HTTP
+fixtures could not bind loopback sockets. The rerun outside that sandbox passed
+all 52. The debug bundle was updated; the running user instance was untouched.
+
+### November 10 workspace folder link
+
+The active workspace path in the sidebar now uses the same hover/focus underline
+and Finder folder-opening action as the repository header path. All 24 App tests
+passed, including the workspace path regression. Renderer and native builds
+passed; the debug bundle was updated without restarting the user instance.
+
+### November 10 changed-file selection checkbox
+
+An unlabeled master checkbox sits as a file row immediately above the first file
+in the first populated group, aligned with the other checkboxes. It selects all enabled
+checkboxes from an empty or partial selection, and clears them when all are
+selected. Partial selection uses the native mixed indicator. Conflicted rows
+remain disabled. When staged and working-tree rows refer to the same path, both
+can be checked; requests include that path once using its full working-tree
+content. The selection count remains a count of unique files.
+
+Validation: all 23 App tests passed, including none/partial/all toggling, mixed
+staged/working-tree rows, unique-file count and excluded conflict rows. Renderer
+build, lint and native build passed. Updated the debug bundle executable; the
+running user instance was left untouched and needs restart to load the change.
+
+### November 10 background scan stability and AI dialog repair
+
+A resumable discovery slice no longer marks previously known repositories
+unavailable merely because it has not reached them yet. Inspected failures still
+update availability; completed scans retain the existing missing/error behavior.
+Time-slice progress is labeled as scanning rather than a discovery error. Actual
+inspection issues remain prominent. The deterministic expired-scan regression
+preserves identity, availability and repository bytes; all 23 workspace cases passed.
+
+The repository header path underlines on hover/focus and opens the folder's
+contents in Finder. The existing tab-menu Reveal action still selects the folder.
+Fill with AI now opens an owned native movable/resizable dialog using the same
+host presentation as Settings, with a fixed header and independently scrolling
+content. A modal guard blocks owner input until closure; selected suggestions
+return only the chosen full message or description to the original draft. The
+child has no Git mutation capability. Settings and AI dialogs share their scoped
+renderer and host presentation, rather than duplicating the window infrastructure.
+
+Validation: all 198 renderer tests across 39 files passed; renderer build, lint,
+native build and generated command ACL test passed. Native verification used
+`/private/tmp/Commit Command AI Dialog Check 20261110.app` with isolated copied
+fixture data at `/private/tmp/commit-command-ai-dialog-check-20261110`.
+Verified native AI opening, scrolling, title-bar dragging, resizing, Close button,
+red-window-button closing, reopening and return to the owner. Header-path click
+opened the intended fixture folder's contents in Finder. No provider inference
+was performed in this window-lifecycle check. The normal running user app and
+its drafts were left untouched; the disposable test process was stopped.
+The debug bundle executable was updated; a running instance needs restart.
+
+### November 10 navigation, tab management and About cleanup
+
+Discovery reports now live in Workspace troubleshooting in the sidebar. An
+incomplete scan still produces a prominent main-content warning that opens the
+troubleshooting section. Push dependency planning moved from Workspace Overview
+into the repository's Remotes and upstream controls.
+
+Hide sidebar has a subtle tinted button surface. Overview stays fixed with a
+visual divider before repository tabs. Repository tabs support pointer dragging,
+keyboard ordering (Alt+Shift+Left/Right), and the requested context menu: Close,
+Close Others, Close to the Right, Copy Path, Reveal in Finder, Pin/Unpin. Pinned
+tabs occupy the left group and survive bulk closing; direct Close remains
+available. Closing tabs preserves drafts. Pin state has a default-false optional
+serialized field, so older saved layouts load; navigation restart coverage verifies
+pinned state persists. Path actions use fixed macOS tools with argument/stdin
+passing and are restricted to the main renderer.
+
+Native verification used three disposable uncommitted fixture repositories in
+`/private/tmp/commit-command-tabs-fixture-20261110` and isolated app data in
+`/private/tmp/commit-command-tabs-check-20261110`. Verified the menu, pinning and
+pin persistence on restart; keyboard and final pointer-drag ordering; Close and
+Close to the Right; disabled bulk-close actions when only other pinned tabs
+remain; retained draft after closing/reopening; exact Copy Path output pasted
+inside the fixture; and Finder selecting the intended fixture folder. Initial
+native tests exposed premature menu dismissal on WebKit blur and unreliable
+HTML drag/drop. Final code uses outside-click/Escape/Tab dismissal and pointer
+capture for dragging. Temporary fixture repositories were not committed or pushed.
+
+About now keeps its metadata visible while View license toggles a read-only text
+box below the buttons; the open label is Close license. Publisher attribution is
+removed. The bundled license text matches the root MIT LICENSE byte-for-byte,
+including copyright to Randy Dodson, without the obsolete publishing attribution.
+
+Final native About check: opened the dialog, observed Developer/Copyright/License
+without Publisher, opened the read-only MIT License text area below the buttons,
+and closed it with Close license; the button returned to View license.
+
+Validation: all 182 renderer tests, frontend build and lint passed. Core navigation
+migration/restart test and generated native command ACL test passed. Native bundle
+rebuilt. Earlier status entries remain historical checkpoints.
+
+### November 10 Settings close fix and native verification
+
+The automatic-save close handler returned through Tauri's `onCloseRequested`,
+which finishes by invoking window destruction. The Settings capability allowed
+close but omitted destroy; this prevented both close controls from finishing.
+Added window-destroy permission scoped to the Settings webview and removed the
+recursive close request. The handler now awaits save completion and allows
+Tauri's normal destruction path, preventing close only on save failure.
+
+Native verification in `/private/tmp/Commit Command Close Check 20261110.app`
+using `/private/tmp/commit-command-close-check-20261110`: opened Settings, clicked
+Close settings, observed the main window with an enabled Settings button;
+reopened Settings, clicked its native red close button, and again observed the
+main window with focus returned to Settings. No user data or drafts were touched.
+The earlier native-close verification gap is resolved for these no-pending-edit
+cases; queued-save and failure boundaries retain renderer test coverage.
+
+### November 10 automatic AI property persistence
+
+The explicit Save AI settings action is removed. Valid edits save automatically
+after a 250 ms typing pause; pending writes are serialized and intermediate edits
+are coalesced. The latest returned settings fingerprint/revision is used for each
+write. Server metadata can save before model selection. Complete server/model
+settings use the existing atomic singleton update, without requiring a live test
+to persist metadata. Live testing remains explicit.
+
+Settings close actions flush pending changes, including the native title-bar
+close route. A failed write is shown as an error and prevents closing; changing
+the field or another close attempt retries pending values. Inputs remain editable
+while writing. Model-list matching ignores only generated record identity within
+the singleton editor, so creating the first saved server does not discard an
+in-progress test or its model list.
+
+Validation: frontend build, ESLint and all 173 renderer tests passed, including
+automatic parameter/Unset persistence, serialized revision use, latest-edit flush
+and write failure handling. Native bundle rebuilt. Native title-bar close behavior
+has not been manually retested for this change.
+
+### November 10 AI settings tabs
+
+Supersedes the earlier wizard navigation: Server, Model and Model settings are
+freely accessible tabs, with roving keyboard focus and preserved edits. Next/Back
+and numbered setup steps are removed. Save AI settings is available on every tab.
+Editing parameters/instructions for the unchanged saved server/model does not
+require a new connection test; choosing a new server/model still uses live
+model discovery. A running test continues when another tab is selected.
+
+Validation: frontend build, ESLint and all 169 renderer tests passed, including
+free navigation before discovery, edit preservation and saved-model editing.
+Native bundle rebuilt; GUI behavior for this navigation change was not manually
+retested. No user settings were changed.
+
+### November 10 saved-server connection-test fix
+
+A saved connection was spread into the request draft, including `revision` and
+`endpoint_approval` fields. The strict desktop decoder rejected that request
+before HTTP transport ran. Explicit draft projection now applies when loading,
+testing and saving a connection. Decoder strictness remains intact. Settings
+alerts now use bold theme-aware red text and a circular marker; local request
+rejection explicitly says the app failed before contacting the server.
+
+Validation: production frontend/native builds, ESLint and all 168 renderer tests
+passed. Regression coverage rejects persistence fields in test/save requests,
+checks saved-server editing and saving, and verifies each test click starts a
+fresh discovery request. A live read-only GET to
+`http://10.10.10.70:11434/api/tags` returned HTTP 200 and nine models. No inference
+or source transfer ran. The bundle was rebuilt. Final native UI verification of
+this patch remains unverified: the normal app was still the old running build,
+and organization policy blocked computer use of the isolated app identity.
+Both owned verification processes were stopped; the normal app was preserved.
+
+### November 10 settings simplification
+
+User-directed scope change: Settings now contains **Appearance** and **AI**.
+AI setup is a single Server → Model → Model settings flow: editable address and
+port, explicit reachability/model-list test, installed-model dropdown, system
+instructions and supported generation parameters. Profile management, scoped
+assignments, template editing, diagnostics, request-limit and backup pages are
+removed from the settings UI. The AI message UI no longer offers a profile selector.
+
+Saving uses one atomic `single_setup` change: one server/model, one application
+binding, no old workspace/repository overrides or additive instructions. Existing
+storage types remain compatible; the previous active application configuration
+(or first saved configuration when none was assigned) supplies initial values.
+Old configuration generations remain on disk. Saving does not send source or
+run inference. The provider test executes directly and watches its returned job
+ID rather than requiring an approval window.
+
+Validation: frontend production build, ESLint, 164 renderer tests, two focused
+Core singleton/migration tests, and generated native command ACL test passed.
+Native host suite: 19 passed and one worker-only case ignored in the sandbox;
+two disposable-Keychain cases failed there with OSStatus -50, then both passed
+when rerun outside the sandbox with one test thread.
+Native verification used `/private/tmp/commit-command-single-ai-check-20261110`:
+entered `http://10.10.10.72`, port `11434`; Test provider returned five installed
+models; selected `qwen3.5:9b-q4_K_M`; saved temperature `0.3` and Top P `0.8`;
+reopened Settings and observed the saved server. Inspected the isolated saved
+metadata to confirm model/parameters persisted. No inference or repository
+content transfer was performed. The normal user's configuration was not changed.
+This is settings/provider-discovery evidence, not inference or release acceptance.
 
 ### November 9 completion P13B Core AI import controller
 
@@ -979,10 +1963,11 @@ reopened. Foreign-lock/stale-fingerprint negative cases continue; package not ye
 - **Environment blocked:** a check could not exercise its intended behavior;
   historical passes remain historical and are not replaced by a new pass.
 
-Ordinary desktop builds allow local inspection and app-state persistence, but
-reject managed Git trust grants, writes and remote execution in Rust. Optional
-AI provider requests have separate exact native approval. `desktop-writes` remains a non-default
-acceptance feature. Default Core builds expose no managed-repository writes.
+Ordinary desktop builds enable controlled managed Git trust, writes and supported
+remote execution through the default `desktop-writes` feature (November 10 decision).
+Explicit read-only bundled builds use `--no-default-features --features custom-protocol`.
+AI source transfers retain exact native approval. Default Core builds expose no
+managed-repository writes.
 Local publication means a local ref advanced; it does not mean a server push.
 Exact individual publication and guided per-item queues are implemented within
 recorded acceptance envelopes. Neither planning nor a completed hook check grants
@@ -994,7 +1979,7 @@ push authority. No default change, commit, push or release is authorized by this
 |---|---|---|
 | P0 baseline | Accepted historical baseline | [P0 report](reports/P0_BASELINE_2026-11-02.md); current checks below do not replace the full baseline matrix |
 | M0–M1 Core inspection/workspaces | Implemented and accepted within recorded local envelope | [M1 contracts](architecture/M1_READ_ONLY_WORKSPACES.md), [M1 ledger](ACCEPTANCE_MATRIX.md#10-m1-acceptance-gates--completed-local-implementation); desktop/scale criteria remain separate |
-| M2 controlled stage/unstage/commit | Implemented and accepted within bounded macOS/APFS envelope | [M2 contracts](architecture/M2_CONTROLLED_WRITES.md), [M2 ledger](ACCEPTANCE_MATRIX.md#11-m2-acceptance-gates--controlled-writes); ordinary desktop exposure blocked by G01–G04 |
+| M2 controlled stage/unstage/commit | Implemented and accepted within bounded macOS/APFS envelope | [M2 contracts](architecture/M2_CONTROLLED_WRITES.md), [M2 ledger](ACCEPTANCE_MATRIX.md#11-m2-acceptance-gates--controlled-writes); default desktop exposure enabled; broader G01–G04 acceptance remains partial |
 | M3 desktop/lifecycle/reviews | Implemented; acceptance partial | [M3 ledger](ACCEPTANCE_MATRIX.md#12-m3-acceptance-gates--implementation-with-native-gates-open), [close/Quit](reports/M3_NATIVE_CLOSE_QUIT_2026-11-02.md), [review lifetime](reports/M3_REVIEW_LIFETIME_2026-11-02.md), [geometry](reports/M3_MIXED_DPI_WINDOW_RESTORE_2026-11-02.md); G01–G04 |
 | Branding/About | Selected automated/native visual acceptance passed | [Branding report](reports/COMMIT_COMMAND_BRANDING_ABOUT_2026-11-03.md); internal storage identifier preserved; release branding/signing work remains G11 |
 | M4 graph/activity/audit | Implemented; acceptance partial | [Graph/activity](reports/M4_READ_ONLY_PROGRESS_2026-11-02.md), [unified audit](reports/M4_UNIFIED_OPERATION_AUDIT_2026-11-02.md); G03, G10 |
@@ -1367,7 +2352,7 @@ AI, SemVer Actions and backups remain in the approved product scope, not deferre
    criterion-level native evidence and classify facility blocks. Restore the full
    reproducible automated matrix with isolated GPG and permitted local transport
    fixtures. Do not reopen selected historical passes merely because an old intro
-   still lists them as untested. Ordinary writes stay disabled until G04 closes.
+   still lists them as untested. Default desktop writes are enabled; G04 remains an acceptance gate.
 2. **G07 remaining acceptance:** expand exact individual publication and recovery
    acceptance to supported authenticated loopback transports, topology and native
    interruption cases. The implementation and selected fixture evidence are above;

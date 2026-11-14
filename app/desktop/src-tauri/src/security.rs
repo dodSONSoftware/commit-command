@@ -15,7 +15,7 @@ pub fn authorize(label: &str, url: &Url, required: &str) -> Result<(), String> {
         && url.port() == Some(1420);
     let path = match required {
         "main" => url.path().is_empty() || url.path() == "/" || url.path() == "/index.html",
-        "review" => url.path() == "/review.html",
+        "settings" | "ai-suggestions" => url.path() == "/settings.html",
         _ => false,
     };
     if label != required
@@ -49,6 +49,28 @@ pub(super) fn known_fields(actual: &serde_json::Value, canonical: &serde_json::V
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn settings_has_a_dedicated_page_and_role() {
+        assert!(authorize(
+            "settings",
+            &Url::parse("tauri://localhost/settings.html").unwrap(),
+            "settings"
+        )
+        .is_ok());
+        for (label, page, role) in [
+            ("main", "settings.html", "main"),
+            ("settings", "index.html", "settings"),
+            ("settings", "review.html", "settings"),
+            ("settings", "settings.html", "review"),
+        ] {
+            assert!(authorize(
+                label,
+                &Url::parse(&format!("tauri://localhost/{page}")).unwrap(),
+                role
+            )
+            .is_err());
+        }
+    }
     #[test]
     fn actual_caller_and_page_are_required() {
         #[cfg(target_os = "macos")]
@@ -97,6 +119,6 @@ mod tests {
             &Url::parse("tauri://localhost/review.html").unwrap(),
             "review"
         )
-        .is_ok());
+        .is_err());
     }
 }

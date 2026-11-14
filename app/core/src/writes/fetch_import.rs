@@ -504,11 +504,14 @@ impl ControlledWrites {
             )?;
             self.revalidate_transport(&plan.transport, &remaining(&options, started)?)?;
             self.import_checkpoint(&mut stored, FetchImportPhase::ImportingObjects)?;
+            let operations = self.workspace.data_directory().join("operations");
             transaction::promote_loose_objects(
+                self.workspace.connection(),
+                &operations,
                 &loose.join("objects"),
                 &plan.transport.metadata,
                 &remaining(&options, started)?,
-                65 * 1024 * 1024,
+                Some(65 * 1024 * 1024),
             )?;
             stored.value.objects_imported = true;
             self.persist_import(&stored)?;
@@ -658,7 +661,7 @@ impl ControlledWrites {
         Ok(stored.value)
     }
     pub(crate) fn import_notices(&mut self) -> Result<Vec<crate::application::FetchImportNotice>> {
-        let mut statement=self.workspace.connection().prepare("SELECT json_extract(value,'$.value.plan.id'), json_extract(value,'$.value.plan.workspace'), json_extract(value,'$.value.plan.worktree') FROM state WHERE key LIKE 'fetch-import:%' AND json_extract(value,'$.value.phase') IN ('importing_objects','publication_pending','reference_prepared','reference_updated','uncertain') ORDER BY key LIMIT 100")?;
+        let mut statement=self.workspace.connection().prepare(&format!("SELECT json_extract(value,'$.value.plan.id'), json_extract(value,'$.value.plan.workspace'), json_extract(value,'$.value.plan.worktree') FROM state WHERE {} ORDER BY key LIMIT 100", crate::workspace::recovery::FETCH))?;
         let rows = statement.query_map([], |r| {
             Ok(crate::application::FetchImportNotice {
                 operation_id: r.get(0)?,

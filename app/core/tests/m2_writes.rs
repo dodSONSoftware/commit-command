@@ -1631,3 +1631,267 @@ fn version_action_recovery_barrier_blocks_new_and_approved_writes_without_applic
     .unwrap();
     assert_eq!(service.execute(&approval).unwrap().phase, Phase::Complete);
 }
+
+#[test]
+fn staging_binds_the_recorded_digest_and_git_blob_during_a_working_file_race() {
+    use sha2::{Digest, Sha256};
+    use std::{io::Write, process::Stdio};
+
+    let t = M2::new();
+    let selected = t.f.repo.join("file.txt");
+    let mut reviewed = vec![0xa5; 17 * 1024 * 1024 + 1];
+    reviewed[0] = 0;
+    fs::write(&selected, &reviewed).unwrap();
+    fs::write(t.f.root.join("reviewed"), &reviewed).unwrap();
+    let head = t.f.git(&["rev-parse", "HEAD"]);
+    let index = fs::read(t.f.repo.join(".git/index")).unwrap();
+
+    // Only the child CLI sees this Git wrapper. It edits the same inode after
+    // capture and controls exactly what revalidation will find.
+    let bin = t.f.root.join("bin");
+    fs::create_dir(&bin).unwrap();
+    let wrapper = bin.join("git");
+    fs::write(
+        &wrapper,
+        r#"#!/bin/sh
+set -eu
+PATH="$ORIGINAL_PATH"
+case " $* " in
+  *" hash-object -w --stdin "*)
+    printf 'concurrent edit' > "$SELECTED"
+    git "$@"
+    if [ "$RESTORE" = yes ]; then cat "$REVIEWED" > "$SELECTED"; fi
+    printf 'ran' > "$BARRIER"
+    ;;
+  *) exec git "$@" ;;
+esac
+"#,
+    )
+    .unwrap();
+    fs::set_permissions(&wrapper, fs::Permissions::from_mode(0o700)).unwrap();
+    let original_path = std::env::var_os("PATH").unwrap();
+    let path =
+        std::env::join_paths(std::iter::once(bin).chain(std::env::split_paths(&original_path)))
+            .unwrap();
+    let barrier = t.f.root.join("barrier");
+    let run = |args: &[&str], restore: &str| {
+        let mut child = Command::new(env!("CARGO_BIN_EXE_gitfleet-write"))
+            .arg(&t.state)
+            .args(args)
+            .env("HOME", &t.home)
+            .env("PATH", &path)
+            .env("ORIGINAL_PATH", &original_path)
+            .env("RESTORE", restore)
+            .env("SELECTED", &selected)
+            .env("REVIEWED", t.f.root.join("reviewed"))
+            .env("BARRIER", &barrier)
+            .stdin(Stdio::piped())
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped())
+            .spawn()
+            .unwrap();
+        child.stdin.take().unwrap().write_all(b"APPROVE\n").unwrap();
+        child.wait_with_output().unwrap()
+    };
+    let trust = run(&["trust", &t.workspace.0, &t.worktree.0], "no");
+    assert!(trust.status.success(), "{trust:?}");
+    let request = serde_json::to_string(&WriteRequest::Stage {
+        paths: vec![NativePath::from_path(Path::new("file.txt"))],
+        hooks: HookPolicy::Execute,
+    })
+    .unwrap();
+    let propose = ["propose", &t.workspace.0, &t.worktree.0, &request];
+    let refused = run(&propose, "no");
+    assert!(!refused.status.success());
+    assert!(
+        String::from_utf8_lossy(&refused.stderr).contains("Selected working content changed"),
+        "{refused:?}"
+    );
+    assert_eq!(fs::read(&selected).unwrap(), b"concurrent edit");
+    assert_eq!(fs::read(t.f.repo.join(".git/index")).unwrap(), index);
+    fs::remove_file(&barrier).unwrap();
+
+    fs::write(&selected, &reviewed).unwrap();
+    let accepted = run(&propose, "yes");
+    assert!(
+        accepted.status.success(),
+        "{}",
+        String::from_utf8_lossy(&accepted.stderr)
+    );
+    assert!(barrier.is_file());
+    assert_eq!(t.f.git(&["rev-parse", "HEAD"]), head);
+    assert!(fs::read(&selected).unwrap() == reviewed);
+    let blob = t.blob("", "file.txt");
+    assert!(blob == reviewed, "staged blob differs from reviewed bytes");
+    let db = rusqlite::Connection::open(t.state.join("state.db")).unwrap();
+    let fingerprint: String = db.query_row(
+        "SELECT json_extract(payload,'$.selected_fingerprints[0][1]') FROM write_operations WHERE json_extract(payload,'$.phase')='complete'",
+        [], |row| row.get(0)
+    ).unwrap();
+    let mode = t.f.git(&["ls-files", "--stage", "--", "file.txt"]);
+    let mut hash = Sha256::new();
+    hash.update(mode.split(|c| *c == b' ').next().unwrap());
+    hash.update(blob);
+    assert_eq!(fingerprint, format!("{:x}", hash.finalize()));
+}
+
+#[test]
+fn failing_post_index_hook_preserves_stage_and_unstage_effects() {
+    let t = M2::new();
+    let head = t.f.git(&["rev-parse", "HEAD"]);
+    let entry = || t.f.git(&["ls-files", "--stage", "--", "file.txt"]);
+    let original = entry();
+    fs::write(t.f.repo.join("file.txt"), b"working edit\n").unwrap();
+    t.hook("post-index-change", "exit 9");
+    let mut service = t.service();
+    t.trust(&mut service);
+    let paths = vec![NativePath::Utf8("file.txt".into())];
+    for request in [
+        WriteRequest::Stage {
+            paths: paths.clone(),
+            hooks: HookPolicy::Execute,
+        },
+        WriteRequest::Unstage {
+            paths,
+            hooks: HookPolicy::Execute,
+        },
+    ] {
+        let staging = matches!(request, WriteRequest::Stage { .. });
+        let out = t.execute(&mut service, request);
+        assert_eq!(out.phase, Phase::PublishedWithPostProcessingFailure);
+        assert!(out.index_reconciled && !out.published);
+        assert_eq!(out.post_processing, ["post-index-change: exit=Some(9)"]);
+        assert_eq!(entry() == original, !staging);
+        assert_eq!(
+            t.f.git(&["show", ":file.txt"]),
+            if staging {
+                b"working edit\n".as_slice()
+            } else {
+                b"original\n"
+            }
+        );
+        assert_eq!(t.f.git(&["rev-parse", "HEAD"]), head);
+        assert_eq!(
+            fs::read(t.f.repo.join("file.txt")).unwrap(),
+            b"working edit\n"
+        );
+    }
+}
+
+#[test]
+fn failed_preparation_keeps_only_existing_artifacts() {
+    let t = M2::new();
+    let mut service = t.service();
+    t.trust(&mut service);
+    let dir = t.state.join("operations");
+    let foreign = dir.join(uuid::Uuid::new_v4().to_string());
+    fs::create_dir(&foreign).unwrap();
+    fs::write(foreign.join("foreign"), b"keep").unwrap();
+    let request = || WriteRequest::Stage {
+        paths: vec![NativePath::Utf8("file.txt".into())],
+        hooks: HookPolicy::Execute,
+    };
+    fs::write(t.f.repo.join("file.txt"), b"pending").unwrap();
+    let pending = service
+        .propose(&t.workspace, &t.worktree, request())
+        .unwrap();
+    let before = tree_bytes(&dir);
+    fs::write(t.f.repo.join("file.txt"), b"original\n").unwrap();
+    assert!(service
+        .propose(&t.workspace, &t.worktree, request())
+        .unwrap_err()
+        .to_string()
+        .contains("no change"));
+    assert_eq!(fs::read_dir(&dir).unwrap().count(), 2);
+    assert_eq!(tree_bytes(&dir), before);
+    assert_eq!(
+        service.outcome(&pending.operation_id).unwrap().phase,
+        Phase::Proposed
+    );
+}
+
+#[cfg(feature = "write-test-support")]
+#[test]
+fn restart_reclaims_interrupted_preparation_and_preserves_recovery_evidence() {
+    use std::os::unix::process::ExitStatusExt;
+    const CHILD: &str = "GITFLEET_TEMPORARY_CRASH_INPUT";
+    if let Some(input) = std::env::var_os(CHILD) {
+        let (state, global, home, ws, wt, request): (
+            PathBuf,
+            Option<PathBuf>,
+            PathBuf,
+            WorkspaceId,
+            WorktreeId,
+            WriteRequest,
+        ) = serde_json::from_slice(&fs::read(input).unwrap()).unwrap();
+        let mut service = ControlledWrites::open(
+            &state,
+            Options {
+                global_config: global,
+                signer_home: Some(home),
+                ..Options::default()
+            },
+        )
+        .unwrap();
+        service.propose(&ws, &wt, request).unwrap();
+        panic!("preparation crash point was missed");
+    }
+    let (t, pending) = crash_fixture(Phase::Preparing);
+    let operations = t.state.join("operations");
+    let foreign = operations.join(uuid::Uuid::new_v4().to_string());
+    fs::create_dir(&foreign).unwrap();
+    fs::write(foreign.join("foreign"), b"keep").unwrap();
+    let before = tree_bytes(&operations);
+    let bin = t.f.root.join("crash-bin");
+    fs::create_dir(&bin).unwrap();
+    let git = bin.join("git");
+    fs::write(&git, "#!/bin/sh\ncase \" $* \" in *' init --bare '*) kill -KILL \"$PPID\"; exit 1;; esac\nPATH=${PATH#*:} exec git \"$@\"\n").unwrap();
+    fs::set_permissions(&git, fs::Permissions::from_mode(0o700)).unwrap();
+    let original = std::env::var_os("PATH").unwrap();
+    let request = WriteRequest::Stage {
+        paths: vec![NativePath::Utf8("file.txt".into())],
+        hooks: HookPolicy::Execute,
+    };
+    let input = t.f.root.join("prepare.json");
+    fs::write(
+        &input,
+        serde_json::to_vec(&(
+            &t.state,
+            &t.options.global_config,
+            &t.home,
+            &t.workspace,
+            &t.worktree,
+            &request,
+        ))
+        .unwrap(),
+    )
+    .unwrap();
+    let child = Command::new(std::env::current_exe().unwrap())
+        .args([
+            "--exact",
+            "restart_reclaims_interrupted_preparation_and_preserves_recovery_evidence",
+            "--nocapture",
+        ])
+        .env(CHILD, &input)
+        .env(
+            "PATH",
+            std::env::join_paths(std::iter::once(bin).chain(std::env::split_paths(&original)))
+                .unwrap(),
+        )
+        .env("HOME", &t.home)
+        .output()
+        .unwrap();
+    assert_eq!(
+        child.status.signal(),
+        Some(9),
+        "{}",
+        String::from_utf8_lossy(&child.stderr)
+    );
+    assert_ne!(tree_bytes(&operations), before);
+    let mut service = t.service();
+    assert_eq!(tree_bytes(&operations), before);
+    let review = service.inspect_recovery(&pending).unwrap();
+    service.recover(&review).unwrap();
+    let retry = t.execute(&mut service, request);
+    assert_eq!(retry.phase, Phase::Complete, "{retry:?}");
+}

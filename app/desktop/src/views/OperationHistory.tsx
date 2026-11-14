@@ -415,8 +415,25 @@ function LocalRecord({
         {op.phase.replaceAll("_", " ")}
       </span>
       <p>{text(record.subject)}</p>
+      <p
+        role={op.phase === "blocked" ? "alert" : undefined}
+        className={op.phase === "blocked" ? "error" : undefined}
+      >
+        {op.phase === "blocked"
+          ? `${record.kind === "stage" ? "Files were not staged" : record.kind === "unstage" ? "Files were not unstaged" : "Commit was not created"}. ${text(op.reason ?? "The operation failed.")}`
+          : op.phase === "complete"
+            ? record.kind === "stage"
+              ? "Files staged successfully."
+              : record.kind === "unstage"
+                ? "Files unstaged successfully."
+                : "Commit created successfully."
+            : text(
+                op.reason ??
+                  "The operation did not finish. Inspect its details before retrying.",
+              )}
+      </p>
       <details>
-        <summary>Recorded phases</summary>
+        <summary>Technical details</summary>
         {record.events.map((event, i) => (
           <p key={i}>
             {new Date(event.at_ms).toLocaleString()} · {event.phase} ·
@@ -426,24 +443,25 @@ function LocalRecord({
         {!record.events_complete && (
           <p>Phase history exceeds the display limit.</p>
         )}
+        <p>
+          {op.reason
+            ? text(op.reason)
+            : op.published
+              ? "Commit published; inspect reconciliation and post-processing below."
+              : "No commit publication recorded."}
+        </p>
+        <p>
+          {publicationStatus(op)} · Index reconciled:{" "}
+          {String(op.index_reconciled)}
+        </p>
+        {op.new_head && <code>{op.new_head}</code>}
+        {op.post_processing.map((result, i) => (
+          <p key={i}>{text(result)}</p>
+        ))}
       </details>
-      <p>
-        {op.reason
-          ? text(op.reason)
-          : op.published
-            ? "Commit published; inspect reconciliation and post-processing below."
-            : "No commit publication recorded."}
-      </p>
-      <p>
-        {publicationStatus(op)} · Index reconciled:{" "}
-        {String(op.index_reconciled)}
-      </p>
-      {op.new_head && <code>{op.new_head}</code>}
-      {op.post_processing.map((result, i) => (
-        <p key={i}>{text(result)}</p>
-      ))}
       {![
         "complete",
+        "blocked",
         "published_with_post_processing_failure",
         "cancelled_before_publication",
         "needs_reauthorization",

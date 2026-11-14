@@ -6,6 +6,11 @@
  */
 export type Data =
   | {
+      kind: "ai_import_targets";
+      value: AiImportTargets;
+      [k: string]: unknown;
+    }
+  | {
       kind: "ai_import_source";
       value: AiImportSource;
       [k: string]: unknown;
@@ -43,6 +48,11 @@ export type Data =
   | {
       kind: "effective_ai_settings";
       value: AiEffective;
+      [k: string]: unknown;
+    }
+  | {
+      kind: "app_preferences";
+      value: AppPreferences;
       [k: string]: unknown;
     }
   | {
@@ -196,6 +206,11 @@ export type Data =
       [k: string]: unknown;
     }
   | {
+      kind: "executed";
+      value: ExecutionResult;
+      [k: string]: unknown;
+    }
+  | {
       kind: "operations";
       value: OperationPage;
       [k: string]: unknown;
@@ -203,23 +218,6 @@ export type Data =
   | {
       kind: "done";
       [k: string]: unknown;
-    };
-/**
- * This interface was referenced by `Response`'s JSON-Schema
- * via the `definition` "AiScope".
- */
-export type AiScope =
-  | {
-      kind: "application";
-    }
-  | {
-      kind: "workspace";
-      workspace: string;
-    }
-  | {
-      kind: "repository";
-      workspace: string;
-      worktree: string;
     };
 /**
  * `display` is never used to reconstruct a path. Byte/wide encodings round-trip.
@@ -243,6 +241,33 @@ export type NativePath =
       value: number[];
       [k: string]: unknown;
     };
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiScope".
+ */
+export type AiScope =
+  | {
+      kind: "application";
+    }
+  | {
+      kind: "workspace";
+      workspace: string;
+    }
+  | {
+      kind: "repository";
+      workspace: string;
+      worktree: string;
+    };
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "BackupComponentType".
+ */
+export type BackupComponentType = "regular_file";
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "BackupKind".
+ */
+export type BackupKind = "ai_configuration" | "full_state" | "migration";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "AiProvider".
@@ -330,6 +355,14 @@ export type AiProviderResult =
       [k: string]: unknown;
     }
   | {
+      kind: "model_loaded";
+      value: {
+        model: string;
+        [k: string]: unknown;
+      };
+      [k: string]: unknown;
+    }
+  | {
       kind: "completion";
       value: AiCompletion;
       [k: string]: unknown;
@@ -349,7 +382,7 @@ export type AiAuthentication = "none" | "stored_bearer";
  * via the `definition` "AiPurpose".
  */
 export type AiPurpose =
-  "discover" | "inference" | "assisted_messages" | "editor_test";
+  "discover" | "load_model" | "inference" | "assisted_messages" | "editor_test";
 /**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "ObservedVersionState".
@@ -745,6 +778,20 @@ export type OverviewSort =
  */
 export type ContentSource = "index" | "working_tree";
 /**
+ * Only these main-window operations offer a separate execution step.
+ *
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ReviewedOperation".
+ */
+export type ReviewedOperation =
+  | "bulk_commit"
+  | "push"
+  | "pre_push_check"
+  | "observe_branch"
+  | "download_branch"
+  | "import_branch"
+  | "set_upstream";
+/**
  * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "OverviewDensity".
  */
@@ -772,16 +819,62 @@ export interface Response {
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiImportTargets".
+ */
+export interface AiImportTargets {
+  items: AiImportTarget[];
+  next?: number | null;
+  total: number;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiImportTarget".
+ */
+export interface AiImportTarget {
+  name: string;
+  path?: NativePath | null;
+  scope: AiScope;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
  * via the `definition` "AiImportSource".
  */
 export interface AiImportSource {
   archive_fingerprint: string;
   available_scopes: AiScope[];
+  manifest: BackupManifest;
   manifest_fingerprint: string;
   path: NativePath;
   settings: AiSettings;
   source: string;
   [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "BackupManifest".
+ */
+export interface BackupManifest {
+  application_version: string;
+  components: BackupComponent[];
+  created_at_ms: number;
+  database_schema?: number | null;
+  includes_history: boolean;
+  kind: BackupKind;
+  recovery_policy: string;
+  settings_revision?: string | null;
+  version: number;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "BackupComponent".
+ */
+export interface BackupComponent {
+  bytes: number;
+  component_type: BackupComponentType;
+  path: string;
+  sha256: string;
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
@@ -855,6 +948,7 @@ export interface AiParameters {
   seed?: number | null;
   stop?: string[] | null;
   temperature?: number | null;
+  thinking?: boolean;
   top_k?: number | null;
   top_p?: number | null;
 }
@@ -971,8 +1065,21 @@ export interface AiJob {
   error_kind?: ErrorKind | null;
   id: string;
   phase: AiJobPhase;
+  progress?: AiStreamProgress | null;
   result?: AiProviderResult | null;
   review: AiProviderReview;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AiStreamProgress".
+ */
+export interface AiStreamProgress {
+  input_tokens?: number | null;
+  message: string;
+  output_tokens?: number | null;
+  tokens_per_second?: number | null;
+  total_duration_ms?: number | null;
   [k: string]: unknown;
 }
 /**
@@ -1106,6 +1213,23 @@ export interface AiEffective {
   profile: AiProfile;
   template: AiTemplate;
   [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "AppPreferences".
+ */
+export interface AppPreferences {
+  generation_timeout_seconds?: number;
+  textarea_heights?: {
+    ai_stop?: number;
+    ai_system?: number;
+    bulk_body?: number;
+    bulk_message?: number;
+    bulk_subject?: number;
+    commit_body?: number;
+    commit_message?: number;
+    commit_subject?: number;
+  };
 }
 /**
  * This interface was referenced by `Response`'s JSON-Schema
@@ -2420,6 +2544,7 @@ export interface RepositoryTab {
   filter: string;
   parent?: string | null;
   path?: NativePath | null;
+  pinned?: boolean;
   scroll: number;
   source: ContentSource;
   view: string;
@@ -2455,8 +2580,19 @@ export interface ReviewDisplay {
   epoch: number;
   expires_at_ms: number;
   id: string;
+  operation?: ReviewedOperation | null;
   summary: string;
   title: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `Response`'s JSON-Schema
+ * via the `definition` "ExecutionResult".
+ */
+export interface ExecutionResult {
+  ai_job_id?: string | null;
+  ai_request_fingerprint?: string | null;
+  result: unknown;
   [k: string]: unknown;
 }
 /**

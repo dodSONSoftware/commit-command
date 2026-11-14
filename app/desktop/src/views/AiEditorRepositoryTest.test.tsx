@@ -148,7 +148,7 @@ it("requires explicit path sources, clears stale previews on repository change a
     }),
   );
   expect(
-    screen.getByRole("button", { name: "Review exact AI source transfer" }),
+    screen.getByRole("button", { name: "Generate message suggestions" }),
   ).toBeEnabled();
   await user.click(
     screen.getByRole("button", { name: "Close AI suggestions" }),
@@ -165,8 +165,8 @@ it("requires explicit path sources, clears stale previews on repository change a
   );
   await user.click(trigger());
   expect(
-    screen.getByRole("button", { name: "Review exact AI source transfer" }),
-  ).toBeDisabled();
+    screen.getByRole("button", { name: "Generate message suggestions" }),
+  ).toBeEnabled();
   expect(screen.queryByText("captured parent payload")).not.toBeInTheDocument();
   await user.click(
     screen.getByRole("button", { name: "Close AI suggestions" }),

@@ -572,7 +572,7 @@ impl ControlledWrites {
     pub(crate) fn publication_notices(
         &mut self,
     ) -> Result<Vec<crate::application::RemoteRecoveryNotice>> {
-        let mut statement=self.workspace.connection().prepare("SELECT json_extract(value,'$.value.plan.id'),json_extract(value,'$.value.plan.check.workspace'),json_extract(value,'$.value.plan.check.worktree') FROM state WHERE key LIKE 'push-publication:%' AND (json_extract(value,'$.value.phase') IN ('checking','preparing','publishing','unconfirmed') OR (json_extract(value,'$.value.phase')='proposed' AND json_extract(value,'$.session')<>?1)) ORDER BY key LIMIT 100")?;
+        let mut statement=self.workspace.connection().prepare(&format!("SELECT json_extract(value,'$.value.plan.id'),json_extract(value,'$.value.plan.check.workspace'),json_extract(value,'$.value.plan.check.worktree') FROM state WHERE {} ORDER BY key LIMIT 100", crate::workspace::recovery::PUBLICATION))?;
         let rows = statement.query_map([&self.session], |r| {
             Ok(crate::application::RemoteRecoveryNotice {
                 operation_id: r.get(0)?,

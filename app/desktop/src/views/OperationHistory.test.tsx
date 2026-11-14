@@ -477,3 +477,59 @@ it("records uncertain publication only through separately selected fresh observa
     ),
   ).toBe(true);
 });
+
+it("shows a failed stage result without expanding technical details or offering needless recovery", async () => {
+  const request = vi.fn<Bridge["request"]>().mockResolvedValue({
+    kind: "operation_audit",
+    value: {
+      items: [
+        {
+          id: "blocked-stage",
+          created_at_ms: 0,
+          operation_kind: "stage",
+          result: "blocked",
+          record: {
+            kind: "local",
+            value: {
+              kind: "stage",
+              worktree: "repo",
+              subject: "",
+              created_at_ms: 0,
+              events: [],
+              events_complete: true,
+              outcome: {
+                operation_id: "blocked-stage",
+                phase: "blocked",
+                published: false,
+                index_reconciled: false,
+                new_head: null,
+                post_processing: [],
+                reason: "Fixture failure",
+              },
+            },
+          },
+        },
+      ],
+      next: null,
+    },
+  });
+  render(
+    <OperationHistory
+      bridge={bridge(request)}
+      workspace="ws"
+      entries={[]}
+      busy={false}
+      act={run}
+      revision={0}
+    />,
+  );
+  expect(await screen.findByRole("alert")).toHaveTextContent(
+    "Files were not staged. Fixture failure",
+  );
+  expect(
+    screen.getByText("Technical details").closest("details"),
+  ).not.toHaveAttribute("open");
+  expect(
+    screen.queryByRole("button", { name: "Inspect guarded recovery" }),
+  ).toBeNull();
+});

@@ -1,5 +1,7 @@
 # Commit Command
 
+**Release:** Aluminum Ferret — version 0.2.0.
+
 Commit Command (formerly GitFleet) is a macOS multi-repository Git workspace
 manager under development. It provides persistent workspaces, repository discovery
 and monitoring, status/diffs/history, commit graphs, workspace activity and operation
@@ -12,8 +14,8 @@ are implemented within bounded acceptance envelopes. Guided push queues, guarded
 SemVer Actions, optional AI settings/templates and native-approved provider
 diagnostics/source message suggestions, read-only unsaved-editor repository tests
 and endpoint-bound macOS Keychain authentication are implemented
-with selected acceptance. **Ordinary desktop builds still disable managed Git
-trust grants, writes and remote execution while acceptance remains partial. Hierarchical AI analysis,
+with selected acceptance. **Ordinary desktop builds enable controlled Git trust, writes and supported remote
+execution through the default `desktop-writes` feature. Acceptance remains partial. Hierarchical AI analysis,
 bounded automatic commits, general backup/restore
 and release readiness remain unfinished. Manual workflows require no AI setup.**
 

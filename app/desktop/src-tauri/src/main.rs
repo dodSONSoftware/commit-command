@@ -9,15 +9,16 @@ mod host_options;
 #[cfg(feature = "native-acceptance-support")]
 mod native_acceptance;
 mod native_dialog;
+mod repository_folder;
+use repository_folder::{FolderTarget, RepositoryPathAction};
 #[cfg(target_os = "macos")]
 mod native_termination;
-use native_dialog::close_review;
 mod security;
 mod shutdown;
 use shutdown::close_snapshot;
 mod window_state;
 use gitfleet_core::{
-    application::{Application, Confirmation, Data, Request, ReviewDisplay, WindowPlacement},
+    application::{Application, Data, Request, WindowPlacement},
     inspection::Cancellation,
 };
 use serde::{Deserialize, Serialize};
@@ -48,6 +49,7 @@ struct JobView {
 }
 struct Job {
     owner: String,
+    finish_on_close: bool,
     generation: u64,
     created: Instant,
     cancel: Cancellation,
@@ -56,17 +58,24 @@ struct Job {
 struct Host {
     sender: SyncSender<Task>,
     jobs: Mutex<BTreeMap<String, Job>>,
-    review: Mutex<Option<String>>,
     closing: std::sync::atomic::AtomicBool,
     active: Mutex<Option<Cancellation>>,
     dialog: std::sync::atomic::AtomicBool,
     generation: std::sync::atomic::AtomicU64,
     reset: std::sync::atomic::AtomicBool,
     completed: std::sync::atomic::AtomicU64,
+    ui_scale: std::sync::atomic::AtomicU16,
+    ai_suggestion: Mutex<Option<AiSuggestion>>,
+    settings_placement: Mutex<Option<WindowPlacement>>,
     close_state: shutdown::CloseState,
+    settings_close: shutdown::SettingsCloseState,
     shutdown_complete: std::sync::atomic::AtomicBool,
 }
 enum Task {
+    SaveUiScale {
+        percent: u16,
+        reply: mpsc::Sender<Result<(), String>>,
+    },
     AiCredentialBinding {
         connection: String,
         reply: mpsc::Sender<Result<gitfleet_core::ai::credentials::Binding, String>>,
@@ -75,31 +84,21 @@ enum Task {
     AcceptanceFault(gitfleet_core::writes::Phase),
     Request {
         job: String,
+        caller: String,
         epoch: u64,
         request: Request,
         cancel: Cancellation,
     },
-    ShowReview {
-        id: String,
-        generation: u64,
+    RequestDirectory(NativeDirectory),
+    RepositoryPathAction {
+        target: FolderTarget,
+        action: RepositoryPathAction,
+        reply: mpsc::Sender<Result<(), String>>,
     },
-    GetReview {
-        id: String,
-        reply: mpsc::Sender<Result<ReviewDisplay, String>>,
-    },
-    Begin {
-        id: String,
-        reply: mpsc::Sender<Result<(Confirmation, ReviewDisplay), String>>,
-    },
-    Confirm {
-        generation: u64,
-        capability: Confirmation,
-        accepted: bool,
-        cancel: Cancellation,
+    RequestAiImport {
+        path: std::path::PathBuf,
         reply: mpsc::Sender<Result<Value, String>>,
     },
-    RequestDirectory(NativeDirectory),
-    CancelReview(String),
     SaveWindowPlacement(WindowPlacement),
     SavePresentation {
         snapshot: shutdown::Snapshot,
@@ -121,9 +120,6 @@ impl Host {
             if let Some(cancel) = active.as_ref() {
                 cancel.cancel();
             }
-        }
-        if let Ok(mut review) = self.review.lock() {
-            *review = None;
         }
     }
 }
@@ -162,11 +158,186 @@ fn check<R: tauri::Runtime>(window: &WebviewWindow<R>, role: &str) -> Result<(),
         role,
     )
 }
+fn check_settings_or_main<R: tauri::Runtime>(window: &WebviewWindow<R>) -> Result<(), String> {
+    check(
+        window,
+        match window.label() {
+            "settings" => "settings",
+            "ai-suggestions" => "ai-suggestions",
+            _ => "main",
+        },
+    )
+}
+#[tauri::command]
+async fn open_settings<R: tauri::Runtime>(
+    window: WebviewWindow<R>,
+    state: tauri::State<'_, Arc<Host>>,
+    workspace: Option<String>,
+    worktree: Option<String>,
+    theme: String,
+) -> Result<(), String> {
+    check(&window, "main")?;
+    if !["system", "light", "dark"].contains(&theme.as_str()) {
+        return Err("Invalid theme".into());
+    }
+    if window
+        .app_handle()
+        .get_webview_window("ai-suggestions")
+        .is_some()
+    {
+        return Err("Close the current dialog first".into());
+    }
+    if let Some(settings) = window.app_handle().get_webview_window("settings") {
+        settings.show().map_err(|e| e.to_string())?;
+        return settings.set_focus().map_err(|e| e.to_string());
+    }
+    let context = json!({"workspace":workspace,"worktree":worktree,"theme":theme,"uiScale":state.ui_scale.load(std::sync::atomic::Ordering::Acquire)});
+    present_owned_dialog(&window, &state, context, "Commit Command — Settings").await
+}
+
+#[derive(Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct AiSuggestion {
+    message: String,
+    body_only: bool,
+}
+#[tauri::command]
+async fn open_ai_suggestions<R: tauri::Runtime>(
+    window: WebviewWindow<R>,
+    state: tauri::State<'_, Arc<Host>>,
+    context: Value,
+) -> Result<Option<AiSuggestion>, String> {
+    check(&window, "main")?;
+    if ["settings", "ai-suggestions"]
+        .iter()
+        .any(|label| window.app_handle().get_webview_window(label).is_some())
+    {
+        return Err("Close the current dialog first".into());
+    }
+    if context.to_string().len() > security::MAX_REQUEST {
+        return Err("AI selection is too large".into());
+    }
+    *lock(&state.ai_suggestion)? = None;
+    let context = json!({"ai": context, "theme": context["theme"], "uiScale": state.ui_scale.load(std::sync::atomic::Ordering::Acquire)});
+    present_owned_dialog(&window, &state, context, "Commit Command — AI message").await?;
+    Ok(lock(&state.ai_suggestion)?.take())
+}
+#[tauri::command]
+fn use_ai_suggestion<R: tauri::Runtime>(
+    window: WebviewWindow<R>,
+    state: tauri::State<'_, Arc<Host>>,
+    suggestion: AiSuggestion,
+) -> Result<(), String> {
+    check(&window, "ai-suggestions")?;
+    if suggestion.message.len() > security::MAX_REQUEST {
+        return Err("AI message is too large".into());
+    }
+    *lock(&state.ai_suggestion)? = Some(suggestion);
+    window.close().map_err(|e| e.to_string())
+}
+async fn present_owned_dialog<R: tauri::Runtime>(
+    window: &WebviewWindow<R>,
+    state: &Host,
+    context: Value,
+    title: &str,
+) -> Result<(), String> {
+    let role = if context.get("ai").is_some() {
+        "ai-suggestions"
+    } else {
+        "settings"
+    };
+    let settings = WebviewWindowBuilder::new(
+        window.app_handle(),
+        role,
+        WebviewUrl::App("settings.html".into()),
+    )
+    .title(title)
+    .inner_size(960., 760.)
+    .min_inner_size(620., 420.)
+    .resizable(true)
+    .decorations(true)
+    .minimizable(false)
+    .maximizable(false)
+    .visible(false)
+    .parent(window)
+    .map_err(|e| e.to_string())?
+    .initialization_script(format!("window.__COMMIT_COMMAND_SETTINGS__={context};"))
+    .on_navigation(move |url| security::authorize(role, url, role).is_ok())
+    .build()
+    .map_err(|e| e.to_string())?;
+    if context.get("ai").is_none() {
+        if let Some(placement) = *lock(&state.settings_placement)? {
+            window_state::restore_settings(&settings, placement).map_err(|e| e.to_string())?;
+        }
+        let geometry = settings.clone();
+        let host = window.state::<Arc<Host>>().inner().clone();
+        settings.on_window_event(move |event| {
+            if matches!(
+                event,
+                tauri::WindowEvent::Moved(_)
+                    | tauri::WindowEvent::Resized(_)
+                    | tauri::WindowEvent::CloseRequested { .. }
+            ) {
+                match window_state::capture(&geometry) {
+                    Ok(Some(placement)) => {
+                        if let Ok(mut saved) = host.settings_placement.lock() {
+                            *saved = Some(placement);
+                        }
+                    }
+                    Ok(None) => {}
+                    Err(error) => eprintln!("Settings placement unavailable: {error}"),
+                }
+            }
+        });
+    }
+    settings
+        .set_zoom(f64::from(state.ui_scale.load(std::sync::atomic::Ordering::Acquire)) / 100.)
+        .map_err(|e| e.to_string())?;
+    native_dialog::present_settings(window, &settings).await
+}
+#[tauri::command]
+fn set_settings_theme<R: tauri::Runtime>(
+    window: WebviewWindow<R>,
+    theme: String,
+) -> Result<(), String> {
+    check(&window, "settings")?;
+    if !["system", "light", "dark"].contains(&theme.as_str()) {
+        return Err("Invalid theme".into());
+    }
+    window
+        .app_handle()
+        .emit_to("main", "commit-command-theme", theme)
+        .map_err(|e| e.to_string())
+}
+fn settings_request(request: &Request) -> bool {
+    matches!(
+        request,
+        Request::AppPreferences {}
+            | Request::SaveAppPreference { .. }
+            | Request::AiSettings {}
+            | Request::SaveAiSettings {
+                change: gitfleet_core::ai::change::Change::SingleSetup { .. }
+                    | gitfleet_core::ai::change::Change::Connection(_),
+                ..
+            }
+            | Request::ReviewAiDiscovery { .. }
+            | Request::AiJobs {}
+    )
+}
 fn lock<T>(mutex: &Mutex<T>) -> Result<std::sync::MutexGuard<'_, T>, String> {
     mutex.lock().map_err(|_| "Host state unavailable".into())
 }
 fn queue(host: &Host, task: Task) -> Result<(), String> {
-    if host.closing.load(std::sync::atomic::Ordering::Acquire) {
+    if host.closing.load(std::sync::atomic::Ordering::Acquire)
+        && !matches!(&task, Task::Request { caller, request:Request::SaveAiSettings{..},.. } if caller=="settings" && host.settings_close.pending())
+        && !matches!(
+            &task,
+            Task::Request {
+                request: Request::SaveAppPreference { .. },
+                ..
+            }
+        )
+    {
         return Err("Application is closing".into());
     }
     host.sender
@@ -193,9 +364,71 @@ fn open_project_repository<R: tauri::Runtime>(window: WebviewWindow<R>) -> Resul
     Err("Opening the project repository is supported on macOS".into())
 }
 #[tauri::command]
-fn desktop_capabilities<R: tauri::Runtime>(window: WebviewWindow<R>) -> Result<Value, String> {
-    check(&window, "main")?;
-    Ok(json!({"writes_enabled":cfg!(feature="desktop-writes"),"protocol":1}))
+fn desktop_capabilities<R: tauri::Runtime>(
+    window: WebviewWindow<R>,
+    state: tauri::State<'_, Arc<Host>>,
+) -> Result<Value, String> {
+    check_settings_or_main(&window)?;
+    Ok(
+        json!({"writes_enabled":cfg!(feature="desktop-writes"),"protocol":1,"ui_scale_percent":state.ui_scale.load(std::sync::atomic::Ordering::Acquire)}),
+    )
+}
+#[tauri::command]
+async fn set_ui_scale<R: tauri::Runtime>(
+    window: WebviewWindow<R>,
+    state: tauri::State<'_, Arc<Host>>,
+    percent: u16,
+) -> Result<u16, String> {
+    check_settings_or_main(&window)?;
+    if !(75..=200).contains(&percent) || !percent.is_multiple_of(5) {
+        return Err("UI scale must be 75–200 percent in increments of five".into());
+    }
+    let previous = state.ui_scale.load(std::sync::atomic::Ordering::Acquire);
+    let windows: Vec<_> = ["main", "settings", "review"]
+        .iter()
+        .filter_map(|label| window.app_handle().get_webview_window(label))
+        .collect();
+    let restore = |error: String| -> String {
+        let failures: Vec<_> = windows
+            .iter()
+            .filter_map(|view| {
+                view.set_zoom(f64::from(previous) / 100.)
+                    .err()
+                    .map(|e| e.to_string())
+            })
+            .collect();
+        if failures.is_empty() {
+            error
+        } else {
+            format!(
+                "{error}; restoring UI scale failed: {}",
+                failures.join("; ")
+            )
+        }
+    };
+    for view in &windows {
+        if let Err(error) = view.set_zoom(f64::from(percent) / 100.) {
+            return Err(restore(error.to_string()));
+        }
+    }
+    let (reply, rx) = mpsc::channel();
+    let result = match queue(&state, Task::SaveUiScale { percent, reply }) {
+        Ok(()) => tauri::async_runtime::spawn_blocking(move || {
+            rx.recv()
+                .map_err(|_| "UI scale save was interrupted".to_owned())?
+        })
+        .await
+        .map_err(|_| "UI scale save failed".to_owned())
+        .and_then(|result| result),
+        Err(error) => Err(error),
+    };
+    if let Err(error) = result {
+        return Err(restore(error));
+    }
+    state
+        .ui_scale
+        .store(percent, std::sync::atomic::Ordering::Release);
+    Ok(percent)
 }
 fn decode(payload: &str) -> Result<Envelope, String> {
     if payload.len() > security::MAX_REQUEST {
@@ -217,7 +450,9 @@ fn decode(payload: &str) -> Result<Envelope, String> {
 fn mutating_request(request: &Request) -> bool {
     matches!(
         request,
-        Request::ReviewVersionAction { .. }
+        Request::ExecuteReviewedOperation { .. }
+            | Request::CancelReviewedOperation { .. }
+            | Request::ReviewVersionAction { .. }
             | Request::ReviewVersionRecovery { .. }
             | Request::ReviewVersionStage { .. }
             | Request::ReviewAuthentication { .. }
@@ -244,20 +479,42 @@ fn dispatch<R: tauri::Runtime>(
     state: tauri::State<'_, Arc<Host>>,
     payload: String,
 ) -> Result<String, String> {
-    check(&window, "main")?;
+    check_settings_or_main(&window)?;
     let input = decode(&payload)?;
+    if window.label() == "settings" && !settings_request(&input.request) {
+        return Err("Request is not available in Settings".into());
+    }
+    if matches!(input.request, Request::ReviewAiEditorTest { .. }) {
+        return Err("Desktop source transfers require a saved AI profile".into());
+    }
+    if window.label() == "ai-suggestions"
+        && !matches!(
+            input.request,
+            Request::AppPreferences {}
+                | Request::SaveAppPreference { .. }
+                | Request::PreviewAiContext { .. }
+                | Request::ReviewAiMessages { .. }
+                | Request::AiJobs {}
+                | Request::CancelAiJob { .. }
+        )
+    {
+        return Err("Request is not available in AI suggestions".into());
+    }
     if !cfg!(feature = "desktop-writes") && mutating_request(&input.request) {
-        return Err("Desktop writes are disabled pending native acceptance".into());
+        return Err("Desktop writes are disabled in this read-only build".into());
     }
     if lock(&state.active)?.is_some()
         && matches!(
             input.request,
-            Request::Activate { .. }
+            Request::ExecuteReviewedOperation { .. }
+                | Request::Activate { .. }
                 | Request::Create { .. }
                 | Request::Update { .. }
+                | Request::CloseInterruptedPushBatch { .. }
                 | Request::Remove { .. }
                 | Request::Propose { .. }
                 | Request::ReviewAiDiscovery { .. }
+                | Request::ReviewAiModelLoad { .. }
                 | Request::ReviewAiInference { .. }
                 | Request::ReviewAiMessages { .. }
                 | Request::ReviewAiEditorTest { .. }
@@ -303,6 +560,9 @@ fn dispatch<R: tauri::Runtime>(
             id.clone(),
             Job {
                 owner: window.label().into(),
+                finish_on_close: matches!(input.request, Request::SaveAppPreference { .. })
+                    || (window.label() == "settings"
+                        && matches!(input.request, Request::SaveAiSettings { .. })),
                 generation: state.generation.load(std::sync::atomic::Ordering::Acquire),
                 created: Instant::now(),
                 cancel: cancellation.clone(),
@@ -318,6 +578,7 @@ fn dispatch<R: tauri::Runtime>(
         &state,
         Task::Request {
             job: id.clone(),
+            caller: window.label().into(),
             epoch: input.epoch,
             request: input.request,
             cancel: cancellation,
@@ -334,7 +595,10 @@ fn job_status<R: tauri::Runtime>(
     state: tauri::State<'_, Arc<Host>>,
     job: String,
 ) -> Result<JobView, String> {
-    check(&window, "main")?;
+    check_settings_or_main(&window)?;
+    if job == "native-write" && window.label() != "main" {
+        return Err("Native operation is owned by the main window".into());
+    }
     if job == "native-write" {
         return Ok(JobView {
             state: if lock(&state.active)?.is_some() {
@@ -368,7 +632,10 @@ fn cancel_job<R: tauri::Runtime>(
     state: tauri::State<'_, Arc<Host>>,
     job: String,
 ) -> Result<(), String> {
-    check(&window, "main")?;
+    check_settings_or_main(&window)?;
+    if job == "native-write" && window.label() != "main" {
+        return Err("Native operation is owned by the main window".into());
+    }
     if job == "native-write" {
         if let Some(cancel) = lock(&state.active)?.as_ref() {
             cancel.cancel();
@@ -376,7 +643,9 @@ fn cancel_job<R: tauri::Runtime>(
         return Ok(());
     }
     let jobs = lock(&state.jobs)?;
-    let entry = jobs.get(&job).ok_or("Unknown job")?;
+    let Some(entry) = jobs.get(&job) else {
+        return Ok(());
+    };
     if entry.owner != window.label()
         || entry.generation != state.generation.load(std::sync::atomic::Ordering::Acquire)
     {
@@ -392,12 +661,46 @@ enum DirectoryPickerPurpose {
     Backup,
 }
 #[tauri::command]
+async fn pick_ai_import<R: tauri::Runtime>(
+    window: WebviewWindow<R>,
+    state: tauri::State<'_, Arc<Host>>,
+) -> Result<Value, String> {
+    check_settings_or_main(&window)?;
+    if lock(&state.active)?.is_some() {
+        return Err("Controlled write is active".into());
+    }
+    let _lease = DialogLease::new(state.inner().clone())?;
+    let path = tauri::async_runtime::spawn_blocking(move || {
+        rfd::FileDialog::new()
+            .set_title("Choose an AI configuration backup")
+            .set_parent(&window)
+            .add_filter("Commit Command backup", &["zip"])
+            .pick_file()
+    })
+    .await
+    .map_err(|_| "Native archive picker failed")?;
+    let Some(path) = path else {
+        return Ok(Value::Null);
+    };
+    let (reply, rx) = mpsc::channel();
+    queue(&state, Task::RequestAiImport { path, reply })?;
+    tauri::async_runtime::spawn_blocking(move || {
+        rx.recv_timeout(Duration::from_secs(60))
+            .map_err(|_| "Archive inspection timed out".to_owned())?
+    })
+    .await
+    .map_err(|_| "Archive inspection response failed".to_owned())?
+}
+#[tauri::command]
 async fn pick_directory<R: tauri::Runtime>(
     window: WebviewWindow<R>,
     state: tauri::State<'_, Arc<Host>>,
     purpose: Option<DirectoryPickerPurpose>,
 ) -> Result<Value, String> {
-    check(&window, "main")?;
+    check_settings_or_main(&window)?;
+    if window.label() == "settings" && !matches!(purpose, Some(DirectoryPickerPurpose::Backup)) {
+        return Err("Settings can only choose backup destinations".into());
+    }
     let _lease = DialogLease::new(state.inner().clone())?;
     let path = tauri::async_runtime::spawn_blocking(move || {
         rfd::FileDialog::new()
@@ -461,211 +764,107 @@ struct NativeDirectory {
     path: PathBuf,
     reply: mpsc::Sender<Result<Value, String>>,
 }
-fn current_review<R: tauri::Runtime>(
-    window: &WebviewWindow<R>,
-    state: &Host,
-    id: Option<&str>,
-) -> Result<String, String> {
-    check(window, "review")?;
-    let active = lock(&state.review)?.clone().ok_or("No active review")?;
-    if id.is_some_and(|id| id != active) {
-        return Err("Review changed".into());
-    }
-    Ok(active)
-}
-#[derive(Serialize)]
-struct ReviewDocument {
-    #[serde(flatten)]
-    review: ReviewDisplay,
-    can_confirm: bool,
-}
-#[tauri::command]
-async fn review_data<R: tauri::Runtime>(
-    window: WebviewWindow<R>,
-    state: tauri::State<'_, Arc<Host>>,
-) -> Result<ReviewDocument, String> {
-    let id = current_review(&window, &state, None)?;
-    let (reply, rx) = mpsc::channel();
-    queue(&state, Task::GetReview { id, reply })?;
-    let review = tauri::async_runtime::spawn_blocking(move || {
-        rx.recv_timeout(Duration::from_secs(30))
-            .map_err(|_| "Review unavailable".to_owned())?
-    })
-    .await
-    .map_err(|_| "Review unavailable".to_owned())??;
-    let can_confirm = cfg!(feature = "desktop-writes") || review.allow_in_read_only_build;
-    Ok(ReviewDocument {
-        review,
-        can_confirm,
-    })
-}
-#[tauri::command]
-async fn review_confirm<R: tauri::Runtime>(
-    window: WebviewWindow<R>,
-    state: tauri::State<'_, Arc<Host>>,
-    review: String,
-) -> Result<Value, String> {
-    let generation = state.generation.load(std::sync::atomic::Ordering::Acquire);
-    let _lease = DialogLease::new(state.inner().clone())?;
-    let id = current_review(&window, &state, Some(&review))?;
-    let (reply, rx) = mpsc::channel();
-    queue(
-        &state,
-        Task::Begin {
-            id: id.clone(),
-            reply,
-        },
-    )?;
-    let (capability, display) = tauri::async_runtime::spawn_blocking(move || {
-        rx.recv_timeout(Duration::from_secs(30))
-            .map_err(|_| "Review unavailable".to_owned())?
-    })
-    .await
-    .map_err(|_| "Review unavailable".to_owned())??;
-    if generation != state.generation.load(std::sync::atomic::Ordering::Acquire) {
-        return Err("Presentation session changed".into());
-    }
-    if !cfg!(feature = "desktop-writes") && !display.allow_in_read_only_build {
-        return Err("Desktop writes are disabled pending native acceptance".into());
-    }
-    // A parented async sheet keeps the app event loop responsive to context
-    // invalidation and Quit while native confirmation is outstanding.
-    let accepted = rfd::AsyncMessageDialog::new()
-        .set_parent(&window)
-        .set_title("Commit Command — Native approval")
-        .set_description(&display.summary)
-        .set_level(rfd::MessageLevel::Warning)
-        .set_buttons(rfd::MessageButtons::OkCancelCustom(
-            "Approve exact operation".into(),
-            "Cancel".into(),
-        ))
-        .show()
-        .await
-        == rfd::MessageDialogResult::Custom("Approve exact operation".into());
-    if generation != state.generation.load(std::sync::atomic::Ordering::Acquire) {
-        return Err("Presentation session changed".into());
-    }
-    let (reply, rx) = mpsc::channel();
-    let cancellation = Cancellation::default();
+fn run_active<T>(
+    host: &Host,
+    cancel: &Cancellation,
+    run: impl FnOnce() -> gitfleet_core::Result<T>,
+) -> gitfleet_core::Result<T> {
     {
-        let mut active = lock(&state.active)?;
+        let mut active = host.active.lock().map_err(|_| {
+            gitfleet_core::Error::with_kind(
+                gitfleet_core::ErrorKind::Unavailable,
+                "Operation state unavailable",
+            )
+        })?;
         if active.is_some() {
-            return Err("Controlled write is active".into());
+            return Err(gitfleet_core::Error::with_kind(
+                gitfleet_core::ErrorKind::Busy,
+                "Another operation is running",
+            ));
         }
-        *active = Some(cancellation.clone());
+        *active = Some(cancel.clone());
     }
-    if let Err(e) = queue(
-        &state,
-        Task::Confirm {
-            generation,
-            capability,
-            accepted,
-            cancel: cancellation,
-            reply,
-        },
-    ) {
-        *lock(&state.active)? = None;
-        return Err(e);
+    let result = run();
+    if let Ok(mut active) = host.active.lock() {
+        *active = None;
     }
-    let result = tauri::async_runtime::spawn_blocking(move || {
-        rx.recv()
-            .map_err(|_| "Execution response unavailable; inspect operation history".to_owned())?
-    })
-    .await
-    .map_err(|_| "Execution response unavailable".to_owned())?;
-    *lock(&state.active)? = None;
-    state
-        .completed
+    host.completed
         .fetch_add(1, std::sync::atomic::Ordering::Release);
     result
 }
-#[tauri::command]
-fn review_cancel<R: tauri::Runtime>(
-    window: WebviewWindow<R>,
-    state: tauri::State<'_, Arc<Host>>,
-    review: String,
-) -> Result<(), String> {
-    let id = current_review(&window, &state, Some(&review))?;
-    #[cfg(feature = "native-acceptance-support")]
-    native_acceptance::record(
-        "review_cancel_requested",
-        json!({"id":id,"label":window.label()}),
-    );
-    if let Some(cancel) = lock(&state.active)?.as_ref() {
-        cancel.cancel();
+
+fn process_request(
+    core: &mut Application,
+    host: &Host,
+    epoch: u64,
+    request: Request,
+    generation: u64,
+    cancel: Cancellation,
+    approve_source: impl FnOnce(&gitfleet_core::ai::provider::Review) -> bool,
+) -> gitfleet_core::Result<gitfleet_core::application::Response> {
+    let check_context = || {
+        if generation != host.generation.load(std::sync::atomic::Ordering::Acquire)
+            || cancel.is_cancelled()
+        {
+            return Err(gitfleet_core::Error::with_kind(
+                gitfleet_core::ErrorKind::Cancelled,
+                "Operation cancelled because the application context changed",
+            ));
+        }
+        Ok(())
+    };
+    let writes_disabled = || {
+        gitfleet_core::Error::with_kind(
+            gitfleet_core::ErrorKind::Unavailable,
+            "Desktop writes are disabled in this read-only build",
+        )
+    };
+    if matches!(request, Request::ExecuteReviewedOperation { .. }) {
+        if !cfg!(feature = "desktop-writes") {
+            return Err(writes_disabled());
+        }
+        return run_active(host, &cancel, || {
+            check_context()?;
+            core.request_with_cancellation(epoch, request, cancel.clone())
+        });
     }
-    queue(&state, Task::CancelReview(id))?;
-    close_review(&window).map_err(|_| "Cannot close review".into())
-}
-fn open_review(app: &tauri::AppHandle, host: Arc<Host>, display: &ReviewDisplay, generation: u64) {
+    let mut response = core.request_with_cancellation(epoch, request, cancel.clone())?;
+    let Data::Review(display) = &response.data else {
+        return Ok(response);
+    };
     let id = display.id.clone();
-    let app = app.clone();
-    let runner = app.clone();
-    let _ = runner.run_on_main_thread(move || {
-        #[cfg(feature = "native-acceptance-support")]
-        native_acceptance::record(
-            "review_open_requested",
-            json!({"id":id,"generation":generation}),
-        );
-        if host.generation.load(std::sync::atomic::Ordering::Acquire) != generation {
-            return;
+    if !cfg!(feature = "desktop-writes") && !display.allow_in_read_only_build {
+        core.cancel_review(&id)?;
+        return Err(writes_disabled());
+    }
+    if let Err(error) = check_context() {
+        core.cancel_review(&id)?;
+        return Err(error);
+    }
+    if display.operation.is_some() {
+        return Ok(response);
+    }
+    if let Some(review) = core.reviewed_ai_source(&id)? {
+        if !approve_source(&review) {
+            core.cancel_review(&id)?;
+            return Err(gitfleet_core::Error::with_kind(
+                gitfleet_core::ErrorKind::Cancelled,
+                "Repository source transfer was declined",
+            ));
         }
-        if let Ok(mut current) = host.review.lock() {
-            *current = Some(id.clone());
+        if let Err(error) = check_context() {
+            core.cancel_review(&id)?;
+            return Err(error);
         }
-        if let Some(old) = app.get_webview_window("review") {
-            #[cfg(feature = "native-acceptance-support")]
-            native_acceptance::record("review_waiting_for_old_window", json!({"id":id}));
-            // Close is asynchronous. The Destroyed run event requests the still-current
-            // review again after Tauri releases the label, rather than racing its teardown.
-            let _ = close_review(&old);
-            return;
-        }
-        let built =
-            WebviewWindowBuilder::new(&app, "review", WebviewUrl::App("review.html".into()))
-                .title("Commit Command — Authoritative review")
-                .inner_size(1000., 800.)
-                .min_inner_size(700., 500.)
-                .devtools(false)
-                .on_navigation(|url| security::authorize("review", url, "review").is_ok())
-                .on_document_title_changed(|window, title| {
-                    #[cfg(feature = "native-acceptance-support")]
-                    native_acceptance::record_probe_title(window.label(), &title);
-                    #[cfg(not(feature = "native-acceptance-support"))]
-                    let _ = (window, title);
-                })
-                .on_new_window(|_, _| tauri::webview::NewWindowResponse::Deny)
-                .build();
-        if let Ok(window) = built {
-            #[cfg(feature = "native-acceptance-support")]
-            native_acceptance::record("review_window_built", json!({"id":id}));
-            let sender = host.sender.clone();
-            let host = host.clone();
-            window.on_window_event(move |event| {
-                #[cfg(feature = "native-acceptance-support")]
-                if matches!(event, tauri::WindowEvent::CloseRequested { .. }) {
-                    native_acceptance::record("review_window_close_requested", json!({"id":id}));
-                }
-                if matches!(event, tauri::WindowEvent::Destroyed) {
-                    #[cfg(feature = "native-acceptance-support")]
-                    native_acceptance::record("review_window_destroyed", json!({"id":id}));
-                    let _ = sender.try_send(Task::CancelReview(id.clone()));
-                    if let Ok(mut current) = host.review.lock() {
-                        if current.as_ref() == Some(&id) {
-                            if let Ok(active) = host.active.lock() {
-                                if let Some(cancel) = active.as_ref() {
-                                    cancel.cancel();
-                                }
-                            }
-                            *current = None;
-                        }
-                    }
-                }
-            });
-        }
-    });
+    }
+    let result = run_active(host, &cancel, || core.execute_prepared(&id, cancel.clone()))?;
+    response.data = Data::Executed(result);
+    response.epoch = core.epoch();
+    Ok(response)
 }
 fn worker(mut core: Application, rx: mpsc::Receiver<Task>, app: tauri::AppHandle, host: Arc<Host>) {
+    let mut saved_settings = core.settings_window_placement().ok().flatten();
+    let mut settings_saved_at = Instant::now();
     loop {
         let event = rx.recv_timeout(Duration::from_millis(250));
         if host.reset.swap(false, std::sync::atomic::Ordering::AcqRel) {
@@ -676,6 +875,7 @@ fn worker(mut core: Application, rx: mpsc::Receiver<Task>, app: tauri::AppHandle
         match event {
             Ok(Task::Request {
                 job,
+                caller,
                 epoch,
                 request,
                 cancel,
@@ -686,54 +886,56 @@ fn worker(mut core: Application, rx: mpsc::Receiver<Task>, app: tauri::AppHandle
                     }
                 }
                 let generation = host.generation.load(std::sync::atomic::Ordering::Acquire);
-                let previous_epoch = core.epoch();
                 #[cfg(feature = "native-acceptance-support")]
                 native_acceptance::record(
                     "request_started",
                     json!({"job":job,"kind":serde_json::to_value(&request).ok().and_then(|v|v.get("kind").cloned())}),
                 );
-                let result = core.request_with_cancellation(epoch, request, cancel);
+                let result = process_request(
+                    &mut core,
+                    &host,
+                    epoch,
+                    request,
+                    generation,
+                    cancel,
+                    |review| {
+                        app.get_webview_window(&caller)
+                            .is_some_and(|parent| native_dialog::approve_ai_source(&parent, review))
+                    },
+                );
                 #[cfg(feature = "native-acceptance-support")]
                 native_acceptance::record(
                     "request_finished",
                     json!({"job":job,"ok":result.is_ok(),"epoch":core.epoch()}),
                 );
-                if core.epoch() != previous_epoch {
-                    if let Ok(mut review) = host.review.lock() {
-                        *review = None;
-                    }
-                    if let Some(review) = app.get_webview_window("review") {
-                        if let Err(error) = close_review(&review) {
-                            eprintln!("Obsolete review window could not be closed: {error}");
+                let response = result.and_then(|mut r| {
+                    if caller == "settings" {
+                        if let Data::AiJobs(jobs) = &mut r.data {
+                            jobs.retain(|job| {
+                                job.review.purpose == gitfleet_core::ai::provider::Purpose::Discover
+                            });
                         }
                     }
-                }
-                if let Ok(response) = &result {
-                    if let Data::Review(display) = &response.data {
-                        open_review(&app, host.clone(), display, generation);
+                    let value = serde_json::to_value(&r)?;
+                    if serde_json::to_vec(&value)?.len() > 16 * 1024 * 1024 {
+                        // The user cannot act on a plan the renderer never received.
+                        if let Data::Review(display) = &r.data {
+                            core.cancel_review(&display.id)?;
+                        }
+                        return Err(gitfleet_core::Error::with_kind(
+                            gitfleet_core::ErrorKind::OutputLimit,
+                            "Desktop response limit exceeded",
+                        ));
                     }
-                }
-                let response = result
-                    .and_then(|r| serde_json::to_value(r).map_err(gitfleet_core::Error::from));
+                    Ok(value)
+                });
                 if let Ok(mut jobs) = host.jobs.lock() {
                     if let Some(j) = jobs.get_mut(&job) {
                         j.view = match response {
-                            Ok(value)
-                                if serde_json::to_vec(&value)
-                                    .is_ok_and(|v| v.len() <= 16 * 1024 * 1024) =>
-                            {
-                                JobView {
-                                    state: "complete".into(),
-                                    response: Some(value),
-                                    error: None,
-                                }
-                            }
-                            Ok(_) => JobView {
+                            Ok(value) => JobView {
                                 state: "complete".into(),
-                                response: None,
-                                error: Some(
-                                    json!({"kind":"output_limit","message":"Desktop response limit exceeded"}),
-                                ),
+                                response: Some(value),
+                                error: None,
                             },
                             Err(e) => JobView {
                                 state: "complete".into(),
@@ -744,12 +946,32 @@ fn worker(mut core: Application, rx: mpsc::Receiver<Task>, app: tauri::AppHandle
                     }
                 }
             }
+            Ok(Task::SaveUiScale { percent, reply }) => {
+                let _ = reply.send(
+                    core.save_ui_scale_percent(percent)
+                        .map_err(|e| e.to_string()),
+                );
+            }
+            Ok(Task::RepositoryPathAction {
+                target,
+                action,
+                reply,
+            }) => {
+                let _ = reply.send(target.apply(&core, action));
+            }
             Ok(Task::RequestDirectory(task)) => {
                 let value = core
                     .register_directory(&task.path)
                     .map(|picker| json!({"picker":picker,"display":task.path.to_string_lossy()}))
                     .map_err(|e| e.to_string());
                 let _ = task.reply.send(value);
+            }
+            Ok(Task::RequestAiImport { path, reply }) => {
+                let value = core
+                    .register_ai_import(&path)
+                    .map(|source| json!({"source":source.source,"display":source.path}))
+                    .map_err(|e| e.to_string());
+                let _ = reply.send(value);
             }
             #[cfg(feature = "native-acceptance-support")]
             Ok(Task::AcceptanceFault(at)) => {
@@ -759,57 +981,11 @@ fn worker(mut core: Application, rx: mpsc::Receiver<Task>, app: tauri::AppHandle
                     kind: gitfleet_core::writes::TestFaultKind::Sigkill,
                 });
             }
-            Ok(Task::ShowReview { id, generation }) => {
-                #[cfg(feature = "native-acceptance-support")]
-                native_acceptance::record(
-                    "review_show_queued",
-                    json!({"id":id,"generation":generation}),
-                );
-                if generation == host.generation.load(std::sync::atomic::Ordering::Acquire) {
-                    if let Ok(display) = core.review(&id) {
-                        open_review(&app, host.clone(), &display, generation);
-                    }
-                }
-            }
             Ok(Task::AiCredentialBinding { connection, reply }) => {
                 let _ = reply.send(
                     core.ai_credential_binding(&connection)
                         .map_err(|e| e.to_string()),
                 );
-            }
-            Ok(Task::GetReview { id, reply }) => {
-                let _ = reply.send(core.review(&id).map_err(|e| e.to_string()));
-            }
-            Ok(Task::Begin { id, reply }) => {
-                let _ = reply.send(core.begin_confirmation(&id).map_err(|e| e.to_string()));
-            }
-            Ok(Task::Confirm {
-                generation,
-                capability,
-                accepted,
-                cancel,
-                reply,
-            }) => {
-                let result =
-                    if generation == host.generation.load(std::sync::atomic::Ordering::Acquire) {
-                        core.confirm(capability, accepted, cancel)
-                            .map_err(|e| e.to_string())
-                    } else {
-                        Err("Presentation session changed".into())
-                    };
-                let _ = reply.send(result);
-            }
-            Ok(Task::CancelReview(id)) => {
-                let cancelled = core.cancel_review(&id).is_ok();
-                #[cfg(feature = "native-acceptance-support")]
-                native_acceptance::record(
-                    "review_cancel_processed",
-                    json!({"id":id,"cancelled":cancelled}),
-                );
-                if cancelled {
-                    host.completed
-                        .fetch_add(1, std::sync::atomic::Ordering::Release);
-                }
             }
             Ok(Task::SavePresentation { snapshot, reply }) => {
                 let _ = reply.send(snapshot.save(&mut core));
@@ -820,6 +996,13 @@ fn worker(mut core: Application, rx: mpsc::Receiver<Task>, app: tauri::AppHandle
                 }
             }
             Ok(Task::Shutdown) | Err(mpsc::RecvTimeoutError::Disconnected) => {
+                if let Ok(saved) = host.settings_placement.lock() {
+                    if let Some(placement) = *saved {
+                        if let Err(error) = core.save_settings_window_placement(placement) {
+                            eprintln!("Settings placement could not be saved: {:?}", error.kind);
+                        }
+                    }
+                }
                 if let Err(error) = core.shutdown() {
                     eprintln!(
                         "Application shutdown state could not be saved: {:?}",
@@ -843,6 +1026,20 @@ fn worker(mut core: Application, rx: mpsc::Receiver<Task>, app: tauri::AppHandle
                 }
             }
         }
+        if settings_saved_at.elapsed() >= Duration::from_millis(250) {
+            let current = host.settings_placement.lock().ok().and_then(|saved| *saved);
+            if current != saved_settings {
+                if let Some(placement) = current {
+                    match core.save_settings_window_placement(placement) {
+                        Ok(()) => saved_settings = current,
+                        Err(error) => {
+                            eprintln!("Settings placement could not be saved: {:?}", error.kind)
+                        }
+                    }
+                }
+            }
+            settings_saved_at = Instant::now();
+        }
     }
 }
 #[cfg(not(target_os = "macos"))]
@@ -851,7 +1048,7 @@ async fn manage_ai_token<R: tauri::Runtime>(
     window: WebviewWindow<R>,
     connection: String,
 ) -> Result<(), String> {
-    check(&window, "main")?;
+    check_settings_or_main(&window)?;
     let _ = connection;
     Err("AI secure authentication is not supported on this platform".into())
 }
@@ -866,36 +1063,46 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     #[cfg(feature = "native-acceptance-support")]
     native_acceptance::validate_workspaces(&mut core, &directory)?;
     let saved_placement = core.window_placement()?;
+    let settings_placement = core.settings_window_placement()?;
+    let saved_ui_scale = core.ui_scale_percent()?;
     let (sender, rx) = mpsc::sync_channel(8);
     let host = Arc::new(Host {
         sender,
         jobs: Mutex::new(BTreeMap::new()),
-        review: Mutex::new(None),
         closing: std::sync::atomic::AtomicBool::new(false),
         active: Mutex::new(None),
         dialog: std::sync::atomic::AtomicBool::new(false),
         generation: std::sync::atomic::AtomicU64::new(1),
         reset: std::sync::atomic::AtomicBool::new(false),
         completed: std::sync::atomic::AtomicU64::new(0),
+        ui_scale: std::sync::atomic::AtomicU16::new(saved_ui_scale),
+        ai_suggestion: Mutex::new(None),
+        settings_placement: Mutex::new(settings_placement),
         close_state: shutdown::CloseState::default(),
+        settings_close: shutdown::SettingsCloseState::default(),
         shutdown_complete: std::sync::atomic::AtomicBool::new(false),
     });
     let setup_host = host.clone();
     tauri::Builder::default()
         .manage(host.clone())
         .invoke_handler(tauri::generate_handler![
+            open_settings,
+            open_ai_suggestions,
+            use_ai_suggestion,
+            set_settings_theme,
             desktop_capabilities,
+            set_ui_scale,
             manage_ai_token,
             open_project_repository,
+            repository_folder::repository_path_action,
             dispatch,
             pick_directory,
+            pick_ai_import,
             pick_authentication_file,
             job_status,
             cancel_job,
-            review_data,
-            review_confirm,
-            review_cancel,
-            close_snapshot
+            close_snapshot,
+            shutdown::settings_flush_done
         ])
         .setup(move |app| {
             #[cfg(target_os = "macos")]
@@ -978,9 +1185,6 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                             #[cfg(feature = "native-acceptance-support")]
                             native_acceptance::record("main_renderer_reset", json!({}));
                             page_host.invalidate_presentation();
-                            if let Some(review) = window.app_handle().get_webview_window("review") {
-                                let _ = close_review(&review);
-                            }
                         }
                         // WebKit loads asynchronously. Showing during setup exposes
                         // an empty surface, particularly on a cold/crash restart.
@@ -1022,6 +1226,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             if let Some(placement) = saved_placement {
                 window_state::restore(&window, placement)?;
             }
+            window.set_zoom(f64::from(saved_ui_scale) / 100.)?;
             let handle = app.handle().clone();
             let host = setup_host.clone();
             std::thread::Builder::new()
@@ -1039,28 +1244,6 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         })
         .build(tauri::generate_context!())?
         .run(move |app, event| {
-            if let tauri::RunEvent::WindowEvent {
-                label,
-                event: tauri::WindowEvent::Destroyed,
-                ..
-            } = &event
-            {
-                if label == "review" {
-                    if let Ok(current) = host.review.lock() {
-                        if let Some(id) = current.as_ref() {
-                            let _ = queue(
-                                &host,
-                                Task::ShowReview {
-                                    id: id.clone(),
-                                    generation: host
-                                        .generation
-                                        .load(std::sync::atomic::Ordering::Acquire),
-                                },
-                            );
-                        }
-                    }
-                }
-            }
             if let tauri::RunEvent::ExitRequested { api, .. } = event {
                 if !host
                     .shutdown_complete
@@ -1090,20 +1273,23 @@ fn main() {
 #[cfg(test)]
 mod tests {
     use super::*;
-    fn host() -> (Arc<Host>, mpsc::Receiver<Task>) {
+    pub(super) fn host() -> (Arc<Host>, mpsc::Receiver<Task>) {
         let (sender, rx) = mpsc::sync_channel(8);
         (
             Arc::new(Host {
                 sender,
                 jobs: Mutex::new(BTreeMap::new()),
-                review: Mutex::new(None),
                 closing: std::sync::atomic::AtomicBool::new(false),
                 active: Mutex::new(None),
                 dialog: std::sync::atomic::AtomicBool::new(false),
                 generation: std::sync::atomic::AtomicU64::new(1),
                 reset: std::sync::atomic::AtomicBool::new(false),
                 completed: std::sync::atomic::AtomicU64::new(0),
+                ui_scale: std::sync::atomic::AtomicU16::new(100),
+                ai_suggestion: Mutex::new(None),
+                settings_placement: Mutex::new(None),
                 close_state: shutdown::CloseState::default(),
+                settings_close: shutdown::SettingsCloseState::default(),
                 shutdown_complete: std::sync::atomic::AtomicBool::new(false),
             }),
             rx,
@@ -1131,6 +1317,19 @@ mod tests {
     }
     #[test]
     fn bulk_review_uses_the_same_write_gate_as_individual_proposals() {
+        for request in [
+            Request::ExecuteReviewedOperation {
+                id: "review".into(),
+                operation: gitfleet_core::application::ReviewedOperation::Push,
+            },
+            Request::CancelReviewedOperation {
+                id: "review".into(),
+                operation: gitfleet_core::application::ReviewedOperation::BulkCommit,
+            },
+        ] {
+            assert!(mutating_request(&request));
+            assert!(!settings_request(&request));
+        }
         assert!(mutating_request(&Request::ReviewAuthentication {
             change: gitfleet_core::authentication::Change::Delete {
                 id: "profile".into()
@@ -1363,11 +1562,9 @@ mod tests {
         let (host, _) = host();
         let cancel = Cancellation::default();
         *host.active.lock().unwrap() = Some(cancel.clone());
-        *host.review.lock().unwrap() = Some("old-review".into());
         let generation = host.generation.load(std::sync::atomic::Ordering::Acquire);
         host.invalidate_presentation();
         assert!(cancel.is_cancelled());
-        assert!(host.review.lock().unwrap().is_none());
         assert!(host.reset.load(std::sync::atomic::Ordering::Acquire));
         assert_ne!(
             generation,
@@ -1383,9 +1580,25 @@ mod tests {
             .as_str()
             .unwrap()
             .contains("unsafe-eval"));
+        let settings: Value =
+            serde_json::from_str(include_str!("../capabilities/settings.json")).unwrap();
+        assert_eq!(settings["webviews"], json!(["settings"]));
+        let permissions = settings["permissions"].as_array().unwrap();
+        // onCloseRequested destroys the window after the async save handler allows closing.
+        for permission in [
+            "core:window:allow-close",
+            "core:window:allow-destroy",
+            "core:event:allow-listen",
+            "core:event:allow-unlisten",
+        ] {
+            assert!(
+                permissions.contains(&json!(permission)),
+                "Settings needs {permission}"
+            );
+        }
         for raw in [
             include_str!("../capabilities/main.json"),
-            include_str!("../capabilities/review.json"),
+            include_str!("../capabilities/settings.json"),
         ] {
             let cap: Value = serde_json::from_str(raw).unwrap();
             assert!(cap.get("remote").is_none());
@@ -1402,14 +1615,14 @@ mod tests {
         assert!(DialogLease::new(host.clone()).is_err());
         drop(lease);
         for _ in 0..8 {
-            assert!(queue(&host, Task::CancelReview("not-authority".into())).is_ok());
+            assert!(queue(&host, Task::Shutdown).is_ok());
         }
-        assert!(queue(&host, Task::CancelReview("overflow".into())).is_err());
+        assert!(queue(&host, Task::Shutdown).is_err());
         host.closing
             .store(true, std::sync::atomic::Ordering::Release);
         assert!(queue(&host, Task::Shutdown).is_err());
     }
-    fn invoke(
+    pub(super) fn invoke(
         window: &tauri::WebviewWindow<tauri::test::MockRuntime>,
         cmd: &str,
         body: Value,
@@ -1429,22 +1642,23 @@ mod tests {
         .map(|r| r.deserialize::<Value>().unwrap())
     }
     #[test]
-    fn actual_generated_command_acl_separates_main_review_and_unprivileged_views() {
+    fn actual_generated_command_acl_separates_main_settings_and_unprivileged_views() {
         let (host, rx) = host();
         let app = tauri::test::mock_builder()
             .manage(host.clone())
             .invoke_handler(tauri::generate_handler![
                 desktop_capabilities,
+                set_ui_scale,
                 manage_ai_token,
                 open_project_repository,
+                repository_folder::repository_path_action,
                 dispatch,
                 job_status,
                 cancel_job,
-                review_data,
-                review_confirm,
-                review_cancel,
                 close_snapshot,
-                pick_authentication_file
+                shutdown::settings_flush_done,
+                pick_authentication_file,
+                pick_ai_import
             ])
             .build(tauri::generate_context!())
             .unwrap();
@@ -1452,10 +1666,37 @@ mod tests {
             tauri::WebviewWindowBuilder::new(&app, "main", WebviewUrl::App("index.html".into()))
                 .build()
                 .unwrap();
-        let review =
-            tauri::WebviewWindowBuilder::new(&app, "review", WebviewUrl::App("review.html".into()))
-                .build()
-                .unwrap();
+        let review = tauri::WebviewWindowBuilder::new(
+            &app,
+            "native-probe",
+            WebviewUrl::App("settings.html".into()),
+        )
+        .build()
+        .unwrap();
+        let settings = tauri::WebviewWindowBuilder::new(
+            &app,
+            "settings",
+            WebviewUrl::App("settings.html".into()),
+        )
+        .build()
+        .unwrap();
+        assert!(invoke(
+            &main,
+            "settings_flush_done",
+            json!({"token":"forged","saved":true})
+        )
+        .is_err());
+        assert!(invoke(
+            &settings,
+            "settings_flush_done",
+            json!({"token":"forged","saved":true})
+        )
+        .unwrap_err()
+        .to_string()
+        .contains("No native close"));
+        assert!(invoke(&settings, "desktop_capabilities", json!({})).is_ok());
+        assert!(invoke(&settings, "job_status", json!({"job":"native-write"})).is_err());
+        assert!(invoke(&settings, "dispatch", json!({"payload":serde_json::to_string(&json!({"version":1,"epoch":0,"request":{"kind":"activate","workspace":"forbidden"}})).unwrap()})).unwrap_err().to_string().contains("not available in Settings"));
         let stranger = tauri::WebviewWindowBuilder::new(
             &app,
             "stranger",
@@ -1464,6 +1705,50 @@ mod tests {
         .build()
         .unwrap();
         let idle = invoke(&main, "job_status", json!({"job":"native-write"})).unwrap();
+        let path_action = json!({"path":{"encoding":"utf8","value":"relative"},"action":"reveal"});
+        assert!(invoke(&main, "repository_path_action", path_action.clone())
+            .unwrap_err()
+            .to_string()
+            .contains("target"));
+        let folder_action =
+            json!({"target":{"workspace":"fixture","worktree":"registered"},"action":"reveal"});
+        for window in [&settings, &stranger] {
+            assert!(
+                invoke(window, "repository_path_action", folder_action.clone())
+                    .unwrap_err()
+                    .to_string()
+                    .contains("not allowed")
+            );
+        }
+
+        std::thread::scope(|scope| {
+            let call = scope.spawn(|| invoke(&main, "repository_path_action", folder_action));
+            let Task::RepositoryPathAction {
+                action: RepositoryPathAction::Reveal,
+                reply,
+                ..
+            } = rx.recv_timeout(Duration::from_secs(2)).unwrap()
+            else {
+                panic!("Unexpected folder operation")
+            };
+            reply.send(Ok(())).unwrap();
+            assert!(call.join().unwrap().is_ok());
+        });
+
+        assert!(invoke(&main, "set_ui_scale", json!({"percent":70}))
+            .unwrap_err()
+            .to_string()
+            .contains("UI scale must be"));
+        assert!(invoke(&review, "set_ui_scale", json!({"percent":125})).is_err());
+        assert!(invoke(&stranger, "set_ui_scale", json!({"percent":125})).is_err());
+        *host.active.lock().unwrap() = Some(Cancellation::default());
+        assert!(invoke(&main, "pick_ai_import", json!({}))
+            .unwrap_err()
+            .to_string()
+            .contains("Controlled write is active"));
+        assert!(invoke(&review, "pick_ai_import", json!({})).is_err());
+        assert!(invoke(&stranger, "pick_ai_import", json!({})).is_err());
+        *host.active.lock().unwrap() = None;
         assert_eq!(idle["state"], "idle");
         assert_eq!(idle["response"]["revision"], 0);
         host.completed
@@ -1512,13 +1797,6 @@ mod tests {
         );
         let caps = invoke(&main, "desktop_capabilities", json!({})).unwrap();
         assert_eq!(caps["writes_enabled"], cfg!(feature = "desktop-writes"));
-        let denied = invoke(
-            &main,
-            "review_confirm",
-            json!({"review":"forged","approved":true}),
-        )
-        .unwrap_err();
-        assert!(denied.to_string().contains("not allowed"), "{denied}");
         assert!(invoke(&review, "dispatch", json!({"payload":"{}"}))
             .unwrap_err()
             .to_string()
@@ -1551,3 +1829,14 @@ mod tests {
         assert!(matches!(request, Request::Workspaces {}));
     }
 }
+
+#[cfg(all(test, target_os = "macos", feature = "desktop-writes"))]
+mod publication_tests;
+
+#[cfg(all(test, target_os = "macos"))]
+mod write_gate_tests;
+
+#[cfg(all(test, target_os = "macos"))]
+#[allow(dead_code)]
+#[path = "../../../core/tests/support/mod.rs"]
+mod test_support;

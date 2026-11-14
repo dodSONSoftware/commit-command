@@ -95,6 +95,60 @@ impl CloseState {
         }
     }
 }
+
+#[derive(Default)]
+pub(super) struct SettingsCloseState(Mutex<Option<(String, u64, SyncSender<bool>)>>);
+impl SettingsCloseState {
+    fn begin(&self, generation: u64) -> Result<(String, mpsc::Receiver<bool>), String> {
+        let mut pending = lock(&self.0)?;
+        if pending.is_some() {
+            return Err("Settings close already pending".into());
+        }
+        let token = Uuid::new_v4().to_string();
+        let (sender, receiver) = mpsc::sync_channel(1);
+        *pending = Some((token.clone(), generation, sender));
+        Ok((token, receiver))
+    }
+    pub(super) fn pending(&self) -> bool {
+        self.0.lock().is_ok_and(|p| p.is_some())
+    }
+    fn finish(&self, token: &str, generation: u64, saved: bool) -> Result<(), String> {
+        let mut pending = lock(&self.0)?;
+        if !pending
+            .as_ref()
+            .is_some_and(|(t, g, _)| t == token && *g == generation)
+        {
+            return Err("Settings close request is stale".into());
+        }
+        let (_, _, sender) = pending.take().ok_or("Settings close request is stale")?;
+        sender
+            .try_send(saved)
+            .map_err(|_| "Settings close request unavailable".into())
+    }
+    fn clear(&self) {
+        if let Ok(mut p) = self.0.lock() {
+            *p = None;
+        }
+    }
+}
+#[tauri::command]
+pub(super) fn settings_flush_done<R: tauri::Runtime>(
+    window: WebviewWindow<R>,
+    state: tauri::State<'_, Arc<Host>>,
+    token: String,
+    saved: bool,
+) -> Result<(), String> {
+    check(&window, "settings")?;
+    if !state.closing.load(std::sync::atomic::Ordering::Acquire) {
+        return Err("No native close is pending".into());
+    }
+    state.settings_close.finish(
+        &token,
+        state.generation.load(std::sync::atomic::Ordering::Acquire),
+        saved,
+    )
+}
+
 #[tauri::command]
 pub(super) async fn close_snapshot<R: tauri::Runtime>(
     window: WebviewWindow<R>,
@@ -123,7 +177,7 @@ pub(super) async fn close_snapshot<R: tauri::Runtime>(
 fn discard_confirmed(app: &tauri::AppHandle) -> bool {
     let mut dialog = rfd::MessageDialog::new()
         .set_title("GitFleet — Unsaved drafts")
-        .set_description("The latest presentation state could not be saved. Keep the app open to retry, or close without saving the latest drafts. Existing Git operation records are kept.")
+        .set_description("The latest drafts or Settings edits could not be saved. Keep the app open to retry, or close without saving the latest drafts. Existing Git operation records are kept.")
         .set_level(rfd::MessageLevel::Warning)
         .set_buttons(rfd::MessageButtons::OkCancelCustom("Keep app open".into(), "Close without saving".into()));
     if let Some(main) = app.get_webview_window("main") {
@@ -137,16 +191,15 @@ pub(super) fn request(app: tauri::AppHandle, host: Arc<Host>) {
     }
     if let Ok(jobs) = host.jobs.lock() {
         for job in jobs.values() {
-            job.cancel.cancel();
+            if !job.finish_on_close {
+                job.cancel.cancel();
+            }
         }
     }
     if let Ok(active) = host.active.lock() {
         if let Some(cancel) = active.as_ref() {
             cancel.cancel();
         }
-    }
-    if let Some(review) = app.get_webview_window("review") {
-        let _ = close_review(&review);
     }
     let placement = app.get_webview_window("main").and_then(|window| {
         let _ = window.set_title("GitFleet — Closing safely…");
@@ -161,6 +214,15 @@ pub(super) fn request(app: tauri::AppHandle, host: Arc<Host>) {
     start(app, host, placement);
 }
 fn start(app: tauri::AppHandle, host: Arc<Host>, placement: Option<WindowPlacement>) {
+    let settings = app.get_webview_window("settings").map(|window| {
+        let (token, receiver) = host
+            .settings_close
+            .begin(host.generation.load(std::sync::atomic::Ordering::Acquire))?;
+        window
+            .emit("gitfleet-settings-close-request", token)
+            .map_err(|e| e.to_string())?;
+        Ok::<_, String>(receiver)
+    });
     let attempt = host
         .close_state
         .begin(host.generation.load(std::sync::atomic::Ordering::Acquire));
@@ -182,6 +244,14 @@ fn start(app: tauri::AppHandle, host: Arc<Host>, placement: Option<WindowPlaceme
             .ok()
             .and_then(|(_, receiver)| receiver.recv_timeout(Duration::from_secs(3)).ok());
         host.close_state.clear();
+        let settings_saved = match settings {
+            None => true,
+            Some(Ok(receiver)) => receiver
+                .recv_timeout(Duration::from_secs(30))
+                .unwrap_or(false),
+            Some(Err(_)) => false,
+        };
+        host.settings_close.clear();
         let mut reply = None;
         let saved = if let Some(submission) = submission {
             reply = Some(submission.reply);
@@ -196,7 +266,8 @@ fn start(app: tauri::AppHandle, host: Arc<Host>, placement: Option<WindowPlaceme
         } else {
             false
         };
-        if !saved && !discard_confirmed(&app) {
+        if (!saved || !settings_saved) && !discard_confirmed(&app) {
+            let _ = app.emit_to("settings", "gitfleet-close-cancelled", ());
             host.closing
                 .store(false, std::sync::atomic::Ordering::Release);
             if let Some(main) = app.get_webview_window("main") {
@@ -234,6 +305,35 @@ mod tests {
             workspace: None,
             navigation: None,
             bulk: None,
+        }
+    }
+    #[test]
+    fn settings_flush_is_scoped_one_use_and_preserves_failure() {
+        let (host, rx) = super::super::tests::host();
+        host.closing
+            .store(true, std::sync::atomic::Ordering::Release);
+        let request = || {
+            serde_json::from_value(json!({"kind":"save_ai_settings","fingerprint":"f","revision":"r","change":{"kind":"connection","id":null,"name":"Fixture","provider":"ollama","endpoint":"http://127.0.0.1:1/","timeout_ms":3000,"authentication":"none"}})).unwrap()
+        };
+        let task = |caller: &str| Task::Request {
+            job: "fixture".into(),
+            caller: caller.into(),
+            epoch: 1,
+            request: request(),
+            cancel: Cancellation::default(),
+        };
+        assert!(queue(&host, task("settings")).is_err());
+        for saved in [false, true] {
+            let (token, done) = host.settings_close.begin(1).unwrap();
+            assert!(queue(&host, task("main")).is_err());
+            queue(&host, task("settings")).unwrap();
+            assert!(matches!(rx.try_recv().unwrap(), Task::Request { .. }));
+            assert!(host.settings_close.finish("forged", 1, true).is_err());
+            assert!(host.settings_close.finish(&token, 2, true).is_err());
+            host.settings_close.finish(&token, 1, saved).unwrap();
+            assert_eq!(done.recv().unwrap(), saved);
+            assert!(host.settings_close.finish(&token, 1, true).is_err());
+            assert!(queue(&host, task("settings")).is_err());
         }
     }
     #[test]

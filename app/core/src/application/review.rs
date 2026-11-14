@@ -1,9 +1,24 @@
 use super::*;
+/// Only these main-window operations offer a separate execution step.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum ReviewedOperation {
+    BulkCommit,
+    Push,
+    PrePushCheck,
+    ObserveBranch,
+    DownloadBranch,
+    ImportBranch,
+    SetUpstream,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct ReviewDisplay {
     pub id: String,
     pub epoch: u64,
     pub expires_at_ms: u64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub operation: Option<ReviewedOperation>,
     pub title: String,
     pub summary: String,
     pub content: String,
@@ -189,7 +204,7 @@ impl Application {
             ),
             Action::PushPublication(plan) => (
                 "Review exact fast-forward push".into(),
-                format!("{}PUSH PUBLICATION\nWorktree: {}\nSource: {} at {}\nDestination: {} · {}\nExpected old commit: {}\nOutgoing commits: {}\nHook policy: {:?}\nThis new approval runs the reviewed pre-push check, exports only the approved committed object closure, checks the exact destination, and attempts one expected-old guarded fast-forward update. Core preserves managed files, refs, config and upstreams; reviewed hooks can have their own effects. No force update, destination creation, implicit child push or automatic retry is authorized. At most 10,000 objects / 64 MiB uncompressed; publication may refuse if these bounds are exceeded. Hooks run unsandboxed as your user. Cancellation or process loss after transport begins may leave publication unconfirmed. Approval includes destination observations immediately before and after this push; authenticated helper/agent policy is the bound policy in the exact plan.\nDigest: {}",plan.batch.as_ref().map(|b|format!("Guided queue {}: this approval covers only this item. Remaining items require fresh evidence and separate native approvals.\n",b.id)).unwrap_or_default(),plan.check.transport.metadata.root.display(),plan.check.preview.source_ref,plan.check.preview.source_oid.hex,plan.check.preview.destination,plan.check.preview.destination_ref,plan.check.preview.observed_oid.hex,plan.check.preview.outgoing_count,plan.check.hooks,plan.digest),
+                format!("{}PUSH PUBLICATION\nWorktree: {}\nSource: {} at {}\nDestination: {} · {}\nExpected old commit: {}\nOutgoing commits: {}\nHook policy: {:?}\nThis new approval runs the reviewed pre-push check, exports only the approved committed object closure, checks the exact destination, and attempts one expected-old guarded fast-forward update. Core preserves managed files, refs, config and upstreams; reviewed hooks can have their own effects. No force update, destination creation, implicit child push or automatic retry is authorized. At most 10,000 objects / 64 MiB uncompressed; publication may refuse if these bounds are exceeded. Hooks run unsandboxed as your user. Cancellation or process loss after transport begins may leave publication unconfirmed. Approval includes destination observations immediately before and after this push; authenticated helper/agent policy is the bound policy in the exact plan.\nDigest: {}",plan.batch.as_ref().map(|b|format!("Guided queue {}: this approval covers only this item. Each remaining item requires fresh evidence and its own Push.\n",b.id)).unwrap_or_default(),plan.check.transport.metadata.root.display(),plan.check.preview.source_ref,plan.check.preview.source_oid.hex,plan.check.preview.destination,plan.check.preview.destination_ref,plan.check.preview.observed_oid.hex,plan.check.preview.outgoing_count,plan.check.hooks,plan.digest),
                 serde_json::to_string_pretty(plan)?,
             ),
             Action::PushPublicationRecovery(review) => (
@@ -253,7 +268,18 @@ impl Application {
             }
             result
         }
+        let operation = match &action {
+            Action::Batch(_) => Some(ReviewedOperation::BulkCommit),
+            Action::PushPublication(_) => Some(ReviewedOperation::Push),
+            Action::PushCheck(_) => Some(ReviewedOperation::PrePushCheck),
+            Action::RemoteObservation(_) => Some(ReviewedOperation::ObserveBranch),
+            Action::FetchCapture(_) => Some(ReviewedOperation::DownloadBranch),
+            Action::FetchImport(_) => Some(ReviewedOperation::ImportBranch),
+            Action::UpstreamSetup(_) => Some(ReviewedOperation::SetUpstream),
+            _ => None,
+        };
         let display = ReviewDisplay {
+            operation,
             id: id.clone(),
             allow_in_read_only_build,
             ai_request_fingerprint,
@@ -283,7 +309,52 @@ impl Application {
         }
         Ok(p.display.clone())
     }
-    /// Called by the privileged review window's native host, never by general IPC dispatch.
+    /// Read the source-transfer details of the host's pending, frozen provider plan.
+    pub fn reviewed_ai_source(&self, id: &str) -> Result<Option<crate::ai::provider::Review>> {
+        let pending = self
+            .pending
+            .as_ref()
+            .filter(|p| p.id == id)
+            .ok_or_else(stale)?;
+        if let Action::Ai { plan, .. } = &pending.action {
+            let review = plan.review();
+            if review.source.is_some() {
+                return Ok(Some(review));
+            }
+        }
+        Ok(None)
+    }
+    pub(super) fn require_reviewed_operation(
+        &self,
+        id: &str,
+        operation: ReviewedOperation,
+    ) -> Result<()> {
+        let pending = self.pending.as_ref().ok_or_else(stale)?;
+        if pending.display.operation != Some(operation) || pending.id != id {
+            return Err(stale());
+        }
+        Ok(())
+    }
+    /// Execute the current prepared operation directly from an explicit application action.
+    /// Preparation and execution retain the existing frozen-state and cancellation checks.
+    pub fn execute_prepared(
+        &mut self,
+        id: &str,
+        cancellation: inspection::Cancellation,
+    ) -> Result<ExecutionResult> {
+        let (capability, display) = self.begin_confirmation(id)?;
+        let result = self.confirm(capability, true, cancellation)?;
+        let ai_job_id = result
+            .get("ai_job")
+            .and_then(serde_json::Value::as_str)
+            .map(str::to_owned);
+        Ok(ExecutionResult {
+            result,
+            ai_job_id,
+            ai_request_fingerprint: display.ai_request_fingerprint,
+        })
+    }
+    /// Create a private one-use handle for the current prepared operation.
     pub fn begin_confirmation(&mut self, id: &str) -> Result<(Confirmation, ReviewDisplay)> {
         let display = self.review(id)?;
         let p = self.pending.as_mut().ok_or_else(stale)?;
@@ -309,7 +380,7 @@ impl Application {
         self.abandon_review()?;
         Ok(())
     }
-    /// Only a Rust native confirmation callback may supply this capability.
+    /// Consume a private prepared-operation handle and revalidate its bound state.
     pub fn confirm(
         &mut self,
         capability: Confirmation,

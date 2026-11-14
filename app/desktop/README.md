@@ -1,7 +1,7 @@
 # Commit Command desktop
 
-Tauri is a thin adapter to the presentation-independent Rust Core. Main and
-review bundles have separate command permissions. The application includes
+Tauri is a thin adapter to the presentation-independent Rust Core. Main, Settings and AI suggestions
+windows have separate command permissions. The application includes
 workspace inspection/monitoring, graph/activity/audit, controlled local/bulk commits,
 supported authentication/fetch/upstream, exact individual publication and guided
 push queues. Optional AI settings, secure authentication, reviewed source message
@@ -11,12 +11,18 @@ Hierarchical analysis, bounded automatic commits, general backup/restore and rel
 acceptance remain unfinished. Use the [detailed completion handoff](../../docs/implementation/README.md)
 for remaining implementation steps and test procedures.
 
-**Ordinary desktop Git trust/write/remote execution remains disabled in Rust and UI.**
-Optional AI source transfers require their separate exact native confirmation;
-[unsaved-editor testing](../../docs/reports/COMPLETION_P09_EDITOR_TEST_2026-11-09.md)
-does not require `desktop-writes` or save AI settings.
-`desktop-writes` is non-default and does not grant repository trust or operation
-approval. Read-only recovery inspection remains available; execution is gated.
+**Ordinary desktop builds enable controlled Git trust/write/remote execution.**
+`desktop-writes` is a default feature; it does not itself grant repository trust or
+operation approval. AI source transfers retain their separate exact native confirmation.
+Build an explicitly read-only bundled host with:
+
+```sh
+cargo build --manifest-path app/desktop/src-tauri/Cargo.toml --no-default-features --features custom-protocol --locked
+```
+
+Omitting `custom-protocol` selects the development server rather than the bundled UI.
+Read-only builds permit local inspection, settings persistence and separately approved
+AI requests, but reject managed Git trust/write/remote preparation in Rust and UI.
 Use [the current record](../../docs/EXECUTION_STATUS.md) for remaining gates and
 next work. Selected native cancellation, recovery, close/Quit, theme and geometry
 cases have passed; broader acceptance remains partial. Checklists below retain
@@ -90,19 +96,19 @@ Do not hand-edit `src/services/*.generated.ts`. The native crate has a separate
 Cargo lockfile and depends on the existing Core crate by path. Ordinary desktop
 dependency graphs exclude `experimental-writes` and `write-test-support`.
 
-Main-view commands: `desktop_capabilities`, `dispatch`, `pick_directory`,
-`job_status`, `cancel_job`. Review-view commands: `review_data`, `review_confirm`,
-`review_cancel`. Both custom-command ACLs and Rust actual-caller/page/origin checks
-apply. There are no generic filesystem, shell, Git argv, SQL, HTTP, approval-token
-or journal-import endpoints.
+Main commands include `dispatch`, `desktop_capabilities`, `job_status`,
+`cancel_job` and repository folder actions. Settings uses a restricted subset of
+`dispatch` plus settings persistence and shutdown acknowledgement. AI suggestions
+uses its own restricted role on `settings.html`. Custom command ACLs and Rust
+actual-caller/page/origin checks both apply. No generic shell, filesystem, SQL or
+HTTP endpoint is exposed.
 
-The renderer can request a stored plan. Rust opens the dedicated review page,
-which loads immutable content from Core, renders text only and requests a native
-confirmation. Only the actual Rust/native dialog result can supply Core's opaque
-confirmation capability. The M2 approval itself never crosses IPC. A proposal ID,
-frontend checkbox, JSON `approved` flag, renderer event or digest is not authority.
-Renderer reload/workspace changes invalidate reviews; cancellation is phase-aware
-and cannot promise rollback after publication.
+The main renderer presents explicit operation reviews for bulk commits and push
+publication. Preparing a review never executes its operation; execution requires a
+separate matching request. Ordinary direct Stage/Unstage/Commit flows execute their
+prepared selection. Saved-profile AI source transfers require exact native approval;
+unsaved Settings editors cannot send repository source. Reload and workspace
+changes invalidate pending context. Cancellation cannot promise rollback after publication.
 
 ## Native acceptance workflow — still required
 
@@ -122,9 +128,8 @@ from agent verification. Renderer mocks cannot close the remaining native gates.
    cargo run --manifest-path app/desktop/src-tauri/Cargo.toml --features desktop-writes -- --data-dir /private/tmp/GENERATED_FIXTURE/state
    ```
 
-   This non-default feature is for finishing acceptance; it is not authorization
-   to target real repositories and must not be promoted to the ordinary build
-   while the native gates remain open.
+   Writes are enabled by default; the explicit flag documents this test requirement.
+   Use only the newly generated disposable repositories for acceptance.
 4. Exercise Table/Tree selection, tabs, draft preservation, filters, themes,
    resizing, keyboard/focus behavior, refresh, missing entries and restart.
 5. Review trust for `engine` in the dedicated view. Cancel once, verify no grant,
@@ -151,7 +156,7 @@ adds an explicit Bulk Commit form and durable batch results through the same nat
 review gate. Select worktrees in Overview, open Bulk Commit, choose messages/sources
 and exclusions, and prepare the exact native review. Refresh results after native
 execution. Selecting unfinished worktrees always requires a new review; published
-successes are excluded. Ordinary builds keep write preparation disabled.
+successes are excluded. Default builds enable controlled write preparation.
 See [M5A contracts](../../docs/architecture/M5A_LOCAL_BULK_COMMITS.md).
 Each repository also exposes on-demand **Remotes and upstream** inspection:
 effective fetch/push destinations, URL rewrites, origins, upstream/push-remote
@@ -160,7 +165,7 @@ no servers and grants no network authority. See [remote boundary](../../docs/arc
 Acceptance builds also offer separately reviewed, credential-free observation of
 one exact remote branch. It uses an isolated transport repository, verifies TLS,
 rejects redirects and preserves managed Git state. Results are timestamped past
-observations. Default builds keep network review disabled. See the
+observations. Default builds enable supported remote review. See the
 [observation report](../../docs/reports/M5B_REMOTE_OBSERVATION_2026-11-02.md).
 The dated observation procedure above does not summarize current capability.
 Supported authenticated fetch/push, assisted AI and SemVer Actions now exist; their

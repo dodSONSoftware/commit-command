@@ -1,3 +1,4 @@
+import { useOperationReview } from "./OperationReview";
 import { useState } from "react";
 import type { Bridge } from "../services/bridge";
 import { value } from "../services/bridge";
@@ -37,6 +38,7 @@ export function PushDependencyPlanner({
   busy: boolean;
   act: (f: () => Promise<void>) => Promise<void>;
 }) {
+  const { review, reviewDialog } = useOperationReview(bridge, workspace);
   const [localBatch, setLocalBatch] = useState<PushBatch | null>(null);
   const [savedQueues, setSavedQueues] = useState<PushBatch[]>([]);
   const [queueNext, setQueueNext] = useState<number | null>(null);
@@ -76,11 +78,12 @@ export function PushDependencyPlanner({
   };
   return (
     <details>
-      <summary>Plan push dependencies locally</summary>
+      <summary>Push repositories with submodules</summary>
+      {reviewDialog}
       <p>
-        Select repositories independently of commit selection. This planner
-        contacts no server and authorizes no push. Observe intended branches
-        separately first. Unselected children are never added automatically.
+        Observe the intended branches, then select the repositories to inspect.
+        Planning uses local data. Each publication requires a separate review
+        and Push, including each selected child.
       </p>
       {entries.map((entry) => (
         <div key={entry.id}>
@@ -219,7 +222,7 @@ export function PushDependencyPlanner({
             disabled={busy || !enabled}
             onClick={() =>
               void act(async () => {
-                await bridge.request({
+                await review({
                   kind: "review_push_check",
                   workspace,
                   selection: {
@@ -245,7 +248,7 @@ export function PushDependencyPlanner({
             disabled={busy || !enabled}
             onClick={() =>
               void act(async () => {
-                await bridge.request({
+                await review({
                   kind: "review_push_publication",
                   workspace,
                   selection: {
@@ -262,11 +265,11 @@ export function PushDependencyPlanner({
             Review exact push publication for {label(source.worktree)}
           </button>
           <p>
-            Publication requires its own exact native approval. It runs a fresh
-            reviewed check and attempts one fast-forward update of the approved
-            committed source. If transport is interrupted, inspect the
-            destination through a separately approved observation before any new
-            push review.
+            Publication requires an explicit Push from the reviewed plan. It
+            runs a fresh reviewed check and attempts one fast-forward update of
+            the approved committed source. If transport is interrupted, inspect
+            the destination through a separately approved observation before any
+            new push review.
           </p>
 
           {source.preview.outgoing_gitlinks.length > 0 && (

@@ -1,3 +1,4 @@
+import { useOperationReview } from "./OperationReview";
 import { CommitMessageEditor } from "./CommitMessageEditor";
 import {
   useCallback,
@@ -56,6 +57,7 @@ export function BulkCommit({
   busy: boolean;
   act: (action: () => Promise<void>) => Promise<void>;
 }) {
+  const { review, reviewDialog } = useOperationReview(bridge, workspace);
   const shared = composer.message;
   const configuration = composer.configurations;
   const [additionalPaths, setAdditionalPaths] = useState<
@@ -118,10 +120,9 @@ export function BulkCommit({
           Refresh batch results
         </button>
       </div>
+      {reviewDialog}
       {!enabled && (
-        <p role="status">
-          Writes require the acceptance build and native authorization.
-        </p>
+        <p role="status">Bulk Commit requires a write-enabled desktop build.</p>
       )}
       <p>
         Selected submodules run before their selected parents. After a child
@@ -133,7 +134,7 @@ export function BulkCommit({
           event.preventDefault();
           if (!valid || busy || !enabled) return;
           void act(async () => {
-            await bridge.request({
+            await review({
               kind: "review_batch",
               workspace,
               selections: chosen.flatMap((entry) =>
@@ -153,6 +154,7 @@ export function BulkCommit({
         }}
       >
         <CommitMessageEditor
+          layoutKey="bulk"
           label="Shared commit message"
           value={shared}
           disabled={busy}
@@ -202,6 +204,7 @@ export function BulkCommit({
               <legend>{repoName(entry)}</legend>
               <p className="path">{pathText(entry.display_path)}</p>
               <CommitMessageEditor
+                layoutKey="bulk"
                 label={`Message override · ${repoName(entry)}`}
                 rows={3}
                 value={drafts[entry.id] ?? ""}
@@ -280,10 +283,10 @@ export function BulkCommit({
                   again.
                 </p>
                 <p>
-                  A changed submodule gitlink may appear only in the fresh
-                  native review. Cancel that review to exclude its exact
-                  relative path here. Core checks every exclusion before
-                  preparing a new review.
+                  A changed submodule gitlink may appear only in the fresh bulk
+                  review. Cancel that review to exclude its exact relative path
+                  here. Core checks every exclusion before preparing a new
+                  review.
                 </p>
                 <label>
                   Additional exclusion · {repoName(entry)}
@@ -336,7 +339,7 @@ export function BulkCommit({
           );
         })}
         <button className="primary" disabled={!enabled || busy || !valid}>
-          Prepare native bulk review
+          Review bulk commit
         </button>
       </form>
       <h2>Durable batch results</h2>

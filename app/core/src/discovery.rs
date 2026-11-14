@@ -11,7 +11,7 @@ mod cursor;
 pub(crate) use cursor::Cursor;
 pub use cursor::ScanProgress;
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "application-services", derive(schemars::JsonSchema))]
 pub struct DiscoveryOptions {
     pub excluded_names: Vec<String>,

@@ -18,6 +18,7 @@ pub(crate) struct Cursor {
     binding: Option<String>,
     options_digest: String,
     pending: Vec<PathBuf>,
+    timed_out: Option<PathBuf>,
     visited: usize,
     classified: usize,
     nested: usize,
@@ -57,6 +58,7 @@ impl Cursor {
             root,
             binding,
             pending,
+            timed_out: None,
             options_digest: digest(&serde_json::to_vec(options)?),
             visited: 0,
             classified: 0,
@@ -189,6 +191,7 @@ impl Cursor {
     }
     pub fn advance(&mut self, options: &DiscoveryOptions, read: &ReadOptions) -> Result<Inventory> {
         let start = Instant::now();
+        self.timed_out = None;
         let result = self.advance_units(options, read, start);
         if let Err(error) = &result {
             if error.kind != ErrorKind::Timeout {
@@ -204,7 +207,12 @@ impl Cursor {
             .sort_by_key(|path| path.to_path().ok());
         if let Err(error) = result {
             report.issues.push(ScanIssue {
-                path: NativePath::from_path(self.pending.last().unwrap_or(&self.root)),
+                path: NativePath::from_path(
+                    self.timed_out
+                        .as_ref()
+                        .or(self.pending.last())
+                        .unwrap_or(&self.root),
+                ),
                 error: error.into(),
             });
             report.progress = Some(ScanProgress {
@@ -240,7 +248,13 @@ impl Cursor {
             // Remove the current unit before adding its children; restore on failure.
             self.pending.pop();
             if let Err(error) = self.directory(&path, options, read, start) {
-                self.pending.push(path);
+                if error.kind == ErrorKind::Timeout {
+                    self.timed_out = Some(path.clone());
+                    // Retry this unit after queued siblings have had their next slice.
+                    self.pending.insert(0, path);
+                } else {
+                    self.pending.push(path);
+                }
                 return Err(error);
             }
         }

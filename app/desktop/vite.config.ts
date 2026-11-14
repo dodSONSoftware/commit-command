@@ -6,7 +6,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: fileURLToPath(new URL("index.html", import.meta.url)),
-        review: fileURLToPath(new URL("review.html", import.meta.url)),
+        settings: fileURLToPath(new URL("settings.html", import.meta.url)),
       },
     },
   },

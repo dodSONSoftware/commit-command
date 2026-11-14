@@ -95,6 +95,9 @@ pub(crate) struct Session<'a> {
     started: Instant,
 }
 impl Session<'_> {
+    pub(crate) fn check(&self) -> Result<()> {
+        self.options.check(self.started)
+    }
     pub(crate) fn git(&self, args: &[&str]) -> Result<Vec<u8>> {
         self.git_os(&strings(args))
     }
@@ -113,6 +116,16 @@ impl Session<'_> {
         let mut remaining = self.options.clone();
         remaining.timeout = self.options.timeout.saturating_sub(self.started.elapsed());
         process::git(&self.root, args, &remaining)
+    }
+    pub(crate) fn git_input(&self, args: &[&str], input: Vec<u8>) -> Result<Vec<u8>> {
+        self.check()?;
+        let mut remaining = self.options.clone();
+        remaining.timeout = remaining.timeout.saturating_sub(self.started.elapsed());
+        let output = process::git_input(&self.root, &strings(args), &remaining, Some(input))?;
+        if !output.status.success() {
+            return Err(data_error("Git batch inspection failed"));
+        }
+        Ok(output.stdout)
     }
     pub(crate) fn head(&self) -> Result<Option<ObjectId>> {
         let output = self.output(&strings(&["rev-parse", "--verify", "--quiet", "HEAD"]))?;

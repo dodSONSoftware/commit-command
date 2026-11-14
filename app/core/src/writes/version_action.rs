@@ -455,7 +455,7 @@ impl ControlledWrites {
     pub(crate) fn version_notices(
         &mut self,
     ) -> Result<Vec<crate::application::RemoteRecoveryNotice>> {
-        let mut stmt=self.workspace.connection().prepare("SELECT json_extract(value,'$.value.plan.id'),json_extract(value,'$.value.plan.workspace'),json_extract(value,'$.value.plan.worktree') FROM state WHERE key LIKE 'version-action:%' AND json_extract(value,'$.value.phase') IN ('preparing','replacing','unconfirmed') ORDER BY key LIMIT 100")?;
+        let mut stmt=self.workspace.connection().prepare(&format!("SELECT json_extract(value,'$.value.plan.id'),json_extract(value,'$.value.plan.workspace'),json_extract(value,'$.value.plan.worktree') FROM state WHERE {} ORDER BY key LIMIT 100", crate::workspace::recovery::VERSION))?;
         let rows = stmt.query_map([], |r| {
             Ok(crate::application::RemoteRecoveryNotice {
                 operation_id: r.get(0)?,

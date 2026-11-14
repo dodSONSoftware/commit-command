@@ -1,0 +1,27 @@
+{
+  "identifier": "settings",
+  "description": "Native Settings window: scoped AI configuration, appearance, and native pickers; no Git mutations or approval authority.",
+  "webviews": [
+    "settings"
+  ],
+  "local": true,
+  "permissions": [
+    "allow-dispatch",
+    "allow-settings-flush-done",
+    "allow-desktop-capabilities",
+    "allow-set-ui-scale",
+    "allow-set-settings-theme",
+    "allow-job-status",
+    "allow-cancel-job",
+    "allow-manage-ai-token",
+    "allow-pick-directory",
+    "allow-pick-ai-import",
+    "core:window:allow-close",
+    "core:window:allow-inner-size",
+    "core:window:allow-scale-factor",
+    "core:window:allow-set-size",
+    "core:event:allow-listen",
+    "core:event:allow-unlisten",
+    "core:window:allow-destroy"
+  ]
+}

@@ -242,14 +242,14 @@ pub fn inspect_with_options(
             raw_files
                 .iter()
                 .filter(|file| file.old_mode != "160000" && file.new_mode != "160000")
-                .map(|file| preview_in(s, &file.path))
+                .map(|file| Ok((&file.path, fingerprint_in(s, &file.path)?)))
                 .collect::<Result<Vec<_>>>()?
         } else {
             Vec::new()
         };
         let patch = s.git_os(&patch_args)?;
-        for before in current {
-            if before.fingerprint != preview_in(s, &before.path)?.fingerprint {
+        for (path, before) in current {
+            if before != fingerprint_in(s, path)? {
                 return Err(Error::with_kind(
                     ErrorKind::ConcurrentChange,
                     "Working file changed during diff",
@@ -282,6 +282,75 @@ pub struct Preview {
     pub fingerprint: String,
     pub complete: bool,
 }
+fn fingerprint_in(s: &Session<'_>, path: &NativePath) -> Result<String> {
+    use sha2::{Digest, Sha256};
+    use std::io::Read;
+    s.check()?;
+    let target = s.safe_path(path)?;
+    let metadata = match std::fs::symlink_metadata(&target) {
+        Ok(metadata) => metadata,
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => return Ok(digest(b"missing")),
+        Err(e) => return Err(e.into()),
+    };
+    if metadata.is_symlink() {
+        let value = std::fs::read_link(&target)?;
+        let mut hash = Sha256::new();
+        hash.update(b"symlink");
+        hash.update(value.as_os_str().as_encoded_bytes());
+        return Ok(format!("{:x}", hash.finalize()));
+    }
+    if !metadata.is_file() {
+        return Err(Error::with_kind(
+            ErrorKind::InvalidPath,
+            "Unsupported preview file type",
+        ));
+    }
+    let mut options = std::fs::OpenOptions::new();
+    options.read(true);
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::OpenOptionsExt;
+        options.custom_flags(libc::O_NOFOLLOW | libc::O_NONBLOCK);
+    }
+    let mut file = options.open(&target)?;
+    if !file.metadata()?.is_file() {
+        return Err(Error::with_kind(
+            ErrorKind::InvalidPath,
+            "File type changed during inspection",
+        ));
+    }
+    if file.metadata()?.len() > 2 * 1024 * 1024 {
+        return Err(Error::with_kind(
+            ErrorKind::OutputLimit,
+            "File exceeds preview limit",
+        ));
+    }
+    let mut hash = Sha256::new();
+    hash.update(b"regular");
+    let mut size = 0;
+    let mut buffer = [0; 65536];
+    loop {
+        s.check()?;
+        let n = file.read(&mut buffer)?;
+        if n == 0 {
+            break;
+        }
+        size += n;
+        if size > 2 * 1024 * 1024 {
+            return Err(Error::with_kind(
+                ErrorKind::OutputLimit,
+                "File exceeds preview limit",
+            ));
+        }
+        hash.update(&buffer[..n]);
+        #[cfg(test)]
+        if fingerprint_tests::CANCEL_ON_CHUNK.replace(false) {
+            s.options.cancellation.cancel();
+        }
+    }
+    Ok(format!("{:x}", hash.finalize()))
+}
+
 fn preview_in(s: &Session<'_>, path: &NativePath) -> Result<Preview> {
     let target = s.safe_path(path)?;
     let metadata = std::fs::symlink_metadata(&target);
@@ -334,4 +403,69 @@ pub fn blob(repo: &Path, oid: &ObjectId) -> Result<Vec<u8>> {
         },
         |s| s.blob(oid),
     )
+}
+
+#[cfg(test)]
+mod fingerprint_tests {
+    use super::*;
+    use std::fs;
+    thread_local! { pub(super) static CANCEL_ON_CHUNK: std::cell::Cell<bool> = const {std::cell::Cell::new(false)}; }
+    #[test]
+    fn streaming_fingerprints_match_preview_contract_and_limits() {
+        let root = std::env::temp_dir().join(format!("diff-fingerprint-{}", uuid::Uuid::new_v4()));
+        fs::create_dir(&root).unwrap();
+        assert!(std::process::Command::new("git")
+            .args(["init", "-q"])
+            .arg(&root)
+            .status()
+            .unwrap()
+            .success());
+        for bytes in [vec![], b"text\n".to_vec(), vec![0; 2 * 1024 * 1024]] {
+            fs::write(root.join("file"), bytes).unwrap();
+            inspection::read(&root, &Default::default(), |s| {
+                let path = NativePath::Utf8("file".into());
+                assert_eq!(fingerprint_in(s, &path)?, preview_in(s, &path)?.fingerprint);
+                Ok(())
+            })
+            .unwrap();
+        }
+        fs::remove_file(root.join("file")).unwrap();
+        #[cfg(unix)]
+        std::os::unix::fs::symlink("target", root.join("link")).unwrap();
+        inspection::read(&root, &Default::default(), |s| {
+            for name in ["file", "link"] {
+                let path = NativePath::Utf8(name.into());
+                assert_eq!(fingerprint_in(s, &path)?, preview_in(s, &path)?.fingerprint);
+            }
+            fs::write(root.join("file"), vec![0; 2 * 1024 * 1024 + 1])?;
+            assert_eq!(
+                fingerprint_in(s, &NativePath::Utf8("file".into()))
+                    .unwrap_err()
+                    .kind,
+                ErrorKind::OutputLimit
+            );
+            Ok(())
+        })
+        .unwrap();
+        fs::write(root.join("file"), vec![0; 131072]).unwrap();
+        let options = ReadOptions::default();
+        let error = inspection::read(&root, &options, |s| {
+            CANCEL_ON_CHUNK.set(true);
+            fingerprint_in(s, &NativePath::Utf8("file".into()))
+        })
+        .unwrap_err();
+        assert_eq!(error.kind, ErrorKind::Cancelled);
+        assert!(options.cancellation.is_cancelled());
+        let options = ReadOptions {
+            timeout: Duration::from_millis(500),
+            ..Default::default()
+        };
+        let error = inspection::read(&root, &options, |s| {
+            std::thread::sleep(Duration::from_millis(500));
+            fingerprint_in(s, &NativePath::Utf8("file".into()))
+        })
+        .unwrap_err();
+        assert_eq!(error.kind, ErrorKind::Timeout);
+        fs::remove_dir_all(root).unwrap();
+    }
 }

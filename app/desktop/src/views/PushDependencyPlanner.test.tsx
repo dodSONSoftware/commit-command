@@ -120,15 +120,19 @@ function setup(cycle = false, enabled = false) {
           reachable: false,
         },
       };
+    if (r.kind === "cancel_reviewed_operation") return { kind: "done" };
+    if (r.kind === "execute_reviewed_operation")
+      return { kind: "executed", value: { result: { phase: "complete" } } };
     if (r.kind === "review_push_check" || r.kind === "review_push_publication")
       return {
         kind: "review",
         value: {
           id: "separate-check",
           epoch: 1,
-          expires_at_ms: 99,
-          title: "Pre-push check",
-          summary: "No publication",
+          expires_at_ms: Date.now() + 60_000,
+          operation: r.kind === "review_push_check" ? "pre_push_check" : "push",
+          title: "Exact review",
+          summary: "Destination: origin refs/heads/main",
           content: "{}",
         },
       };
@@ -256,7 +260,7 @@ it("does not auto-select or auto-enroll an unavailable child and sends no networ
   expect(
     screen.getByRole("button", { name: "Inspect selected push sources" }),
   ).toBeDisabled();
-  fireEvent.click(screen.getByText("Plan push dependencies locally"));
+  fireEvent.click(screen.getByText("Push repositories with submodules"));
   await choose("a");
   await inspect();
   await saveChild();
@@ -290,7 +294,7 @@ it("does not auto-select or auto-enroll an unavailable child and sends no networ
 });
 it("shows conditional child-before-parent order after explicit selection and clears stale results", async () => {
   setup();
-  fireEvent.click(screen.getByText("Plan push dependencies locally"));
+  fireEvent.click(screen.getByText("Push repositories with submodules"));
   await choose("a");
   await choose("b");
   fireEvent.click(
@@ -327,7 +331,7 @@ it("shows conditional child-before-parent order after explicit selection and cle
 });
 it("shows the closed cycle witness without a partial order", async () => {
   setup(true);
-  fireEvent.click(screen.getByText("Plan push dependencies locally"));
+  fireEvent.click(screen.getByText("Push repositories with submodules"));
   await choose("a");
   await inspect();
   fireEvent.click(
@@ -344,7 +348,7 @@ it("shows the closed cycle witness without a partial order", async () => {
 
 it("keeps separately approved hook checks disabled in the ordinary build", async () => {
   setup();
-  fireEvent.click(screen.getByText("Plan push dependencies locally"));
+  fireEvent.click(screen.getByText("Push repositories with submodules"));
   await choose("a");
   await inspect();
   expect(
@@ -360,7 +364,7 @@ it("keeps separately approved hook checks disabled in the ordinary build", async
 });
 it("submits exact saved child selections and explicit hook policy for independent review", async () => {
   const request = setup(false, true);
-  fireEvent.click(screen.getByText("Plan push dependencies locally"));
+  fireEvent.click(screen.getByText("Push repositories with submodules"));
   await choose("a");
   await inspect();
   await saveChild();
@@ -398,7 +402,7 @@ it("submits exact saved child selections and explicit hook policy for independen
 
 it("requires an independent exact publication request with ordinary-build gating", async () => {
   const request = setup(false, true);
-  fireEvent.click(screen.getByText("Plan push dependencies locally"));
+  fireEvent.click(screen.getByText("Push repositories with submodules"));
   await choose("a");
   await inspect();
   fireEvent.click(
@@ -419,6 +423,34 @@ it("requires an independent exact publication request with ordinary-build gating
       hooks: "execute",
     }),
   );
+  expect(
+    await screen.findByText("Destination: origin refs/heads/main"),
+  ).toBeVisible();
+  expect(
+    request.mock.calls.some(([r]) => r.kind === "execute_reviewed_operation"),
+  ).toBe(false);
+  fireEvent.click(screen.getByRole("button", { name: "Cancel review" }));
+  await waitFor(() =>
+    expect(request).toHaveBeenCalledWith({
+      kind: "cancel_reviewed_operation",
+      id: "separate-check",
+      operation: "push",
+    }),
+  );
+  fireEvent.click(
+    screen.getByRole("button", {
+      name: "Review exact push publication for /tmp/project/a",
+    }),
+  );
+  fireEvent.click(
+    await screen.findByRole("button", { name: "Push reviewed commit" }),
+  );
+  await screen.findByText("Push result: complete");
+  expect(request).toHaveBeenCalledWith({
+    kind: "execute_reviewed_operation",
+    id: "separate-check",
+    operation: "push",
+  });
 });
 
 it("creates a durable guided queue from explicit sources without issuing item approval", async () => {
@@ -457,7 +489,7 @@ it("creates a durable guided queue from explicit sources without issuing item ap
       return { kind: "push_batches", value: { items: [queue], next: null } };
     return original(r);
   });
-  fireEvent.click(screen.getByText("Plan push dependencies locally"));
+  fireEvent.click(screen.getByText("Push repositories with submodules"));
   await choose("b");
   await inspect();
   fireEvent.click(
@@ -495,7 +527,7 @@ it("distinguishes identical branch tips by observation time without auto-selecti
       };
     return original(r);
   });
-  fireEvent.click(screen.getByText("Plan push dependencies locally"));
+  fireEvent.click(screen.getByText("Push repositories with submodules"));
   fireEvent.click(
     screen.getByRole("checkbox", { name: "Plan push for /tmp/project/b" }),
   );

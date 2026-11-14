@@ -89,3 +89,51 @@ it("shows resumable progress and explicitly continues without a full rescan", as
     screen.queryByRole("button", { name: "Continue discovery" }),
   ).not.toBeInTheDocument();
 });
+
+it("distinguishes a time-sliced background scan from an inspection failure", async () => {
+  const scan = {
+    complete: false,
+    issues: [
+      {
+        path: { encoding: "utf8" as const, value: "/workspace" },
+        error: { kind: "timeout" as const, message: "Read deadline exceeded" },
+      },
+    ],
+    skipped_caches: [],
+    progress: {
+      inspected_repositories: 5,
+      pending_directories: 12,
+      classified_repositories: 0,
+      phase: "traversal",
+    },
+  };
+  const { rerender } = render(<WorkspaceScanStatus scan={scan} />);
+  expect(screen.getByText("Scanning repositories…")).toBeVisible();
+  await userEvent.click(screen.getByText("Discovery details"));
+  expect(
+    screen.getByText(
+      /Previously inspected repositories keep their last known status/,
+    ),
+  ).toBeVisible();
+  expect(screen.queryByText(/timeout:/)).not.toBeInTheDocument();
+  rerender(
+    <WorkspaceScanStatus
+      scan={{
+        ...scan,
+        issues: [
+          {
+            path: scan.issues[0].path,
+            error: {
+              kind: "inspection_failed",
+              message: "Cannot inspect metadata",
+            },
+          },
+        ],
+      }}
+    />,
+  );
+  expect(screen.getByText("△ Discovery incomplete")).toBeVisible();
+  expect(
+    screen.getByText(/inspection_failed: Cannot inspect metadata/),
+  ).toBeVisible();
+});

@@ -5,6 +5,8 @@ use std::collections::BTreeMap;
 #[serde(deny_unknown_fields)]
 pub struct RepositoryTab {
     pub worktree: String,
+    #[serde(default)]
+    pub pinned: bool,
     pub view: String,
     pub path: Option<NativePath>,
     pub commit: Option<String>,
@@ -17,6 +19,7 @@ impl Default for RepositoryTab {
     fn default() -> Self {
         Self {
             worktree: String::new(),
+            pinned: false,
             view: "changes".into(),
             path: None,
             commit: None,
@@ -309,6 +312,43 @@ impl WindowPlacement {
 }
 
 impl Application {
+    pub fn ui_scale_percent(&mut self) -> Result<u16> {
+        let value: Option<String> = self
+            .writes
+            .workspace
+            .connection()
+            .query_row(
+                "SELECT value FROM state WHERE key='ui_scale_percent'",
+                [],
+                |row| row.get(0),
+            )
+            .optional()?;
+        let percent = value
+            .map(|raw| {
+                raw.parse::<u16>()
+                    .map_err(|_| invalid("Invalid saved UI scale"))
+            })
+            .transpose()?
+            .unwrap_or(100);
+        if !(75..=200).contains(&percent) || !percent.is_multiple_of(5) {
+            return Err(invalid(
+                "UI scale must be 75–200 percent in increments of five",
+            ));
+        }
+        Ok(percent)
+    }
+    pub fn save_ui_scale_percent(&mut self, percent: u16) -> Result<()> {
+        if !(75..=200).contains(&percent) || !percent.is_multiple_of(5) {
+            return Err(invalid(
+                "UI scale must be 75–200 percent in increments of five",
+            ));
+        }
+        self.writes.workspace.connection().execute(
+            "INSERT OR REPLACE INTO state(key,value) VALUES('ui_scale_percent',?1)",
+            [percent.to_string()],
+        )?;
+        Ok(())
+    }
     pub fn window_placement(&mut self) -> Result<Option<WindowPlacement>> {
         let raw: Option<String> = self
             .writes
@@ -413,5 +453,117 @@ mod sort_tests {
         validate(&state).unwrap();
         state.collapsed.push("/overflow".into());
         assert!(validate(&state).is_err());
+    }
+}
+
+#[derive(
+    Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, JsonSchema,
+)]
+#[serde(rename_all = "snake_case")]
+pub enum TextareaField {
+    CommitMessage,
+    CommitSubject,
+    CommitBody,
+    BulkMessage,
+    BulkSubject,
+    BulkBody,
+    AiSystem,
+    AiStop,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+#[serde(default, deny_unknown_fields)]
+pub struct AppPreferences {
+    pub textarea_heights: BTreeMap<TextareaField, u16>,
+    pub generation_timeout_seconds: u16,
+}
+impl Default for AppPreferences {
+    fn default() -> Self {
+        Self {
+            textarea_heights: BTreeMap::new(),
+            generation_timeout_seconds: 60,
+        }
+    }
+}
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+#[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
+pub enum PreferenceChange {
+    TextareaHeight { field: TextareaField, height: u16 },
+    GenerationTimeout { seconds: u16 },
+}
+impl AppPreferences {
+    fn validate(&self) -> Result<()> {
+        if !(1..=3600).contains(&self.generation_timeout_seconds)
+            || self
+                .textarea_heights
+                .values()
+                .any(|h| !(48..=4096).contains(h))
+        {
+            return Err(invalid("Invalid application preference value"));
+        }
+        Ok(())
+    }
+}
+impl Application {
+    pub fn app_preferences(&mut self) -> Result<AppPreferences> {
+        let raw: Option<String> = self
+            .writes
+            .workspace
+            .connection()
+            .query_row(
+                "SELECT value FROM state WHERE key='app_preferences'",
+                [],
+                |row| row.get(0),
+            )
+            .optional()?;
+        let preferences = raw
+            .map(|s| serde_json::from_str::<AppPreferences>(&s))
+            .transpose()?
+            .unwrap_or_default();
+        preferences.validate()?;
+        Ok(preferences)
+    }
+    pub fn save_app_preference(&mut self, change: PreferenceChange) -> Result<AppPreferences> {
+        let mut preferences = self.app_preferences()?;
+        match change {
+            PreferenceChange::TextareaHeight { field, height } => {
+                preferences.textarea_heights.insert(field, height);
+            }
+            PreferenceChange::GenerationTimeout { seconds } => {
+                preferences.generation_timeout_seconds = seconds
+            }
+        }
+        preferences.validate()?;
+        self.writes.workspace.connection().execute(
+            "INSERT OR REPLACE INTO state(key,value) VALUES('app_preferences',?1)",
+            [serde_json::to_string(&preferences)?],
+        )?;
+        Ok(preferences)
+    }
+    pub fn settings_window_placement(&mut self) -> Result<Option<WindowPlacement>> {
+        let raw: Option<String> = self
+            .writes
+            .workspace
+            .connection()
+            .query_row(
+                "SELECT value FROM state WHERE key='settings_window_placement'",
+                [],
+                |row| row.get(0),
+            )
+            .optional()?;
+        let placement = raw
+            .map(|s| serde_json::from_str::<WindowPlacement>(&s))
+            .transpose()?;
+        if let Some(p) = &placement {
+            p.validate()?;
+        }
+        Ok(placement)
+    }
+    pub fn save_settings_window_placement(&mut self, placement: WindowPlacement) -> Result<()> {
+        placement.validate()?;
+        self.writes.workspace.connection().execute(
+            "INSERT OR REPLACE INTO state(key,value) VALUES('settings_window_placement',?1)",
+            [serde_json::to_string(&placement)?],
+        )?;
+        Ok(())
     }
 }

@@ -109,6 +109,16 @@ function fake(writes = false) {
     request: async (request): Promise<Payload> => {
       requests.push(request);
       switch (request.kind) {
+        case "app_preferences":
+          return {
+            kind: "app_preferences",
+            value: { textarea_heights: {}, generation_timeout_seconds: 60 },
+          };
+        case "save_app_preference":
+          return {
+            kind: "app_preferences",
+            value: { textarea_heights: {}, generation_timeout_seconds: 60 },
+          };
         case "workspaces":
           return {
             kind: "workspaces",
@@ -232,18 +242,16 @@ it("preserves a composer draft through overview navigation and saves it", async 
     ),
   );
 });
-it("keeps write controls disabled in the ordinary desktop while inspection works", async () => {
+it("disables Git actions when the host explicitly reports them unavailable", async () => {
   const { bridge, requests } = fake();
   render(<App bridge={bridge} />);
   await screen.findByRole("checkbox", { name: "Select parent" });
   await userEvent.click(
     screen.getAllByRole("button", { name: "parent" }).at(-1)!,
   );
-  expect(screen.getByRole("button", { name: "Review trust" })).toBeDisabled();
-  expect(screen.getByRole("button", { name: "Review stage" })).toBeDisabled();
-  expect(
-    screen.getByRole("button", { name: "Inspect trust & eligibility" }),
-  ).toBeEnabled();
+  expect(screen.queryByRole("button", { name: "Review trust" })).toBeNull();
+  expect(screen.getByRole("button", { name: "Stage" })).toBeDisabled();
+  expect(screen.queryByText("Inspect trust & eligibility")).toBeNull();
   expect(
     requests.some((r) => r.kind === "propose" || r.kind === "review_trust"),
   ).toBe(false);
@@ -352,9 +360,8 @@ it("clears the removed active workspace and operation view, then loads another w
   });
   // Changing the theme must not save the old workspace after removal.
   const afterRemoval = requests.length;
-  await userEvent.selectOptions(
-    screen.getByRole("combobox", { name: "Color theme" }),
-    "dark",
+  await userEvent.click(
+    screen.getByRole("button", { name: /Switch to (light|dark) mode/ }),
   );
   await userEvent.selectOptions(
     screen.getByRole("combobox", { name: "Workspace" }),
@@ -482,26 +489,12 @@ it("keeps Changes patches and previews out of History and restores the selected 
   expect(screen.queryByText("Late Changes patch")).toBeNull();
 });
 
-it("refreshes trust automatically and removes selections whose source is no longer changed", async () => {
+it("removes selections whose source is no longer changed", async () => {
   vi.useFakeTimers({ toFake: ["setInterval", "clearInterval"] });
   const { bridge } = fake(true);
   const original = bridge.request;
   let clean = false;
   bridge.request = async (request) => {
-    if (request.kind === "trust_status")
-      return {
-        kind: "trust",
-        value: [
-          {
-            worktree: "parent",
-            grant: "granted",
-            validity: "current",
-            eligible: true,
-            reason: null,
-            policy: "execute",
-          },
-        ],
-      };
     const result = await original(request);
     if (clean && result.kind === "inventory") {
       const status = result.value.entries[0].status!;
@@ -515,28 +508,22 @@ it("refreshes trust automatically and removes selections whose source is no long
   await userEvent.click(
     screen.getAllByRole("button", { name: "parent" }).at(-1)!,
   );
-  expect(
-    screen
-      .getByRole("button", { name: "Inspect trust & eligibility" })
-      .closest(".repository-tabs"),
-  ).toBeNull();
   await userEvent.click(
     screen.getByRole("checkbox", { name: "Include file.txt from index" }),
   );
-  expect(screen.getByRole("button", { name: "Review stage" })).toBeEnabled();
+  expect(screen.getByRole("button", { name: "Unstage" })).toBeEnabled();
   expect(
-    screen.getByRole("button", { name: "Review commit · 1 files" }),
+    screen.getByRole("button", { name: "Commit · 1 file" }),
   ).toBeInTheDocument();
   clean = true;
   await act(async () => {
     await vi.advanceTimersByTimeAsync(3000);
   });
   {
-    expect(screen.getByText("granted · current")).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "Review commit · 0 files" }),
+      screen.getByRole("button", { name: "Commit · 0 files" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Review stage" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Unstage" })).toBeDisabled();
   }
   clean = false;
   await act(async () => {
@@ -546,7 +533,7 @@ it("refreshes trust automatically and removes selections whose source is no long
     expect(
       screen.getByRole("checkbox", { name: "Include file.txt from index" }),
     ).not.toBeChecked();
-    expect(screen.getByRole("button", { name: "Review stage" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Unstage" })).toBeDisabled();
   }
 });
 
@@ -789,9 +776,10 @@ it("polls one refresh at a time and pauses repository reads during native writes
     await vi.advanceTimersByTimeAsync(3000);
   });
   expect(bridge.writeStatus).toHaveBeenCalledTimes(polls + 1);
-  expect(requests.slice(baseline).some((r) => r.kind === "trust_status")).toBe(
+  expect(requests.slice(baseline).some((r) => r.kind === "inventory")).toBe(
     true,
   );
+  expect(requests.some((r) => r.kind === "trust_status")).toBe(false);
   expect(
     screen.getByRole("button", { name: "Cancel current operation" }),
   ).toBeDisabled();
@@ -1004,7 +992,13 @@ it("shows incomplete discovery even when all known repositories are available", 
   };
   render(<App bridge={bridge} />);
   await screen.findByRole("checkbox", { name: "Select parent" });
-  expect(screen.getByText("△ Discovery incomplete")).toBeVisible();
+  expect(screen.getByRole("alert")).toHaveTextContent("Discovery incomplete");
+  expect(screen.getByRole("alert")).toHaveTextContent(
+    "Cannot inspect repository metadata",
+  );
+  await userEvent.click(
+    screen.getByRole("button", { name: "Show scan details" }),
+  );
   await userEvent.click(screen.getByText("Discovery details"));
   expect(screen.getByText("/tmp/project/cache/broken")).toBeVisible();
 });
@@ -1027,6 +1021,56 @@ it("preserves captured AI context across native review completion without replay
       return false;
     };
     bridge.request = async (r) => {
+      if (r.kind === "effective_ai_settings")
+        return {
+          kind: "effective_ai_settings",
+          value: {
+            connection: {
+              id: "c",
+              revision: "r",
+              name: "Local",
+              provider: "ollama",
+              endpoint: "http://127.0.0.1:1/",
+              endpoint_approval: "",
+              timeout_ms: 3000,
+            },
+            profile: {
+              id: "p",
+              revision: "r",
+              name: "Profile",
+              connection: "c",
+              model: "model",
+              system_message: "",
+              parameters: {},
+              template: "t",
+              context_bytes: 16384,
+            },
+            template: {
+              id: "t",
+              revision: "r",
+              name: "Plain",
+              examples: [],
+              rules: {
+                style: "plain",
+                subject_max_chars: 72,
+                allowed_types: [],
+                allow_scope: false,
+                forbid_trailing_period: false,
+                instructions: "",
+              },
+            },
+            instructions: [],
+          },
+        };
+      if (r.kind === "review_ai_model_load")
+        return {
+          kind: "executed",
+          value: {
+            result: null,
+            ai_job_id: "load-job",
+            ai_request_fingerprint: "load-fingerprint",
+          },
+        };
       if (r.kind === "preview_ai_context") {
         requests.push(r);
         return {
@@ -1049,7 +1093,28 @@ it("preserves captured AI context across native review completion without replay
         completed = true;
         return { kind: "done" };
       }
-      if (r.kind === "ai_jobs") return { kind: "ai_jobs", value: [] };
+      if (r.kind === "ai_jobs")
+        return {
+          kind: "ai_jobs",
+          value: [
+            {
+              id: "load-job",
+              phase: "complete",
+              error: null,
+              review: {
+                fingerprint: "load-fingerprint",
+                endpoint: "http://localhost/",
+                route: "http://localhost/api/generate",
+                model: "model",
+                purpose: "load_model",
+                request_bytes: 1,
+                authentication: "none",
+                unencrypted: true,
+              },
+              result: { kind: "model_loaded", value: { model: "model" } },
+            },
+          ],
+        };
       return original(r);
     };
     render(<App bridge={bridge} />);
@@ -1063,29 +1128,11 @@ it("preserves captured AI context across native review completion without replay
     await userEvent.click(
       screen.getByRole("checkbox", { name: "Include file.txt from index" }),
     );
-    await userEvent.click(
-      screen.getByRole("button", { name: "AI message suggestions…" }),
-    );
-    await userEvent.click(
-      screen.getByRole("button", {
-        name: "Capture filtered AI context · no transfer",
-      }),
-    );
-    await screen.findByRole("region", { name: "Exact filtered AI context" });
-    await userEvent.click(
-      screen.getByRole("button", { name: "Review exact AI source transfer" }),
-    );
+    await userEvent.click(screen.getByRole("button", { name: "Fill with AI" }));
     await act(async () => {
       await vi.advanceTimersByTimeAsync(3000);
     });
-    expect(
-      screen.getByRole("dialog", {
-        name: "AI context and message suggestions",
-      }),
-    ).toHaveAttribute("open");
-    expect(
-      screen.getByRole("region", { name: "Exact filtered AI context" }),
-    ).toHaveTextContent("snapshot");
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(screen.getByRole("textbox", { name: "Message" })).toHaveValue(
       "Preserve my manual draft",
     );
@@ -1098,4 +1145,839 @@ it("preserves captured AI context across native review completion without replay
   } finally {
     Reflect.deleteProperty(HTMLDialogElement.prototype, "showModal");
   }
+});
+
+it("keeps scan diagnostics in troubleshooting and push planning with repository remote controls", async () => {
+  const { bridge } = fake();
+  render(<App bridge={bridge} />);
+  await screen.findByRole("checkbox", { name: "Select parent" });
+  const troubleshooting = screen.getByText("Workspace troubleshooting");
+  expect(troubleshooting.closest("aside")).not.toBeNull();
+  expect(screen.queryByText("Push repositories with submodules")).toBeNull();
+  await userEvent.click(
+    screen.getAllByRole("button", { name: "parent" }).at(-1)!,
+  );
+  const remoteControls = await screen.findByText("Remotes and upstream");
+  await userEvent.click(remoteControls);
+  const planner = screen.getByText("Push repositories with submodules");
+  expect(planner).toBeVisible();
+  expect(planner.closest(".remote-inspector")).toBe(
+    remoteControls.closest("details"),
+  );
+});
+
+it("opens the repository folder from its path", async () => {
+  const { bridge } = fake();
+  bridge.repositoryPathAction = vi.fn().mockResolvedValue(undefined);
+  render(<App bridge={bridge} />);
+  await userEvent.click(await screen.findByRole("button", { name: "parent" }));
+  await userEvent.click(
+    screen.getByRole("button", { name: "/tmp/project/parent" }),
+  );
+  expect(bridge.repositoryPathAction).toHaveBeenCalledWith(
+    { workspace: fixtureWorkspace.id, worktree: "parent" },
+    "open",
+  );
+});
+
+it("selects every selectable file from none or partial selection, then clears all", async () => {
+  const { bridge } = fake();
+  const original = bridge.request;
+  bridge.request = async (request) => {
+    const result = await original(request);
+    if (result.kind === "inventory") {
+      const changes = result.value.entries[0].status!.changes;
+      changes.push(
+        {
+          ...changes[0],
+          path: { encoding: "utf8", value: "new.txt" },
+          index: "?",
+          worktree: "?",
+        },
+        {
+          ...changes[0],
+          path: { encoding: "utf8", value: "conflict.txt" },
+          conflict: true,
+          index: "U",
+          worktree: "U",
+        },
+      );
+    }
+    return result;
+  };
+  render(<App bridge={bridge} />);
+  await userEvent.click(await screen.findByRole("button", { name: "parent" }));
+  const all = screen.getByRole("checkbox", {
+    name: "Select all changed files",
+  });
+  const files = screen
+    .getAllByRole("checkbox", { name: /^Include / })
+    .filter((checkbox) => !checkbox.hasAttribute("disabled"));
+  expect(all).not.toBeChecked();
+  await userEvent.click(all);
+  expect(all).toBeChecked();
+  files.forEach((file) => expect(file).toBeChecked());
+  screen
+    .getAllByRole("checkbox", { name: /Include conflict.txt/ })
+    .forEach((file) => expect(file).not.toBeChecked());
+  expect(screen.getByText("2 selected")).toBeInTheDocument();
+  await userEvent.click(files[0]);
+  expect(all).toBePartiallyChecked();
+  await userEvent.click(all);
+  expect(all).toBeChecked();
+  files.forEach((file) => expect(file).toBeChecked());
+  await userEvent.click(all);
+  expect(all).not.toBeChecked();
+  expect(all).not.toBePartiallyChecked();
+  files.forEach((file) => expect(file).not.toBeChecked());
+});
+
+it.each(["Stage", "Unstage", "Commit"] as const)(
+  "%s submits only eligible sides from the displayed rename and partial file",
+  async (action) => {
+    const { bridge, requests } = fake(true);
+    const original = bridge.request;
+    const oldPath = { encoding: "utf8" as const, value: "old.txt" };
+    const newPath = { encoding: "utf8" as const, value: "new [Δ].txt" };
+    const file = { encoding: "utf8" as const, value: "file.txt" };
+    bridge.request = async (request) => {
+      const data = await original(request);
+      if (data.kind === "inventory") {
+        const changes = data.value.entries[0].status!.changes;
+        changes.push({
+          ...changes[0],
+          index: "R",
+          worktree: ".",
+          original_path: oldPath,
+          path: newPath,
+        });
+      }
+      if (request.kind === "propose")
+        return {
+          kind: "executed",
+          value: { result: { phase: "complete", published: false } },
+        };
+      return data;
+    };
+    render(<App bridge={bridge} />);
+    await userEvent.click(
+      await screen.findByRole("button", { name: "parent" }),
+    );
+    expect(
+      screen.getByRole("button", { name: "old.txt → new [Δ].txt" }),
+    ).toBeVisible();
+    const checkbox = (name: string) => screen.getByRole("checkbox", { name });
+    const button = (name: string) => screen.getByRole("button", { name });
+    const rename = checkbox("Include new [Δ].txt from index");
+    const working = checkbox("Include file.txt from working_tree");
+    await userEvent.click(rename);
+    expect(button("Stage")).toBeDisabled();
+    await userEvent.click(button("Stage"));
+    await userEvent.click(rename);
+    await userEvent.click(working);
+    expect(button("Unstage")).toBeDisabled();
+    await userEvent.click(button("Unstage"));
+    expect(requests.filter((r) => r.kind === "propose")).toHaveLength(0);
+
+    if (action === "Commit") {
+      await userEvent.click(checkbox("Select all changed files"));
+      fireEvent.change(screen.getByRole("textbox", { name: "Message" }), {
+        target: { value: "Selected changes" },
+      });
+      await userEvent.click(button("Commit · 2 files"));
+      expect(
+        requests.filter((r) => r.kind === "propose").map((r) => r.request),
+      ).toEqual([
+        expect.objectContaining({
+          kind: "commit",
+          selected: [
+            { path: file, source: "working_tree" },
+            { path: oldPath, source: "index" },
+            { path: newPath, source: "index" },
+          ],
+        }),
+      ]);
+    } else {
+      await userEvent.click(rename);
+      expect(screen.getByText("2 selected")).toBeVisible();
+      await userEvent.click(button(action));
+      const staging = action === "Stage";
+      expect(
+        await screen.findByText(
+          staging ? "1 file staged." : "1 file unstaged.",
+        ),
+      ).toBeVisible();
+      expect(
+        requests.filter((r) => r.kind === "propose").map((r) => r.request),
+      ).toEqual([
+        {
+          kind: staging ? "stage" : "unstage",
+          paths: staging ? [file] : [oldPath, newPath],
+          hooks: "execute",
+        },
+      ]);
+    }
+  },
+);
+
+it("opens the active workspace folder from the sidebar path", async () => {
+  const { bridge } = fake();
+  bridge.repositoryPathAction = vi.fn().mockResolvedValue(undefined);
+  render(<App bridge={bridge} />);
+  await userEvent.click(
+    await screen.findByRole("button", { name: "/tmp/project" }),
+  );
+  expect(bridge.repositoryPathAction).toHaveBeenCalledWith(
+    { workspace: fixtureWorkspace.id },
+    "open",
+  );
+});
+
+it("commits selected files and a message without a separate trust step", async () => {
+  const { bridge, requests } = fake(true);
+  render(<App bridge={bridge} />);
+  await userEvent.click(await screen.findByRole("button", { name: "parent" }));
+  expect(screen.queryByText("Trust & execution")).toBeNull();
+  expect(screen.queryByText("Inspect trust & eligibility")).toBeNull();
+  await userEvent.click(
+    screen.getByRole("checkbox", { name: "Include file.txt from index" }),
+  );
+  fireEvent.change(screen.getByRole("textbox", { name: "Message" }), {
+    target: { value: "fix: selected change" },
+  });
+  const commit = screen.getByRole("button", { name: "Commit · 1 file" });
+  expect(commit).toBeEnabled();
+  await userEvent.click(commit);
+  expect(requests).toContainEqual(
+    expect.objectContaining({
+      kind: "propose",
+      request: expect.objectContaining({
+        kind: "commit",
+        message: "fix: selected change",
+      }),
+    }),
+  );
+  expect(
+    requests.some(
+      (r) => r.kind === "review_trust" || r.kind === "trust_status",
+    ),
+  ).toBe(false);
+});
+
+it("rounds fractional sidebar coordinates before saving layout and drafts", async () => {
+  const { bridge, saved } = fake();
+  const original = bridge.request;
+  bridge.request = async (request) => {
+    if (
+      request.kind === "save_state" &&
+      !Number.isInteger(request.state.sidebar_width)
+    )
+      throw new Error("Malformed or unsupported request");
+    return original(request);
+  };
+  render(<App bridge={bridge} />);
+  await userEvent.click(await screen.findByRole("button", { name: "parent" }));
+  fireEvent.change(screen.getByRole("textbox", { name: "Message" }), {
+    target: { value: "Preserve the draft" },
+  });
+  const splitter = screen.getByRole("separator", { name: "Sidebar width" });
+  Object.defineProperty(splitter, "hasPointerCapture", { value: () => true });
+  const event = new Event("pointermove", { bubbles: true });
+  Object.defineProperty(event, "clientX", { value: 333.6 });
+  Object.defineProperty(event, "pointerId", { value: 1 });
+  fireEvent(splitter, event);
+  await waitFor(() => expect(saved.at(-1)?.sidebar_width).toBe(334));
+  expect(saved.at(-1)?.drafts.parent).toBe("Preserve the draft");
+  expect(screen.queryByRole("alert")).toBeNull();
+});
+
+it("clears a layout-save error after a successful retry", async () => {
+  const { bridge, saved } = fake();
+  const original = bridge.request;
+  let fail = true;
+  bridge.request = async (request) => {
+    if (request.kind === "save_state" && fail)
+      throw new Error("Storage unavailable");
+    return original(request);
+  };
+  render(<App bridge={bridge} />);
+  expect(await screen.findByRole("alert")).toHaveTextContent(
+    "Layout and drafts were not saved: Storage unavailable",
+  );
+  fail = false;
+  await userEvent.click(screen.getByRole("button", { name: "Hide sidebar" }));
+  await waitFor(() => expect(saved.at(-1)?.sidebar_collapsed).toBe(true));
+  expect(screen.queryByRole("alert")).toBeNull();
+});
+
+it("keeps staging and commit controls outside their scrolling content", async () => {
+  const { bridge } = fake(true);
+  render(<App bridge={bridge} />);
+  await userEvent.click(await screen.findByRole("button", { name: "parent" }));
+  const files = screen.getByLabelText("Changed file list");
+  const stage = screen.getByRole("button", { name: "Stage" });
+  expect(files.contains(stage)).toBe(false);
+  expect(stage.closest(".files")).toBe(files.parentElement);
+  expect(
+    stage.compareDocumentPosition(files) & Node.DOCUMENT_POSITION_FOLLOWING,
+  ).not.toBe(0);
+  const commit = screen.getByRole("button", { name: "Commit · 0 files" });
+  expect(commit.closest(".composer-content")).toBeNull();
+  expect(commit.closest(".commit-actions")).not.toBeNull();
+});
+
+it.each([
+  ["Stage", "complete"],
+  ["Stage", "blocked"],
+  ["Stage", "published_with_post_processing_failure"],
+  ["Unstage", "published_with_post_processing_failure"],
+])(
+  "shows the %s %s result immediately without opening operation history",
+  async (action, phase) => {
+    const { bridge } = fake(true);
+    const original = bridge.request;
+    bridge.request = async (request) =>
+      request.kind === "propose"
+        ? {
+            kind: "executed",
+            value: {
+              result: {
+                phase,
+                published: false,
+                index_reconciled: phase !== "blocked",
+                reason:
+                  phase === "published_with_post_processing_failure"
+                    ? "post-index-change failed after index/ref publication"
+                    : "Fixture Git failure",
+              },
+            },
+          }
+        : original(request);
+    render(<App bridge={bridge} />);
+    await userEvent.click(
+      await screen.findByRole("button", { name: "parent" }),
+    );
+    await userEvent.click(
+      screen.getByRole("checkbox", {
+        name:
+          action === "Stage"
+            ? "Include file.txt from working_tree"
+            : "Include file.txt from index",
+      }),
+    );
+    fireEvent.change(screen.getByRole("textbox", { name: "Message" }), {
+      target: { value: "Keep my draft" },
+    });
+    await userEvent.click(screen.getByRole("button", { name: action }));
+    if (phase === "blocked") {
+      expect(await screen.findByRole("alert")).toHaveTextContent(
+        "Could not stage files. The staging area was not changed. Fixture Git failure",
+      );
+    } else if (phase === "published_with_post_processing_failure") {
+      expect(await screen.findByRole("alert")).toHaveTextContent(
+        `1 file ${action === "Stage" ? "staged" : "unstaged"}. post-index-change failed after index/ref publication`,
+      );
+    } else {
+      expect(await screen.findByText("1 file staged.")).toBeVisible();
+      await userEvent.click(
+        screen.getByRole("button", { name: "↻ Local refresh" }),
+      );
+      expect(screen.getByText("1 file staged.")).toBeVisible();
+    }
+    expect(screen.getByRole("textbox", { name: "Message" })).toHaveValue(
+      "Keep my draft",
+    );
+    expect(
+      screen.queryByRole("heading", { name: "Operation results" }),
+    ).toBeNull();
+  },
+);
+
+it("removes obsolete saved selections without selecting their replacements or clearing current selections", async () => {
+  const { bridge, saved } = fake();
+  const original = bridge.request;
+  let replaced = false;
+  bridge.request = async (request) => {
+    if (request.kind === "load_state")
+      return {
+        kind: "state",
+        value: {
+          ...initialState,
+          selected: ["old-parent", "child", "removed"],
+          drafts: { "old-parent": "Preserve historical draft" },
+        },
+      };
+    if (request.kind === "inventory")
+      return {
+        kind: "inventory",
+        value: {
+          entries: [
+            {
+              ...fixtureEntry("old-parent", "parent"),
+              superseded_by: "parent",
+            },
+            fixtureEntry("parent", "parent"),
+            {
+              ...fixtureEntry("child", "parent/child"),
+              superseded_by: replaced ? "new-child" : null,
+            },
+            ...(replaced ? [fixtureEntry("new-child", "parent/child")] : []),
+          ],
+          monitor: { running: true, epoch: 1, watched: 1, degraded: null },
+        },
+      };
+    return original(request);
+  };
+  render(<App bridge={bridge} />);
+  expect(
+    await screen.findByRole("checkbox", { name: "Select parent/child" }),
+  ).toBeChecked();
+  expect(
+    screen.getByRole("checkbox", { name: "Select parent" }),
+  ).not.toBeChecked();
+  expect(screen.getByText("1 explicitly selected")).toBeVisible();
+  expect(
+    screen.getByText("Needs attention", { selector: ".metrics span" }),
+  ).toBeVisible();
+  await waitFor(() => expect(saved.at(-1)?.selected).toEqual(["child"]));
+  expect(saved.at(-1)?.drafts["old-parent"]).toBe("Preserve historical draft");
+  replaced = true;
+  await userEvent.click(screen.getByRole("button", { name: "↻ Rescan" }));
+  await waitFor(() =>
+    expect(screen.getByText("0 explicitly selected")).toBeVisible(),
+  );
+  expect(
+    screen.getByRole("checkbox", { name: "Select parent/child" }),
+  ).not.toBeChecked();
+  await waitFor(() => expect(saved.at(-1)?.selected).toEqual([]));
+});
+
+it.each(["stage", "unstage"] as const)(
+  "shows ongoing %s work while its controls are disabled",
+  async (kind) => {
+    const { bridge } = fake(true);
+    const original = bridge.request;
+    let finish!: (payload: Payload) => void;
+    bridge.request = async (request) =>
+      request.kind === "propose"
+        ? new Promise<Payload>((resolve) => {
+            finish = resolve;
+          })
+        : original(request);
+    render(<App bridge={bridge} />);
+    await userEvent.click(
+      await screen.findByRole("button", { name: "parent" }),
+    );
+    await userEvent.click(
+      screen.getByRole("checkbox", {
+        name: `Include file.txt from ${kind === "stage" ? "working_tree" : "index"}`,
+      }),
+    );
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: kind === "stage" ? "Stage" : "Unstage",
+      }),
+    );
+    const working = kind === "stage" ? "Staging" : "Unstaging";
+    expect(screen.getByRole("button", { name: `${working}…` })).toBeDisabled();
+    expect(screen.getByText(`${working} 1 file…`)).toBeVisible();
+    expect(
+      screen.getByRole("button", {
+        name: kind === "stage" ? "Unstage" : "Stage",
+      }),
+    ).toBeDisabled();
+    await act(async () =>
+      finish({
+        kind: "executed",
+        value: { result: { phase: "complete", published: false } },
+      }),
+    );
+    expect(screen.queryByText(`${working} 1 file…`)).toBeNull();
+    expect(
+      screen.getByRole("button", {
+        name: kind === "stage" ? "Stage" : "Unstage",
+      }),
+    ).toBeEnabled();
+  },
+);
+
+it.each(["edit", "rename"])(
+  "keeps the whole %s checked as its rows move between sides",
+  async (kind) => {
+    vi.useFakeTimers({ toFake: ["setInterval", "clearInterval"] });
+    const { bridge } = fake(true);
+    const original = bridge.request;
+    const oldPath = { encoding: "utf8" as const, value: "old.txt" };
+    let staged = false;
+    bridge.request = async (request) => {
+      const data = await original(request);
+      if (data.kind === "inventory") {
+        const changes = data.value.entries[0].status!.changes;
+        const destination = changes[0];
+        if (kind === "edit") {
+          destination.index = staged ? "M" : ".";
+          destination.worktree = staged ? "." : "M";
+        } else if (staged) {
+          Object.assign(destination, {
+            index: "R",
+            worktree: ".",
+            original_path: oldPath,
+          });
+        } else {
+          Object.assign(destination, { index: "?", worktree: "?" });
+          changes.push({
+            ...destination,
+            path: oldPath,
+            index: ".",
+            worktree: "D",
+          });
+        }
+      }
+      if (request.kind === "propose") {
+        staged = request.request.kind === "stage";
+        return {
+          kind: "executed",
+          value: { result: { phase: "complete", published: false } },
+        };
+      }
+      return data;
+    };
+    render(<App bridge={bridge} />);
+    await userEvent.click(
+      await screen.findByRole("button", { name: "parent" }),
+    );
+    const all = screen.getByRole("checkbox", {
+      name: "Select all changed files",
+    });
+    await userEvent.click(all);
+    await userEvent.click(screen.getByRole("button", { name: "Stage" }));
+    await act(() => vi.advanceTimersByTimeAsync(3000));
+    expect(
+      screen.getByRole("checkbox", { name: "Include file.txt from index" }),
+    ).toBeChecked();
+    expect(screen.getByText("1 selected")).toBeVisible();
+    await userEvent.click(screen.getByRole("button", { name: "Unstage" }));
+    await act(() => vi.advanceTimersByTimeAsync(3000));
+    expect(
+      screen.getByRole("checkbox", {
+        name: "Include file.txt from working_tree",
+      }),
+    ).toBeChecked();
+    if (kind === "rename") {
+      expect(
+        screen.getByRole("checkbox", {
+          name: "Include old.txt from working_tree",
+        }),
+      ).toBeChecked();
+      expect(screen.getByText("2 selected")).toBeVisible();
+    }
+  },
+);
+
+it("cancels staging beside its progress indicator and waits for the operation to settle", async () => {
+  const { bridge } = fake(true);
+  const original = bridge.request;
+  let finish!: (payload: Payload) => void;
+  let stageOwner: symbol | undefined;
+  bridge.request = async (request, owner) =>
+    request.kind === "propose"
+      ? new Promise<Payload>((resolve) => {
+          stageOwner = owner;
+          finish = resolve;
+        })
+      : original(request);
+  bridge.cancel = vi.fn(async () => {});
+  render(<App bridge={bridge} />);
+  await userEvent.click(await screen.findByRole("button", { name: "parent" }));
+  await userEvent.click(
+    screen.getByRole("checkbox", {
+      name: "Include file.txt from working_tree",
+    }),
+  );
+  await userEvent.click(screen.getByRole("button", { name: "Stage" }));
+  await userEvent.click(screen.getByRole("button", { name: "Cancel" }));
+  expect(typeof stageOwner).toBe("symbol");
+  expect(bridge.cancel).toHaveBeenCalledWith(stageOwner);
+  expect(screen.getByRole("button", { name: "Cancelling…" })).toBeDisabled();
+  await act(async () =>
+    finish({
+      kind: "executed",
+      value: {
+        result: { phase: "cancelled_before_publication", published: false },
+      },
+    }),
+  );
+  expect(screen.queryByRole("button", { name: "Cancelling…" })).toBeNull();
+  expect(screen.getByRole("button", { name: "Stage" })).toBeEnabled();
+  expect(
+    screen.getByRole("checkbox", {
+      name: "Include file.txt from working_tree",
+    }),
+  ).toBeChecked();
+});
+
+it.each(["raw", "structured"])(
+  "clears the %s commit draft only after successful completion",
+  async (mode) => {
+    const { bridge, saved } = fake(true);
+    const original = bridge.request;
+    let finish!: (payload: Payload) => void;
+    bridge.request = async (r) =>
+      r.kind === "propose"
+        ? new Promise<Payload>((resolve) => {
+            finish = resolve;
+          })
+        : original(r);
+    render(<App bridge={bridge} />);
+    await userEvent.click(
+      await screen.findByRole("button", { name: "parent" }),
+    );
+    await userEvent.click(
+      screen.getByRole("checkbox", { name: "Include file.txt from index" }),
+    );
+    fireEvent.change(screen.getByRole("textbox", { name: "Message" }), {
+      target: { value: "fix: selected change\n\nDetailed explanation" },
+    });
+    if (mode === "structured")
+      await userEvent.click(
+        screen.getByRole("button", { name: "Edit subject and body" }),
+      );
+    await userEvent.click(
+      screen.getByRole("button", { name: "Commit · 1 file" }),
+    );
+    expect(
+      screen.getByRole("textbox", {
+        name: mode === "raw" ? "Message" : "Message subject",
+      }),
+    ).toHaveValue(
+      mode === "raw"
+        ? "fix: selected change\n\nDetailed explanation"
+        : "fix: selected change",
+    );
+    await act(async () =>
+      finish({
+        kind: "executed",
+        value: { result: { phase: "complete", published: true } },
+      }),
+    );
+    expect(
+      screen.getByRole("textbox", {
+        name: mode === "raw" ? "Message" : "Message subject",
+      }),
+    ).toHaveValue("");
+    if (mode === "structured")
+      expect(screen.getByRole("textbox", { name: "Message body" })).toHaveValue(
+        "",
+      );
+    await waitFor(() => expect(saved.at(-1)?.drafts.parent).toBe(""));
+  },
+);
+it.each(["blocked", "cancelled_before_publication"])(
+  "preserves the commit draft when the outcome is %s",
+  async (phase) => {
+    const { bridge } = fake(true);
+    const original = bridge.request;
+    bridge.request = async (r) =>
+      r.kind === "propose"
+        ? { kind: "executed", value: { result: { phase, published: false } } }
+        : original(r);
+    render(<App bridge={bridge} />);
+    await userEvent.click(
+      await screen.findByRole("button", { name: "parent" }),
+    );
+    await userEvent.click(
+      screen.getByRole("checkbox", { name: "Include file.txt from index" }),
+    );
+    fireEvent.change(screen.getByRole("textbox", { name: "Message" }), {
+      target: { value: "Keep this draft\n\nAnd its body" },
+    });
+    await userEvent.click(
+      screen.getByRole("button", { name: "Commit · 1 file" }),
+    );
+    expect(screen.getByRole("textbox", { name: "Message" })).toHaveValue(
+      "Keep this draft\n\nAnd its body",
+    );
+  },
+);
+
+it.each([false, true, "restore"] as const)(
+  "clears only the submitted commit draft, edited=%s",
+  async (edited) => {
+    const { bridge, saved } = fake(true);
+    const original = bridge.request;
+    let finish!: (value: Payload) => void;
+    bridge.request = async (request) =>
+      request.kind === "propose"
+        ? new Promise<Payload>((resolve) => {
+            finish = resolve;
+          })
+        : original(request);
+    render(<App bridge={bridge} />);
+    await userEvent.click(
+      await screen.findByRole("button", { name: "parent" }),
+    );
+    await userEvent.click(
+      screen.getByRole("checkbox", { name: "Include file.txt from index" }),
+    );
+    const message = screen.getByRole("textbox", { name: "Message" });
+    fireEvent.change(message, { target: { value: "draft A" } });
+    await userEvent.click(
+      screen.getByRole("button", { name: "Commit · 1 file" }),
+    );
+    if (edited) fireEvent.change(message, { target: { value: "draft B" } });
+    if (edited === "restore")
+      fireEvent.change(message, { target: { value: "draft A" } });
+    await act(async () =>
+      finish({
+        kind: "executed",
+        value: { result: { phase: "complete", published: true } },
+      }),
+    );
+    expect(message).toHaveValue(
+      edited === "restore" ? "draft A" : edited ? "draft B" : "",
+    );
+    await waitFor(() =>
+      expect(saved.at(-1)?.drafts.parent ?? "").toBe(
+        edited === "restore" ? "draft A" : edited ? "draft B" : "",
+      ),
+    );
+  },
+);
+
+it("keeps navigation and manual drafts during late AI streaming", async () => {
+  const { bridge, saved } = fake(true);
+  const original = bridge.request;
+  const effective: Payload = {
+    kind: "effective_ai_settings",
+    value: {
+      connection: {
+        id: "c",
+        revision: "r",
+        name: "Local",
+        provider: "ollama",
+        endpoint: "http://127.0.0.1:1/",
+        endpoint_approval: "",
+        timeout_ms: 3000,
+      },
+      profile: {
+        id: "p",
+        revision: "r",
+        name: "Profile",
+        connection: "c",
+        model: "model",
+        system_message: "",
+        parameters: {},
+        template: "t",
+        context_bytes: 16384,
+      },
+      template: {
+        id: "t",
+        revision: "r",
+        name: "Plain",
+        examples: [],
+        rules: {
+          style: "plain",
+          subject_max_chars: 72,
+          allowed_types: [],
+          allow_scope: false,
+          forbid_trailing_period: false,
+          instructions: "",
+        },
+      },
+      instructions: [],
+    },
+  };
+  if (effective.kind !== "effective_ai_settings") throw new Error();
+  effective.value.connection.provider = "compatible";
+  let finishPoll: ((value: Payload) => void) | undefined;
+  bridge.request = async (request) => {
+    if (request.kind === "effective_ai_settings") return effective;
+    if (request.kind === "preview_ai_context")
+      return {
+        kind: "ai_context",
+        value: {
+          snapshot_fingerprint: "snapshot",
+          generation: "g",
+          bundle: {
+            payload: "diff",
+            fingerprint: "context",
+            complete: true,
+            warnings: [],
+            accounting: [],
+          },
+        },
+      };
+    if (request.kind === "review_ai_messages")
+      return {
+        kind: "executed",
+        value: {
+          result: null,
+          ai_job_id: "job",
+          ai_request_fingerprint: "request",
+        },
+      };
+    if (request.kind === "ai_jobs")
+      return new Promise<Payload>((resolve) => {
+        finishPoll = resolve;
+      });
+    if (request.kind === "cancel_ai_job") return { kind: "done" };
+    return original(request);
+  };
+  render(<App bridge={bridge} />);
+  await userEvent.click(await screen.findByRole("button", { name: "parent" }));
+  await userEvent.click(
+    screen.getByRole("checkbox", { name: "Include file.txt from index" }),
+  );
+  await waitFor(() =>
+    expect(screen.getByRole("button", { name: "Fill with AI" })).toBeEnabled(),
+  );
+  await userEvent.click(screen.getByRole("button", { name: "Fill with AI" }));
+  const emit = async (message: string) => {
+    await waitFor(() => expect(finishPoll).toBeDefined());
+    const finish = finishPoll!;
+    finishPoll = undefined;
+    await act(async () =>
+      finish({
+        kind: "ai_jobs",
+        value: [
+          {
+            id: "job",
+            phase: "running",
+            error: null,
+            error_kind: null,
+            review: {
+              fingerprint: "request",
+              endpoint: "http://localhost/",
+              route: "http://localhost/v1/chat/completions",
+              model: "model",
+              purpose: "assisted_messages",
+              request_bytes: 1,
+              authentication: "none",
+              unencrypted: true,
+            },
+            result: null,
+            progress: {
+              message,
+              total_duration_ms: null,
+              tokens_per_second: null,
+              input_tokens: null,
+              output_tokens: null,
+            },
+          },
+        ],
+      }),
+    );
+  };
+  await emit("partial");
+  const message = screen.getByRole("textbox", { name: "Message" });
+  expect(message).toHaveValue("partial");
+  await userEvent.click(screen.getByRole("button", { name: "Hide sidebar" }));
+  await emit("streamed continuation");
+  expect(message).toHaveValue("streamed continuation");
+  expect(screen.getByRole("button", { name: "Show sidebar" })).toBeVisible();
+  fireEvent.change(message, { target: { value: "manual draft" } });
+  await emit("late replacement");
+  expect(message).toHaveValue("manual draft");
+  expect(screen.getByRole("button", { name: "Show sidebar" })).toBeVisible();
+  await waitFor(() => expect(saved.at(-1)?.drafts.parent).toBe("manual draft"));
 });

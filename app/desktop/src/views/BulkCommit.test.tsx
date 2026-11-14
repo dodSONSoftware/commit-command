@@ -17,15 +17,19 @@ function setup(enabled = true) {
   const request = vi.fn<Bridge["request"]>().mockImplementation(async (r) => {
     if (r.kind === "batches")
       return { kind: "batches", value: { items: [], next: null } };
+    if (r.kind === "cancel_reviewed_operation") return { kind: "done" };
+    if (r.kind === "execute_reviewed_operation")
+      return { kind: "executed", value: { result: {} } };
     return {
       kind: "review",
       value: {
         id: "review",
+        operation: "bulk_commit",
         epoch: 1,
         expires_at_ms: Date.now() + 60000,
         title: "Review",
         summary: "",
-        content: "",
+        content: "Worktree: alpha\nSelected content: docs.md",
       },
     };
   });
@@ -75,9 +79,7 @@ it("prepares only explicit selections with exact overrides, sources and exclusio
     target: { value: "index_only" },
   });
   fireEvent.click(screen.getAllByLabelText("Exclude file.txt")[0]);
-  fireEvent.click(
-    screen.getByRole("button", { name: "Prepare native bulk review" }),
-  );
+  fireEvent.click(screen.getByRole("button", { name: "Review bulk commit" }));
   await waitFor(() =>
     expect(request).toHaveBeenCalledWith({
       kind: "review_batch",
@@ -107,14 +109,37 @@ it("prepares only explicit selections with exact overrides, sources and exclusio
       ["review_batch", "batches"].includes(r.kind),
     ),
   ).toBe(true);
+  expect(await screen.findByText(/Selected content: docs.md/)).toBeVisible();
+  fireEvent.click(screen.getByRole("button", { name: "Cancel review" }));
+  await waitFor(() =>
+    expect(request).toHaveBeenCalledWith({
+      kind: "cancel_reviewed_operation",
+      id: "review",
+      operation: "bulk_commit",
+    }),
+  );
+  expect(
+    request.mock.calls.some(([r]) => r.kind === "execute_reviewed_operation"),
+  ).toBe(false);
+  fireEvent.click(screen.getByRole("button", { name: "Review bulk commit" }));
+  fireEvent.click(
+    await screen.findByRole("button", { name: "Commit reviewed changes" }),
+  );
+  await waitFor(() =>
+    expect(request).toHaveBeenCalledWith({
+      kind: "execute_reviewed_operation",
+      id: "review",
+      operation: "bulk_commit",
+    }),
+  );
 });
-it("keeps write preparation disabled in ordinary builds", () => {
+it("keeps write preparation disabled in read-only builds", () => {
   const { request } = setup(false);
   fireEvent.change(screen.getByLabelText("Shared commit message"), {
     target: { value: "Message" },
   });
   expect(
-    screen.getByRole("button", { name: "Prepare native bulk review" }),
+    screen.getByRole("button", { name: "Review bulk commit" }),
   ).toBeDisabled();
   expect(request).not.toHaveBeenCalled();
 });
@@ -206,9 +231,7 @@ it("adds an exact gitlink exclusion absent from restricted status without prepar
   expect(request.mock.calls.some(([r]) => r.kind === "review_batch")).toBe(
     false,
   );
-  fireEvent.click(
-    screen.getByRole("button", { name: "Prepare native bulk review" }),
-  );
+  fireEvent.click(screen.getByRole("button", { name: "Review bulk commit" }));
   await waitFor(() => {
     const call = request.mock.calls.find(
       ([r]) => r.kind === "review_batch",
@@ -240,9 +263,7 @@ it("keeps manually added exclusions visible, exact and removable", async () => {
   );
   const checkbox = screen.getByLabelText("Exclude modules/child");
   expect(checkbox).toBeChecked();
-  fireEvent.click(
-    screen.getByRole("button", { name: "Prepare native bulk review" }),
-  );
+  fireEvent.click(screen.getByRole("button", { name: "Review bulk commit" }));
   await waitFor(() => {
     const call = request.mock.calls.find(
       ([r]) => r.kind === "review_batch",

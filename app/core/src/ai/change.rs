@@ -11,8 +11,22 @@ use uuid::Uuid;
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 #[schemars(rename = "AiChange")]
 pub enum Change {
+    SingleSetup {
+        connection: ConnectionDraft,
+        model: String,
+        system_message: String,
+        parameters: Parameters,
+    },
     Connection(ConnectionDraft),
     Profile(ProfileDraft),
+    ProfileSetup {
+        connection: Option<ConnectionDraft>,
+        profile: ProfileDraft,
+        make_default: bool,
+    },
+    DeleteProfileWithAssignments {
+        id: String,
+    },
     Template(TemplateDraft),
     DeleteConnection {
         id: String,
@@ -61,6 +75,43 @@ fn delete<T>(items: &mut Vec<T>, id: &str, get: impl Fn(&T) -> &str) -> Result<(
     items.remove(i);
     Ok(())
 }
+fn save_connection(next: &mut Settings, draft: ConnectionDraft, revision: &str) -> Result<String> {
+    let id = identity(&next.connections, draft.id, |value| &value.id)?;
+    replace(
+        &mut next.connections,
+        Connection {
+            id: id.clone(),
+            revision: revision.into(),
+            name: draft.name,
+            provider: draft.provider,
+            endpoint: endpoint(&draft.endpoint)?,
+            timeout_ms: draft.timeout_ms,
+            authentication: draft.authentication,
+            endpoint_approval: String::new(),
+        },
+        |value| &value.id,
+    );
+    Ok(id)
+}
+fn save_profile(next: &mut Settings, draft: ProfileDraft, revision: &str) -> Result<String> {
+    let id = identity(&next.profiles, draft.id, |value| &value.id)?;
+    replace(
+        &mut next.profiles,
+        Profile {
+            id: id.clone(),
+            revision: revision.into(),
+            name: draft.name,
+            connection: draft.connection,
+            model: draft.model,
+            system_message: draft.system_message,
+            parameters: draft.parameters,
+            template: draft.template,
+            context_bytes: draft.context_bytes,
+        },
+        |value| &value.id,
+    );
+    Ok(id)
+}
 impl Settings {
     /// Produce a new validated value; errors leave the caller's original untouched.
     pub fn changed(&self, expected_revision: &str, change: Change) -> Result<Self> {
@@ -74,34 +125,77 @@ impl Settings {
         let mut next = self.clone();
         let revision = Uuid::new_v4().to_string();
         match change {
+            Change::SingleSetup {
+                connection,
+                model,
+                system_message,
+                parameters,
+            } => {
+                let previous = next
+                    .assignments
+                    .iter()
+                    .find(|a| a.scope == Scope::Application)
+                    .and_then(|a| next.profiles.iter().find(|p| p.id == a.profile))
+                    .or_else(|| next.profiles.first());
+                let profile_id = previous.map(|p| p.id.clone());
+                let connection_id = save_connection(&mut next, connection, &revision)?;
+                let template = Template::default();
+                let id = save_profile(
+                    &mut next,
+                    ProfileDraft {
+                        id: profile_id,
+                        name: "AI".into(),
+                        connection: connection_id.clone(),
+                        model,
+                        system_message,
+                        parameters,
+                        template: template.id.clone(),
+                        context_bytes: 16384,
+                    },
+                    &revision,
+                )?;
+                // Replace the old hierarchy atomically so every workspace uses this AI.
+                next.connections.retain(|c| c.id == connection_id);
+                next.profiles.retain(|p| p.id == id);
+                next.templates = vec![template];
+                next.assignments = vec![Assignment {
+                    scope: Scope::Application,
+                    profile: id,
+                }];
+                next.instructions.clear();
+                next.global_concurrency = 1;
+                next.connection_concurrency = 1;
+            }
             Change::Connection(v) => {
-                let id = identity(&next.connections, v.id, |v| &v.id)?;
-                let value = Connection {
-                    id,
-                    revision: revision.clone(),
-                    name: v.name,
-                    provider: v.provider,
-                    endpoint: endpoint(&v.endpoint)?,
-                    timeout_ms: v.timeout_ms,
-                    authentication: v.authentication,
-                    endpoint_approval: String::new(),
-                };
-                replace(&mut next.connections, value, |v| &v.id);
+                save_connection(&mut next, v, &revision)?;
             }
             Change::Profile(v) => {
-                let id = identity(&next.profiles, v.id, |v| &v.id)?;
-                let value = Profile {
-                    id,
-                    revision: revision.clone(),
-                    name: v.name,
-                    connection: v.connection,
-                    model: v.model,
-                    system_message: v.system_message,
-                    parameters: v.parameters,
-                    template: v.template,
-                    context_bytes: v.context_bytes,
-                };
-                replace(&mut next.profiles, value, |v| &v.id);
+                save_profile(&mut next, v, &revision)?;
+            }
+            Change::ProfileSetup {
+                connection,
+                mut profile,
+                make_default,
+            } => {
+                if let Some(connection) = connection {
+                    profile.connection = save_connection(&mut next, connection, &revision)?;
+                }
+                let id = save_profile(&mut next, profile, &revision)?;
+                next.assignments.retain(|assignment| {
+                    assignment.scope != Scope::Application
+                        || (!make_default && assignment.profile != id)
+                });
+                if make_default {
+                    next.assignments.push(Assignment {
+                        scope: Scope::Application,
+                        profile: id,
+                    });
+                }
+            }
+            Change::DeleteProfileWithAssignments { id } => {
+                delete(&mut next.profiles, &id, |value| &value.id)?;
+                next.assignments
+                    .retain(|assignment| assignment.profile != id);
             }
             Change::Template(v) => {
                 let id = identity(&next.templates, v.id, |v| &v.id)?;

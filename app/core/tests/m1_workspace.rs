@@ -688,7 +688,7 @@ fn tagged_caches_are_explicitly_skipped_without_hiding_other_broken_git_markers(
 }
 
 #[test]
-fn expired_scan_is_reported_as_partial_without_marking_known_repositories_missing() {
+fn expired_scan_is_reported_as_partial_without_changing_known_repository_availability() {
     use gitfleet_core::inspection::ReadOptions;
     use std::time::Duration;
     let f = Fixture::new();
@@ -709,7 +709,7 @@ fn expired_scan_is_reported_as_partial_without_marking_known_repositories_missin
     assert_eq!(partial.entries[0].id, original.id);
     assert!(matches!(
         partial.entries[0].availability,
-        Availability::Unavailable
+        Availability::Available
     ));
     let stored = service.last_scan(&workspace.id).unwrap().unwrap();
     assert!(!stored.complete);

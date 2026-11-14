@@ -55,29 +55,33 @@ pub fn validate_path(path: &str) -> Result<()> {
     }
     Ok(())
 }
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, schemars::JsonSchema)]
 #[serde(rename_all = "snake_case")]
+#[schemars(rename = "BackupKind")]
 pub enum Kind {
     AiConfiguration,
     FullState,
     Migration,
 }
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, schemars::JsonSchema)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "snake_case")]
+#[schemars(rename = "BackupComponentType")]
 pub enum ComponentType {
     RegularFile,
 }
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, schemars::JsonSchema)]
 #[serde(deny_unknown_fields)]
+#[schemars(rename = "BackupComponent")]
 pub struct Component {
     pub component_type: ComponentType,
     pub path: String,
     pub bytes: u64,
     pub sha256: String,
 }
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, schemars::JsonSchema)]
 #[serde(deny_unknown_fields)]
+#[schemars(rename = "BackupManifest")]
 pub struct Manifest {
     pub version: u32,
     pub application_version: String,

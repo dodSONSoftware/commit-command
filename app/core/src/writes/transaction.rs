@@ -1,5 +1,6 @@
 use super::*;
 use policy::Entry;
+use std::io::{Read, Seek};
 use std::os::unix::fs::{MetadataExt, OpenOptionsExt};
 
 fn path_key(path: &NativePath) -> Result<Vec<u8>> {
@@ -90,12 +91,73 @@ fn safe_path(meta: &Metadata, path: &NativePath) -> Result<PathBuf> {
     }
     Ok(root.join(relative))
 }
-type CapturedContent = (String, Option<(String, Vec<u8>)>);
+enum CapturedPayload {
+    Bytes(Vec<u8>),
+    File(File),
+}
+type CapturedContent = (String, Option<(String, CapturedPayload)>);
+fn open_regular(path: &Path) -> Result<File> {
+    let file = fs::OpenOptions::new()
+        .read(true)
+        .custom_flags(libc::O_NOFOLLOW | libc::O_NONBLOCK)
+        .open(path)?;
+    if !file.metadata()?.is_file() {
+        return Err(unsupported("Selected file type changed"));
+    }
+    Ok(file)
+}
+fn capture_regular(
+    mut file: File,
+    mode: &str,
+    snapshot_dir: Option<&Path>,
+    options: &ReadOptions,
+) -> Result<CapturedContent> {
+    use sha2::{Digest, Sha256};
+    // Only materialization needs a copy. Unlink it before writing any content
+    // so cancellation, errors and process exit all release the scratch space.
+    let mut snapshot = if let Some(dir) = snapshot_dir {
+        let path = dir.join("capture.tmp");
+        let file = OpenOptions::new()
+            .read(true)
+            .write(true)
+            .create_new(true)
+            .mode(0o600)
+            .open(&path)?;
+        fs::remove_file(path)?;
+        Some(file)
+    } else {
+        None
+    };
+    let mut hash = Sha256::new();
+    hash.update(mode.as_bytes());
+    let started = Instant::now();
+    let mut buffer = [0; 65536];
+    loop {
+        options.check(started)?;
+        let count = file.read(&mut buffer)?;
+        if count == 0 {
+            break;
+        }
+        hash.update(&buffer[..count]);
+        if let Some(snapshot) = &mut snapshot {
+            snapshot.write_all(&buffer[..count])?;
+        }
+    }
+    if let Some(snapshot) = &mut snapshot {
+        snapshot.rewind()?;
+    }
+    Ok((
+        format!("{:x}", hash.finalize()),
+        snapshot.map(|f| (mode.to_owned(), CapturedPayload::File(f))),
+    ))
+}
 fn capture(
     meta: &Metadata,
     path: &NativePath,
     old: Option<&Entry>,
     config: &EffectiveConfig,
+    snapshot_dir: Option<&Path>,
+    options: &ReadOptions,
 ) -> Result<CapturedContent> {
     let target = safe_path(meta, path)?;
     let content = match fs::symlink_metadata(&target) {
@@ -107,19 +169,17 @@ fn capture(
                 .to_vec(),
         )),
         Ok(m) if m.is_file() => {
+            let file = open_regular(&target)?;
             let mode = if !config.file_mode {
                 old.filter(|e| e.mode.starts_with("100"))
                     .map(|e| e.mode.as_str())
                     .unwrap_or("100644")
-            } else if m.mode() & 0o111 != 0 {
+            } else if file.metadata()?.mode() & 0o111 != 0 {
                 "100755"
             } else {
                 "100644"
             };
-            Some((
-                mode.to_owned(),
-                inspection::file_bytes(&target, 16 * 1024 * 1024)?,
-            ))
+            return capture_regular(file, mode, snapshot_dir, options);
         }
         Ok(m) if m.is_dir() && old.is_some_and(|e| e.mode == "160000") => {
             let child = inspection::snapshot(&target)?;
@@ -137,7 +197,10 @@ fn capture(
     } else {
         digest(b"missing")
     };
-    Ok((hash, content))
+    Ok((
+        hash,
+        content.map(|(mode, bytes)| (mode, CapturedPayload::Bytes(bytes))),
+    ))
 }
 fn attributes(meta: &Metadata, paths: &[SelectedPath], options: &ReadOptions) -> Result<()> {
     let mut input = Vec::new();
@@ -212,7 +275,46 @@ impl ControlledWrites {
         &mut self,
         workspace: &WorkspaceId,
         worktree: &WorktreeId,
+        request: WriteRequest,
+    ) -> Result<Proposal> {
+        self.prepare_operation(workspace, worktree, request, true)
+    }
+    #[cfg(feature = "application-services")]
+    pub(crate) fn prepare_direct_operation(
+        &mut self,
+        workspace: &WorkspaceId,
+        worktree: &WorktreeId,
+        request: WriteRequest,
+        cancellation: inspection::Cancellation,
+    ) -> Result<Proposal> {
+        let previous = std::mem::replace(&mut self.options.process.cancellation, cancellation);
+        let result = self.prepare_operation(workspace, worktree, request, false);
+        self.options.process.cancellation = previous;
+        result
+    }
+    fn prepare_operation(
+        &mut self,
+        workspace: &WorkspaceId,
+        worktree: &WorktreeId,
+        request: WriteRequest,
+        include_patch: bool,
+    ) -> Result<Proposal> {
+        let id = Uuid::new_v4().to_string();
+        let result =
+            self.prepare_operation_inner(workspace, worktree, request, include_patch, id.clone());
+        if result.is_err() {
+            let operations = self.workspace.data_directory().join("operations");
+            temporary::cleanup(self.workspace.connection(), &operations, &id)?;
+        }
+        result
+    }
+    fn prepare_operation_inner(
+        &mut self,
+        workspace: &WorkspaceId,
+        worktree: &WorktreeId,
         mut request: WriteRequest,
+        include_patch: bool,
+        id: String,
     ) -> Result<Proposal> {
         let entry = self.entry(workspace, worktree)?;
         let meta = entry.metadata;
@@ -265,9 +367,20 @@ impl ControlledWrites {
         } else {
             Vec::new()
         };
-        let id = Uuid::new_v4().to_string();
         let dir = self.directory(&id)?;
-        store::private_dir(&dir)?;
+        use std::os::unix::fs::DirBuilderExt;
+        fs::DirBuilder::new().mode(0o700).create(&dir)?;
+        if let Err(error) = temporary::remember(
+            self.workspace.connection(),
+            dir.parent().unwrap(),
+            &id,
+            &dir,
+            &fs::symlink_metadata(&dir)?,
+        ) {
+            fs::remove_dir(&dir)?;
+            return Err(error);
+        }
+        store::sync_dir(dir.parent().unwrap())?;
         let repo = scratch_repo(&dir);
         let format = if meta.object_format == ObjectFormat::Sha1 {
             "sha1"
@@ -376,7 +489,14 @@ impl ControlledWrites {
             {
                 None
             } else {
-                Some(capture(&meta, &selected.path, old.or(tracked), &config)?)
+                Some(capture(
+                    &meta,
+                    &selected.path,
+                    old.or(tracked),
+                    &config,
+                    (selected.source == ContentSource::WorkingTree).then_some(dir.as_path()),
+                    &self.options.process,
+                )?)
             };
             if let Some((fingerprint, _)) = &captured {
                 fingerprints.push((selected.path.clone(), fingerprint.clone()));
@@ -389,10 +509,14 @@ impl ControlledWrites {
                 }
                 old.cloned()
             } else if let Some((mode, bytes)) = captured.and_then(|(_, content)| content) {
-                let oid = if mode == "160000" {
-                    String::from_utf8(bytes).map_err(|_| unsupported("Invalid gitlink OID"))?
-                } else {
-                    adapter::text(adapter::run(
+                let oid = match bytes {
+                    CapturedPayload::File(file) => {
+                        adapter::hash_file(&repo, file, &self.options.process)?
+                    }
+                    CapturedPayload::Bytes(bytes) if mode == "160000" => {
+                        String::from_utf8(bytes).map_err(|_| unsupported("Invalid gitlink OID"))?
+                    }
+                    CapturedPayload::Bytes(bytes) => adapter::text(adapter::run(
                         &repo,
                         &["hash-object", "-w", "--stdin"],
                         None,
@@ -400,7 +524,7 @@ impl ControlledWrites {
                         Some(bytes),
                         None,
                         &self.options.process,
-                    )?)?
+                    )?)?,
                 };
                 Some(Entry {
                     path: selected.path.clone(),
@@ -442,25 +566,31 @@ impl ControlledWrites {
                 &self.options.process,
             )?;
         }
-        let patch = adapter::run(
-            &repo,
-            &[
-                "diff",
-                "--no-ext-diff",
-                "--no-textconv",
-                "--no-color",
-                "--binary",
-                "--submodule=short",
-                &base_tree,
-                &approved_tree,
-                "--",
-            ],
-            None,
-            None,
-            None,
-            None,
-            &self.options.process,
-        )?;
+        // The patch is a review display artifact. Direct operations bind and
+        // revalidate the exact trees/files without generating an unused full diff.
+        let patch = if include_patch {
+            adapter::run(
+                &repo,
+                &[
+                    "diff",
+                    "--no-ext-diff",
+                    "--no-textconv",
+                    "--no-color",
+                    "--binary",
+                    "--submodule=short",
+                    &base_tree,
+                    &approved_tree,
+                    "--",
+                ],
+                None,
+                None,
+                None,
+                None,
+                &self.options.process,
+            )?
+        } else {
+            Vec::new()
+        };
         let mut proposal = Proposal {
             operation_id: id,
             workspace_id: workspace.clone(),
@@ -513,7 +643,7 @@ impl ControlledWrites {
     fn revalidate(&mut self, op: &Operation, allow_lock: bool) -> Result<()> {
         self.entry(&op.proposal.workspace_id, &op.proposal.worktree_id)?;
         let root = op.metadata.root.to_path()?;
-        let current = inspection::repository_metadata(&root)?;
+        let current = inspection::repository_metadata_with_options(&root, &self.options.process)?;
         if policy::binding(&current)? != op.binding {
             return Err(fail(
                 ErrorKind::UntrustedRepository,
@@ -577,7 +707,16 @@ impl ControlledWrites {
         }
         for (path, expected) in &op.selected_fingerprints {
             let old = op.original_entries.iter().find(|e| &e.path == path);
-            if capture(&op.metadata, path, old, &op.config)?.0 != *expected {
+            if capture(
+                &op.metadata,
+                path,
+                old,
+                &op.config,
+                None,
+                &self.options.process,
+            )?
+            .0 != *expected
+            {
                 return Err(fail(
                     ErrorKind::StaleReview,
                     "Selected working content changed",
@@ -610,11 +749,11 @@ fn owned_lock(op: &Operation, path: &Path) -> Result<bool> {
     let bytes = inspection::file_bytes(path, 16 * 1024 * 1024)?;
     Ok(inspection::fs_identity(path)? == receipt.identity && digest(&bytes) == receipt.hash)
 }
-fn observation(meta: &Metadata, config: &EffectiveConfig) -> Result<String> {
+fn observation(meta: &Metadata, config: &EffectiveConfig, options: &ReadOptions) -> Result<String> {
     let status = inspection::snapshot(&meta.root.to_path()?)?;
     let mut values = Vec::new();
     for change in status.changes {
-        let fingerprint = capture(meta, &change.path, None, config)
+        let fingerprint = capture(meta, &change.path, None, config, None, options)
             .map(|c| c.0)
             .unwrap_or_else(|_| "unavailable".into());
         values.push((change.path, fingerprint));
@@ -671,10 +810,12 @@ fn hook_command(
     process::bounded_input(command, options, None)
 }
 pub(super) fn promote_loose_objects(
+    db: &rusqlite::Connection,
+    operations: &Path,
     source: &Path,
     meta: &Metadata,
     options: &ReadOptions,
-    max_object_bytes: usize,
+    max_object_bytes: Option<usize>,
 ) -> Result<()> {
     let started = Instant::now();
     let destination = meta.common_dir.to_path()?.join("objects");
@@ -724,26 +865,68 @@ pub(super) fn promote_loose_objects(
                 }
                 continue;
             }
-            let temporary = target.join(format!(".gitfleet-object-{}", Uuid::new_v4()));
-            store::write_new(
-                &temporary,
-                &inspection::file_bytes(&file.path(), max_object_bytes)?,
-            )?;
-            // Publish an immutable object only after its complete bytes are durable.
-            match fs::hard_link(&temporary, &path) {
-                Ok(()) => {}
-                Err(error) if error.kind() == std::io::ErrorKind::AlreadyExists => {}
-                Err(error) => return Err(error.into()),
+            let id = Uuid::new_v4().to_string();
+            let temporary = target.join(format!(".gitfleet-object-{id}"));
+            let mut input = open_regular(&file.path())?;
+            let mut output = fs::OpenOptions::new()
+                .write(true)
+                .create_new(true)
+                .mode(0o600)
+                .open(&temporary)?;
+            if let Err(error) =
+                temporary::remember(db, operations, &id, &temporary, &output.metadata()?)
+            {
+                fs::remove_file(&temporary)?;
+                return Err(error);
             }
-            store::sync_dir(&target)?;
-            fs::remove_file(temporary)?;
-            store::sync_dir(&target)?;
+            let result = (|| -> Result<()> {
+                let mut copied = 0u64;
+                let mut buffer = [0; 65536];
+                loop {
+                    options.check(started)?;
+                    let count = input.read(&mut buffer)?;
+                    if count == 0 {
+                        break;
+                    }
+                    copied += count as u64;
+                    if max_object_bytes.is_some_and(|limit| copied > limit as u64) {
+                        return Err(fail(
+                            ErrorKind::OutputLimit,
+                            "Imported object exceeds transfer limit",
+                        ));
+                    }
+                    #[cfg(test)]
+                    if copied > buffer.len() as u64 {
+                        promotion_cleanup_tests::inject("write", options)?;
+                    }
+                    output.write_all(&buffer[..count])?;
+                    #[cfg(test)]
+                    promotion_cleanup_tests::inject("cancel", options)?;
+                }
+                #[cfg(test)]
+                promotion_cleanup_tests::inject("sync", options)?;
+                store::sync(&output)?;
+                store::sync_dir(&target)?;
+                // Publish an immutable object only after its complete bytes are durable.
+                match fs::hard_link(&temporary, &path) {
+                    Ok(()) => {}
+                    Err(error) if error.kind() == std::io::ErrorKind::AlreadyExists => {}
+                    Err(error) => return Err(error.into()),
+                }
+                store::sync_dir(&target)?;
+                #[cfg(test)]
+                promotion_cleanup_tests::inject("linked", options)?;
+                Ok(())
+            })();
+            temporary::cleanup(db, operations, &id)?;
+            result?;
         }
     }
     Ok(())
 }
 fn validate_objects(
     repo: &Path,
+    objects: Option<&Path>,
     index: &Path,
     head: Option<&str>,
     options: &ReadOptions,
@@ -758,7 +941,7 @@ fn validate_objects(
     if let Some(head) = head {
         args.push(head);
     }
-    adapter::run(repo, &args, Some(index), None, None, None, options)?;
+    adapter::run(repo, &args, Some(index), objects, None, None, options)?;
     Ok(())
 }
 fn shell_quote(value: &str) -> String {
@@ -1015,7 +1198,7 @@ impl ControlledWrites {
                     .find(|h| h.name == name && h.executable)
                     .cloned()
                 {
-                    let before = observation(&op.metadata, &op.config)?;
+                    let before = observation(&op.metadata, &op.config, &self.options.process)?;
                     let args = match name {
                         "prepare-commit-msg" => {
                             vec![message.as_os_str().to_owned(), "message".into()]
@@ -1032,7 +1215,7 @@ impl ControlledWrites {
                         &args,
                         &self.options.process,
                     )?;
-                    if before != observation(&op.metadata, &op.config)? {
+                    if before != observation(&op.metadata, &op.config, &self.options.process)? {
                         op.post_results.push(format!("{name}: working-tree side effects observed; not added to approved content"));
                         self.persist(op)?;
                     }
@@ -1089,6 +1272,7 @@ impl ControlledWrites {
         }
         validate_objects(
             &repo,
+            None,
             &dir.join("reconciled.index"),
             op.new_head.as_deref(),
             &self.options.process,
@@ -1159,14 +1343,20 @@ impl ControlledWrites {
         }));
         self.checkpoint(op, Phase::IndexLockWritten)?;
         self.revalidate(op, true)?;
+        let operations = self.workspace.data_directory().join("operations");
         promote_loose_objects(
+            self.workspace.connection(),
+            &operations,
             &object_dir(&dir),
             &op.metadata,
             &self.options.process,
-            32 * 1024 * 1024,
+            None,
         )?;
+        // Validate the promoted objects through the isolated reference namespace.
+        // Staging must not enumerate unrelated refs (including Finder metadata).
         validate_objects(
-            &op.metadata.root.to_path()?,
+            &repo,
+            Some(&op.metadata.common_dir.to_path()?.join("objects")),
             &dir.join("reconciled.index"),
             op.new_head.as_deref(),
             &self.options.process,
@@ -1340,7 +1530,7 @@ impl ControlledWrites {
             {
                 op.post_attempted.push(name.to_owned());
                 self.checkpoint(op, Phase::PostProcessing)?;
-                let before = observation(&op.metadata, &op.config)?;
+                let before = observation(&op.metadata, &op.config, &self.options.process)?;
                 let args = if name == "post-index-change" {
                     inspection::strings(&["0", "0"])
                 } else {
@@ -1373,7 +1563,7 @@ impl ControlledWrites {
                         return Ok(());
                     }
                 }
-                if before != observation(&op.metadata, &op.config)? {
+                if before != observation(&op.metadata, &op.config, &self.options.process)? {
                     op.post_results
                         .push(format!("{name}: working-tree side effects observed"));
                 }
@@ -1789,5 +1979,100 @@ impl ControlledWrites {
         store::sync(&file)?;
         store::sync_dir(&directory)?;
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod promotion_cleanup_tests {
+    use super::*;
+    thread_local! { static FAULT: std::cell::Cell<&'static str> = const {std::cell::Cell::new("")}; }
+    pub(super) fn inject(point: &str, options: &ReadOptions) -> Result<()> {
+        if FAULT.get() == point {
+            match point {
+                "cancel" => options.cancellation.cancel(),
+                "linked" => std::process::exit(71),
+                _ => return Err(std::io::Error::from_raw_os_error(libc::ENOSPC).into()),
+            }
+        }
+        Ok(())
+    }
+
+    #[test]
+    fn interrupted_copy_preserves_foreign_fanout_file() {
+        const CHILD: &str = "GITFLEET_F13_PROMOTION_CHILD";
+        if let Some(root) = std::env::var_os(CHILD) {
+            let root = PathBuf::from(root);
+            let meta = inspection::repository_metadata(&root).unwrap();
+            let db = rusqlite::Connection::open(root.join("test.db")).unwrap();
+            FAULT.set("linked");
+            promote_loose_objects(
+                &db,
+                &root,
+                &root.join("source"),
+                &meta,
+                &Default::default(),
+                None,
+            )
+            .unwrap();
+            panic!("crash point missed");
+        }
+        let root = std::env::temp_dir().join(format!("promotion-{}", Uuid::new_v4()));
+        fs::create_dir(&root).unwrap();
+        assert!(std::process::Command::new("git")
+            .args(["init", "-q"])
+            .arg(&root)
+            .status()
+            .unwrap()
+            .success());
+        let meta = inspection::repository_metadata(&root).unwrap();
+        let source = root.join("source");
+        let fanout = root.join(".git/objects/ab");
+        fs::create_dir_all(source.join("ab")).unwrap();
+        fs::create_dir(&fanout).unwrap();
+        let name = "1".repeat(38);
+        fs::write(source.join("ab").join(&name), vec![42; 131072]).unwrap();
+        let foreign = fanout.join(".gitfleet-object-foreign");
+        fs::write(&foreign, b"keep").unwrap();
+        let db = rusqlite::Connection::open(root.join("test.db")).unwrap();
+        db.execute_batch("CREATE TABLE state(key TEXT PRIMARY KEY,value TEXT)")
+            .unwrap();
+        assert_eq!(
+            promote_loose_objects(&db, &root, &source, &meta, &Default::default(), Some(65536))
+                .unwrap_err()
+                .kind,
+            ErrorKind::OutputLimit
+        );
+        for point in ["write", "sync", "cancel"] {
+            FAULT.set(point);
+            assert!(
+                promote_loose_objects(&db, &root, &source, &meta, &Default::default(), None)
+                    .is_err()
+            );
+            assert_eq!(fs::read_dir(&fanout).unwrap().count(), 1);
+        }
+        FAULT.set("");
+        let status = std::process::Command::new(std::env::current_exe().unwrap())
+            .args(["--exact","writes::transaction::promotion_cleanup_tests::interrupted_copy_preserves_foreign_fanout_file"])
+            .env(CHILD,&root).status().unwrap();
+        assert_eq!(status.code(), Some(71));
+        assert_eq!(fs::read_dir(&fanout).unwrap().count(), 3);
+        temporary::recover(&db, &root).unwrap();
+        assert_eq!(fs::read_dir(&fanout).unwrap().count(), 2);
+        assert_eq!(
+            fs::read(fanout.join(&name)).unwrap(),
+            fs::read(source.join("ab").join(&name)).unwrap()
+        );
+        promote_loose_objects(&db, &root, &source, &meta, &Default::default(), None).unwrap();
+        assert_eq!(fs::read(&foreign).unwrap(), b"keep");
+        // A foreign file can replace the exact recorded name before restart.
+        let id = Uuid::new_v4().to_string();
+        let temporary = fanout.join(format!(".gitfleet-object-{id}"));
+        let original = File::create_new(&temporary).unwrap();
+        temporary::remember(&db, &root, &id, &temporary, &original.metadata().unwrap()).unwrap();
+        fs::remove_file(&temporary).unwrap();
+        fs::write(&temporary, b"replacement").unwrap();
+        temporary::recover(&db, &root).unwrap();
+        assert_eq!(fs::read(&temporary).unwrap(), b"replacement");
+        fs::remove_dir_all(root).unwrap();
     }
 }

@@ -168,15 +168,10 @@ function fixture(fail = false, editor = false, stale = false) {
     if (r.kind === "review_ai_messages" || r.kind === "review_ai_editor_test") {
       if (fail) throw new Error("AI unavailable; no fallback");
       return {
-        kind: "review",
+        kind: "executed",
         value: {
-          id: "review",
-          epoch: 1,
-          expires_at_ms: Date.now() + 60000,
-          title: "Source review",
-          summary: "Fixture",
-          content: "Fixture",
-          allow_in_read_only_build: true,
+          result: { ai_job: "job" },
+          ai_job_id: "job",
           ai_request_fingerprint: "request",
         },
       };
@@ -201,6 +196,7 @@ function fixture(fail = false, editor = false, stale = false) {
     cancel: async () => {},
   };
   const onUse = vi.fn();
+  const onUseBody = vi.fn();
   render(
     <>
       <textarea
@@ -216,13 +212,14 @@ function fixture(fail = false, editor = false, stale = false) {
         ]}
         busy={false}
         onUse={onUse}
+        onUseBody={onUseBody}
         editor={editor ? editorDraft : undefined}
       />
     </>,
   );
-  return { request, onUse, user: userEvent.setup() };
+  return { request, onUse, onUseBody, user: userEvent.setup() };
 }
-it("requires explicit capture and source review without contacting AI or changing the manual draft", async () => {
+it("allows optional context inspection without contacting AI or changing the manual draft", async () => {
   const { request, onUse, user } = fixture();
   expect(request).not.toHaveBeenCalled();
   await user.click(
@@ -230,8 +227,8 @@ it("requires explicit capture and source review without contacting AI or changin
   );
   expect(request).not.toHaveBeenCalled();
   expect(
-    screen.getByRole("button", { name: "Review exact AI source transfer" }),
-  ).toBeDisabled();
+    screen.getByRole("button", { name: "Generate message suggestions" }),
+  ).toBeEnabled();
   await user.click(
     screen.getByRole("button", {
       name: "Capture filtered AI context · no transfer",
@@ -253,8 +250,8 @@ it("requires explicit capture and source review without contacting AI or changin
     screen.queryByRole("region", { name: "Exact filtered AI context" }),
   ).toBeNull();
   expect(
-    screen.getByRole("button", { name: "Review exact AI source transfer" }),
-  ).toBeDisabled();
+    screen.getByRole("button", { name: "Generate message suggestions" }),
+  ).toBeEnabled();
 });
 it("uses only a deliberately selected valid suggestion to replace the draft", async () => {
   const { request, onUse, user } = fixture();
@@ -267,14 +264,16 @@ it("uses only a deliberately selected valid suggestion to replace the draft", as
     }),
   );
   await user.click(
-    screen.getByRole("button", { name: "Review exact AI source transfer" }),
+    screen.getByRole("button", { name: "Generate message suggestions" }),
   );
   expect(
     await screen.findByRole("region", { name: "AI candidate 1" }),
   ).toHaveTextContent("Incomplete coverage");
   expect(onUse).not.toHaveBeenCalled();
   expect(
-    screen.getByRole("button", { name: "Replace draft with candidate 2" }),
+    screen.getByRole("button", {
+      name: "Use title and description from candidate 2",
+    }),
   ).toBeDisabled();
   expect(
     request.mock.calls.find(([r]) => r.kind === "review_ai_messages")?.[0],
@@ -284,7 +283,9 @@ it("uses only a deliberately selected valid suggestion to replace the draft", as
     one_off_profile: null,
   });
   await user.click(
-    screen.getByRole("button", { name: "Replace draft with candidate 1" }),
+    screen.getByRole("button", {
+      name: "Use title and description from candidate 1",
+    }),
   );
   expect(onUse).toHaveBeenCalledWith("fix: selected change\n\nObserved only\n");
   await waitFor(() =>
@@ -309,7 +310,7 @@ it("keeps the manual draft and shows failures without applying a fallback", asyn
     }),
   );
   await user.click(
-    screen.getByRole("button", { name: "Review exact AI source transfer" }),
+    screen.getByRole("button", { name: "Generate message suggestions" }),
   );
   expect(await screen.findByRole("alert")).toHaveTextContent(
     "AI unavailable; no fallback",
@@ -339,15 +340,15 @@ it("reviews current unsaved editors without saving settings or offering draft re
   );
   // Instruction edits deliberately invalidate the old preview.
   expect(
-    screen.getByRole("button", { name: "Review exact AI source transfer" }),
-  ).toBeDisabled();
+    screen.getByRole("button", { name: "Generate message suggestions" }),
+  ).toBeEnabled();
   await user.click(
     screen.getByRole("button", {
       name: "Capture filtered AI context · no transfer",
     }),
   );
   await user.click(
-    screen.getByRole("button", { name: "Review exact AI source transfer" }),
+    screen.getByRole("button", { name: "Generate message suggestions" }),
   );
   expect(request).toHaveBeenCalledWith(
     expect.objectContaining({
@@ -367,7 +368,9 @@ it("reviews current unsaved editors without saving settings or offering draft re
   );
   await screen.findByText("Editor test · complete");
   expect(
-    screen.queryByRole("button", { name: /Replace draft with candidate/ }),
+    screen.queryByRole("button", {
+      name: /Use title and description from candidate/,
+    }),
   ).not.toBeInTheDocument();
   expect(
     request.mock.calls.some(
@@ -394,7 +397,7 @@ for (const editor of [false, true]) {
       }),
     );
     await user.click(
-      screen.getByRole("button", { name: "Review exact AI source transfer" }),
+      screen.getByRole("button", { name: "Generate message suggestions" }),
     );
     await screen.findByRole("article", { name: "Message generation job" });
     expect(
@@ -405,3 +408,25 @@ for (const editor of [false, true]) {
     ).not.toBeInTheDocument();
   });
 }
+
+it("can use only the generated description without replacing the title", async () => {
+  const { user, onUse, onUseBody } = fixture();
+  await user.click(
+    screen.getByRole("button", { name: "AI message suggestions…" }),
+  );
+  await user.click(
+    screen.getByRole("button", {
+      name: "Capture filtered AI context · no transfer",
+    }),
+  );
+  await user.click(
+    screen.getByRole("button", { name: "Generate message suggestions" }),
+  );
+  await user.click(
+    await screen.findByRole("button", {
+      name: "Use description only from candidate 1",
+    }),
+  );
+  expect(onUseBody).toHaveBeenCalledWith("Observed only");
+  expect(onUse).not.toHaveBeenCalled();
+});

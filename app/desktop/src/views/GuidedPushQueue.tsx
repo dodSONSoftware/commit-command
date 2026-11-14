@@ -1,3 +1,4 @@
+import { useOperationReview } from "./OperationReview";
 import { useCallback, useEffect, useState } from "react";
 import { value, type Bridge } from "../services/bridge";
 import type {
@@ -30,6 +31,7 @@ export function GuidedPushQueue({
   onChange: (value: PushBatch) => void;
   label: (id: string) => string;
 }) {
+  const { review, reviewDialog } = useOperationReview(bridge, batch.plan.id);
   const [error, setError] = useState("");
   const id = batch.plan.id;
   const refresh = useCallback(async () => {
@@ -63,9 +65,10 @@ export function GuidedPushQueue({
   return (
     <section aria-label="Guided push queue">
       <h3>Guided push queue · {batch.phase.replaceAll("_", " ")}</h3>
+      {reviewDialog}
       <p>
         This saved order grants no publication authority. Each item requires a
-        fresh exact native approval. Publication failure, cancellation or
+        fresh review and an explicit Push. Publication failure, cancellation or
         uncertainty stops the queue; successes are preserved. Restart never
         resumes it.
       </p>
@@ -100,7 +103,7 @@ export function GuidedPushQueue({
             onClick={() =>
               void act(async () => {
                 if (!source) return;
-                await bridge.request({
+                await review({
                   kind: "review_push_batch_item",
                   workspace,
                   batch: id,

@@ -25,7 +25,7 @@ fn source_request_fingerprint_binds_profile_identity_and_revision() {
         context_bytes: 16384,
     };
     let context = Bundle {
-        payload: "fixture source".into(),
+        payload: r#"{"chunks":[{"id":"f1.1","text":"+synthetic change"}]}"#.into(),
         fingerprint: "context".into(),
         accounting: vec![],
         complete: true,
@@ -43,6 +43,18 @@ fn source_request_fingerprint_binds_profile_identity_and_revision() {
         .unwrap()
     };
     let original = plan(&profile);
+    let body: Value = serde_json::from_slice(original.payload().unwrap()).unwrap();
+    assert!(body.get("format").is_none());
+    assert_eq!(body["stream"], true);
+    assert_eq!(body["think"], false);
+    assert!(body["messages"][1]["content"]
+        .as_str()
+        .unwrap()
+        .contains("plain text"));
+    assert!(!body["messages"][1]["content"]
+        .as_str()
+        .unwrap()
+        .contains("output_schema"));
     profile.id = "profile-two".into();
     let identity = plan(&profile);
     assert_eq!(original.payload(), identity.payload());
@@ -252,7 +264,14 @@ impl Server {
                         }
                         let header=format!("HTTP/1.1 {status} Fixture\r\nContent-Length: {}\r\nContent-Type: application/json\r\nConnection: close\r\n{extra}\r\n",body.len());
                         let _ = stream.write_all(header.as_bytes());
-                        let _ = stream.write_all(&body);
+                        if extra.contains("X-Fixture-Stream") {
+                            for line in body.split_inclusive(|b| *b == b'\n') {
+                                let _ = stream.write_all(line);
+                                thread::sleep(Duration::from_millis(100));
+                            }
+                        } else {
+                            let _ = stream.write_all(&body);
+                        }
                         return;
                     }
                     Err(e) if e.kind() == std::io::ErrorKind::WouldBlock => {
@@ -707,7 +726,7 @@ fn truncated_answers_are_actionable_refusals_even_when_the_partial_message_looks
     ] {
         let error = completion(provider, &value, "model", Duration::ZERO).unwrap_err();
         assert_eq!(error.kind, ErrorKind::OutputLimit);
-        assert!(error.to_string().contains("profile output/context budget"));
+        assert!(error.to_string().contains("Maximum output tokens"));
         assert!(!error.to_string().contains("never-display-partial"));
     }
 }
@@ -720,4 +739,330 @@ fn unfinished_or_unrecognized_finish_metadata_never_exposes_the_provider_value()
         assert!(!error.to_string().contains("never-display-content"));
         assert!(error.to_string().contains("discarded"));
     }
+}
+
+#[test]
+fn blank_parameters_omit_ollama_options_but_explicit_zero_is_preserved() {
+    let c = connection(Provider::Ollama, "http://localhost:11434/");
+    let defaults = Plan::inference(
+        &c,
+        "fixture-model",
+        "system",
+        "user",
+        &Parameters::default(),
+    )
+    .unwrap();
+    let body: Value = serde_json::from_slice(defaults.payload().unwrap()).unwrap();
+    assert!(body.get("options").is_none());
+    let explicit = Plan::inference(
+        &c,
+        "fixture-model",
+        "system",
+        "user",
+        &Parameters {
+            temperature: Some(0.0),
+            ..Default::default()
+        },
+    )
+    .unwrap();
+    let body: Value = serde_json::from_slice(explicit.payload().unwrap()).unwrap();
+    assert_eq!(body["options"], json!({"temperature": 0.0}));
+}
+
+#[test]
+fn empty_ollama_request_loads_only_the_selected_model_without_source() {
+    let server = Server::new(
+        200,
+        String::new(),
+        json!({"model":"fixture-model","done":true,"done_reason":"load"})
+            .to_string()
+            .into_bytes(),
+        false,
+    );
+    let c = connection(Provider::Ollama, &server.address);
+    let parameters = Parameters {
+        context_size: Some(8192),
+        ..Default::default()
+    };
+    let plan = Plan::load_model(&c, "fixture-model", &parameters).unwrap();
+    assert_eq!(plan.review().purpose, Purpose::LoadModel);
+    assert_eq!(plan.timeout, Duration::from_secs(120));
+    let result = plan
+        .approve()
+        .execute(None, Cancellation::default())
+        .unwrap();
+    assert!(matches!(result, ProviderResult::ModelLoaded { model } if model == "fixture-model"));
+    let (headers, raw) = server.captured();
+    assert!(headers.starts_with("POST /api/generate "));
+    let body: Value = serde_json::from_slice(&raw).unwrap();
+    assert_eq!(
+        body,
+        json!({"model":"fixture-model","stream":false,"keep_alive":"10m","options":{"num_ctx":8192}})
+    );
+}
+
+#[test]
+fn model_loading_requires_an_exact_success_acknowledgment() {
+    for reply in [
+        json!({"model":"fixture-model","done":false}),
+        json!({"model":"other-model","done":true}),
+    ] {
+        let server = Server::new(200, String::new(), reply.to_string().into_bytes(), false);
+        let plan = Plan::load_model(
+            &connection(Provider::Ollama, &server.address),
+            "fixture-model",
+            &Parameters::default(),
+        )
+        .unwrap();
+        let error = plan
+            .approve()
+            .execute(None, Cancellation::default())
+            .unwrap_err();
+        assert!(error.to_string().contains("did not confirm"));
+    }
+}
+
+#[test]
+fn loading_timeout_reports_loading_instead_of_a_generic_request_failure() {
+    let server = Server::new(
+        200,
+        String::new(),
+        json!({"model":"fixture-model","done":true})
+            .to_string()
+            .into_bytes(),
+        true,
+    );
+    let mut plan = Plan::load_model(
+        &connection(Provider::Ollama, &server.address),
+        "fixture-model",
+        &Parameters::default(),
+    )
+    .unwrap();
+    plan.timeout = Duration::from_millis(150);
+    let error = plan
+        .approve()
+        .execute(None, Cancellation::default())
+        .unwrap_err();
+    assert_eq!(error.kind, ErrorKind::Timeout);
+    assert!(error.to_string().contains("Model loading timed out"));
+    assert!(error.to_string().contains("has not confirmed"));
+    server.stop.store(true, Ordering::Relaxed);
+}
+
+#[test]
+fn ollama_stream_decodes_fragmented_unicode_and_reports_server_metrics() {
+    let mut stream = OllamaStream::default();
+    let bytes = concat!(
+        "{\"model\":\"fixture-model\",\"message\":{\"role\":\"assistant\",\"content\":\"fix: café\"},\"done\":false}\n",
+        "{\"model\":\"fixture-model\",\"message\":{\"content\":\"\\n\\nDetails.\"},\"done\":true,\"done_reason\":\"stop\",\"prompt_eval_count\":100,\"eval_count\":20,\"eval_duration\":2000000000,\"total_duration\":3000000000}\n"
+    ).as_bytes();
+    for chunk in bytes.chunks(3) {
+        stream.push(chunk);
+    }
+    let progress = stream.progress();
+    assert_eq!(progress.message, "fix: café\n\nDetails.");
+    assert_eq!(progress.tokens_per_second, Some(10.0));
+    assert_eq!(progress.total_duration_ms, Some(3000.0));
+    assert_eq!(progress.input_tokens, Some(100));
+    assert_eq!(progress.output_tokens, Some(20));
+    let completed = stream.finish().unwrap();
+    assert_eq!(
+        completion(
+            Provider::Ollama,
+            &completed,
+            "fixture-model",
+            Duration::ZERO
+        )
+        .unwrap()
+        .content,
+        "fix: café\n\nDetails."
+    );
+}
+#[test]
+fn ollama_stream_rejects_truncation_invalid_frames_and_model_changes() {
+    for bytes in [
+        b"not json\n".as_slice(),
+        br#"{"model":"a","message":{"content":"partial"},"done":false}"#.as_slice(),
+        b"{\"model\":\"a\",\"done\":false}\n{\"model\":\"b\",\"done\":true}\n".as_slice(),
+        b"{\"error\":\"failure\"}\n".as_slice(),
+    ] {
+        let mut stream = OllamaStream::default();
+        stream.push(bytes);
+        assert!(stream.finish().is_err());
+    }
+    let mut stream = OllamaStream::default();
+    stream.push(b"{\"model\":\"fixture-model\",\"message\":{\"content\":\"partial\"},\"done\":true,\"done_reason\":\"length\"}\n");
+    assert_eq!(stream.progress().message, "partial");
+    assert_eq!(
+        completion(
+            Provider::Ollama,
+            &stream.finish().unwrap(),
+            "fixture-model",
+            Duration::ZERO
+        )
+        .unwrap_err()
+        .kind,
+        ErrorKind::OutputLimit
+    );
+}
+
+#[test]
+fn streamed_transport_delivers_message_before_http_completion() {
+    use crate::ai::{config::Profile, context::Bundle, template::Template};
+    let body = b"{\"model\":\"fixture-model\",\"message\":{\"role\":\"assistant\",\"content\":\"docs: update design documents and handoff prompts for Interstellar Executive\"},\"done\":false}\n{\"model\":\"fixture-model\",\"message\":{\"content\":\"\\n\\nDetails.\"},\"done\":true,\"done_reason\":\"stop\",\"prompt_eval_count\":100,\"eval_count\":20,\"eval_duration\":2000000000,\"total_duration\":3000000000}\n".to_vec();
+    let server = Server::new(200, "X-Fixture-Stream: true\r\n".into(), body, false);
+    let template = Template::default();
+    let profile = Profile {
+        id: "p".into(),
+        revision: "r".into(),
+        name: "Fixture".into(),
+        connection: "c".into(),
+        model: "fixture-model".into(),
+        system_message: "Write a commit message.".into(),
+        parameters: Parameters::default(),
+        template: template.id.clone(),
+        context_bytes: 16384,
+    };
+    let context = Bundle {
+        payload: r#"{"chunks":[]}"#.into(),
+        fingerprint: "context".into(),
+        accounting: vec![],
+        complete: true,
+        warnings: vec![],
+    };
+    let plan = Plan::messages(
+        &connection(Provider::Ollama, &server.address),
+        &profile,
+        context,
+        "snapshot".into(),
+        template,
+        vec![],
+    )
+    .unwrap();
+    let (send, receive) = std::sync::mpsc::channel();
+    let worker = thread::spawn(move || {
+        plan.approve().execute_stream(
+            None,
+            Cancellation::default(),
+            Box::new(move |p| {
+                let _ = send.send(p);
+            }),
+        )
+    });
+    let first = receive.recv_timeout(Duration::from_secs(2)).unwrap();
+    assert_eq!(
+        first.message,
+        "docs: update design documents and handoff prompts for Interstellar Executive"
+    );
+    assert!(first.output_tokens.is_none());
+    assert!(!worker.is_finished());
+    let ProviderResult::Candidates(result) = worker.join().unwrap().unwrap() else {
+        panic!()
+    };
+    assert_eq!(
+        result.candidates[0].candidate.message.subject,
+        "docs: update design documents and handoff prompts for Interstellar Executive"
+    );
+    assert_eq!(result.candidates[0].candidate.message.body, "Details.");
+    assert_eq!(result.output_tokens, Some(20));
+    let (_, sent) = server.request.lock().unwrap().clone().unwrap();
+    let sent: Value = serde_json::from_slice(&sent).unwrap();
+    assert_eq!(sent["stream"], true);
+    assert_eq!(sent["think"], false);
+    assert!(sent.get("format").is_none());
+}
+
+#[test]
+fn thinking_defaults_off_and_is_sent_as_an_ollama_top_level_option() {
+    let parameters: Parameters = serde_json::from_str("{}").unwrap();
+    assert!(!parameters.thinking);
+    let c = connection(Provider::Ollama, "http://localhost/");
+    for enabled in [false, true] {
+        let parameters = Parameters {
+            thinking: enabled,
+            ..Default::default()
+        };
+        let plan = Plan::inference(&c, "model", "system", "user", &parameters).unwrap();
+        let body: Value = serde_json::from_slice(plan.payload().unwrap()).unwrap();
+        assert_eq!(body["think"], enabled);
+        assert!(body.get("options").is_none());
+        let saved = toml::to_string(&parameters).unwrap();
+        assert_eq!(
+            toml::from_str::<Parameters>(&saved).unwrap().thinking,
+            enabled
+        );
+    }
+}
+
+#[test]
+fn stored_bearer_requires_tls_outside_loopback() {
+    for (endpoint, permitted) in [
+        ("http://127.0.0.2/", true),
+        ("http://[::1]/", true),
+        ("http://localhost/", true),
+        ("https://provider.example/", true),
+        ("http://192.0.2.1/", false),
+        ("http://[fd00::1]/", false),
+        ("http://localhost.example/", false),
+        ("http://provider.example/", false),
+    ] {
+        let mut draft = connection(Provider::Ollama, endpoint);
+        assert!(Plan::discover(&draft).is_ok());
+        draft.id = Some(uuid::Uuid::new_v4().to_string());
+        draft.authentication = crate::ai::credentials::Authentication::StoredBearer;
+        assert_eq!(Plan::discover(&draft).is_ok(), permitted, "{endpoint}");
+    }
+}
+
+#[test]
+fn finished_jobs_release_admission_without_expiring_recent_results() {
+    use crate::ai::jobs::{Jobs, Limits, Phase};
+    let mut jobs = Jobs::default();
+    let mut first = None;
+    for number in 0..40 {
+        let server = Server::new(
+            200,
+            String::new(),
+            br#"{"models":[{"name":"fixture-model"}]}"#.to_vec(),
+            false,
+        );
+        let plan = Plan::discover(&connection(Provider::Ollama, &server.address)).unwrap();
+        let id = jobs
+            .start(
+                plan.approve(),
+                None,
+                "fixture".into(),
+                Limits::default(),
+                Cancellation::default(),
+            )
+            .unwrap();
+        first.get_or_insert_with(|| id.clone());
+        let start = Instant::now();
+        loop {
+            let retained = jobs.list().unwrap();
+            assert!(retained.len() <= 32);
+            let current = retained.iter().find(|j| j.id == id).unwrap();
+            if matches!(current.phase, Phase::Complete) {
+                assert!(current.result.is_some());
+                break;
+            }
+            assert!(
+                !matches!(current.phase, Phase::Failed),
+                "{}",
+                current.error.as_deref().unwrap_or("")
+            );
+            assert!(start.elapsed() < Duration::from_secs(3));
+            thread::sleep(Duration::from_millis(5));
+        }
+        assert!(server.captured().0.starts_with("GET /api/tags"));
+        if number >= 32 {
+            assert!(!jobs
+                .list()
+                .unwrap()
+                .iter()
+                .any(|j| Some(&j.id) == first.as_ref()));
+        }
+    }
+    assert!(jobs.is_idle().unwrap());
+    assert_eq!(jobs.list().unwrap().len(), 32);
 }

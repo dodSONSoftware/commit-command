@@ -15,7 +15,7 @@ pub use bulk::{
 mod monitor;
 mod portability;
 pub use portability::AiExport;
-pub use portability::{AiImportPreview, AiImportSource};
+pub use portability::{AiImportPreview, AiImportSource, AiImportTarget, AiImportTargets};
 mod review;
 mod state;
 use crate::{
@@ -25,13 +25,13 @@ pub use exploration::{
     ActivityEntry, ActivityReport, AuditEntry, AuditPage, AuditPhase, AuditQuery,
 };
 pub use monitor::{Monitor, MonitorStatus, MonitoringOptions};
-pub use review::{Confirmation, ReviewDisplay};
+pub use review::{Confirmation, ReviewDisplay, ReviewedOperation};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 pub use state::{
-    ActivityMode, ActivityViewState, DesktopState, OverviewDensity, OverviewFilter, OverviewSort,
-    RepositoryTab, WindowPlacement,
+    ActivityMode, ActivityViewState, AppPreferences, DesktopState, OverviewDensity, OverviewFilter,
+    OverviewSort, PreferenceChange, RepositoryTab, TextareaField, WindowPlacement,
 };
 use std::{
     path::{Path, PathBuf},
@@ -52,6 +52,19 @@ fn stale() -> Error {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Request {
+    ExecuteReviewedOperation {
+        id: String,
+        operation: ReviewedOperation,
+    },
+    CancelReviewedOperation {
+        id: String,
+        operation: ReviewedOperation,
+    },
+    AiImportTargets {
+        source: String,
+        filter: String,
+        offset: usize,
+    },
     InspectAiImport {
         source: String,
     },
@@ -95,6 +108,10 @@ pub enum Request {
     ReviewAiDiscovery {
         connection: crate::ai::config::ConnectionDraft,
     },
+    ReviewAiModelLoad {
+        workspace: String,
+        worktree: String,
+    },
     ReviewAiInference {
         connection: crate::ai::config::ConnectionDraft,
         profile: Box<crate::ai::config::ProfileDraft>,
@@ -103,6 +120,10 @@ pub enum Request {
     AiJobs {},
     CancelAiJob {
         id: String,
+    },
+    AppPreferences {},
+    SaveAppPreference {
+        change: PreferenceChange,
     },
     AiSettings {},
     SaveAiSettings {
@@ -233,6 +254,10 @@ pub enum Request {
     CreatePushBatch {
         workspace: String,
         selections: Vec<crate::remote::push_batch::PushBatchSelection>,
+    },
+    CloseInterruptedPushBatch {
+        workspace: String,
+        id: String,
     },
     PushBatches {
         workspace: String,
@@ -418,6 +443,7 @@ pub struct OperationPage {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "kind", content = "value", rename_all = "snake_case")]
 pub enum Data {
+    AiImportTargets(AiImportTargets),
     AiImportSource(AiImportSource),
     AiImportPreview(AiImportPreview),
     AiExport(AiExport),
@@ -426,6 +452,7 @@ pub enum Data {
     AiSettings(crate::ai::store::Snapshot),
     AiTemplatePreview(crate::ai::template::Message),
     EffectiveAiSettings(Box<crate::ai::config::Effective>),
+    AppPreferences(AppPreferences),
     VersionRetainedFile(crate::actions::version::RetainedVersionFile),
     VersionActions(crate::actions::version::VersionPage),
     VersionPreview(crate::actions::semver::VersionPreview),
@@ -456,8 +483,15 @@ pub enum Data {
     State(DesktopState),
     Trust(Vec<TrustState>),
     Review(ReviewDisplay),
+    Executed(ExecutionResult),
     Operations(OperationPage),
     Done,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+pub struct ExecutionResult {
+    pub result: serde_json::Value,
+    pub ai_job_id: Option<String>,
+    pub ai_request_fingerprint: Option<String>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct Response {
@@ -487,6 +521,7 @@ pub struct Application {
     epoch: u64,
     read_options: inspection::ReadOptions,
     monitor: Monitor,
+    status_pass: Option<crate::workspace::StatusPass>,
     pending: Option<review::Pending>,
     ai_jobs: crate::ai::jobs::Jobs,
     ai_secret_store: Option<std::sync::Arc<dyn crate::ai::credentials::SecretStore>>,
@@ -503,18 +538,27 @@ impl Application {
         timing: MonitoringOptions,
     ) -> Result<Self> {
         let mut writes = ControlledWrites::open(directory, options)?;
+        // The user's operation is the authorization. Keep per-operation checks
+        // for identity, configuration, hooks, locks and concurrent changes.
+        writes.disable_trust_requirement();
         state::migrate(&mut writes)?;
         let mut app = Self {
             writes,
             epoch: 1,
             read_options: inspection::ReadOptions::default(),
             monitor: Monitor::with_options(timing)?,
+            status_pass: None,
             pending: None,
             ai_jobs: Default::default(),
             ai_secret_store: None,
             pickers: Default::default(),
             ai_imports: Default::default(),
         };
+        // Startup reports the workspace as it exists now, rather than presenting
+        // the previous process's scan result as current.
+        if let Some(id) = app.writes.workspace.active()? {
+            app.scan_for_display(&id, false)?;
+        }
         app.restart_monitor()?;
         Ok(app)
     }
@@ -568,15 +612,24 @@ impl Application {
         }
         Ok(id)
     }
-    fn entry(&self, workspace: &str, worktree: &str) -> Result<StoredWorktree> {
-        let id = self.active(workspace)?;
-        let entry = self
-            .writes
+    fn stored_worktree(&self, id: &WorkspaceId, worktree: &str) -> Result<StoredWorktree> {
+        self.writes
             .workspace
-            .inventory(&id)?
+            .inventory(id)?
             .into_iter()
             .find(|e| e.id.0 == worktree)
-            .ok_or_else(|| invalid("Unknown worktree"))?;
+            .ok_or_else(|| invalid("Unknown worktree"))
+    }
+    /// Copy Path also works when a registered worktree is currently missing.
+    pub fn stored_worktree_path(&self, workspace: &str, worktree: &str) -> Result<PathBuf> {
+        self.stored_worktree(&self.active(workspace)?, worktree)?
+            .metadata
+            .root
+            .to_path()
+    }
+    fn entry(&self, workspace: &str, worktree: &str) -> Result<StoredWorktree> {
+        let id = self.active(workspace)?;
+        let entry = self.stored_worktree(&id, worktree)?;
         if entry.superseded_by.is_some() || !matches!(entry.availability, Availability::Available) {
             return Err(Error::with_kind(
                 ErrorKind::Unavailable,
@@ -609,6 +662,27 @@ impl Application {
             return Err(stale());
         }
         Ok(entry)
+    }
+    /// Resolve a folder action against the active definition and live worktree identity.
+    pub fn repository_folder(&self, workspace: &str, worktree: Option<&str>) -> Result<PathBuf> {
+        let path = if let Some(worktree) = worktree {
+            self.entry(workspace, worktree)?.metadata.root.to_path()?
+        } else {
+            let id = self.active(workspace)?;
+            self.writes
+                .workspace
+                .list()
+                .iter()
+                .find(|w| w.id == id)
+                .ok_or_else(stale)?
+                .root
+                .to_path()?
+        };
+        // Stored roots are canonical. A new symlink must not redirect a saved identity.
+        if !path.is_absolute() || std::fs::canonicalize(&path)? != path || !path.is_dir() {
+            return Err(stale());
+        }
+        Ok(path)
     }
     fn push_check_entries(
         &self,
@@ -697,6 +771,7 @@ impl Application {
         Ok(())
     }
     fn invalidate(&mut self) -> Result<()> {
+        self.status_pass = None;
         self.ai_imports = Default::default();
         self.ai_jobs.reset();
         self.epoch = self.epoch.wrapping_add(1);
@@ -704,11 +779,22 @@ impl Application {
         self.abandon_review()
     }
     fn restart_monitor(&mut self) -> Result<()> {
+        self.status_pass = None;
         self.monitor.stop();
         if let Some(id) = self.writes.workspace.active()? {
             if let Some(w) = self.writes.workspace.list().iter().find(|w| w.id == id) {
                 self.monitor
                     .activate(w, &self.writes.workspace.inventory(&id)?, self.epoch)?;
+                // Continue an unfinished scan promptly instead of waiting for
+                // the next periodic discovery cycle.
+                if self
+                    .writes
+                    .workspace
+                    .last_scan(&id)?
+                    .is_some_and(|scan| scan.progress.is_some())
+                {
+                    self.monitor.retry_discovery();
+                }
             }
         }
         Ok(())
@@ -755,15 +841,6 @@ impl Application {
         self.invalidate()?;
         self.ai_jobs.wait_shutdown()
     }
-    fn require_resolved(&mut self, workspace: &str) -> Result<()> {
-        if self.writes.application_has_pending(workspace)? {
-            return Err(Error::with_kind(
-                ErrorKind::Busy,
-                "Resolve interrupted operations before removing or changing workspace scope",
-            ));
-        }
-        Ok(())
-    }
     pub fn request_with_cancellation(
         &mut self,
         epoch: u64,
@@ -782,7 +859,16 @@ impl Application {
                 "Application request cancelled before execution",
             ));
         }
-        if epoch != self.epoch && !matches!(request, Request::Workspaces {}) {
+        // App preferences contain no workspace context and must load before
+        // either webview has synchronized its workspace epoch.
+        if epoch != self.epoch
+            && !matches!(
+                request,
+                Request::Workspaces {}
+                    | Request::AppPreferences {}
+                    | Request::SaveAppPreference { .. }
+            )
+        {
             return Err(stale());
         }
         match &request {
@@ -812,6 +898,15 @@ impl Application {
             _ => {}
         }
         let data = match request {
+            Request::ExecuteReviewedOperation { id, operation } => {
+                self.require_reviewed_operation(&id, operation)?;
+                Data::Executed(self.execute_prepared(&id, self.read_options.cancellation.clone())?)
+            }
+            Request::CancelReviewedOperation { id, operation } => {
+                self.require_reviewed_operation(&id, operation)?;
+                self.abandon_review()?;
+                Data::Done
+            }
             Request::ReviewAiEditorTest {
                 workspace,
                 worktree,
@@ -895,7 +990,8 @@ impl Application {
                     name: effective.connection.name,
                     provider: effective.connection.provider,
                     endpoint: effective.connection.endpoint,
-                    timeout_ms: effective.connection.timeout_ms,
+                    timeout_ms: u64::from(self.app_preferences()?.generation_timeout_seconds)
+                        * 1000,
                     authentication: effective.connection.authentication,
                 };
                 let mut additive = effective.instructions;
@@ -933,6 +1029,10 @@ impl Application {
                     &self.read_options,
                 )?)
             }
+            Request::AppPreferences {} => Data::AppPreferences(self.app_preferences()?),
+            Request::SaveAppPreference { change } => {
+                Data::AppPreferences(self.save_app_preference(change)?)
+            }
             Request::AiJobs {} => Data::AiJobs(self.ai_jobs.list()?),
             Request::CancelAiJob { id } => {
                 self.ai_jobs.cancel(&id)?;
@@ -941,6 +1041,34 @@ impl Application {
             Request::ReviewAiDiscovery { connection } => {
                 self.abandon_review()?;
                 let plan = crate::ai::provider::Plan::discover(&connection)?;
+                Data::Review(self.review_ai_plan(plan)?)
+            }
+            Request::ReviewAiModelLoad {
+                workspace,
+                worktree,
+            } => {
+                self.abandon_review()?;
+                self.entry(&workspace, &worktree)?;
+                let settings = crate::ai::store::load(self.writes.workspace.data_directory())?;
+                let effective = settings.settings.effective(
+                    &WorkspaceId(workspace),
+                    &WorktreeId(worktree),
+                    None,
+                )?;
+                let c = &effective.connection;
+                let connection = crate::ai::config::ConnectionDraft {
+                    id: Some(c.id.clone()),
+                    name: c.name.clone(),
+                    provider: c.provider,
+                    endpoint: c.endpoint.clone(),
+                    timeout_ms: c.timeout_ms,
+                    authentication: c.authentication,
+                };
+                let plan = crate::ai::provider::Plan::load_model(
+                    &connection,
+                    &effective.profile.model,
+                    &effective.profile.parameters,
+                )?;
                 Data::Review(self.review_ai_plan(plan)?)
             }
             Request::ReviewAiInference {
@@ -964,6 +1092,11 @@ impl Application {
                 )?;
                 Data::Review(self.review_ai_plan(plan)?)
             }
+            Request::AiImportTargets {
+                source,
+                filter,
+                offset,
+            } => Data::AiImportTargets(portability::targets(self, &source, &filter, offset)?),
             Request::InspectAiImport { source } => {
                 Data::AiImportSource(portability::inspect_import(self, &source)?)
             }
@@ -1030,11 +1163,14 @@ impl Application {
             } => {
                 self.entry(&workspace, &worktree)?;
                 let settings = crate::ai::store::load(self.writes.workspace.data_directory())?;
-                Data::EffectiveAiSettings(Box::new(settings.settings.effective(
+                let mut effective = settings.settings.effective(
                     &WorkspaceId(workspace),
                     &WorktreeId(worktree),
                     one_off.as_deref(),
-                )?))
+                )?;
+                effective.connection.timeout_ms =
+                    u64::from(self.app_preferences()?.generation_timeout_seconds) * 1000;
+                Data::EffectiveAiSettings(Box::new(effective))
             }
             Request::VersionRetainedFile {
                 workspace,
@@ -1178,9 +1314,7 @@ impl Application {
                 let w = self.writes.workspace.create(&name, &path)?;
                 self.writes.workspace.activate(&w.id)?;
                 self.invalidate()?;
-                self.writes
-                    .workspace
-                    .scan_with_options(&w.id, &self.read_options)?;
+                self.scan_for_display(&w.id, false)?;
                 self.restart_monitor()?;
                 Data::Done
             }
@@ -1191,22 +1325,16 @@ impl Application {
                 exclusions,
             } => {
                 let id = self.active(&workspace)?;
-                if picker.is_some() || exclusions.is_some() {
-                    self.require_resolved(&workspace)?;
-                }
                 let path = picker.map(|p| self.directory(&p)).transpose()?;
                 self.writes
                     .workspace
                     .update(&id, name.as_deref(), path.as_deref(), exclusions)?;
                 self.invalidate()?;
-                self.writes
-                    .workspace
-                    .scan_with_options(&id, &self.read_options)?;
+                self.scan_for_display(&id, false)?;
                 self.restart_monitor()?;
                 Data::Done
             }
             Request::Remove { workspace } => {
-                self.require_resolved(&workspace)?;
                 self.writes.workspace.remove(&WorkspaceId(workspace))?;
                 self.invalidate()?;
                 self.restart_monitor()?;
@@ -1231,9 +1359,7 @@ impl Application {
             Request::Scan { workspace } => {
                 let id = self.active(&workspace)?;
                 self.abandon_review()?;
-                self.writes
-                    .workspace
-                    .scan_with_options(&id, &self.read_options)?;
+                self.scan_for_display(&id, false)?;
                 self.restart_monitor()?;
                 Data::Inventory(InventoryView {
                     entries: self.writes.workspace.inventory(&id)?,
@@ -1244,9 +1370,7 @@ impl Application {
             Request::ContinueScan { workspace } => {
                 let id = self.active(&workspace)?;
                 self.abandon_review()?;
-                self.writes
-                    .workspace
-                    .continue_scan_with_options(&id, &self.read_options)?;
+                self.scan_for_display(&id, true)?;
                 self.restart_monitor()?;
                 Data::Inventory(InventoryView {
                     entries: self.writes.workspace.inventory(&id)?,
@@ -1375,6 +1499,11 @@ impl Application {
                     self.writes
                         .create_push_batch(&id, &entries, selections, &options)?,
                 )
+            }
+            Request::CloseInterruptedPushBatch { workspace, id } => {
+                let workspace = self.active(&workspace)?;
+                self.writes.close_interrupted_push_batch(&workspace, &id)?;
+                Data::Done
             }
             Request::PushBatches { workspace, offset } => {
                 let id = self.active(&workspace)?;
@@ -1745,7 +1874,12 @@ impl Application {
                 let id = self.active(&workspace)?;
                 self.entry(&workspace, &worktree)?;
                 self.abandon_review()?;
-                let p = self.writes.propose(&id, &WorktreeId(worktree), request)?;
+                let p = self.writes.prepare_direct_operation(
+                    &id,
+                    &WorktreeId(worktree),
+                    request,
+                    self.read_options.cancellation.clone(),
+                )?;
                 Data::Review(self.set_review(review::Action::Write(Box::new(p)))?)
             }
             Request::Operations { workspace, offset } => {
@@ -1771,6 +1905,30 @@ impl Application {
             epoch: self.epoch,
             data,
         })
+    }
+    fn scan_for_display(&mut self, id: &WorkspaceId, continuation: bool) -> Result<()> {
+        let workspace = &mut self.writes.workspace;
+        let result = if continuation {
+            workspace.continue_scan_with_options(id, &self.read_options)
+        } else {
+            workspace.scan_with_options(id, &self.read_options)
+        };
+        match result {
+            Ok(_) => Ok(()),
+            Err(error)
+                if matches!(
+                    error.kind,
+                    ErrorKind::OutputLimit
+                        | ErrorKind::Io
+                        | ErrorKind::Unavailable
+                        | ErrorKind::InspectionFailed
+                        | ErrorKind::ConcurrentChange
+                ) =>
+            {
+                workspace.record_failed_scan(id, error)
+            }
+            Err(error) => Err(error),
+        }
     }
     fn scan_summary(&self, workspace: &WorkspaceId) -> Result<Option<ScanSummary>> {
         Ok(self.writes.workspace.last_scan(workspace)?.map(|scan| {
@@ -1800,26 +1958,27 @@ impl Application {
         };
         let work = self.monitor.due();
         if work.discovery {
-            if self.writes.workspace.can_continue_scan(&id) {
-                self.writes
-                    .workspace
-                    .continue_scan_with_options(&id, &self.read_options)?;
-            } else {
-                self.writes
-                    .workspace
-                    .scan_with_options(&id, &self.read_options)?;
-            }
+            self.scan_for_display(&id, self.writes.workspace.can_continue_scan(&id))?;
             self.restart_monitor()?;
             return Ok(true);
         }
-        if work.status {
-            for e in self.writes.workspace.inventory(&id)? {
-                if e.superseded_by.is_some() {
-                    continue;
-                }
-                if let Err(error) = self.writes.workspace.refresh(&id, &e.id) {
-                    self.monitor.failure(&error);
-                }
+        if self
+            .status_pass
+            .as_ref()
+            .is_some_and(|pass| pass.workspace != id)
+        {
+            self.status_pass = None;
+        }
+        if work.status && self.status_pass.is_none() {
+            self.status_pass = Some(self.writes.workspace.status_pass(&id)?);
+        }
+        if let Some(pass) = self.status_pass.as_mut() {
+            // One worktree per worker turn permits foreground requests between refreshes.
+            if let Err(error) = self.writes.workspace.refresh_next(pass, &self.read_options) {
+                self.monitor.failure(&error);
+            }
+            if pass.pending.is_empty() {
+                self.status_pass = None;
             }
             return Ok(true);
         }

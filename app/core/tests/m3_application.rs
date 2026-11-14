@@ -1,3 +1,5 @@
+#[path = "support/scope_recovery.rs"]
+mod scope_recovery;
 mod support;
 use gitfleet_core::{application::*, domain::*, inspection::Cancellation, writes::*, ErrorKind};
 use serde_json::json;
@@ -53,6 +55,27 @@ fn setup() -> (Fixture, Application, String, String) {
     };
     let wt = i.entries[0].id.0.clone();
     (f, app, ws, wt)
+}
+#[test]
+fn ui_scale_is_app_wide_bounded_and_survives_reopen_without_changing_repositories() {
+    let f = Fixture::new();
+    f.commit_file();
+    let mut app = Application::open(&f.root.join("state"), fixture_options(&f)).unwrap();
+    let before = tree_bytes(&f.repo);
+    assert_eq!(app.ui_scale_percent().unwrap(), 100);
+    app.save_ui_scale_percent(125).unwrap();
+    for invalid in [0, 74, 76, 201, u16::MAX] {
+        assert!(app.save_ui_scale_percent(invalid).is_err());
+    }
+    app.reset_presentation().unwrap();
+    assert_eq!(app.ui_scale_percent().unwrap(), 125);
+    drop(app);
+    let mut app = Application::open(&f.root.join("state"), fixture_options(&f)).unwrap();
+    assert_eq!(app.ui_scale_percent().unwrap(), 125);
+    app.save_ui_scale_percent(75).unwrap();
+    app.save_ui_scale_percent(200).unwrap();
+    app.save_ui_scale_percent(100).unwrap();
+    assert_eq!(before, tree_bytes(&f.repo));
 }
 fn ai_import_archive(f: &Fixture, name: &str) -> std::path::PathBuf {
     use gitfleet_core::ai::{change::Change, config::*, store::Snapshot};
@@ -818,6 +841,7 @@ fn navigation_migration_restart_and_newer_data_are_preserved() {
     };
     state.tabs.push(RepositoryTab {
         worktree: wt.clone(),
+        pinned: true,
         view: "history".into(),
         ..RepositoryTab::default()
     });
@@ -845,6 +869,7 @@ fn navigation_migration_restart_and_newer_data_are_preserved() {
     else {
         panic!()
     };
+    assert!(restored.tabs[0].pinned);
     assert_eq!(restored.drafts, state.drafts);
     assert_eq!(restored.sort, OverviewSort::LastCommitDesc);
     assert_eq!(restored.attention, OverviewFilter::Conflicted);
@@ -1073,6 +1098,7 @@ fn interrupted_records_block_scope_loss_and_are_reported_for_guarded_recovery() 
         .kind,
         ErrorKind::Busy
     );
+    scope_recovery::verify(&mut app, &f.root, &ws, fixture_options(&f), true);
     let Data::Review(r) = app
         .request(
             app.epoch(),
@@ -1092,6 +1118,7 @@ fn interrupted_records_block_scope_loss_and_are_reported_for_guarded_recovery() 
         "cancelled_before_publication"
     );
     assert_eq!(before, tree_bytes(&f.repo));
+    scope_recovery::verify(&mut app, &f.root, &ws, fixture_options(&f), false);
     app.request(app.epoch(), Request::Remove { workspace: ws })
         .unwrap();
 }
@@ -1427,7 +1454,7 @@ fn trust_currentness_is_distinct_from_supported_hook_policy_eligibility() {
 }
 
 #[test]
-fn operation_reviews_show_exact_content_and_only_applicable_commit_fields() {
+fn prepared_operations_keep_paths_and_commit_metadata_without_display_patches() {
     let (f, mut app, ws, wt) = setup();
     trust(&mut app, &ws, &wt);
     fs::write(f.repo.join("file.txt"), b"reviewed content\n").unwrap();
@@ -1452,7 +1479,7 @@ fn operation_reviews_show_exact_content_and_only_applicable_commit_fields() {
     };
     assert_eq!(stage.title, "Review stage");
     assert!(stage.content.contains("file.txt — working tree → index"));
-    assert!(stage.content.contains("+reviewed content"));
+    assert!(!stage.content.contains("+reviewed content"));
     assert!(!stage.summary.contains("Message subject"));
     assert!(!stage.summary.contains("Signer:"));
     assert!(!stage.content.contains("Commit identity"));
@@ -3398,7 +3425,7 @@ fn ai_context_bounds_selection_documents_history_and_cancellation() {
         capture::capture(&f.repo, &spec, &options).unwrap_err().kind,
         ErrorKind::Cancelled
     );
-    fs::write(f.repo.join("huge"), vec![b'x'; 1024 * 1024 + 1]).unwrap();
+    fs::write(f.repo.join("huge"), vec![b'x'; 4 * 1024 * 1024 + 1]).unwrap();
     let spec = context_spec(vec![selected_context("huge", ContentSource::WorkingTree)]);
     assert_eq!(
         capture::capture(&f.repo, &spec, &Default::default())
@@ -3662,11 +3689,132 @@ fn unsaved_editor_source_review_revalidates_and_never_saves_configuration() {
     );
     assert!(!f.root.join("state/ai").exists());
 }
+fn receive_provider_request(listener: &std::net::TcpListener) -> (std::net::TcpStream, Vec<u8>) {
+    use std::{
+        io::Read,
+        thread,
+        time::{Duration, Instant},
+    };
+    let start = Instant::now();
+    let mut stream = loop {
+        if let Ok((stream, _)) = listener.accept() {
+            break stream;
+        }
+        assert!(start.elapsed() < Duration::from_secs(5));
+        thread::sleep(Duration::from_millis(5));
+    };
+    stream.set_nonblocking(false).unwrap();
+    stream
+        .set_read_timeout(Some(Duration::from_secs(3)))
+        .unwrap();
+    let mut bytes = Vec::new();
+    let body = loop {
+        let mut buffer = [0; 4096];
+        let n = stream.read(&mut buffer).unwrap();
+        assert!(n > 0);
+        bytes.extend_from_slice(&buffer[..n]);
+        assert!(bytes.len() < 1024 * 1024);
+        if let Some(at) = bytes.windows(4).position(|b| b == b"\r\n\r\n") {
+            let headers = String::from_utf8_lossy(&bytes[..at]);
+            let size = headers
+                .lines()
+                .find_map(|l| {
+                    l.to_ascii_lowercase()
+                        .strip_prefix("content-length:")
+                        .and_then(|s| s.trim().parse::<usize>().ok())
+                })
+                .unwrap();
+            if bytes.len() >= at + 4 + size {
+                break bytes[at + 4..at + 4 + size].to_vec();
+            }
+        }
+    };
+    (stream, body)
+}
+
+#[test]
+fn provider_requests_redact_an_interior_private_key_edit() {
+    use gitfleet_core::ai::{capture, config::Provider};
+    use std::{io::Write, net::TcpListener};
+    for provider in [Provider::Ollama, Provider::Compatible] {
+        for editor in [false, true] {
+            for budget in [2048, 16384] {
+                let (f, mut app, ws, wt) = setup();
+                let old = "-----BEGIN PRIVATE KEY-----\nSyntheticAlpha\nSyntheticBravo\nSyntheticCharlie\nSyntheticDelta\nSyntheticOld\nSyntheticEcho\nSyntheticFoxtrot\nSyntheticGolf\nSyntheticHotel\n-----END PRIVATE KEY-----\n";
+                let path = f.repo.join("fixture.txt");
+                fs::write(&path, old).unwrap();
+                f.git(&["add", "fixture.txt"]);
+                f.git(&["commit", "-qm", "Add inert fixture"]);
+                fs::write(&path, old.replace("SyntheticOld", "SyntheticNew")).unwrap();
+                f.git(&["add", "fixture.txt"]);
+                fs::write(f.repo.join("file.txt"), "ordinary outbound change\n").unwrap();
+                let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+                listener.set_nonblocking(true).unwrap();
+                let endpoint = format!("http://{}/", listener.local_addr().unwrap());
+                let mut spec = context_spec(vec![
+                    selected_context(
+                        "fixture.txt",
+                        if editor {
+                            ContentSource::WorkingTree
+                        } else {
+                            ContentSource::Index
+                        },
+                    ),
+                    selected_context("file.txt", ContentSource::WorkingTree),
+                ]);
+                spec.policy.max_bytes = budget;
+                let captured = capture::capture(&f.repo, &spec, &Default::default()).unwrap();
+                for (kind, total, redacted) in [
+                    (gitfleet_core::ai::context::Kind::SelectedDiff, 10, 8),
+                    (gitfleet_core::ai::context::Kind::SelectedContent, 11, 11),
+                ] {
+                    let row = captured
+                        .bundle
+                        .accounting
+                        .iter()
+                        .find(|row| row.kind == kind && row.origin == "fixture.txt")
+                        .unwrap();
+                    assert_eq!((row.input_lines, row.redacted_lines), (total, redacted));
+                    assert_eq!(row.included_lines + row.omitted_lines, total);
+                }
+                assert_eq!(
+                    captured
+                        .bundle
+                        .accounting
+                        .iter()
+                        .any(|row| row.omitted_lines > 0),
+                    budget == 2048,
+                );
+                let request = if editor {
+                    editor_message_review(&ws, &wt, &spec, &captured, &endpoint, provider)
+                } else {
+                    let profile = message_profile(&mut app, &endpoint, provider);
+                    message_review(&ws, &wt, &spec, &captured, &profile)
+                };
+                let Data::Review(review) = app.request(app.epoch(), request).unwrap().data else {
+                    panic!()
+                };
+                let (cap, _) = app.begin_confirmation(&review.id).unwrap();
+                let recorder = std::thread::spawn(move || {
+                    let (mut stream, body) = receive_provider_request(&listener);
+                    stream.write_all(b"HTTP/1.1 503 Service Unavailable\r\nContent-Length: 0\r\nConnection: close\r\n\r\n").unwrap();
+                    String::from_utf8(body).unwrap()
+                });
+                app.confirm(cap, true, Cancellation::default()).unwrap();
+                let body = recorder.join().unwrap();
+                assert!(body.contains("ordinary outbound change"));
+                assert!(!body.contains("Synthetic") && !body.contains("PRIVATE KEY"), "{provider:?}, editor={editor}, budget={budget}: private-key content reached provider");
+                app.shutdown().unwrap();
+            }
+        }
+    }
+}
+
 #[test]
 fn ai_source_transfer_requires_exact_native_approval_and_returns_only_validated_text() {
     use gitfleet_core::ai::{capture, config::Provider};
     use std::{
-        io::{Read, Write},
+        io::Write,
         net::TcpListener,
         thread,
         time::{Duration, Instant},
@@ -3746,39 +3894,7 @@ fn ai_source_transfer_requires_exact_native_approval_and_returns_only_validated_
         let candidates = json!({"candidates":[{"message":{"subject":"fix: preserve selected changes","body":""},"rationale":"Describe the selected changes","summary":"Selected source change","concerns":["Credential line was redacted"],"covered_chunks":ids},{"message":{"subject":"invalid template format","body":""},"rationale":"Alternative wording","summary":"Alternate selected change","concerns":[],"covered_chunks":[]}]});
         let expected_context_payload = captured.bundle.payload.clone();
         let server = thread::spawn(move || {
-            let start = Instant::now();
-            let mut stream = loop {
-                if let Ok((stream, _)) = listener.accept() {
-                    break stream;
-                }
-                assert!(start.elapsed() < Duration::from_secs(5));
-                thread::sleep(Duration::from_millis(5));
-            };
-            stream
-                .set_read_timeout(Some(Duration::from_secs(3)))
-                .unwrap();
-            let mut bytes = Vec::new();
-            let body = loop {
-                let mut buffer = [0; 4096];
-                let n = stream.read(&mut buffer).unwrap();
-                assert!(n > 0);
-                bytes.extend_from_slice(&buffer[..n]);
-                assert!(bytes.len() < 1024 * 1024);
-                if let Some(at) = bytes.windows(4).position(|b| b == b"\r\n\r\n") {
-                    let headers = String::from_utf8_lossy(&bytes[..at]);
-                    let size = headers
-                        .lines()
-                        .find_map(|l| {
-                            l.to_ascii_lowercase()
-                                .strip_prefix("content-length:")
-                                .and_then(|s| s.trim().parse::<usize>().ok())
-                        })
-                        .unwrap();
-                    if bytes.len() >= at + 4 + size {
-                        break bytes[at + 4..at + 4 + size].to_vec();
-                    }
-                }
-            };
+            let (mut stream, body) = receive_provider_request(&listener);
             let body: serde_json::Value = serde_json::from_slice(&body).unwrap();
             let user: serde_json::Value =
                 serde_json::from_str(body["messages"][1]["content"].as_str().unwrap()).unwrap();
@@ -3930,4 +4046,781 @@ fn ai_source_drift_or_missing_profile_blocks_before_transfer_and_manual_reads_co
     )
     .unwrap();
     app.shutdown().unwrap();
+}
+
+#[test]
+#[ignore = "creates 100,001 directories to exercise the production discovery limit"]
+fn hard_scan_failure_preserves_workspace_and_membership_through_restart_and_repair() {
+    use gitfleet_core::discovery::DiscoveryOptions;
+    let (f, mut app, healthy, _) = setup();
+    let root = f.root.join("oversized");
+    let generated = root.join("generated");
+    fs::create_dir_all(&generated).unwrap();
+    f.git(&[
+        "-c",
+        "init.templateDir=",
+        "init",
+        "-q",
+        root.join("known").to_str().unwrap(),
+    ]);
+    for i in 0..100_001 {
+        fs::create_dir(generated.join(i.to_string())).unwrap();
+    }
+    let picker = app.register_directory(&root).unwrap();
+    app.request(
+        app.epoch(),
+        Request::Create {
+            name: "Oversized".into(),
+            picker,
+        },
+    )
+    .unwrap();
+    let workspaces = |app: &mut Application| {
+        let Data::Workspaces(list) = app
+            .request(app.epoch(), Request::Workspaces {})
+            .unwrap()
+            .data
+        else {
+            panic!()
+        };
+        assert_eq!(list.workspaces.len(), 2);
+        list.active.unwrap()
+    };
+    let failed = workspaces(&mut app);
+    assert_ne!(failed, healthy);
+    let inventory = |app: &mut Application| {
+        let Data::Inventory(view) = app
+            .request(
+                app.epoch(),
+                Request::Inventory {
+                    workspace: failed.clone(),
+                },
+            )
+            .unwrap()
+            .data
+        else {
+            panic!()
+        };
+        view
+    };
+    let check_failure = |app: &mut Application| {
+        let scan = inventory(app).scan.unwrap();
+        assert!(!scan.complete && scan.progress.is_none());
+        assert_eq!(scan.issues[0].error.kind, ErrorKind::OutputLimit);
+    };
+    check_failure(&mut app);
+    drop(app);
+    let state = f.root.join("state");
+    let mut app = Application::open(&state, fixture_options(&f)).unwrap();
+    assert_eq!(workspaces(&mut app), failed);
+    check_failure(&mut app);
+    for ws in [&healthy, &failed] {
+        app.request(
+            app.epoch(),
+            Request::Activate {
+                workspace: ws.clone(),
+            },
+        )
+        .unwrap();
+        assert_eq!(workspaces(&mut app), *ws);
+    }
+    let update = |app: &mut Application, names: Vec<String>| {
+        app.request(
+            app.epoch(),
+            Request::Update {
+                workspace: failed.clone(),
+                name: None,
+                picker: None,
+                exclusions: Some(DiscoveryOptions {
+                    excluded_names: names,
+                    ..Default::default()
+                }),
+            },
+        )
+        .unwrap();
+    };
+    update(&mut app, vec!["generated".into()]);
+    let before = inventory(&mut app);
+    assert!(before.scan.unwrap().complete);
+    assert_eq!(before.entries.len(), 1);
+    // A new unexcluded directory can break discovery without changing the definition.
+    fs::rename(&generated, root.join("new-generated")).unwrap();
+    app.request(
+        app.epoch(),
+        Request::Scan {
+            workspace: failed.clone(),
+        },
+    )
+    .unwrap();
+    check_failure(&mut app);
+    let after = inventory(&mut app);
+    assert_eq!(after.entries[0].id, before.entries[0].id);
+    assert!(matches!(
+        after.entries[0].availability,
+        gitfleet_core::workspace::Availability::Available
+    ));
+    update(&mut app, vec!["new-generated".into()]);
+    assert!(inventory(&mut app).scan.unwrap().complete);
+    assert_eq!(workspaces(&mut app), failed);
+}
+
+#[test]
+fn startup_scans_again_instead_of_showing_the_previous_timeout() {
+    use gitfleet_core::{inspection::ReadOptions, workspace::WorkspaceService};
+    let (f, app, ws, _) = setup();
+    drop(app);
+    let before = tree_bytes(&f.repo);
+    let state = f.root.join("state");
+    let mut workspace = WorkspaceService::open(&state).unwrap();
+    let scan = workspace
+        .scan_with_options(
+            &WorkspaceId(ws.clone()),
+            &ReadOptions {
+                timeout: std::time::Duration::ZERO,
+                ..ReadOptions::default()
+            },
+        )
+        .unwrap();
+    assert!(scan.scan.progress.is_some());
+    drop(workspace);
+    let mut app = Application::open(&state, fixture_options(&f)).unwrap();
+    let Data::Inventory(inventory) = app
+        .request(app.epoch(), Request::Inventory { workspace: ws })
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert!(inventory.scan.as_ref().unwrap().complete);
+    assert!(inventory.scan.unwrap().issues.is_empty());
+    assert_eq!(before, tree_bytes(&f.repo));
+}
+
+#[test]
+fn startup_discovers_repositories_created_while_the_app_was_closed() {
+    let (f, app, ws, _) = setup();
+    drop(app);
+    let nested = f.repo.join("created-while-closed");
+    f.git(&[
+        "-c",
+        "init.templateDir=",
+        "init",
+        "-q",
+        "-b",
+        "main",
+        nested.to_str().unwrap(),
+    ]);
+    let before = tree_bytes(&f.repo);
+    let mut app = Application::open(&f.root.join("state"), fixture_options(&f)).unwrap();
+    let Data::Inventory(inventory) = app
+        .request(app.epoch(), Request::Inventory { workspace: ws })
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert!(inventory.scan.unwrap().complete);
+    assert!(inventory
+        .entries
+        .iter()
+        .any(|entry| entry.metadata.root.to_path().unwrap() == nested.canonicalize().unwrap()));
+    assert_eq!(before, tree_bytes(&f.repo));
+}
+
+#[test]
+fn user_commit_executes_without_a_separate_trust_grant() {
+    let (f, mut app, ws, wt) = setup();
+    fs::write(f.repo.join("file.txt"), b"selected change\n").unwrap();
+    let Data::Review(prepared) = app
+        .request(
+            app.epoch(),
+            Request::Propose {
+                workspace: ws.clone(),
+                worktree: wt,
+                request: WriteRequest::Commit {
+                    selected: vec![SelectedPath {
+                        path: NativePath::from_path(Path::new("file.txt")),
+                        source: ContentSource::WorkingTree,
+                    }],
+                    message: "fix: commit selected change".into(),
+                    hooks: HookPolicy::Execute,
+                    signing: SigningPreference::Unsigned,
+                },
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    app.execute_prepared(&prepared.id, Cancellation::default())
+        .unwrap();
+    assert_eq!(
+        f.git(&["log", "-1", "--format=%s"]),
+        b"fix: commit selected change\n"
+    );
+    assert_eq!(f.git(&["show", "HEAD:file.txt"]), b"selected change\n");
+    let db = rusqlite::Connection::open(f.root.join("state/state.db")).unwrap();
+    assert_eq!(
+        db.query_row("SELECT count(*) FROM write_trust", [], |row| row
+            .get::<_, i64>(0))
+            .unwrap(),
+        0
+    );
+}
+
+#[test]
+fn stage_unstage_and_commit_do_not_require_a_full_patch_within_the_output_budget() {
+    let (f, app, ws, wt) = setup();
+    drop(app);
+    let paths = (0..4)
+        .map(|i| {
+            let path = format!("selected-{i}.txt");
+            fs::write(
+                f.repo.join(&path),
+                format!("file {i}\n{}\n", "synthetic change\n".repeat(200)),
+            )
+            .unwrap();
+            NativePath::from_path(Path::new(&path))
+        })
+        .collect::<Vec<_>>();
+    let mut options = fixture_options(&f);
+    options.process.max_output = 4096;
+    let mut app = Application::open(&f.root.join("state"), options).unwrap();
+    for request in [
+        WriteRequest::Stage {
+            paths: paths.clone(),
+            hooks: HookPolicy::Execute,
+        },
+        WriteRequest::Unstage {
+            paths: paths.clone(),
+            hooks: HookPolicy::Execute,
+        },
+        WriteRequest::Commit {
+            selected: paths
+                .iter()
+                .map(|path| SelectedPath {
+                    path: path.clone(),
+                    source: ContentSource::WorkingTree,
+                })
+                .collect(),
+            message: "test: handle a selection larger than the patch display budget".into(),
+            hooks: HookPolicy::Execute,
+            signing: SigningPreference::Unsigned,
+        },
+    ] {
+        let is_stage = matches!(request, WriteRequest::Stage { .. });
+        let is_unstage = matches!(request, WriteRequest::Unstage { .. });
+        let Data::Review(prepared) = app
+            .request(
+                app.epoch(),
+                Request::Propose {
+                    workspace: ws.clone(),
+                    worktree: wt.clone(),
+                    request,
+                },
+            )
+            .unwrap()
+            .data
+        else {
+            panic!()
+        };
+        app.execute_prepared(&prepared.id, Cancellation::default())
+            .unwrap();
+        if is_stage {
+            assert!(f.git(&["diff", "--cached", "--binary"]).len() > 4096);
+        }
+        if is_unstage {
+            assert!(f.git(&["diff", "--cached", "--name-only"]).is_empty());
+        }
+        for path in &paths {
+            assert!(fs::read(f.repo.join(path.to_path().unwrap()))
+                .unwrap()
+                .starts_with(b"file "));
+        }
+    }
+    assert_eq!(f.git(&["status", "--porcelain"]), b"");
+    assert_eq!(
+        f.git(&["show", "HEAD:selected-3.txt"]),
+        fs::read(f.repo.join("selected-3.txt")).unwrap()
+    );
+}
+
+#[test]
+fn stage_unstage_and_commit_ignore_finder_metadata_in_the_reference_directory() {
+    let (f, mut app, ws, wt) = setup();
+    let metadata = f.repo.join(".git/refs/.DS_Store");
+    fs::write(&metadata, b"synthetic Finder metadata").unwrap();
+    fs::write(f.repo.join("file.txt"), b"selected change\n").unwrap();
+    let path = NativePath::from_path(Path::new("file.txt"));
+    for request in [
+        WriteRequest::Stage {
+            paths: vec![path.clone()],
+            hooks: HookPolicy::Execute,
+        },
+        WriteRequest::Unstage {
+            paths: vec![path.clone()],
+            hooks: HookPolicy::Execute,
+        },
+        WriteRequest::Commit {
+            selected: vec![SelectedPath {
+                path,
+                source: ContentSource::WorkingTree,
+            }],
+            message: "test: ignore Finder metadata during object validation".into(),
+            hooks: HookPolicy::Execute,
+            signing: SigningPreference::Unsigned,
+        },
+    ] {
+        let stage = matches!(request, WriteRequest::Stage { .. });
+        let unstage = matches!(request, WriteRequest::Unstage { .. });
+        let head = f.git(&["rev-parse", "HEAD"]);
+        let Data::Review(prepared) = app
+            .request(
+                app.epoch(),
+                Request::Propose {
+                    workspace: ws.clone(),
+                    worktree: wt.clone(),
+                    request,
+                },
+            )
+            .unwrap()
+            .data
+        else {
+            panic!()
+        };
+        let result = app
+            .execute_prepared(&prepared.id, Cancellation::default())
+            .unwrap();
+        let outcome: Outcome = serde_json::from_value(result.result).unwrap();
+        assert_eq!(outcome.phase, Phase::Complete, "{:?}", outcome.reason);
+        if stage {
+            assert_eq!(f.git(&["show", ":file.txt"]), b"selected change\n");
+        }
+        if unstage {
+            assert!(f.git(&["diff", "--cached", "--name-only"]).is_empty());
+        }
+        if stage || unstage {
+            assert_eq!(f.git(&["rev-parse", "HEAD"]), head);
+        }
+        assert_eq!(fs::read(&metadata).unwrap(), b"synthetic Finder metadata");
+        assert_eq!(
+            fs::read(f.repo.join("file.txt")).unwrap(),
+            b"selected change\n"
+        );
+    }
+    assert_eq!(f.git(&["show", "HEAD:file.txt"]), b"selected change\n");
+}
+
+#[test]
+fn cleaned_up_blocked_write_is_kept_in_history_but_not_pending_recovery() {
+    use std::os::unix::fs::PermissionsExt;
+    let (f, mut app, ws, wt) = setup();
+    let hook = f.repo.join(".git/hooks/pre-commit");
+    fs::create_dir_all(hook.parent().unwrap()).unwrap();
+    fs::write(&hook, b"#!/bin/sh\nexit 1\n").unwrap();
+    fs::set_permissions(&hook, fs::Permissions::from_mode(0o700)).unwrap();
+    fs::write(f.repo.join("file.txt"), b"selected change\n").unwrap();
+    let head = f.git(&["rev-parse", "HEAD"]);
+    let Data::Review(prepared) = app
+        .request(
+            app.epoch(),
+            Request::Propose {
+                workspace: ws.clone(),
+                worktree: wt,
+                request: WriteRequest::Commit {
+                    selected: vec![SelectedPath {
+                        path: NativePath::from_path(Path::new("file.txt")),
+                        source: ContentSource::WorkingTree,
+                    }],
+                    message: "test: rejected hook".into(),
+                    hooks: HookPolicy::Execute,
+                    signing: SigningPreference::Unsigned,
+                },
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    let result = app
+        .execute_prepared(&prepared.id, Cancellation::default())
+        .unwrap();
+    let outcome: Outcome = serde_json::from_value(result.result).unwrap();
+    assert_eq!(outcome.phase, Phase::Blocked);
+    assert!(!outcome.published);
+    assert_eq!(head, f.git(&["rev-parse", "HEAD"]));
+    assert!(!f.repo.join(".git/index.lock").exists());
+    assert!(!f.repo.join(".git/HEAD.lock").exists());
+    let Data::Workspaces(workspaces) = app
+        .request(app.epoch(), Request::Workspaces {})
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    assert!(workspaces.recovery.is_empty());
+    let db = rusqlite::Connection::open(f.root.join("state/state.db")).unwrap();
+    let phase: String = db
+        .query_row(
+            "SELECT json_extract(payload,'$.phase') FROM write_operations WHERE id=?1",
+            [outcome.operation_id],
+            |row| row.get(0),
+        )
+        .unwrap();
+    assert_eq!(phase, "blocked");
+}
+
+#[test]
+fn ai_capture_accepts_349_staged_files_including_large_binary_assets() {
+    use gitfleet_core::ai::capture;
+    let f = Fixture::new();
+    f.commit_file();
+    let mut selected = Vec::new();
+    for i in 0..349 {
+        let name = format!("selected-{i:03}.dat");
+        let content = if i < 26 {
+            vec![0; 1024 * 1024 + 1]
+        } else {
+            format!("Selected fixture change {i}\n").into_bytes()
+        };
+        fs::write(f.repo.join(&name), content).unwrap();
+        selected.push(SelectedPath {
+            path: NativePath::from_path(Path::new(&name)),
+            source: ContentSource::Index,
+        });
+    }
+    f.git(&["add", "--all"]);
+    let before = fs::read(f.repo.join(".git/index")).unwrap();
+    let head = f.git(&["rev-parse", "HEAD"]);
+    let mut spec = context_spec(selected);
+    spec.branch_commits = 0;
+    spec.file_commits = 0;
+    let captured = capture::capture(&f.repo, &spec, &Default::default()).unwrap();
+    assert!(captured.bundle.payload.len() <= spec.policy.max_bytes);
+    assert_eq!(captured.bundle.accounting.len(), 349 * 3);
+    assert!(!captured.bundle.complete);
+    assert!(
+        captured
+            .bundle
+            .accounting
+            .iter()
+            .filter(|row| row.input_bytes > 1024 * 1024)
+            .count()
+            >= 26
+    );
+    assert_eq!(before, fs::read(f.repo.join(".git/index")).unwrap());
+    assert_eq!(head, f.git(&["rev-parse", "HEAD"]));
+    let mut duplicate = spec.clone();
+    duplicate.selected.push(duplicate.selected[0].clone());
+    assert_eq!(
+        duplicate.validate().unwrap_err().kind,
+        ErrorKind::InvalidRequest
+    );
+}
+
+#[test]
+fn app_preferences_load_before_workspace_sync_and_save_after_context_changes() {
+    let (f, mut app, ws, _) = setup();
+    assert_ne!(app.epoch(), 0);
+    let before = tree_bytes(&f.repo);
+    let response = app.request(0, Request::AppPreferences {}).unwrap();
+    assert_eq!(response.epoch, app.epoch());
+    let Data::AppPreferences(preferences) = response.data else {
+        panic!()
+    };
+    assert_eq!(preferences.generation_timeout_seconds, 60);
+    app.request(
+        0,
+        Request::SaveAppPreference {
+            change: PreferenceChange::TextareaHeight {
+                field: TextareaField::CommitMessage,
+                height: 310,
+            },
+        },
+    )
+    .unwrap();
+    app.request(
+        0,
+        Request::SaveAppPreference {
+            change: PreferenceChange::GenerationTimeout { seconds: 180 },
+        },
+    )
+    .unwrap();
+    assert_eq!(
+        app.request(0, Request::Inventory { workspace: ws })
+            .unwrap_err()
+            .kind,
+        ErrorKind::StaleReview
+    );
+    assert_eq!(
+        app.request(
+            0,
+            Request::SaveAppPreference {
+                change: PreferenceChange::GenerationTimeout { seconds: 0 },
+            }
+        )
+        .unwrap_err()
+        .kind,
+        ErrorKind::InvalidRequest
+    );
+    drop(app);
+    let mut reopened = Application::open(&f.root.join("state"), fixture_options(&f)).unwrap();
+    let preferences = reopened.app_preferences().unwrap();
+    assert_eq!(preferences.generation_timeout_seconds, 180);
+    assert_eq!(
+        preferences.textarea_heights[&TextareaField::CommitMessage],
+        310
+    );
+    assert_eq!(tree_bytes(&f.repo), before);
+}
+
+#[test]
+fn large_files_stage_unstage_and_commit_using_git_object_ids_without_file_size_caps() {
+    use std::io::Write;
+    let (f, mut app, ws, wt) = setup();
+    let specs = [
+        ("large-catalog.tsv", 65_929_398usize),
+        ("large-systems.tsv", 24_754_883usize),
+    ];
+    let mut expected = Vec::new();
+    let mut seed = 0x123456789abcdef0u64;
+    for (name, size) in specs {
+        let mut file = fs::File::create(f.repo.join(name)).unwrap();
+        let mut remaining = size;
+        let mut buffer = [0u8; 65536];
+        while remaining > 0 {
+            for word in buffer.chunks_exact_mut(8) {
+                seed ^= seed << 13;
+                seed ^= seed >> 7;
+                seed ^= seed << 17;
+                word.copy_from_slice(&seed.to_le_bytes());
+            }
+            let count = remaining.min(buffer.len());
+            file.write_all(&buffer[..count]).unwrap();
+            remaining -= count;
+        }
+        drop(file);
+        expected.push((
+            name,
+            String::from_utf8(f.git(&["hash-object", "--no-filters", name]))
+                .unwrap()
+                .trim()
+                .to_string(),
+            size,
+        ));
+    }
+    let paths = specs
+        .iter()
+        .map(|(name, _)| NativePath::from_path(Path::new(name)))
+        .collect::<Vec<_>>();
+    for request in [
+        WriteRequest::Stage {
+            paths: paths.clone(),
+            hooks: HookPolicy::Execute,
+        },
+        WriteRequest::Unstage {
+            paths: paths.clone(),
+            hooks: HookPolicy::Execute,
+        },
+        WriteRequest::Stage {
+            paths: paths.clone(),
+            hooks: HookPolicy::Execute,
+        },
+        WriteRequest::Commit {
+            selected: paths
+                .iter()
+                .map(|path| SelectedPath {
+                    path: path.clone(),
+                    source: ContentSource::Index,
+                })
+                .collect(),
+            message: "test: commit large catalog files".into(),
+            hooks: HookPolicy::Execute,
+            signing: SigningPreference::Unsigned,
+        },
+    ] {
+        let unstage = matches!(request, WriteRequest::Unstage { .. });
+        let commit = matches!(request, WriteRequest::Commit { .. });
+        let Data::Review(prepared) = app
+            .request(
+                app.epoch(),
+                Request::Propose {
+                    workspace: ws.clone(),
+                    worktree: wt.clone(),
+                    request,
+                },
+            )
+            .unwrap()
+            .data
+        else {
+            panic!()
+        };
+        let executed = app
+            .execute_prepared(&prepared.id, Cancellation::default())
+            .unwrap();
+        let outcome: Outcome = serde_json::from_value(executed.result).unwrap();
+        assert_eq!(outcome.phase, Phase::Complete, "{:?}", outcome.reason);
+        if unstage {
+            assert!(f.git(&["diff", "--cached", "--name-only"]).is_empty());
+        } else {
+            for (name, oid, size) in &expected {
+                let reference = format!("{}:{name}", if commit { "HEAD" } else { "" });
+                assert_eq!(
+                    String::from_utf8(f.git(&["rev-parse", &reference]))
+                        .unwrap()
+                        .trim(),
+                    oid
+                );
+                assert_eq!(
+                    String::from_utf8(f.git(&["cat-file", "-s", &reference]))
+                        .unwrap()
+                        .trim(),
+                    size.to_string()
+                );
+            }
+        }
+        for (name, oid, _) in &expected {
+            assert_eq!(
+                String::from_utf8(f.git(&["hash-object", "--no-filters", name]))
+                    .unwrap()
+                    .trim(),
+                oid
+            );
+        }
+    }
+    assert!(f.git(&["status", "--porcelain"]).is_empty());
+    f.git(&["fsck", "--strict", "--no-reflogs", "--no-dangling"]);
+}
+
+#[cfg(unix)]
+#[test]
+fn folder_actions_resolve_only_registered_live_targets() {
+    let (f, mut app, ws, wt) = setup();
+    let canonical = fs::canonicalize(&f.repo).unwrap();
+    assert_eq!(app.repository_folder(&ws, None).unwrap(), canonical);
+    assert_eq!(app.repository_folder(&ws, Some(&wt)).unwrap(), canonical);
+    assert!(app.repository_folder("unknown", None).is_err());
+    assert!(app.repository_folder(&ws, Some("unknown")).is_err());
+
+    let alias = f.root.join("alias");
+    std::os::unix::fs::symlink(&canonical, &alias).unwrap();
+    let picker = app.register_directory(&alias).unwrap();
+    app.request(
+        app.epoch(),
+        Request::Create {
+            name: "Alias".into(),
+            picker,
+        },
+    )
+    .unwrap();
+    let Data::Workspaces(list) = app
+        .request(app.epoch(), Request::Workspaces {})
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    let active = list.active.unwrap();
+    assert_ne!(ws, active);
+    assert!(app.repository_folder(&ws, None).is_err());
+    assert_eq!(app.repository_folder(&active, None).unwrap(), canonical);
+    let Data::Inventory(inventory) = app
+        .request(
+            app.epoch(),
+            Request::Inventory {
+                workspace: active.clone(),
+            },
+        )
+        .unwrap()
+        .data
+    else {
+        panic!()
+    };
+    let worktree = &inventory.entries[0].id.0;
+    let moved = f.root.join("moved");
+    fs::rename(&canonical, &moved).unwrap();
+    assert_eq!(
+        app.stored_worktree_path(&active, worktree).unwrap(),
+        canonical
+    );
+    assert!(app.repository_folder(&active, Some(worktree)).is_err());
+    std::os::unix::fs::symlink(&moved, &canonical).unwrap();
+    assert!(app.repository_folder(&active, None).is_err());
+}
+
+#[test]
+fn connection_before_first_model_and_saved_fill_model_survive_reopen() {
+    use gitfleet_core::ai::store::Snapshot;
+    fn save(app: &mut Application, change: serde_json::Value) -> Snapshot {
+        let Data::AiSettings(before) = app
+            .request(app.epoch(), Request::AiSettings {})
+            .unwrap()
+            .data
+        else {
+            panic!()
+        };
+        let request=serde_json::from_value(json!({"kind":"save_ai_settings","fingerprint":before.fingerprint,"revision":before.settings.revision,"change":change})).unwrap();
+        let Data::AiSettings(after) = app.request(app.epoch(), request).unwrap().data else {
+            panic!()
+        };
+        after
+    }
+    let (fixture, mut app, workspace, worktree) = setup();
+    let connection = json!({"id":null,"name":"F21 fixture","provider":"ollama","endpoint":"http://127.0.0.1:1/","timeout_ms":3000,"authentication":"none"});
+    let mut change = connection.clone();
+    change["kind"] = json!("connection");
+    let connected = save(&mut app, change);
+    assert!(connected.settings.profiles.is_empty());
+    let effective = || Request::EffectiveAiSettings {
+        workspace: workspace.clone(),
+        worktree: worktree.clone(),
+        one_off: None,
+    };
+    assert!(app.request(app.epoch(), effective()).is_err());
+    let request =
+        serde_json::from_value(json!({"kind":"review_ai_discovery","connection":connection}))
+            .unwrap();
+    let Data::Review(review) = app.request(app.epoch(), request).unwrap().data else {
+        panic!()
+    };
+    app.cancel_review(&review.id).unwrap();
+    let mut connection = connection;
+    connection["id"] = json!(connected.settings.connections[0].id);
+    save(
+        &mut app,
+        json!({"kind":"single_setup","connection":connection,"model":"fixture-model","system_message":"Describe changes","parameters":{}}),
+    );
+    app.shutdown().unwrap();
+    drop(app);
+    let mut app =
+        Application::open(&fixture.root.join("state"), fixture_options(&fixture)).unwrap();
+    let Data::EffectiveAiSettings(effective) = app.request(app.epoch(), effective()).unwrap().data
+    else {
+        panic!()
+    };
+    assert_eq!(effective.profile.model, "fixture-model");
+    assert_eq!(effective.connection.id, effective.profile.connection);
+    fs::write(fixture.repo.join("file.txt"), b"F21 selected change\n").unwrap();
+    let spec = context_spec(vec![selected_context(
+        "file.txt",
+        ContentSource::WorkingTree,
+    )]);
+    let captured =
+        gitfleet_core::ai::capture::capture(&fixture.repo, &spec, &Default::default()).unwrap();
+    let request = message_review(
+        &workspace,
+        &worktree,
+        &spec,
+        &captured,
+        &effective.profile.id,
+    );
+    let Data::Review(review) = app.request(app.epoch(), request).unwrap().data else {
+        panic!()
+    };
+    assert!(
+        review.content.contains("fixture-model") && review.content.contains("F21 selected change")
+    );
+    app.cancel_review(&review.id).unwrap();
 }

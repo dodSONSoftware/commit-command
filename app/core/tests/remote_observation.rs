@@ -312,92 +312,13 @@ fn restart_exposes_an_orphaned_review_but_never_restores_authority() {
     assert_eq!(before, tree_bytes(&t.f.repo));
 }
 
-struct TlsServer {
-    child: std::process::Child,
-    port: u16,
-    marker: PathBuf,
-}
-impl Drop for TlsServer {
-    fn drop(&mut self) {
-        let _ = self.child.kill();
-        let _ = self.child.wait();
-    }
-}
+#[path = "support/tls.rs"]
+mod tls;
+use tls::TlsServer;
 fn tls_fixture(t: &mut Test, mode: &str) -> TlsServer {
-    use std::{
-        io::{BufRead, BufReader},
-        process::{Command, Stdio},
-    };
-    let cert = t.f.root.join("certificate.pem");
-    let key = t.f.root.join("key.pem");
-    let config = t.f.root.join("certificate.cnf");
-    fs::write(&config,b"[req]\ndistinguished_name=dn\nx509_extensions=ext\nprompt=no\n[dn]\nCN=GitFleet TLS Fixture\n[ext]\nsubjectAltName=IP:127.0.0.1\nbasicConstraints=critical,CA:TRUE\nkeyUsage=critical,digitalSignature,keyCertSign\n").unwrap();
-    let certificate = Command::new("openssl")
-        .args([
-            "req", "-x509", "-newkey", "rsa:2048", "-nodes", "-days", "1", "-config",
-        ])
-        .arg(&config)
-        .arg("-keyout")
-        .arg(&key)
-        .arg("-out")
-        .arg(&cert)
-        .output()
-        .unwrap();
-    assert!(
-        certificate.status.success(),
-        "{}",
-        String::from_utf8_lossy(&certificate.stderr)
-    );
-    let marker = t.f.root.join("network-requests");
-    let log = fs::File::create(t.f.root.join("https-server.txt")).unwrap();
-    let oid = String::from_utf8(t.f.git(&["rev-parse", "HEAD"]))
-        .unwrap()
-        .trim()
-        .to_owned();
-    let mut child = Command::new("python3")
-        .args([
-            "-I",
-            concat!(
-                env!("CARGO_MANIFEST_DIR"),
-                "/tests/support/https_observation.py"
-            ),
-        ])
-        .arg(&cert)
-        .arg(&key)
-        .arg(&marker)
-        .arg(mode)
-        .arg(oid)
-        .arg(&t.remote)
-        .stdout(Stdio::piped())
-        .stderr(Stdio::from(log))
-        .spawn()
-        .unwrap();
-    let stdout = child.stdout.take().unwrap();
-    let (sender, receiver) = std::sync::mpsc::channel();
-    let reader = std::thread::spawn(move || {
-        let mut line = String::new();
-        let result = BufReader::new(stdout).read_line(&mut line);
-        let _ = sender.send((result, line));
-    });
-    let ready = receiver.recv_timeout(std::time::Duration::from_secs(10));
-    if ready.is_err() {
-        let _ = child.kill();
-    }
-    reader.join().unwrap();
-    let (result, line) = ready.unwrap();
-    result.unwrap();
-    let port = line.trim().parse().unwrap_or_else(|_| {
-        panic!(
-            "TLS server did not start: {}",
-            fs::read_to_string(t.f.root.join("https-server.txt")).unwrap()
-        )
-    });
-    t.options.remote.ca_file = Some(cert);
-    TlsServer {
-        child,
-        port,
-        marker,
-    }
+    let server = tls::start(&t.f, &t.remote, mode);
+    t.options.remote.ca_file = Some(t.f.root.join("certificate.pem"));
+    server
 }
 fn reopen(t: &mut Test) {
     let old = std::mem::replace(

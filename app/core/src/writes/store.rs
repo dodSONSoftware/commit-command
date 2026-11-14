@@ -89,10 +89,12 @@ impl ControlledWrites {
                 "Unsafe operation-artifact directory",
             ));
         }
+        temporary::recover(workspace.connection(), &artifacts)?;
         Ok(Self {
+            session: workspace.session.clone(),
             workspace,
             options,
-            session: Uuid::new_v4().to_string(),
+            trust_required: true,
             trust_reviews: BTreeMap::new(),
             recovery_reviews: BTreeMap::new(),
             #[cfg(feature = "write-test-support")]
@@ -254,6 +256,9 @@ impl ControlledWrites {
         meta: &Metadata,
         config: &EffectiveConfig,
     ) -> Result<()> {
+        if !self.trust_required {
+            return Ok(());
+        }
         let row: Option<(String, bool)> = self
             .workspace
             .connection()
@@ -315,6 +320,9 @@ impl ControlledWrites {
         let tx = self.workspace.connection().transaction()?;
         tx.execute("INSERT INTO write_operations(id,payload) VALUES(?1,?2) ON CONFLICT(id) DO UPDATE SET payload=excluded.payload",params![op.proposal.operation_id,serde_json::to_string(op)?])?;
         tx.execute("INSERT INTO write_events(operation_id,phase,published,new_oid,at_ms) VALUES(?1,?2,?3,?4,?5)",params![op.proposal.operation_id,serde_json::to_string(&op.phase)?,op.published,op.new_head,now_ms() as i64])?;
+        if op.phase == Phase::Proposed {
+            temporary::forget(&tx, &op.proposal.operation_id)?;
+        }
         tx.commit()?;
         Ok(())
     }

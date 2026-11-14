@@ -6,7 +6,10 @@ use crate::{
         portability::Preview,
         store::{self, Snapshot},
     },
-    backup::{archive::ValidatedArchive, publication::Destination},
+    backup::{
+        archive::{Manifest, ValidatedArchive},
+        publication::Destination,
+    },
     inspection::Cancellation,
 };
 use std::io::Cursor;
@@ -22,6 +25,7 @@ pub struct AiImportSource {
     pub archive_fingerprint: String,
     pub manifest_fingerprint: String,
     pub settings: Settings,
+    pub manifest: Manifest,
     pub available_scopes: Vec<Scope>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
@@ -35,12 +39,25 @@ pub struct AiImportPreview {
     pub changes: Vec<EntityChange>,
     pub unassigned_scopes: Vec<Scope>,
 }
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+pub struct AiImportTarget {
+    pub scope: Scope,
+    pub name: String,
+    pub path: Option<NativePath>,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+pub struct AiImportTargets {
+    pub items: Vec<AiImportTarget>,
+    pub total: usize,
+    pub next: Option<usize>,
+}
 #[derive(Clone)]
 struct Source {
     id: String,
     path: PathBuf,
     expires: Instant,
     preview: Preview,
+    manifest: Manifest,
 }
 struct Prepared {
     source: Source,
@@ -74,11 +91,12 @@ fn cancelled(cancel: &Cancellation) -> Result<()> {
     }
     Ok(())
 }
-fn read_source(path: &Path, cancel: &Cancellation) -> Result<Preview> {
+fn read_source(path: &Path, cancel: &Cancellation) -> Result<(Preview, Manifest)> {
     cancelled(cancel)?;
     let bytes = inspection::file_bytes(path, MAX_SOURCE)?;
     let archive = ValidatedArchive::inspect(Cursor::new(bytes), cancel)?;
-    crate::ai::portability::preview(archive, cancel)
+    let manifest = archive.manifest().clone();
+    Ok((crate::ai::portability::preview(archive, cancel)?, manifest))
 }
 fn available(app: &Application) -> Result<Vec<Scope>> {
     let mut scopes = vec![Scope::Application];
@@ -124,7 +142,7 @@ fn revalidate(
         return Err(stale());
     }
     cancelled(cancel)?;
-    let fresh = read_source(&source.path, cancel)?;
+    let (fresh, _) = read_source(&source.path, cancel)?;
     let current = store::load(app.writes.workspace.data_directory())?;
     for scope in plan.mapped_scopes() {
         validate_scope(app, scope)?;
@@ -141,7 +159,7 @@ impl Application {
         if !path.is_absolute() {
             return Err(invalid("AI archive selection must be absolute"));
         }
-        let preview = read_source(path, &Cancellation::default())?;
+        let (preview, manifest) = read_source(path, &Cancellation::default())?;
         let id = Uuid::new_v4().to_string();
         let view = AiImportSource {
             source: id.clone(),
@@ -149,6 +167,7 @@ impl Application {
             archive_fingerprint: preview.archive_fingerprint.clone(),
             manifest_fingerprint: preview.manifest_fingerprint.clone(),
             settings: preview.settings.clone(),
+            manifest: manifest.clone(),
             available_scopes: available(self)?,
         };
         self.ai_imports = Imports {
@@ -157,6 +176,7 @@ impl Application {
                 path: path.to_path_buf(),
                 expires: Instant::now() + LIFETIME,
                 preview,
+                manifest,
             }),
             prepared: None,
         };
@@ -213,7 +233,100 @@ pub(in crate::application) fn inspect_import(
         archive_fingerprint: source.preview.archive_fingerprint.clone(),
         manifest_fingerprint: source.preview.manifest_fingerprint.clone(),
         settings: source.preview.settings.clone(),
+        manifest: source.manifest.clone(),
         available_scopes: available(app)?,
+    })
+}
+pub(in crate::application) fn targets(
+    app: &Application,
+    source: &str,
+    filter: &str,
+    offset: usize,
+) -> Result<AiImportTargets> {
+    app.ai_imports
+        .source
+        .as_ref()
+        .filter(|s| s.id == source && Instant::now() < s.expires)
+        .ok_or_else(stale)?;
+    if filter.len() > 512 || filter.contains('\0') {
+        return Err(invalid("AI import target search exceeds its limit"));
+    }
+    let mut items = vec![AiImportTarget {
+        scope: Scope::Application,
+        name: "Application".into(),
+        path: None,
+    }];
+    if let Some(workspace) = app.writes.workspace.active()? {
+        let definition = app
+            .writes
+            .workspace
+            .list()
+            .iter()
+            .find(|w| w.id == workspace)
+            .ok_or_else(stale)?;
+        items.push(AiImportTarget {
+            scope: Scope::Workspace {
+                workspace: workspace.clone(),
+            },
+            name: definition.name.clone(),
+            path: Some(definition.display_root.clone()),
+        });
+        for entry in app.writes.workspace.inventory(&workspace)? {
+            if entry.superseded_by.is_none()
+                && matches!(entry.availability, Availability::Available)
+            {
+                items.push(AiImportTarget {
+                    scope: Scope::Repository {
+                        workspace: workspace.clone(),
+                        worktree: entry.id,
+                    },
+                    name: "Repository".into(),
+                    path: Some(entry.display_path),
+                });
+            }
+        }
+    }
+    target_page(items, filter, offset)
+}
+fn target_page(
+    mut items: Vec<AiImportTarget>,
+    filter: &str,
+    offset: usize,
+) -> Result<AiImportTargets> {
+    let filter = filter.to_lowercase();
+    items.retain(|item| {
+        format!(
+            "{} {} {:?}",
+            item.name,
+            item.path
+                .as_ref()
+                .map(NativePath::display)
+                .unwrap_or_default(),
+            item.scope
+        )
+        .to_lowercase()
+        .contains(&filter)
+    });
+    items.sort_by_cached_key(|item| {
+        (
+            item.path
+                .as_ref()
+                .map(NativePath::display)
+                .unwrap_or_default(),
+            format!("{:?}", item.scope),
+        )
+    });
+    let total = items.len();
+    if offset > total {
+        return Err(invalid(
+            "AI import targets changed; search again from the first page",
+        ));
+    }
+    let end = offset.saturating_add(100).min(total);
+    Ok(AiImportTargets {
+        items: items.into_iter().skip(offset).take(100).collect(),
+        total,
+        next: (end < total).then_some(end),
     })
 }
 pub(in crate::application) fn review_import(
@@ -272,6 +385,50 @@ pub(in crate::application) fn apply_import(
 mod tests {
     use super::*;
     #[test]
+    fn target_pages_are_bounded_literal_searches_with_stable_path_order() {
+        let items = (0..205)
+            .rev()
+            .map(|n| AiImportTarget {
+                scope: Scope::Repository {
+                    workspace: WorkspaceId(Uuid::nil().to_string()),
+                    worktree: WorktreeId(Uuid::from_u128(n + 1).to_string()),
+                },
+                name: "Repository".into(),
+                path: Some(NativePath::from_path(&PathBuf::from(format!(
+                    "/fixture/repo-{n:03}"
+                )))),
+            })
+            .collect::<Vec<_>>();
+        let first = target_page(items.clone(), "", 0).unwrap();
+        let second = target_page(items.clone(), "", first.next.unwrap()).unwrap();
+        let third = target_page(items.clone(), "", second.next.unwrap()).unwrap();
+        assert_eq!(
+            (first.items.len(), second.items.len(), third.items.len()),
+            (100, 100, 5)
+        );
+        assert!(third.next.is_none());
+        assert_eq!(first.total, 205);
+        let scopes = first
+            .items
+            .iter()
+            .chain(&second.items)
+            .chain(&third.items)
+            .map(|item| item.scope.clone())
+            .collect::<std::collections::BTreeSet<_>>();
+        assert_eq!(scopes.len(), 205);
+        assert_eq!(
+            first.items[0].path.as_ref().unwrap().display(),
+            "/fixture/repo-000"
+        );
+        assert_eq!(
+            third.items[4].path.as_ref().unwrap().display(),
+            "/fixture/repo-204"
+        );
+        assert_eq!(target_page(items.clone(), "REPO-10", 0).unwrap().total, 10);
+        assert_eq!(target_page(items.clone(), "[", 0).unwrap().total, 0);
+        assert!(target_page(items, "", 206).is_err());
+    }
+    #[test]
     fn expired_native_sources_and_previews_are_refused_before_opening_the_source() {
         let root = std::env::temp_dir().join(format!("gitfleet-import-expiry-{}", Uuid::new_v4()));
         let mut app = Application::open(&root, Options::default()).unwrap();
@@ -285,6 +442,17 @@ mod tests {
             path: root.join("must-not-be-opened.zip"),
             expires: Instant::now(),
             preview: incoming,
+            manifest: Manifest {
+                version: 1,
+                application_version: "fixture".into(),
+                created_at_ms: 0,
+                kind: crate::backup::archive::Kind::AiConfiguration,
+                database_schema: None,
+                settings_revision: None,
+                includes_history: false,
+                recovery_policy: "not_included".into(),
+                components: Vec::new(),
+            },
         };
         app.ai_imports.source = Some(source.clone());
         assert_eq!(

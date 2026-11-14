@@ -71,6 +71,8 @@ pub struct Connection {
 #[serde(deny_unknown_fields)]
 #[schemars(rename = "AiParameters")]
 pub struct Parameters {
+    #[serde(default)]
+    pub thinking: bool,
     pub temperature: Option<f64>,
     pub top_p: Option<f64>,
     pub top_k: Option<u32>,
@@ -96,7 +98,7 @@ impl Parameters {
         if self.top_k.is_some_and(|n| n == 0 || n > 1000)
             || self
                 .context_size
-                .is_some_and(|n| !(512..=131072).contains(&n))
+                .is_some_and(|n| !(512..=262144).contains(&n))
             || self.output_tokens.is_some_and(|n| n == 0 || n > 65536)
             || self.seed.is_some_and(|n| n > 9_007_199_254_740_991)
         {
@@ -105,7 +107,8 @@ impl Parameters {
             ));
         }
         if provider == Provider::Compatible
-            && (self.top_k.is_some()
+            && (self.thinking
+                || self.top_k.is_some()
                 || self.min_p.is_some()
                 || self.context_size.is_some()
                 || self.repetition_penalty.is_some())
@@ -303,7 +306,7 @@ impl Settings {
             if c.authentication == super::credentials::Authentication::StoredBearer {
                 super::credentials::Binding::new(&c.id, &c.endpoint)?;
             }
-            if endpoint(&c.endpoint)? != c.endpoint || !(100..=120000).contains(&c.timeout_ms) {
+            if endpoint(&c.endpoint)? != c.endpoint || !(100..=3_600_000).contains(&c.timeout_ms) {
                 return Err(invalid("AI connection endpoint or timeout is invalid"));
             }
             if !c.endpoint_approval.is_empty()

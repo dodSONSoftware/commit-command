@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-settings-flush-done"
+description = "Enables the settings_flush_done command without any pre-configured scope."
+commands.allow = ["settings_flush_done"]
+
+[[permission]]
+identifier = "deny-settings-flush-done"
+description = "Denies the settings_flush_done command without any pre-configured scope."
+commands.deny = ["settings_flush_done"]

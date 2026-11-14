@@ -1,5 +1,5 @@
 //! Ephemeral AI jobs run independently of the serialized application/storage owner.
-use super::provider::{Approved, ProviderResult, Review};
+use super::provider::{Approved, ProviderResult, Review, StreamProgress};
 use crate::{inspection::Cancellation, Error, ErrorKind, Result};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -40,12 +40,13 @@ pub struct Job {
     pub result: Option<ProviderResult>,
     pub error: Option<String>,
     pub error_kind: Option<ErrorKind>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub progress: Option<StreamProgress>,
 }
 struct Entry {
     view: Job,
     cancel: Cancellation,
-    created: Instant,
-    finished: bool,
+    finished: Option<Instant>,
 }
 #[derive(Default)]
 struct Inner {
@@ -82,15 +83,23 @@ impl Jobs {
         let generation;
         {
             let mut inner = self.inner.lock().map_err(|_| unavailable())?;
-            inner.jobs.retain(|_, e| {
-                e.created.elapsed() < Duration::from_secs(600)
-                    || matches!(e.view.phase, Phase::Queued | Phase::Running)
+            inner.jobs.retain(|_, entry| {
+                entry
+                    .finished
+                    .is_none_or(|at| at.elapsed() < Duration::from_secs(600))
             });
             if inner.jobs.len() >= 32 {
-                return Err(Error::with_kind(
-                    ErrorKind::Busy,
-                    "AI job limit reached; cancel or wait before retrying",
-                ));
+                let oldest = inner
+                    .jobs
+                    .iter()
+                    .filter_map(|(id, entry)| entry.finished.map(|at| (id.clone(), at)))
+                    .min_by_key(|(_, at)| *at)
+                    .map(|(id, _)| id);
+                if let Some(id) = oldest {
+                    inner.jobs.remove(&id);
+                } else {
+                    return Err(Error::with_kind(ErrorKind::Busy,"AI job limit reached; cancel or wait for an active request before retrying"));
+                }
             }
             inner.limits = limits;
             generation = inner.generation;
@@ -104,10 +113,10 @@ impl Jobs {
                         result: None,
                         error: None,
                         error_kind: None,
+                        progress: None,
                     },
                     cancel: cancel.clone(),
-                    created: Instant::now(),
-                    finished: false,
+                    finished: None,
                 },
             );
         }
@@ -145,7 +154,20 @@ impl Jobs {
                         None => Ok(None),
                     };
                     match secret {
-                        Ok(secret) if !cancel.is_cancelled() => approved.execute(secret, cancel.clone()),
+                        Ok(secret) if !cancel.is_cancelled() => {
+                            let updates = shared.clone();
+                            let update_job = job.clone();
+                            approved.execute_stream(secret, cancel.clone(), Box::new(move |progress| {
+                                if let Ok(mut inner) = updates.lock() {
+                                    if inner.generation != generation { return; }
+                                    if let Some(entry) = inner.jobs.get_mut(&update_job) {
+                                        if !entry.cancel.is_cancelled() && matches!(entry.view.phase, Phase::Running) {
+                                            entry.view.progress = Some(progress);
+                                        }
+                                    }
+                                }
+                            }))
+                        },
                         Ok(_) => Err(Error::with_kind(ErrorKind::Cancelled, "AI request cancelled before credential use")),
                         Err(error) => Err(error),
                     }
@@ -170,7 +192,7 @@ impl Jobs {
                         return;
                     }
                     if let Some(entry) = inner.jobs.get_mut(&job) {
-                        entry.finished = true;
+                        entry.finished = Some(Instant::now());
                         match result {
                             Ok(value) if !cancel.is_cancelled() => {
                                 entry.view.phase = Phase::Complete;
@@ -215,7 +237,7 @@ impl Jobs {
     }
     pub(crate) fn is_idle(&self) -> Result<bool> {
         let inner = self.inner.lock().map_err(|_| unavailable())?;
-        Ok(inner.active == 0 && inner.jobs.values().all(|entry| entry.finished))
+        Ok(inner.active == 0 && inner.jobs.values().all(|entry| entry.finished.is_some()))
     }
     pub(crate) fn list(&self) -> Result<Vec<Job>> {
         Ok(self
@@ -274,6 +296,74 @@ impl Drop for Jobs {
 mod idle_tests {
     use super::*;
     #[test]
+    fn cancelled_workers_keep_their_slots_until_they_finish() {
+        use super::super::{
+            config::{ConnectionDraft, Provider},
+            provider::Plan,
+        };
+        let draft = ConnectionDraft {
+            id: None,
+            name: "Capacity fixture".into(),
+            provider: Provider::Ollama,
+            endpoint: "http://127.0.0.1:1/".into(),
+            timeout_ms: 100,
+            authentication: Default::default(),
+        };
+        let plan = || Plan::discover(&draft).unwrap().approve();
+        let mut jobs = Jobs::default();
+        {
+            let mut inner = jobs.inner.lock().unwrap();
+            for number in 0..32 {
+                let id = number.to_string();
+                inner.jobs.insert(
+                    id.clone(),
+                    Entry {
+                        view: Job {
+                            id,
+                            review: plan().review(),
+                            phase: Phase::Cancelled,
+                            result: None,
+                            error: None,
+                            error_kind: Some(ErrorKind::Cancelled),
+                            progress: None,
+                        },
+                        cancel: Cancellation::default(),
+                        finished: None,
+                    },
+                );
+            }
+        }
+        assert_eq!(
+            jobs.start(
+                plan(),
+                None,
+                "fixture".into(),
+                Limits::default(),
+                Cancellation::default()
+            )
+            .unwrap_err()
+            .kind,
+            ErrorKind::Busy
+        );
+        jobs.inner
+            .lock()
+            .unwrap()
+            .jobs
+            .get_mut("0")
+            .unwrap()
+            .finished = Some(Instant::now());
+        let cancel = Cancellation::default();
+        cancel.cancel();
+        let id = jobs
+            .start(plan(), None, "fixture".into(), Limits::default(), cancel)
+            .unwrap();
+        let inner = jobs.inner.lock().unwrap();
+        assert!(!inner.jobs.contains_key("0"));
+        assert!(inner.jobs.contains_key(&id));
+        assert_eq!(inner.jobs.len(), 32);
+    }
+
+    #[test]
     fn cancelled_display_state_is_not_idle_until_the_owned_worker_finishes() {
         let jobs = Jobs::default();
         let review =
@@ -299,10 +389,10 @@ mod idle_tests {
                     result: None,
                     error: None,
                     error_kind: Some(ErrorKind::Cancelled),
+                    progress: None,
                 },
                 cancel,
-                created: Instant::now(),
-                finished: false,
+                finished: None,
             },
         );
         assert!(!jobs.is_idle().unwrap());
@@ -312,7 +402,7 @@ mod idle_tests {
             .jobs
             .get_mut("fixture")
             .unwrap()
-            .finished = true;
+            .finished = Some(Instant::now());
         assert!(jobs.is_idle().unwrap());
         jobs.inner.lock().unwrap().active = 1;
         assert!(!jobs.is_idle().unwrap());

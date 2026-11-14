@@ -1,7 +1,6 @@
 import { readFileSync } from "node:fs";
 import { expect, it } from "vitest";
 const app = readFileSync("src/styles/app.css", "utf8");
-const review = readFileSync("src/styles/review.css", "utf8");
 function declarations(css: string, selector: string) {
   const start = css.indexOf(`${selector} {`);
   if (start < 0) throw new Error(`Missing CSS selector ${selector}`);
@@ -83,7 +82,7 @@ it.each([":root", ':root[data-theme="light"]', ':root[data-theme="system"]'])(
     });
   },
 );
-it("keeps primary labels readable including Light-mode hover and the authoritative review", () => {
+it("keeps primary labels readable including Light-mode hover", () => {
   minimum(
     "main primary",
     rgb("#ffffff"),
@@ -96,22 +95,16 @@ it("keeps primary labels readable including Light-mode hover and the authoritati
     rgb(declarations(app, ".primary:hover:not(:disabled)").background),
     4.5,
   );
-  minimum(
-    "review primary",
-    rgb(declarations(review, "button").color),
-    rgb(declarations(review, ".primary").background),
-    4.5,
+});
+
+it("renders settings errors in bold red with a visible marker", () => {
+  const style = declarations(app, '.ai-settings-dialog [role="alert"]');
+  expect(style.color).toBe("var(--red)");
+  expect(style["font-weight"]).toBe("700");
+  const marker = declarations(
+    app,
+    '.ai-settings-dialog [role="alert"]::before',
   );
-  minimum(
-    "review body",
-    rgb(declarations(review, ":root").color),
-    rgb(declarations(review, ":root").background),
-    4.5,
-  );
-  minimum(
-    "review secondary text",
-    rgb(declarations(review, "p").color),
-    rgb(declarations(review, ":root").background),
-    4.5,
-  );
+  expect(marker.background).toBe("currentColor");
+  expect(marker["border-radius"]).toBe("50%");
 });

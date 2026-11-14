@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-open-ai-suggestions"
+description = "Enables the open_ai_suggestions command without any pre-configured scope."
+commands.allow = ["open_ai_suggestions"]
+
+[[permission]]
+identifier = "deny-open-ai-suggestions"
+description = "Denies the open_ai_suggestions command without any pre-configured scope."
+commands.deny = ["open_ai_suggestions"]

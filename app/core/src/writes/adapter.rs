@@ -92,6 +92,30 @@ pub(super) fn git(
     command.args(args);
     process::bounded_input(command, options, input)
 }
+pub(super) fn hash_file(root: &Path, file: std::fs::File, options: &ReadOptions) -> Result<String> {
+    let mut command = clean(Path::new("git"));
+    command
+        .current_dir(root)
+        .env("GIT_CONFIG_NOSYSTEM", "1")
+        .env("GIT_CONFIG_GLOBAL", "/dev/null")
+        .args([
+            "-c",
+            "core.fsync=all",
+            "-c",
+            "core.fsyncMethod=fsync",
+            "hash-object",
+            "-w",
+            "--stdin",
+        ]);
+    let output = process::bounded_file_input(command, options, file)?;
+    if !output.status.success() {
+        return Err(fail(
+            ErrorKind::UnsupportedRepositoryState,
+            "Git could not write the selected file object",
+        ));
+    }
+    text(output.stdout)
+}
 pub(super) fn run(
     root: &Path,
     args: &[&str],

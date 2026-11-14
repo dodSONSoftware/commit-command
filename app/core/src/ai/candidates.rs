@@ -18,9 +18,10 @@ pub struct Candidate {
     /// Model-reported attribution, not independent proof of semantic analysis.
     pub covered_chunks: Vec<String>,
 }
-#[derive(Deserialize)]
+#[derive(Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
 struct Reply {
+    #[schemars(length(min = 1, max = 1))]
     candidates: Vec<Candidate>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
@@ -53,7 +54,10 @@ pub(crate) struct Rules {
     pub profile_revision: String,
 }
 fn invalid() -> Error {
-    Error::with_kind(ErrorKind::InvalidData,"AI candidate response is malformed, unsafe, duplicated or outside the approved output schema")
+    Error::with_kind(
+        ErrorKind::InvalidData,
+        "The AI returned an invalid commit-message response. Try again.",
+    )
 }
 fn safe(value: &str, max: usize) -> bool {
     value.len()<=max && !value.chars().any(|c| (c.is_control() && c!='\n' && c!='\t') || matches!(c,'\u{061c}'|'\u{200e}'|'\u{200f}'|'\u{202a}'..='\u{202e}'|'\u{2066}'..='\u{2069}'))
@@ -67,7 +71,60 @@ pub(crate) fn chunk_ids(context: &Bundle) -> Result<BTreeSet<String>> {
         .map(|c| c["id"].as_str().map(str::to_owned).ok_or_else(invalid))
         .collect()
 }
+pub(crate) fn response_schema(context: &Bundle) -> Result<serde_json::Value> {
+    let mut schema = serde_json::to_value(schemars::schema_for!(Reply))?;
+    let ids = chunk_ids(context)?;
+    // Constrain attribution to IDs in this request, rather than asking the model
+    // to reproduce arbitrary identifiers correctly without a schema.
+    schema["$defs"]["AiCandidate"]["properties"]["covered_chunks"]["items"] = if ids.is_empty() {
+        serde_json::json!({"type":"string"})
+    } else {
+        serde_json::json!({"type":"string", "enum":ids})
+    };
+    Ok(schema)
+}
 impl Rules {
+    pub(crate) fn validate_message(
+        &self,
+        completion: &super::provider::Completion,
+    ) -> Result<CandidateSet> {
+        let text = completion.content.trim().replace("\r\n", "\n");
+        let (subject, body) = text.split_once('\n').unwrap_or((&text, ""));
+        if subject.trim().is_empty() || !safe(&text, 65536) {
+            return Err(invalid());
+        }
+        if subject.len() > 16384 || body.len() > 16384 {
+            return Err(invalid());
+        }
+        // Fill with AI supplies an editable draft. Template style/subject-length
+        // preferences do not make a successfully generated Git message invalid.
+        Ok(CandidateSet {
+            model: completion.model.clone(),
+            elapsed_ms: completion.elapsed_ms,
+            input_tokens: completion.input_tokens,
+            output_tokens: completion.output_tokens,
+            context_fingerprint: self.context.fingerprint.clone(),
+            snapshot_fingerprint: self.snapshot.clone(),
+            context_complete: self.context.complete,
+            candidates: vec![Validated {
+                candidate: Candidate {
+                    message: Message {
+                        subject: subject.trim().into(),
+                        body: body.trim().into(),
+                    },
+                    rationale: String::new(),
+                    summary: String::new(),
+                    concerns: vec![],
+                    covered_chunks: vec![],
+                },
+                valid: true,
+                validation_errors: vec![],
+                unreported_chunks: chunk_ids(&self.context)?.into_iter().collect(),
+            }],
+            warnings: self.context.warnings.clone(),
+        })
+    }
+
     pub(crate) fn validate(
         &self,
         completion: &super::provider::Completion,
@@ -160,6 +217,30 @@ mod tests {
             profile_id: "profile".into(),
             profile_revision: "revision".into(),
         }
+    }
+    #[test]
+    fn streamed_drafts_accept_long_subjects_without_hidden_template_rejection() {
+        let r = rules();
+        let subject =
+            "docs: update design documents and handoff prompts for Interstellar Executive";
+        assert_eq!(subject.chars().count(), 76);
+        let message = Message {
+            subject: subject.into(),
+            body: String::new(),
+        };
+        assert!(r.template.check_message(&message).is_err());
+        let result = r
+            .validate_message(&super::super::provider::Completion {
+                model: "fixture-model".into(),
+                content: subject.into(),
+                elapsed_ms: 400,
+                input_tokens: Some(6431),
+                output_tokens: Some(14),
+            })
+            .unwrap();
+        assert!(result.candidates[0].valid);
+        assert!(result.candidates[0].validation_errors.is_empty());
+        assert_eq!(result.candidates[0].candidate.message.subject, subject);
     }
     impl Rules {
         fn text(&self, text: &str) -> Result<CandidateSet> {

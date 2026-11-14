@@ -46,6 +46,12 @@ function escapedControl(c: string): string {
     ? `\\u${n.toString(16).padStart(4, "0")}`
     : `\\x${n.toString(16).padStart(2, "0")}`;
 }
+export function safeText(text: string): string {
+  return text.replace(
+    /[\u0000-\u0008\u000b-\u001f\u007f\u061c\u200e\u200f\u202a-\u202e\u2066-\u2069]/g,
+    escapedControl,
+  );
+}
 export function bytes(input: number[]): string {
   let text: string;
   try {
@@ -64,10 +70,7 @@ export function bytes(input: number[]): string {
         .join("")
     );
   }
-  return text.replace(
-    /[\u0000-\u0008\u000b-\u001f\u007f\u061c\u200e\u200f\u202a-\u202e\u2066-\u2069]/g,
-    escapedControl,
-  );
+  return safeText(text);
 }
 export function pathText(path: NativePath): string {
   if (path.encoding === "utf8")
@@ -130,6 +133,38 @@ export function closeTab(state: DesktopState, id: string): DesktopState {
     ...state,
     tabs: state.tabs.filter((t) => t.worktree !== id),
     active_tab: state.active_tab === id ? null : state.active_tab,
+  };
+}
+export function reorderTab(
+  state: DesktopState,
+  source: string,
+  target: string,
+  after: boolean,
+): DesktopState {
+  if (source === target) return state;
+  const moved = state.tabs.find((tab) => tab.worktree === source);
+  if (!moved || !state.tabs.some((tab) => tab.worktree === target))
+    return state;
+  if (
+    !!moved.pinned !==
+    !!state.tabs.find((tab) => tab.worktree === target)?.pinned
+  )
+    return state;
+  const tabs = state.tabs.filter((tab) => tab.worktree !== source);
+  const index = tabs.findIndex((tab) => tab.worktree === target);
+  tabs.splice(index + (after ? 1 : 0), 0, moved);
+  return { ...state, tabs };
+}
+export function toggleTabPinned(state: DesktopState, id: string): DesktopState {
+  const tabs = state.tabs.map((tab) =>
+    tab.worktree === id ? { ...tab, pinned: !tab.pinned } : tab,
+  );
+  return {
+    ...state,
+    tabs: [
+      ...tabs.filter((tab) => tab.pinned),
+      ...tabs.filter((tab) => !tab.pinned),
+    ],
   };
 }
 export function updateTab(

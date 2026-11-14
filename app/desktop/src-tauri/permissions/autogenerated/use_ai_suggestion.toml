@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-use-ai-suggestion"
+description = "Enables the use_ai_suggestion command without any pre-configured scope."
+commands.allow = ["use_ai_suggestion"]
+
+[[permission]]
+identifier = "deny-use-ai-suggestion"
+description = "Denies the use_ai_suggestion command without any pre-configured scope."
+commands.deny = ["use_ai_suggestion"]

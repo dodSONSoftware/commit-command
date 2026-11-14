@@ -24,7 +24,7 @@ export function AiDiagnostics({
   profile: Profile;
   template: AiTemplate | null;
   active: boolean;
-  onModels: (models: AiInstalledModel[]) => void;
+  onModels?: (models: AiInstalledModel[]) => void;
 }) {
   const [jobs, setJobs] = useState<AiJob[]>([]);
   const [error, setError] = useState("");
@@ -65,7 +65,7 @@ export function AiDiagnostics({
             !seen.current.has(job.id)
           ) {
             seen.current.add(job.id);
-            modelsCallback.current(job.result.value);
+            modelsCallback.current?.(job.result.value);
           }
         }
       } catch (e) {

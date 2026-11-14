@@ -69,13 +69,23 @@ pub struct WorkspaceInventory {
     pub scan: Inventory,
     pub entries: Vec<StoredWorktree>,
 }
+pub(crate) mod recovery;
+
 pub struct WorkspaceService {
+    pub(crate) session: String,
     directory: PathBuf,
     database: Connection,
     config: Config,
     _writer: crate::locking::ExclusiveLock,
     scan_cursor: Option<(String, discovery::Cursor)>,
 }
+#[cfg(feature = "application-services")]
+pub(crate) struct StatusPass {
+    pub(crate) workspace: WorkspaceId,
+    pub(crate) pending: std::collections::VecDeque<StoredWorktree>,
+    heads: BTreeMap<PathBuf, ObjectId>,
+}
+
 fn observed_heads(entries: &[StoredWorktree]) -> Result<BTreeMap<PathBuf, ObjectId>> {
     entries
         .iter()
@@ -265,6 +275,7 @@ impl WorkspaceService {
         }
         let mut service = Self {
             directory,
+            session: Uuid::new_v4().to_string(),
             _writer: writer,
             database,
             config,
@@ -427,18 +438,17 @@ impl WorkspaceService {
         if let Some(options) = options {
             workspace.discovery = options;
         }
+        let current = self.definition(id)?;
+        if current.root != workspace.root || current.discovery != workspace.discovery {
+            self.require_resolved(id)?;
+        }
         self.save(next)
     }
     pub fn remove(&mut self, id: &WorkspaceId) -> Result<()> {
         let mut next = self.config.clone();
-        let original = next.workspaces.len();
+        self.definition(id)?;
+        self.require_resolved(id)?;
         next.workspaces.retain(|w| &w.id != id);
-        if next.workspaces.len() == original {
-            return Err(Error::with_kind(
-                ErrorKind::InvalidRequest,
-                "Unknown workspace",
-            ));
-        }
         self.save(next)
     }
     pub fn activate(&self, id: &WorkspaceId) -> Result<()> {
@@ -527,17 +537,22 @@ impl WorkspaceService {
     fn store_scan(&mut self, id: &WorkspaceId, report: Inventory) -> Result<WorkspaceInventory> {
         let previous = self.inventory(id)?;
         let transaction = self.database.transaction()?;
-        transaction.execute(
-            "UPDATE membership SET availability=?2 WHERE workspace_id=?1",
-            params![
-                id.0,
-                if report.complete {
-                    "missing"
-                } else {
-                    "unavailable"
-                }
-            ],
-        )?;
+        // A resumable scan has not checked every location yet. Absence from
+        // this slice is not evidence that a previously inspected repo failed.
+        // Entries actually inspected below still receive their current status.
+        if report.progress.is_none() {
+            transaction.execute(
+                "UPDATE membership SET availability=?2 WHERE workspace_id=?1",
+                params![
+                    id.0,
+                    if report.complete {
+                        "missing"
+                    } else {
+                        "unavailable"
+                    }
+                ],
+            )?;
+        }
         for entry in &report.repositories {
             let metadata = &entry.metadata;
             let repository_id: Option<String> = transaction
@@ -606,6 +621,29 @@ impl WorkspaceService {
             entries: self.inventory(id)?,
         })
     }
+    #[cfg(feature = "application-services")]
+    pub(crate) fn record_failed_scan(&mut self, id: &WorkspaceId, error: Error) -> Result<()> {
+        let root = self.definition(id)?.root.clone();
+        let report = Inventory {
+            root: root.clone(),
+            complete: false,
+            repositories: Vec::new(),
+            relationships: Vec::new(),
+            issues: vec![discovery::ScanIssue {
+                path: root,
+                error: error.into(),
+            }],
+            skipped_caches: Vec::new(),
+            progress: None,
+        };
+        // A failed traversal supplies no evidence about previously observed members.
+        self.database.execute(
+            "INSERT OR REPLACE INTO state(key,value) VALUES(?1,?2)",
+            params![format!("scan:{}", id.0), serde_json::to_string(&report)?],
+        )?;
+        self.scan_cursor = None;
+        Ok(())
+    }
     pub fn last_scan(&self, id: &WorkspaceId) -> Result<Option<Inventory>> {
         self.definition(id)?;
         let value: Option<String> = self
@@ -621,8 +659,10 @@ impl WorkspaceService {
             .transpose()
     }
     pub fn inventory(&self, id: &WorkspaceId) -> Result<Vec<StoredWorktree>> {
+        #[cfg(test)]
+        INVENTORY_WORK.with(|n| n.set((n.get().0 + 1, n.get().1)));
         let workspace_root = self.definition(id)?.root.to_path()?;
-        let mut statement=self.database.prepare("SELECT w.id,w.repository_id,w.metadata,m.availability,m.status,m.issue FROM worktrees w JOIN membership m ON m.worktree_id=w.id WHERE m.workspace_id=?1 ORDER BY w.id")?;
+        let mut statement=self.database.prepare("SELECT w.id,w.repository_id,w.metadata,m.availability,m.status,m.issue,s.value FROM worktrees w JOIN membership m ON m.worktree_id=w.id LEFT JOIN state s ON s.key='superseded:'||m.workspace_id||':'||w.id WHERE m.workspace_id=?1 ORDER BY w.id")?;
         let rows = statement.query_map([&id.0], |row| {
             Ok((
                 row.get::<_, String>(0)?,
@@ -631,12 +671,14 @@ impl WorkspaceService {
                 row.get::<_, String>(3)?,
                 row.get::<_, Option<String>>(4)?,
                 row.get::<_, Option<String>>(5)?,
+                row.get::<_, Option<String>>(6)?,
             ))
         })?;
-        let workspace_id = &id.0;
         let mut entries = rows
             .map(|row| {
-                let (id, repository_id, metadata, availability, status, issue) = row?;
+                let (id, repository_id, metadata, availability, status, issue, superseded) = row?;
+                #[cfg(test)]
+                INVENTORY_WORK.with(|n| n.set((n.get().0, n.get().1 + 1)));
                 let metadata: Metadata = serde_json::from_str(&metadata)?;
                 let root = metadata.root.to_path()?;
                 let display_path =
@@ -654,14 +696,7 @@ impl WorkspaceService {
                     status: status.map(|s| serde_json::from_str(&s)).transpose()?,
                     issue: issue.map(|s| serde_json::from_str(&s)).transpose()?,
                     untrusted: true,
-                    superseded_by: self
-                        .database
-                        .query_row(
-                            "SELECT value FROM state WHERE key=?1",
-                            [format!("superseded:{}:{}", workspace_id, id)],
-                            |row| row.get::<_, String>(0),
-                        )
-                        .optional()?
+                    superseded_by: superseded
                         .map(|value| serde_json::from_str(&value))
                         .transpose()?,
                 })
@@ -689,6 +724,56 @@ impl WorkspaceService {
             .into_iter()
             .find(|entry| &entry.id == id)
             .ok_or_else(|| Error::with_kind(ErrorKind::InvalidRequest, "Unknown worktree"))?;
+        self.refresh_entry(workspace, old, &heads, options)
+    }
+
+    #[cfg(feature = "application-services")]
+    pub(crate) fn status_pass(&self, workspace: &WorkspaceId) -> Result<StatusPass> {
+        let entries = self.inventory(workspace)?;
+        let heads = observed_heads(&entries)?;
+        Ok(StatusPass {
+            workspace: workspace.clone(),
+            heads,
+            pending: entries
+                .into_iter()
+                .filter(|e| e.superseded_by.is_none())
+                .collect(),
+        })
+    }
+
+    #[cfg(feature = "application-services")]
+    pub(crate) fn refresh_next(
+        &mut self,
+        pass: &mut StatusPass,
+        options: &inspection::ReadOptions,
+    ) -> Result<()> {
+        let Some(old) = pass.pending.pop_front() else {
+            return Ok(());
+        };
+        let root = old.metadata.root.to_path()?;
+        match self.refresh_entry(&pass.workspace, old, &pass.heads, options) {
+            Ok(entry) => {
+                pass.heads.remove(&root);
+                if let Some(head) = entry.status.and_then(|s| s.head_oid) {
+                    pass.heads.insert(root, head);
+                }
+                Ok(())
+            }
+            Err(error) => {
+                pass.heads.remove(&root);
+                Err(error)
+            }
+        }
+    }
+
+    fn refresh_entry(
+        &mut self,
+        workspace: &WorkspaceId,
+        old: StoredWorktree,
+        heads: &BTreeMap<PathBuf, ObjectId>,
+        options: &inspection::ReadOptions,
+    ) -> Result<StoredWorktree> {
+        let id = &old.id;
         if old.superseded_by.is_some() {
             return Err(Error::with_kind(
                 ErrorKind::Unavailable,
@@ -734,7 +819,7 @@ impl WorkspaceService {
             issue: None,
             ..old
         };
-        reflect_child_heads(&mut entry, &heads)?;
+        reflect_child_heads(&mut entry, heads)?;
         Ok(entry)
     }
 }
@@ -758,3 +843,6 @@ fn validate_config(config: &Config, directory: &Path) -> Result<()> {
     }
     Ok(())
 }
+
+#[cfg(test)]
+thread_local! { pub(crate) static INVENTORY_WORK: std::cell::Cell<(usize,usize)> = const {std::cell::Cell::new((0,0))}; }

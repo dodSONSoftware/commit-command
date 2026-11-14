@@ -29,6 +29,7 @@ mod push_publication;
 #[cfg(feature = "application-services")]
 mod remote;
 mod store;
+mod temporary;
 mod transaction;
 #[cfg(feature = "application-services")]
 mod upstream;
@@ -288,6 +289,7 @@ pub struct ControlledWrites {
     pub(crate) workspace: WorkspaceService,
     options: Options,
     session: String,
+    trust_required: bool,
     trust_reviews: BTreeMap<String, TrustReview>,
     recovery_reviews: BTreeMap<String, RecoveryReview>,
     #[cfg(feature = "write-test-support")]

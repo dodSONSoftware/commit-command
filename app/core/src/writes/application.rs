@@ -1,6 +1,10 @@
 use super::*;
 use crate::application::{OperationPage, TrustState};
 impl ControlledWrites {
+    pub(crate) fn disable_trust_requirement(&mut self) {
+        self.trust_required = false;
+    }
+
     pub(crate) fn application_remotes(
         &self,
         entry: &crate::workspace::StoredWorktree,
@@ -150,7 +154,10 @@ impl ControlledWrites {
     pub(crate) fn application_pending(
         &mut self,
     ) -> Result<Vec<crate::application::RecoveryNotice>> {
-        let mut statement=self.workspace.connection().prepare("SELECT payload FROM write_operations WHERE json_extract(payload,'$.phase') NOT IN ('complete','published_with_post_processing_failure','cancelled_before_publication','proposed','approved','needs_reauthorization') ORDER BY rowid DESC LIMIT 100")?;
+        let mut statement = self.workspace.connection().prepare(&format!(
+            "SELECT payload FROM write_operations WHERE {} ORDER BY rowid DESC LIMIT 100",
+            crate::workspace::recovery::LOCAL
+        ))?;
         let rows = statement.query_map([], |r| r.get::<_, String>(0))?;
         rows.map(|r| {
             let op: Operation = serde_json::from_str(&r?)?;
@@ -166,12 +173,6 @@ impl ControlledWrites {
         .collect()
     }
 }
-impl ControlledWrites {
-    pub(crate) fn application_has_pending(&mut self, workspace: &str) -> Result<bool> {
-        self.workspace.connection().query_row("SELECT EXISTS(SELECT 1 FROM write_operations WHERE json_extract(payload,'$.proposal.workspace_id')=?1 AND json_extract(payload,'$.phase') NOT IN ('complete','published_with_post_processing_failure','cancelled_before_publication','proposed','approved','needs_reauthorization')) OR EXISTS(SELECT 1 FROM state WHERE key LIKE 'fetch-import:%' AND json_extract(value,'$.value.plan.workspace')=?1 AND json_extract(value,'$.value.phase') IN ('importing_objects','publication_pending','reference_prepared','reference_updated','uncertain')) OR EXISTS(SELECT 1 FROM state WHERE key LIKE 'upstream:%' AND json_extract(value,'$.value.plan.workspace')=?1 AND json_extract(value,'$.value.phase') IN ('lock_pending','lock_created','lock_ready','publication_pending','config_published','uncertain')) OR EXISTS(SELECT 1 FROM state WHERE key LIKE 'version-action:%' AND json_extract(value,'$.value.plan.workspace')=?1 AND json_extract(value,'$.value.phase') IN ('preparing','replacing','unconfirmed'))",[workspace],|r|r.get(0)).map_err(Error::from)
-    }
-}
-
 impl ControlledWrites {
     pub(crate) fn application_audit(
         &mut self,
