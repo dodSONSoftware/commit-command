@@ -1,14 +1,12 @@
-fix: find compatible Git when launched from Finder
+fix: keep application and release versions aligned
 
-[0.2.5] Aluminum Ferret
+[0.2.6] Aluminum Ferret
 
-- macOS: Prefer an installed Homebrew Git when startup PATH selects Apple Git or contains no Git
-- startup: Initialize the process search path before credential and application workers while preserving custom Git priority
-- tests: Cover Apple Silicon and Intel Homebrew paths, custom selection, duplicates and missing fallback
-- desktop: Update application metadata, lockfiles and About expectations from 0.2.3 to 0.2.4
-- validation: Record passing path tests, Stage regression, Clippy and builds plus direct Finder recovery of all eleven repositories
-- docs: Explain Git lookup and preserve the native acceptance evidence in the execution ledger
-- VERSION: Increment repository version from 0.2.4 to 0.2.5 using the PATCH workflow
-- README.md: Update Aluminum Ferret release metadata; preserve the verified application version
+- desktop: Align npm, native Cargo and Tauri application metadata with the resolved 0.2.6 release
+- lockfiles: Update the desktop package version without changing dependencies
+- About: Update both displayed-version assertions to 0.2.6
+- validation: Pass three About tests, the frontend production build and the locked native build
+- VERSION: Increment 0.2.5 to 0.2.6 using the PATCH workflow
+- README.md: Update Aluminum Ferret release information
 
 developed by Randel Dodson and AI
