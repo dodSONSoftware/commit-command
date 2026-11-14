@@ -1,13 +1,12 @@
-fix: share discovery budgets and match the About author
+fix: update desktop version metadata and About expectations
 
-[0.2.3] Aluminum Ferret
+[0.2.4] Aluminum Ferret
 
-- F26: Route standalone discovery through the workspace cursor and its remaining read budget
-- contracts: Preserve partial one-shot reports, cancellation errors and workspace continuation
-- tests: Verify complete scans, exclusions, inaccessible paths, large directories, slow Git and CLI parity
-- About: Match the Developer name to the authoritative Randel Dodson license
-- validation: Record focused passes and the unrelated broader AI assertion and integration-test lint
-- VERSION: Increment 0.2.2 to 0.2.3 for the discovery and About corrections
-- README.md: Update Aluminum Ferret release metadata
+- desktop: Update npm, native Cargo and Tauri application versions from 0.1.1 to 0.2.3
+- lockfiles: Record the desktop package version without dependency changes
+- About: Expect version 0.2.3 in the existing branded dialog tests
+- validation: Three About tests, frontend build and locked native build passed; the relaunched About box displayed 0.2.3
+- VERSION: Increment repository version from 0.2.3 to 0.2.4 using the required PATCH workflow
+- README.md: Update Aluminum Ferret release information; preserve the separately verified application version
 
 developed by Randel Dodson and AI
