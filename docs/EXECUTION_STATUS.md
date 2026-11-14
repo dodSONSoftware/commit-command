@@ -11,6 +11,20 @@ The [detailed completion handoff](implementation/README.md) supplies the executa
 remaining-work packages, decision worksheet, fixture/test procedures and complete
 requirement mapping. It does not accept gates or replace this live evidence ledger.
 
+### November 14 · F23 monitoring debounce and status ticks
+
+Two regressions failed before the change: a periodic status-only tick erased a
+new discovery event, and a newly initialized disposable repository stayed absent
+after the debounce. Status refresh now updates its timer without consuming an
+unready event; discovery or a ready event burst clears the pending timestamps.
+
+All seven monitor tests passed, including the two controlled-timestamp regressions,
+real repository discovery through Application reconciliation, coalescing, overflow,
+periodic fallback, continuation retry and slow sibling progress. Core library
+Clippy and formatting passed. Broader all-targets Clippy exposed an existing
+`chunks_exact_to_as_chunks` lint in `tests/m3_application.rs:4594`, outside the
+monitor change; it is not reported as a passing all-targets check.
+
 ### November 14 · F22 state directory aliases
 
 The disposable CLI reproduction returned `invalid_path` yet created

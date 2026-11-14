@@ -257,10 +257,14 @@ impl Monitor {
                 .is_some_and(|at| Instant::now() >= at)
             || (ready && self.discovery_pending);
         let status = self.last_status.elapsed() >= self.timing.status_interval || ready;
-        if discovery || status {
+        // A periodic status refresh does not consume an event still debouncing.
+        // Discovery (or a ready status-only burst) consumes the queued events.
+        if discovery || ready {
             self.first = None;
             self.last_event = None;
             self.discovery_pending = false;
+        }
+        if discovery || status {
             self.last_status = Instant::now();
         }
         if discovery {
@@ -273,6 +277,71 @@ impl Monitor {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn periodic_status_tick_preserves_debouncing_repository_discovery() {
+        let mut m = Monitor::default();
+        m.status.running = true;
+        let (sender, receiver) = mpsc::sync_channel(8);
+        m.events = Some(receiver);
+        m.last_status = Instant::now() - m.timing.status_interval;
+        sender.send(true).unwrap();
+        let first = m.due();
+        assert!(first.status && !first.discovery);
+        assert!(m.discovery_pending, "status-only tick discarded discovery");
+        assert!(m.first.is_some() && m.last_event.is_some());
+        m.last_event = Some(Instant::now() - m.timing.debounce);
+        let next = m.due();
+        assert!(next.discovery && next.status);
+        assert!(!m.discovery_pending && m.first.is_none() && m.last_event.is_none());
+        assert!(!m.due().discovery);
+    }
+
+    #[test]
+    fn status_tick_then_debounce_discovers_new_repository_in_disposable_workspace() {
+        use crate::application::{Application, Request};
+        use std::{fs, process::Command};
+        let root = std::env::temp_dir().join(format!("monitor-debounce-{}", uuid::Uuid::new_v4()));
+        let workspace = root.join("workspace");
+        fs::create_dir_all(&workspace).unwrap();
+        let mut app = Application::open(&root.join("state"), Default::default()).unwrap();
+        let picker = app.register_directory(&workspace).unwrap();
+        app.request(
+            app.epoch(),
+            Request::Create {
+                name: "Debounce".into(),
+                picker,
+            },
+        )
+        .unwrap();
+        let id = app.writes.workspace.active().unwrap().unwrap();
+        app.monitor.stop();
+        app.monitor.status.running = true;
+        let (sender, receiver) = mpsc::sync_channel(8);
+        app.monitor.events = Some(receiver);
+        let repo = workspace.join("new-repo");
+        assert!(Command::new("git")
+            .args(["init", "-q"])
+            .arg(&repo)
+            .status()
+            .unwrap()
+            .success());
+        app.monitor.last_status = Instant::now() - app.monitor.timing.status_interval;
+        sender.send(true).unwrap();
+        app.reconcile().unwrap();
+        assert!(app.writes.workspace.inventory(&id).unwrap().is_empty());
+        app.monitor.last_event = Some(Instant::now() - app.monitor.timing.debounce);
+        assert!(app.reconcile().unwrap());
+        let entries = app.writes.workspace.inventory(&id).unwrap();
+        assert_eq!(entries.len(), 1);
+        assert_eq!(
+            entries[0].metadata.root.to_path().unwrap(),
+            fs::canonicalize(repo).unwrap()
+        );
+        app.shutdown().unwrap();
+        drop(app);
+        fs::remove_dir_all(root).unwrap();
+    }
+
     #[test]
     fn inventory_work_is_linear_across_monitor_passes() {
         use crate::{

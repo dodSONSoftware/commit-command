@@ -1,12 +1,11 @@
-fix: reject state aliases before creating checkout directories
+fix: preserve discovery events during periodic status refresh
 
-[0.2.1] Aluminum Ferret
+[0.2.2] Aluminum Ferret
 
-- workspace: Resolve the nearest existing ancestor before creating state descendants
-- safety: Preserve the final canonical ancestry check and propagate filesystem errors
-- tests: Cover checkout aliases, direct paths, parent components and valid external state
-- docs: Record failing reproduction, 24 passing workspace tests and rebuilt CLI verification
-- VERSION: Increment 0.2.0 to 0.2.1 for the F22 bug fix
+- monitor: Keep debouncing discovery events pending until their work is emitted
+- tests: Reproduce the lost flag and discover a new repository after a status-only tick
+- validation: Pass seven monitor tests and library Clippy; record the unrelated integration-test lint
+- VERSION: Increment 0.2.1 to 0.2.2 for the F23 bug fix
 - README.md: Update Aluminum Ferret release metadata
 
 developed by Randel Dodson and AI
