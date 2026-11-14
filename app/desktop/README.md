@@ -33,7 +33,10 @@ dated details and must be read alongside the current record.
 Requirements: Node 22.12+, npm 10+, Rust 1.99+, Git 2.56+, macOS native command-line
 tools. The executed host is macOS 27.2 arm64. No other desktop platform is accepted.
 No global package installation, personal signing keyring, or global Git config
-change is required. Locked npm installation disables dependency install scripts;
+change is required. Finder launches prefer Git in `/opt/homebrew/bin` or
+`/usr/local/bin` when the inherited PATH selects Apple Git or contains no Git.
+An explicitly selected custom Git keeps priority. Core still enforces Git 2.56+.
+Locked npm installation disables dependency install scripts;
 the local `.npmrc` preserves the peer resolver used to produce the lockfile.
 
 From the project root:

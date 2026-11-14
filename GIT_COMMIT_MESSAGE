@@ -1,12 +1,14 @@
-fix: update desktop version metadata and About expectations
+fix: find compatible Git when launched from Finder
 
-[0.2.4] Aluminum Ferret
+[0.2.5] Aluminum Ferret
 
-- desktop: Update npm, native Cargo and Tauri application versions from 0.1.1 to 0.2.3
-- lockfiles: Record the desktop package version without dependency changes
-- About: Expect version 0.2.3 in the existing branded dialog tests
-- validation: Three About tests, frontend build and locked native build passed; the relaunched About box displayed 0.2.3
-- VERSION: Increment repository version from 0.2.3 to 0.2.4 using the required PATCH workflow
-- README.md: Update Aluminum Ferret release information; preserve the separately verified application version
+- macOS: Prefer an installed Homebrew Git when startup PATH selects Apple Git or contains no Git
+- startup: Initialize the process search path before credential and application workers while preserving custom Git priority
+- tests: Cover Apple Silicon and Intel Homebrew paths, custom selection, duplicates and missing fallback
+- desktop: Update application metadata, lockfiles and About expectations from 0.2.3 to 0.2.4
+- validation: Record passing path tests, Stage regression, Clippy and builds plus direct Finder recovery of all eleven repositories
+- docs: Explain Git lookup and preserve the native acceptance evidence in the execution ledger
+- VERSION: Increment repository version from 0.2.4 to 0.2.5 using the PATCH workflow
+- README.md: Update Aluminum Ferret release metadata; preserve the verified application version
 
 developed by Randel Dodson and AI

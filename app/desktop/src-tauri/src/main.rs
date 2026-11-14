@@ -5,6 +5,8 @@ mod ai_credentials;
 mod ai_token_dialog;
 #[cfg(target_os = "macos")]
 use ai_token_dialog::manage_ai_token;
+#[cfg(target_os = "macos")]
+mod git_environment;
 mod host_options;
 #[cfg(feature = "native-acceptance-support")]
 mod native_acceptance;
@@ -1257,6 +1259,11 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 fn main() {
+    #[cfg(target_os = "macos")]
+    if let Err(error) = git_environment::initialize() {
+        eprintln!("Commit Command could not initialize its Git search path: {error}");
+        std::process::exit(1);
+    }
     #[cfg(target_os = "macos")]
     ai_credentials::maybe_worker();
     if std::env::args_os().nth(1).as_deref()

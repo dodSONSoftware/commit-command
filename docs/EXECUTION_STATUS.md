@@ -11,6 +11,29 @@ The [detailed completion handoff](implementation/README.md) supplies the executa
 remaining-work packages, decision worksheet, fixture/test procedures and complete
 requirement mapping. It does not accept gates or replace this live evidence ledger.
 
+### November 14 · Finder-installed Git lookup
+
+The installed 0.2.4 application reproduced incomplete discovery and eleven
+unavailable repositories when double-clicked in Finder. The same executable
+launched through the development environment inspected them successfully.
+A disposable CLI reproduction with `/usr/bin:/bin:/usr/sbin:/sbin` confirmed
+Apple Git 2.54.0 was selected, while `/opt/homebrew/bin/git` provides 2.56.0.
+
+macOS startup now adds a conventional Homebrew Git directory to the process PATH
+when the inherited search selects Apple Git (or no Git). Explicit custom Git
+selection remains first. Initialization runs before the credential/application
+workers, so inspection and controlled writes inherit the same path. The minimum
+Git version check remains in Core.
+
+Five path-selection tests passed in default and bundled read-only configurations;
+all-targets desktop Clippy, the eligible Stage worker regression, locked native
+build, Rust formatting and diff checks passed. The rebuilt 0.2.4 bundle was copied
+to `/Applications/Commit Command.app` and verified byte-for-byte. A new double-click
+from Finder opened the installed copy with all eleven repositories available,
+no Git-version error, and zero entries needing attention. Existing workspace
+changes remained visible. The prior installed bundle is retained temporarily at
+`/private/tmp/commit-command-before-git-fix-qil3ahj2/Commit Command.app`.
+
 ### November 14 · F26 shared discovery traversal and budgets
 
 A disposable slow-Git regression reproduced a 15.002-second standalone metadata

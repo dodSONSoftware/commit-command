@@ -58,7 +58,7 @@ it("opens the branded About dialog, shows the local license and restores focus",
   expect(
     within(dialog).getByRole("button", { name: "View License" }),
   ).toHaveFocus();
-  expect(within(dialog).getByText("version 0.2.3")).toBeVisible();
+  expect(within(dialog).getByText("version 0.2.4")).toBeVisible();
   expect(within(dialog).getByText("Randel Dodson")).toBeVisible();
   expect(within(dialog).getByText("© 2026 Randel Dodson")).toBeVisible();
   await user.click(
@@ -68,7 +68,7 @@ it("opens the branded About dialog, shows the local license and restores focus",
   expect(license).toHaveAttribute("readonly");
   expect(license).toHaveValue(readFileSync("../../LICENSE", "utf8"));
   expect(license.previousElementSibling).toHaveClass("about-actions");
-  expect(within(dialog).getByText("version 0.2.3")).toBeVisible();
+  expect(within(dialog).getByText("version 0.2.4")).toBeVisible();
   expect(within(dialog).queryByText("Publisher")).toBeNull();
   expect(within(dialog).queryByText(/publishing under/)).toBeNull();
   await user.click(
