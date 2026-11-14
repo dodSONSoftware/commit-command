@@ -175,8 +175,29 @@ fn reject_symlink(path: &Path) -> Result<()> {
 }
 impl WorkspaceService {
     pub fn open(directory: &Path) -> Result<Self> {
-        // Refuse even creation of the state directory inside an existing checkout.
-        for ancestor in directory.ancestors() {
+        // Resolve aliases before creating descendants: a lexical parent can hide
+        // the checkout root when an alias targets a repository subdirectory.
+        let absolute = if directory.is_absolute() {
+            directory.to_path_buf()
+        } else {
+            std::env::current_dir()?.join(directory)
+        };
+        let mut existing = absolute.as_path();
+        let resolved = loop {
+            match fs::canonicalize(existing) {
+                Ok(path) => break path,
+                Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
+                    existing = existing.parent().ok_or_else(|| {
+                        Error::with_kind(
+                            ErrorKind::InvalidPath,
+                            "State directory has no existing ancestor",
+                        )
+                    })?;
+                }
+                Err(error) => return Err(error.into()),
+            }
+        };
+        for ancestor in resolved.ancestors() {
             if ancestor.join(".git").exists() {
                 return Err(Error::with_kind(
                     ErrorKind::InvalidPath,

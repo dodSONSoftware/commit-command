@@ -1,6 +1,6 @@
 # Commit Command
 
-**Release:** Aluminum Ferret — version 0.2.0.
+**Release:** Aluminum Ferret — version 0.2.1.
 
 Commit Command (formerly GitFleet) is a macOS multi-repository Git workspace
 manager under development. It provides persistent workspaces, repository discovery

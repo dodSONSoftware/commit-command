@@ -1013,3 +1013,40 @@ fn cancelled_continuation_keeps_accepted_state_and_exclusion_changes_invalidate_
         ErrorKind::InvalidRequest
     );
 }
+
+#[cfg(unix)]
+#[test]
+fn state_alias_into_checkout_is_rejected_before_creating_descendants() {
+    use std::os::unix::fs::symlink;
+    let f = Fixture::new();
+    f.commit_file();
+    fs::create_dir(f.repo.join("subdir")).unwrap();
+    let alias = f.root.join("alias");
+    symlink(f.repo.join("subdir"), &alias).unwrap();
+    let before = tree_bytes(&f.repo);
+    for state in [alias.join("new/state"), f.repo.join("subdir/new/state")] {
+        assert_eq!(
+            WorkspaceService::open(&state).err().unwrap().kind,
+            ErrorKind::InvalidPath
+        );
+        assert!(!f.repo.join("subdir/new").exists());
+        assert_eq!(tree_bytes(&f.repo), before);
+    }
+    // Parent components must be interpreted after resolving the alias.
+    assert_eq!(
+        WorkspaceService::open(&alias.join("../new/state"))
+            .err()
+            .unwrap()
+            .kind,
+        ErrorKind::InvalidPath
+    );
+    assert!(!f.repo.join("new").exists());
+    let external = f.root.join("external");
+    fs::create_dir(&external).unwrap();
+    let external_alias = f.root.join("external-alias");
+    symlink(&external, &external_alias).unwrap();
+    let service = WorkspaceService::open(&external_alias.join("new/state")).unwrap();
+    drop(service);
+    assert!(external.join("new/state/state.db").is_file());
+    assert_eq!(tree_bytes(&f.repo), before);
+}

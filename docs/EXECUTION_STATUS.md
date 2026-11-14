@@ -11,6 +11,20 @@ The [detailed completion handoff](implementation/README.md) supplies the executa
 remaining-work packages, decision worksheet, fixture/test procedures and complete
 requirement mapping. It does not accept gates or replace this live evidence ledger.
 
+### November 14 · F22 state directory aliases
+
+The disposable CLI reproduction returned `invalid_path` yet created
+`repo/subdir/new/state` through an alias to `repo/subdir`. The regression failed
+on those new directories before the fix. Startup now canonicalizes the nearest
+existing ancestor and checks its checkout ancestry before creating descendants;
+the final canonical check remains in place. Canonicalization errors other than
+missing descendants fail before creation.
+
+All 24 workspace tests passed, including alias/direct paths, parent components,
+valid external aliases and unchanged repository bytes. A rebuilt CLI independently
+refused the same alias request without creating descendants. Default all-targets
+Clippy, formatting and diff checks passed.
+
 ### November 14 · F24/F25 desktop authority and validation matrix
 
 Reproduced the documentation mismatch against the manifest: default builds select

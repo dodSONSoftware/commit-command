@@ -1,16 +1,12 @@
-feat: harden controlled workflows and validate desktop authority
+fix: reject state aliases before creating checkout directories
 
-[0.2.0] Aluminum Ferret
+[0.2.1] Aluminum Ferret
 
-- desktop: Add dedicated Settings, saved preferences, streaming AI fill and explicit operation reviews
-- safety: Fix selection, staging consistency, recovery guards, source redaction and credential transport
-- lifecycle: Preserve final Settings edits and composer state; reclaim completed AI job capacity
-- performance: Bound diff retention, monitoring work, sibling discovery and history Git processes
-- F24/F25: Align current build documentation and exercise real Stage dispatch across default and read-only hosts
-- validation: Replace obsolete native probes, add caller positive controls and extend the feature matrix
-- LICENSE: Match the About copyright to Randel Dodson
-- docs: Record regression evidence and retain the supplied commit workflow
-- VERSION: Increment 0.1.1 to 0.2.0 for backward-compatible functionality
-- README.md: Add Aluminum Ferret release metadata and correct desktop write defaults
+- workspace: Resolve the nearest existing ancestor before creating state descendants
+- safety: Preserve the final canonical ancestry check and propagate filesystem errors
+- tests: Cover checkout aliases, direct paths, parent components and valid external state
+- docs: Record failing reproduction, 24 passing workspace tests and rebuilt CLI verification
+- VERSION: Increment 0.2.0 to 0.2.1 for the F22 bug fix
+- README.md: Update Aluminum Ferret release metadata
 
 developed by Randel Dodson and AI
